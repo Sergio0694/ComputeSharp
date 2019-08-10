@@ -62,11 +62,11 @@ namespace DirectX12GameEngine.Shaders
             return node.ReplaceType(node.Name);
         }
 
-        public override SyntaxNode VisitAttributeList(AttributeListSyntax node)
+        public override SyntaxNode? VisitAttributeList(AttributeListSyntax node)
         {
-            var knownAttributes = node.Attributes.Where(n => ShaderGenerator.HlslKnownAttributes.Contains(n.Name + "Attribute"));
+            var knownAttributes = node.Attributes.Where(n => ShaderGenerator.HlslKnownAttributes.Contains(n.Name + "Attribute")).ToArray();
 
-            if (knownAttributes.Count() == 0) return null;
+            if (knownAttributes.Length == 0) return null;
 
             var list = new SeparatedSyntaxList<AttributeSyntax>();
             list = list.AddRange(knownAttributes);
