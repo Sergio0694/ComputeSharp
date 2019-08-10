@@ -147,6 +147,54 @@ namespace DirectX12GameEngine.Shaders
             return result;
         }
 
+        public ShaderGenerationResult GenerateShaderForLambda()
+        {
+            if (result != null) return result;
+
+            if (!(shader is Action action)) throw new InvalidOperationException("Missing lambda shader");
+
+            Type shaderType = action.Method.DeclaringType;
+            object shaderInstance = action.Target;
+
+            var fields = shaderType.GetFields(BindingFlags.Public).ToArray();
+
+            // Collect the fields
+            foreach (FieldInfo fieldInfo in fields)
+            {
+                CollectStructure(fieldInfo.FieldType, fieldInfo.GetValue(shaderInstance));
+            }
+
+            // Collect the method
+            CollectTopLevelMethod(action.Method);
+
+            // Writing stage
+            foreach (ShaderTypeDefinition type in collectedTypes)
+            {
+                WriteStructure(type.Type, type.Instance);
+            }
+
+            // Write the fields, assuming that all buffers are unordered access views, and the other fields are constant buffers
+            foreach (FieldInfo fieldInfo in fields)
+            {
+                Type? memberType = fieldInfo.FieldType;
+
+                if (memberType.GetGenericTypeDefinition() == typeof(RWBufferResource<>))
+                    WriteUnorderedAccessView(fieldInfo, memberType, bindingTracker.UnorderedAccessView++);
+                else WriteConstantBuffer(fieldInfo, memberType, bindingTracker.ConstantBuffer++);
+            }
+
+            // Write the actual shader body
+            WriteTopLevelMethod(action.Method);
+
+            stringWriter.GetStringBuilder().TrimEnd();
+            writer.WriteLine();
+
+            result = new ShaderGenerationResult(stringWriter.ToString());
+            GetEntryPoints(result, shaderType, bindingAttr);
+
+            return result;
+        }
+
         public static ShaderGenerationResult GetEntryPoints(ShaderGenerationResult result, Type shaderType, BindingFlags bindingAttr = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance)
         {
             foreach (MethodInfo shaderMethodInfo in shaderType.GetMethods(bindingAttr).Where(m => m.IsDefined(typeof(ShaderAttribute))))
@@ -339,12 +387,6 @@ namespace DirectX12GameEngine.Shaders
                 case ConstantBufferResourceAttribute _:
                     WriteConstantBuffer(memberInfo, memberType, bindingTracker.ConstantBuffer++);
                     break;
-                case SamplerResourceAttribute _:
-                    WriteSampler(memberInfo, memberType, bindingTracker.Sampler++);
-                    break;
-                case TextureResourceAttribute _:
-                    WriteTexture(memberInfo, memberType, bindingTracker.Texture++);
-                    break;
                 case UnorderedAccessViewResourceAttribute _:
                     WriteUnorderedAccessView(memberInfo, memberType, bindingTracker.UnorderedAccessView++);
                     break;
@@ -371,28 +413,10 @@ namespace DirectX12GameEngine.Shaders
             writer.WriteLine();
         }
 
-        private void WriteSampler(MemberInfo memberInfo, Type memberType, int binding)
-        {
-            writer.Write($"{HlslKnownTypes.GetMappedName(memberType)} {memberInfo.Name}");
-            writer.Write(GetHlslSemantic(memberInfo.GetCustomAttribute<ShaderSemanticAttribute>()));
-            writer.Write($" : register(s{binding})");
-            writer.WriteLine(";");
-            writer.WriteLine();
-        }
-
-        private void WriteTexture(MemberInfo memberInfo, Type memberType, int binding)
-        {
-            writer.Write($"{HlslKnownTypes.GetMappedName(memberType)} {memberInfo.Name}");
-            writer.Write(GetHlslSemantic(memberInfo.GetCustomAttribute<ShaderSemanticAttribute>()));
-            writer.Write($" : register(t{binding})");
-            writer.WriteLine(";");
-            writer.WriteLine();
-        }
-
         private void WriteUnorderedAccessView(MemberInfo memberInfo, Type memberType, int binding)
         {
             writer.Write($"{HlslKnownTypes.GetMappedName(memberType)} {memberInfo.Name}");
-            writer.Write(GetHlslSemantic(memberInfo.GetCustomAttribute<ShaderSemanticAttribute>()));
+            writer.Write(" : SV_DispatchThreadId");
             writer.Write($" : register(u{binding})");
             writer.WriteLine(";");
             writer.WriteLine();
