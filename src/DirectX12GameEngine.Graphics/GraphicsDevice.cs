@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using DirectX12GameEngine.Core;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D12;
 
 namespace DirectX12GameEngine.Graphics
 {
-    public sealed class GraphicsDevice : IDisposable, ICollector
+    public sealed class GraphicsDevice : IDisposable
     {
         private readonly AutoResetEvent fenceEvent = new AutoResetEvent(false);
         private SharpDX.Direct3D11.Device? nativeDirect3D11Device;
@@ -52,8 +51,6 @@ namespace DirectX12GameEngine.Graphics
         public CommandList CommandList { get; }
 
         public CommandList CopyCommandList { get; }
-
-        public ICollection<IDisposable> Disposables { get; } = new List<IDisposable>();
 
         public FeatureLevel FeatureLevel { get; }
 
@@ -162,11 +159,6 @@ namespace DirectX12GameEngine.Graphics
             NativeComputeFence.Dispose();
             NativeDirectFence.Dispose();
             NativeDirectFence.Dispose();
-
-            foreach (IDisposable disposable in Disposables)
-            {
-                disposable.Dispose();
-            }
 
             nativeDirect3D11Device?.Dispose();
 
