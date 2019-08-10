@@ -187,6 +187,8 @@ namespace DirectX12GameEngine.Shaders
             }
 
             // Write the actual shader body
+            writer.WriteLine("[Shader(\"compute\")]");
+            writer.WriteLine("[NumThreads(5, 5, 1)]");
             WriteTopLevelMethod(action.Method);
 
             stringWriter.GetStringBuilder().TrimEnd();
@@ -518,6 +520,7 @@ namespace DirectX12GameEngine.Shaders
 
             string shaderSource = root.ToFullString();
             shaderSource = shaderSource.Replace("internal void <Main>b__0", "void Foo");
+            shaderSource = shaderSource.Replace("uint3 id", "uint3 id : SV_DispatchThreadId");
 
             // TODO: See why the System namespace in System.Math is not present in UWP projects.
             shaderSource = shaderSource.Replace("Math.Max", "max");
