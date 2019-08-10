@@ -17,29 +17,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Dlls\win-x64\dxcompiler.dll" />
-    <None Remove="Dlls\win-x64\dxil.dll" />
-    <None Remove="Dlls\win-x86\dxcompiler.dll" />
-    <None Remove="Dlls\win-x86\dxil.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Dlls\win-x64\dxcompiler.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Dlls\win-x64\dxil.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Dlls\win-x86\dxcompiler.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Dlls\win-x86\dxil.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\DirectX12GameEngine.Core\DirectX12GameEngine.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--<Content Include="..\Libs\runtimes\win-x86\native\*.*">
+      <PackagePath>runtimes\win-x86\native</PackagePath>
+      <Pack>true</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>-->
+    <Content Include="..\Libs\runtimes\win-x64\native\*.*">
+      <PackagePath>runtimes\win-x64\native</PackagePath>
+      <Pack>true</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
