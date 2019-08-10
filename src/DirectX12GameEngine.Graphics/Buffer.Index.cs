@@ -22,25 +22,6 @@ namespace DirectX12GameEngine.Graphics
             {
                 return Buffer.New(device, data, BufferFlags.IndexBuffer, heapType);
             }
-
-            public static IndexBufferView CreateIndexBufferView(Buffer indexBuffer, PixelFormat format, int size)
-            {
-                switch (format)
-                {
-                    case PixelFormat.R16_UInt:
-                    case PixelFormat.R32_UInt:
-                        break;
-                    default:
-                        throw new NotSupportedException("Index buffer type must be ushort or uint");
-                }
-
-                return new IndexBufferView
-                {
-                    BufferLocation = indexBuffer.NativeResource.GPUVirtualAddress,
-                    Format = (Format)format,
-                    SizeInBytes = size
-                };
-            }
         }
     }
 }

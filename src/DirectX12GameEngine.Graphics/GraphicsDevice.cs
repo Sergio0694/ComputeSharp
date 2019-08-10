@@ -54,8 +54,6 @@ namespace DirectX12GameEngine.Graphics
 
         public FeatureLevel FeatureLevel { get; }
 
-        public GraphicsPresenter? Presenter { get; set; }
-
         internal Device NativeDevice { get; }
 
         internal SharpDX.Direct3D11.Device NativeDirect3D11Device => NativeDirect3D11Device ?? (nativeDirect3D11Device = SharpDX.Direct3D11.Device.CreateFromDirect3D12(
