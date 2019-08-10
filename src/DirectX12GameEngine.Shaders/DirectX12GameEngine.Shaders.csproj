@@ -8,6 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetDxc" Version="1.2.0-alpha">
+      <ExcludeAssets>native</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="ICSharpCode.Decompiler" Version="5.0.0.4861-preview3" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.3.0-beta1-final" />
+    <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.1-beta0-g3060495c2a" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Dlls\win-x64\dxcompiler.dll" />
     <None Remove="Dlls\win-x64\dxil.dll" />
     <None Remove="Dlls\win-x86\dxcompiler.dll" />
