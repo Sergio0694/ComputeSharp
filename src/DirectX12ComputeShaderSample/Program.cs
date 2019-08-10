@@ -64,7 +64,7 @@ namespace DirectX12ComputeShaderSample
                 array[i] = i + 1;
             }
 
-            using Buffer<float> inputBuffer = Buffer.New(device, array.AsSpan(), BufferFlags.UnorderedAccess, GraphicsHeapType.Default);
+            using Buffer<float> gpuBuffer = Buffer.UnorderedAccess.New(device, array.AsSpan());
 
             // Execute computer shader
 
@@ -73,20 +73,10 @@ namespace DirectX12ComputeShaderSample
                 commandList.SetPipelineState(pipelineState);
 
                 commandList.SetComputeRoot32BitConstant(0, width, 0);
-                commandList.SetComputeRootDescriptorTable(1, inputBuffer);
+                commandList.SetComputeRootDescriptorTable(1, gpuBuffer);
 
                 commandList.Dispatch(2, 2, 1);
                 commandList.Flush(true);
-            }
-
-            // Copy data back to CPU
-
-            using Buffer<float> outputBuffer = Buffer.New<float>(device, array.Length, BufferFlags.None, GraphicsHeapType.Readback);
-
-            using (CommandList copyCommandList = new CommandList(device, CommandListType.Copy))
-            {
-                copyCommandList.CopyResource(inputBuffer, outputBuffer);
-                copyCommandList.Flush(true);
             }
 
             // Print matrix
@@ -94,7 +84,7 @@ namespace DirectX12ComputeShaderSample
             Console.WriteLine("Before:");
             PrintMatrix(array, width, height);
 
-            outputBuffer.GetData(array.AsSpan());
+            gpuBuffer.GetData(array.AsSpan());
 
             Console.WriteLine();
             Console.WriteLine("After:");
@@ -118,3 +108,4 @@ namespace DirectX12ComputeShaderSample
         }
     }
 }
+

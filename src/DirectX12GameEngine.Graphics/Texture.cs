@@ -65,12 +65,10 @@ namespace DirectX12GameEngine.Graphics
                 textureUploadBuffer.NativeResource.WriteToSubresource(0, null, (IntPtr)pointer, ((Format)Description.Format).SizeOfInBytes() * Width, data.Length * Unsafe.SizeOf<T>());
             }
 
-            CommandList copyCommandList = GraphicsDevice.GetOrCreateCopyCommandList();
+            using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
             copyCommandList.CopyResource(textureUploadBuffer, this);
             copyCommandList.Flush(true);
-
-            GraphicsDevice.EnqueueCopyCommandList(copyCommandList);
         }
 
         public Texture InitializeFrom(TextureDescription description)

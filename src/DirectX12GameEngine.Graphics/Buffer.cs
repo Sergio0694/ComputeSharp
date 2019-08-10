@@ -33,44 +33,67 @@ namespace DirectX12GameEngine.Graphics
             return data;
         }
 
-        public void GetData<T>(ref T data) where T : unmanaged
+        public unsafe void GetData<T>(ref T data, int offsetInBytes = 0) where T : unmanaged
         {
-            if (Usage != GraphicsHeapType.Default)
+            fixed (T* pointer = &data)
+            {
+                GetData(new Span<T>(pointer, 1), offsetInBytes);
+            }
+        }
+
+        public void GetData<T>(Span<T> data, int offsetInBytes = 0) where T : unmanaged
+        {
+            if (Usage == GraphicsHeapType.Default)
+            {
+                using Buffer<T> readbackBaffer = New<T>(GraphicsDevice, data.Length, BufferFlags.None, GraphicsHeapType.Readback);
+                using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
+
+                copyCommandList.CopyBufferRegion(this, offsetInBytes, readbackBaffer, 0, data.Length * Unsafe.SizeOf<T>());
+                copyCommandList.Flush(true);
+
+                readbackBaffer.GetData(data);
+            }
+            else
             {
                 Map(0);
-                MemoryHelper.Copy(MappedResource, ref data);
+                MemoryHelper.Copy(MappedResource + offsetInBytes, data);
                 Unmap(0);
             }
         }
 
-        public void GetData<T>(Span<T> data) where T : unmanaged
+        public unsafe void SetData<T>(in T data, int offsetInBytes = 0) where T : unmanaged
         {
-            if (Usage != GraphicsHeapType.Default)
+            fixed (T* pointer = &data)
             {
-                Map(0);
-                MemoryHelper.Copy(MappedResource, data);
-                Unmap(0);
-            }
-        }
-
-        public void SetData<T>(in T data, int offsetInBytes = 0) where T : unmanaged
-        {
-            if (Usage != GraphicsHeapType.Default)
-            {
-                Map(0);
-                MemoryHelper.Copy(data, MappedResource + offsetInBytes);
-                Unmap(0);
+                SetData(new Span<T>(pointer, 1), offsetInBytes);
             }
         }
 
         public void SetData<T>(Span<T> data, int offsetInBytes = 0) where T : unmanaged
         {
-            if (Usage != GraphicsHeapType.Default)
+            if (Usage == GraphicsHeapType.Default)
+            {
+                using Buffer<T> uploadBuffer = New(GraphicsDevice, data, BufferFlags.None, GraphicsHeapType.Upload);
+                using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
+
+                copyCommandList.CopyBufferRegion(uploadBuffer, 0, this, offsetInBytes, data.Length * Unsafe.SizeOf<T>());
+                copyCommandList.Flush(true);
+            }
+            else
             {
                 Map(0);
                 MemoryHelper.Copy(data, MappedResource + offsetInBytes);
                 Unmap(0);
             }
+        }
+
+        public Buffer ToReadback()
+        {
+            BufferDescription description = Description;
+            description.HeapType = GraphicsHeapType.Readback;
+            description.Flags = BufferFlags.None;
+
+            return New(GraphicsDevice, description);
         }
 
         public static Buffer New(GraphicsDevice device, BufferDescription description)
@@ -101,7 +124,7 @@ namespace DirectX12GameEngine.Graphics
         public static Buffer<T> New<T>(GraphicsDevice device, Span<T> data, BufferFlags bufferFlags, GraphicsHeapType heapType = GraphicsHeapType.Default) where T : unmanaged
         {
             Buffer<T> buffer = New<T>(device, data.Length, bufferFlags, heapType);
-            buffer.Recreate(data);
+            buffer.SetData(data);
 
             return buffer;
         }
@@ -134,25 +157,6 @@ namespace DirectX12GameEngine.Graphics
             };
 
             return this;
-        }
-
-        protected internal void Recreate<T>(Span<T> data) where T : unmanaged
-        {
-            if (Description.HeapType == GraphicsHeapType.Upload)
-            {
-                SetData(data);
-            }
-            else
-            {
-                using Buffer uploadBuffer = New(GraphicsDevice, data, BufferFlags.None, GraphicsHeapType.Upload);
-
-                CommandList copyCommandList = GraphicsDevice.GetOrCreateCopyCommandList();
-
-                copyCommandList.CopyResource(uploadBuffer, this);
-                copyCommandList.Flush(true);
-
-                GraphicsDevice.EnqueueCopyCommandList(copyCommandList);
-            }
         }
 
         private static ResourceDescription ConvertToNativeDescription(BufferDescription description)

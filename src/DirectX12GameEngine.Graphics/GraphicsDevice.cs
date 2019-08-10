@@ -44,17 +44,20 @@ namespace DirectX12GameEngine.Graphics
 
             CommandList = new CommandList(this, CommandListType.Direct);
             CommandList.Close();
+
+            CopyCommandList = new CommandList(this, CommandListType.Copy);
+            CopyCommandList.Close();
         }
 
         public CommandList CommandList { get; }
+
+        public CommandList CopyCommandList { get; }
 
         public ICollection<IDisposable> Disposables { get; } = new List<IDisposable>();
 
         public FeatureLevel FeatureLevel { get; }
 
         public GraphicsPresenter? Presenter { get; set; }
-
-        internal Queue<CommandList> CopyCommandLists { get; } = new Queue<CommandList>();
 
         internal Device NativeDevice { get; }
 
@@ -141,6 +144,7 @@ namespace DirectX12GameEngine.Graphics
             NativeDirectCommandQueue.Wait(NativeDirectFence, NextDirectFenceValue);
 
             CommandList.Dispose();
+            CopyCommandList.Dispose();
 
             DepthStencilViewAllocator.Dispose();
             RenderTargetViewAllocator.Dispose();
@@ -158,11 +162,6 @@ namespace DirectX12GameEngine.Graphics
             NativeComputeFence.Dispose();
             NativeDirectFence.Dispose();
             NativeDirectFence.Dispose();
-
-            foreach (CommandList commandList in CopyCommandLists)
-            {
-                commandList.Dispose();
-            }
 
             foreach (IDisposable disposable in Disposables)
             {
@@ -241,34 +240,6 @@ namespace DirectX12GameEngine.Graphics
             commandQueue.Signal(fence, fenceValue);
 
             return fenceValue;
-        }
-
-        public CommandList GetOrCreateCopyCommandList()
-        {
-            CommandList commandList;
-
-            lock (CopyCommandLists)
-            {
-                if (CopyCommandLists.Count > 0)
-                {
-                    commandList = CopyCommandLists.Dequeue();
-                    commandList.Reset();
-                }
-                else
-                {
-                    commandList = new CommandList(this, CommandListType.Copy);
-                }
-            }
-
-            return commandList;
-        }
-
-        public void EnqueueCopyCommandList(CommandList commandList)
-        {
-            lock (CopyCommandLists)
-            {
-                CopyCommandLists.Enqueue(commandList);
-            }
         }
 
         internal bool IsFenceComplete(Fence fence, long fenceValue)
