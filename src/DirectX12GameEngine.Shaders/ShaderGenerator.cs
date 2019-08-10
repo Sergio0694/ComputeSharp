@@ -7,11 +7,14 @@ using System.Numerics;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
+using DirectX12GameEngine.Shaders.Numerics;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
 using ICSharpCode.Decompiler.Metadata;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Vector2 = System.Numerics.Vector2;
+using Vector4 = System.Numerics.Vector4;
 
 namespace DirectX12GameEngine.Shaders
 {
@@ -151,12 +154,12 @@ namespace DirectX12GameEngine.Shaders
         {
             if (result != null) return result;
 
-            if (!(shader is Action action)) throw new InvalidOperationException("Missing lambda shader");
+            if (!(shader is Action<UInt3> action)) throw new InvalidOperationException("Missing lambda shader");
 
             Type shaderType = action.Method.DeclaringType;
             object shaderInstance = action.Target;
 
-            var fields = shaderType.GetFields(BindingFlags.Public).ToArray();
+            var fields = shaderType.GetFields().ToArray();
 
             // Collect the fields
             foreach (FieldInfo fieldInfo in fields)
@@ -178,7 +181,7 @@ namespace DirectX12GameEngine.Shaders
             {
                 Type? memberType = fieldInfo.FieldType;
 
-                if (memberType.GetGenericTypeDefinition() == typeof(RWBufferResource<>))
+                if (memberType.IsGenericType && memberType.GetGenericTypeDefinition() == typeof(RWBufferResource<>))
                     WriteUnorderedAccessView(fieldInfo, memberType, bindingTracker.UnorderedAccessView++);
                 else WriteConstantBuffer(fieldInfo, memberType, bindingTracker.ConstantBuffer++);
             }
@@ -190,7 +193,9 @@ namespace DirectX12GameEngine.Shaders
             writer.WriteLine();
 
             result = new ShaderGenerationResult(stringWriter.ToString());
-            GetEntryPoints(result, shaderType, bindingAttr);
+            //GetEntryPoints(result, shaderType, bindingAttr);
+
+            result.SetShader("compute", "Foo" /* action.Method.Name */);
 
             return result;
         }
@@ -512,6 +517,7 @@ namespace DirectX12GameEngine.Shaders
             root = syntaxRewriter.Visit(root);
 
             string shaderSource = root.ToFullString();
+            shaderSource = shaderSource.Replace("internal void <Main>b__0", "void Foo");
 
             // TODO: See why the System namespace in System.Math is not present in UWP projects.
             shaderSource = shaderSource.Replace("Math.Max", "max");
