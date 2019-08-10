@@ -2,7 +2,6 @@
 {
     public struct ImageDescription
     {
-        public TextureDimension Dimension;
 
         public int Width;
 
@@ -20,7 +19,6 @@
         {
             return new ImageDescription
             {
-                Dimension = TextureDimension.Texture2D,
                 Width = width,
                 Height = height,
                 Depth = 1,

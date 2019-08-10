@@ -82,18 +82,6 @@ namespace DirectX12GameEngine.Graphics
                 StreamOutput = new StreamOutputDescription()
             };
 
-            Texture? depthStencilBuffer = device.CommandList.DepthStencilBuffer;
-
-            if (depthStencilBuffer != null)
-            {
-                pipelineStateDescription.DepthStencilFormat = (Format)depthStencilBuffer.Description.Format;
-            }
-
-            for (int i = 0; i < device.CommandList.RenderTargets.Length; i++)
-            {
-                pipelineStateDescription.RenderTargetFormats[i] = (Format)device.CommandList.RenderTargets[i].Description.Format;
-            }
-
             return pipelineStateDescription;
         }
     }

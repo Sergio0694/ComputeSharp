@@ -10,8 +10,6 @@ namespace DirectX12GameEngine.Graphics
     {
         protected const int BufferCount = 2;
 
-        private readonly Texture[] renderTargets = new Texture[BufferCount];
-
         public SwapChainGraphicsPresenter(GraphicsDevice device, PresentationParameters presentationParameters, SwapChain3 swapChain)
             : base(device, presentationParameters)
         {
@@ -22,11 +20,7 @@ namespace DirectX12GameEngine.Graphics
                 GraphicsDevice.RenderTargetViewAllocator.Dispose();
                 GraphicsDevice.RenderTargetViewAllocator = new DescriptorAllocator(GraphicsDevice, DescriptorHeapType.RenderTargetView, descriptorCount: BufferCount);
             }
-
-            CreateRenderTargets();
         }
-
-        public override Texture BackBuffer => renderTargets[SwapChain.CurrentBackBufferIndex];
 
         public Matrix3x2 MatrixTransform { get => SwapChain.MatrixTransform.ToMatrix3x2(); set => SwapChain.MatrixTransform = value.ToMatrix3x2(); }
 
@@ -38,11 +32,6 @@ namespace DirectX12GameEngine.Graphics
         {
             SwapChain.Dispose();
 
-            foreach (Texture renderTarget in renderTargets)
-            {
-                renderTarget.Dispose();
-            }
-
             base.Dispose();
         }
 
@@ -53,28 +42,9 @@ namespace DirectX12GameEngine.Graphics
 
         protected override void ResizeBackBuffer(int width, int height)
         {
-            for (int i = 0; i < BufferCount; i++)
-            {
-                renderTargets[i].Dispose();
-            }
 
             SwapChain.ResizeBuffers(BufferCount, width, height, (Format)PresentationParameters.BackBufferFormat, SwapChainFlags.None);
 
-            CreateRenderTargets();
-        }
-
-        protected override void ResizeDepthStencilBuffer(int width, int height)
-        {
-            DepthStencilBuffer.Dispose();
-            DepthStencilBuffer = CreateDepthStencilBuffer();
-        }
-
-        private void CreateRenderTargets()
-        {
-            for (int i = 0; i < BufferCount; i++)
-            {
-                renderTargets[i] = new Texture(GraphicsDevice).InitializeFrom(SwapChain.GetBackBuffer<Resource>(i));
-            }
         }
     }
 
