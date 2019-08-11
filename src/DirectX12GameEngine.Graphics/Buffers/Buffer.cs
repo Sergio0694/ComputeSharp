@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using DirectX12GameEngine.Core;
+using DirectX12GameEngine.Core.Helpers;
+using DirectX12GameEngine.Graphics.Buffers.Abstract;
 using SharpDX.Direct3D12;
 
-namespace DirectX12GameEngine.Graphics
+namespace DirectX12GameEngine.Graphics.Buffers
 {
     public partial class Buffer : GraphicsResource
     {
-        public Buffer()
-        {
-        }
-
         protected Buffer(GraphicsDevice device) : base(device)
         {
         }
@@ -87,7 +84,7 @@ namespace DirectX12GameEngine.Graphics
             }
         }
 
-        public Buffer ToReadback()
+        public Buffers.Buffer ToReadback()
         {
             BufferDescription description = Description;
             description.HeapType = GraphicsHeapType.Readback;
@@ -96,12 +93,12 @@ namespace DirectX12GameEngine.Graphics
             return New(GraphicsDevice, description);
         }
 
-        public static Buffer New(GraphicsDevice device, BufferDescription description)
+        public static Buffers.Buffer New(GraphicsDevice device, BufferDescription description)
         {
-            return new Buffer(device).InitializeFrom(description);
+            return new Buffers.Buffer(device).InitializeFrom(description);
         }
 
-        public static Buffer New(GraphicsDevice device, int size, BufferFlags bufferFlags, GraphicsHeapType heapType = GraphicsHeapType.Default)
+        public static Buffers.Buffer New(GraphicsDevice device, int size, BufferFlags bufferFlags, GraphicsHeapType heapType = GraphicsHeapType.Default)
         {
             return New(device, new BufferDescription(size, bufferFlags, heapType));
         }
@@ -129,7 +126,7 @@ namespace DirectX12GameEngine.Graphics
             return buffer;
         }
 
-        protected internal Buffer InitializeFrom(BufferDescription description)
+        protected internal Buffers.Buffer InitializeFrom(BufferDescription description)
         {
             ResourceStates resourceStates = ResourceStates.Common;
 
@@ -218,7 +215,7 @@ namespace DirectX12GameEngine.Graphics
         }
     }
 
-    public class Buffer<T> : Buffer where T : unmanaged
+    public class Buffer<T> : Buffers.Buffer where T : unmanaged
     {
         protected internal Buffer(GraphicsDevice device, int size, BufferFlags bufferFlags, GraphicsHeapType heapType = GraphicsHeapType.Default) : base(device)
         {

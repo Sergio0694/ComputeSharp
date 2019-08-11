@@ -1,28 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
-using DirectX12GameEngine.Core;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D12;
 
 namespace DirectX12GameEngine.Graphics
 {
-    public sealed class GraphicsDevice : IDisposable, ICollector
+    public sealed class GraphicsDevice : IDisposable
     {
         private readonly AutoResetEvent fenceEvent = new AutoResetEvent(false);
-        private SharpDX.Direct3D11.Device? nativeDirect3D11Device;
 
-        public GraphicsDevice(FeatureLevel minFeatureLevel = FeatureLevel.Level_11_0, bool enableDebugLayer = false)
+        public GraphicsDevice(bool enableDebugLayer = false)
         {
 #if DEBUG
-            if (enableDebugLayer)
-            {
-                DebugInterface.Get().EnableDebugLayer();
-            }
+            if (enableDebugLayer) DebugInterface.Get().EnableDebugLayer();
 #endif
-            FeatureLevel = minFeatureLevel < FeatureLevel.Level_11_0 ? FeatureLevel.Level_11_0 : minFeatureLevel;
-
             NativeDevice = new Device(null, FeatureLevel);
 
             NativeComputeCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(SharpDX.Direct3D12.CommandListType.Compute));
@@ -53,16 +44,9 @@ namespace DirectX12GameEngine.Graphics
 
         public CommandList CopyCommandList { get; }
 
-        public ICollection<IDisposable> Disposables { get; } = new List<IDisposable>();
-
-        public FeatureLevel FeatureLevel { get; }
-
-        public GraphicsPresenter? Presenter { get; set; }
+        public const FeatureLevel FeatureLevel = SharpDX.Direct3D.FeatureLevel.Level_12_1;
 
         internal Device NativeDevice { get; }
-
-        internal SharpDX.Direct3D11.Device NativeDirect3D11Device => NativeDirect3D11Device ?? (nativeDirect3D11Device = SharpDX.Direct3D11.Device.CreateFromDirect3D12(
-                NativeDevice, SharpDX.Direct3D11.DeviceCreationFlags.BgraSupport, null, null, NativeDirectCommandQueue));
 
         internal DescriptorAllocator DepthStencilViewAllocator { get; set; }
 
@@ -96,46 +80,9 @@ namespace DirectX12GameEngine.Graphics
 
         internal long NextDirectFenceValue { get; private set; } = 1;
 
-        public void CopyDescriptors(int numDestDescriptorRanges, CpuDescriptorHandle[] destDescriptorRangeStartsRef, int[] destDescriptorRangeSizesRef, int numSrcDescriptorRanges, CpuDescriptorHandle[] srcDescriptorRangeStartsRef, int[] srcDescriptorRangeSizesRef, DescriptorHeapType descriptorHeapsType)
-        {
-            NativeDevice.CopyDescriptors(numDestDescriptorRanges, destDescriptorRangeStartsRef, destDescriptorRangeSizesRef, numSrcDescriptorRanges, srcDescriptorRangeStartsRef, srcDescriptorRangeSizesRef, descriptorHeapsType);
-        }
-
-        public (CpuDescriptorHandle, GpuDescriptorHandle) CopyDescriptorsToOneDescriptorHandle(IEnumerable<GraphicsResource> resources)
-        {
-            return CopyDescriptorsToOneDescriptorHandle(resources.Select(t => t.NativeCpuDescriptorHandle).ToArray());
-        }
-
-        public (CpuDescriptorHandle, GpuDescriptorHandle) CopyDescriptorsToOneDescriptorHandle(CpuDescriptorHandle[] descriptors)
-        {
-            if (descriptors.Length == 0) return default;
-
-            int[] srcDescriptorRangeStarts = new int[descriptors.Length];
-            //Array.Fill(srcDescriptorRangeStarts, 1);
-
-            for (int i = 0; i < srcDescriptorRangeStarts.Length; i++)
-            {
-                srcDescriptorRangeStarts[i] = 1;
-            }
-
-            var (cpuDescriptorHandle, gpuDescriptorHandle) = ShaderResourceViewAllocator.Allocate(descriptors.Length);
-
-            CopyDescriptors(
-                1, new[] { cpuDescriptorHandle }, new[] { descriptors.Length },
-                descriptors.Length, descriptors, srcDescriptorRangeStarts,
-                DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView);
-
-            return (cpuDescriptorHandle, gpuDescriptorHandle);
-        }
-
         public RootSignature CreateRootSignature(RootSignatureDescription rootSignatureDescription)
         {
             return NativeDevice.CreateRootSignature(rootSignatureDescription.Serialize());
-        }
-
-        public RootSignature CreateRootSignature(byte[] bytecode)
-        {
-            return NativeDevice.CreateRootSignature(bytecode);
         }
 
         public void Dispose()
@@ -162,13 +109,6 @@ namespace DirectX12GameEngine.Graphics
             NativeComputeFence.Dispose();
             NativeDirectFence.Dispose();
             NativeDirectFence.Dispose();
-
-            foreach (IDisposable disposable in Disposables)
-            {
-                disposable.Dispose();
-            }
-
-            nativeDirect3D11Device?.Dispose();
 
             NativeDevice.Dispose();
         }
@@ -256,34 +196,6 @@ namespace DirectX12GameEngine.Graphics
                 fence.SetEventOnCompletion(fenceValue, fenceEvent.SafeWaitHandle.DangerousGetHandle());
                 fenceEvent.WaitOne();
             }
-        }
-    }
-
-    internal class D3DXUtilities
-    {
-        public const int ComponentMappingMask = 0x7;
-
-        public const int ComponentMappingShift = 3;
-
-        public const int ComponentMappingAlwaysSetBitAvoidingZeromemMistakes = 1 << (ComponentMappingShift * 4);
-
-        public static int ComponentMapping(int src0, int src1, int src2, int src3)
-        {
-            return ((src0) & ComponentMappingMask)
-                | (((src1) & ComponentMappingMask) << ComponentMappingShift)
-                | (((src2) & ComponentMappingMask) << (ComponentMappingShift * 2))
-                | (((src3) & ComponentMappingMask) << (ComponentMappingShift * 3))
-                | ComponentMappingAlwaysSetBitAvoidingZeromemMistakes;
-        }
-
-        public static int DefaultComponentMapping()
-        {
-            return ComponentMapping(0, 1, 2, 3);
-        }
-
-        public static int ComponentMapping(int ComponentToExtract, int Mapping)
-        {
-            return (Mapping >> (ComponentMappingShift * ComponentToExtract)) & ComponentMappingMask;
         }
     }
 }

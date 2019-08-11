@@ -7,12 +7,14 @@ using System.Numerics;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
+using DirectX12GameEngine.Graphics.Buffers.Abstract;
 using DirectX12GameEngine.Shaders.Numerics;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
 using ICSharpCode.Decompiler.Metadata;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using SharpDX.Direct3D12;
 using Vector2 = System.Numerics.Vector2;
 using Vector4 = System.Numerics.Vector4;
 
@@ -92,63 +94,9 @@ namespace DirectX12GameEngine.Shaders
             CollectStructure(type, null);
         }
 
-        public ShaderGenerationResult GenerateShader()
-        {
-            if (result != null) return result;
+        public RootParameter[] RootParameters { get; private set; }
 
-            Type shaderType = shader.GetType();
-
-            var memberInfos = shaderType.GetMembersInTypeHierarchyInOrder(bindingAttr).Where(m => m.IsDefined(typeof(ShaderResourceAttribute)));
-
-            // Collecting stage
-
-            foreach (MemberInfo memberInfo in memberInfos)
-            {
-                Type? memberType = memberInfo.GetMemberType(shader);
-
-                if (memberType != null)
-                {
-                    CollectStructure(memberType, memberInfo.GetMemberValue(shader));
-                }
-
-                ShaderResourceAttribute? resourceType = memberInfo.GetResourceAttribute(memberType);
-
-                if (resourceType is ShaderMethodAttribute && memberInfo is MethodInfo methodInfo)
-                {
-                    CollectTopLevelMethod(methodInfo);
-                }
-            }
-
-            // Writing stage
-
-            foreach (ShaderTypeDefinition type in collectedTypes)
-            {
-                WriteStructure(type.Type, type.Instance);
-            }
-
-            foreach (MemberInfo memberInfo in memberInfos)
-            {
-                Type? memberType = memberInfo.GetMemberType(shader);
-                ShaderResourceAttribute? resourceType = memberInfo.GetResourceAttribute(memberType);
-
-                if (resourceType is ShaderMethodAttribute && memberInfo is MethodInfo methodInfo)
-                {
-                    WriteTopLevelMethod(methodInfo);
-                }
-                else if (memberType != null && resourceType != null)
-                {
-                    WriteResource(memberInfo, memberType, resourceType);
-                }
-            }
-
-            stringWriter.GetStringBuilder().TrimEnd();
-            writer.WriteLine();
-
-            result = new ShaderGenerationResult(stringWriter.ToString());
-            GetEntryPoints(result, shaderType, bindingAttr);
-
-            return result;
-        }
+        public IReadOnlyList<GraphicsResource> ReadWriteBuffers { get; private set; }
 
         public ShaderGenerationResult GenerateShaderForLambda()
         {
@@ -177,14 +125,26 @@ namespace DirectX12GameEngine.Shaders
             }
 
             // Write the fields, assuming that all buffers are unordered access views, and the other fields are constant buffers
+            var parameters = new List<DescriptorRange>();
+            var rwbuffers = new List<GraphicsResource>();
             foreach (FieldInfo fieldInfo in fields)
             {
                 Type? memberType = fieldInfo.FieldType;
 
                 if (memberType.IsGenericType && memberType.GetGenericTypeDefinition() == typeof(RWBufferResource<>))
+                {
+                    var range = new DescriptorRange(DescriptorRangeType.UnorderedAccessView, 1, bindingTracker.UnorderedAccessView);
+                    parameters.Add(range);
+                    var buffer = fieldInfo.GetValue(shaderInstance);
+                    var resource = (GraphicsResource)memberType.GetProperty(nameof(RWBufferResource<byte>.Buffer)).GetValue(buffer);
+                    rwbuffers.Add(resource);
                     WriteUnorderedAccessView(fieldInfo, memberType, bindingTracker.UnorderedAccessView++);
-                else WriteConstantBuffer(fieldInfo, memberType, bindingTracker.ConstantBuffer++);
+                }
+                //else WriteConstantBuffer(fieldInfo, memberType, bindingTracker.ConstantBuffer++);
+                else WriteStaticVariable(fieldInfo, memberType, fieldInfo.GetValue(shaderInstance));
             }
+            RootParameters = parameters.Select(range => new RootParameter(ShaderVisibility.All, range)).ToArray();
+            ReadWriteBuffers = rwbuffers;
 
             // Write the actual shader body
             writer.WriteLine("[Shader(\"compute\")]");
@@ -194,21 +154,7 @@ namespace DirectX12GameEngine.Shaders
             stringWriter.GetStringBuilder().TrimEnd();
             writer.WriteLine();
 
-            result = new ShaderGenerationResult(stringWriter.ToString());
-            //GetEntryPoints(result, shaderType, bindingAttr);
-
-            result.SetShader("compute", "Foo" /* action.Method.Name */);
-
-            return result;
-        }
-
-        public static ShaderGenerationResult GetEntryPoints(ShaderGenerationResult result, Type shaderType, BindingFlags bindingAttr = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance)
-        {
-            foreach (MethodInfo shaderMethodInfo in shaderType.GetMethods(bindingAttr).Where(m => m.IsDefined(typeof(ShaderAttribute))))
-            {
-                ShaderAttribute shaderAttribute = shaderMethodInfo.GetCustomAttribute<ShaderAttribute>();
-                result.SetShader(shaderAttribute.Name, shaderMethodInfo.Name);
-            }
+            result = new ShaderGenerationResult(stringWriter.ToString(), "Foo"); /* action.Method.Name */
 
             return result;
         }
@@ -403,6 +349,13 @@ namespace DirectX12GameEngine.Shaders
                 default:
                     throw new NotSupportedException("This shader resource type is not supported.");
             }
+        }
+
+        private void WriteStaticVariable(MemberInfo memberInfo, Type memberType, object value)
+        {
+            writer.Write($"static {HlslKnownTypes.GetMappedName(memberType)} {memberInfo.Name}");
+            writer.Write($" = {value};");
+            writer.WriteLine();
         }
 
         private void WriteConstantBuffer(MemberInfo memberInfo, Type memberType, int binding)

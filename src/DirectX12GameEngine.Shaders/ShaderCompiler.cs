@@ -26,7 +26,7 @@ namespace DirectX12GameEngine.Shaders
             const uint CP_UTF16 = 1200;
 
             IDxcBlobEncoding sourceBlob = library.CreateBlobWithEncodingOnHeapCopy(shaderSource, (uint)(shaderSource.Length * 2), CP_UTF16);
-            IDxcOperationResult result = compiler.Compile(sourceBlob, filePath, entryPoint ?? GetDefaultEntryPoint(version), $"{GetShaderProfile(version)}_6_1", new[] { "-Zpr" }, 1, null, 0, library.CreateIncludeHandler());
+            IDxcOperationResult result = compiler.Compile(sourceBlob, filePath, entryPoint ?? "CSMain", "cs_6_1", new[] { "-Zpr" }, 1, null, 0, library.CreateIncludeHandler());
 
             if (result.GetStatus() == 0)
             {
@@ -40,11 +40,6 @@ namespace DirectX12GameEngine.Shaders
                 string resultText = GetStringFromBlob(library, result.GetErrors());
                 throw new Exception(resultText);
             }
-        }
-
-        public static byte[] CompileShaderLegacy(string shaderSource, ShaderVersion? version = null, string? entryPoint = null)
-        {
-            return ShaderBytecode.Compile(shaderSource, entryPoint ?? GetDefaultEntryPoint(version), $"{GetShaderProfile(version)}_5_1", ShaderFlags.PackMatrixRowMajor);
         }
 
         public static unsafe byte[] GetBytesFromBlob(IDxcBlob blob)
@@ -69,27 +64,5 @@ namespace DirectX12GameEngine.Shaders
             blob = library.GetBlobAstUf16(blob);
             return new string(blob.GetBufferPointer(), 0, (int)(blob.GetBufferSize() / 2));
         }
-
-        private static string GetDefaultEntryPoint(ShaderVersion? version) => version switch
-        {
-            ShaderVersion.ComputeShader => "CSMain",
-            ShaderVersion.VertexShader => "VSMain",
-            ShaderVersion.PixelShader => "PSMain",
-            ShaderVersion.HullShader => "HSMain",
-            ShaderVersion.DomainShader => "DSMain",
-            ShaderVersion.GeometryShader => "GSMain",
-            _ => ""
-        };
-
-        private static string GetShaderProfile(ShaderVersion? version) => version switch
-        {
-            ShaderVersion.ComputeShader => "cs",
-            ShaderVersion.VertexShader => "vs",
-            ShaderVersion.PixelShader => "ps",
-            ShaderVersion.HullShader => "hs",
-            ShaderVersion.DomainShader => "ds",
-            ShaderVersion.GeometryShader => "gs",
-            _ => "lib"
-        };
     }
 }
