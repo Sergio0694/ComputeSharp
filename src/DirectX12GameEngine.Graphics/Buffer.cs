@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using DirectX12GameEngine.Core;
+using DirectX12GameEngine.Graphics.Primitives.Abstract;
 using SharpDX.Direct3D12;
 
 namespace DirectX12GameEngine.Graphics
 {
     public partial class Buffer : GraphicsResource
     {
-        public Buffer()
-        {
-        }
-
         protected Buffer(GraphicsDevice device) : base(device)
         {
         }
