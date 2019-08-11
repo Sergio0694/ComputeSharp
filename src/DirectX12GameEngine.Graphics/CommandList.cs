@@ -201,14 +201,7 @@ namespace DirectX12GameEngine.Graphics
 
         public void SetPipelineState(PipelineState pipelineState)
         {
-            if (pipelineState.IsCompute)
-            {
-                SetComputeRootSignature(pipelineState.RootSignature);
-            }
-            else
-            {
-                SetGraphicsRootSignature(pipelineState.RootSignature);
-            }
+            SetComputeRootSignature(pipelineState.RootSignature);
 
             currentCommandList.NativeCommandList.PipelineState = pipelineState.NativePipelineState;
         }
