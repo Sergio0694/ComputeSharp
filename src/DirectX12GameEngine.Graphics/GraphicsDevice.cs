@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D12;
@@ -91,46 +89,9 @@ namespace DirectX12GameEngine.Graphics
 
         internal long NextDirectFenceValue { get; private set; } = 1;
 
-        public void CopyDescriptors(int numDestDescriptorRanges, CpuDescriptorHandle[] destDescriptorRangeStartsRef, int[] destDescriptorRangeSizesRef, int numSrcDescriptorRanges, CpuDescriptorHandle[] srcDescriptorRangeStartsRef, int[] srcDescriptorRangeSizesRef, DescriptorHeapType descriptorHeapsType)
-        {
-            NativeDevice.CopyDescriptors(numDestDescriptorRanges, destDescriptorRangeStartsRef, destDescriptorRangeSizesRef, numSrcDescriptorRanges, srcDescriptorRangeStartsRef, srcDescriptorRangeSizesRef, descriptorHeapsType);
-        }
-
-        public (CpuDescriptorHandle, GpuDescriptorHandle) CopyDescriptorsToOneDescriptorHandle(IEnumerable<GraphicsResource> resources)
-        {
-            return CopyDescriptorsToOneDescriptorHandle(resources.Select(t => t.NativeCpuDescriptorHandle).ToArray());
-        }
-
-        public (CpuDescriptorHandle, GpuDescriptorHandle) CopyDescriptorsToOneDescriptorHandle(CpuDescriptorHandle[] descriptors)
-        {
-            if (descriptors.Length == 0) return default;
-
-            int[] srcDescriptorRangeStarts = new int[descriptors.Length];
-            //Array.Fill(srcDescriptorRangeStarts, 1);
-
-            for (int i = 0; i < srcDescriptorRangeStarts.Length; i++)
-            {
-                srcDescriptorRangeStarts[i] = 1;
-            }
-
-            var (cpuDescriptorHandle, gpuDescriptorHandle) = ShaderResourceViewAllocator.Allocate(descriptors.Length);
-
-            CopyDescriptors(
-                1, new[] { cpuDescriptorHandle }, new[] { descriptors.Length },
-                descriptors.Length, descriptors, srcDescriptorRangeStarts,
-                DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView);
-
-            return (cpuDescriptorHandle, gpuDescriptorHandle);
-        }
-
         public RootSignature CreateRootSignature(RootSignatureDescription rootSignatureDescription)
         {
             return NativeDevice.CreateRootSignature(rootSignatureDescription.Serialize());
-        }
-
-        public RootSignature CreateRootSignature(byte[] bytecode)
-        {
-            return NativeDevice.CreateRootSignature(bytecode);
         }
 
         public void Dispose()
@@ -246,34 +207,6 @@ namespace DirectX12GameEngine.Graphics
                 fence.SetEventOnCompletion(fenceValue, fenceEvent.SafeWaitHandle.DangerousGetHandle());
                 fenceEvent.WaitOne();
             }
-        }
-    }
-
-    internal class D3DXUtilities
-    {
-        public const int ComponentMappingMask = 0x7;
-
-        public const int ComponentMappingShift = 3;
-
-        public const int ComponentMappingAlwaysSetBitAvoidingZeromemMistakes = 1 << (ComponentMappingShift * 4);
-
-        public static int ComponentMapping(int src0, int src1, int src2, int src3)
-        {
-            return ((src0) & ComponentMappingMask)
-                | (((src1) & ComponentMappingMask) << ComponentMappingShift)
-                | (((src2) & ComponentMappingMask) << (ComponentMappingShift * 2))
-                | (((src3) & ComponentMappingMask) << (ComponentMappingShift * 3))
-                | ComponentMappingAlwaysSetBitAvoidingZeromemMistakes;
-        }
-
-        public static int DefaultComponentMapping()
-        {
-            return ComponentMapping(0, 1, 2, 3);
-        }
-
-        public static int ComponentMapping(int ComponentToExtract, int Mapping)
-        {
-            return (Mapping >> (ComponentMappingShift * ComponentToExtract)) & ComponentMappingMask;
         }
     }
 }
