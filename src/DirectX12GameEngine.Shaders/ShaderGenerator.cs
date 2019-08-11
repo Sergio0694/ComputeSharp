@@ -200,7 +200,7 @@ namespace DirectX12GameEngine.Shaders
 
                 if (memberInfo is MethodInfo methodInfo)
                 {
-                    if (type.IsInterface || resourceType is ShaderMethodAttribute)
+                    if (type.IsInterface)
                     {
                         CollectMethod(methodInfo);
                     }
@@ -269,7 +269,7 @@ namespace DirectX12GameEngine.Shaders
 
                 if (memberInfo is MethodInfo methodInfo)
                 {
-                    if (type.IsInterface || resourceType is ShaderMethodAttribute)
+                    if (type.IsInterface)
                     {
                         WriteMethod(methodInfo);
                     }
@@ -576,8 +576,7 @@ namespace DirectX12GameEngine.Shaders
         {
             private static readonly HashSet<string> allowedAttributes = new HashSet<string>()
             {
-                typeof(NumThreadsAttribute).FullName,
-                typeof(ShaderAttribute).FullName
+                typeof(NumThreadsAttribute).FullName
             };
 
             public static bool Contains(string name)
