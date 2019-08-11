@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
 using DirectX12GameEngine.Graphics.Buffers.Abstract;
+using DirectX12GameEngine.Shaders.Mappings;
 using DirectX12GameEngine.Shaders.Primitives;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
@@ -163,7 +164,7 @@ namespace DirectX12GameEngine.Shaders
         {
             type = type.GetElementOrDeclaredType();
 
-            if (HlslKnownTypes.ContainsKey(type) || collectedTypes.Any(d => d.Type == type)) return;
+            if (HlslKnownTypes.IsKnownType(type) || collectedTypes.Any(d => d.Type == type)) return;
 
             ShaderTypeDefinition shaderTypeDefinition = new ShaderTypeDefinition(type, obj);
 
@@ -483,63 +484,6 @@ namespace DirectX12GameEngine.Shaders
             decompilerSettings.CSharpFormattingOptions.IndentationString = IndentedTextWriter.DefaultTabString;
 
             return new CSharpDecompiler(assemblyPath, resolver, decompilerSettings);
-        }
-
-        internal static class HlslKnownTypes
-        {
-            private static readonly Dictionary<string, string> knownTypes = new Dictionary<string, string>()
-            {
-                { typeof(void).FullName, "void" },
-                { typeof(bool).FullName, "bool" },
-                { typeof(uint).FullName, "uint" },
-                { typeof(int).FullName, "int" },
-                { typeof(double).FullName, "double" },
-                { typeof(float).FullName, "float" },
-                { typeof(Vector2).FullName, "float2" },
-                { typeof(Vector3).FullName, "float3" },
-                { typeof(Vector4).FullName, "float4" },
-                { typeof(Matrix4x4).FullName, "float4x4" },
-                { typeof(ThreadIds).FullName, "uint3" },
-                { typeof(RWBufferResource<>).FullName, "RWBuffer" },
-            };
-
-            public static bool ContainsKey(Type type)
-            {
-                type = type.GetElementOrDeclaredType();
-                string typeFullName = type.Namespace + Type.Delimiter + type.Name;
-
-                return knownTypes.ContainsKey(typeFullName);
-            }
-
-            public static bool ContainsKey(string name)
-            {
-                int indexOfOpenBracket = name.IndexOf('<');
-                name = indexOfOpenBracket >= 0 ? name.Remove(indexOfOpenBracket) + "`1" : name;
-
-                return knownTypes.ContainsKey(name);
-            }
-
-            public static string GetMappedName(Type type)
-            {
-                type = type.GetElementOrDeclaredType();
-                string typeFullName = type.Namespace + Type.Delimiter + type.Name;
-
-                string mappedName = knownTypes.TryGetValue(typeFullName, out string mapped) ? mapped : type.Name;
-
-                return type.IsGenericType ? mappedName + $"<{GetMappedName(type.GetGenericArguments()[0])}>" : mappedName;
-            }
-
-            public static string GetMappedName(string name)
-            {
-                int indexOfOpenBracket = name.IndexOf('<');
-
-                string genericArguments = indexOfOpenBracket >= 0 ? name.Substring(indexOfOpenBracket) : "";
-                name = indexOfOpenBracket >= 0 ? name.Remove(indexOfOpenBracket) + "`1" : name;
-
-                string mappedName = knownTypes.TryGetValue(name, out string mapped) ? mapped : Regex.Match(name, @"[^\.]+$").Value;
-
-                return mappedName + genericArguments;
-            }
         }
 
         internal static class HlslKnownMethods
