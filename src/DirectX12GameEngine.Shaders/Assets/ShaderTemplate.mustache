@@ -20,6 +20,4 @@ cbuffer {{FieldName}}Buffer : register(b{{ConstantBufferIndex}})
 [Shader("compute")]
 [NumThreads({{ThreadsX}}, {{ThreadsY}}, {{ThreadsZ}})]
 void CSMain(uint3 {{ThreadsIdsVariableName}} : SV_DispatchThreadId)
-{
 {{ShaderBody}}
-}

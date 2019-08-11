@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using DirectX12GameEngine.Shaders.Mappings;
 using DirectX12GameEngine.Shaders.Primitives;
 using DirectX12GameEngine.Shaders.Renderer.Models.Abstract;
 using DirectX12GameEngine.Shaders.Renderer.Models.Fields;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace DirectX12GameEngine.Shaders
 {
@@ -55,6 +58,16 @@ namespace DirectX12GameEngine.Shaders
         public IReadOnlyList<FieldInfoBase> FieldsInfo => _FieldsInfo;
 
         /// <summary>
+        /// Gets the name of the <see cref="ThreadIds"/> variable used as input for the shader method
+        /// </summary>
+        public string ThreadIdsIdentifierName { get; private set; }
+
+        /// <summary>
+        /// Gets the generated source code for the method in the current shader
+        /// </summary>
+        public string MethodBody { get; private set; }
+
+        /// <summary>
         /// Loads and processes an input <see cref="Action{T}"/>
         /// </summary>
         /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
@@ -65,6 +78,7 @@ namespace DirectX12GameEngine.Shaders
             ShaderLoader @this = new ShaderLoader(action);
 
             @this.LoadFieldsInfo();
+            @this.LoadMethodSource();
 
             return @this;
         }
@@ -100,6 +114,27 @@ namespace DirectX12GameEngine.Shaders
 
                 _FieldsInfo.Add(processedFieldInfo);
             }
+        }
+
+        /// <summary>
+        /// Loads the entry method for the current shader being loaded
+        /// </summary>
+        private void LoadMethodSource()
+        {
+            // Decompile the shader method
+            MethodDecompiler.Instance.GetSyntaxTree(Action.Method, out SyntaxNode root, out SemanticModel semanticModel);
+
+            // Rewrite the shader method (eg. to fix the type declarations)
+            ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel, true);
+            root = syntaxRewriter.Visit(root);
+
+            // Get the thread ids identifier name and shader method body
+            ConstructorDeclarationSyntax methodNode = root.ChildNodes().OfType<ConstructorDeclarationSyntax>().First();
+            ThreadIdsIdentifierName = methodNode.ParameterList.Parameters.First().Identifier.Text;
+            MethodBody = methodNode.Body.ToFullString();
+
+            // Additional preprocessing
+            MethodBody = Regex.Replace(MethodBody, @"\d+[fFdD]", m => m.Value.Replace("f", ""));
         }
     }
 }
