@@ -16,5 +16,16 @@ namespace DirectX12GameEngine.Shaders.Renderer.Models.Fields
         /// Gets the index of the current constant buffer field
         /// </summary>
         public int ConstantBufferIndex { get; set; }
+
+        /// <summary>
+        /// Creates a new <see cref="ConstantBufferFieldInfo"/> instance with the specified parameters
+        /// </summary>
+        /// <param name="fieldType">The type of the current field</param>
+        /// <param name="fieldName">The name of the current field</param>
+        /// <param name="bufferIndex">The index of the current constant buffer field</param>
+        public ConstantBufferFieldInfo(string fieldType, string fieldName, int bufferIndex) : base(fieldType, fieldName)
+        {
+            ConstantBufferIndex = bufferIndex;
+        }
     }
 }
