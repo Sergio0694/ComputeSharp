@@ -589,13 +589,7 @@ namespace DirectX12GameEngine.Shaders
         {
             public int ConstantBuffer { get; set; }
 
-            public int Sampler { get; set; }
-
-            public int Texture { get; set; }
-
             public int UnorderedAccessView { get; set; }
-
-            public int StaticResource { get; set; }
         }
 
         private class ShaderTypeDefinition
@@ -609,49 +603,6 @@ namespace DirectX12GameEngine.Shaders
             public object? Instance { get; }
 
             public Type Type { get; }
-
-            public List<ResourceDefinition> ResourceDefinitions { get; } = new List<ResourceDefinition>();
-        }
-
-        private class ResourceDefinition
-        {
-            public ResourceDefinition(Type memberType)
-            {
-                MemberType = memberType;
-            }
-
-            public Type MemberType { get; }
-        }
-
-        private class FakeMemberInfo : MemberInfo
-        {
-            public FakeMemberInfo(string name)
-            {
-                Name = name;
-            }
-
-            public override Type DeclaringType => throw new NotImplementedException();
-
-            public override MemberTypes MemberType => MemberTypes.Field;
-
-            public override string Name { get; }
-
-            public override Type ReflectedType => throw new NotImplementedException();
-
-            public override object[] GetCustomAttributes(bool inherit)
-            {
-                return Array.Empty<object>();
-            }
-
-            public override object[] GetCustomAttributes(Type attributeType, bool inherit)
-            {
-                return Array.Empty<object>();
-            }
-
-            public override bool IsDefined(Type attributeType, bool inherit)
-            {
-                return false;
-            }
         }
     }
 }
