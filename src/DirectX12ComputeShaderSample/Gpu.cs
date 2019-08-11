@@ -2,7 +2,7 @@
 using System.Linq;
 using DirectX12GameEngine.Graphics;
 using DirectX12GameEngine.Shaders;
-using DirectX12GameEngine.Shaders.Numerics;
+using DirectX12GameEngine.Shaders.Primitives;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D12;
 using CommandList = DirectX12GameEngine.Graphics.CommandList;

@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
 using DirectX12GameEngine.Graphics.Buffers.Abstract;
-using DirectX12GameEngine.Shaders.Numerics;
+using DirectX12GameEngine.Shaders.Primitives;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
 using ICSharpCode.Decompiler.Metadata;

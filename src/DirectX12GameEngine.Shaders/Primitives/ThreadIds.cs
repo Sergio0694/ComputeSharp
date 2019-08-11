@@ -1,4 +1,4 @@
-﻿namespace DirectX12GameEngine.Shaders.Numerics
+﻿namespace DirectX12GameEngine.Shaders.Primitives
 {
     /// <summary>
     /// A <see langword="struct"/> that indicates the ids of a given GPU thread running a compute shader
