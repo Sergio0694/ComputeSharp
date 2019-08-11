@@ -127,7 +127,8 @@ namespace DirectX12GameEngine.Shaders
                     GraphicsResource resource = (GraphicsResource)fieldType.GetProperty(nameof(RWBufferResource<byte>.Buffer)).GetValue(readWriteBuffer);
                     readWriteBuffers.Add(resource);
 
-                    processedFieldInfo = new ReadWriteBufferFieldInfo(fieldType.Name, fieldName, readWriteBuffersCount++);
+                    string typeName = HlslKnownTypes.GetMappedName(fieldType);
+                    processedFieldInfo = new ReadWriteBufferFieldInfo(typeName, fieldName, readWriteBuffersCount++);
                 }
                 else if (HlslKnownTypes.IsKnownScalarType(fieldType))
                 {
