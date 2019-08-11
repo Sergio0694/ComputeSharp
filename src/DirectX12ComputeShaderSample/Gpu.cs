@@ -7,6 +7,7 @@ using SharpDX.D3DCompiler;
 using SharpDX.Direct3D12;
 using CommandList = DirectX12GameEngine.Graphics.CommandList;
 using PipelineState = DirectX12GameEngine.Graphics.PipelineState;
+using ShaderBytecode = SharpDX.Direct3D12.ShaderBytecode;
 
 namespace DirectX12ComputeShaderSample
 {
@@ -25,7 +26,7 @@ namespace DirectX12ComputeShaderSample
             ShaderGenerator shaderGenerator = new ShaderGenerator(shader);
             ShaderGenerationResult result = shaderGenerator.GenerateShaderForLambda();
 
-            byte[] shaderBytecode = ShaderCompiler.CompileShader(result.ShaderSource, ShaderVersion.ComputeShader, result.ComputeShader);
+            ShaderBytecode shaderBytecode = ShaderCompiler.Instance.CompileShader(result.ShaderSource);
 
             // Create the root signature for the pipeline and the pipeline state
             RootSignatureDescription rootSignatureDescription = new RootSignatureDescription(RootSignatureFlags.None, shaderGenerator.RootParameters);

@@ -99,7 +99,7 @@ namespace DirectX12GameEngine.Shaders
             stringWriter.GetStringBuilder().TrimEnd();
             writer.WriteLine();
 
-            result = new ShaderGenerationResult(stringWriter.ToString(), "Foo"); /* action.Method.Name */
+            result = new ShaderGenerationResult(stringWriter.ToString(), "CSMain"); /* action.Method.Name */
 
             return result;
         }
@@ -330,7 +330,7 @@ namespace DirectX12GameEngine.Shaders
             root = syntaxRewriter.Visit(root);
 
             string shaderSource = root.ToFullString();
-            shaderSource = shaderSource.Replace("internal void <Main>b__0", "void Foo");
+            shaderSource = shaderSource.Replace("internal void <Main>b__0", "void CSMain");
             shaderSource = shaderSource.Replace("uint3 id", "uint3 id : SV_DispatchThreadId");
 
             // TODO: See why the System namespace in System.Math is not present in UWP projects.
