@@ -321,7 +321,6 @@ namespace DirectX12GameEngine.Shaders
             int arrayCount = memberType.IsArray ? 2 : 0;
             writer.Write(GetArrayString(arrayCount));
 
-            writer.Write(GetHlslSemantic(memberInfo.GetCustomAttribute<ShaderSemanticAttribute>()));
             writer.WriteLine(";");
             writer.WriteLine();
         }
@@ -363,7 +362,6 @@ namespace DirectX12GameEngine.Shaders
             int arrayCount = memberType.IsArray ? 2 : 0;
 
             writer.Write($"cbuffer {memberInfo.Name}Buffer");
-            writer.Write(GetHlslSemantic(memberInfo.GetCustomAttribute<ShaderSemanticAttribute>()));
             writer.WriteLine($" : register(b{binding})");
             writer.WriteLine("{");
             writer.Indent++;
@@ -395,7 +393,6 @@ namespace DirectX12GameEngine.Shaders
             }
 
             writer.Write($"static {HlslKnownTypes.GetMappedName(memberType)} {memberInfo.Name}");
-            writer.Write(GetHlslSemantic(memberInfo.GetCustomAttribute<ShaderSemanticAttribute>()));
 
             if (generatedMemberInfos.Count != 0)
             {
@@ -415,24 +412,6 @@ namespace DirectX12GameEngine.Shaders
         }
 
         private static string GetArrayString(int arrayCount) => arrayCount > 0 ? $"[{arrayCount}]" : "";
-
-        private static string GetHlslSemantic(ShaderSemanticAttribute? semanticAttribute)
-        {
-            if (semanticAttribute is null) return "";
-
-            Type semanticType = semanticAttribute.GetType();
-
-            if (HlslKnownSemantics.ContainsKey(semanticType))
-            {
-                string semanticName = HlslKnownSemantics.GetMappedName(semanticType);
-
-                return semanticAttribute is ShaderSemanticWithIndexAttribute semanticAttributeWithIndex
-                    ? " : " + semanticName + semanticAttributeWithIndex.Index
-                    : " : " + semanticName;
-            }
-
-            throw new NotSupportedException();
-        }
 
         private void CollectTopLevelMethod(MethodInfo methodInfo)
         {
@@ -468,7 +447,7 @@ namespace DirectX12GameEngine.Shaders
         {
             GetSyntaxTree(methodInfo, out SyntaxNode root, out SemanticModel semanticModel);
 
-            ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(this, semanticModel, true, depth);
+            ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel, true, depth);
             root = syntaxRewriter.Visit(root);
 
             string shaderSource = root.ToFullString();
@@ -570,58 +549,6 @@ namespace DirectX12GameEngine.Shaders
             decompilerSettings.CSharpFormattingOptions.IndentationString = IndentedTextWriter.DefaultTabString;
 
             return new CSharpDecompiler(assemblyPath, resolver, decompilerSettings);
-        }
-
-        internal static class HlslKnownAttributes
-        {
-            private static readonly HashSet<string> allowedAttributes = new HashSet<string>()
-            {
-                typeof(NumThreadsAttribute).FullName
-            };
-
-            public static bool Contains(string name)
-            {
-                return HlslKnownSemantics.ContainsKey(name) || allowedAttributes.Contains(name);
-            }
-        }
-
-        internal static class HlslKnownSemantics
-        {
-            private static readonly Dictionary<string, string> knownSemantics = new Dictionary<string, string>()
-            {
-                { typeof(PositionSemanticAttribute).FullName, "Position" },
-                { typeof(NormalSemanticAttribute).FullName, "Normal" },
-                { typeof(TextureCoordinateSemanticAttribute).FullName, "TexCoord" },
-                { typeof(ColorSemanticAttribute).FullName, "Color" },
-                { typeof(TangentSemanticAttribute).FullName, "Tangent" },
-
-                { typeof(SystemTargetSemanticAttribute).FullName, "SV_Target" },
-                { typeof(SystemDispatchThreadIdSemanticAttribute).FullName, "SV_DispatchThreadId" },
-                { typeof(SystemIsFrontFaceSemanticAttribute).FullName, "SV_IsFrontFace" },
-                { typeof(SystemInstanceIdSemanticAttribute).FullName, "SV_InstanceId" },
-                { typeof(SystemPositionSemanticAttribute).FullName, "SV_Position" },
-                { typeof(SystemRenderTargetArrayIndexSemanticAttribute).FullName, "SV_RenderTargetArrayIndex" }
-            };
-
-            public static bool ContainsKey(Type type)
-            {
-                return knownSemantics.ContainsKey(type.GetElementOrDeclaredType().FullName);
-            }
-
-            public static bool ContainsKey(string name)
-            {
-                return knownSemantics.ContainsKey(name);
-            }
-
-            public static string GetMappedName(Type type)
-            {
-                return knownSemantics[type.GetElementOrDeclaredType().FullName];
-            }
-
-            public static string GetMappedName(string name)
-            {
-                return knownSemantics[name];
-            }
         }
 
         internal static class HlslKnownTypes
