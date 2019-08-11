@@ -500,15 +500,9 @@ namespace DirectX12GameEngine.Shaders
                 { "System.Math.PI", "3.1415926535897931" },
                 { "System.MathF.PI", "3.14159274f" },
 
-                { "DirectX12GameEngine.Shaders.Numerics.Vector2.Length", "length" },
-
-                { "DirectX12GameEngine.Shaders.Numerics.UInt2.X", ".x" },
-                { "DirectX12GameEngine.Shaders.Numerics.UInt2.Y", ".y" },
-
-                { "DirectX12GameEngine.Shaders.Numerics.ThreadIds.X", ".x" },
-                { "DirectX12GameEngine.Shaders.Numerics.ThreadIds.Y", ".y" },
-                { "DirectX12GameEngine.Shaders.Numerics.ThreadIds.Z", ".z" },
-                { "DirectX12GameEngine.Shaders.Numerics.ThreadIds.XY", ".xy" },
+                { "DirectX12GameEngine.Shaders.Primitives.ThreadIds.X", ".x" },
+                { "DirectX12GameEngine.Shaders.Primitives.ThreadIds.Y", ".y" },
+                { "DirectX12GameEngine.Shaders.Primitives.ThreadIds.Z", ".z" },
 
                 { "System.Numerics.Vector3.X", ".x" },
                 { "System.Numerics.Vector3.Y", ".y" },
