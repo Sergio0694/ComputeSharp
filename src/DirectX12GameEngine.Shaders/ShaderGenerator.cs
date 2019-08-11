@@ -498,7 +498,6 @@ namespace DirectX12GameEngine.Shaders
                 { typeof(Vector2).FullName, "float2" },
                 { typeof(Vector3).FullName, "float3" },
                 { typeof(Vector4).FullName, "float4" },
-                { typeof(Numerics.Vector4).FullName, "float4" },
                 { typeof(Numerics.UInt2).FullName, "uint2" },
                 { typeof(Numerics.UInt3).FullName, "uint3" },
                 { typeof(Matrix4x4).FullName, "float4x4" },
