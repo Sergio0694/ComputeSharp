@@ -4,12 +4,14 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using DirectX12GameEngine.Graphics.Buffers.Abstract;
 using DirectX12GameEngine.Shaders.Mappings;
 using DirectX12GameEngine.Shaders.Primitives;
 using DirectX12GameEngine.Shaders.Renderer.Models.Abstract;
 using DirectX12GameEngine.Shaders.Renderer.Models.Fields;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using SharpDX.Direct3D12;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized
 
@@ -47,10 +49,20 @@ namespace DirectX12GameEngine.Shaders
         private ShaderLoader(Action<ThreadIds> action)
         {
             Action = action;
-            ShaderType = action.Method.DeclaringType ?? throw new InvalidOperationException("Invalid closure type");
+            ShaderType = action.Method.DeclaringType;
             ShaderInstance = action.Target;
             ShaderFields = ShaderType.GetFields().ToArray();
         }
+
+        /// <summary>
+        /// Gets the <see cref="RootParameter"/> array for the current shader
+        /// </summary>
+        public RootParameter[] RootParameters { get; private set; }
+
+        /// <summary>
+        /// Gets the ordered collection of read write buffers used as fields in the current shader
+        /// </summary>
+        public IReadOnlyList<GraphicsResource> ReadWriteBuffers { get; private set; }
 
         private readonly List<FieldInfoBase> _FieldsInfo = new List<FieldInfoBase>();
 
@@ -92,6 +104,8 @@ namespace DirectX12GameEngine.Shaders
         {
             if (FieldsInfo.Count > 0) throw new InvalidOperationException("Shader fields already loaded");
 
+            List<DescriptorRange> descriptorRanges = new List<DescriptorRange>();
+            List<GraphicsResource> readWriteBuffers = new List<GraphicsResource>();
             int readWriteBuffersCount = 0;
 
             foreach (FieldInfo fieldInfo in ShaderFields)
@@ -104,6 +118,15 @@ namespace DirectX12GameEngine.Shaders
                 // Read write buffer
                 if (HlslKnownTypes.IsReadWriteBufferType(fieldType))
                 {
+                    // Root parameter for a read write buffer
+                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.UnorderedAccessView, 1, readWriteBuffersCount);
+                    descriptorRanges.Add(range);
+
+                    // Reference to the underlying buffer
+                    object readWriteBuffer = fieldInfo.GetValue(ShaderInstance);
+                    GraphicsResource resource = (GraphicsResource)fieldType.GetProperty(nameof(RWBufferResource<byte>.Buffer)).GetValue(readWriteBuffer);
+                    readWriteBuffers.Add(resource);
+
                     processedFieldInfo = new ReadWriteBufferFieldInfo(fieldType.Name, fieldName, readWriteBuffersCount++);
                 }
                 else if (HlslKnownTypes.IsKnownScalarType(fieldType))
@@ -116,6 +139,9 @@ namespace DirectX12GameEngine.Shaders
 
                 _FieldsInfo.Add(processedFieldInfo);
             }
+
+            RootParameters = descriptorRanges.Select(range => new RootParameter(ShaderVisibility.All, range)).ToArray();
+            ReadWriteBuffers = readWriteBuffers;
         }
 
         /// <summary>
