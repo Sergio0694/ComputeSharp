@@ -37,7 +37,7 @@ namespace DirectX12ComputeShaderSample
 
             // Create graphics device and pipeline state
 
-            using GraphicsDevice device = new GraphicsDevice(SharpDX.Direct3D.FeatureLevel.Level_12_1, true);
+            using GraphicsDevice device = new GraphicsDevice(true);
 
             SharpDX.Direct3D12.RootParameter[] rootParameters = new SharpDX.Direct3D12.RootParameter[]
             {

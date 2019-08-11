@@ -8,18 +8,12 @@ namespace DirectX12GameEngine.Graphics
     public sealed class GraphicsDevice : IDisposable
     {
         private readonly AutoResetEvent fenceEvent = new AutoResetEvent(false);
-        private SharpDX.Direct3D11.Device? nativeDirect3D11Device;
 
-        public GraphicsDevice(FeatureLevel minFeatureLevel = FeatureLevel.Level_11_0, bool enableDebugLayer = false)
+        public GraphicsDevice(bool enableDebugLayer = false)
         {
 #if DEBUG
-            if (enableDebugLayer)
-            {
-                DebugInterface.Get().EnableDebugLayer();
-            }
+            if (enableDebugLayer) DebugInterface.Get().EnableDebugLayer();
 #endif
-            FeatureLevel = minFeatureLevel < FeatureLevel.Level_11_0 ? FeatureLevel.Level_11_0 : minFeatureLevel;
-
             NativeDevice = new Device(null, FeatureLevel);
 
             NativeComputeCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(SharpDX.Direct3D12.CommandListType.Compute));
@@ -50,12 +44,9 @@ namespace DirectX12GameEngine.Graphics
 
         public CommandList CopyCommandList { get; }
 
-        public FeatureLevel FeatureLevel { get; }
+        public const FeatureLevel FeatureLevel = SharpDX.Direct3D.FeatureLevel.Level_12_1;
 
         internal Device NativeDevice { get; }
-
-        internal SharpDX.Direct3D11.Device NativeDirect3D11Device => NativeDirect3D11Device ?? (nativeDirect3D11Device = SharpDX.Direct3D11.Device.CreateFromDirect3D12(
-                NativeDevice, SharpDX.Direct3D11.DeviceCreationFlags.BgraSupport, null, null, NativeDirectCommandQueue));
 
         internal DescriptorAllocator DepthStencilViewAllocator { get; set; }
 
@@ -118,8 +109,6 @@ namespace DirectX12GameEngine.Graphics
             NativeComputeFence.Dispose();
             NativeDirectFence.Dispose();
             NativeDirectFence.Dispose();
-
-            nativeDirect3D11Device?.Dispose();
 
             NativeDevice.Dispose();
         }

@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Numerics;
-using SharpDX.Direct3D;
 using SharpDX.Direct3D12;
-using SharpDX.Mathematics.Interop;
 
 namespace DirectX12GameEngine.Graphics
 {
     public sealed class CommandList : IDisposable
     {
-        private const int MaxRenderTargetCount = 8;
-        private const int MaxViewportAndScissorRectangleCount = 16;
-
         private readonly CompiledCommandList currentCommandList;
 
         public CommandList(GraphicsDevice device, CommandListType commandListType)
@@ -29,24 +23,6 @@ namespace DirectX12GameEngine.Graphics
         public CommandListType CommandListType { get; }
 
         public GraphicsDevice GraphicsDevice { get; }
-
-        public RawRectangle[] ScissorRectangles { get; private set; } = Array.Empty<RawRectangle>();
-
-        public RawViewportF[] Viewports { get; private set; } = Array.Empty<RawViewportF>();
-
-        public PrimitiveTopology PrimitiveTopology { set => currentCommandList.NativeCommandList.PrimitiveTopology = value; }
-
-        public void BeginRenderPass(int numRenderTargets, RenderPassRenderTargetDescription[] renderTargetsRef, RenderPassDepthStencilDescription? depthStencilRef, RenderPassFlags flags)
-        {
-            using GraphicsCommandList4 commandList = currentCommandList.NativeCommandList.QueryInterface<GraphicsCommandList4>();
-            commandList.BeginRenderPass(numRenderTargets, renderTargetsRef, depthStencilRef, flags);
-        }
-
-        public void EndRenderPass()
-        {
-            using GraphicsCommandList4 commandList = currentCommandList.NativeCommandList.QueryInterface<GraphicsCommandList4>();
-            commandList.EndRenderPass();
-        }
 
         public CompiledCommandList Close()
         {
@@ -68,11 +44,6 @@ namespace DirectX12GameEngine.Graphics
         public void CopyResource(GraphicsResource source, GraphicsResource destination)
         {
             currentCommandList.NativeCommandList.CopyResource(destination.NativeResource, source.NativeResource);
-        }
-
-        public void CopyTextureRegion(TextureCopyLocation source, TextureCopyLocation destination)
-        {
-            currentCommandList.NativeCommandList.CopyTextureRegion(destination, 0, 0, 0, source, null);
         }
 
         public void Dispatch(int threadGroupCountX, int threadGroupCountY, int threadGroupCountZ)
@@ -101,24 +72,6 @@ namespace DirectX12GameEngine.Graphics
             }
 
             currentCommandList.NativeCommandList.Dispose();
-        }
-
-        public void DrawIndexedInstanced(int indexCountPerInstance, int instanceCount, int startIndexLocation = 0, int baseVertexLocation = 0, int startInstanceLocation = 0)
-        {
-            currentCommandList.NativeCommandList.DrawIndexedInstanced(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
-        }
-
-        public void DrawInstanced(int vertexCountPerInstance, int instanceCount, int startVertexLocation = 0, int startInstanceLocation = 0)
-        {
-            currentCommandList.NativeCommandList.DrawInstanced(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
-        }
-
-        public void ExecuteBundle(CompiledCommandList commandList)
-        {
-            if (currentCommandList != commandList && commandList.Builder.CommandListType == CommandListType.Bundle)
-            {
-                currentCommandList.NativeCommandList.ExecuteBundle(commandList.NativeCommandList);
-            }
         }
 
         public void Flush(bool wait = false)
@@ -194,55 +147,11 @@ namespace DirectX12GameEngine.Graphics
             currentCommandList.NativeCommandList.SetComputeRootUnorderedAccessView(rootParameterIndex, resource.NativeResource.GPUVirtualAddress);
         }
 
-        public void SetIndexBuffer(IndexBufferView? indexBufferView)
-        {
-            currentCommandList.NativeCommandList.SetIndexBuffer(indexBufferView);
-        }
-
         public void SetPipelineState(PipelineState pipelineState)
         {
             SetComputeRootSignature(pipelineState.RootSignature);
 
             currentCommandList.NativeCommandList.PipelineState = pipelineState.NativePipelineState;
-        }
-
-        public void SetScissorRectangles(params RawRectangle[] scissorRectangles)
-        {
-            if (scissorRectangles.Length > MaxViewportAndScissorRectangleCount)
-            {
-                throw new ArgumentOutOfRangeException(nameof(scissorRectangles), scissorRectangles.Length, $"The maximum number of scissor rectangles is {MaxViewportAndScissorRectangleCount}.");
-            }
-
-            if (ScissorRectangles.Length != scissorRectangles.Length)
-            {
-                ScissorRectangles = new RawRectangle[scissorRectangles.Length];
-            }
-
-            scissorRectangles.CopyTo(ScissorRectangles, 0);
-
-            currentCommandList.NativeCommandList.SetScissorRectangles(scissorRectangles);
-        }
-
-        public void SetVertexBuffers(int startSlot, params VertexBufferView[] vertexBufferViews)
-        {
-            currentCommandList.NativeCommandList.SetVertexBuffers(startSlot, vertexBufferViews);
-        }
-
-        public void SetViewports(params RawViewportF[] viewports)
-        {
-            if (viewports.Length > MaxViewportAndScissorRectangleCount)
-            {
-                throw new ArgumentOutOfRangeException(nameof(viewports), viewports.Length, $"The maximum number of viewporst is {MaxViewportAndScissorRectangleCount}.");
-            }
-
-            if (Viewports.Length != viewports.Length)
-            {
-                Viewports = new RawViewportF[viewports.Length];
-            }
-
-            viewports.CopyTo(Viewports, 0);
-
-            currentCommandList.NativeCommandList.SetViewports(viewports);
         }
 
         private CommandAllocator GetCommandAllocator() => CommandListType switch
