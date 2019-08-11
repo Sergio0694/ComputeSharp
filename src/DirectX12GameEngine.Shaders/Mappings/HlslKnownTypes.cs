@@ -18,10 +18,10 @@ namespace DirectX12GameEngine.Shaders.Mappings
         private static readonly IReadOnlyDictionary<string, string> KnownTypes = new Dictionary<string, string>
         {
             [typeof(bool).FullName] = "bool",
-            [typeof(uint).FullName] = "uint",
             [typeof(int).FullName] = "int",
-            [typeof(double).FullName] = "double",
+            [typeof(uint).FullName] = "uint",
             [typeof(float).FullName] = "float",
+            [typeof(double).FullName] = "double",
             [typeof(Vector2).FullName] = "float2",
             [typeof(Vector3).FullName] = "float3",
             [typeof(Vector4).FullName] = "float4",
@@ -31,10 +31,42 @@ namespace DirectX12GameEngine.Shaders.Mappings
         };
 
         /// <summary>
+        /// Checks whether or not the input type is a known scalar type
+        /// </summary>
+        /// <param name="type">The input <see cref="Type"/> instance to check</param>
+        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a known HLSL scalar type</returns>
+        [Pure]
+        public static bool IsKnownScalarType(Type type) => type == typeof(bool) ||
+                                                           type == typeof(int) ||
+                                                           type == typeof(uint) ||
+                                                           type == typeof(float) ||
+                                                           type == typeof(double);
+
+        /// <summary>
+        /// Checks whether or not the input type is a known vector type
+        /// </summary>
+        /// <param name="type">The input <see cref="Type"/> instance to check</param>
+        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a known HLSL vector type</returns>
+        [Pure]
+        public static bool IsKnownVectorType(Type type) => type == typeof(Vector2) ||
+                                                           type == typeof(Vector3) ||
+                                                           type == typeof(Vector4) ||
+                                                           type == typeof(Matrix4x4);
+
+        /// <summary>
+        /// Checks whether or not the input type is a <see cref="RWBufferResource{T}"/> value
+        /// </summary>
+        /// <param name="type">The input <see cref="Type"/> instance to check</param>
+        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a <see cref="RWBufferResource{T}"/> instance</returns>
+        [Pure]
+        public static bool IsReadWriteBufferType(Type type) => type.IsGenericType &&
+                                                               type.GetGenericTypeDefinition() == typeof(RWBufferResource<>);
+
+        /// <summary>
         /// Checks whether or not a given <see cref="Type"/> is an HLSL known type
         /// </summary>
         /// <param name="type">The input <see cref="Type"/> instance to check</param>
-        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact an HLSL known type</returns>
+        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a known HLSL type</returns>
         [Pure]
         public static bool IsKnownType(Type type)
         {
