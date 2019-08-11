@@ -42,11 +42,6 @@ namespace DirectX12GameEngine.Shaders
             }
         }
 
-        public static byte[] CompileShaderLegacy(string shaderSource, ShaderVersion? version = null, string? entryPoint = null)
-        {
-            return ShaderBytecode.Compile(shaderSource, entryPoint ?? GetDefaultEntryPoint(version), $"{GetShaderProfile(version)}_5_1", ShaderFlags.PackMatrixRowMajor);
-        }
-
         public static unsafe byte[] GetBytesFromBlob(IDxcBlob blob)
         {
             byte* pMem = (byte*)blob.GetBufferPointer();

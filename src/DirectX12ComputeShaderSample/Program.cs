@@ -32,7 +32,7 @@ namespace DirectX12ComputeShaderSample
 
             // Variables for closure
             uint Width = (uint)width;
-            var data = new RWBufferResource<float>();
+            var data = gpuBuffer.GetGpuResource();
 
             // Shader body
             Action<UInt3> action = id =>
