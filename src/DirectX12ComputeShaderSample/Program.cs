@@ -28,16 +28,15 @@ namespace DirectX12ComputeShaderSample
             }
 
             using Buffer<float> gpuBuffer = Buffer.UnorderedAccess.New(device, array.AsSpan());
-            using Buffer<uint> widthBuffer = Buffer.Constant.New(device, (uint)width);
 
             // Variables for closure
-            uint Width = (uint)width;
+            uint size = (uint)width;
             var data = gpuBuffer.GetGpuResource();
 
             // Shader body
             Action<UInt3> action = id =>
             {
-                data[id.X + id.Y * Width] *= 2;
+                data[id.X + id.Y * size] *= 2;
             };
 
             // Generate computer shader
@@ -50,7 +49,6 @@ namespace DirectX12ComputeShaderSample
 
             RootParameter[] rootParameters =
             {
-                new RootParameter(ShaderVisibility.All, new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, 0)),
                 new RootParameter(ShaderVisibility.All, new DescriptorRange(DescriptorRangeType.UnorderedAccessView, 1, 0))
             };
 
@@ -67,8 +65,7 @@ namespace DirectX12ComputeShaderSample
             {
                 commandList.SetPipelineState(pipelineState);
 
-                commandList.SetComputeRootDescriptorTable(0, widthBuffer);
-                commandList.SetComputeRootDescriptorTable(1, gpuBuffer);
+                commandList.SetComputeRootDescriptorTable(0, gpuBuffer);
 
                 commandList.Dispatch(2, 2, 1);
                 commandList.Flush(true);

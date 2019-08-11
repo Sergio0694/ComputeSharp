@@ -125,7 +125,8 @@ namespace DirectX12GameEngine.Shaders
 
                 if (memberType.IsGenericType && memberType.GetGenericTypeDefinition() == typeof(RWBufferResource<>))
                     WriteUnorderedAccessView(fieldInfo, memberType, bindingTracker.UnorderedAccessView++);
-                else WriteConstantBuffer(fieldInfo, memberType, bindingTracker.ConstantBuffer++);
+                //else WriteConstantBuffer(fieldInfo, memberType, bindingTracker.ConstantBuffer++);
+                else WriteStaticVariable(fieldInfo, memberType, fieldInfo.GetValue(shaderInstance));
             }
 
             // Write the actual shader body
@@ -331,6 +332,13 @@ namespace DirectX12GameEngine.Shaders
                 default:
                     throw new NotSupportedException("This shader resource type is not supported.");
             }
+        }
+
+        private void WriteStaticVariable(MemberInfo memberInfo, Type memberType, object value)
+        {
+            writer.Write($"static {HlslKnownTypes.GetMappedName(memberType)} {memberInfo.Name}");
+            writer.Write($" = {value};");
+            writer.WriteLine();
         }
 
         private void WriteConstantBuffer(MemberInfo memberInfo, Type memberType, int binding)
