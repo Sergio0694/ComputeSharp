@@ -7,12 +7,14 @@ using System.Numerics;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
+using DirectX12GameEngine.Graphics.Buffers.Abstract;
 using DirectX12GameEngine.Shaders.Numerics;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
 using ICSharpCode.Decompiler.Metadata;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using SharpDX.Direct3D12;
 using Vector2 = System.Numerics.Vector2;
 using Vector4 = System.Numerics.Vector4;
 
@@ -92,6 +94,10 @@ namespace DirectX12GameEngine.Shaders
             CollectStructure(type, null);
         }
 
+        public RootParameter[] RootParameters { get; private set; }
+
+        public IReadOnlyList<GraphicsResource> ReadWriteBuffers { get; private set; }
+
         public ShaderGenerationResult GenerateShaderForLambda()
         {
             if (result != null) return result;
@@ -119,15 +125,26 @@ namespace DirectX12GameEngine.Shaders
             }
 
             // Write the fields, assuming that all buffers are unordered access views, and the other fields are constant buffers
+            var parameters = new List<DescriptorRange>();
+            var rwbuffers = new List<GraphicsResource>();
             foreach (FieldInfo fieldInfo in fields)
             {
                 Type? memberType = fieldInfo.FieldType;
 
                 if (memberType.IsGenericType && memberType.GetGenericTypeDefinition() == typeof(RWBufferResource<>))
+                {
+                    var range = new DescriptorRange(DescriptorRangeType.UnorderedAccessView, 1, bindingTracker.UnorderedAccessView);
+                    parameters.Add(range);
+                    var buffer = fieldInfo.GetValue(shaderInstance);
+                    var resource = (GraphicsResource)memberType.GetProperty(nameof(RWBufferResource<byte>.Buffer)).GetValue(buffer);
+                    rwbuffers.Add(resource);
                     WriteUnorderedAccessView(fieldInfo, memberType, bindingTracker.UnorderedAccessView++);
+                }
                 //else WriteConstantBuffer(fieldInfo, memberType, bindingTracker.ConstantBuffer++);
                 else WriteStaticVariable(fieldInfo, memberType, fieldInfo.GetValue(shaderInstance));
             }
+            RootParameters = parameters.Select(range => new RootParameter(ShaderVisibility.All, range)).ToArray();
+            ReadWriteBuffers = rwbuffers;
 
             // Write the actual shader body
             writer.WriteLine("[Shader(\"compute\")]");
