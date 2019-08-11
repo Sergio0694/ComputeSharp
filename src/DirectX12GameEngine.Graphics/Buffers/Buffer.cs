@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using DirectX12GameEngine.Core;
+using DirectX12GameEngine.Core.Helpers;
 using DirectX12GameEngine.Graphics.Buffers.Abstract;
 using SharpDX.Direct3D12;
 
