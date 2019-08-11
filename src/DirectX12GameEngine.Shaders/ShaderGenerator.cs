@@ -186,17 +186,11 @@ namespace DirectX12GameEngine.Shaders
                 CollectStructure(interfaceType, obj);
             }
 
-            var memberInfos = type.GetMembersInOrder(bindingAttr);
-
-            if (!type.IsInterface)
-            {
-                memberInfos = memberInfos.Where(m => m.IsDefined(typeof(ShaderResourceAttribute)));
-            }
+            var memberInfos = new MemberInfo[0]; //type.GetMembersInOrder(bindingAttr);
 
             foreach (MemberInfo memberInfo in memberInfos)
             {
                 Type? memberType = memberInfo.GetMemberType(obj);
-                ShaderResourceAttribute? resourceType = memberInfo.GetResourceAttribute(memberType);
 
                 if (memberInfo is MethodInfo methodInfo)
                 {
@@ -208,11 +202,6 @@ namespace DirectX12GameEngine.Shaders
                 else if (memberType != null && memberType != type)
                 {
                     CollectStructure(memberType, memberInfo.GetMemberValue(obj));
-
-                    if (resourceType != null)
-                    {
-                        shaderTypeDefinition.ResourceDefinitions.Add(new ResourceDefinition(memberType, resourceType));
-                    }
                 }
             }
 
@@ -253,19 +242,13 @@ namespace DirectX12GameEngine.Shaders
             writer.WriteLine("{");
             writer.Indent++;
 
-            var fieldAndPropertyInfos = type.GetMembersInOrder(bindingAttr | BindingFlags.DeclaredOnly).Where(m => m is FieldInfo || m is PropertyInfo);
-            var methodInfos = type.GetMembersInTypeHierarchyInOrder(bindingAttr).Where(m => m is MethodInfo);
-            var memberInfos = fieldAndPropertyInfos.Concat(methodInfos);
+            //var fieldAndPropertyInfos = type.GetMembersInOrder(bindingAttr | BindingFlags.DeclaredOnly).Where(m => m is FieldInfo || m is PropertyInfo);
+            //var methodInfos = type.GetMembersInTypeHierarchyInOrder(bindingAttr).Where(m => m is MethodInfo);
+            //var memberInfos = fieldAndPropertyInfos.Concat(methodInfos);
 
-            if (!type.IsInterface && !type.IsEnum)
-            {
-                memberInfos = memberInfos.Where(m => m.IsDefined(typeof(ShaderResourceAttribute)));
-            }
-
-            foreach (MemberInfo memberInfo in memberInfos)
+            foreach (MemberInfo memberInfo in new MemberInfo[0])
             {
                 Type? memberType = memberInfo.GetMemberType(obj);
-                ShaderResourceAttribute? resourceType = memberInfo.GetResourceAttribute(memberType);
 
                 if (memberInfo is MethodInfo methodInfo)
                 {
@@ -274,7 +257,7 @@ namespace DirectX12GameEngine.Shaders
                         WriteMethod(methodInfo);
                     }
                 }
-                else if (memberType != null && resourceType != null)
+                else if (memberType != null)
                 {
                     if (type.IsEnum)
                     {
@@ -297,7 +280,7 @@ namespace DirectX12GameEngine.Shaders
 
             if (type.IsEnum) return;
 
-            foreach (MemberInfo memberInfo in memberInfos.Where(m => m.IsStatic()))
+            foreach (MemberInfo memberInfo in new MemberInfo[0].Where(m => m.IsStatic()))
             {
                 Type? memberType = memberInfo.GetMemberType(obj);
 
@@ -332,24 +315,6 @@ namespace DirectX12GameEngine.Shaders
             writer.WriteLine();
         }
 
-        private void WriteResource(MemberInfo memberInfo, Type memberType, ShaderResourceAttribute resourceType)
-        {
-            switch (resourceType)
-            {
-                case ConstantBufferResourceAttribute _:
-                    WriteConstantBuffer(memberInfo, memberType, bindingTracker.ConstantBuffer++);
-                    break;
-                case UnorderedAccessViewResourceAttribute _:
-                    WriteUnorderedAccessView(memberInfo, memberType, bindingTracker.UnorderedAccessView++);
-                    break;
-                case StaticResourceAttribute _:
-                    WriteStaticResource(memberInfo, memberType);
-                    break;
-                default:
-                    throw new NotSupportedException("This shader resource type is not supported.");
-            }
-        }
-
         private void WriteStaticVariable(MemberInfo memberInfo, Type memberType, object value)
         {
             writer.Write($"static {HlslKnownTypes.GetMappedName(memberType)} {memberInfo.Name}");
@@ -376,37 +341,6 @@ namespace DirectX12GameEngine.Shaders
             writer.Write($"{HlslKnownTypes.GetMappedName(memberType)} {memberInfo.Name}");
             writer.Write(" : SV_DispatchThreadId");
             writer.Write($" : register(u{binding})");
-            writer.WriteLine(";");
-            writer.WriteLine();
-        }
-
-        private void WriteStaticResource(MemberInfo memberInfo, Type memberType)
-        {
-            List<MemberInfo> generatedMemberInfos = new List<MemberInfo>();
-
-            foreach (ResourceDefinition resourceDefinition in collectedTypes.First(d => d.Type == memberType).ResourceDefinitions)
-            {
-                MemberInfo generatedMemberInfo = new FakeMemberInfo($"__Generated__{bindingTracker.StaticResource++}__");
-                generatedMemberInfos.Add(generatedMemberInfo);
-
-                WriteResource(generatedMemberInfo, resourceDefinition.MemberType, resourceDefinition.ResourceType);
-            }
-
-            writer.Write($"static {HlslKnownTypes.GetMappedName(memberType)} {memberInfo.Name}");
-
-            if (generatedMemberInfos.Count != 0)
-            {
-                writer.Write(" = { ");
-
-                foreach (MemberInfo generatedMemberInfo in generatedMemberInfos)
-                {
-                    writer.Write(generatedMemberInfo.Name);
-                    writer.Write(", ");
-                }
-
-                writer.Write("}");
-            }
-
             writer.WriteLine(";");
             writer.WriteLine();
         }
@@ -568,13 +502,7 @@ namespace DirectX12GameEngine.Shaders
                 { typeof(Numerics.UInt2).FullName, "uint2" },
                 { typeof(Numerics.UInt3).FullName, "uint3" },
                 { typeof(Matrix4x4).FullName, "float4x4" },
-                { typeof(SamplerResource).FullName, "SamplerState" },
-                { typeof(SamplerComparisonResource).FullName, "SamplerComparisonState" },
-                { typeof(Texture2DResource).FullName, "Texture2D" },
-                { typeof(Texture2DArrayResource).FullName, "Texture2DArray" },
-                { typeof(TextureCubeResource).FullName, "TextureCube" },
                 { typeof(RWBufferResource<>).FullName, "RWBuffer" },
-                { typeof(RWTexture2DResource<>).FullName, "RWTexture2D" },
             };
 
             public static bool ContainsKey(Type type)
@@ -751,15 +679,12 @@ namespace DirectX12GameEngine.Shaders
 
         private class ResourceDefinition
         {
-            public ResourceDefinition(Type memberType, ShaderResourceAttribute resourceType)
+            public ResourceDefinition(Type memberType)
             {
                 MemberType = memberType;
-                ResourceType = resourceType;
             }
 
             public Type MemberType { get; }
-
-            public ShaderResourceAttribute ResourceType { get; }
         }
 
         private class FakeMemberInfo : MemberInfo

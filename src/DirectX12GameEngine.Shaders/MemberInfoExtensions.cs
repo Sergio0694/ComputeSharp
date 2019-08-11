@@ -66,20 +66,6 @@ namespace DirectX12GameEngine.Shaders
             return type.GetMembers(bindingAttr).OrderByDescending(prop => lookup[prop.DeclaringType]);
         }
 
-        public static IEnumerable<MemberInfo> GetMembersInTypeHierarchyInOrder(this Type type, BindingFlags bindingAttr)
-        {
-            return type.GetMembersInTypeHierarchy(bindingAttr)
-                .GroupBy(m => m.DeclaringType)
-                .Select(g => g.OrderBy(m => m.GetCustomAttribute<ShaderResourceAttribute>()?.Order))
-                .SelectMany(m => m);
-        }
-
-        public static IEnumerable<MemberInfo> GetMembersInOrder(this Type type, BindingFlags bindingAttr)
-        {
-            return type.GetMembers(bindingAttr)
-                .OrderBy(m => m.GetCustomAttribute<ShaderResourceAttribute>()?.Order);
-        }
-
         public static object? GetMemberValue(this MemberInfo memberInfo, object? obj) => memberInfo switch
         {
             FieldInfo fieldInfo => obj is null ? null : fieldInfo.GetValue(obj),
@@ -100,17 +86,6 @@ namespace DirectX12GameEngine.Shaders
             PropertyInfo propertyInfo => propertyInfo.PropertyType,
             _ => null
         };
-
-        public static ShaderResourceAttribute? GetResourceAttribute(this MemberInfo memberInfo, Type? memberType)
-        {
-            ShaderResourceAttribute? resourceType = memberInfo.GetCustomAttribute<ShaderResourceAttribute>();
-
-            if (resourceType is null) return null;
-
-            return resourceType.Override
-                ? resourceType
-                : memberType?.GetCustomAttribute<ShaderResourceAttribute>() ?? resourceType;
-        }
 
         public static bool IsStatic(this MemberInfo memberInfo) => memberInfo switch
         {
