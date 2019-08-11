@@ -3,7 +3,8 @@ using System.Linq;
 using DirectX12GameEngine.Graphics;
 using DirectX12GameEngine.Shaders;
 using DirectX12GameEngine.Shaders.Primitives;
-using SharpDX.D3DCompiler;
+using DirectX12GameEngine.Shaders.Renderer;
+using DirectX12GameEngine.Shaders.Renderer.Models;
 using SharpDX.Direct3D12;
 using CommandList = DirectX12GameEngine.Graphics.CommandList;
 using PipelineState = DirectX12GameEngine.Graphics.PipelineState;
@@ -20,16 +21,28 @@ namespace DirectX12ComputeShaderSample
 
     public static class GraphicsDeviceExtensions
     {
-        public static void For(this GraphicsDevice device, int n, Action<ThreadIds> shader)
+        public static void For(this GraphicsDevice device, int n, Action<ThreadIds> action)
         {
-            // Generate the compute shadr
-            ShaderGenerator shaderGenerator = new ShaderGenerator(shader);
-            ShaderGenerationResult result = shaderGenerator.GenerateShaderForLambda();
+            // Load the input shader
+            ShaderLoader shaderLoader = ShaderLoader.Load(action);
 
-            ShaderBytecode shaderBytecode = ShaderCompiler.Instance.CompileShader(result.ShaderSource);
+            // Render the loaded shader
+            ShaderInfo shaderInfo = new ShaderInfo
+            {
+                FieldsList = shaderLoader.FieldsInfo,
+                ThreadsX = n,
+                ThreadsY = 1,
+                ThreadsZ = 1,
+                ThreadsIdsVariableName = shaderLoader.ThreadsIdsVariableName,
+                ShaderBody = shaderLoader.MethodBody
+            };
+            string shaderSource = ShaderRenderer.Instance.Render(shaderInfo);
+
+            // Compile the loaded shader to HLSL bytecode
+            ShaderBytecode shaderBytecode = ShaderCompiler.Instance.CompileShader(shaderSource);
 
             // Create the root signature for the pipeline and the pipeline state
-            RootSignatureDescription rootSignatureDescription = new RootSignatureDescription(RootSignatureFlags.None, shaderGenerator.RootParameters);
+            RootSignatureDescription rootSignatureDescription = new RootSignatureDescription(RootSignatureFlags.None, shaderLoader.RootParameters);
             RootSignature rootSignature = device.CreateRootSignature(rootSignatureDescription);
             PipelineState pipelineState = new PipelineState(device, rootSignature, shaderBytecode);
 
@@ -38,13 +51,13 @@ namespace DirectX12ComputeShaderSample
             commandList.SetPipelineState(pipelineState);
 
             // Load the captured buffers
-            foreach (var item in shaderGenerator.ReadWriteBuffers.Select((r, i) => (Resource: r, Index: i)))
+            foreach (var buffer in shaderLoader.ReadWriteBuffers.Select((r, i) => (Resource: r, Index: i)))
             {
-                commandList.SetComputeRootDescriptorTable(item.Index, item.Resource);
+                commandList.SetComputeRootDescriptorTable(buffer.Index, buffer.Resource);
             }
 
             // Dispatch and wait for completion
-            commandList.Dispatch(2, 2, 1);
+            commandList.Dispatch(1, 1, 1);
             commandList.Flush(true);
         }
     }
