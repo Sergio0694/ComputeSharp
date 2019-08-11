@@ -4,7 +4,10 @@ using DirectX12GameEngine.Shaders.Numerics;
 using System;
 using System.Linq;
 using DirectX12GameEngine.Graphics.Buffers;
+using SharpDX.Direct3D12;
 using Buffer = DirectX12GameEngine.Graphics.Buffers.Buffer;
+using CommandList = DirectX12GameEngine.Graphics.CommandList;
+using PipelineState = DirectX12GameEngine.Graphics.PipelineState;
 
 namespace DirectX12ComputeShaderSample
 {
