@@ -11,11 +11,9 @@ namespace DirectX12GameEngine.Shaders
         private readonly int depth;
         private readonly bool isTopLevel;
         private readonly SemanticModel semanticModel;
-        private readonly ShaderGenerator shaderGenerator;
 
-        public ShaderSyntaxRewriter(ShaderGenerator shaderGenerator, SemanticModel semanticModel, bool isTopLevel = false, int depth = 0)
+        public ShaderSyntaxRewriter(SemanticModel semanticModel, bool isTopLevel = false, int depth = 0)
         {
-            this.shaderGenerator = shaderGenerator;
             this.semanticModel = semanticModel;
             this.isTopLevel = isTopLevel;
             this.depth = depth;
@@ -42,38 +40,11 @@ namespace DirectX12GameEngine.Shaders
 
         public override SyntaxNode VisitParameter(ParameterSyntax node)
         {
-            string? attributeName = node.AttributeLists.FirstOrDefault()?.Attributes.FirstOrDefault()?.Name.ToString();
-
             node = (ParameterSyntax)base.VisitParameter(node);
             node = node.WithAttributeLists(default);
             node = node.ReplaceType(node.Type);
 
-            if (attributeName != null)
-            {
-                node = node.ReplaceToken(node.Identifier, SyntaxFactory.Identifier($"{node.Identifier.ValueText} : {ShaderGenerator.HlslKnownSemantics.GetMappedName(attributeName + "Attribute")}"));
-            }
-
             return node;
-        }
-
-        public override SyntaxNode VisitAttribute(AttributeSyntax node)
-        {
-            node = (AttributeSyntax)base.VisitAttribute(node);
-            return node.ReplaceType(node.Name);
-        }
-
-        public override SyntaxNode? VisitAttributeList(AttributeListSyntax node)
-        {
-            var knownAttributes = node.Attributes.Where(n => ShaderGenerator.HlslKnownAttributes.Contains(n.Name + "Attribute")).ToArray();
-
-            if (knownAttributes.Length == 0) return null;
-
-            var list = new SeparatedSyntaxList<AttributeSyntax>();
-            list = list.AddRange(knownAttributes);
-
-            node = node.WithAttributes(list);
-
-            return base.VisitAttributeList(node);
         }
 
         public override SyntaxNode VisitCastExpression(CastExpressionSyntax node)
