@@ -102,7 +102,7 @@ namespace DirectX12GameEngine.Shaders
         {
             if (result != null) return result;
 
-            if (!(shader is Action<UInt3> action)) throw new InvalidOperationException("Missing lambda shader");
+            if (!(shader is Action<ThreadIds> action)) throw new InvalidOperationException("Missing lambda shader");
 
             Type shaderType = action.Method.DeclaringType;
             object shaderInstance = action.Target;
@@ -498,9 +498,8 @@ namespace DirectX12GameEngine.Shaders
                 { typeof(Vector2).FullName, "float2" },
                 { typeof(Vector3).FullName, "float3" },
                 { typeof(Vector4).FullName, "float4" },
-                { typeof(Numerics.UInt2).FullName, "uint2" },
-                { typeof(Numerics.UInt3).FullName, "uint3" },
                 { typeof(Matrix4x4).FullName, "float4x4" },
+                { typeof(ThreadIds).FullName, "uint3" },
                 { typeof(RWBufferResource<>).FullName, "RWBuffer" },
             };
 
@@ -562,10 +561,10 @@ namespace DirectX12GameEngine.Shaders
                 { "DirectX12GameEngine.Shaders.Numerics.UInt2.X", ".x" },
                 { "DirectX12GameEngine.Shaders.Numerics.UInt2.Y", ".y" },
 
-                { "DirectX12GameEngine.Shaders.Numerics.UInt3.X", ".x" },
-                { "DirectX12GameEngine.Shaders.Numerics.UInt3.Y", ".y" },
-                { "DirectX12GameEngine.Shaders.Numerics.UInt3.Z", ".z" },
-                { "DirectX12GameEngine.Shaders.Numerics.UInt3.XY", ".xy" },
+                { "DirectX12GameEngine.Shaders.Numerics.ThreadIds.X", ".x" },
+                { "DirectX12GameEngine.Shaders.Numerics.ThreadIds.Y", ".y" },
+                { "DirectX12GameEngine.Shaders.Numerics.ThreadIds.Z", ".z" },
+                { "DirectX12GameEngine.Shaders.Numerics.ThreadIds.XY", ".xy" },
 
                 { "System.Numerics.Vector3.X", ".x" },
                 { "System.Numerics.Vector3.Y", ".y" },

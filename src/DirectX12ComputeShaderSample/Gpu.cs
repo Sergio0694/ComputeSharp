@@ -19,7 +19,7 @@ namespace DirectX12ComputeShaderSample
 
     public static class GraphicsDeviceExtensions
     {
-        public static void For(this GraphicsDevice device, int n, Action<UInt3> shader)
+        public static void For(this GraphicsDevice device, int n, Action<ThreadIds> shader)
         {
             // Generate the compute shadr
             ShaderGenerator shaderGenerator = new ShaderGenerator(shader);

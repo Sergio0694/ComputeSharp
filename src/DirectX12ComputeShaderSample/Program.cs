@@ -27,7 +27,7 @@ namespace DirectX12ComputeShaderSample
             var data = gpuBuffer.GetGpuResource();
 
             // Shader body
-            Action<UInt3> action = id =>
+            Action<ThreadIds> action = id =>
             {
                 data[id.X + id.Y * size] *= 2;
             };
