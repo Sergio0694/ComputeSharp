@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using DirectX12GameEngine.Shaders.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -46,7 +47,7 @@ namespace DirectX12GameEngine.Shaders
 
             ISymbol containingMemberSymbol = containingMemberSymbolInfo.Symbol;
 
-            if (!ShaderGenerator.HlslKnownMethods.Contains(containingMemberSymbol, memberSymbol))
+            if (!HlslKnownMethods.IsKnownMethod(containingMemberSymbol, memberSymbol))
             {
                 ISymbol symbol = containingMemberSymbol.IsStatic ? containingMemberSymbol : memberSymbol.ContainingType;
 

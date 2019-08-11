@@ -3,7 +3,6 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Numerics;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
@@ -16,8 +15,6 @@ using ICSharpCode.Decompiler.Metadata;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using SharpDX.Direct3D12;
-using Vector2 = System.Numerics.Vector2;
-using Vector4 = System.Numerics.Vector4;
 
 namespace DirectX12GameEngine.Shaders
 {
@@ -484,105 +481,6 @@ namespace DirectX12GameEngine.Shaders
             decompilerSettings.CSharpFormattingOptions.IndentationString = IndentedTextWriter.DefaultTabString;
 
             return new CSharpDecompiler(assemblyPath, resolver, decompilerSettings);
-        }
-
-        internal static class HlslKnownMethods
-        {
-            private static readonly Dictionary<string, string> knownMethods = new Dictionary<string, string>()
-            {
-                { "System.Math.Cos", "cos" },
-                { "System.MathF.Cos", "cos" },
-                { "System.Math.Max", "max" },
-                { "System.Math.Pow", "pow" },
-                { "System.MathF.Pow", "pow" },
-                { "System.Math.Sin", "sin" },
-                { "System.MathF.Sin", "sin" },
-                { "System.Math.PI", "3.1415926535897931" },
-                { "System.MathF.PI", "3.14159274f" },
-
-                { "DirectX12GameEngine.Shaders.Primitives.ThreadIds.X", ".x" },
-                { "DirectX12GameEngine.Shaders.Primitives.ThreadIds.Y", ".y" },
-                { "DirectX12GameEngine.Shaders.Primitives.ThreadIds.Z", ".z" },
-
-                { "System.Numerics.Vector3.X", ".x" },
-                { "System.Numerics.Vector3.Y", ".y" },
-                { "System.Numerics.Vector3.Z", ".z" },
-                { "System.Numerics.Vector3.Cross", "cross" },
-                { "System.Numerics.Vector3.Dot", "dot" },
-                { "System.Numerics.Vector3.Lerp", "lerp" },
-                { "System.Numerics.Vector3.Transform", "mul" },
-                { "System.Numerics.Vector3.TransformNormal", "mul" },
-                { "System.Numerics.Vector3.Normalize", "normalize" },
-                { "System.Numerics.Vector3.Zero", "(float3)0" },
-                { "System.Numerics.Vector3.One", "float3(1.0f, 1.0f, 1.0f)" },
-                { "System.Numerics.Vector3.UnitX", "float3(1.0f, 0.0f, 0.0f)" },
-                { "System.Numerics.Vector3.UnitY", "float3(0.0f, 1.0f, 0.0f)" },
-                { "System.Numerics.Vector3.UnitZ", "float3(0.0f, 0.0f, 1.0f)" },
-
-                { "System.Numerics.Vector4.X", ".x" },
-                { "System.Numerics.Vector4.Y", ".y" },
-                { "System.Numerics.Vector4.Z", ".z" },
-                { "System.Numerics.Vector4.W", ".w" },
-                { "System.Numerics.Vector4.Lerp", "lerp" },
-                { "System.Numerics.Vector4.Transform", "mul" },
-                { "System.Numerics.Vector4.Normalize", "normalize" },
-                { "System.Numerics.Vector4.Zero", "(float4)0" },
-                { "System.Numerics.Vector4.One", "float4(1.0f, 1.0f, 1.0f, 1.0f)" },
-
-                { "System.Numerics.Matrix4x4.Multiply", "mul" },
-                { "System.Numerics.Matrix4x4.Transpose", "transpose" },
-                { "System.Numerics.Matrix4x4.Translation", "[3].xyz" },
-                { "System.Numerics.Matrix4x4.M11", "[0][0]" },
-                { "System.Numerics.Matrix4x4.M12", "[0][1]" },
-                { "System.Numerics.Matrix4x4.M13", "[0][2]" },
-                { "System.Numerics.Matrix4x4.M14", "[0][3]" },
-                { "System.Numerics.Matrix4x4.M21", "[1][0]" },
-                { "System.Numerics.Matrix4x4.M22", "[1][1]" },
-                { "System.Numerics.Matrix4x4.M23", "[1][2]" },
-                { "System.Numerics.Matrix4x4.M24", "[1][3]" },
-                { "System.Numerics.Matrix4x4.M31", "[2][0]" },
-                { "System.Numerics.Matrix4x4.M32", "[2][1]" },
-                { "System.Numerics.Matrix4x4.M33", "[2][2]" },
-                { "System.Numerics.Matrix4x4.M34", "[2][3]" },
-                { "System.Numerics.Matrix4x4.M41", "[3][0]" },
-                { "System.Numerics.Matrix4x4.M42", "[3][1]" },
-                { "System.Numerics.Matrix4x4.M43", "[3][2]" },
-                { "System.Numerics.Matrix4x4.M44", "[3][3]" }
-            };
-
-            public static bool Contains(ISymbol containingMemberSymbol, ISymbol memberSymbol)
-            {
-                string fullTypeName = containingMemberSymbol.IsStatic ? containingMemberSymbol.ToString() : memberSymbol.ContainingType.ToString();
-
-                if (knownMethods.ContainsKey(fullTypeName + Type.Delimiter + memberSymbol.Name))
-                {
-                    return true;
-                }
-
-                return false;
-            }
-
-            public static string? GetMappedName(ISymbol containingMemberSymbol, ISymbol memberSymbol)
-            {
-                string fullTypeName = containingMemberSymbol.IsStatic ? containingMemberSymbol.ToString() : memberSymbol.ContainingType.ToString();
-
-                if (knownMethods.TryGetValue(fullTypeName + Type.Delimiter + memberSymbol.Name, out string mapped))
-                {
-                    if (!memberSymbol.IsStatic)
-                    {
-                        return containingMemberSymbol.Name + mapped;
-                    }
-
-                    return mapped;
-                }
-
-                if (memberSymbol.IsStatic)
-                {
-                    return containingMemberSymbol.Name + "::" + memberSymbol.Name;
-                }
-
-                return null;
-            }
         }
 
         private class HlslBindingTracker

@@ -34,16 +34,12 @@ namespace DirectX12GameEngine.Shaders
                 return node;
             }
 
-            string? value = ShaderGenerator.HlslKnownMethods.GetMappedName(containingMemberSymbolInfo.Symbol, memberSymbol);
-
-            if (value is null)
-            {
-                return node;
-            }
-            else
+            if (HlslKnownMethods.TryGetMappedName(containingMemberSymbolInfo.Symbol, memberSymbol) is string value)
             {
                 return SyntaxFactory.IdentifierName(value).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
             }
+
+            return node;
         }
     }
 }
