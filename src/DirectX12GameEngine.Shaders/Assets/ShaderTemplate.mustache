@@ -5,14 +5,14 @@ static {{FieldType}} {{FieldName}} = {{FieldValue}};
 {{/IsStaticScalarField}}
 {{!Constant buffer}}
 {{#IsConstantBuffer}}
-cbuffer {{FieldName}}Buffer : register(b{{BufferIndex}})
+cbuffer {{FieldName}}Buffer : register(b{{ConstantBufferIndex}})
 {
 {{FieldType}} {{FieldName}};
 }
 {{/IsConstantBuffer}}
 {{!Read write buffer}}
 {{#IsReadWriteBuffer}}
-{{FieldType}} {{FieldName}} : SV_DispatchThreadId : register(u{{BufferIndex}});
+{{FieldType}} {{FieldName}} : SV_DispatchThreadId : register(u{{ReadWriteBufferIndex}});
 {{/IsReadWriteBuffer}}
 
 {{/FieldsList}}
