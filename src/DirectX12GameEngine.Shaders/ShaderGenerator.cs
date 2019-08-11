@@ -4,29 +4,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
 using DirectX12GameEngine.Graphics.Buffers.Abstract;
 using DirectX12GameEngine.Shaders.Mappings;
 using DirectX12GameEngine.Shaders.Primitives;
-using ICSharpCode.Decompiler;
-using ICSharpCode.Decompiler.CSharp;
-using ICSharpCode.Decompiler.Metadata;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using SharpDX.Direct3D12;
 
 namespace DirectX12GameEngine.Shaders
 {
     public class ShaderGenerator
     {
-        private static readonly object compilationLock = new object();
-        private static readonly Dictionary<string, CSharpDecompiler> decompilers = new Dictionary<string, CSharpDecompiler>();
-        private static readonly IEnumerable<PEFile> peFiles;
-        private static readonly Dictionary<Type, (PEFile PEFile, TypeDefinition TypeDefinition)> typeDefinitions = new Dictionary<Type, (PEFile, TypeDefinition)>();
-
-        private static Compilation compilation;
-
         private readonly List<ShaderTypeDefinition> collectedTypes = new List<ShaderTypeDefinition>();
         private readonly BindingFlags bindingAttr;
         private readonly HlslBindingTracker bindingTracker = new HlslBindingTracker();
@@ -35,47 +23,6 @@ namespace DirectX12GameEngine.Shaders
         private readonly IndentedTextWriter writer;
 
         private ShaderGenerationResult? result;
-
-        static ShaderGenerator()
-        {
-            IEnumerable<string> assemblyPaths;
-
-            if (!string.IsNullOrEmpty(Assembly.GetEntryAssembly().Location))
-            {
-                assemblyPaths = AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).Select(a => a.Location);
-            }
-            else
-            {
-                assemblyPaths = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.dll").Where(p =>
-                {
-                    try
-                    {
-                        PEFile peFile = new PEFile(p);
-                        return true;
-                    }
-                    catch
-                    {
-                        return false;
-                    }
-                });
-            }
-
-            var metadataReferences = assemblyPaths.Select(p => MetadataReference.CreateFromFile(p));
-            peFiles = assemblyPaths.Select(p => new PEFile(p));
-
-            compilation = CSharpCompilation.Create("ShaderAssembly").WithReferences(metadataReferences);
-
-            AppDomain.CurrentDomain.AssemblyLoad += CurrentDomain_AssemblyLoad;
-        }
-
-        private static void CurrentDomain_AssemblyLoad(object sender, AssemblyLoadEventArgs e)
-        {
-            if (!e.LoadedAssembly.IsDynamic)
-            {
-                PortableExecutableReference metadataReference = MetadataReference.CreateFromFile(e.LoadedAssembly.Location);
-                compilation = compilation.AddReferences(metadataReference);
-            }
-        }
 
         public ShaderGenerator(object shader, BindingFlags bindingAttr = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance)
         {
@@ -358,7 +305,7 @@ namespace DirectX12GameEngine.Shaders
 
         private void CollectMethod(MethodInfo methodInfo)
         {
-            GetSyntaxTree(methodInfo, out SyntaxNode root, out SemanticModel semanticModel);
+            MethodDecompiler.Instance.GetSyntaxTree(methodInfo, out SyntaxNode root, out SemanticModel semanticModel);
 
             ShaderSyntaxCollector syntaxCollector = new ShaderSyntaxCollector(this, semanticModel);
             syntaxCollector.Visit(root);
@@ -377,7 +324,7 @@ namespace DirectX12GameEngine.Shaders
 
         private void WriteMethod(MethodInfo methodInfo, int depth = 0)
         {
-            GetSyntaxTree(methodInfo, out SyntaxNode root, out SemanticModel semanticModel);
+            MethodDecompiler.Instance.GetSyntaxTree(methodInfo, out SyntaxNode root, out SemanticModel semanticModel);
 
             ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel, true, depth);
             root = syntaxRewriter.Visit(root);
@@ -405,82 +352,6 @@ namespace DirectX12GameEngine.Shaders
             shaderSource = shaderSource.Replace(Environment.NewLine, Environment.NewLine + indent).TrimEnd(' ');
 
             writer.WriteLine(shaderSource);
-        }
-
-        private static void GetSyntaxTree(MethodInfo methodInfo, out SyntaxNode root, out SemanticModel semanticModel)
-        {
-            lock (compilationLock)
-            {
-                GetMethodHandle(methodInfo, out string assemblyPath, out EntityHandle methodHandle);
-
-                if (!decompilers.TryGetValue(assemblyPath, out CSharpDecompiler decompiler))
-                {
-                    decompiler = CreateDecompiler(assemblyPath);
-                    decompilers.Add(assemblyPath, decompiler);
-                }
-
-                string sourceCode = decompiler.DecompileAsString(methodHandle);
-
-                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
-                root = syntaxTree.GetRoot();
-
-                compilation = compilation.AddSyntaxTrees(syntaxTree);
-                semanticModel = compilation.GetSemanticModel(syntaxTree);
-            }
-        }
-
-        private static void GetMethodHandle(MethodInfo methodInfo, out string assemblyPath, out EntityHandle methodHandle)
-        {
-            assemblyPath = methodInfo.DeclaringType.Assembly.Location;
-
-            if (!string.IsNullOrEmpty(assemblyPath))
-            {
-                methodHandle = MetadataTokenHelpers.TryAsEntityHandle(methodInfo.MetadataToken) ?? throw new InvalidOperationException();
-            }
-            else
-            {
-                if (!typeDefinitions.TryGetValue(methodInfo.DeclaringType, out var tuple))
-                {
-                    foreach (PEFile peFile in peFiles)
-                    {
-                        TypeDefinitionHandle typeDefinitionHandle = peFile.Metadata.TypeDefinitions.FirstOrDefault(t => t.GetFullTypeName(peFile.Metadata).ToString() == methodInfo.DeclaringType.FullName);
-
-                        if (!typeDefinitionHandle.IsNil)
-                        {
-                            tuple = (peFile, peFile.Metadata.GetTypeDefinition(typeDefinitionHandle));
-                            typeDefinitions.Add(methodInfo.DeclaringType, tuple);
-
-                            break;
-                        }
-                    }
-
-                    if (tuple.PEFile is null) throw new InvalidOperationException();
-                }
-
-                PEFile peFileForMethod = tuple.PEFile;
-                TypeDefinition typeDefinition = tuple.TypeDefinition;
-
-                assemblyPath = peFileForMethod.FileName;
-
-                methodHandle = typeDefinition.GetMethods()
-                    .Where(m => peFileForMethod.Metadata.StringComparer.Equals(peFileForMethod.Metadata.GetMethodDefinition(m).Name, methodInfo.Name))
-                    .First(m => peFileForMethod.Metadata.GetMethodDefinition(m).GetParameters().Count == methodInfo.GetParameters().Length);
-            }
-        }
-
-        private static CSharpDecompiler CreateDecompiler(string assemblyPath)
-        {
-            UniversalAssemblyResolver resolver = new UniversalAssemblyResolver(assemblyPath, false, "netstandard");
-
-            DecompilerSettings decompilerSettings = new DecompilerSettings(ICSharpCode.Decompiler.CSharp.LanguageVersion.Latest)
-            {
-                ObjectOrCollectionInitializers = false,
-                UsingDeclarations = false
-            };
-
-            decompilerSettings.CSharpFormattingOptions.IndentationString = IndentedTextWriter.DefaultTabString;
-
-            return new CSharpDecompiler(assemblyPath, resolver, decompilerSettings);
         }
 
         private class HlslBindingTracker
