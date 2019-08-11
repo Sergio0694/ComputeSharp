@@ -13,7 +13,7 @@ namespace DirectX12GameEngine.Shaders.Renderer.Models
         /// <summary>
         /// Gets the list of fields being present in the current shader
         /// </summary>
-        public List<FieldInfo> FieldsList { get; } = new List<FieldInfo>();
+        public List<FieldInfoBase> FieldsList { get; } = new List<FieldInfoBase>();
 
         /// <summary>
         /// Gets or sets the number of threads in the X group

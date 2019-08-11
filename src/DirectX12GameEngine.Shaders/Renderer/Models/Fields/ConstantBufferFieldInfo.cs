@@ -5,10 +5,10 @@ namespace DirectX12GameEngine.Shaders.Renderer.Models.Fields
     /// <summary>
     /// A <see langword="class"/> that contains info on a constant buffer field
     /// </summary>
-    public sealed class ConstantBufferFieldInfo : FieldInfo
+    public sealed class ConstantBufferFieldInfo : FieldInfoBase
     {
         /// <summary>
-        /// Gets whether or not the current <see cref="FieldInfo"/> instance represents a constant buffer (always <see langword="true"/>)
+        /// Gets whether or not the current <see cref="FieldInfoBase"/> instance represents a constant buffer (always <see langword="true"/>)
         /// </summary>
         public bool IsConstantBuffer { get; } = true;
 

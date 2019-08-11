@@ -5,10 +5,10 @@ namespace DirectX12GameEngine.Shaders.Renderer.Models.Fields
     /// <summary>
     /// A <see langword="class"/> that contains info on a static scalar field
     /// </summary>
-    public sealed class StaticScalarFieldInfo : FieldInfo
+    public sealed class StaticScalarFieldInfo : FieldInfoBase
     {
         /// <summary>
-        /// Gets whether or not the current <see cref="FieldInfo"/> instance represents a static scalar value (always <see langword="true"/>)
+        /// Gets whether or not the current <see cref="FieldInfoBase"/> instance represents a static scalar value (always <see langword="true"/>)
         /// </summary>
         public bool IsStaticScalarField { get; } = true;
 
