@@ -10,7 +10,7 @@ namespace DirectX12GameEngine.Shaders.Renderer.Models.Fields
         /// <summary>
         /// Gets whether or not the current <see cref="FieldInfo"/> instance represents a read write buffer (always <see langword="true"/>)
         /// </summary>
-        public bool IsConstantBuffer { get; } = true;
+        public bool IsReadWriteBuffer { get; } = true;
 
         /// <summary>
         /// Gets the index of the current read write buffer field

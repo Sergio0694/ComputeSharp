@@ -12,7 +12,7 @@ cbuffer {{FieldName}}Buffer : register(b{{ConstantBufferIndex}})
 {{/IsConstantBuffer}}
 {{!Read write buffer}}
 {{#IsReadWriteBuffer}}
-{{FieldType}} {{FieldName}} : SV_DispatchThreadId : register(u{{ReadWriteBufferIndex}});
+{{&FieldType}} {{FieldName}} : SV_DispatchThreadId : register(u{{ReadWriteBufferIndex}});
 {{/IsReadWriteBuffer}}
 
 {{/FieldsList}}
