@@ -1,5 +1,5 @@
 ﻿using System;
-using DirectX12GameEngine.Graphics.Primitives.Abstract;
+using DirectX12GameEngine.Graphics.Buffers.Abstract;
 using SharpDX.Direct3D12;
 
 namespace DirectX12GameEngine.Graphics

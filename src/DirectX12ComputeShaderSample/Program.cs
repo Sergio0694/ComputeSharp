@@ -3,8 +3,8 @@ using DirectX12GameEngine.Shaders;
 using DirectX12GameEngine.Shaders.Numerics;
 using System;
 using System.Linq;
-
-using Buffer = DirectX12GameEngine.Graphics.Buffer;
+using DirectX12GameEngine.Graphics.Buffers;
+using Buffer = DirectX12GameEngine.Graphics.Buffers.Buffer;
 
 namespace DirectX12ComputeShaderSample
 {
