@@ -11,6 +11,8 @@ using DirectX12GameEngine.Shaders.Renderer.Models.Fields;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+#pragma warning disable CS8618 // Non-nullable field is uninitialized
+
 namespace DirectX12GameEngine.Shaders
 {
     /// <summary>
@@ -60,7 +62,7 @@ namespace DirectX12GameEngine.Shaders
         /// <summary>
         /// Gets the name of the <see cref="ThreadIds"/> variable used as input for the shader method
         /// </summary>
-        public string ThreadIdsIdentifierName { get; private set; }
+        public string ThreadsIdsVariableName { get; private set; }
 
         /// <summary>
         /// Gets the generated source code for the method in the current shader
@@ -130,7 +132,7 @@ namespace DirectX12GameEngine.Shaders
 
             // Get the thread ids identifier name and shader method body
             ConstructorDeclarationSyntax methodNode = root.ChildNodes().OfType<ConstructorDeclarationSyntax>().First();
-            ThreadIdsIdentifierName = methodNode.ParameterList.Parameters.First().Identifier.Text;
+            ThreadsIdsVariableName = methodNode.ParameterList.Parameters.First().Identifier.Text;
             MethodBody = methodNode.Body.ToFullString();
 
             // Additional preprocessing
