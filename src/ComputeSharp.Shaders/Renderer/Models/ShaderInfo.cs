@@ -16,19 +16,34 @@ namespace ComputeSharp.Shaders.Renderer.Models
         public IReadOnlyList<FieldInfoBase> FieldsList { get; set; }
 
         /// <summary>
-        /// Gets or sets the number of threads in the X group
+        /// Gets or sets the total number of threads to run on the X axis
         /// </summary>
         public int ThreadsX { get; set; }
 
         /// <summary>
-        /// Gets or sets the number of threads in the Y group
+        /// Gets or sets the total number of threads to run on the Y axis
         /// </summary>
         public int ThreadsY { get; set; }
 
         /// <summary>
-        /// Gets or sets the number of threads in the Z group
+        /// Gets or sets the total number of threads to run on the Z axis
         /// </summary>
         public int ThreadsZ { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of threads in the X group
+        /// </summary>
+        public int NumThreadsX { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of threads in the Y group
+        /// </summary>
+        public int NumThreadsY { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of threads in the Z group
+        /// </summary>
+        public int NumThreadsZ { get; set; }
 
         /// <summary>
         /// Gets or sets the name for the threads id variable used in the shader
