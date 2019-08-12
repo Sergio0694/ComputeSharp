@@ -108,8 +108,8 @@ namespace ComputeSharp.Shaders.Translation
             lock (Lock)
             {
                 // Get the handle of the input method
-                GetMethodHandle(methodInfo, out string assemblyPath, out EntityHandle methodHandle);
-
+                string assemblyPath = methodInfo.DeclaringType?.Assembly.Location ?? throw new InvalidOperationException();
+                EntityHandle methodHandle = MetadataTokenHelpers.TryAsEntityHandle(methodInfo.MetadataToken) ?? throw new InvalidOperationException();
                 // Get or create a decompiler for the target assembly, and decompile the method
                 if (!Decompilers.TryGetValue(assemblyPath, out CSharpDecompiler decompiler))
                 {
@@ -126,55 +126,6 @@ namespace ComputeSharp.Shaders.Translation
                 // Update the incremental compilation and retrieve the syntax tree for the method
                 _Compilation = _Compilation.AddSyntaxTrees(syntaxTree);
                 semanticModel = _Compilation.GetSemanticModel(syntaxTree);
-            }
-        }
-
-        /// <summary>
-        /// Loads the assembly path and method handle for the input <see cref="MethodInfo"/> instance
-        /// </summary>
-        /// <param name="methodInfo">The input <see cref="MethodInfo"/> to inspect</param>
-        /// <param name="assemblyPath">The path of the assembly containing the input method</param>
-        /// <param name="methodHandle">The handle for the input method</param>
-        private void GetMethodHandle(MethodInfo methodInfo, out string assemblyPath, out EntityHandle methodHandle)
-        {
-            // Try to get the method handle from the assembly of the declaring type
-            Type declaringType = methodInfo.DeclaringType ?? throw new InvalidOperationException("Invalid declaring type");
-            string path = declaringType.Assembly.Location;
-            if (!string.IsNullOrEmpty(path))
-            {
-                assemblyPath = path;
-                methodHandle = MetadataTokenHelpers.TryAsEntityHandle(methodInfo.MetadataToken) ?? throw new InvalidOperationException();
-            }
-            else
-            {
-                // Try to get the PEFile and type definition for the method declaring type
-                if (!TypeDefinitions.TryGetValue(methodInfo.DeclaringType, out (PEFile PEFile, TypeDefinition TypeDefinition) tuple))
-                {
-                    foreach (PEFile peFile in PEFiles)
-                    {
-                        // If not available, browse through the loaded PEFiles to find the type definition
-                        TypeDefinitionHandle typeDefinitionHandle = peFile.Metadata.TypeDefinitions.FirstOrDefault(t => t.GetFullTypeName(peFile.Metadata).ToString() == methodInfo.DeclaringType.FullName);
-
-                        if (!typeDefinitionHandle.IsNil)
-                        {
-                            tuple = (peFile, peFile.Metadata.GetTypeDefinition(typeDefinitionHandle));
-                            TypeDefinitions.Add(methodInfo.DeclaringType, tuple);
-
-                            break;
-                        }
-                    }
-
-                    if (tuple.PEFile is null) throw new InvalidOperationException($"Missing PEFile for declaring type {methodInfo.DeclaringType.FullName}");
-                }
-
-                PEFile peFileForMethod = tuple.PEFile;
-                TypeDefinition typeDefinition = tuple.TypeDefinition;
-
-                // Retrieve the assembly path and method handle from the loaded PEFile and metadata
-                assemblyPath = peFileForMethod.FileName;
-                methodHandle = typeDefinition.GetMethods()
-                    .Where(m => peFileForMethod.Metadata.StringComparer.Equals(peFileForMethod.Metadata.GetMethodDefinition(m).Name, methodInfo.Name))
-                    .First(m => peFileForMethod.Metadata.GetMethodDefinition(m).GetParameters().Count == methodInfo.GetParameters().Length);
             }
         }
 
