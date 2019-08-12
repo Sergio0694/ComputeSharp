@@ -110,7 +110,8 @@ namespace ComputeSharp.Graphics
 
         public void SetGraphicsRootDescriptorTable(int rootParameterIndex, GraphicsResource resource)
         {
-            SetGraphicsRootDescriptorTable(rootParameterIndex, resource.NativeGpuDescriptorHandle);
+            if (resource.NativeGpuDescriptorHandle == null) throw new InvalidOperationException("Invalid graphics resource GPU descriptor");
+            SetGraphicsRootDescriptorTable(rootParameterIndex, resource.NativeGpuDescriptorHandle.Value);
         }
 
         public void SetGraphicsRootDescriptorTable(int rootParameterIndex, GpuDescriptorHandle baseDescriptor)
@@ -130,7 +131,8 @@ namespace ComputeSharp.Graphics
 
         public void SetComputeRootDescriptorTable(int rootParameterIndex, GraphicsResource resource)
         {
-            SetComputeRootDescriptorTable(rootParameterIndex, resource.NativeGpuDescriptorHandle);
+            if (resource.NativeGpuDescriptorHandle == null) throw new InvalidOperationException("Invalid graphics resource GPU descriptor");
+            SetComputeRootDescriptorTable(rootParameterIndex, resource.NativeGpuDescriptorHandle.Value);
         }
 
         public void SetComputeRootDescriptorTable(int rootParameterIndex, GpuDescriptorHandle baseDescriptor)

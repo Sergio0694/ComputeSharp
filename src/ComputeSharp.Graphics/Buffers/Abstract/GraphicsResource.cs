@@ -35,12 +35,12 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <summary>
         /// Gets the <see cref="CpuDescriptorHandle"/> instance for the current resource
         /// </summary>
-        protected internal CpuDescriptorHandle NativeCpuDescriptorHandle { get; protected set; }
+        protected internal CpuDescriptorHandle? NativeCpuDescriptorHandle { get; protected set; }
 
         /// <summary>
         /// Gets the <see cref="GpuDescriptorHandle"/> instance for the current resource
         /// </summary>
-        protected internal GpuDescriptorHandle NativeGpuDescriptorHandle { get; protected set; }
+        protected internal GpuDescriptorHandle? NativeGpuDescriptorHandle { get; protected set; }
 
         /// <summary>
         /// Maps the current resource to a specified subresource
