@@ -117,7 +117,7 @@ namespace ComputeSharp.Shaders
 
                 // Read write buffer
                 if (HlslKnownTypes.IsBufferType(fieldType) &&
-                    (HeapType)fieldType.GetProperty(nameof(Buffer2<byte>.HeapType)).GetValue(fieldValue) == HeapType.Default)
+                    (HeapType)fieldType.GetProperty(nameof(Buffer<byte>.HeapType)).GetValue(fieldValue) == HeapType.Default)
                 {
                     // Root parameter for a read write buffer
                     DescriptorRange range = new DescriptorRange(DescriptorRangeType.UnorderedAccessView, 1, readWriteBuffersCount);

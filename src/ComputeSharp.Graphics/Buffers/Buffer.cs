@@ -11,15 +11,15 @@ namespace ComputeSharp.Graphics.Buffers
     /// A <see langword="class"/> representing a typed buffer stored on GPU memory
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffer</typeparam>
-    public sealed class Buffer2<T> : GraphicsResource where T : unmanaged
+    public sealed class Buffer<T> : GraphicsResource where T : unmanaged
     {
         /// <summary>
-        /// Creates a new <see cref="Buffer2{T}"/> instance with the specified parameters
+        /// Creates a new <see cref="Buffer{T}"/> instance with the specified parameters
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
         /// <param name="heapType">The heap type for the current buffer</param>
-        internal Buffer2(GraphicsDevice device, int size, HeapType heapType) : base(device)
+        internal Buffer(GraphicsDevice device, int size, HeapType heapType) : base(device)
         {
             Size = size;
             ElementSizeInBytes = Unsafe.SizeOf<T>();
@@ -120,7 +120,7 @@ namespace ComputeSharp.Graphics.Buffers
         }
 
         /// <summary>
-        /// Reads the contents of the current <see cref="Buffer2{T}"/> instance and returns an array
+        /// Reads the contents of the current <see cref="Buffer{T}"/> instance and returns an array
         /// </summary>
         /// <returns>A <typeparamref name="T"/> array with the contents of the current buffer</returns>
         [Pure]
@@ -133,7 +133,7 @@ namespace ComputeSharp.Graphics.Buffers
         }
 
         /// <summary>
-        /// Reads the contents of the current <see cref="Buffer2{T}"/> instance and writes them into a target <see cref="Span{T}"/>
+        /// Reads the contents of the current <see cref="Buffer{T}"/> instance and writes them into a target <see cref="Span{T}"/>
         /// </summary>
         /// <param name="span">The input <see cref="Span{T}"/> to write data to</param>
         public void GetData(Span<T> span)
@@ -141,7 +141,7 @@ namespace ComputeSharp.Graphics.Buffers
             // Create a temporary readback buffer if the current buffer type is read write (can't be read from directly)
             if (HeapType == HeapType.Default)
             {
-                using Buffer2<T> readbackBaffer = new Buffer2<T>(GraphicsDevice, Size, HeapType.Readback);
+                using Buffer<T> readbackBaffer = new Buffer<T>(GraphicsDevice, Size, HeapType.Readback);
                 using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
                 copyCommandList.CopyBufferRegion(this, 0, readbackBaffer, 0, SizeInBytes);
@@ -159,7 +159,7 @@ namespace ComputeSharp.Graphics.Buffers
         }
 
         /// <summary>
-        /// Writes the contents of a given <see cref="Span{T}"/> to the current <see cref="Buffer2{T}"/> instance
+        /// Writes the contents of a given <see cref="Span{T}"/> to the current <see cref="Buffer{T}"/> instance
         /// </summary>
         /// <param name="span">The input <see cref="Span{T}"/> to read data from</param>
         public void SetData(Span<T> span)
@@ -167,7 +167,7 @@ namespace ComputeSharp.Graphics.Buffers
             // Create a temporary upload buffer if the current buffer type is read write (can't be written to directly)
             if (HeapType == HeapType.Default)
             {
-                using Buffer2<T> uploadBuffer = new Buffer2<T>(GraphicsDevice, Size, HeapType.Upload);
+                using Buffer<T> uploadBuffer = new Buffer<T>(GraphicsDevice, Size, HeapType.Upload);
                 using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
                 uploadBuffer.SetData(span);

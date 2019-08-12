@@ -16,12 +16,12 @@ namespace ComputeSharp.Graphics.Buffers
         /// <typeparam name="T">The type of items to store in the buffer</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer</param>
         /// <param name="size">The size of the buffer to allocate</param>
-        /// <returns>A zeroed read write <see cref="Buffer2{T}"/> instance of size <paramref name="size"/></returns>
+        /// <returns>A zeroed read write <see cref="Buffer{T}"/> instance of size <paramref name="size"/></returns>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Buffer2<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, int size) where T : unmanaged
+        public static Buffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, int size) where T : unmanaged
         {
-            return new Buffer2<T>(device, size, HeapType.Default);
+            return new Buffer<T>(device, size, HeapType.Default);
         }
 
         /// <summary>
@@ -30,12 +30,12 @@ namespace ComputeSharp.Graphics.Buffers
         /// <typeparam name="T">The type of items to store in the buffer</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer</param>
         /// <param name="span">The input <see cref="Span{T}"/> with the data to copy on the allocated buffer</param>
-        /// <returns>A read write <see cref="Buffer2{T}"/> instance with the contents of the input <see cref="Span{T}"/></returns>
+        /// <returns>A read write <see cref="Buffer{T}"/> instance with the contents of the input <see cref="Span{T}"/></returns>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Buffer2<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, Span<T> span) where T : unmanaged
+        public static Buffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, Span<T> span) where T : unmanaged
         {
-            Buffer2<T> buffer = new Buffer2<T>(device, span.Length, HeapType.Default);
+            Buffer<T> buffer = new Buffer<T>(device, span.Length, HeapType.Default);
             buffer.SetData(span);
 
             return buffer;
@@ -47,12 +47,12 @@ namespace ComputeSharp.Graphics.Buffers
         /// <typeparam name="T">The type of items to store in the buffer</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer</param>
         /// <param name="span">The input <see cref="Span{T}"/> with the data to copy on the allocated buffer</param>
-        /// <returns>A constant <see cref="Buffer2{T}"/> instance with the contents of the input <see cref="Span{T}"/></returns>
+        /// <returns>A constant <see cref="Buffer{T}"/> instance with the contents of the input <see cref="Span{T}"/></returns>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Buffer2<T> AllocateConstantBuffer<T>(this GraphicsDevice device, Span<T> span) where T : unmanaged
+        public static Buffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, Span<T> span) where T : unmanaged
         {
-            Buffer2<T> buffer = new Buffer2<T>(device, span.Length, HeapType.Upload);
+            Buffer<T> buffer = new Buffer<T>(device, span.Length, HeapType.Upload);
             buffer.SetData(span);
 
             return buffer;
