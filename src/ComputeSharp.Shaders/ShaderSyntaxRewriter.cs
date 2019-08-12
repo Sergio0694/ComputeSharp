@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace DirectX12GameEngine.Shaders
+namespace ComputeSharp.Shaders
 {
     public class ShaderSyntaxRewriter : CSharpSyntaxRewriter
     {

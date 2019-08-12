@@ -1,8 +1,8 @@
-﻿using DirectX12GameEngine.Shaders;
-using System;
+﻿using System;
 using System.Linq;
+using ComputeSharp;
 using ComputeSharp.Graphics.Buffers;
-using DirectX12GameEngine.Shaders.Primitives;
+using ComputeSharp.Shaders;
 using Buffer = ComputeSharp.Graphics.Buffers.Buffer;
 
 namespace DirectX12ComputeShaderSample

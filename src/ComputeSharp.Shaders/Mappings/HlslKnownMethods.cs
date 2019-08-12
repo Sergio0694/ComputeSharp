@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Microsoft.CodeAnalysis;
 
-namespace DirectX12GameEngine.Shaders.Mappings
+namespace ComputeSharp.Shaders.Mappings
 {
     /// <summary>
     /// A <see langword="class"/> that contains and maps known HLSL method names to common .NET method

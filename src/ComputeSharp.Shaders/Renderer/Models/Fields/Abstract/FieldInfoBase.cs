@@ -1,4 +1,4 @@
-﻿namespace DirectX12GameEngine.Shaders.Renderer.Models.Abstract
+﻿namespace ComputeSharp.Shaders.Renderer.Models.Fields.Abstract
 {
     /// <summary>
     /// A <see langword="class"/> that contains info on a shader field

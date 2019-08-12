@@ -5,17 +5,16 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using ComputeSharp.Graphics.Buffers.Abstract;
-using DirectX12GameEngine.Shaders.Mappings;
-using DirectX12GameEngine.Shaders.Primitives;
-using DirectX12GameEngine.Shaders.Renderer.Models.Abstract;
-using DirectX12GameEngine.Shaders.Renderer.Models.Fields;
+using ComputeSharp.Shaders.Mappings;
+using ComputeSharp.Shaders.Renderer.Models.Fields;
+using ComputeSharp.Shaders.Renderer.Models.Fields.Abstract;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SharpDX.Direct3D12;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized
 
-namespace DirectX12GameEngine.Shaders
+namespace ComputeSharp.Shaders
 {
     /// <summary>
     /// A <see langword="class"/> responsible for loading and processing <see cref="Action{T}"/> instances

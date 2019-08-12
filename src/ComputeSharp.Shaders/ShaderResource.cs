@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Numerics;
 using ComputeSharp.Graphics.Buffers;
-using Buffer = System.Buffer;
 
-namespace DirectX12GameEngine.Shaders
+namespace ComputeSharp.Shaders
 {
     public abstract class ShaderResource
     {

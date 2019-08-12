@@ -1,6 +1,6 @@
-﻿using DirectX12GameEngine.Shaders.Renderer.Models.Abstract;
+﻿using ComputeSharp.Shaders.Renderer.Models.Fields.Abstract;
 
-namespace DirectX12GameEngine.Shaders.Renderer.Models.Fields
+namespace ComputeSharp.Shaders.Renderer.Models.Fields
 {
     /// <summary>
     /// A <see langword="class"/> that contains info on a static scalar field

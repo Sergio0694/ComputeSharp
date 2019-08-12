@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Numerics;
 using System.Text.RegularExpressions;
-using DirectX12GameEngine.Shaders.Primitives;
 
-namespace DirectX12GameEngine.Shaders.Mappings
+namespace ComputeSharp.Shaders.Mappings
 {
     /// <summary>
     /// A <see langword="class"/> that contains and maps known HLSL type names to common .NET types

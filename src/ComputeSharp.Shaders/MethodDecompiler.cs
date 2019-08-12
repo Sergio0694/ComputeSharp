@@ -12,7 +12,7 @@ using ICSharpCode.Decompiler.Metadata;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace DirectX12GameEngine.Shaders
+namespace ComputeSharp.Shaders
 {
     /// <summary>
     /// A <see langword="class"/> that is able to decompile arbitrary methods

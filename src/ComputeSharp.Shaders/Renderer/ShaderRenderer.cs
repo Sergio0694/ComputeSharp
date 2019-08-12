@@ -2,9 +2,9 @@
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Reflection;
-using DirectX12GameEngine.Shaders.Renderer.Models;
+using ComputeSharp.Shaders.Renderer.Models;
 
-namespace DirectX12GameEngine.Shaders.Renderer
+namespace ComputeSharp.Shaders.Renderer
 {
     /// <summary>
     /// A <see langword="class"/> that uses the mustache templating system to render HLSL shaders

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using DirectX12GameEngine.Shaders.Renderer.Models.Abstract;
+using ComputeSharp.Shaders.Renderer.Models.Fields.Abstract;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized
 
-namespace DirectX12GameEngine.Shaders.Renderer.Models
+namespace ComputeSharp.Shaders.Renderer.Models
 {
     /// <summary>
     /// A <see langword="class"/> that contains info to render a shader source to compile
