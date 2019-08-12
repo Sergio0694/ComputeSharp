@@ -1,6 +1,8 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System;
+using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Graphics.Helpers;
 using SharpDX.Direct3D12;
 
 namespace ComputeSharp.Graphics.Buffers
@@ -105,5 +107,55 @@ namespace ComputeSharp.Graphics.Buffers
         /// Gets the heap type being targeted by the current buffer
         /// </summary>
         public HeapType HeapType { get; }
+
+        /// <summary>
+        /// Reads the contents of the current <see cref="Buffer2{T}"/> instance and writes them into a target <see cref="Span{T}"/>
+        /// </summary>
+        /// <param name="span">The input <see cref="Span{T}"/> to write data to</param>
+        public void GetData(Span<T> span)
+        {
+            // Create a temporary readback buffer if the current buffer type is read write (can't be read from directly)
+            if (HeapType == HeapType.Default)
+            {
+                using Buffer2<T> readbackBaffer = new Buffer2<T>(GraphicsDevice, Size, HeapType.Readback);
+                using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
+
+                copyCommandList.CopyBufferRegion(this, 0, readbackBaffer, 0, SizeInBytes);
+                copyCommandList.Flush(true);
+
+                readbackBaffer.GetData(span);
+            }
+            else
+            {
+                // Map and read the memory back directly
+                Map(0);
+                MemoryHelper.Copy(MappedResource, span);
+                Unmap(0);
+            }
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <see cref="Span{T}"/> to the current <see cref="Buffer2{T}"/> instance
+        /// </summary>
+        /// <param name="span">The input <see cref="Span{T}"/> to read data from</param>
+        public void SetData(Span<T> span)
+        {
+            // Create a temporary upload buffer if the current buffer type is read write (can't be written to directly)
+            if (HeapType == HeapType.Default)
+            {
+                using Buffer2<T> uploadBuffer = new Buffer2<T>(GraphicsDevice, Size, HeapType.Upload);
+                using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
+
+                copyCommandList.CopyBufferRegion(uploadBuffer, 0, this, 0, SizeInBytes);
+                copyCommandList.Flush(true);
+            }
+            else
+            {
+                // Map and copy the memory directly
+                Map(0);
+                MemoryHelper.Copy(span, MappedResource);
+                Unmap(0);
+            }
+        }
     }
 }
