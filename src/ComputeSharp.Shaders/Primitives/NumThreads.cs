@@ -1,10 +1,12 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace ComputeSharp
 {
     /// <summary>
     /// A <see langword="struct"/> that indicates the number of threads to use to run a given compute shader
     /// </summary>
+    [DebuggerDisplay("(X: {X}, Y: {Y}, Z: {Z})")]
     public readonly struct NumThreads
     {
         /// <summary>
