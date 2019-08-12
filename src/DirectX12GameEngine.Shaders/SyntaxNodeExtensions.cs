@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using DirectX12GameEngine.Shaders.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -9,7 +10,7 @@ namespace DirectX12GameEngine.Shaders
     {
         public static TRoot ReplaceType<TRoot>(this TRoot node, TypeSyntax type) where TRoot : SyntaxNode
         {
-            string value = ShaderGenerator.HlslKnownTypes.GetMappedName(type.ToString());
+            string value = HlslKnownTypes.GetMappedName(type.ToString());
 
             if (value == type.ToString())
             {
@@ -33,16 +34,12 @@ namespace DirectX12GameEngine.Shaders
                 return node;
             }
 
-            string? value = ShaderGenerator.HlslKnownMethods.GetMappedName(containingMemberSymbolInfo.Symbol, memberSymbol);
-
-            if (value is null)
-            {
-                return node;
-            }
-            else
+            if (HlslKnownMethods.TryGetMappedName(containingMemberSymbolInfo.Symbol, memberSymbol) is string value)
             {
                 return SyntaxFactory.IdentifierName(value).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
             }
+
+            return node;
         }
     }
 }
