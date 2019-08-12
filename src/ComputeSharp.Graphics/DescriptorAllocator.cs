@@ -1,7 +1,7 @@
 ﻿using System;
 using SharpDX.Direct3D12;
 
-namespace DirectX12GameEngine.Graphics
+namespace ComputeSharp.Graphics
 {
     internal sealed class DescriptorAllocator : IDisposable
     {

@@ -4,7 +4,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using DirectX12GameEngine.Graphics.Buffers.Abstract;
+using ComputeSharp.Graphics.Buffers.Abstract;
 using DirectX12GameEngine.Shaders.Mappings;
 using DirectX12GameEngine.Shaders.Primitives;
 using DirectX12GameEngine.Shaders.Renderer.Models.Abstract;

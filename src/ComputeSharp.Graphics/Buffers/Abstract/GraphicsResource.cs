@@ -1,7 +1,7 @@
 ﻿using System;
 using SharpDX.Direct3D12;
 
-namespace DirectX12GameEngine.Graphics.Buffers.Abstract
+namespace ComputeSharp.Graphics.Buffers.Abstract
 {
     /// <summary>
     /// An abstract <see langword="class"/> that represents a graphics resource object

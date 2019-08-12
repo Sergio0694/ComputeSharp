@@ -1,4 +1,4 @@
-﻿namespace DirectX12GameEngine.Graphics
+﻿namespace ComputeSharp.Graphics
 {
     public enum GraphicsHeapType
     {

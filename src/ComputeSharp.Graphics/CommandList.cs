@@ -1,8 +1,8 @@
 ﻿using System;
-using DirectX12GameEngine.Graphics.Buffers.Abstract;
+using ComputeSharp.Graphics.Buffers.Abstract;
 using SharpDX.Direct3D12;
 
-namespace DirectX12GameEngine.Graphics
+namespace ComputeSharp.Graphics
 {
     public sealed class CommandList : IDisposable
     {

@@ -1,6 +1,6 @@
 ﻿using SharpDX.Direct3D12;
 
-namespace DirectX12GameEngine.Graphics
+namespace ComputeSharp.Graphics
 {
     public sealed class CompiledCommandList
     {

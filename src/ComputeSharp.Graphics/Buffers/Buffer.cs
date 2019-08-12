@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using DirectX12GameEngine.Graphics.Buffers.Abstract;
-using DirectX12GameEngine.Graphics.Helpers;
+using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Graphics.Helpers;
 using SharpDX.Direct3D12;
 
-namespace DirectX12GameEngine.Graphics.Buffers
+namespace ComputeSharp.Graphics.Buffers
 {
     public partial class Buffer : GraphicsResource
     {

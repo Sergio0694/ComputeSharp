@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Numerics;
-using DirectX12GameEngine.Graphics.Buffers;
+using ComputeSharp.Graphics.Buffers;
 using Buffer = System.Buffer;
 
 namespace DirectX12GameEngine.Shaders

@@ -1,6 +1,6 @@
 ﻿using SharpDX.Direct3D12;
 
-namespace DirectX12GameEngine.Graphics
+namespace ComputeSharp.Graphics
 {
     /// <summary>
     /// A <see langword="class"/> representing a custom pipeline state for a compute operation

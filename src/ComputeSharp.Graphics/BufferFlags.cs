@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DirectX12GameEngine.Graphics
+namespace ComputeSharp.Graphics
 {
     [Flags]
     public enum BufferFlags

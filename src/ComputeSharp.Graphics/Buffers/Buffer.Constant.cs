@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DirectX12GameEngine.Graphics.Buffers
+namespace ComputeSharp.Graphics.Buffers
 {
     public partial class Buffer
     {
