@@ -109,6 +109,17 @@ namespace ComputeSharp.Graphics.Buffers
         public HeapType HeapType { get; }
 
         /// <summary>
+        /// Gets or sets a single value from the current buffer
+        /// </summary>
+        /// <param name="i">The index of the value to get or set</param>
+        /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else</remarks>
+        public T this[int i]
+        {
+            get => throw new InvalidOperationException("The indexer APIs can only be used from a compute shader");
+            set => throw new InvalidOperationException("The indexer APIs can only be used from a compute shader");
+        }
+
+        /// <summary>
         /// Reads the contents of the current <see cref="Buffer2{T}"/> instance and writes them into a target <see cref="Span{T}"/>
         /// </summary>
         /// <param name="span">The input <see cref="Span{T}"/> to write data to</param>
