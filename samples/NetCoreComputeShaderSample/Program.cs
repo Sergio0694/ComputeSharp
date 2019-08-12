@@ -2,9 +2,8 @@
 using System.Linq;
 using ComputeSharp;
 using ComputeSharp.Graphics.Buffers;
-using ComputeSharp.Graphics.Buffers.Extensions;
 
-namespace DirectX12ComputeShaderSample
+namespace NetCoreComputeShaderSample
 {
     public class Program
     {
@@ -19,7 +18,11 @@ namespace DirectX12ComputeShaderSample
                 array[i] = i + 1;
             }
 
-            using ReadWriteBuffer<float> gpuBuffer = Gpu.Default.AllocateReadWriteBuffer(array.AsSpan());
+            // Print the initial matrix
+            Console.WriteLine("Before:");
+            PrintMatrix(array, width, height);
+
+            using ReadWriteBuffer<float> gpuBuffer = Gpu.Default.AllocateReadWriteBuffer(array);
 
             // Shader body
             Action<ThreadIds> action = id =>
@@ -31,14 +34,10 @@ namespace DirectX12ComputeShaderSample
             // Run the shader
             Gpu.Default.For(100, action);
 
-            // Print matrix
+            // Get the data back
+            gpuBuffer.GetData(array);
 
-            Console.WriteLine("Before:");
-            PrintMatrix(array, width, height);
-
-            gpuBuffer.GetData(array.AsSpan());
-
-            Console.WriteLine();
+            // Print the updated matrix
             Console.WriteLine("After:");
             PrintMatrix(array, width, height);
         }
