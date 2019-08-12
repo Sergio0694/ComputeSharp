@@ -120,6 +120,19 @@ namespace ComputeSharp.Graphics.Buffers
         }
 
         /// <summary>
+        /// Reads the contents of the current <see cref="Buffer2{T}"/> instance and returns an array
+        /// </summary>
+        /// <returns>A <typeparamref name="T"/> array with the contents of the current buffer</returns>
+        [Pure]
+        public T[] GetData()
+        {
+            T[] data = new T[Size];
+            GetData(data);
+
+            return data;
+        }
+
+        /// <summary>
         /// Reads the contents of the current <see cref="Buffer2{T}"/> instance and writes them into a target <see cref="Span{T}"/>
         /// </summary>
         /// <param name="span">The input <see cref="Span{T}"/> to write data to</param>
