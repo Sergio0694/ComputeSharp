@@ -4,6 +4,16 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
+    <Version>1.0.0-alpha+85bfe4f636407cb9f41ce1c8856c662b634399f0</Version>
+    <Authors>Sergio Pedri</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>A .NET Standard 2.0 library to run C# code in parallel on the GPU through DX12 and dynamically generated HLSL compute shaders</Description>
+    <Copyright>Copyright (c) 2019 Sergio Pedri</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/Sergio0694/ComputeSharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Sergio0694/ComputeSharp</RepositoryUrl>
+    <PackageTags>dotnet net netcore netstandard csharp library graphics shader hlsl compute gpu</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +25,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp.Shaders\ComputeSharp.Shaders.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
