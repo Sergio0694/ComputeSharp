@@ -19,7 +19,7 @@ namespace ComputeSharp.Graphics.Buffers
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
         /// <param name="heapType">The heap type for the current buffer</param>
-        public Buffer2(GraphicsDevice device, int size, HeapType heapType) : base(device)
+        internal Buffer2(GraphicsDevice device, int size, HeapType heapType) : base(device)
         {
             Size = size;
             ElementSizeInBytes = Unsafe.SizeOf<T>();
