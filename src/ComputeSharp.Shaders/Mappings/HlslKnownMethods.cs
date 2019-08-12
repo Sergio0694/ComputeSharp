@@ -30,9 +30,9 @@ namespace ComputeSharp.Shaders.Mappings
             ["System.MathF.PI"] = "3.14159274f",
 
             // ThreadIds
-            ["DirectX12GameEngine.Shaders.Primitives.ThreadIds.X"] = ".x",
-            ["DirectX12GameEngine.Shaders.Primitives.ThreadIds.Y"] = ".y",
-            ["DirectX12GameEngine.Shaders.Primitives.ThreadIds.Z"] = ".z",
+            ["ComputeSharp.ThreadIds.X"] = ".x",
+            ["ComputeSharp.ThreadIds.Y"] = ".y",
+            ["ComputeSharp.ThreadIds.Z"] = ".z",
 
             // Vector3
             ["System.Numerics.Vector3.X"] = ".x",
