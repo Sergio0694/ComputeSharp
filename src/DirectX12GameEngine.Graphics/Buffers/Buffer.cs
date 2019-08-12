@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using DirectX12GameEngine.Core.Helpers;
 using DirectX12GameEngine.Graphics.Buffers.Abstract;
+using DirectX12GameEngine.Graphics.Helpers;
 using SharpDX.Direct3D12;
 
 namespace DirectX12GameEngine.Graphics.Buffers

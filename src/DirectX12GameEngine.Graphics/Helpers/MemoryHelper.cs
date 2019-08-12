@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace DirectX12GameEngine.Core.Helpers
+namespace DirectX12GameEngine.Graphics.Helpers
 {
     /// <summary>
     /// A <see langword="class"/> with some helper methods to copy data between memory areas

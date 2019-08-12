@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectX12GameEngine.Graphic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectX12GameEngine.Shaders", "DirectX12GameEngine.Shaders\DirectX12GameEngine.Shaders.csproj", "{23AE6EED-79CD-4ADD-9A85-0148BD957D19}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectX12GameEngine.Core", "DirectX12GameEngine.Core\DirectX12GameEngine.Core.csproj", "{314EB353-E7E3-4146-8111-685CC83EC1DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp", "ComputeSharp\ComputeSharp.csproj", "{314EB353-E7E3-4146-8111-685CC83EC1DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectX12ComputeShaderSample", "DirectX12ComputeShaderSample\DirectX12ComputeShaderSample.csproj", "{7A48A85D-8866-4DED-A404-653ED09BF396}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectX12ComputeShaderSample", "DirectX12ComputeShaderSample\DirectX12ComputeShaderSample.csproj", "{7A48A85D-8866-4DED-A404-653ED09BF396}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
