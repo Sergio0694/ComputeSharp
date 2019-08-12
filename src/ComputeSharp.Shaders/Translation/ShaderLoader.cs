@@ -14,7 +14,7 @@ using SharpDX.Direct3D12;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized
 
-namespace ComputeSharp.Shaders
+namespace ComputeSharp.Shaders.Translation
 {
     /// <summary>
     /// A <see langword="class"/> responsible for loading and processing <see cref="Action{T}"/> instances

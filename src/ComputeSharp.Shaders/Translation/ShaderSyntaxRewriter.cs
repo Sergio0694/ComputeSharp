@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace ComputeSharp.Shaders
+namespace ComputeSharp.Shaders.Translation
 {
     /// <summary>
     /// A custom <see cref="CSharpSyntaxRewriter"/> <see langword="class"/> that processes C# methods to convert to HLSL

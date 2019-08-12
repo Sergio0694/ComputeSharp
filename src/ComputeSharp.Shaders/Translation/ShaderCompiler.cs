@@ -3,7 +3,7 @@ using System.Diagnostics.Contracts;
 using DotNetDxc;
 using SharpDX.Direct3D12;
 
-namespace ComputeSharp.Shaders
+namespace ComputeSharp.Shaders.Translation
 {
     /// <summary>
     /// A <see langword="class"/> that uses the <see cref="HlslDxcLib"/> APIs to compile compute shaders
