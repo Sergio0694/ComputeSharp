@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
-using DirectX12GameEngine.Graphics;
-using DirectX12GameEngine.Shaders;
-using DirectX12GameEngine.Shaders.Primitives;
-using DirectX12GameEngine.Shaders.Renderer;
-using DirectX12GameEngine.Shaders.Renderer.Models;
+using ComputeSharp;
+using ComputeSharp.Graphics;
+using ComputeSharp.Shaders;
+using ComputeSharp.Shaders.Renderer;
+using ComputeSharp.Shaders.Renderer.Models;
 using SharpDX.Direct3D12;
-using CommandList = DirectX12GameEngine.Graphics.CommandList;
-using PipelineState = DirectX12GameEngine.Graphics.PipelineState;
+using CommandList = ComputeSharp.Graphics.CommandList;
+using PipelineState = ComputeSharp.Graphics.PipelineState;
 using ShaderBytecode = SharpDX.Direct3D12.ShaderBytecode;
 
 namespace DirectX12ComputeShaderSample

@@ -1,9 +1,8 @@
-﻿using DirectX12GameEngine.Shaders;
-using System;
+﻿using System;
 using System.Linq;
-using DirectX12GameEngine.Graphics.Buffers;
-using DirectX12GameEngine.Shaders.Primitives;
-using Buffer = DirectX12GameEngine.Graphics.Buffers.Buffer;
+using ComputeSharp;
+using ComputeSharp.Graphics.Buffers;
+using ComputeSharp.Graphics.Buffers.Extensions;
 
 namespace DirectX12ComputeShaderSample
 {
@@ -20,16 +19,12 @@ namespace DirectX12ComputeShaderSample
                 array[i] = i + 1;
             }
 
-            using Buffer<float> gpuBuffer = Buffer.UnorderedAccess.New(Gpu.Default, array.AsSpan());
-
-            // Variables for closure
-            uint size = (uint)width;
-            var data = gpuBuffer.GetGpuResource();
+            using ReadWriteBuffer<float> gpuBuffer = Gpu.Default.AllocateReadWriteBuffer(array.AsSpan());
 
             // Shader body
             Action<ThreadIds> action = id =>
             {
-                data[id.X + id.Y * size] *= 2;
+                gpuBuffer[id.X + id.Y * (uint)width] *= 2;
             };
 
             // Run the shader
