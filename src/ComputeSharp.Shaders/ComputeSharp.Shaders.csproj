@@ -35,11 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Assets\ShaderTemplate.mustache" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Assets\ShaderTemplate.mustache">
+    <Content Include="Renderer\Templates\ShaderTemplate.mustache">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

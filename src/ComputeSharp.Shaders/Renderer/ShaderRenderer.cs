@@ -24,7 +24,7 @@ namespace ComputeSharp.Shaders.Renderer
             string
                 assemblyPath = Assembly.GetExecutingAssembly().Location,
                 assemblyDirectory = Path.GetDirectoryName(assemblyPath) ?? throw new InvalidOperationException("Can't find the assembly directory"),
-                templatePath = Path.Combine(assemblyDirectory, "Assets", "ShaderTemplate.mustache");
+                templatePath = Path.Combine(assemblyDirectory, "Renderer", "Templates", "ShaderTemplate.mustache");
             Template = File.ReadAllText(templatePath);
         }
 
