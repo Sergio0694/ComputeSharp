@@ -27,12 +27,12 @@ namespace ComputeSharp.Graphics.Buffers
             HeapType = heapType;
 
             ResourceFlags flags = heapType == HeapType.Default ? ResourceFlags.AllowUnorderedAccess : ResourceFlags.None;
-            ResourceDescription description = ResourceDescription.Buffer(ElementSizeInBytes, flags);
+            ResourceDescription description = ResourceDescription.Buffer(SizeInBytes, flags);
             ResourceStates resourceStates = heapType switch
             {
                 HeapType.Upload => ResourceStates.GenericRead,
                 HeapType.Readback => ResourceStates.CopyDestination,
-                _ => ResourceStates.CopyDestination
+                _ => ResourceStates.Common
             };
 
             NativeResource = GraphicsDevice.NativeDevice.CreateCommittedResource(new HeapProperties(heapType), HeapFlags.None, description, resourceStates);
