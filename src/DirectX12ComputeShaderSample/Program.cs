@@ -1,8 +1,8 @@
 ﻿using DirectX12GameEngine.Shaders;
-using DirectX12GameEngine.Shaders.Numerics;
 using System;
 using System.Linq;
 using DirectX12GameEngine.Graphics.Buffers;
+using DirectX12GameEngine.Shaders.Primitives;
 using Buffer = DirectX12GameEngine.Graphics.Buffers.Buffer;
 
 namespace DirectX12ComputeShaderSample
@@ -27,7 +27,7 @@ namespace DirectX12ComputeShaderSample
             var data = gpuBuffer.GetGpuResource();
 
             // Shader body
-            Action<UInt3> action = id =>
+            Action<ThreadIds> action = id =>
             {
                 data[id.X + id.Y * size] *= 2;
             };

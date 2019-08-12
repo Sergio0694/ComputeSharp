@@ -13,6 +13,7 @@
     </PackageReference>
     <PackageReference Include="ICSharpCode.Decompiler" Version="5.0.0.4861-preview3" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.3.0-beta1-final" />
+    <PackageReference Include="Nustache" Version="1.16.0.10" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.1-beta0-g3060495c2a" />
   </ItemGroup>
 
@@ -30,6 +31,16 @@
     <Content Include="..\Libs\runtimes\win-x64\native\*.*">
       <PackagePath>runtimes\win-x64\native</PackagePath>
       <Pack>true</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\ShaderTemplate.mustache" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\ShaderTemplate.mustache">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

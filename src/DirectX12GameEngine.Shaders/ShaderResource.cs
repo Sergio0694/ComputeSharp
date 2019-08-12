@@ -9,39 +9,6 @@ namespace DirectX12GameEngine.Shaders
     {
     }
 
-    [SamplerResource]
-    public class SamplerResource : ShaderResource
-    {
-    }
-
-    [SamplerResource]
-    public class SamplerComparisonResource : ShaderResource
-    {
-    }
-
-    [TextureResource]
-    public class Texture2DResource : ShaderResource
-    {
-        public Vector4 Sample(SamplerResource sampler, Vector2 texCoord) => throw new NotImplementedException();
-    }
-
-    [TextureResource]
-    public class Texture2DResource<T> : ShaderResource where T : unmanaged
-    {
-        public T Sample(SamplerResource sampler, Vector2 texCoord) => throw new NotImplementedException();
-    }
-
-    [TextureResource]
-    public class Texture2DArrayResource : ShaderResource
-    {
-    }
-
-    [TextureResource]
-    public class TextureCubeResource : ShaderResource
-    {
-    }
-
-    [UnorderedAccessViewResource]
     public sealed class RWBufferResource<T> : ShaderResource where T : unmanaged
     {
         internal RWBufferResource(Buffer<T> buffer) => Buffer = buffer;
@@ -57,11 +24,5 @@ namespace DirectX12GameEngine.Shaders
         {
             return new RWBufferResource<T>(buffer);
         }
-    }
-
-    [UnorderedAccessViewResource]
-    public class RWTexture2DResource<T> : ShaderResource where T : unmanaged
-    {
-        public T this[Numerics.UInt2 index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }
