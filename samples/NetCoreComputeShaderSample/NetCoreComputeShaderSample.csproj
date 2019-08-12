@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />
+    <ProjectReference Include="..\..\src\ComputeSharp\ComputeSharp.csproj" />
   </ItemGroup>
 
 </Project>

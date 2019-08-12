@@ -9,12 +9,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Shaders", "Com
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp", "ComputeSharp\ComputeSharp.csproj", "{314EB353-E7E3-4146-8111-685CC83EC1DE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectX12ComputeShaderSample", "DirectX12ComputeShaderSample\DirectX12ComputeShaderSample.csproj", "{7A48A85D-8866-4DED-A404-653ED09BF396}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreComputeShaderSample", "..\samples\NetCoreComputeShaderSample\NetCoreComputeShaderSample.csproj", "{7A48A85D-8866-4DED-A404-653ED09BF396}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_SolutionItems", "_SolutionItems", "{1A9C4108-F61A-4ABE-B5CF-F524521EAE2D}"
 	ProjectSection(SolutionItems) = preProject
 		..\.gitignore = ..\.gitignore
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7A48A85D-8866-4DED-A404-653ED09BF396} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4664C5E3-0340-4E22-BCFD-98AAEDF5F2DC}
