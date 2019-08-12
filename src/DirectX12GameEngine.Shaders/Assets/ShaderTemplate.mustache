@@ -1,13 +1,13 @@
 ﻿{{#FieldsList}}
 {{!Static scalar}}
 {{#IsStaticScalarField}}
-static {{FieldType}} {{FieldName}} = {{FieldValue}};
+static {{&FieldType}} {{FieldName}} = {{FieldValue}};
 {{/IsStaticScalarField}}
 {{!Constant buffer}}
 {{#IsConstantBuffer}}
 cbuffer {{FieldName}}Buffer : register(b{{ConstantBufferIndex}})
 {
-{{FieldType}} {{FieldName}};
+{{&FieldType}} {{FieldName}};
 }
 {{/IsConstantBuffer}}
 {{!Read write buffer}}
@@ -20,6 +20,4 @@ cbuffer {{FieldName}}Buffer : register(b{{ConstantBufferIndex}})
 [Shader("compute")]
 [NumThreads({{ThreadsX}}, {{ThreadsY}}, {{ThreadsZ}})]
 void CSMain(uint3 {{ThreadsIdsVariableName}} : SV_DispatchThreadId)
-{
-{{ShaderBody}}
-}
+{{&ShaderBody}}
