@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.18362.2002-preview" />
     <PackageReference Include="SharpDX.Direct3D12" Version="4.2.1-beta0-gab36f12303" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\DirectX12GameEngine.Core\ComputeSharp.csproj" />
+    <PackageReference Include="System.Memory" Version="4.5.3" />
+    <PackageReference Include="System.Numerics.Vectors" Version="4.6.0-preview5.19224.8" />
+    <PackageReference Include="System.Runtime.InteropServices.WindowsRuntime" Version="4.3.0" />
   </ItemGroup>
 
 </Project>
