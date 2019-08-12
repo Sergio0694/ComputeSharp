@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+using ComputeSharp.Graphics;
+using ComputeSharp.Graphics.Buffers;
 
-namespace ComputeSharp.Graphics.Buffers.Extensions
+namespace ComputeSharp
 {
     /// <summary>
     /// A <see langword="class"/> with extension methods for the <see cref="GraphicsDevice"/> type to allocate buffers

@@ -2,7 +2,6 @@
 using System.Linq;
 using ComputeSharp;
 using ComputeSharp.Graphics.Buffers;
-using ComputeSharp.Graphics.Buffers.Extensions;
 
 namespace NetCoreComputeShaderSample
 {
