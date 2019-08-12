@@ -170,6 +170,7 @@ namespace ComputeSharp.Graphics.Buffers
                 using Buffer2<T> uploadBuffer = new Buffer2<T>(GraphicsDevice, Size, HeapType.Upload);
                 using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
+                uploadBuffer.SetData(span);
                 copyCommandList.CopyBufferRegion(uploadBuffer, 0, this, 0, SizeInBytes);
                 copyCommandList.Flush(true);
             }
