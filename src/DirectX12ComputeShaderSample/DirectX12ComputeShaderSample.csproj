@@ -6,8 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ComputeSharp.Graphics\ComputeSharp.Graphics.csproj" />
-    <ProjectReference Include="..\ComputeSharp.Shaders\ComputeSharp.Shaders.csproj" />
+    <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />
   </ItemGroup>
 
 </Project>
