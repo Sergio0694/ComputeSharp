@@ -2,8 +2,6 @@
 using System.Linq;
 using ComputeSharp;
 using ComputeSharp.Graphics.Buffers;
-using ComputeSharp.Shaders;
-using Buffer = ComputeSharp.Graphics.Buffers.Buffer;
 
 namespace DirectX12ComputeShaderSample
 {
