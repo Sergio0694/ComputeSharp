@@ -20,16 +20,12 @@ namespace DirectX12ComputeShaderSample
                 array[i] = i + 1;
             }
 
-            using Buffer<float> gpuBuffer = Buffer.UnorderedAccess.New(Gpu.Default, array.AsSpan());
-
-            // Variables for closure
-            uint size = (uint)width;
-            var data = gpuBuffer.GetGpuResource();
+            using Buffer2<float> gpuBuffer = Gpu.Default.AllocateReadWriteBuffer(array.AsSpan());
 
             // Shader body
             Action<ThreadIds> action = id =>
             {
-                data[id.X + id.Y * size] *= 2;
+                gpuBuffer[id.X + id.Y * (uint)width] *= 2;
             };
 
             // Run the shader

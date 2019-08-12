@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Numerics;
 using System.Text.RegularExpressions;
+using ComputeSharp.Graphics.Buffers;
 
 namespace ComputeSharp.Shaders.Mappings
 {
@@ -26,7 +27,7 @@ namespace ComputeSharp.Shaders.Mappings
             [typeof(Vector4).FullName] = "float4",
             [typeof(Matrix4x4).FullName] = "float4x4",
             [typeof(ThreadIds).FullName] = "uint3",
-            [typeof(RWBufferResource<>).FullName] = "RWBuffer"
+            [typeof(Buffer2<>).FullName] = "RWBuffer"
         };
 
         /// <summary>
@@ -53,13 +54,13 @@ namespace ComputeSharp.Shaders.Mappings
                                                            type == typeof(Matrix4x4);
 
         /// <summary>
-        /// Checks whether or not the input type is a <see cref="RWBufferResource{T}"/> value
+        /// Checks whether or not the input type is a <see cref="Buffer2{T}"/> value
         /// </summary>
         /// <param name="type">The input <see cref="Type"/> instance to check</param>
-        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a <see cref="RWBufferResource{T}"/> instance</returns>
+        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a <see cref="Buffer2{T}"/> instance</returns>
         [Pure]
-        public static bool IsReadWriteBufferType(Type type) => type.IsGenericType &&
-                                                               type.GetGenericTypeDefinition() == typeof(RWBufferResource<>);
+        public static bool IsBufferType(Type type) => type.IsGenericType &&
+                                                      type.GetGenericTypeDefinition() == typeof(Buffer2<>);
 
         /// <summary>
         /// Checks whether or not a given <see cref="Type"/> is an HLSL known type
