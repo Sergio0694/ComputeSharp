@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
-using SharpDX.Direct3D12;
 
-namespace ComputeSharp.Graphics.Buffers
+namespace ComputeSharp.Graphics.Buffers.Extensions
 {
     /// <summary>
     /// A <see langword="class"/> with extension methods for the <see cref="GraphicsDevice"/> type to allocate buffers
