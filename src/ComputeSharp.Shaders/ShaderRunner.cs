@@ -19,11 +19,21 @@ namespace ComputeSharp.Shaders
         /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader</param>
-        /// <param name="numThreads">The <see cref="NumThreads"/> value that indicates the number of threads to run in each thread group</param>
-        /// <param name="numGroups">The <see cref="NumThreads"/> value that indicates the number of thread groups to dispatch</param>
+        /// <param name="x">The number of threads to run on the X axis</param>
+        /// <param name="y">The number of threads to run on the Y axis</param>
+        /// <param name="z">The number of threads to run on the Z axis</param>
         /// <param name="action">The input <see cref="Action{T}"/> representing the compute shader to run</param>
-        public static void Run(GraphicsDevice device, NumThreads numThreads, NumThreads numGroups, Action<ThreadIds> action)
+        public static void Run(GraphicsDevice device, int x, int y, int z, Action<ThreadIds> action)
         {
+            // Calculate the optimized thread num and group values
+            int
+                threadsX = device.WavefrontSize,
+                threadsY = y > 1 ? device.WavefrontSize : 1,
+                threadsZ = z > 1 ? device.WavefrontSize : 1,
+                groupsX = (x - 1) / device.WavefrontSize + 1,
+                groupsY = (y - 1) / device.WavefrontSize + 1,
+                groupsZ = (z - 1) / device.WavefrontSize + 1;
+
             // Load the input shader
             ShaderLoader shaderLoader = ShaderLoader.Load(action);
 
@@ -31,9 +41,12 @@ namespace ComputeSharp.Shaders
             ShaderInfo shaderInfo = new ShaderInfo
             {
                 FieldsList = shaderLoader.FieldsInfo,
-                NumThreadsX = numThreads.X,
-                NumThreadsY = numThreads.Y,
-                NumThreadsZ = numThreads.Z,
+                ThreadsX = x,
+                ThreadsY = y,
+                ThreadsZ = z,
+                NumThreadsX = threadsX,
+                NumThreadsY = threadsY,
+                NumThreadsZ = threadsZ,
                 ThreadsIdsVariableName = shaderLoader.ThreadsIdsVariableName,
                 ShaderBody = shaderLoader.MethodBody
             };
@@ -58,7 +71,7 @@ namespace ComputeSharp.Shaders
             }
 
             // Dispatch and wait for completion
-            commandList.Dispatch(numGroups.X, numGroups.Y, numGroups.Z);
+            commandList.Dispatch(groupsX, groupsY, groupsZ);
             commandList.Flush(true);
         }
     }
