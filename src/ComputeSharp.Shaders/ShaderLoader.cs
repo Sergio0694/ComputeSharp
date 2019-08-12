@@ -4,7 +4,6 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using ComputeSharp.Graphics.Buffers;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Renderer.Models.Fields;
@@ -116,8 +115,7 @@ namespace ComputeSharp.Shaders
                 FieldInfoBase processedFieldInfo;
 
                 // Read write buffer
-                if (HlslKnownTypes.IsBufferType(fieldType) &&
-                    (HeapType)fieldType.GetProperty(nameof(Buffer<byte>.HeapType)).GetValue(fieldValue) == HeapType.Default)
+                if (HlslKnownTypes.IsReadWriteBufferType(fieldType))
                 {
                     // Root parameter for a read write buffer
                     DescriptorRange range = new DescriptorRange(DescriptorRangeType.UnorderedAccessView, 1, readWriteBuffersCount);

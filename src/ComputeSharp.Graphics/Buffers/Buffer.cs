@@ -11,7 +11,7 @@ namespace ComputeSharp.Graphics.Buffers
     /// A <see langword="class"/> representing a typed buffer stored on GPU memory
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffer</typeparam>
-    public sealed class Buffer<T> : GraphicsResource where T : unmanaged
+    public class Buffer<T> : GraphicsResource where T : unmanaged
     {
         /// <summary>
         /// Creates a new <see cref="Buffer{T}"/> instance with the specified parameters
@@ -19,7 +19,7 @@ namespace ComputeSharp.Graphics.Buffers
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
         /// <param name="heapType">The heap type for the current buffer</param>
-        internal Buffer(GraphicsDevice device, int size, HeapType heapType) : base(device)
+        protected internal Buffer(GraphicsDevice device, int size, HeapType heapType) : base(device)
         {
             Size = size;
             ElementSizeInBytes = Unsafe.SizeOf<T>();
@@ -107,17 +107,6 @@ namespace ComputeSharp.Graphics.Buffers
         /// Gets the heap type being targeted by the current buffer
         /// </summary>
         public HeapType HeapType { get; }
-
-        /// <summary>
-        /// Gets or sets a single value from the current buffer
-        /// </summary>
-        /// <param name="i">The index of the value to get or set</param>
-        /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else</remarks>
-        public T this[uint i]
-        {
-            get => throw new InvalidOperationException("The indexer APIs can only be used from a compute shader");
-            set => throw new InvalidOperationException("The indexer APIs can only be used from a compute shader");
-        }
 
         /// <summary>
         /// Reads the contents of the current <see cref="Buffer{T}"/> instance and returns an array

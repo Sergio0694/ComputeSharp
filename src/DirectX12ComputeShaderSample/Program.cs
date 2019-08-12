@@ -18,7 +18,7 @@ namespace DirectX12ComputeShaderSample
                 array[i] = i + 1;
             }
 
-            using Buffer<float> gpuBuffer = Gpu.Default.AllocateReadWriteBuffer(array.AsSpan());
+            using ReadWriteBuffer<float> gpuBuffer = Gpu.Default.AllocateReadWriteBuffer(array.AsSpan());
 
             // Shader body
             Action<ThreadIds> action = id =>
