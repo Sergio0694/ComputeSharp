@@ -70,7 +70,7 @@ namespace DirectX12GameEngine.Shaders.Mappings
         [Pure]
         public static bool IsKnownType(Type type)
         {
-            Type declaredType = type.GetElementOrDeclaredType();
+            Type declaredType = type.IsArray ? type.GetElementType() : type;
             string fullname = $"{declaredType.Namespace}{Type.Delimiter}{declaredType.Name}";
 
             return KnownTypes.ContainsKey(fullname);
@@ -84,7 +84,7 @@ namespace DirectX12GameEngine.Shaders.Mappings
         [Pure]
         public static string GetMappedName(Type type)
         {
-            Type declaredType = type.GetElementOrDeclaredType();
+            Type declaredType = type.IsArray ? type.GetElementType() : type;
             string
                 fullname = $"{declaredType.Namespace}{Type.Delimiter}{declaredType.Name}",
                 mappedName = KnownTypes.TryGetValue(fullname, out string mapped) ? mapped : declaredType.Name,
