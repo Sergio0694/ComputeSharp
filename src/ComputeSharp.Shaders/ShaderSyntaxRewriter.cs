@@ -1,32 +1,29 @@
-﻿using System;
-using System.Linq;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ComputeSharp.Shaders
 {
+    /// <summary>
+    /// A custom <see cref="CSharpSyntaxRewriter"/> <see langword="class"/> that processes C# methods to convert to HLSL
+    /// </summary>
     public class ShaderSyntaxRewriter : CSharpSyntaxRewriter
     {
-        private readonly int depth;
-        private readonly bool isTopLevel;
-        private readonly SemanticModel semanticModel;
+        /// <summary>
+        /// The <see cref="Microsoft.CodeAnalysis.SemanticModel"/> instance to use to rewrite the decompiled code
+        /// </summary>
+        private readonly SemanticModel SemanticModel;
 
-        public ShaderSyntaxRewriter(SemanticModel semanticModel, bool isTopLevel = false, int depth = 0)
-        {
-            this.semanticModel = semanticModel;
-            this.isTopLevel = isTopLevel;
-            this.depth = depth;
-        }
+        /// <summary>
+        /// Creates a new <see cref="ShaderSyntaxRewriter"/> instance with the specified parameters
+        /// </summary>
+        /// <param name="semanticModel"></param>
+        public ShaderSyntaxRewriter(SemanticModel semanticModel) => SemanticModel = semanticModel;
 
+        /// <inheritdoc/>
         public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
             node = (MethodDeclarationSyntax)base.VisitMethodDeclaration(node);
-
-            if (isTopLevel && depth > 0)
-            {
-                node = node.ReplaceToken(node.Identifier, SyntaxFactory.Identifier($"Base_{depth}_{node.Identifier.ValueText}"));
-            }
 
             SyntaxTokenList modifiers = new SyntaxTokenList();
 
@@ -38,6 +35,7 @@ namespace ComputeSharp.Shaders
             return node.ReplaceType(node.ReturnType).WithModifiers(modifiers);
         }
 
+        /// <inheritdoc/>
         public override SyntaxNode VisitParameter(ParameterSyntax node)
         {
             node = (ParameterSyntax)base.VisitParameter(node);
@@ -47,18 +45,23 @@ namespace ComputeSharp.Shaders
             return node;
         }
 
+        /// <inheritdoc/>
         public override SyntaxNode VisitCastExpression(CastExpressionSyntax node)
         {
             node = (CastExpressionSyntax)base.VisitCastExpression(node);
+
             return node.ReplaceType(node.Type);
         }
 
+        /// <inheritdoc/>
         public override SyntaxNode VisitLocalDeclarationStatement(LocalDeclarationStatementSyntax node)
         {
             node = (LocalDeclarationStatementSyntax)base.VisitLocalDeclarationStatement(node);
+
             return node.ReplaceType(node.Declaration.Type);
         }
 
+        /// <inheritdoc/>
         public override SyntaxNode VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
         {
             node = (ObjectCreationExpressionSyntax)base.VisitObjectCreationExpression(node);
@@ -68,48 +71,25 @@ namespace ComputeSharp.Shaders
             {
                 return SyntaxFactory.CastExpression(node.Type, SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(0)));
             }
-            else
-            {
-                return SyntaxFactory.InvocationExpression(node.Type, node.ArgumentList);
-            }
+
+            return SyntaxFactory.InvocationExpression(node.Type, node.ArgumentList);
         }
 
+        /// <inheritdoc/>
         public override SyntaxNode VisitDefaultExpression(DefaultExpressionSyntax node)
         {
             node = (DefaultExpressionSyntax)base.VisitDefaultExpression(node);
             node = node.ReplaceType(node.Type);
+
             return SyntaxFactory.CastExpression(node.Type, SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(0)));
         }
 
+        /// <inheritdoc/>
         public override SyntaxNode VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
         {
             node = (MemberAccessExpressionSyntax)base.VisitMemberAccessExpression(node);
 
-            if (node.Expression is BaseExpressionSyntax)
-            {
-                if (isTopLevel)
-                {
-                    return SyntaxFactory.IdentifierName($"Base_{depth + 1}_{node.Name}");
-                }
-                else
-                {
-                    SymbolInfo memberSymbolInfo = semanticModel.GetSymbolInfo(node.Name);
-                    ISymbol? memberSymbol = memberSymbolInfo.Symbol ?? memberSymbolInfo.CandidateSymbols.FirstOrDefault();
-
-                    if (memberSymbol != null)
-                    {
-                        return SyntaxFactory.IdentifierName($"{memberSymbol.ContainingType.Name}::{node.Name}");
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException();
-                    }
-                }
-            }
-            else
-            {
-                return node.ReplaceMember(semanticModel);
-            }
+            return node.ReplaceMember(SemanticModel);
         }
     }
 }

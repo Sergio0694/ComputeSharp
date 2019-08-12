@@ -151,7 +151,7 @@ namespace ComputeSharp.Shaders
             MethodDecompiler.Instance.GetSyntaxTree(Action.Method, out SyntaxNode root, out SemanticModel semanticModel);
 
             // Rewrite the shader method (eg. to fix the type declarations)
-            ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel, true);
+            ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel);
             root = syntaxRewriter.Visit(root);
 
             // Get the thread ids identifier name and shader method body
