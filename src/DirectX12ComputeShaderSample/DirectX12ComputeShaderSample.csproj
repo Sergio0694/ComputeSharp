@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp.Graphics\ComputeSharp.Graphics.csproj" />
-    <ProjectReference Include="..\DirectX12GameEngine.Shaders\DirectX12GameEngine.Shaders.csproj" />
+    <ProjectReference Include="..\ComputeSharp.Shaders\ComputeSharp.Shaders.csproj" />
   </ItemGroup>
 
 </Project>

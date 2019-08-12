@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29201.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Graphics", "ComputeSharp.Graphics\ComputeSharp.Graphics.csproj", "{2499CC74-BC9A-4B30-A3B6-05F9C7BF9B34}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DirectX12GameEngine.Shaders", "DirectX12GameEngine.Shaders\DirectX12GameEngine.Shaders.csproj", "{23AE6EED-79CD-4ADD-9A85-0148BD957D19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Shaders", "ComputeSharp.Shaders\ComputeSharp.Shaders.csproj", "{23AE6EED-79CD-4ADD-9A85-0148BD957D19}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp", "ComputeSharp\ComputeSharp.csproj", "{314EB353-E7E3-4146-8111-685CC83EC1DE}"
 EndProject
