@@ -18,6 +18,11 @@ cbuffer {{FieldName}}Buffer : register(b{{ConstantBufferIndex}})
 {{/FieldsList}}
 {{!Shader entry point}}
 [Shader("compute")]
-[NumThreads({{ThreadsX}}, {{ThreadsY}}, {{ThreadsZ}})]
+[NumThreads({{NumThreadsX}}, {{NumThreadsY}}, {{NumThreadsZ}})]
 void CSMain(uint3 {{ThreadsIdsVariableName}} : SV_DispatchThreadId)
+{
+if ({{ThreadsIdsVariableName}}.x < {{ThreadsX}} &&
+    {{ThreadsIdsVariableName}}.y < {{ThreadsY}} &&
+    {{ThreadsIdsVariableName}}.z < {{ThreadsZ}})
 {{&ShaderBody}}
+}

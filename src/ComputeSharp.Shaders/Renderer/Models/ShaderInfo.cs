@@ -18,17 +18,17 @@ namespace ComputeSharp.Shaders.Renderer.Models
         /// <summary>
         /// Gets or sets the number of threads in the X group
         /// </summary>
-        public int ThreadsX { get; set; }
+        public int NumThreadsX { get; set; }
 
         /// <summary>
         /// Gets or sets the number of threads in the Y group
         /// </summary>
-        public int ThreadsY { get; set; }
+        public int NumThreadsY { get; set; }
 
         /// <summary>
         /// Gets or sets the number of threads in the Z group
         /// </summary>
-        public int ThreadsZ { get; set; }
+        public int NumThreadsZ { get; set; }
 
         /// <summary>
         /// Gets or sets the name for the threads id variable used in the shader

@@ -31,9 +31,9 @@ namespace ComputeSharp.Shaders
             ShaderInfo shaderInfo = new ShaderInfo
             {
                 FieldsList = shaderLoader.FieldsInfo,
-                ThreadsX = numThreads.X,
-                ThreadsY = numThreads.Y,
-                ThreadsZ = numThreads.Z,
+                NumThreadsX = numThreads.X,
+                NumThreadsY = numThreads.Y,
+                NumThreadsZ = numThreads.Z,
                 ThreadsIdsVariableName = shaderLoader.ThreadsIdsVariableName,
                 ShaderBody = shaderLoader.MethodBody
             };
