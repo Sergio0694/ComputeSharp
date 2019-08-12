@@ -15,6 +15,7 @@ namespace ComputeSharp.Graphics
             if (enableDebugLayer) DebugInterface.Get().EnableDebugLayer();
 #endif
             NativeDevice = new Device(null, FeatureLevel);
+            WavefrontSize = NativeDevice.D3D12Options1.WaveLaneCountMin;
 
             NativeComputeCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(SharpDX.Direct3D12.CommandListType.Compute));
             NativeCopyCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(SharpDX.Direct3D12.CommandListType.Copy));
@@ -39,6 +40,11 @@ namespace ComputeSharp.Graphics
             CopyCommandList = new CommandList(this, CommandListType.Copy);
             CopyCommandList.Close();
         }
+
+        /// <summary>
+        /// Gets the number of lanes in a SIMD wave on the current device (also known as "wavefront size" or "warp width")
+        /// </summary>
+        public int WavefrontSize { get; }
 
         public CommandList CommandList { get; }
 

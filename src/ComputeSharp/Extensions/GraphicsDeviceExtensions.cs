@@ -10,22 +10,12 @@ namespace ComputeSharp
     public static class GraphicsDeviceExtensions
     {
         /// <summary>
-        /// The default number of threads in a thead froup
-        /// </summary>
-        public const int DefaultThreadGroupCount = 64;
-
-        /// <summary>
         /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader</param>
         /// <param name="x">The number of threads to run on the X axis</param>
         /// <param name="action">The input <see cref="Action{T}"/> representing the compute shader to run</param>
-        public static void For(this GraphicsDevice device, int x, Action<ThreadIds> action)
-        {
-            int groupsX = (x - 1) / DefaultThreadGroupCount + 1;
-
-            ShaderRunner.Run(device, (DefaultThreadGroupCount, 1), (groupsX, 1), action);
-        }
+        public static void For(this GraphicsDevice device, int x, Action<ThreadIds> action) => device.For(x, 1, 1, action);
 
         /// <summary>
         /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters
@@ -34,14 +24,7 @@ namespace ComputeSharp
         /// <param name="x">The number of threads to run on the X axis</param>
         /// <param name="y">The number of threads to run on the Y axis</param>
         /// <param name="action">The input <see cref="Action{T}"/> representing the compute shader to run</param>
-        public static void For(this GraphicsDevice device, int x, int y, Action<ThreadIds> action)
-        {
-            int
-                groupsX = (x - 1) / DefaultThreadGroupCount + 1,
-                groupsY = (y - 1) / DefaultThreadGroupCount + 1;
-
-            ShaderRunner.Run(device, (DefaultThreadGroupCount, DefaultThreadGroupCount), (groupsX, groupsY), action);
-        }
+        public static void For(this GraphicsDevice device, int x, int y, Action<ThreadIds> action) => device.For(x, y, 1, action);
 
         /// <summary>
         /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters
@@ -54,11 +37,14 @@ namespace ComputeSharp
         public static void For(this GraphicsDevice device, int x, int y, int z, Action<ThreadIds> action)
         {
             int
-                groupsX = (x - 1) / DefaultThreadGroupCount + 1,
-                groupsY = (y - 1) / DefaultThreadGroupCount + 1,
-                groupsZ = (z - 1) / DefaultThreadGroupCount + 1;
+                threadsX = device.WavefrontSize,
+                threadsY = y > 1 ? device.WavefrontSize : 1,
+                threadsZ = z > 1 ? device.WavefrontSize : 1,
+                groupsX = (x - 1) / device.WavefrontSize + 1,
+                groupsY = (y - 1) / device.WavefrontSize + 1,
+                groupsZ = (z - 1) / device.WavefrontSize + 1;
 
-            ShaderRunner.Run(device, (DefaultThreadGroupCount, DefaultThreadGroupCount, DefaultThreadGroupCount), (groupsX, groupsY, groupsZ), action);
+            ShaderRunner.Run(device, (threadsX, threadsY, threadsZ), (groupsX, groupsY, groupsZ), action);
         }
 
         /// <summary>
