@@ -113,7 +113,7 @@ namespace ComputeSharp.Graphics.Buffers
         /// </summary>
         /// <param name="i">The index of the value to get or set</param>
         /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else</remarks>
-        public T this[int i]
+        public T this[uint i]
         {
             get => throw new InvalidOperationException("The indexer APIs can only be used from a compute shader");
             set => throw new InvalidOperationException("The indexer APIs can only be used from a compute shader");
