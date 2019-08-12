@@ -24,7 +24,9 @@ namespace DirectX12ComputeShaderSample
             // Shader body
             Action<ThreadIds> action = id =>
             {
-                gpuBuffer[id.X + id.Y * (uint)width] *= 2;
+                uint offset = id.X + id.Y * (uint)width;
+                if (offset > 99) return;
+                gpuBuffer[offset] *= 2;
             };
 
             // Run the shader
