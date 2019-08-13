@@ -13,9 +13,14 @@ namespace ComputeSharp.Shaders.Renderer.Models.Fields
         public bool IsConstantBuffer { get; } = true;
 
         /// <summary>
+        /// Gets whether or not this constant buffer actually contains a single, explicit variable
+        /// </summary>
+        public bool IsSingleValue { get; }
+
+        /// <summary>
         /// Gets the index of the current constant buffer field
         /// </summary>
-        public int ConstantBufferIndex { get; set; }
+        public int ConstantBufferIndex { get; }
 
         /// <summary>
         /// Creates a new <see cref="ConstantBufferFieldInfo"/> instance with the specified parameters
@@ -23,9 +28,11 @@ namespace ComputeSharp.Shaders.Renderer.Models.Fields
         /// <param name="fieldType">The type of the current field</param>
         /// <param name="fieldName">The name of the current field</param>
         /// <param name="bufferIndex">The index of the current constant buffer field</param>
-        public ConstantBufferFieldInfo(string fieldType, string fieldName, int bufferIndex) : base(fieldType, fieldName)
+        /// <param name="singleValue">Whether or not this constant buffer actually contains a single, explicit variable</param>
+        public ConstantBufferFieldInfo(string fieldType, string fieldName, int bufferIndex, bool singleValue) : base(fieldType, fieldName)
         {
             ConstantBufferIndex = bufferIndex;
+            IsSingleValue = singleValue;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers;
+using ComputeSharp.Graphics.Buffers.Abstract;
 
 namespace ComputeSharp
 {
@@ -75,6 +76,23 @@ namespace ComputeSharp
         }
 
         /// <summary>
+        /// Allocates a new read write buffer with the specified parameters
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the buffer</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer</param>
+        /// <param name="buffer">The input <see cref="HlslBuffer{T}"/> with the data to copy on the allocated buffer</param>
+        /// <returns>A read write <see cref="ReadWriteBuffer{T}"/> instance with the contents of the input <see cref="HlslBuffer{T}"/></returns>
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, HlslBuffer<T> buffer) where T : unmanaged
+        {
+            ReadWriteBuffer<T> readWriteBuffer = new ReadWriteBuffer<T>(device, buffer.Size);
+            readWriteBuffer.SetData(buffer);
+
+            return readWriteBuffer;
+        }
+
+        /// <summary>
         /// Allocates a new constant buffer with the specified parameters
         /// </summary>
         /// <typeparam name="T">The type of items to store in the buffer</typeparam>
@@ -121,6 +139,23 @@ namespace ComputeSharp
             buffer.SetData(span);
 
             return buffer;
+        }
+
+        /// <summary>
+        /// Allocates a new constant buffer with the specified parameters
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the buffer</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer</param>
+        /// <param name="buffer">The input <see cref="HlslBuffer{T}"/> with the data to copy on the allocated buffer</param>
+        /// <returns>A constant <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input <see cref="HlslBuffer{T}"/></returns>
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, HlslBuffer<T> buffer) where T : unmanaged
+        {
+            ReadOnlyBuffer<T> readOnlyBuffer = new ReadOnlyBuffer<T>(device, buffer.Size);
+            readOnlyBuffer.SetData(buffer);
+
+            return readOnlyBuffer;
         }
     }
 }

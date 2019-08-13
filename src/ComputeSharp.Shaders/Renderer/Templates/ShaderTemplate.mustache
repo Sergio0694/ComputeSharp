@@ -7,7 +7,7 @@ static {{&FieldType}} {{FieldName}} = {{FieldValue}};
 {{#IsConstantBuffer}}
 cbuffer {{FieldName}}Buffer : register(b{{ConstantBufferIndex}})
 {
-{{&FieldType}} {{FieldName}};
+{{&FieldType}} {{FieldName}}{{^IsSingleValue}}[2]{{/IsSingleValue}};
 }
 {{/IsConstantBuffer}}
 {{!Read write buffer}}
