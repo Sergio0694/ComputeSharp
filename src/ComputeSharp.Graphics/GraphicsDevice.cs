@@ -131,9 +131,9 @@ namespace ComputeSharp.Graphics
             NativeDevice.Dispose();
         }
 
-        public void ExecuteCommandLists(bool wait, params CompiledCommandList[] commandLists)
+        internal void ExecuteCommandLists(bool wait, params CommandList[] commandLists)
         {
-            Fence fence = commandLists[0].Builder.CommandListType switch
+            Fence fence = commandLists[0].CommandListType switch
             {
                 CommandListType.Direct => NativeDirectFence,
                 CommandListType.Compute => NativeComputeFence,
@@ -149,14 +149,14 @@ namespace ComputeSharp.Graphics
             }
         }
 
-        public long ExecuteCommandLists(params CompiledCommandList[] commandLists)
+        internal long ExecuteCommandLists(params CommandList[] commandLists)
         {
             CommandAllocatorPool commandAllocatorPool;
             CommandQueue commandQueue;
             Fence fence;
             long fenceValue;
 
-            switch (commandLists[0].Builder.CommandListType)
+            switch (commandLists[0].CommandListType)
             {
                 case CommandListType.Compute:
                     commandAllocatorPool = ComputeAllocatorPool;
@@ -191,7 +191,7 @@ namespace ComputeSharp.Graphics
             for (int i = 0; i < commandLists.Length; i++)
             {
                 nativeCommandLists[i] = commandLists[i].NativeCommandList;
-                commandAllocatorPool.Enqueue(commandLists[i].NativeCommandAllocator, fenceValue);
+                commandAllocatorPool.Enqueue(commandLists[i].CommandAllocator, fenceValue);
             }
 
             commandQueue.ExecuteCommandLists(nativeCommandLists);

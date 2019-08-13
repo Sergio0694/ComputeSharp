@@ -10,77 +10,71 @@ namespace ComputeSharp.Graphics.Commands
     /// </summary>
     internal sealed class CommandList : CommandController
     {
-        private readonly CompiledCommandList currentCommandList;
-
         /// <inheritdoc/>
         public CommandList(GraphicsDevice device, CommandListType commandListType) : base(device, commandListType)
         {
-            CommandAllocator commandAllocator = GetCommandAllocator();
-
-            GraphicsCommandList nativeCommandList = GraphicsDevice.NativeDevice.CreateCommandList((SharpDX.Direct3D12.CommandListType)CommandListType, commandAllocator, null);
-            currentCommandList = new CompiledCommandList(this, commandAllocator, nativeCommandList);
+            CommandAllocator = GetCommandAllocator();
+            NativeCommandList = GraphicsDevice.NativeDevice.CreateCommandList(CommandListType, CommandAllocator, null);
 
             SetDescriptorHeaps(GraphicsDevice.ShaderResourceViewAllocator.DescriptorHeap);
         }
 
-        public CompiledCommandList Close()
-        {
-            //foreach (var renderTarget in RenderTargets)
-            //{
-            //    ResourceBarrierTransition(renderTarget, ResourceStates.RenderTarget, ResourceStates.Present);
-            //}
 
-            currentCommandList.NativeCommandList.Close();
+        /// <summary>
+        /// Gets the <see cref="SharpDX.Direct3D12.CommandAllocator"/> object in use by the current instance
+        /// </summary>
+        public CommandAllocator CommandAllocator { get; private set; }
 
-            return currentCommandList;
-        }
+        /// <summary>
+        /// Gets the <see cref="GraphicsCommandList"/> object in use by the current instance
+        /// </summary>
+        public GraphicsCommandList NativeCommandList { get; }
 
         public void CopyBufferRegion(GraphicsResource source, long sourceOffset, GraphicsResource destination, long destinationOffset, long numBytes)
         {
-            currentCommandList.NativeCommandList.CopyBufferRegion(destination.NativeResource, destinationOffset, source.NativeResource, sourceOffset, numBytes);
+            NativeCommandList.CopyBufferRegion(destination.NativeResource, destinationOffset, source.NativeResource, sourceOffset, numBytes);
         }
 
         public void CopyResource(GraphicsResource source, GraphicsResource destination)
         {
-            currentCommandList.NativeCommandList.CopyResource(destination.NativeResource, source.NativeResource);
+            NativeCommandList.CopyResource(destination.NativeResource, source.NativeResource);
         }
 
         public void Dispatch(int threadGroupCountX, int threadGroupCountY, int threadGroupCountZ)
         {
-            currentCommandList.NativeCommandList.Dispatch(threadGroupCountX, threadGroupCountY, threadGroupCountZ);
+            NativeCommandList.Dispatch(threadGroupCountX, threadGroupCountY, threadGroupCountZ);
         }
 
         public void Flush(bool wait = false)
         {
-            GraphicsDevice.ExecuteCommandLists(wait, Close());
+            Close();
+            GraphicsDevice.ExecuteCommandLists(wait, this);
         }
 
         public void Reset()
         {
-            CommandAllocator commandAllocator = GetCommandAllocator();
-
-            currentCommandList.NativeCommandAllocator = commandAllocator;
-            currentCommandList.NativeCommandList.Reset(currentCommandList.NativeCommandAllocator, null);
+            CommandAllocator = GetCommandAllocator();
+            NativeCommandList.Reset(CommandAllocator, null);
 
             SetDescriptorHeaps(GraphicsDevice.ShaderResourceViewAllocator.DescriptorHeap);
         }
 
         public void ResourceBarrierTransition(GraphicsResource resource, ResourceStates stateBefore, ResourceStates stateAfter)
         {
-            currentCommandList.NativeCommandList.ResourceBarrierTransition(resource.NativeResource, stateBefore, stateAfter);
+            NativeCommandList.ResourceBarrierTransition(resource.NativeResource, stateBefore, stateAfter);
         }
 
         public void SetDescriptorHeaps(params DescriptorHeap[] descriptorHeaps)
         {
             if (CommandListType != CommandListType.Copy)
             {
-                currentCommandList.NativeCommandList.SetDescriptorHeaps(descriptorHeaps);
+                NativeCommandList.SetDescriptorHeaps(descriptorHeaps);
             }
         }
 
         public void SetGraphicsRoot32BitConstant(int rootParameterIndex, int srcData, int destOffsetIn32BitValues)
         {
-            currentCommandList.NativeCommandList.SetGraphicsRoot32BitConstant(rootParameterIndex, srcData, destOffsetIn32BitValues);
+            NativeCommandList.SetGraphicsRoot32BitConstant(rootParameterIndex, srcData, destOffsetIn32BitValues);
         }
 
         public void SetGraphicsRootDescriptorTable(int rootParameterIndex, GraphicsResource resource)
@@ -91,17 +85,17 @@ namespace ComputeSharp.Graphics.Commands
 
         public void SetGraphicsRootDescriptorTable(int rootParameterIndex, GpuDescriptorHandle baseDescriptor)
         {
-            currentCommandList.NativeCommandList.SetGraphicsRootDescriptorTable(rootParameterIndex, baseDescriptor);
+            NativeCommandList.SetGraphicsRootDescriptorTable(rootParameterIndex, baseDescriptor);
         }
 
         public void SetGraphicsRootSignature(RootSignature rootSignature)
         {
-            currentCommandList.NativeCommandList.SetGraphicsRootSignature(rootSignature);
+            NativeCommandList.SetGraphicsRootSignature(rootSignature);
         }
 
         public void SetComputeRoot32BitConstant(int rootParameterIndex, int srcData, int destOffsetIn32BitValues)
         {
-            currentCommandList.NativeCommandList.SetComputeRoot32BitConstant(rootParameterIndex, srcData, destOffsetIn32BitValues);
+            NativeCommandList.SetComputeRoot32BitConstant(rootParameterIndex, srcData, destOffsetIn32BitValues);
         }
 
         public void SetComputeRootDescriptorTable(int rootParameterIndex, GraphicsResource resource)
@@ -112,24 +106,24 @@ namespace ComputeSharp.Graphics.Commands
 
         public void SetComputeRootDescriptorTable(int rootParameterIndex, GpuDescriptorHandle baseDescriptor)
         {
-            currentCommandList.NativeCommandList.SetComputeRootDescriptorTable(rootParameterIndex, baseDescriptor);
+            NativeCommandList.SetComputeRootDescriptorTable(rootParameterIndex, baseDescriptor);
         }
 
         public void SetComputeRootSignature(RootSignature rootSignature)
         {
-            currentCommandList.NativeCommandList.SetComputeRootSignature(rootSignature);
+            NativeCommandList.SetComputeRootSignature(rootSignature);
         }
 
         public void SetComputeRootUnorderedAccessView(int rootParameterIndex, GraphicsResource resource)
         {
-            currentCommandList.NativeCommandList.SetComputeRootUnorderedAccessView(rootParameterIndex, resource.NativeResource.GPUVirtualAddress);
+            NativeCommandList.SetComputeRootUnorderedAccessView(rootParameterIndex, resource.NativeResource.GPUVirtualAddress);
         }
 
         public void SetPipelineState(PipelineState pipelineState)
         {
             SetComputeRootSignature(pipelineState.RootSignature);
 
-            currentCommandList.NativeCommandList.PipelineState = pipelineState.NativePipelineState;
+            NativeCommandList.PipelineState = pipelineState.NativePipelineState;
         }
 
         private CommandAllocator GetCommandAllocator() => CommandListType switch
@@ -141,28 +135,30 @@ namespace ComputeSharp.Graphics.Commands
             _ => throw new NotSupportedException("This command list type is not supported.")
         };
 
+        public void Close() => NativeCommandList.Close();
+
         /// <inheritdoc/>
         public override void Dispose()
         {
             switch (CommandListType)
             {
                 case CommandListType.Bundle:
-                    GraphicsDevice.BundleAllocatorPool.Enqueue(currentCommandList.NativeCommandAllocator, GraphicsDevice.NextDirectFenceValue - 1);
+                    GraphicsDevice.BundleAllocatorPool.Enqueue(CommandAllocator, GraphicsDevice.NextDirectFenceValue - 1);
                     break;
                 case CommandListType.Direct:
-                    GraphicsDevice.DirectAllocatorPool.Enqueue(currentCommandList.NativeCommandAllocator, GraphicsDevice.NextDirectFenceValue - 1);
+                    GraphicsDevice.DirectAllocatorPool.Enqueue(CommandAllocator, GraphicsDevice.NextDirectFenceValue - 1);
                     break;
                 case CommandListType.Compute:
-                    GraphicsDevice.ComputeAllocatorPool.Enqueue(currentCommandList.NativeCommandAllocator, GraphicsDevice.NextComputeFenceValue - 1);
+                    GraphicsDevice.ComputeAllocatorPool.Enqueue(CommandAllocator, GraphicsDevice.NextComputeFenceValue - 1);
                     break;
                 case CommandListType.Copy:
-                    GraphicsDevice.CopyAllocatorPool.Enqueue(currentCommandList.NativeCommandAllocator, GraphicsDevice.NextCopyFenceValue - 1);
+                    GraphicsDevice.CopyAllocatorPool.Enqueue(CommandAllocator, GraphicsDevice.NextCopyFenceValue - 1);
                     break;
                 default:
                     throw new NotSupportedException("This command list type is not supported.");
             }
 
-            currentCommandList.NativeCommandList.Dispose();
+            NativeCommandList.Dispose();
         }
     }
 }
