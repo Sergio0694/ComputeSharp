@@ -88,8 +88,6 @@ namespace ComputeSharp.Graphics.Buffers
                 ref T tin = ref span.GetPinnableReference();
                 ref byte tout = ref temporarySpan.GetPinnableReference();
 
-                temporarySpan.Clear();
-
                 // Copy the input data to the temporary array and add the padding
                 for (int i = 0; i < Size; i++)
                 {
