@@ -10,21 +10,6 @@ namespace ComputeSharp.NetCore.Tests.Extensions
     public static class SpanExtensions
     {
         /// <summary>
-        /// Fills an input <see cref="Span{T}"/> instance with random <see langword="float"/> values
-        /// </summary>
-        /// <param name="span">The target <see cref="Span{T}"/> to fill</param>
-        public static void FillRandom(this Span<float> span)
-        {
-            if (span.Length == 0) return;
-
-            var l = span.Length;
-            ref var rspan = ref span.GetPinnableReference();
-
-            for (var i = 0; i < l; i++)
-                Unsafe.Add(ref rspan, i) = (float)ConcurrentRandom.Instance.NextDouble();
-        }
-
-        /// <summary>
         /// The maximum threshold to validate two <see langword="float"/> values as being equal
         /// </summary>
         private const float FloatThreshold = 0.00001f;
