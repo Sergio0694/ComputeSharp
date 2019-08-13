@@ -141,7 +141,7 @@ namespace ComputeSharp.Shaders.Translation
                     readOnlyBuffers.Add((GraphicsResource)fieldValue);
 
                     string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
-                    processedFieldInfo = new ConstantBufferFieldInfo(typeName, fieldName, readOnlyBuffersCount++, true);
+                    processedFieldInfo = new ConstantBufferFieldInfo(typeName, fieldName, readOnlyBuffersCount++, false);
                 }
                 else if (HlslKnownTypes.IsKnownScalarType(fieldType))
                 {
