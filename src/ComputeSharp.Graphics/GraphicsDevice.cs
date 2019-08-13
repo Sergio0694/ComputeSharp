@@ -9,9 +9,20 @@ using Device = SharpDX.Direct3D12.Device;
 
 namespace ComputeSharp.Graphics
 {
+    /// <summary>
+    /// A <see langword="class"/> that represents a DX12.1-compatible GPU device that can be used to run compute shaders
+    /// </summary>
     public sealed class GraphicsDevice : IDisposable
     {
-        private readonly AutoResetEvent fenceEvent = new AutoResetEvent(false);
+        /// <summary>
+        /// Gets the <see cref="SharpDX.Direct3D.FeatureLevel"/> value that needs to be supported by GPUs mapped to a <see cref="GraphicsDevice"/> instance
+        /// </summary>
+        public const FeatureLevel FeatureLevel = SharpDX.Direct3D.FeatureLevel.Level_12_1;
+
+        /// <summary>
+        /// The <see cref="System.Threading.AutoResetEvent"/> instance used to wait for completion when executing commands
+        /// </summary>
+        private readonly AutoResetEvent AutoResetEvent = new AutoResetEvent(false);
 
         /// <summary>
         /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="Device"/>
@@ -24,9 +35,9 @@ namespace ComputeSharp.Graphics
             Description = description;
             WavefrontSize = NativeDevice.D3D12Options1.WaveLaneCountMin;
 
-            NativeComputeCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(SharpDX.Direct3D12.CommandListType.Compute));
-            NativeCopyCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(SharpDX.Direct3D12.CommandListType.Copy));
-            NativeDirectCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(SharpDX.Direct3D12.CommandListType.Direct));
+            NativeComputeCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(CommandListType.Compute));
+            NativeCopyCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(CommandListType.Copy));
+            NativeDirectCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(CommandListType.Direct));
 
             BundleAllocatorPool = new CommandAllocatorPool(this, CommandListType.Bundle);
             ComputeAllocatorPool = new CommandAllocatorPool(this, CommandListType.Compute);
@@ -37,15 +48,7 @@ namespace ComputeSharp.Graphics
             NativeCopyFence = NativeDevice.CreateFence(0, FenceFlags.None);
             NativeDirectFence = NativeDevice.CreateFence(0, FenceFlags.None);
 
-            DepthStencilViewAllocator = new DescriptorAllocator(this, DescriptorHeapType.DepthStencilView, descriptorCount: 1);
-            RenderTargetViewAllocator = new DescriptorAllocator(this, DescriptorHeapType.RenderTargetView, descriptorCount: 2);
             ShaderResourceViewAllocator = new DescriptorAllocator(this, DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView, DescriptorHeapFlags.ShaderVisible);
-
-            CommandList = new CommandList(this, CommandListType.Direct);
-            CommandList.Close();
-
-            CopyCommandList = new CommandList(this, CommandListType.Copy);
-            CopyCommandList.Close();
         }
 
         /// <summary>
@@ -58,18 +61,14 @@ namespace ComputeSharp.Graphics
         /// </summary>
         public int WavefrontSize { get; }
 
-        internal CommandList CommandList { get; }
-
-        internal CommandList CopyCommandList { get; }
-
-        public const FeatureLevel FeatureLevel = SharpDX.Direct3D.FeatureLevel.Level_12_1;
-
+        /// <summary>
+        /// Gets the <see cref="Device"/> object wrapped by the current instance
+        /// </summary>
         internal Device NativeDevice { get; }
 
-        internal DescriptorAllocator DepthStencilViewAllocator { get; set; }
-
-        internal DescriptorAllocator RenderTargetViewAllocator { get; set; }
-
+        /// <summary>
+        /// Gets the <see cref="DescriptorAllocator"/> object for the current instance, used when allocating new buffers
+        /// </summary>
         internal DescriptorAllocator ShaderResourceViewAllocator { get; set; }
 
         internal CommandAllocatorPool BundleAllocatorPool { get; }
@@ -123,8 +122,8 @@ namespace ComputeSharp.Graphics
 
             lock (fence)
             {
-                fence.SetEventOnCompletion(fenceValue, fenceEvent.SafeWaitHandle.DangerousGetHandle());
-                fenceEvent.WaitOne();
+                fence.SetEventOnCompletion(fenceValue, AutoResetEvent.SafeWaitHandle.DangerousGetHandle());
+                AutoResetEvent.WaitOne();
             }
         }
 
@@ -182,11 +181,6 @@ namespace ComputeSharp.Graphics
             NativeDirectCommandQueue.Signal(NativeDirectFence, NextDirectFenceValue);
             NativeDirectCommandQueue.Wait(NativeDirectFence, NextDirectFenceValue);
 
-            CommandList.Dispose();
-            CopyCommandList.Dispose();
-
-            DepthStencilViewAllocator.Dispose();
-            RenderTargetViewAllocator.Dispose();
             ShaderResourceViewAllocator.Dispose();
 
             BundleAllocatorPool.Dispose();
@@ -203,6 +197,8 @@ namespace ComputeSharp.Graphics
             NativeDirectFence.Dispose();
 
             NativeDevice.Dispose();
+
+            AutoResetEvent.Dispose();
         }
     }
 }
