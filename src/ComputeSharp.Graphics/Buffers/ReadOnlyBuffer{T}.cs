@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Buffers;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Graphics.Helpers;
 using SharpDX.Direct3D12;
 
 namespace ComputeSharp.Graphics.Buffers
@@ -36,13 +38,46 @@ namespace ComputeSharp.Graphics.Buffers
         /// <inheritdoc/>
         public override void GetData(Span<T> span)
         {
-            throw new NotImplementedException();
+            byte[] temporaryArray = ArrayPool<byte>.Shared.Rent(SizeInBytes);
+            Span<byte> temporarySpan = temporaryArray.AsSpan();
+
+            Map(0);
+            MemoryHelper.Copy(MappedResource, temporarySpan);
+            Unmap(0);
+
+            ref byte tin = ref temporarySpan.GetPinnableReference();
+            ref T tout = ref span.GetPinnableReference();
+
+            for (int i = 0; i < Size; i++)
+            {
+                ref byte rsource = ref Unsafe.Add(ref tin, i * PaddedElementSizeInBytes);
+                Unsafe.Add(ref tout, i) = Unsafe.As<byte, T>(ref rsource);
+            }
+
+            ArrayPool<byte>.Shared.Return(temporaryArray);
         }
 
         /// <inheritdoc/>
         public override void SetData(Span<T> span)
         {
-            throw new NotImplementedException();
+            byte[] temporaryArray = ArrayPool<byte>.Shared.Rent(SizeInBytes);
+            Span<byte> temporarySpan = temporaryArray.AsSpan();
+            ref T tin = ref span.GetPinnableReference();
+            ref byte tout = ref temporarySpan.GetPinnableReference();
+
+            temporarySpan.Clear();
+
+            for (int i = 0; i < Size; i++)
+            {
+                ref byte rtarget = ref Unsafe.Add(ref tout, i * PaddedElementSizeInBytes);
+                Unsafe.As<byte, T>(ref rtarget) = Unsafe.Add(ref tin, i);
+            }
+
+            Map(0);
+            MemoryHelper.Copy(temporarySpan, MappedResource);
+            Unmap(0);
+
+            ArrayPool<byte>.Shared.Return(temporaryArray);
         }
     }
 }
