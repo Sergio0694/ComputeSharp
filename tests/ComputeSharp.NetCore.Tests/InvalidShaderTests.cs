@@ -4,8 +4,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.NetCore.Tests
 {
     [TestClass]
-    [TestCategory("ShaderCompile")]
-    public class ShaderTests
+    [TestCategory("InvalidShader")]
+    public class InvalidShaderTests
     {
         [TestMethod]
         public void EmptyShaderCompileError()
@@ -16,3 +16,4 @@ namespace ComputeSharp.NetCore.Tests
         }
     }
 }
+
