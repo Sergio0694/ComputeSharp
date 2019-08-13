@@ -46,11 +46,10 @@ namespace ComputeSharp.Graphics.Commands
 
                     long completedValue = CommandListType switch
                     {
-                        CommandListType.Bundle => GraphicsDevice.NativeDirectFence.CompletedValue,
                         CommandListType.Compute => GraphicsDevice.NativeComputeFence.CompletedValue,
                         CommandListType.Copy => GraphicsDevice.NativeCopyFence.CompletedValue,
                         CommandListType.Direct => GraphicsDevice.NativeDirectFence.CompletedValue,
-                        _ => throw new NotSupportedException("This command list type is not supported.")
+                        _ => throw new NotSupportedException($"Unsupported command list type with value {CommandListType}")
                     };
 
                     if (fenceValue <= completedValue)

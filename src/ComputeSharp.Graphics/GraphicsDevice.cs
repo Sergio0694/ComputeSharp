@@ -39,7 +39,6 @@ namespace ComputeSharp.Graphics
             NativeCopyCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(CommandListType.Copy));
             NativeDirectCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(CommandListType.Direct));
 
-            BundleAllocatorPool = new CommandAllocatorPool(this, CommandListType.Bundle);
             ComputeAllocatorPool = new CommandAllocatorPool(this, CommandListType.Compute);
             CopyAllocatorPool = new CommandAllocatorPool(this, CommandListType.Copy);
             DirectAllocatorPool = new CommandAllocatorPool(this, CommandListType.Direct);
@@ -70,8 +69,6 @@ namespace ComputeSharp.Graphics
         /// Gets the <see cref="DescriptorAllocator"/> object for the current instance, used when allocating new buffers
         /// </summary>
         internal DescriptorAllocator ShaderResourceViewAllocator { get; set; }
-
-        internal CommandAllocatorPool BundleAllocatorPool { get; }
 
         internal CommandAllocatorPool ComputeAllocatorPool { get; }
 
@@ -183,7 +180,6 @@ namespace ComputeSharp.Graphics
 
             ShaderResourceViewAllocator.Dispose();
 
-            BundleAllocatorPool.Dispose();
             ComputeAllocatorPool.Dispose();
             CopyAllocatorPool.Dispose();
             DirectAllocatorPool.Dispose();

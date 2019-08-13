@@ -15,11 +15,10 @@ namespace ComputeSharp.Graphics.Commands
         {
             CommandAllocator = CommandListType switch
             {
-                CommandListType.Bundle => GraphicsDevice.BundleAllocatorPool.GetCommandAllocator(),
                 CommandListType.Compute => GraphicsDevice.ComputeAllocatorPool.GetCommandAllocator(),
                 CommandListType.Copy => GraphicsDevice.CopyAllocatorPool.GetCommandAllocator(),
                 CommandListType.Direct => GraphicsDevice.DirectAllocatorPool.GetCommandAllocator(),
-                _ => throw new NotSupportedException("This command list type is not supported.")
+                _ => throw new NotSupportedException($"Unsupported command list type with value {CommandListType}")
             };
             NativeCommandList = GraphicsDevice.NativeDevice.CreateCommandList(CommandListType, CommandAllocator, null);
 
@@ -105,9 +104,6 @@ namespace ComputeSharp.Graphics.Commands
         {
             switch (CommandListType)
             {
-                case CommandListType.Bundle:
-                    GraphicsDevice.BundleAllocatorPool.Enqueue(CommandAllocator, GraphicsDevice.NextDirectFenceValue - 1);
-                    break;
                 case CommandListType.Direct:
                     GraphicsDevice.DirectAllocatorPool.Enqueue(CommandAllocator, GraphicsDevice.NextDirectFenceValue - 1);
                     break;
@@ -118,7 +114,7 @@ namespace ComputeSharp.Graphics.Commands
                     GraphicsDevice.CopyAllocatorPool.Enqueue(CommandAllocator, GraphicsDevice.NextCopyFenceValue - 1);
                     break;
                 default:
-                    throw new NotSupportedException("This command list type is not supported.");
+                    throw new NotSupportedException($"Unsupported command list type with value {CommandListType}");
             }
 
             NativeCommandList.Dispose();
