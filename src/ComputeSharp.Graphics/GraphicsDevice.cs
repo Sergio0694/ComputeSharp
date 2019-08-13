@@ -18,9 +18,6 @@ namespace ComputeSharp.Graphics
         /// <param name="description">The available info for the new <see cref="GraphicsDevice"/> instance</param>
         public GraphicsDevice(Device device, AdapterDescription description)
         {
-#if DEBUG
-            DebugInterface.Get().EnableDebugLayer();
-#endif
             NativeDevice = device;
             Description = description;
             WavefrontSize = NativeDevice.D3D12Options1.WaveLaneCountMin;
