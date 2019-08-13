@@ -12,6 +12,7 @@
   - [Capturing variables](#capturing-variables) 
   - [Advanced usage](#advanced-usage)
 - [Requirements](#requirements)
+- [Special thanks](#special-thanks)
 
 # Installing from NuGet
 
@@ -81,3 +82,12 @@ The **ComputeSharp** library requires .NET Standard 2.0 support, and it is avail
 - UWP (from SDK 10.0.16299, and only in `Debug` mode for now)
 
 Additionally, you need an IDE with .NET Core 3.0 and C# 8.0 support to compile the library on your PC.
+
+# Special thanks
+
+The core of the **ComputeSharp** library is based on some of the code from the [DX12GameEngine](https://github.com/Aminator/DirectX12GameEngine) repository from [Amin Delavar](https://github.com/Aminator). Additionally, **ComputeSharp** uses the following NuGet packages (excluding those from Microsoft):
+
+- [SharpDX.Direct3D12](https://www.nuget.org/packages/SharpDX.Direct3D12)
+- [SharpDX.D3DCompiler](https://www.nuget.org/packages/SharpDX.D3DCompiler)
+- [ICSharpCode.Decompiler](https://www.nuget.org/packages/ICSharpCode.Decompiler)
+- [Stubble.Core](https://www.nuget.org/packages/Stubble.Core)
