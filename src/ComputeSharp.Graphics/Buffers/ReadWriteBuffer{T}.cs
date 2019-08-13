@@ -61,10 +61,9 @@ namespace ComputeSharp.Graphics.Buffers
         }
 
         /// <inheritdoc/>
-        public override void SetData(ReadOnlyBuffer<T> buffer)
+        public override void SetData(HlslBuffer<T> buffer)
         {
-            if (buffer.IsPaddingPresent) SetDataWithCpuBuffer(buffer);
-            else
+            if (buffer is ReadOnlyBuffer<T> readOnlyBuffer && !readOnlyBuffer.IsPaddingPresent)
             {
                 // Directly copy the input buffer
                 using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
@@ -72,6 +71,7 @@ namespace ComputeSharp.Graphics.Buffers
                 copyCommandList.CopyBufferRegion(buffer, 0, this, 0, SizeInBytes);
                 copyCommandList.Flush(true);
             }
+            else SetDataWithCpuBuffer(buffer);
         }
     }
 }
