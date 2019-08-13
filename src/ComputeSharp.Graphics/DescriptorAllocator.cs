@@ -3,88 +3,95 @@ using SharpDX.Direct3D12;
 
 namespace ComputeSharp.Graphics
 {
+    /// <summary>
+    /// A <see langword="class"/> that provides logic to create resource descriptors for a <see cref="GraphicsDevice"/> instance
+    /// </summary>
     internal sealed class DescriptorAllocator : IDisposable
     {
+        /// <summary>
+        /// The default number of available descriptors per heap
+        /// </summary>
         private const int DescriptorsPerHeap = 4096;
 
-        private readonly object allocatorLock = new object();
-        private readonly int descriptorSize;
+        /// <summary>
+        /// The dummy object used to handle concurrent allocation requests
+        /// </summary>
+        private readonly object Lock = new object();
 
-        private CpuDescriptorHandle currentCpuHandle;
-        private GpuDescriptorHandle currentGpuHandle;
-        private int remainingHandles;
+        /// <summary>
+        /// The size of each new descriptor being allocated
+        /// </summary>
+        private readonly int DescriptorSize;
 
-        public DescriptorAllocator(GraphicsDevice device, DescriptorHeapType descriptorHeapType, DescriptorHeapFlags descriptorHeapFlags = DescriptorHeapFlags.None, int descriptorCount = DescriptorsPerHeap)
+        /// <summary>
+        /// The current <see cref="CpuDescriptorHandle"/> for the <see cref="DescriptorAllocator"/> instance in use
+        /// </summary>
+        private CpuDescriptorHandle _CurrentCpuHandle;
+
+        /// <summary>
+        /// The current <see cref="GpuDescriptorHandle"/> for the <see cref="DescriptorAllocator"/> instance in use
+        /// </summary>
+        private GpuDescriptorHandle _CurrentGpuHandle;
+
+        /// <summary>
+        /// The number of remaining handles to allocate on the current heap
+        /// </summary>
+        private int _RemainingHandles;
+
+        /// <summary>
+        /// Creates a new <see cref="DescriptorAllocator"/> instance with the specified parameters
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use</param>
+        public DescriptorAllocator(GraphicsDevice device)
         {
-            if (descriptorCount < 1 || descriptorCount > DescriptorsPerHeap)
-            {
-                throw new ArgumentOutOfRangeException(nameof(descriptorCount), $"Descriptor count must be between 1 and {DescriptorsPerHeap}.");
-            }
+            DescriptorSize = device.NativeDevice.GetDescriptorHandleIncrementSize(DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView);
 
-            descriptorSize = device.NativeDevice.GetDescriptorHandleIncrementSize(descriptorHeapType);
-
-            DescriptorHeapDescription rtvHeapDescription = new DescriptorHeapDescription
+            DescriptorHeapDescription descriptorHeapDescription = new DescriptorHeapDescription
             {
-                DescriptorCount = descriptorCount,
-                Flags = descriptorHeapFlags,
-                Type = descriptorHeapType
+                DescriptorCount = DescriptorsPerHeap,
+                Flags = DescriptorHeapFlags.ShaderVisible,
+                Type = DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView
             };
 
-            DescriptorHeap = device.NativeDevice.CreateDescriptorHeap(rtvHeapDescription);
+            DescriptorHeap = device.NativeDevice.CreateDescriptorHeap(descriptorHeapDescription);
 
-            remainingHandles = descriptorCount;
-            currentCpuHandle = DescriptorHeap.CPUDescriptorHandleForHeapStart;
-            currentGpuHandle = DescriptorHeap.GPUDescriptorHandleForHeapStart;
+            _RemainingHandles = DescriptorsPerHeap;
+            _CurrentCpuHandle = DescriptorHeap.CPUDescriptorHandleForHeapStart;
+            _CurrentGpuHandle = DescriptorHeap.GPUDescriptorHandleForHeapStart;
         }
 
+        /// <summary>
+        /// Gets the <see cref="SharpDX.Direct3D12.DescriptorHeap"/> object in use for the current <see cref="DescriptorAllocator"/> instance
+        /// </summary>
         public DescriptorHeap DescriptorHeap { get; }
 
-        public (CpuDescriptorHandle, GpuDescriptorHandle) Allocate(int count)
+        /// <summary>
+        /// Allocates a new CPU and GPU handle pair to use in a memory buffer
+        /// </summary>
+        /// <returns>A pair of <see cref="CpuDescriptorHandle"/> and <see cref="GpuDescriptorHandle"/> to use</returns>
+        public (CpuDescriptorHandle, GpuDescriptorHandle) Allocate()
         {
-            if (count < 1 || (count > remainingHandles && remainingHandles != 0))
+            lock (Lock)
             {
-                throw new ArgumentOutOfRangeException(nameof(count), "Count must be between 1 and the remaining handles if the remaining handles are not 0.");
-            }
-
-            lock (allocatorLock)
-            {
-                if (remainingHandles == 0)
+                if (_RemainingHandles == 0)
                 {
-                    remainingHandles = DescriptorHeap.Description.DescriptorCount;
-                    currentCpuHandle = DescriptorHeap.CPUDescriptorHandleForHeapStart;
-                    currentGpuHandle = DescriptorHeap.GPUDescriptorHandleForHeapStart;
+                    _RemainingHandles = DescriptorHeap.Description.DescriptorCount;
+                    _CurrentCpuHandle = DescriptorHeap.CPUDescriptorHandleForHeapStart;
+                    _CurrentGpuHandle = DescriptorHeap.GPUDescriptorHandleForHeapStart;
                 }
 
-                CpuDescriptorHandle cpuDescriptorHandle = currentCpuHandle;
-                GpuDescriptorHandle gpuDescriptorHandle = currentGpuHandle;
+                CpuDescriptorHandle cpuDescriptorHandle = _CurrentCpuHandle;
+                GpuDescriptorHandle gpuDescriptorHandle = _CurrentGpuHandle;
 
-                currentCpuHandle += descriptorSize * count;
-                currentGpuHandle += descriptorSize * count;
-                remainingHandles -= count;
-
-                return (cpuDescriptorHandle, gpuDescriptorHandle);
-            }
-        }
-
-        public (CpuDescriptorHandle, GpuDescriptorHandle) AllocateSlot(int slot)
-        {
-            if (slot < 0 || slot > DescriptorHeap.Description.DescriptorCount - 1)
-            {
-                throw new ArgumentOutOfRangeException(nameof(slot), "Slot must be between 0 and the descript count - 1.");
-            }
-
-            lock (allocatorLock)
-            {
-                CpuDescriptorHandle cpuDescriptorHandle = DescriptorHeap.CPUDescriptorHandleForHeapStart + descriptorSize * slot;
-                GpuDescriptorHandle gpuDescriptorHandle = DescriptorHeap.GPUDescriptorHandleForHeapStart + descriptorSize * slot;
+                _CurrentCpuHandle += DescriptorSize;
+                _CurrentGpuHandle += DescriptorSize;
+                _RemainingHandles -= 1;
 
                 return (cpuDescriptorHandle, gpuDescriptorHandle);
             }
         }
 
-        public void Dispose()
-        {
-            DescriptorHeap.Dispose();
-        }
+        /// <inheritdoc/>
+        public void Dispose() => DescriptorHeap.Dispose();
     }
 }

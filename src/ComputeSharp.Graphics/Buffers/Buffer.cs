@@ -66,7 +66,7 @@ namespace ComputeSharp.Graphics.Buffers
         [Pure]
         private (CpuDescriptorHandle, GpuDescriptorHandle) CreateConstantBufferView()
         {
-            (CpuDescriptorHandle cpuHandle, GpuDescriptorHandle gpuHandle) = GraphicsDevice.ShaderResourceViewAllocator.Allocate(1);
+            (CpuDescriptorHandle cpuHandle, GpuDescriptorHandle gpuHandle) = GraphicsDevice.ShaderResourceViewAllocator.Allocate();
 
             int constantBufferSize = (SizeInBytes + 255) & ~255;
 
@@ -88,7 +88,7 @@ namespace ComputeSharp.Graphics.Buffers
         [Pure]
         private (CpuDescriptorHandle, GpuDescriptorHandle) CreateUnorderedAccessView()
         {
-            (CpuDescriptorHandle cpuHandle, GpuDescriptorHandle gpuHandle) = GraphicsDevice.ShaderResourceViewAllocator.Allocate(1);
+            (CpuDescriptorHandle cpuHandle, GpuDescriptorHandle gpuHandle) = GraphicsDevice.ShaderResourceViewAllocator.Allocate();
 
             UnorderedAccessViewDescription description = new UnorderedAccessViewDescription
             {
