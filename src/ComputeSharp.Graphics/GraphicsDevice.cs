@@ -15,12 +15,14 @@ namespace ComputeSharp.Graphics
         /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="Device"/>
         /// </summary>
         /// <param name="device">The <see cref="Device"/> to use for the new <see cref="GraphicsDevice"/> instance</param>
-        public GraphicsDevice(Device device)
+        /// <param name="description">The available info for the new <see cref="GraphicsDevice"/> instance</param>
+        public GraphicsDevice(Device device, AdapterDescription description)
         {
 #if DEBUG
             DebugInterface.Get().EnableDebugLayer();
 #endif
             NativeDevice = device;
+            Description = description;
             WavefrontSize = NativeDevice.D3D12Options1.WaveLaneCountMin;
 
             NativeComputeCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(SharpDX.Direct3D12.CommandListType.Compute));
@@ -48,26 +50,9 @@ namespace ComputeSharp.Graphics
         }
 
         /// <summary>
-        /// Tries to create a new <see cref="GraphicsDevice"/> instance from the input <see cref="Adapter"/> object
+        /// Gets the available info for the current <see cref="GraphicsDevice"/> instance
         /// </summary>
-        /// <param name="adapter">The input <see cref="Adapter"/> for the current GPU being targeted</param>
-        /// <param name="result">The resulting <see cref="GraphicsDevice"/> value, in case of success</param>
-        /// <returns>A <see langword="bool"/> value indicating whether or not the resulting device was created correctly</returns>
-        public static bool TryGetFromAdapter(Adapter adapter, out GraphicsDevice? result)
-        {
-            try
-            {
-                Device device = new Device(adapter, FeatureLevel);
-                result = new GraphicsDevice(device);
-
-                return true;
-            }
-            catch
-            {
-                result = null;
-                return false;
-            }
-        }
+        public AdapterDescription Description { get; }
 
         /// <summary>
         /// Gets the number of lanes in a SIMD wave on the current device (also known as "wavefront size" or "warp width")

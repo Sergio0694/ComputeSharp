@@ -15,10 +15,10 @@ namespace ComputeSharp.Graphics.Helpers
         /// </summary>
         /// <returns>The collection of <see cref="Device"/> objects with support for DX12.1</returns>
         [Pure]
-        public static IReadOnlyList<Device> QueryAllSupportedDevices()
+        public static IReadOnlyList<(Device, AdapterDescription)> QueryAllSupportedDevices()
         {
             using Factory factory = new Factory1();
-            List<Device> devices = new List<Device>();
+            List<(Device, AdapterDescription)> devices = new List<(Device, AdapterDescription)>();
 
             foreach (Adapter adapter in factory.Adapters)
             {
@@ -26,7 +26,7 @@ namespace ComputeSharp.Graphics.Helpers
                 try
                 {
                     Device device = new Device(adapter, GraphicsDevice.FeatureLevel);
-                    devices.Add(device);
+                    devices.Add((device, adapter.Description));
                 }
                 catch
                 {
