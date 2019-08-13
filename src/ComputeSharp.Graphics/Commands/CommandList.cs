@@ -13,128 +13,92 @@ namespace ComputeSharp.Graphics.Commands
         /// <inheritdoc/>
         public CommandList(GraphicsDevice device, CommandListType commandListType) : base(device, commandListType)
         {
-            CommandAllocator = GetCommandAllocator();
+            CommandAllocator = CommandListType switch
+            {
+                CommandListType.Bundle => GraphicsDevice.BundleAllocatorPool.GetCommandAllocator(),
+                CommandListType.Compute => GraphicsDevice.ComputeAllocatorPool.GetCommandAllocator(),
+                CommandListType.Copy => GraphicsDevice.CopyAllocatorPool.GetCommandAllocator(),
+                CommandListType.Direct => GraphicsDevice.DirectAllocatorPool.GetCommandAllocator(),
+                _ => throw new NotSupportedException("This command list type is not supported.")
+            };
             NativeCommandList = GraphicsDevice.NativeDevice.CreateCommandList(CommandListType, CommandAllocator, null);
 
-            SetDescriptorHeaps(GraphicsDevice.ShaderResourceViewAllocator.DescriptorHeap);
+            // Set the heap descriptor if the command list is for copy operations
+            if (CommandListType != CommandListType.Copy)
+            {
+                NativeCommandList.SetDescriptorHeaps(GraphicsDevice.ShaderResourceViewAllocator.DescriptorHeap);
+            }
         }
 
 
         /// <summary>
         /// Gets the <see cref="SharpDX.Direct3D12.CommandAllocator"/> object in use by the current instance
         /// </summary>
-        public CommandAllocator CommandAllocator { get; private set; }
+        public CommandAllocator CommandAllocator { get; }
 
         /// <summary>
         /// Gets the <see cref="GraphicsCommandList"/> object in use by the current instance
         /// </summary>
         public GraphicsCommandList NativeCommandList { get; }
 
+        /// <summary>
+        /// Copies a memory region from one resource to another
+        /// </summary>
+        /// <param name="source">The source <see cref="GraphicsResource"/> to read from</param>
+        /// <param name="sourceOffset">The starting offset to read the source resource from</param>
+        /// <param name="destination">The destination <see cref="GraphicsResource"/> to write to</param>
+        /// <param name="destinationOffset">The starting offset to write the destination resource from</param>
+        /// <param name="numBytes">The total number of bytes to copy from one resource to another</param>
         public void CopyBufferRegion(GraphicsResource source, long sourceOffset, GraphicsResource destination, long destinationOffset, long numBytes)
         {
             NativeCommandList.CopyBufferRegion(destination.NativeResource, destinationOffset, source.NativeResource, sourceOffset, numBytes);
         }
 
-        public void CopyResource(GraphicsResource source, GraphicsResource destination)
+        /// <summary>
+        /// Binds an input <see cref="GraphicsResource"/> object to a specified root parameter
+        /// </summary>
+        /// <param name="rootParameterIndex">The root parameter index to bind to the input resource</param>
+        /// <param name="resource">The input <see cref="GraphicsResource"/> instance to bind</param>
+        public void SetComputeRootDescriptorTable(int rootParameterIndex, GraphicsResource resource)
         {
-            NativeCommandList.CopyResource(destination.NativeResource, source.NativeResource);
+            if (resource.NativeGpuDescriptorHandle == null) throw new InvalidOperationException("Invalid graphics resource GPU descriptor");
+            NativeCommandList.SetComputeRootDescriptorTable(rootParameterIndex, resource.NativeGpuDescriptorHandle.Value);
         }
 
+        /// <summary>
+        /// Sets a given <see cref="PipelineState"/> object ready to be executed
+        /// </summary>
+        /// <param name="pipelineState">The input <see cref="PipelineState"/> to setup</param>
+        public void SetPipelineState(PipelineState pipelineState)
+        {
+            NativeCommandList.SetComputeRootSignature(pipelineState.RootSignature);
+            NativeCommandList.PipelineState = pipelineState.NativePipelineState;
+        }
+
+        /// <summary>
+        /// Executes the pending command list using the specified thread group values
+        /// </summary>
+        /// <param name="threadGroupCountX">The number of thread groups to schedule for the X axis</param>
+        /// <param name="threadGroupCountY">The number of thread groups to schedule for the Y axis</param>
+        /// <param name="threadGroupCountZ">The number of thread groups to schedule for the Z axis</param>
         public void Dispatch(int threadGroupCountX, int threadGroupCountY, int threadGroupCountZ)
         {
             NativeCommandList.Dispatch(threadGroupCountX, threadGroupCountY, threadGroupCountZ);
         }
 
+        /// <summary>
+        /// Executes the pending operations and optionally waits for them to be completed
+        /// </summary>
+        /// <param name="wait">Indicates whether or not to wait for the completion of the scheduled operations</param>
         public void Flush(bool wait = false)
         {
             Close();
             GraphicsDevice.ExecuteCommandLists(wait, this);
         }
 
-        public void Reset()
-        {
-            CommandAllocator = GetCommandAllocator();
-            NativeCommandList.Reset(CommandAllocator, null);
-
-            SetDescriptorHeaps(GraphicsDevice.ShaderResourceViewAllocator.DescriptorHeap);
-        }
-
-        public void ResourceBarrierTransition(GraphicsResource resource, ResourceStates stateBefore, ResourceStates stateAfter)
-        {
-            NativeCommandList.ResourceBarrierTransition(resource.NativeResource, stateBefore, stateAfter);
-        }
-
-        public void SetDescriptorHeaps(params DescriptorHeap[] descriptorHeaps)
-        {
-            if (CommandListType != CommandListType.Copy)
-            {
-                NativeCommandList.SetDescriptorHeaps(descriptorHeaps);
-            }
-        }
-
-        public void SetGraphicsRoot32BitConstant(int rootParameterIndex, int srcData, int destOffsetIn32BitValues)
-        {
-            NativeCommandList.SetGraphicsRoot32BitConstant(rootParameterIndex, srcData, destOffsetIn32BitValues);
-        }
-
-        public void SetGraphicsRootDescriptorTable(int rootParameterIndex, GraphicsResource resource)
-        {
-            if (resource.NativeGpuDescriptorHandle == null) throw new InvalidOperationException("Invalid graphics resource GPU descriptor");
-            SetGraphicsRootDescriptorTable(rootParameterIndex, resource.NativeGpuDescriptorHandle.Value);
-        }
-
-        public void SetGraphicsRootDescriptorTable(int rootParameterIndex, GpuDescriptorHandle baseDescriptor)
-        {
-            NativeCommandList.SetGraphicsRootDescriptorTable(rootParameterIndex, baseDescriptor);
-        }
-
-        public void SetGraphicsRootSignature(RootSignature rootSignature)
-        {
-            NativeCommandList.SetGraphicsRootSignature(rootSignature);
-        }
-
-        public void SetComputeRoot32BitConstant(int rootParameterIndex, int srcData, int destOffsetIn32BitValues)
-        {
-            NativeCommandList.SetComputeRoot32BitConstant(rootParameterIndex, srcData, destOffsetIn32BitValues);
-        }
-
-        public void SetComputeRootDescriptorTable(int rootParameterIndex, GraphicsResource resource)
-        {
-            if (resource.NativeGpuDescriptorHandle == null) throw new InvalidOperationException("Invalid graphics resource GPU descriptor");
-            SetComputeRootDescriptorTable(rootParameterIndex, resource.NativeGpuDescriptorHandle.Value);
-        }
-
-        public void SetComputeRootDescriptorTable(int rootParameterIndex, GpuDescriptorHandle baseDescriptor)
-        {
-            NativeCommandList.SetComputeRootDescriptorTable(rootParameterIndex, baseDescriptor);
-        }
-
-        public void SetComputeRootSignature(RootSignature rootSignature)
-        {
-            NativeCommandList.SetComputeRootSignature(rootSignature);
-        }
-
-        public void SetComputeRootUnorderedAccessView(int rootParameterIndex, GraphicsResource resource)
-        {
-            NativeCommandList.SetComputeRootUnorderedAccessView(rootParameterIndex, resource.NativeResource.GPUVirtualAddress);
-        }
-
-        public void SetPipelineState(PipelineState pipelineState)
-        {
-            SetComputeRootSignature(pipelineState.RootSignature);
-
-            NativeCommandList.PipelineState = pipelineState.NativePipelineState;
-        }
-
-        private CommandAllocator GetCommandAllocator() => CommandListType switch
-        {
-            CommandListType.Bundle => GraphicsDevice.BundleAllocatorPool.GetCommandAllocator(),
-            CommandListType.Compute => GraphicsDevice.ComputeAllocatorPool.GetCommandAllocator(),
-            CommandListType.Copy => GraphicsDevice.CopyAllocatorPool.GetCommandAllocator(),
-            CommandListType.Direct => GraphicsDevice.DirectAllocatorPool.GetCommandAllocator(),
-            _ => throw new NotSupportedException("This command list type is not supported.")
-        };
-
+        /// <summary>
+        /// Closes the current native command list
+        /// </summary>
         public void Close() => NativeCommandList.Close();
 
         /// <inheritdoc/>
