@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Helpers;
 using SharpDX.Direct3D12;
+using CommandList = ComputeSharp.Graphics.Commands.CommandList;
 
 namespace ComputeSharp.Graphics.Buffers
 {

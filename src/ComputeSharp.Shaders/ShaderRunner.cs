@@ -5,7 +5,7 @@ using ComputeSharp.Shaders.Renderer;
 using ComputeSharp.Shaders.Renderer.Models;
 using ComputeSharp.Shaders.Translation;
 using SharpDX.Direct3D12;
-using CommandList = ComputeSharp.Graphics.CommandList;
+using CommandList = ComputeSharp.Graphics.Commands.CommandList;
 using PipelineState = ComputeSharp.Graphics.PipelineState;
 
 namespace ComputeSharp.Shaders

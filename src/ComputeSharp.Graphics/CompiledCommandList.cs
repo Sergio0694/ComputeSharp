@@ -1,4 +1,5 @@
 ﻿using SharpDX.Direct3D12;
+using CommandList = ComputeSharp.Graphics.Commands.CommandList;
 
 namespace ComputeSharp.Graphics
 {

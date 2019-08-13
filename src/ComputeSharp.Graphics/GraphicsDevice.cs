@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading;
+using ComputeSharp.Graphics.Commands;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D12;
 using SharpDX.DXGI;
+using CommandList = ComputeSharp.Graphics.Commands.CommandList;
 using Device = SharpDX.Direct3D12.Device;
 
 namespace ComputeSharp.Graphics
@@ -56,9 +58,9 @@ namespace ComputeSharp.Graphics
         /// </summary>
         public int WavefrontSize { get; }
 
-        public CommandList CommandList { get; }
+        internal CommandList CommandList { get; }
 
-        public CommandList CopyCommandList { get; }
+        internal CommandList CopyCommandList { get; }
 
         public const FeatureLevel FeatureLevel = SharpDX.Direct3D.FeatureLevel.Level_12_1;
 

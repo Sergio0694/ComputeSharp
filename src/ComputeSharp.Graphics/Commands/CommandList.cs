@@ -1,21 +1,20 @@
 ﻿using System;
 using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Graphics.Commands.Abstract;
 using SharpDX.Direct3D12;
 
-namespace ComputeSharp.Graphics
+namespace ComputeSharp.Graphics.Commands
 {
     /// <summary>
     /// A <see langword="class"/> that represents a list of commands to issue to a GPU
     /// </summary>
-    public sealed class CommandList : IDisposable
+    internal sealed class CommandList : CommandController
     {
         private readonly CompiledCommandList currentCommandList;
 
-        public CommandList(GraphicsDevice device, CommandListType commandListType)
+        /// <inheritdoc/>
+        public CommandList(GraphicsDevice device, CommandListType commandListType) : base(device, commandListType)
         {
-            GraphicsDevice = device;
-            CommandListType = commandListType;
-
             CommandAllocator commandAllocator = GetCommandAllocator();
 
             GraphicsCommandList nativeCommandList = GraphicsDevice.NativeDevice.CreateCommandList((SharpDX.Direct3D12.CommandListType)CommandListType, commandAllocator, null);
@@ -23,10 +22,6 @@ namespace ComputeSharp.Graphics
 
             SetDescriptorHeaps(GraphicsDevice.ShaderResourceViewAllocator.DescriptorHeap);
         }
-
-        public CommandListType CommandListType { get; }
-
-        public GraphicsDevice GraphicsDevice { get; }
 
         public CompiledCommandList Close()
         {
@@ -53,29 +48,6 @@ namespace ComputeSharp.Graphics
         public void Dispatch(int threadGroupCountX, int threadGroupCountY, int threadGroupCountZ)
         {
             currentCommandList.NativeCommandList.Dispatch(threadGroupCountX, threadGroupCountY, threadGroupCountZ);
-        }
-
-        public void Dispose()
-        {
-            switch (CommandListType)
-            {
-                case CommandListType.Bundle:
-                    GraphicsDevice.BundleAllocatorPool.Enqueue(currentCommandList.NativeCommandAllocator, GraphicsDevice.NextDirectFenceValue - 1);
-                    break;
-                case CommandListType.Direct:
-                    GraphicsDevice.DirectAllocatorPool.Enqueue(currentCommandList.NativeCommandAllocator, GraphicsDevice.NextDirectFenceValue - 1);
-                    break;
-                case CommandListType.Compute:
-                    GraphicsDevice.ComputeAllocatorPool.Enqueue(currentCommandList.NativeCommandAllocator, GraphicsDevice.NextComputeFenceValue - 1);
-                    break;
-                case CommandListType.Copy:
-                    GraphicsDevice.CopyAllocatorPool.Enqueue(currentCommandList.NativeCommandAllocator, GraphicsDevice.NextCopyFenceValue - 1);
-                    break;
-                default:
-                    throw new NotSupportedException("This command list type is not supported.");
-            }
-
-            currentCommandList.NativeCommandList.Dispose();
         }
 
         public void Flush(bool wait = false)
@@ -168,5 +140,29 @@ namespace ComputeSharp.Graphics
             CommandListType.Direct => GraphicsDevice.DirectAllocatorPool.GetCommandAllocator(),
             _ => throw new NotSupportedException("This command list type is not supported.")
         };
+
+        /// <inheritdoc/>
+        public override void Dispose()
+        {
+            switch (CommandListType)
+            {
+                case CommandListType.Bundle:
+                    GraphicsDevice.BundleAllocatorPool.Enqueue(currentCommandList.NativeCommandAllocator, GraphicsDevice.NextDirectFenceValue - 1);
+                    break;
+                case CommandListType.Direct:
+                    GraphicsDevice.DirectAllocatorPool.Enqueue(currentCommandList.NativeCommandAllocator, GraphicsDevice.NextDirectFenceValue - 1);
+                    break;
+                case CommandListType.Compute:
+                    GraphicsDevice.ComputeAllocatorPool.Enqueue(currentCommandList.NativeCommandAllocator, GraphicsDevice.NextComputeFenceValue - 1);
+                    break;
+                case CommandListType.Copy:
+                    GraphicsDevice.CopyAllocatorPool.Enqueue(currentCommandList.NativeCommandAllocator, GraphicsDevice.NextCopyFenceValue - 1);
+                    break;
+                default:
+                    throw new NotSupportedException("This command list type is not supported.");
+            }
+
+            currentCommandList.NativeCommandList.Dispose();
+        }
     }
 }
