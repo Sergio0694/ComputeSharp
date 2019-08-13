@@ -3,6 +3,7 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Reflection;
 using ComputeSharp.Shaders.Renderer.Models;
+using Stubble.Core;
 
 namespace ComputeSharp.Shaders.Renderer
 {
@@ -39,6 +40,6 @@ namespace ComputeSharp.Shaders.Renderer
         /// <param name="info">The input <see cref="ShaderInfo"/> instance with the shader information</param>
         /// <returns>The source code for the new HLSL shader</returns>
         [Pure]
-        public string Render(ShaderInfo info) => Nustache.Core.Render.StringToString(Template, info);
+        public string Render(ShaderInfo info) => StaticStubbleRenderer.Render(Template, info);
     }
 }
