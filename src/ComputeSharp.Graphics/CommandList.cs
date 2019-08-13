@@ -4,6 +4,9 @@ using SharpDX.Direct3D12;
 
 namespace ComputeSharp.Graphics
 {
+    /// <summary>
+    /// A <see langword="class"/> that represents a list of commands to issue to a GPU
+    /// </summary>
     public sealed class CommandList : IDisposable
     {
         private readonly CompiledCommandList currentCommandList;
