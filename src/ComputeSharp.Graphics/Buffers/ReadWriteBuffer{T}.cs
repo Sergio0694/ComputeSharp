@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Graphics.Helpers;
 using SharpDX.Direct3D12;
 
 namespace ComputeSharp.Graphics.Buffers
@@ -16,10 +17,7 @@ namespace ComputeSharp.Graphics.Buffers
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
-        internal ReadWriteBuffer(GraphicsDevice device, int size) : base(device, size, size * Unsafe.SizeOf<T>(), HeapType.Default)
-        {
-
-        }
+        internal ReadWriteBuffer(GraphicsDevice device, int size) : base(device, size, size * Unsafe.SizeOf<T>(), HeapType.Default) { }
 
         /// <summary>
         /// Gets or sets a single <typeparamref name="T"/> value from the current read write buffer
@@ -35,13 +33,29 @@ namespace ComputeSharp.Graphics.Buffers
         /// <inheritdoc/>
         public override void GetData(Span<T> span)
         {
-            throw new NotImplementedException();
+            using Buffer<T> readbackBaffer = new Buffer<T>(GraphicsDevice, Size, SizeInBytes, HeapType.Readback);
+            using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
+
+            copyCommandList.CopyBufferRegion(this, 0, readbackBaffer, 0, SizeInBytes);
+            copyCommandList.Flush(true);
+
+            readbackBaffer.Map(0);
+            MemoryHelper.Copy(readbackBaffer.MappedResource, span);
+            readbackBaffer.Unmap(0);
         }
 
         /// <inheritdoc/>
         public override void SetData(Span<T> span)
         {
-            throw new NotImplementedException();
+            using Buffer<T> uploadBuffer = new Buffer<T>(GraphicsDevice, Size, SizeInBytes, HeapType.Upload);
+            using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
+
+            uploadBuffer.Map(0);
+            MemoryHelper.Copy(span, uploadBuffer.MappedResource);
+            uploadBuffer.Unmap(0);
+
+            copyCommandList.CopyBufferRegion(uploadBuffer, 0, this, 0, SizeInBytes);
+            copyCommandList.Flush(true);
         }
     }
 }
