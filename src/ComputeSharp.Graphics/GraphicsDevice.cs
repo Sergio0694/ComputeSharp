@@ -12,15 +12,10 @@ namespace ComputeSharp.Graphics
         private readonly AutoResetEvent fenceEvent = new AutoResetEvent(false);
 
         /// <summary>
-        /// Creates a new <see cref="GraphicsDevice"/> instance for the default GPU on the current machine
-        /// </summary>
-        public GraphicsDevice() : this(new Device(null, FeatureLevel)) { }
-
-        /// <summary>
         /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="Device"/>
         /// </summary>
         /// <param name="device">The <see cref="Device"/> to use for the new <see cref="GraphicsDevice"/> instance</param>
-        private GraphicsDevice(Device device)
+        public GraphicsDevice(Device device)
         {
 #if DEBUG
             DebugInterface.Get().EnableDebugLayer();
