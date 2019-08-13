@@ -87,13 +87,12 @@ namespace ComputeSharp.Graphics.Commands
         }
 
         /// <summary>
-        /// Executes the pending operations and optionally waits for them to be completed
+        /// Executes the pending operations and waits for them to be completed
         /// </summary>
-        /// <param name="wait">Indicates whether or not to wait for the completion of the scheduled operations</param>
-        public void Flush(bool wait = false)
+        public void Flush()
         {
             Close();
-            GraphicsDevice.ExecuteCommandLists(wait, this);
+            GraphicsDevice.ExecuteCommandList(this);
         }
 
         /// <summary>

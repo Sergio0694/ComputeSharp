@@ -72,7 +72,7 @@ namespace ComputeSharp.Shaders
 
             // Dispatch and wait for completion
             commandList.Dispatch(groupsX, groupsY, groupsZ);
-            commandList.Flush(true);
+            commandList.Flush();
         }
     }
 }

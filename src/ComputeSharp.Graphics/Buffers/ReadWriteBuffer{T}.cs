@@ -39,7 +39,7 @@ namespace ComputeSharp.Graphics.Buffers
             using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
             copyCommandList.CopyBufferRegion(this, 0, readbackBaffer, 0, SizeInBytes);
-            copyCommandList.Flush(true);
+            copyCommandList.Flush();
 
             readbackBaffer.Map(0);
             MemoryHelper.Copy(readbackBaffer.MappedResource, span);
@@ -58,7 +58,7 @@ namespace ComputeSharp.Graphics.Buffers
             using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
             copyCommandList.CopyBufferRegion(uploadBuffer, 0, this, 0, SizeInBytes);
-            copyCommandList.Flush(true);
+            copyCommandList.Flush();
         }
 
         /// <inheritdoc/>
@@ -70,7 +70,7 @@ namespace ComputeSharp.Graphics.Buffers
                 using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
                 copyCommandList.CopyBufferRegion(buffer, 0, this, 0, SizeInBytes);
-                copyCommandList.Flush(true);
+                copyCommandList.Flush();
             }
             else SetDataWithCpuBuffer(buffer);
         }

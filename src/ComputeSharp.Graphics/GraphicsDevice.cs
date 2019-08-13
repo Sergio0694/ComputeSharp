@@ -103,6 +103,80 @@ namespace ComputeSharp.Graphics
             return NativeDevice.CreateRootSignature(rootSignatureDescription.Serialize());
         }
 
+        /// <summary>
+        /// Executes a <see cref="CommandList"/> and waits for the GPU to finish processing it
+        /// </summary>
+        /// <param name="commandList">The input <see cref="CommandList"/> to execute</param>
+        internal void ExecuteCommandList(CommandList commandList)
+        {
+            Fence fence = commandList.CommandListType switch
+            {
+                CommandListType.Direct => NativeDirectFence,
+                CommandListType.Compute => NativeComputeFence,
+                CommandListType.Copy => NativeCopyFence,
+                _ => throw new NotSupportedException("This command list type is not supported.")
+            };
+
+            long fenceValue = GetFenceValueForCommandList(commandList);
+
+            if (fenceValue <= fence.CompletedValue) return;
+
+            lock (fence)
+            {
+                fence.SetEventOnCompletion(fenceValue, fenceEvent.SafeWaitHandle.DangerousGetHandle());
+                fenceEvent.WaitOne();
+            }
+        }
+
+        /// <summary>
+        /// Executes a <see cref="CommandList"/> and, signals and retrieves the following fence value
+        /// </summary>
+        /// <param name="commandList">The input <see cref="CommandList"/> to execute</param>
+        /// <returns>The value of the new fence to wait for</returns>
+        private long GetFenceValueForCommandList(CommandList commandList)
+        {
+            CommandAllocatorPool commandAllocatorPool;
+            CommandQueue commandQueue;
+            Fence fence;
+            long fenceValue;
+
+            switch (commandList.CommandListType)
+            {
+                case CommandListType.Compute:
+                    commandAllocatorPool = ComputeAllocatorPool;
+                    commandQueue = NativeComputeCommandQueue;
+                    fence = NativeComputeFence;
+                    fenceValue = NextComputeFenceValue;
+
+                    NextDirectFenceValue++;
+                    break;
+                case CommandListType.Copy:
+                    commandAllocatorPool = CopyAllocatorPool;
+                    commandQueue = NativeCopyCommandQueue;
+                    fence = NativeCopyFence;
+                    fenceValue = NextCopyFenceValue;
+
+                    NextCopyFenceValue++;
+                    break;
+                case CommandListType.Direct:
+                    commandAllocatorPool = DirectAllocatorPool;
+                    commandQueue = NativeDirectCommandQueue;
+                    fence = NativeDirectFence;
+                    fenceValue = NextDirectFenceValue;
+
+                    NextDirectFenceValue++;
+                    break;
+                default: throw new NotSupportedException($"Unsupported command list of type {commandList.CommandListType}");
+            }
+
+            commandAllocatorPool.Enqueue(commandList.CommandAllocator, fenceValue);
+            commandQueue.ExecuteCommandLists(commandList.NativeCommandList);
+            commandQueue.Signal(fence, fenceValue);
+
+            return fenceValue;
+        }
+
+        /// <inheritdoc/>
         public void Dispose()
         {
             NativeDirectCommandQueue.Signal(NativeDirectFence, NextDirectFenceValue);
@@ -129,91 +203,6 @@ namespace ComputeSharp.Graphics
             NativeDirectFence.Dispose();
 
             NativeDevice.Dispose();
-        }
-
-        internal void ExecuteCommandLists(bool wait, params CommandList[] commandLists)
-        {
-            Fence fence = commandLists[0].CommandListType switch
-            {
-                CommandListType.Direct => NativeDirectFence,
-                CommandListType.Compute => NativeComputeFence,
-                CommandListType.Copy => NativeCopyFence,
-                _ => throw new NotSupportedException("This command list type is not supported.")
-            };
-
-            long fenceValue = ExecuteCommandLists(commandLists);
-
-            if (wait)
-            {
-                WaitForFence(fence, fenceValue);
-            }
-        }
-
-        internal long ExecuteCommandLists(params CommandList[] commandLists)
-        {
-            CommandAllocatorPool commandAllocatorPool;
-            CommandQueue commandQueue;
-            Fence fence;
-            long fenceValue;
-
-            switch (commandLists[0].CommandListType)
-            {
-                case CommandListType.Compute:
-                    commandAllocatorPool = ComputeAllocatorPool;
-                    commandQueue = NativeComputeCommandQueue;
-
-                    fence = NativeComputeFence;
-                    fenceValue = NextComputeFenceValue;
-                    NextDirectFenceValue++;
-                    break;
-                case CommandListType.Copy:
-                    commandAllocatorPool = CopyAllocatorPool;
-                    commandQueue = NativeCopyCommandQueue;
-
-                    fence = NativeCopyFence;
-                    fenceValue = NextCopyFenceValue;
-                    NextCopyFenceValue++;
-                    break;
-                case CommandListType.Direct:
-                    commandAllocatorPool = DirectAllocatorPool;
-                    commandQueue = NativeDirectCommandQueue;
-
-                    fence = NativeDirectFence;
-                    fenceValue = NextDirectFenceValue;
-                    NextDirectFenceValue++;
-                    break;
-                default:
-                    throw new NotSupportedException("This command list type is not supported.");
-            }
-
-            SharpDX.Direct3D12.CommandList[] nativeCommandLists = new SharpDX.Direct3D12.CommandList[commandLists.Length];
-
-            for (int i = 0; i < commandLists.Length; i++)
-            {
-                nativeCommandLists[i] = commandLists[i].NativeCommandList;
-                commandAllocatorPool.Enqueue(commandLists[i].CommandAllocator, fenceValue);
-            }
-
-            commandQueue.ExecuteCommandLists(nativeCommandLists);
-            commandQueue.Signal(fence, fenceValue);
-
-            return fenceValue;
-        }
-
-        internal bool IsFenceComplete(Fence fence, long fenceValue)
-        {
-            return fenceValue <= fence.CompletedValue;
-        }
-
-        internal void WaitForFence(Fence fence, long fenceValue)
-        {
-            if (IsFenceComplete(fence, fenceValue)) return;
-
-            lock (fence)
-            {
-                fence.SetEventOnCompletion(fenceValue, fenceEvent.SafeWaitHandle.DangerousGetHandle());
-                fenceEvent.WaitOne();
-            }
         }
     }
 }
