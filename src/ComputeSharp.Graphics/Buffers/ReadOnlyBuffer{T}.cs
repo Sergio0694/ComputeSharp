@@ -21,12 +21,18 @@ namespace ComputeSharp.Graphics.Buffers
         internal ReadOnlyBuffer(GraphicsDevice device, int size) : base(device, size, size * (Unsafe.SizeOf<T>() / 16 + 1) * 16, HeapType.Upload)
         {
             PaddedElementSizeInBytes = SizeInBytes / Size;
+            IsPaddingPresent = PaddedElementSizeInBytes > ElementSizeInBytes;
         }
 
         /// <summary>
         /// Gets the size in bytes of the current buffer
         /// </summary>
-        private int PaddedElementSizeInBytes { get; }
+        internal int PaddedElementSizeInBytes { get; }
+
+        /// <summary>
+        /// Gets whether or not there is some padding between elements in the current buffer
+        /// </summary>
+        internal bool IsPaddingPresent { get; }
 
         /// <summary>
         /// Gets a single <typeparamref name="T"/> value from the current read write buffer
@@ -38,14 +44,7 @@ namespace ComputeSharp.Graphics.Buffers
         /// <inheritdoc/>
         public override void GetData(Span<T> span)
         {
-            // Directly copy the data back if there is no padding
-            if (PaddedElementSizeInBytes == ElementSizeInBytes)
-            {
-                Map(0);
-                MemoryHelper.Copy(MappedResource, span);
-                Unmap(0);
-            }
-            else
+            if (IsPaddingPresent)
             {
                 // Create the temporary array
                 byte[] temporaryArray = ArrayPool<byte>.Shared.Rent(SizeInBytes);
@@ -68,19 +67,19 @@ namespace ComputeSharp.Graphics.Buffers
 
                 ArrayPool<byte>.Shared.Return(temporaryArray);
             }
+            else
+            {
+                // Directly copy the data back if there is no padding
+                Map(0);
+                MemoryHelper.Copy(MappedResource, span);
+                Unmap(0);
+            }
         }
 
         /// <inheritdoc/>
         public override void SetData(Span<T> span)
         {
-            // Directly copy the input span if there is no padding
-            if (PaddedElementSizeInBytes == ElementSizeInBytes)
-            {
-                Map(0);
-                MemoryHelper.Copy(span, MappedResource);
-                Unmap(0);
-            }
-            else
+            if (IsPaddingPresent)
             {
                 // Create the temporary array
                 byte[] temporaryArray = ArrayPool<byte>.Shared.Rent(SizeInBytes);
@@ -102,6 +101,38 @@ namespace ComputeSharp.Graphics.Buffers
 
                 ArrayPool<byte>.Shared.Return(temporaryArray);
             }
+            else
+            {
+                // Directly copy the input span if there is no padding
+                Map(0);
+                MemoryHelper.Copy(span, MappedResource);
+                Unmap(0);
+            }
+        }
+
+        /// <inheritdoc/>
+        public override void SetData(ReadOnlyBuffer<T> buffer)
+        {
+            using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
+
+            copyCommandList.CopyBufferRegion(buffer, 0, this, 0, SizeInBytes);
+            copyCommandList.Flush(true);
+        }
+
+        /// <inheritdoc/>
+        public override void SetData(ReadWriteBuffer<T> buffer)
+        {
+            // Create a temporary array
+            T[] array = ArrayPool<T>.Shared.Rent(buffer.Size);
+            Span<T> span = array.AsSpan(buffer.Size);
+
+            // Get the unpadded data from the read write buffer
+            buffer.GetData(span);
+
+            // Set the data, adding the padding if needed
+            SetData(span);
+
+            ArrayPool<T>.Shared.Return(array);
         }
     }
 }

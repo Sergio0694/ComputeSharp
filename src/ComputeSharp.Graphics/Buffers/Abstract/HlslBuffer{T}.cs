@@ -43,5 +43,17 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// </summary>
         /// <param name="span">The input <see cref="Span{T}"/> to read data from</param>
         public abstract void SetData(Span<T> span);
+
+        /// <summary>
+        /// Writes the contents of a given <see cref="ReadOnlyBuffer{T}"/> to the current <see cref="HlslBuffer{T}"/> instance
+        /// </summary>
+        /// <param name="buffer">The input <see cref="ReadOnlyBuffer{T}"/> to read data from</param>
+        public abstract void SetData(ReadOnlyBuffer<T> buffer);
+
+        /// <summary>
+        /// Writes the contents of a given <see cref="ReadWriteBuffer{T}"/> to the current <see cref="HlslBuffer{T}"/> instance
+        /// </summary>
+        /// <param name="buffer">The input <see cref="ReadWriteBuffer{T}"/> to read data from</param>
+        public abstract void SetData(ReadWriteBuffer<T> buffer);
     }
 }

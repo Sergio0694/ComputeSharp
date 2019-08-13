@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Helpers;
@@ -48,14 +49,58 @@ namespace ComputeSharp.Graphics.Buffers
         public override void SetData(Span<T> span)
         {
             using Buffer<T> uploadBuffer = new Buffer<T>(GraphicsDevice, Size, SizeInBytes, HeapType.Upload);
-            using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
             uploadBuffer.Map(0);
             MemoryHelper.Copy(span, uploadBuffer.MappedResource);
             uploadBuffer.Unmap(0);
 
+            using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
+
             copyCommandList.CopyBufferRegion(uploadBuffer, 0, this, 0, SizeInBytes);
             copyCommandList.Flush(true);
+        }
+
+        /// <inheritdoc/>
+        public override void SetData(ReadOnlyBuffer<T> buffer)
+        {
+            if (buffer.IsPaddingPresent)
+            {
+                // Create a temporary array
+                T[] array = ArrayPool<T>.Shared.Rent(buffer.Size);
+                Span<T> span = array.AsSpan(buffer.Size);
+
+                // Get the data from the readonly array, removing the padding
+                buffer.GetData(span);
+
+                // Set the data to the current buffer
+                SetData(span);
+
+                ArrayPool<T>.Shared.Return(array);
+            }
+            else
+            {
+                // Directly copy the input buffer
+                using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
+
+                copyCommandList.CopyBufferRegion(buffer, 0, this, 0, SizeInBytes);
+                copyCommandList.Flush(true);
+            }
+        }
+
+        /// <inheritdoc/>
+        public override void SetData(ReadWriteBuffer<T> buffer)
+        {
+            // Create a temporary array
+            T[] array = ArrayPool<T>.Shared.Rent(buffer.Size);
+            Span<T> span = array.AsSpan(buffer.Size);
+
+            // Get the unpadded data from the read write buffer
+            buffer.GetData(span);
+
+            // Set the data to the current buffer
+            SetData(span);
+
+            ArrayPool<T>.Shared.Return(array);
         }
     }
 }
