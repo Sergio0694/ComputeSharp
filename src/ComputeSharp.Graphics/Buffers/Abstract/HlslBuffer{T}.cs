@@ -59,7 +59,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         {
             // Create a temporary array
             T[] array = ArrayPool<T>.Shared.Rent(buffer.Size);
-            Span<T> span = array.AsSpan(buffer.Size);
+            Span<T> span = array.AsSpan(0, buffer.Size);
 
             // Get the unpadded data from the read write buffer
             buffer.GetData(span);
