@@ -14,6 +14,7 @@
     <PackageProjectUrl>https://github.com/Sergio0694/ComputeSharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Sergio0694/ComputeSharp</RepositoryUrl>
     <PackageTags>dotnet net netcore netstandard csharp library graphics shader hlsl compute gpu</PackageTags>
+    <PackageIconUrl>https://i.imgur.com/oo8dA0q.png</PackageIconUrl>
   </PropertyGroup>
 
   <ItemGroup>
