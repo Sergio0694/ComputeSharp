@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Diagnostics.Contracts;
 using SharpDX.Direct3D12;
 
@@ -48,12 +49,31 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// Writes the contents of a given <see cref="ReadOnlyBuffer{T}"/> to the current <see cref="HlslBuffer{T}"/> instance
         /// </summary>
         /// <param name="buffer">The input <see cref="ReadOnlyBuffer{T}"/> to read data from</param>
-        public abstract void SetData(ReadOnlyBuffer<T> buffer);
+        public virtual void SetData(ReadOnlyBuffer<T> buffer) => SetDataWithCpuBuffer(buffer);
 
         /// <summary>
         /// Writes the contents of a given <see cref="ReadWriteBuffer{T}"/> to the current <see cref="HlslBuffer{T}"/> instance
         /// </summary>
         /// <param name="buffer">The input <see cref="ReadWriteBuffer{T}"/> to read data from</param>
-        public abstract void SetData(ReadWriteBuffer<T> buffer);
+        public virtual void SetData(ReadWriteBuffer<T> buffer) => SetDataWithCpuBuffer(buffer);
+
+        /// <summary>
+        /// Writes the contents of a given <see cref="HlslBuffer{T}"/> to the current <see cref="HlslBuffer{T}"/> instance, using a temporary CPU buffer
+        /// </summary>
+        /// <param name="buffer">The input <see cref="HlslBuffer{T}"/> to read data from</param>
+        protected void SetDataWithCpuBuffer(HlslBuffer<T> buffer)
+        {
+            // Create a temporary array
+            T[] array = ArrayPool<T>.Shared.Rent(buffer.Size);
+            Span<T> span = array.AsSpan(buffer.Size);
+
+            // Get the unpadded data from the read write buffer
+            buffer.GetData(span);
+
+            // Set the data, adding the padding if needed
+            SetData(span);
+
+            ArrayPool<T>.Shared.Return(array);
+        }
     }
 }

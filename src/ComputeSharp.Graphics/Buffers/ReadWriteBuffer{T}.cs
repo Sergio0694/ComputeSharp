@@ -63,20 +63,7 @@ namespace ComputeSharp.Graphics.Buffers
         /// <inheritdoc/>
         public override void SetData(ReadOnlyBuffer<T> buffer)
         {
-            if (buffer.IsPaddingPresent)
-            {
-                // Create a temporary array
-                T[] array = ArrayPool<T>.Shared.Rent(buffer.Size);
-                Span<T> span = array.AsSpan(buffer.Size);
-
-                // Get the data from the readonly array, removing the padding
-                buffer.GetData(span);
-
-                // Set the data to the current buffer
-                SetData(span);
-
-                ArrayPool<T>.Shared.Return(array);
-            }
+            if (buffer.IsPaddingPresent) SetDataWithCpuBuffer(buffer);
             else
             {
                 // Directly copy the input buffer
@@ -85,22 +72,6 @@ namespace ComputeSharp.Graphics.Buffers
                 copyCommandList.CopyBufferRegion(buffer, 0, this, 0, SizeInBytes);
                 copyCommandList.Flush(true);
             }
-        }
-
-        /// <inheritdoc/>
-        public override void SetData(ReadWriteBuffer<T> buffer)
-        {
-            // Create a temporary array
-            T[] array = ArrayPool<T>.Shared.Rent(buffer.Size);
-            Span<T> span = array.AsSpan(buffer.Size);
-
-            // Get the unpadded data from the read write buffer
-            buffer.GetData(span);
-
-            // Set the data to the current buffer
-            SetData(span);
-
-            ArrayPool<T>.Shared.Return(array);
         }
     }
 }

@@ -118,21 +118,5 @@ namespace ComputeSharp.Graphics.Buffers
             copyCommandList.CopyBufferRegion(buffer, 0, this, 0, SizeInBytes);
             copyCommandList.Flush(true);
         }
-
-        /// <inheritdoc/>
-        public override void SetData(ReadWriteBuffer<T> buffer)
-        {
-            // Create a temporary array
-            T[] array = ArrayPool<T>.Shared.Rent(buffer.Size);
-            Span<T> span = array.AsSpan(buffer.Size);
-
-            // Get the unpadded data from the read write buffer
-            buffer.GetData(span);
-
-            // Set the data, adding the padding if needed
-            SetData(span);
-
-            ArrayPool<T>.Shared.Return(array);
-        }
     }
 }
