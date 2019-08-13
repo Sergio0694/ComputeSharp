@@ -6,7 +6,7 @@ using ComputeSharp.Shaders.Renderer.Models;
 using ComputeSharp.Shaders.Translation;
 using SharpDX.Direct3D12;
 using CommandList = ComputeSharp.Graphics.Commands.CommandList;
-using PipelineState = ComputeSharp.Graphics.PipelineState;
+using PipelineState = ComputeSharp.Graphics.Commands.PipelineState;
 
 namespace ComputeSharp.Shaders
 {
@@ -55,12 +55,12 @@ namespace ComputeSharp.Shaders
             // Compile the loaded shader to HLSL bytecode
             ShaderBytecode shaderBytecode = ShaderCompiler.Instance.CompileShader(shaderSource);
 
-            // Create the root signature for the pipeline and the pipeline state
+            // Create the root signature for the pipeline and get the pipeline state
             RootSignatureDescription rootSignatureDescription = new RootSignatureDescription(RootSignatureFlags.None, shaderLoader.RootParameters);
             RootSignature rootSignature = device.CreateRootSignature(rootSignatureDescription);
             PipelineState pipelineState = new PipelineState(device, rootSignature, shaderBytecode);
 
-            // Create the commands list
+            // Create the commands list and set the pipeline state
             using CommandList commandList = new CommandList(device, CommandListType.Compute);
             commandList.SetPipelineState(pipelineState);
 

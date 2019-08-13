@@ -1,6 +1,6 @@
 ﻿using SharpDX.Direct3D12;
 
-namespace ComputeSharp.Graphics
+namespace ComputeSharp.Graphics.Commands
 {
     /// <summary>
     /// A <see langword="class"/> representing a custom pipeline state for a compute operation
