@@ -83,9 +83,9 @@ namespace ComputeSharp
         /// <returns>A constant <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input array</returns>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlyBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, T[] array) where T : unmanaged
+        public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, T[] array) where T : unmanaged
         {
-            return device.AllocateConstantBuffer(array.AsSpan());
+            return device.AllocateReadOnlyBuffer(array.AsSpan());
         }
 
         /// <summary>
@@ -97,12 +97,12 @@ namespace ComputeSharp
         /// <returns>A constant <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input 2D array</returns>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe ReadOnlyBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, T[,] array) where T : unmanaged
+        public static unsafe ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, T[,] array) where T : unmanaged
         {
             fixed (T* p = array)
             {
                 Span<T> span = new Span<T>(p, array.Length);
-                return device.AllocateConstantBuffer(span);
+                return device.AllocateReadOnlyBuffer(span);
             }
         }
 
@@ -115,7 +115,7 @@ namespace ComputeSharp
         /// <returns>A constant <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input <see cref="Span{T}"/></returns>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlyBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, Span<T> span) where T : unmanaged
+        public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, Span<T> span) where T : unmanaged
         {
             ReadOnlyBuffer<T> buffer = new ReadOnlyBuffer<T>(device, span.Length);
             buffer.SetData(span);

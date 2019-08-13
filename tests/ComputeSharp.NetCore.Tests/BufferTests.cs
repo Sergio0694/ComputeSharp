@@ -27,7 +27,7 @@ namespace ComputeSharp.NetCore.Tests
             float[] array = new float[4096];
             array.AsSpan().FillRandom();
 
-            using ReadOnlyBuffer<float> buffer = Gpu.Default.AllocateConstantBuffer(array);
+            using ReadOnlyBuffer<float> buffer = Gpu.Default.AllocateReadOnlyBuffer(array);
             float[] result = buffer.GetData();
 
             Assert.IsTrue(array.AsSpan().ContentEquals(result));
