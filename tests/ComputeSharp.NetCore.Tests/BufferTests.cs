@@ -3,7 +3,7 @@ using ComputeSharp.Graphics.Buffers;
 using ComputeSharp.NetCore.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ComputeSharp.NetCore.Sample
+namespace ComputeSharp.NetCore.Tests
 {
     [TestClass]
     [TestCategory("Buffers")]

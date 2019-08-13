@@ -103,6 +103,8 @@ namespace ComputeSharp.Shaders.Translation
         {
             if (FieldsInfo.Count > 0) throw new InvalidOperationException("Shader fields already loaded");
 
+            if (ShaderFields.Any(fieldInfo => fieldInfo.IsStatic)) throw new InvalidOperationException("Empty shader body");
+
             List<DescriptorRange> descriptorRanges = new List<DescriptorRange>();
             List<GraphicsResource> readWriteBuffers = new List<GraphicsResource>();
             int readWriteBuffersCount = 0;
