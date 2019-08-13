@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Metadata;
+using System.Text.RegularExpressions;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
 using ICSharpCode.Decompiler.Metadata;
@@ -98,6 +99,11 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <summary>
+        /// A <see cref="Regex"/> uused to preprocess the entry point declaration for both lambda expressions and local methods
+        /// </summary>
+        private static readonly Regex LambdaMethodDeclarationRegex = new Regex(@"^(private|internal) void <\w+>[\w_|]+(?=\()", RegexOptions.Compiled);
+
+        /// <summary>
         /// Decompiles a target method and returns its <see cref="SyntaxTree"/> and <see cref="SemanticModel"/> info
         /// </summary>
         /// <param name="methodInfo">The input <see cref="MethodInfo"/> to inspect</param>
@@ -117,10 +123,13 @@ namespace ComputeSharp.Shaders.Translation
                     Decompilers.Add(assemblyPath, decompiler);
                 }
 
-                string sourceCode = decompiler.DecompileAsString(methodHandle);
+                // Decompile the method source and fix the method declaration for local methods converted to lambdas
+                string
+                    sourceCode = decompiler.DecompileAsString(methodHandle),
+                    fixedCode = LambdaMethodDeclarationRegex.Replace(sourceCode, "internal void Main");
 
                 // Load the method syntax tree
-                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
+                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(fixedCode);
                 rootNode = syntaxTree.GetRoot();
 
                 // Update the incremental compilation and retrieve the syntax tree for the method

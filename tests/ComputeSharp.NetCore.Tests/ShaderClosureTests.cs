@@ -27,6 +27,21 @@ namespace ComputeSharp.NetCore.Tests
         }
 
         [TestMethod]
+        public void LocalScalarAssignToBufferWithinLocalMethod()
+        {
+            float value = 10;
+            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
+
+            void Foo(ThreadIds id) => buffer[0] = value;
+
+            Gpu.Default.For(1, Foo);
+
+            float[] result = buffer.GetData();
+
+            Assert.IsTrue((int)result[0] == (int)value);
+        }
+
+        [TestMethod]
         public void LocalKnownVectorAssignToBuffer()
         {
             Vector4 vector4 = new Vector4(1, 2, 3, 4);

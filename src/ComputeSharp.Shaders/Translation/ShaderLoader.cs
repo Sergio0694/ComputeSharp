@@ -157,7 +157,7 @@ namespace ComputeSharp.Shaders.Translation
             root = syntaxRewriter.Visit(root);
 
             // Get the thread ids identifier name and shader method body
-            ConstructorDeclarationSyntax methodNode = root.ChildNodes().OfType<ConstructorDeclarationSyntax>().First();
+            MethodDeclarationSyntax methodNode = root.ChildNodes().OfType<MethodDeclarationSyntax>().First();
             ThreadsIdsVariableName = methodNode.ParameterList.Parameters.First().Identifier.Text;
             MethodBody = methodNode.Body.ToFullString();
 
