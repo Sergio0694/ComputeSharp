@@ -18,7 +18,7 @@ namespace ComputeSharp.Graphics.Buffers
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
-        internal ReadOnlyBuffer(GraphicsDevice device, int size) : base(device, size, size * (Unsafe.SizeOf<T>() / 16 + 1), HeapType.Upload)
+        internal ReadOnlyBuffer(GraphicsDevice device, int size) : base(device, size, size * (Unsafe.SizeOf<T>() / 16 + 1) * 16, HeapType.Upload)
         {
             PaddedElementSizeInBytes = SizeInBytes / Size;
         }
@@ -61,7 +61,7 @@ namespace ComputeSharp.Graphics.Buffers
         public override void SetData(Span<T> span)
         {
             byte[] temporaryArray = ArrayPool<byte>.Shared.Rent(SizeInBytes);
-            Span<byte> temporarySpan = temporaryArray.AsSpan();
+            Span<byte> temporarySpan = temporaryArray.AsSpan(0, SizeInBytes); // Array pool arrays can be longer
             ref T tin = ref span.GetPinnableReference();
             ref byte tout = ref temporarySpan.GetPinnableReference();
 
