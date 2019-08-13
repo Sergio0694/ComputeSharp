@@ -148,7 +148,7 @@ namespace ComputeSharp.Graphics
                     fence = NativeComputeFence;
                     fenceValue = NextComputeFenceValue;
 
-                    NextDirectFenceValue++;
+                    NextComputeFenceValue++;
                     break;
                 case CommandListType.Copy:
                     commandAllocatorPool = CopyAllocatorPool;
