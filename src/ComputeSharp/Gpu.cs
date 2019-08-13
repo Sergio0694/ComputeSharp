@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using ComputeSharp.Graphics;
-using SharpDX.DXGI;
+using ComputeSharp.Graphics.Helpers;
 using Device = SharpDX.Direct3D12.Device;
 
 namespace ComputeSharp
@@ -16,7 +16,7 @@ namespace ComputeSharp
         /// <summary>
         /// Gets whether or not the <see cref="Gpu"/> APIs can be used on the current machine (ie. if there is at least a supported GPU device)
         /// </summary>
-        public static bool IsSupported { get; } = (_Devices = QueryAllSupportedDevices()).Any();
+        public static bool IsSupported { get; } = (_Devices = DeviceHelper.QueryAllSupportedDevices()).Any();
 
         private static GraphicsDevice _Default;
 
@@ -42,32 +42,5 @@ namespace ComputeSharp
 
         // The loaded collection of supported devices
         private static IReadOnlyList<Device> _Devices;
-
-        /// <summary>
-        /// Gets a collection of all the supported devices on the current machine
-        /// </summary>
-        /// <returns>The collection of <see cref="Device"/> objects with support for DX12.1</returns>
-        [Pure]
-        private static IReadOnlyList<Device> QueryAllSupportedDevices()
-        {
-            using Factory factory = new Factory1();
-            List<Device> devices = new List<Device>();
-
-            foreach (Adapter adapter in factory.Adapters)
-            {
-                if (adapter.Description.DedicatedVideoMemory == 0) continue;
-                try
-                {
-                    Device device = new Device(adapter, GraphicsDevice.FeatureLevel);
-                    devices.Add(device);
-                }
-                catch
-                {
-                    // Unsupported device
-                }
-            }
-
-            return devices;
-        }
     }
 }
