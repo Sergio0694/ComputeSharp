@@ -25,6 +25,21 @@ namespace ComputeSharp.Graphics
         private readonly AutoResetEvent AutoResetEvent = new AutoResetEvent(false);
 
         /// <summary>
+        /// The <see cref="CommandQueue"/> instance to use for compute operations
+        /// </summary>
+        private readonly CommandQueue NativeComputeCommandQueue;
+
+        /// <summary>
+        /// The <see cref="CommandQueue"/> instance to use for copy operations
+        /// </summary>
+        private readonly CommandQueue NativeCopyCommandQueue;
+
+        /// <summary>
+        /// The <see cref="CommandQueue"/> instance to use for direct operations
+        /// </summary>
+        private readonly CommandQueue NativeDirectCommandQueue;
+
+        /// <summary>
         /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="Device"/>
         /// </summary>
         /// <param name="device">The <see cref="Device"/> to use for the new <see cref="GraphicsDevice"/> instance</param>
@@ -70,30 +85,56 @@ namespace ComputeSharp.Graphics
         /// </summary>
         internal DescriptorAllocator ShaderResourceViewAllocator { get; set; }
 
+        /// <summary>
+        /// Gets the <see cref="CommandAllocatorPool"/> instance for compute operations
+        /// </summary>
         internal CommandAllocatorPool ComputeAllocatorPool { get; }
 
+        /// <summary>
+        /// Gets the <see cref="CommandAllocatorPool"/> instance for copy operations
+        /// </summary>
         internal CommandAllocatorPool CopyAllocatorPool { get; }
 
+        /// <summary>
+        /// Gets the <see cref="CommandAllocatorPool"/> instance for direct operations
+        /// </summary>
         internal CommandAllocatorPool DirectAllocatorPool { get; }
 
-        internal CommandQueue NativeComputeCommandQueue { get; }
-
-        internal CommandQueue NativeCopyCommandQueue { get; }
-
-        internal CommandQueue NativeDirectCommandQueue { get; }
-
+        /// <summary>
+        /// Gets the <see cref="Fence"/> instance used for compute operations
+        /// </summary>
         internal Fence NativeComputeFence { get; }
 
+        /// <summary>
+        /// Gets the <see cref="Fence"/> instance used for copy operations
+        /// </summary>
         internal Fence NativeCopyFence { get; }
 
+        /// <summary>
+        /// Gets the <see cref="Fence"/> instance used for direct operations
+        /// </summary>
         internal Fence NativeDirectFence { get; }
 
+        /// <summary>
+        /// Gets the next fence value for compute operations
+        /// </summary>
         internal long NextComputeFenceValue { get; private set; } = 1;
 
+        /// <summary>
+        /// Gets the next fence value for copy operations
+        /// </summary>
         internal long NextCopyFenceValue { get; private set; } = 1;
 
+        /// <summary>
+        /// Gets the next fence value for direct operations
+        /// </summary>
         internal long NextDirectFenceValue { get; private set; } = 1;
 
+        /// <summary>
+        /// Creates a <see cref="RootSignature"/> instance from a description
+        /// </summary>
+        /// <param name="rootSignatureDescription">A <see cref="RootSignatureDescription"/> instance with the info for the new <see cref="RootSignature"/> object to create</param>
+        /// <returns>A new <see cref="RootSignature"/> instance to use in a compute shader</returns>
         public RootSignature CreateRootSignature(RootSignatureDescription rootSignatureDescription)
         {
             return NativeDevice.CreateRootSignature(rootSignatureDescription.Serialize());
