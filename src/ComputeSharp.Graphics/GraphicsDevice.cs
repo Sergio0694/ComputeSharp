@@ -2,6 +2,8 @@
 using System.Threading;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D12;
+using SharpDX.DXGI;
+using Device = SharpDX.Direct3D12.Device;
 
 namespace ComputeSharp.Graphics
 {
@@ -9,12 +11,21 @@ namespace ComputeSharp.Graphics
     {
         private readonly AutoResetEvent fenceEvent = new AutoResetEvent(false);
 
-        public GraphicsDevice(bool enableDebugLayer = false)
+        /// <summary>
+        /// Creates a new <see cref="GraphicsDevice"/> instance for the default GPU on the current machine
+        /// </summary>
+        public GraphicsDevice() : this(new Device(null, FeatureLevel)) { }
+
+        /// <summary>
+        /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="Device"/>
+        /// </summary>
+        /// <param name="device">The <see cref="Device"/> to use for the new <see cref="GraphicsDevice"/> instance</param>
+        private GraphicsDevice(Device device)
         {
 #if DEBUG
-            if (enableDebugLayer) DebugInterface.Get().EnableDebugLayer();
+            DebugInterface.Get().EnableDebugLayer();
 #endif
-            NativeDevice = new Device(null, FeatureLevel);
+            NativeDevice = device;
             WavefrontSize = NativeDevice.D3D12Options1.WaveLaneCountMin;
 
             NativeComputeCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(SharpDX.Direct3D12.CommandListType.Compute));
@@ -39,6 +50,28 @@ namespace ComputeSharp.Graphics
 
             CopyCommandList = new CommandList(this, CommandListType.Copy);
             CopyCommandList.Close();
+        }
+
+        /// <summary>
+        /// Tries to create a new <see cref="GraphicsDevice"/> instance from the input <see cref="Adapter"/> object
+        /// </summary>
+        /// <param name="adapter">The input <see cref="Adapter"/> for the current GPU being targeted</param>
+        /// <param name="result">The resulting <see cref="GraphicsDevice"/> value, in case of success</param>
+        /// <returns>A <see langword="bool"/> value indicating whether or not the resulting device was created correctly</returns>
+        public static bool TryGetFromAdapter(Adapter adapter, out GraphicsDevice? result)
+        {
+            try
+            {
+                Device device = new Device(adapter, FeatureLevel);
+                result = new GraphicsDevice(device);
+
+                return true;
+            }
+            catch
+            {
+                result = null;
+                return false;
+            }
         }
 
         /// <summary>
