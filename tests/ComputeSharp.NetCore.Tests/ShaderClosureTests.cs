@@ -23,7 +23,7 @@ namespace ComputeSharp.NetCore.Tests
 
             float[] result = buffer.GetData();
 
-            Assert.IsTrue((int)result[0] == (int)value);
+            Assert.IsTrue(MathF.Abs(result[0] - value) < 0.0001f);
         }
 
         [TestMethod]
