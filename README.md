@@ -58,14 +58,14 @@ using ReadOnlyBuffer<float> xBuffer = Gpu.Default.AllocateConstantBuffer(x);
 using ReadWriteBuffer<float> yBuffer = Gpu.Default.AllocateReadWriteBuffer(y);
 
 // Shader body
-void Shader(ThreadIds id)
+void Main(ThreadIds id)
 {
     uint offset = id.X + id.Y * (uint)width;
     yBuffer[offset] += xBuffer[offset];
 }
 
 // Run the shader
-Gpu.Default.For(width, height, action);
+Gpu.Default.For(width, height, Main);
 
 // Get the data back and write it to the y array
 yBuffer.GetData(y);
