@@ -28,10 +28,10 @@ namespace ComputeSharp.Shaders
         public static void Run(GraphicsDevice device, int x, int y, int z, Action<ThreadIds> action)
         {
             // Calculate the optimized thread num values
-            int
-                threadsX = device.WavefrontSize,
-                threadsY = y > 1 ? device.WavefrontSize : 1,
-                threadsZ = z > 1 ? device.WavefrontSize : 1;
+            int threadsX, threadsY = 1, threadsZ = 1;
+            if (y == 1 && z == 1) threadsX = device.WavefrontSize;
+            else if (z == 1) threadsX = threadsY = 8;
+            else threadsX = threadsY = threadsZ = 4;
 
             Run(device, x, y, z, threadsX, threadsY, threadsZ, action);
         }
