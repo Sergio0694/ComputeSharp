@@ -21,20 +21,43 @@ namespace ComputeSharp.Shaders
         /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader</param>
-        /// <param name="x">The number of threads to run on the X axis</param>
-        /// <param name="y">The number of threads to run on the Y axis</param>
-        /// <param name="z">The number of threads to run on the Z axis</param>
+        /// <param name="x">The number of iterations to run on the X axis</param>
+        /// <param name="y">The number of iterations to run on the Y axis</param>
+        /// <param name="z">The number of iterations to run on the Z axis</param>
         /// <param name="action">The input <see cref="Action{T}"/> representing the compute shader to run</param>
         public static void Run(GraphicsDevice device, int x, int y, int z, Action<ThreadIds> action)
         {
-            // Calculate the optimized thread num and group values
+            // Calculate the optimized thread num values
             int
                 threadsX = device.WavefrontSize,
                 threadsY = y > 1 ? device.WavefrontSize : 1,
-                threadsZ = z > 1 ? device.WavefrontSize : 1,
-                groupsX = (x - 1) / device.WavefrontSize + 1,
-                groupsY = (y - 1) / device.WavefrontSize + 1,
-                groupsZ = (z - 1) / device.WavefrontSize + 1;
+                threadsZ = z > 1 ? device.WavefrontSize : 1;
+
+            Run(device, x, y, z, threadsX, threadsY, threadsZ, action);
+        }
+
+        /// <summary>
+        /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader</param>
+        /// <param name="x">The number of iterations to run on the X axis</param>
+        /// <param name="y">The number of iterations to run on the Y axis</param>
+        /// <param name="z">The number of iterations to run on the Z axis</param>
+        /// <param name="threadsX">The number of threads in each thread group for the X axis</param>
+        /// <param name="threadsY">The number of threads in each thread group for the Y axis</param>
+        /// <param name="threadsZ">The number of threads in each thread group for the Z axis</param>
+        /// <param name="action">The input <see cref="Action{T}"/> representing the compute shader to run</param>
+        public static void Run(
+            GraphicsDevice device,
+            int x, int y, int z,
+            int threadsX, int threadsY, int threadsZ,
+            Action<ThreadIds> action)
+        {
+            // Calculate the dispatch values
+            int
+                groupsX = x / threadsX + (x % threadsX == 0 ? 0 : 1),
+                groupsY = y / threadsY + (y % threadsY == 0 ? 0 : 1),
+                groupsZ = z / threadsZ + (z % threadsZ == 0 ? 0 : 1);
 
             // Load the input shader
             ShaderLoader shaderLoader = ShaderLoader.Load(action);

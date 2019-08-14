@@ -26,6 +26,21 @@ namespace ComputeSharp.NetCore.Tests
         }
 
         [TestMethod]
+        public void WriteToReadWriteBufferManualDispatch1D()
+        {
+            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(100);
+
+            Action<ThreadIds> action = id => buffer[id.X] = id.X;
+
+            Gpu.Default.For(100, 1, 1, 64, 1, 1, action);
+
+            float[] array = buffer.GetData();
+            float[] expected = Enumerable.Range(0, 100).Select(i => (float)i).ToArray();
+
+            Assert.IsTrue(array.AsSpan().ContentEquals(expected));
+        }
+
+        [TestMethod]
         public void WriteToReadWriteBufferDispatch2D()
         {
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(100);
@@ -48,6 +63,21 @@ namespace ComputeSharp.NetCore.Tests
             Action<ThreadIds> action = id => buffer[id.X + id.Y * 10 + id.Z * 100] = id.X + id.Y * 10 + id.Z * 100;
 
             Gpu.Default.For(10, 10, 10, action);
+
+            float[] array = buffer.GetData();
+            float[] expected = Enumerable.Range(0, 1000).Select(i => (float)i).ToArray();
+
+            Assert.IsTrue(array.AsSpan().ContentEquals(expected));
+        }
+
+        [TestMethod]
+        public void WriteToReadWriteBufferManualDispatch3D()
+        {
+            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1000);
+
+            Action<ThreadIds> action = id => buffer[id.X + id.Y * 10 + id.Z * 100] = id.X + id.Y * 10 + id.Z * 100;
+
+            Gpu.Default.For(10, 10, 10, 4, 4, 4, action);
 
             float[] array = buffer.GetData();
             float[] expected = Enumerable.Range(0, 1000).Select(i => (float)i).ToArray();
