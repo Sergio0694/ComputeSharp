@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
@@ -13,6 +14,11 @@ namespace ComputeSharp.Graphics.Buffers.Extensions
     internal static class GraphicsResourceExtensions
     {
         /// <summary>
+        /// The <see cref="Dictionary{TKey,TValue}"/> that maps types to the necessary data to create buffers, for quick lookup
+        /// </summary>
+        private static readonly Dictionary<Type, (ConstructorInfo Constructor, IList Array, MethodInfo Setter)> TypeMapping = new Dictionary<Type, (ConstructorInfo, IList, MethodInfo)>();
+
+        /// <summary>
         /// Allocates a new constant buffer with the specified generic value
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer</param>
@@ -21,28 +27,32 @@ namespace ComputeSharp.Graphics.Buffers.Extensions
         [Pure]
         public static GraphicsResource AllocateReadOnlyBufferFromReflectedSingleValue(this GraphicsDevice device, object data)
         {
-            // Create the generic constant buffer
-            Type
-                dataType = data.GetType(),
-                bufferType = typeof(ReadOnlyBuffer<>).MakeGenericType(dataType);
-            ConstructorInfo constructor = bufferType.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic).First();
-            GraphicsResource buffer = (GraphicsResource)constructor.Invoke(new object[] { device, 1 });
+            Type dataType = data.GetType();
+            if (!TypeMapping.TryGetValue(dataType, out var info))
+            {
+                // Get the generic buffer constructor
+                Type bufferType = typeof(ReadOnlyBuffer<>).MakeGenericType(dataType);
+                info.Constructor = bufferType.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic).First();
 
-            // Create the array with the input value
-            Type arrayType = dataType.MakeArrayType();
-            ConstructorInfo[] arrayConstructors = arrayType.GetConstructors(BindingFlags.CreateInstance
-                                                                            | BindingFlags.Public
-                                                                            | BindingFlags.Instance
-                                                                            | BindingFlags.OptionalParamBinding);
-            Array array = (Array)arrayConstructors[0].Invoke(new object[] { 1 });
+                // Create the reusable array
+                Type arrayType = dataType.MakeArrayType();
+                ConstructorInfo[] arrayConstructors = arrayType.GetConstructors(BindingFlags.CreateInstance
+                                                                                | BindingFlags.Public
+                                                                                | BindingFlags.Instance
+                                                                                | BindingFlags.OptionalParamBinding);
+                info.Array = (IList)arrayConstructors[0].Invoke(new object[] { 1 });
 
-            // Use the IList indexer to set the generic object
-            IList ilist = array;
-            ilist[0] = data;
+                // Set the input data to the new buffer
+                info.Setter = bufferType.GetMethod(nameof(HlslBuffer<byte>.SetData), new[] { arrayType });
 
-            // Set the input data to the new buffer
-            MethodInfo setDataMethod = bufferType.GetMethod(nameof(HlslBuffer<byte>.SetData), new[] { arrayType });
-            setDataMethod.Invoke(buffer, new object[] { array });
+                // Cache for later reuse
+                TypeMapping.Add(dataType, info);
+            }
+
+            // Create the buffer and set the content
+            GraphicsResource buffer = (GraphicsResource)info.Constructor.Invoke(new object[] { device, 1 });
+            info.Array[0] = data;
+            info.Setter.Invoke(buffer, new object[] { info.Array });
 
             return buffer;
         }

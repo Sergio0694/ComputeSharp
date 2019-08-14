@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using ComputeSharp.Graphics.Buffers;
-using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Extensions;
 using ComputeSharp.NetCore.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
