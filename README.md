@@ -26,7 +26,7 @@ More details available [here](https://www.nuget.org/packages/ComputeSharp/).
 
 # Quick start
 
-**ComputeSharp** exposes a `Gpu` class that acts as the entry point for all public APIs. It exposes the `Gpu.Default` property that let you access the main GPU device on the current machine, which can be used to allocate buffers and perform operations.
+**ComputeSharp** exposes a `Gpu` class that acts entry point for all public APIs. It exposes the `Gpu.Default` property that let you access the main GPU device on the current machine, which can be used to allocate buffers and perform operations.
 
 The following sample shows how to allocate a writeable buffer, populate it with a compute shader, and read it back.
 
@@ -34,11 +34,8 @@ The following sample shows how to allocate a writeable buffer, populate it with 
 // Allocate a writeable buffer on the GPU, with the contents of the array
 using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1000);
 
-// Shader body
-Action<ThreadIds> action = id => buffer[id.X] = id.X;
-
 // Run the shader
-Gpu.Default.For(1000, action);
+Gpu.Default.For(1000, id => buffer[id.X] = id.X);
 
 // Get the data back
 float[] array = buffer.GetData();
@@ -50,7 +47,7 @@ If the shader in C# is capturing some local variable, those will be automaticall
 
 ## Advanced usage
 
-**ComputeSharp** lets you dispatch compute shaders over thread groups from 1 to 3 dimensions, includes supports for readonly buffers, and more. Here is a more advanced sample showcasing both these two features.
+**ComputeSharp** lets you dispatch compute shaders over thread groups from 1 to 3 dimensions, includes supports for readonly buffers, and more. The shader body can both be declared inline, as a separate `Action<ThreadIds>` or as a local method. Here is a more advanced sample showcasing all these features.
 
 ```C#
 int height = 10, width = 10;
@@ -61,11 +58,11 @@ using ReadOnlyBuffer<float> xBuffer = Gpu.Default.AllocateConstantBuffer(x);
 using ReadWriteBuffer<float> yBuffer = Gpu.Default.AllocateReadWriteBuffer(y);
 
 // Shader body
-Action<ThreadIds> action = id =>
+void Shader(ThreadIds id)
 {
     uint offset = id.X + id.Y * (uint)width;
     yBuffer[offset] += xBuffer[offset];
-};
+}
 
 // Run the shader
 Gpu.Default.For(width, height, action);
