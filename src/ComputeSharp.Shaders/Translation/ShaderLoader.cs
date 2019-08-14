@@ -177,6 +177,7 @@ namespace ComputeSharp.Shaders.Translation
             // Additional preprocessing
             MethodBody = Regex.Replace(MethodBody, @"\d+[fFdD]", m => m.Value.Replace("f", ""));
             MethodBody = MethodBody.TrimEnd('\n', '\r', ' ');
+            MethodBody = $"    {MethodBody.Replace(Environment.NewLine, $"{Environment.NewLine}    ")}";
         }
     }
 }
