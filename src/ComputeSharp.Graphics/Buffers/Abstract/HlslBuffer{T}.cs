@@ -40,6 +40,12 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         public abstract void GetData(Span<T> span);
 
         /// <summary>
+        /// Writes the contents of a given <typeparamref name="T"/> array to the current <see cref="HlslBuffer{T}"/> instance
+        /// </summary>
+        /// <param name="array">The input <typeparamref name="T"/> array to read data from</param>
+        public void SetData(T[] array) => SetData(array.AsSpan());
+
+        /// <summary>
         /// Writes the contents of a given <see cref="Span{T}"/> to the current <see cref="HlslBuffer{T}"/> instance
         /// </summary>
         /// <param name="span">The input <see cref="Span{T}"/> to read data from</param>

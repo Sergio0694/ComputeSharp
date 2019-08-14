@@ -61,7 +61,12 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// Gets the ordered collection of buffers used as fields in the current shader
         /// </summary>
-        public IReadOnlyList<GraphicsResource> Buffers { get; private set; }
+        public IReadOnlyList<(int Index, GraphicsResource Resource)> Buffers { get; private set; }
+
+        /// <summary>
+        /// Gets the ordered collection of captured variables that need to be assigned to constant buffers
+        /// </summary>
+        public IReadOnlyList<(int Index, object Value)> CapturedConstantBufferValues { get; private set; }
 
         private readonly List<FieldInfoBase> _FieldsInfo = new List<FieldInfoBase>();
 
@@ -106,7 +111,8 @@ namespace ComputeSharp.Shaders.Translation
             if (ShaderFields.Any(fieldInfo => fieldInfo.IsStatic)) throw new InvalidOperationException("Empty shader body");
 
             List<DescriptorRange> descriptorRanges = new List<DescriptorRange>();
-            List<GraphicsResource> buffers = new List<GraphicsResource>();
+            List<(int, GraphicsResource)> buffers = new List<(int, GraphicsResource)>();
+            List<(int, object)> variables = new List<(int, object)>();
             int readWriteBuffersCount = 0;
             int readOnlyBuffersCount = 0;
 
@@ -125,7 +131,7 @@ namespace ComputeSharp.Shaders.Translation
                     descriptorRanges.Add(range);
 
                     // Reference to the underlying buffer
-                    buffers.Add((GraphicsResource)fieldValue);
+                    buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
 
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
                     processedFieldInfo = new ReadWriteBufferFieldInfo(typeName, fieldName, readWriteBuffersCount++);
@@ -137,16 +143,23 @@ namespace ComputeSharp.Shaders.Translation
                     descriptorRanges.Add(range);
 
                     // Reference to the underlying buffer
-                    buffers.Add((GraphicsResource)fieldValue);
+                    buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
 
                     string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
                     processedFieldInfo = new ConstantBufferFieldInfo(typeName, fieldName, readOnlyBuffersCount++, false);
                 }
                 else if (HlslKnownTypes.IsKnownScalarType(fieldType))
                 {
-                    // Static scalar field
+                    // Read only buffer
+                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, readOnlyBuffersCount);
+                    descriptorRanges.Add(range);
+
+                    // Register the captured value
+                    variables.Add((descriptorRanges.Count - 1, fieldValue));
+
+                    // Constant buffer field
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
-                    processedFieldInfo = new StaticScalarFieldInfo(typeName, fieldName, fieldValue);
+                    processedFieldInfo = new ConstantBufferFieldInfo(typeName, fieldName, readOnlyBuffersCount++, true);
                 }
                 else throw new NotSupportedException($"Unsupported field of type {fieldType.FullName}");
 
@@ -155,6 +168,7 @@ namespace ComputeSharp.Shaders.Translation
 
             RootParameters = descriptorRanges.Select(range => new RootParameter(ShaderVisibility.All, range)).ToArray();
             Buffers = buffers;
+            CapturedConstantBufferValues = variables;
         }
 
         /// <summary>
@@ -177,6 +191,7 @@ namespace ComputeSharp.Shaders.Translation
             // Additional preprocessing
             MethodBody = Regex.Replace(MethodBody, @"\d+[fFdD]", m => m.Value.Replace("f", ""));
             MethodBody = MethodBody.TrimEnd('\n', '\r', ' ');
+            MethodBody = $"    {MethodBody.Replace(Environment.NewLine, $"{Environment.NewLine}    ")}";
         }
     }
 }

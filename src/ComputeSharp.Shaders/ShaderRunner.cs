@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using ComputeSharp.Graphics;
+using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Graphics.Buffers.Extensions;
 using ComputeSharp.Shaders.Renderer;
 using ComputeSharp.Shaders.Renderer.Models;
 using ComputeSharp.Shaders.Translation;
@@ -65,14 +67,29 @@ namespace ComputeSharp.Shaders
             commandList.SetPipelineState(pipelineState);
 
             // Load the captured buffers
-            foreach (var buffer in shaderLoader.Buffers.Select((r, i) => (Resource: r, Index: i)))
+            foreach (var buffer in shaderLoader.Buffers)
             {
                 commandList.SetComputeRootDescriptorTable(buffer.Index, buffer.Resource);
+            }
+
+            // Load the captured variables
+            List<GraphicsResource> buffers = new List<GraphicsResource>();
+            foreach (var variable in shaderLoader.CapturedConstantBufferValues)
+            {
+                GraphicsResource resource = device.AllocateReadOnlyBufferFromReflectedSingleValue(variable.Value);
+                commandList.SetComputeRootDescriptorTable(variable.Index, resource);
+                buffers.Add(resource);
             }
 
             // Dispatch and wait for completion
             commandList.Dispatch(groupsX, groupsY, groupsZ);
             commandList.Flush();
+
+            // Free the allocated resources
+            foreach (GraphicsResource resource in buffers)
+            {
+                resource.Dispose();
+            }
         }
     }
 }
