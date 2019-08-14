@@ -65,7 +65,7 @@ namespace ComputeSharp.Shaders
             commandList.SetPipelineState(pipelineState);
 
             // Load the captured buffers
-            foreach (var buffer in shaderLoader.Buffers.Select((r, i) => (Resource: r, Index: i)))
+            foreach (var buffer in shaderLoader.Buffers)
             {
                 commandList.SetComputeRootDescriptorTable(buffer.Index, buffer.Resource);
             }

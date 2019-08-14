@@ -61,7 +61,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// Gets the ordered collection of buffers used as fields in the current shader
         /// </summary>
-        public IReadOnlyList<GraphicsResource> Buffers { get; private set; }
+        public IReadOnlyList<(int Index, GraphicsResource Resource)> Buffers { get; private set; }
 
         private readonly List<FieldInfoBase> _FieldsInfo = new List<FieldInfoBase>();
 
@@ -106,7 +106,7 @@ namespace ComputeSharp.Shaders.Translation
             if (ShaderFields.Any(fieldInfo => fieldInfo.IsStatic)) throw new InvalidOperationException("Empty shader body");
 
             List<DescriptorRange> descriptorRanges = new List<DescriptorRange>();
-            List<GraphicsResource> buffers = new List<GraphicsResource>();
+            List<(int, GraphicsResource)> buffers = new List<(int, GraphicsResource)>();
             int readWriteBuffersCount = 0;
             int readOnlyBuffersCount = 0;
 
@@ -125,7 +125,7 @@ namespace ComputeSharp.Shaders.Translation
                     descriptorRanges.Add(range);
 
                     // Reference to the underlying buffer
-                    buffers.Add((GraphicsResource)fieldValue);
+                    buffers.Add((readWriteBuffersCount, (GraphicsResource)fieldValue));
 
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
                     processedFieldInfo = new ReadWriteBufferFieldInfo(typeName, fieldName, readWriteBuffersCount++);
@@ -137,7 +137,7 @@ namespace ComputeSharp.Shaders.Translation
                     descriptorRanges.Add(range);
 
                     // Reference to the underlying buffer
-                    buffers.Add((GraphicsResource)fieldValue);
+                    buffers.Add((readOnlyBuffersCount, (GraphicsResource)fieldValue));
 
                     string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
                     processedFieldInfo = new ConstantBufferFieldInfo(typeName, fieldName, readOnlyBuffersCount++, false);
