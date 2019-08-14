@@ -22,14 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--<Content Include="..\Libs\win-x86\*.*">
-      <PackagePath>runtimes\win-x86\native</PackagePath>
-      <Pack>true</Pack>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>-->
-    <Content Include="..\Libs\win-x64\*.*">
-      <PackagePath>runtimes\win-x64\native</PackagePath>
-      <Pack>true</Pack>
+    <Content Include="..\lib\win-x64\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
