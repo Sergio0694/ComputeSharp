@@ -6,7 +6,7 @@ namespace ComputeSharp.Graphics.Helpers
     /// <summary>
     /// A <see langword="class"/> with some helper methods to copy data between memory areas
     /// </summary>
-    public static class MemoryHelper
+    internal static class MemoryHelper
     {
         /// <summary>
         /// Copies the content of a <see cref="Span{T}"/> to the area pointed by an input <see cref="IntPtr"/> value

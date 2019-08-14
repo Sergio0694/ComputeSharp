@@ -25,7 +25,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <summary>
         /// Gets the <see cref="IntPtr"/> associated to the currently mapped resource
         /// </summary>
-        public IntPtr MappedResource { get; private set; }
+        internal IntPtr MappedResource { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="Resource"/> object currently mapped
@@ -47,7 +47,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// </summary>
         /// <param name="subresource">The index of the target subresource to map</param>
         /// <returns>An <see cref="IntPtr"/> for the newly mapped resource</returns>
-        public IntPtr Map(int subresource)
+        internal IntPtr Map(int subresource)
         {
             IntPtr mappedResource = NativeResource?.Map(subresource) ?? throw new InvalidOperationException("Missing resource");
             MappedResource = mappedResource;
@@ -58,7 +58,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// Unmaps a subresource specified by a given index
         /// </summary>
         /// <param name="subresource">The index of the subresource to unmap</param>
-        public void Unmap(int subresource)
+        internal void Unmap(int subresource)
         {
             NativeResource?.Unmap(subresource);
             MappedResource = IntPtr.Zero;

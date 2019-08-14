@@ -135,7 +135,7 @@ namespace ComputeSharp.Graphics
         /// </summary>
         /// <param name="rootSignatureDescription">A <see cref="RootSignatureDescription"/> instance with the info for the new <see cref="RootSignature"/> object to create</param>
         /// <returns>A new <see cref="RootSignature"/> instance to use in a compute shader</returns>
-        public RootSignature CreateRootSignature(RootSignatureDescription rootSignatureDescription)
+        internal RootSignature CreateRootSignature(RootSignatureDescription rootSignatureDescription)
         {
             return NativeDevice.CreateRootSignature(rootSignatureDescription.Serialize());
         }

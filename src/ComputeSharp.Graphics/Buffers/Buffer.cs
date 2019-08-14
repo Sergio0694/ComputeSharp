@@ -21,8 +21,8 @@ namespace ComputeSharp.Graphics.Buffers
         protected internal Buffer(GraphicsDevice device, int size, int sizeInBytes, HeapType heapType) : base(device)
         {
             Size = size;
-            ElementSizeInBytes = Unsafe.SizeOf<T>();
             SizeInBytes = sizeInBytes; // Not necessarily a multiple of the element size, as there could be padding
+            ElementSizeInBytes = Unsafe.SizeOf<T>();
             HeapType = heapType;
 
             ResourceFlags flags = heapType == HeapType.Default ? ResourceFlags.AllowUnorderedAccess : ResourceFlags.None;
@@ -58,6 +58,11 @@ namespace ComputeSharp.Graphics.Buffers
         /// Gets the size in bytes of each <typeparamref name="T"/> value contained in the buffer
         /// </summary>
         protected int ElementSizeInBytes { get; }
+
+        /// <summary>
+        /// Gets the heap type being targeted by the current buffer
+        /// </summary>
+        internal HeapType HeapType { get; }
 
         /// <summary>
         /// Creates the descriptors for a constant buffer
@@ -101,10 +106,5 @@ namespace ComputeSharp.Graphics.Buffers
 
             return (cpuHandle, gpuHandle);
         }
-
-        /// <summary>
-        /// Gets the heap type being targeted by the current buffer
-        /// </summary>
-        public HeapType HeapType { get; }
     }
 }

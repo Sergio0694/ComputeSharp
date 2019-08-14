@@ -8,7 +8,7 @@ namespace ComputeSharp.Shaders.Translation
     /// <summary>
     /// A custom <see cref="CSharpSyntaxRewriter"/> <see langword="class"/> that processes C# methods to convert to HLSL
     /// </summary>
-    public class ShaderSyntaxRewriter : CSharpSyntaxRewriter
+    internal class ShaderSyntaxRewriter : CSharpSyntaxRewriter
     {
         /// <summary>
         /// The <see cref="Microsoft.CodeAnalysis.SemanticModel"/> instance to use to rewrite the decompiled code

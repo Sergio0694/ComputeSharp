@@ -5,7 +5,7 @@ namespace ComputeSharp.Shaders.Renderer.Models.Fields
     /// <summary>
     /// A <see langword="class"/> that contains info on a read write buffer field
     /// </summary>
-    public sealed class ReadWriteBufferFieldInfo : FieldInfoBase
+    internal sealed class ReadWriteBufferFieldInfo : FieldInfoBase
     {
         /// <summary>
         /// Gets whether or not the current <see cref="FieldInfoBase"/> instance represents a read write buffer (always <see langword="true"/>)

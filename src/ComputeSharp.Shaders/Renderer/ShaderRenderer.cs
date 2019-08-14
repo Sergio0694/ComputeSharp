@@ -10,7 +10,7 @@ namespace ComputeSharp.Shaders.Renderer
     /// <summary>
     /// A <see langword="class"/> that uses the mustache templating system to render HLSL shaders
     /// </summary>
-    public sealed class ShaderRenderer
+    internal sealed class ShaderRenderer
     {
         /// <summary>
         /// Gets the singleton <see cref="ShaderRenderer"/> instance to use

@@ -3,7 +3,7 @@
     /// <summary>
     /// A <see langword="class"/> that contains info on a shader field
     /// </summary>
-    public abstract class FieldInfoBase
+    internal abstract class FieldInfoBase
     {
         /// <summary>
         /// Gets or sets the type of the current field

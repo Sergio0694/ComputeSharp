@@ -15,7 +15,7 @@ namespace ComputeSharp.Shaders
     /// <summary>
     /// A <see langword="class"/> responsible for performing all the necessary operations to compile and run a compute shader
     /// </summary>
-    public static class ShaderRunner
+    internal static class ShaderRunner
     {
         /// <summary>
         /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters

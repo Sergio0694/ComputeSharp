@@ -8,7 +8,7 @@ namespace ComputeSharp.Graphics.Helpers
     /// <summary>
     /// A <see langword="class"/> with methods to inspect the available devices on the current machine
     /// </summary>
-    public static class DeviceHelper
+    internal static class DeviceHelper
     {
         /// <summary>
         /// Gets a collection of all the supported devices on the current machine

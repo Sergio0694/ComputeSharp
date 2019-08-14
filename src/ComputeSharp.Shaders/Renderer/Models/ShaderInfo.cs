@@ -8,7 +8,7 @@ namespace ComputeSharp.Shaders.Renderer.Models
     /// <summary>
     /// A <see langword="class"/> that contains info to render a shader source to compile
     /// </summary>
-    public sealed class ShaderInfo
+    internal sealed class ShaderInfo
     {
         /// <summary>
         /// Gets the list of fields being present in the current shader

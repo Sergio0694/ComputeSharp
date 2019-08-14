@@ -18,7 +18,7 @@ namespace ComputeSharp.Shaders.Translation
     /// <summary>
     /// A <see langword="class"/> that is able to decompile arbitrary methods
     /// </summary>
-    public sealed class MethodDecompiler
+    internal sealed class MethodDecompiler
     {
         /// <summary>
         /// Gets the singleton <see cref="MethodDecompiler"/> instance to use

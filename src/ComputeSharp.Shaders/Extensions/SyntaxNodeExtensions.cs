@@ -10,7 +10,7 @@ namespace ComputeSharp.Shaders.Extensions
     /// <summary>
     /// A <see langword="class"/> with some extension methods for C# syntax nodes
     /// </summary>
-    public static class SyntaxNodeExtensions
+    internal static class SyntaxNodeExtensions
     {
         /// <summary>
         /// Checks a <see cref="SyntaxNode"/> value and replaces the value type to be HLSL compatible, if needed

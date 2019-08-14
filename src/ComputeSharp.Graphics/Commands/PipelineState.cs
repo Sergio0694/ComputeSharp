@@ -5,7 +5,7 @@ namespace ComputeSharp.Graphics.Commands
     /// <summary>
     /// A <see langword="class"/> representing a custom pipeline state for a compute operation
     /// </summary>
-    public sealed class PipelineState : ComputePipelineStateDescription
+    internal sealed class PipelineState : ComputePipelineStateDescription
     {
         /// <summary>
         /// Creates a new <see cref="PipelineState"/> instance with the specified parameters

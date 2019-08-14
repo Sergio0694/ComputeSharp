@@ -19,7 +19,7 @@ namespace ComputeSharp.Shaders.Translation
     /// <summary>
     /// A <see langword="class"/> responsible for loading and processing <see cref="Action{T}"/> instances
     /// </summary>
-    public sealed class ShaderLoader
+    internal sealed class ShaderLoader
     {
         /// <summary>
         /// The <see cref="Action{T}"/> that represents the shader to load

@@ -8,7 +8,7 @@ namespace ComputeSharp.Shaders.Translation
     /// <summary>
     /// A <see langword="class"/> that uses the <see cref="HlslDxcLib"/> APIs to compile compute shaders
     /// </summary>
-    public sealed class ShaderCompiler
+    internal sealed class ShaderCompiler
     {
         /// <summary>
         /// Gets the singleton <see cref="ShaderCompiler"/> instance to use
