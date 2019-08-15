@@ -136,9 +136,9 @@ namespace ComputeSharp.Shaders.Translation
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
                     processedFieldInfo = new ReadWriteBufferFieldInfo(typeName, fieldName, readWriteBuffersCount++);
                 }
-                else if (HlslKnownTypes.IsReadOnlyBufferType(fieldType))
+                else if (HlslKnownTypes.IsConstantBufferType(fieldType))
                 {
-                    // Read only buffer
+                    // Constant buffer
                     DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, readOnlyBuffersCount);
                     descriptorRanges.Add(range);
 
@@ -150,7 +150,7 @@ namespace ComputeSharp.Shaders.Translation
                 }
                 else if (HlslKnownTypes.IsKnownScalarType(fieldType))
                 {
-                    // Read only buffer
+                    // Constant buffer
                     DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, readOnlyBuffersCount);
                     descriptorRanges.Add(range);
 

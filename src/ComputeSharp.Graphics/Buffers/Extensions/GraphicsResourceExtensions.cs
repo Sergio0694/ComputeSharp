@@ -23,7 +23,7 @@ namespace ComputeSharp.Graphics.Buffers.Extensions
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer</param>
         /// <param name="data">The input <see cref="object"/> to copy to the allocated buffer</param>
-        /// <returns>A constant <see cref="ReadOnlyBuffer{T}"/> instance (as a <see cref="GraphicsResource"/>) with the input data</returns>
+        /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance (as a <see cref="GraphicsResource"/>) with the input data</returns>
         [Pure]
         public static GraphicsResource AllocateReadOnlyBufferFromReflectedSingleValue(this GraphicsDevice device, object data)
         {
@@ -31,7 +31,7 @@ namespace ComputeSharp.Graphics.Buffers.Extensions
             if (!TypeMapping.TryGetValue(dataType, out var info))
             {
                 // Get the generic buffer constructor
-                Type bufferType = typeof(ReadOnlyBuffer<>).MakeGenericType(dataType);
+                Type bufferType = typeof(ConstantBuffer<>).MakeGenericType(dataType);
                 info.Constructor = bufferType.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic).First();
 
                 // Create the reusable array

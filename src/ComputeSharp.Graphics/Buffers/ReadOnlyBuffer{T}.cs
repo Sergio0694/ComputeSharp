@@ -12,14 +12,14 @@ namespace ComputeSharp.Graphics.Buffers
     /// A <see langword="class"/> representing a typed read write buffer stored on GPU memory
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffer</typeparam>
-    public sealed class ReadOnlyBuffer<T> : HlslBuffer<T> where T : unmanaged
+    public sealed class ConstantBuffer<T> : HlslBuffer<T> where T : unmanaged
     {
         /// <summary>
-        /// Creates a new <see cref="ReadOnlyBuffer{T}"/> instance with the specified parameters
+        /// Creates a new <see cref="ConstantBuffer{T}"/> instance with the specified parameters
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
-        internal ReadOnlyBuffer(GraphicsDevice device, int size) : base(device, size, size * (Unsafe.SizeOf<T>() / 16 + 1) * 16, HeapType.Upload)
+        internal ConstantBuffer(GraphicsDevice device, int size) : base(device, size, size * (Unsafe.SizeOf<T>() / 16 + 1) * 16, HeapType.Upload)
         {
             PaddedElementSizeInBytes = SizeInBytes / Size;
             IsPaddingPresent = PaddedElementSizeInBytes > ElementSizeInBytes;
@@ -114,7 +114,7 @@ namespace ComputeSharp.Graphics.Buffers
         /// <inheritdoc/>
         public override void SetData(HlslBuffer<T> buffer)
         {
-            if (buffer is ReadOnlyBuffer<T>)
+            if (buffer is ConstantBuffer<T>)
             {
                 // Directly copy the input buffer, if possible
                 using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);

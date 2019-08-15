@@ -63,13 +63,13 @@ namespace ComputeSharp.Shaders.Mappings
                                                                type.GetGenericTypeDefinition() == typeof(ReadWriteBuffer<>);
 
         /// <summary>
-        /// Checks whether or not the input type is a <see cref="ReadOnlyBuffer{T}"/> value
+        /// Checks whether or not the input type is a <see cref="ConstantBuffer{T}"/> value
         /// </summary>
         /// <param name="type">The input <see cref="Type"/> instance to check</param>
-        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a <see cref="ReadOnlyBuffer{T}"/> instance</returns>
+        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a <see cref="ConstantBuffer{T}"/> instance</returns>
         [Pure]
-        public static bool IsReadOnlyBufferType(Type type) => type.IsGenericType &&
-                                                               type.GetGenericTypeDefinition() == typeof(ReadOnlyBuffer<>);
+        public static bool IsConstantBufferType(Type type) => type.IsGenericType &&
+                                                              type.GetGenericTypeDefinition() == typeof(ConstantBuffer<>);
 
         /// <summary>
         /// Checks whether or not a given <see cref="Type"/> is an HLSL known type

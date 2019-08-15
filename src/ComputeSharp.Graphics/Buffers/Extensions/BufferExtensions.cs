@@ -98,12 +98,12 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the buffer</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer</param>
         /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated buffer</param>
-        /// <returns>A constant <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input array</returns>
+        /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance with the contents of the input array</returns>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, T[] array) where T : unmanaged
+        public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, T[] array) where T : unmanaged
         {
-            return device.AllocateReadOnlyBuffer(array.AsSpan());
+            return device.AllocateConstantBuffer(array.AsSpan());
         }
 
         /// <summary>
@@ -112,15 +112,15 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the buffer</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer</param>
         /// <param name="array">The input 2D <typeparamref name="T"/> array with the data to copy on the allocated buffer</param>
-        /// <returns>A constant <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input 2D array</returns>
+        /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance with the contents of the input 2D array</returns>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, T[,] array) where T : unmanaged
+        public static unsafe ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, T[,] array) where T : unmanaged
         {
             fixed (T* p = array)
             {
                 Span<T> span = new Span<T>(p, array.Length);
-                return device.AllocateReadOnlyBuffer(span);
+                return device.AllocateConstantBuffer(span);
             }
         }
 
@@ -130,12 +130,12 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the buffer</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer</param>
         /// <param name="span">The input <see cref="Span{T}"/> with the data to copy on the allocated buffer</param>
-        /// <returns>A constant <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input <see cref="Span{T}"/></returns>
+        /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance with the contents of the input <see cref="Span{T}"/></returns>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, Span<T> span) where T : unmanaged
+        public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, Span<T> span) where T : unmanaged
         {
-            ReadOnlyBuffer<T> buffer = new ReadOnlyBuffer<T>(device, span.Length);
+            ConstantBuffer<T> buffer = new ConstantBuffer<T>(device, span.Length);
             buffer.SetData(span);
 
             return buffer;
@@ -147,15 +147,15 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the buffer</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer</param>
         /// <param name="buffer">The input <see cref="HlslBuffer{T}"/> with the data to copy on the allocated buffer</param>
-        /// <returns>A constant <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input <see cref="HlslBuffer{T}"/></returns>
+        /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance with the contents of the input <see cref="HlslBuffer{T}"/></returns>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, HlslBuffer<T> buffer) where T : unmanaged
+        public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, HlslBuffer<T> buffer) where T : unmanaged
         {
-            ReadOnlyBuffer<T> readOnlyBuffer = new ReadOnlyBuffer<T>(device, buffer.Size);
-            readOnlyBuffer.SetData(buffer);
+            ConstantBuffer<T> constantBuffer = new ConstantBuffer<T>(device, buffer.Size);
+            constantBuffer.SetData(buffer);
 
-            return readOnlyBuffer;
+            return constantBuffer;
         }
     }
 }
