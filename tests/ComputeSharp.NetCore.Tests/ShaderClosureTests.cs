@@ -85,7 +85,7 @@ namespace ComputeSharp.NetCore.Tests
         {
             float[] source = Enumerable.Range(0, 100).Select(i => (float)i).ToArray();
 
-            using ReadOnlyBuffer<float> input = Gpu.Default.AllocateReadOnlyBuffer(source);
+            using ConstantBuffer<float> input = Gpu.Default.AllocateConstantBuffer(source);
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(source.Length);
 
             Action<ThreadIds> action = id => buffer[id.X] = input[id.X];

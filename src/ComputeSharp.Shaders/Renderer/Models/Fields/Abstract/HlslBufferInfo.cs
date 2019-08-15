@@ -1,0 +1,24 @@
+﻿namespace ComputeSharp.Shaders.Renderer.Models.Fields.Abstract
+{
+    /// <summary>
+    /// A <see langword="class"/> that contains info on a shader buffer field
+    /// </summary>
+    internal abstract class HlslBufferInfo : FieldInfo
+    {
+        /// <summary>
+        /// Gets or sets the index of the current buffer, relative to its own type
+        /// </summary>
+        public int BufferIndex { get; set; }
+
+        /// <summary>
+        /// Creates a new <see cref="HlslBufferInfo"/> instance with the specified parameters
+        /// </summary>
+        /// <param name="fieldType">The type of the current field</param>
+        /// <param name="fieldName">The name of the current field</param>
+        /// <param name="bufferIndex">The index of the current buffer field</param>
+        protected HlslBufferInfo(string fieldType, string fieldName, int bufferIndex) : base(fieldType, fieldName)
+        {
+            BufferIndex = bufferIndex;
+        }
+    }
+}

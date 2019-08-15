@@ -5,14 +5,18 @@ static {{&FieldType}} {{FieldName}} = {{FieldValue}};
 {{/IsStaticScalarField}}
 {{!Constant buffer}}
 {{#IsConstantBuffer}}
-cbuffer {{FieldName}}Buffer : register(b{{ConstantBufferIndex}})
+cbuffer {{FieldName}}Buffer : register(b{{BufferIndex}})
 {
     {{&FieldType}} {{FieldName}}{{^IsSingleValue}}[2]{{/IsSingleValue}};
 }
 {{/IsConstantBuffer}}
+{{!Readonly buffer}}
+{{#IsReadOnlyBuffer}}
+{{&FieldType}} {{FieldName}} : register(t{{BufferIndex}});
+{{/IsReadOnlyBuffer}}
 {{!Read write buffer}}
 {{#IsReadWriteBuffer}}
-{{&FieldType}} {{FieldName}} : SV_DispatchThreadId : register(u{{ReadWriteBufferIndex}});
+{{&FieldType}} {{FieldName}} : SV_DispatchThreadId : register(u{{BufferIndex}});
 {{/IsReadWriteBuffer}}
 
 {{/FieldsList}}
@@ -21,8 +25,8 @@ cbuffer {{FieldName}}Buffer : register(b{{ConstantBufferIndex}})
 [NumThreads({{NumThreadsX}}, {{NumThreadsY}}, {{NumThreadsZ}})]
 void CSMain(uint3 {{ThreadsIdsVariableName}} : SV_DispatchThreadId)
 {
-if ({{ThreadsIdsVariableName}}.x < {{ThreadsX}} &&
-    {{ThreadsIdsVariableName}}.y < {{ThreadsY}} &&
-    {{ThreadsIdsVariableName}}.z < {{ThreadsZ}})
+    if ({{ThreadsIdsVariableName}}.x < {{ThreadsX}} &&
+        {{ThreadsIdsVariableName}}.y < {{ThreadsY}} &&
+        {{ThreadsIdsVariableName}}.z < {{ThreadsZ}})
 {{&ShaderBody}}
 }

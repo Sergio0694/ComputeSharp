@@ -11,6 +11,7 @@ using ComputeSharp.Shaders.Renderer.Models.Fields.Abstract;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SharpDX.Direct3D12;
+using FieldInfo = ComputeSharp.Shaders.Renderer.Models.Fields.Abstract.FieldInfo;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized
 
@@ -39,7 +40,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// The sequence of fields in the targeted closure
         /// </summary>
-        private readonly IReadOnlyList<FieldInfo> ShaderFields;
+        private readonly IReadOnlyList<System.Reflection.FieldInfo> ShaderFields;
 
         /// <summary>
         /// Creates a new <see cref="ShaderLoader"/> with the specified parameters
@@ -68,12 +69,12 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         public IReadOnlyList<(int Index, object Value)> CapturedConstantBufferValues { get; private set; }
 
-        private readonly List<FieldInfoBase> _FieldsInfo = new List<FieldInfoBase>();
+        private readonly List<FieldInfo> _FieldsInfo = new List<FieldInfo>();
 
         /// <summary>
-        /// Gets the collection of <see cref="FieldInfoBase"/> items for the shader fields
+        /// Gets the collection of <see cref="FieldInfo"/> items for the shader fields
         /// </summary>
-        public IReadOnlyList<FieldInfoBase> FieldsInfo => _FieldsInfo;
+        public IReadOnlyList<FieldInfo> FieldsInfo => _FieldsInfo;
 
         /// <summary>
         /// Gets the name of the <see cref="ThreadIds"/> variable used as input for the shader method
@@ -113,18 +114,42 @@ namespace ComputeSharp.Shaders.Translation
             List<DescriptorRange> descriptorRanges = new List<DescriptorRange>();
             List<(int, GraphicsResource)> buffers = new List<(int, GraphicsResource)>();
             List<(int, object)> variables = new List<(int, object)>();
-            int readWriteBuffersCount = 0;
+            int constantBuffersCount = 0;
             int readOnlyBuffersCount = 0;
+            int readWriteBuffersCount = 0;
 
-            foreach (FieldInfo fieldInfo in ShaderFields)
+            foreach (System.Reflection.FieldInfo fieldInfo in ShaderFields)
             {
                 Type fieldType = fieldInfo.FieldType;
                 string fieldName = fieldInfo.Name;
                 object fieldValue = fieldInfo.GetValue(ShaderInstance);
-                FieldInfoBase processedFieldInfo;
+                FieldInfo processedFieldInfo;
 
-                // Read write buffer
-                if (HlslKnownTypes.IsReadWriteBufferType(fieldType))
+                // Constant buffer
+                if (HlslKnownTypes.IsConstantBufferType(fieldType))
+                {
+                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, constantBuffersCount);
+                    descriptorRanges.Add(range);
+
+                    // Reference to the underlying buffer
+                    buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
+
+                    string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
+                    processedFieldInfo = new ConstantBufferFieldInfo(typeName, fieldName, constantBuffersCount++, false);
+                }
+                else if (HlslKnownTypes.IsReadOnlyBufferType(fieldType))
+                {
+                    // Root parameter for a readonly buffer
+                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.ShaderResourceView, 1, readOnlyBuffersCount);
+                    descriptorRanges.Add(range);
+
+                    // Reference to the underlying buffer
+                    buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
+
+                    string typeName = HlslKnownTypes.GetMappedName(fieldType);
+                    processedFieldInfo = new ReadOnlyBufferFieldInfo(typeName, fieldName, readOnlyBuffersCount++);
+                }
+                else if (HlslKnownTypes.IsReadWriteBufferType(fieldType))
                 {
                     // Root parameter for a read write buffer
                     DescriptorRange range = new DescriptorRange(DescriptorRangeType.UnorderedAccessView, 1, readWriteBuffersCount);
@@ -136,22 +161,10 @@ namespace ComputeSharp.Shaders.Translation
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
                     processedFieldInfo = new ReadWriteBufferFieldInfo(typeName, fieldName, readWriteBuffersCount++);
                 }
-                else if (HlslKnownTypes.IsReadOnlyBufferType(fieldType))
-                {
-                    // Read only buffer
-                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, readOnlyBuffersCount);
-                    descriptorRanges.Add(range);
-
-                    // Reference to the underlying buffer
-                    buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
-
-                    string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
-                    processedFieldInfo = new ConstantBufferFieldInfo(typeName, fieldName, readOnlyBuffersCount++, false);
-                }
                 else if (HlslKnownTypes.IsKnownScalarType(fieldType))
                 {
-                    // Read only buffer
-                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, readOnlyBuffersCount);
+                    // Constant buffer
+                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, constantBuffersCount);
                     descriptorRanges.Add(range);
 
                     // Register the captured value
@@ -159,7 +172,7 @@ namespace ComputeSharp.Shaders.Translation
 
                     // Constant buffer field
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
-                    processedFieldInfo = new ConstantBufferFieldInfo(typeName, fieldName, readOnlyBuffersCount++, true);
+                    processedFieldInfo = new ConstantBufferFieldInfo(typeName, fieldName, constantBuffersCount++, true);
                 }
                 else throw new NotSupportedException($"Unsupported field of type {fieldType.FullName}");
 

@@ -26,7 +26,7 @@ namespace ComputeSharp.NetCore.Tests
         {
             float[] array = Enumerable.Range(0, 4096).Select(i => (float)i).ToArray();
 
-            using ReadOnlyBuffer<float> buffer = Gpu.Default.AllocateReadOnlyBuffer(array);
+            using ConstantBuffer<float> buffer = Gpu.Default.AllocateConstantBuffer(array);
             float[] result = buffer.GetData();
 
             Assert.IsTrue(array.AsSpan().ContentEquals(result));
@@ -52,7 +52,7 @@ namespace ComputeSharp.NetCore.Tests
         {
             float[] array = Enumerable.Range(0, 4096).Select(i => (float)i).ToArray();
 
-            using ReadOnlyBuffer<float> sourceBuffer = Gpu.Default.AllocateReadOnlyBuffer(array);
+            using ConstantBuffer<float> sourceBuffer = Gpu.Default.AllocateConstantBuffer(array);
             using ReadWriteBuffer<float> destinationBuffer = Gpu.Default.AllocateReadWriteBuffer(sourceBuffer);
 
             float[] sourceResult = sourceBuffer.GetData();
@@ -68,7 +68,7 @@ namespace ComputeSharp.NetCore.Tests
             float[] array = Enumerable.Range(0, 4096).Select(i => (float)i).ToArray();
 
             using ReadWriteBuffer<float> sourceBuffer = Gpu.Default.AllocateReadWriteBuffer(array);
-            using ReadOnlyBuffer<float> destinationBuffer = Gpu.Default.AllocateReadOnlyBuffer(sourceBuffer);
+            using ConstantBuffer<float> destinationBuffer = Gpu.Default.AllocateConstantBuffer(sourceBuffer);
 
             float[] sourceResult = sourceBuffer.GetData();
             float[] destinationResult = destinationBuffer.GetData();
@@ -82,8 +82,8 @@ namespace ComputeSharp.NetCore.Tests
         {
             float[] array = Enumerable.Range(0, 4096).Select(i => (float)i).ToArray();
 
-            using ReadOnlyBuffer<float> sourceBuffer = Gpu.Default.AllocateReadOnlyBuffer(array);
-            using ReadOnlyBuffer<float> destinationBuffer = Gpu.Default.AllocateReadOnlyBuffer(sourceBuffer);
+            using ConstantBuffer<float> sourceBuffer = Gpu.Default.AllocateConstantBuffer(array);
+            using ConstantBuffer<float> destinationBuffer = Gpu.Default.AllocateConstantBuffer(sourceBuffer);
 
             float[] sourceResult = sourceBuffer.GetData();
             float[] destinationResult = destinationBuffer.GetData();

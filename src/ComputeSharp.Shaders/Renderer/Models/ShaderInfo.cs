@@ -13,7 +13,7 @@ namespace ComputeSharp.Shaders.Renderer.Models
         /// <summary>
         /// Gets the list of fields being present in the current shader
         /// </summary>
-        public IReadOnlyList<FieldInfoBase> FieldsList { get; set; }
+        public IReadOnlyList<FieldInfo> FieldsList { get; set; }
 
         /// <summary>
         /// Gets or sets the total number of threads to run on the X axis

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Buffers;
 using System.Diagnostics.Contracts;
-using SharpDX.Direct3D12;
+using ComputeSharp.Graphics.Buffers.Enums;
 
 namespace ComputeSharp.Graphics.Buffers.Abstract
 {
@@ -17,8 +17,8 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
         /// <param name="sizeInBytes">The size in bytes for the current buffer</param>
-        /// <param name="heapType">The heap type for the current buffer</param>
-        protected internal HlslBuffer(GraphicsDevice device, int size, int sizeInBytes, HeapType heapType) : base(device, size, sizeInBytes, heapType) { }
+        /// <param name="bufferType">The buffer type for the current buffer</param>
+        private protected HlslBuffer(GraphicsDevice device, int size, int sizeInBytes, BufferType bufferType) : base(device, size, sizeInBytes, bufferType) { }
 
         /// <summary>
         /// Reads the contents of the current <see cref="HlslBuffer{T}"/> instance and returns an array
