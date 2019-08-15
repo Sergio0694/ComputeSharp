@@ -69,8 +69,8 @@ namespace ComputeSharp.Shaders.Mappings
         /// <param name="type">The input <see cref="Type"/> instance to check</param>
         /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a <see cref="ReadOnlyBuffer{T}"/> instance</returns>
         [Pure]
-        public static bool IsReaadOnlyBufferType(Type type) => type.IsGenericType &&
-                                                               type.GetGenericTypeDefinition() == typeof(ReadOnlyBuffer<>);
+        public static bool IsReadOnlyBufferType(Type type) => type.IsGenericType &&
+                                                              type.GetGenericTypeDefinition() == typeof(ReadOnlyBuffer<>);
 
         /// <summary>
         /// Checks whether or not the input type is a <see cref="ReadWriteBuffer{T}"/> value

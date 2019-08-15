@@ -114,8 +114,9 @@ namespace ComputeSharp.Shaders.Translation
             List<DescriptorRange> descriptorRanges = new List<DescriptorRange>();
             List<(int, GraphicsResource)> buffers = new List<(int, GraphicsResource)>();
             List<(int, object)> variables = new List<(int, object)>();
-            int readWriteBuffersCount = 0;
+            int constantBuffersCount = 0;
             int readOnlyBuffersCount = 0;
+            int readWriteBuffersCount = 0;
 
             foreach (System.Reflection.FieldInfo fieldInfo in ShaderFields)
             {
@@ -124,8 +125,31 @@ namespace ComputeSharp.Shaders.Translation
                 object fieldValue = fieldInfo.GetValue(ShaderInstance);
                 FieldInfo processedFieldInfo;
 
-                // Read write buffer
-                if (HlslKnownTypes.IsReadWriteBufferType(fieldType))
+                // Constant buffer
+                if (HlslKnownTypes.IsConstantBufferType(fieldType))
+                {
+                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, constantBuffersCount);
+                    descriptorRanges.Add(range);
+
+                    // Reference to the underlying buffer
+                    buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
+
+                    string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
+                    processedFieldInfo = new ConstantBufferFieldInfo(typeName, fieldName, constantBuffersCount++, false);
+                }
+                else if (HlslKnownTypes.IsReadOnlyBufferType(fieldType))
+                {
+                    // Root parameter for a readonly buffer
+                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.ShaderResourceView, 1, readOnlyBuffersCount);
+                    descriptorRanges.Add(range);
+
+                    // Reference to the underlying buffer
+                    buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
+
+                    string typeName = HlslKnownTypes.GetMappedName(fieldType);
+                    processedFieldInfo = new ReadOnlyBufferFieldInfo(typeName, fieldName, readOnlyBuffersCount++);
+                }
+                else if (HlslKnownTypes.IsReadWriteBufferType(fieldType))
                 {
                     // Root parameter for a read write buffer
                     DescriptorRange range = new DescriptorRange(DescriptorRangeType.UnorderedAccessView, 1, readWriteBuffersCount);
@@ -137,22 +161,10 @@ namespace ComputeSharp.Shaders.Translation
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
                     processedFieldInfo = new ReadWriteBufferFieldInfo(typeName, fieldName, readWriteBuffersCount++);
                 }
-                else if (HlslKnownTypes.IsConstantBufferType(fieldType))
-                {
-                    // Constant buffer
-                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, readOnlyBuffersCount);
-                    descriptorRanges.Add(range);
-
-                    // Reference to the underlying buffer
-                    buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
-
-                    string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
-                    processedFieldInfo = new ConstantBufferFieldInfo(typeName, fieldName, readOnlyBuffersCount++, false);
-                }
                 else if (HlslKnownTypes.IsKnownScalarType(fieldType))
                 {
                     // Constant buffer
-                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, readOnlyBuffersCount);
+                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, constantBuffersCount);
                     descriptorRanges.Add(range);
 
                     // Register the captured value
@@ -160,7 +172,7 @@ namespace ComputeSharp.Shaders.Translation
 
                     // Constant buffer field
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
-                    processedFieldInfo = new ConstantBufferFieldInfo(typeName, fieldName, readOnlyBuffersCount++, true);
+                    processedFieldInfo = new ConstantBufferFieldInfo(typeName, fieldName, constantBuffersCount++, true);
                 }
                 else throw new NotSupportedException($"Unsupported field of type {fieldType.FullName}");
 
