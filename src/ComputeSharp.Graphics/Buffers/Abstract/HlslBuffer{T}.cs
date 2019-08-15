@@ -2,7 +2,6 @@
 using System.Buffers;
 using System.Diagnostics.Contracts;
 using ComputeSharp.Graphics.Buffers.Enums;
-using SharpDX.Direct3D12;
 
 namespace ComputeSharp.Graphics.Buffers.Abstract
 {

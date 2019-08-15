@@ -35,29 +35,29 @@ namespace ComputeSharp.Graphics.Buffers
         /// <inheritdoc/>
         public override void GetData(Span<T> span)
         {
-            using Buffer<T> readbackBaffer = new Buffer<T>(GraphicsDevice, Size, SizeInBytes, BufferType.Transfer);
+            using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, Size, SizeInBytes, BufferType.Transfer);
             using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
-            copyCommandList.CopyBufferRegion(this, 0, readbackBaffer, 0, SizeInBytes);
+            copyCommandList.CopyBufferRegion(this, 0, transferBuffer, 0, SizeInBytes);
             copyCommandList.Flush();
 
-            readbackBaffer.Map(0);
-            MemoryHelper.Copy(readbackBaffer.MappedResource, span);
-            readbackBaffer.Unmap(0);
+            transferBuffer.Map(0);
+            MemoryHelper.Copy(transferBuffer.MappedResource, span);
+            transferBuffer.Unmap(0);
         }
 
         /// <inheritdoc/>
         public override void SetData(Span<T> span)
         {
-            using Buffer<T> uploadBuffer = new Buffer<T>(GraphicsDevice, Size, SizeInBytes, BufferType.Transfer);
+            using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, Size, SizeInBytes, BufferType.Transfer);
 
-            uploadBuffer.Map(0);
-            MemoryHelper.Copy(span, uploadBuffer.MappedResource);
-            uploadBuffer.Unmap(0);
+            transferBuffer.Map(0);
+            MemoryHelper.Copy(span, transferBuffer.MappedResource);
+            transferBuffer.Unmap(0);
 
             using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
-            copyCommandList.CopyBufferRegion(uploadBuffer, 0, this, 0, SizeInBytes);
+            copyCommandList.CopyBufferRegion(transferBuffer, 0, this, 0, SizeInBytes);
             copyCommandList.Flush();
         }
 
