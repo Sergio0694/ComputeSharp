@@ -10,6 +10,10 @@ cbuffer {{FieldName}}Buffer : register(b{{BufferIndex}})
     {{&FieldType}} {{FieldName}}{{^IsSingleValue}}[2]{{/IsSingleValue}};
 }
 {{/IsConstantBuffer}}
+{{!Readonly buffer}}
+{{#IsReadOnlyBuffer}}
+{{&FieldType}} {{FieldName}} : register(t{{BufferIndex}});
+{{/IsReadOnlyBuffer}}
 {{!Read write buffer}}
 {{#IsReadWriteBuffer}}
 {{&FieldType}} {{FieldName}} : SV_DispatchThreadId : register(u{{BufferIndex}});
