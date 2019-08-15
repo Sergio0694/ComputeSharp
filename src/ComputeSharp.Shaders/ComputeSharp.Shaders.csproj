@@ -13,7 +13,6 @@
     </PackageReference>
     <PackageReference Include="ICSharpCode.Decompiler" Version="5.0.0.5066-preview4" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.3.0-beta1-final" />
-    <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.1-beta0-g3060495c2a" />
     <PackageReference Include="Stubble.Core" Version="1.4.12" />
   </ItemGroup>
 
