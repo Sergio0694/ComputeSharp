@@ -25,7 +25,7 @@ namespace ComputeSharp.Graphics.Buffers.Extensions
         /// <param name="data">The input <see cref="object"/> to copy to the allocated buffer</param>
         /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance (as a <see cref="GraphicsResource"/>) with the input data</returns>
         [Pure]
-        public static GraphicsResource AllocateReadOnlyBufferFromReflectedSingleValue(this GraphicsDevice device, object data)
+        public static GraphicsResource AllocateConstantBufferFromReflectedSingleValue(this GraphicsDevice device, object data)
         {
             Type dataType = data.GetType();
             if (!TypeMapping.TryGetValue(dataType, out var info))

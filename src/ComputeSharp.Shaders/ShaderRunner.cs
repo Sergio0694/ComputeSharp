@@ -99,7 +99,7 @@ namespace ComputeSharp.Shaders
             List<GraphicsResource> buffers = new List<GraphicsResource>();
             foreach (var variable in shaderLoader.CapturedConstantBufferValues)
             {
-                GraphicsResource resource = device.AllocateReadOnlyBufferFromReflectedSingleValue(variable.Value);
+                GraphicsResource resource = device.AllocateConstantBufferFromReflectedSingleValue(variable.Value);
                 commandList.SetComputeRootDescriptorTable(variable.Index, resource);
                 buffers.Add(resource);
             }

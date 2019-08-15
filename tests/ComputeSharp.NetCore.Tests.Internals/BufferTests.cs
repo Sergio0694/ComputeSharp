@@ -14,7 +14,7 @@ namespace ComputeSharp.NetCore.Tests.Internals
         {
             object value = 77;
 
-            using ConstantBuffer<int> buffer = (ConstantBuffer<int>)Gpu.Default.AllocateReadOnlyBufferFromReflectedSingleValue(value);
+            using ConstantBuffer<int> buffer = (ConstantBuffer<int>)Gpu.Default.AllocateConstantBufferFromReflectedSingleValue(value);
             int[] result = buffer.GetData();
 
             Assert.IsTrue(result.Length == 1);
@@ -26,7 +26,7 @@ namespace ComputeSharp.NetCore.Tests.Internals
         {
             object value = 3.14f;
 
-            using ConstantBuffer<float> buffer = (ConstantBuffer<float>)Gpu.Default.AllocateReadOnlyBufferFromReflectedSingleValue(value); 
+            using ConstantBuffer<float> buffer = (ConstantBuffer<float>)Gpu.Default.AllocateConstantBufferFromReflectedSingleValue(value); 
             float[] result = buffer.GetData();
 
             Assert.IsTrue(result.Length == 1);
