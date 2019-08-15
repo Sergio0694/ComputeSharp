@@ -2,6 +2,7 @@
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Graphics.Buffers.Enums;
 using ComputeSharp.Graphics.Helpers;
 using SharpDX.Direct3D12;
 using CommandList = ComputeSharp.Graphics.Commands.CommandList;
@@ -19,7 +20,7 @@ namespace ComputeSharp.Graphics.Buffers
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
-        internal ConstantBuffer(GraphicsDevice device, int size) : base(device, size, size * (Unsafe.SizeOf<T>() / 16 + 1) * 16, HeapType.Upload)
+        internal ConstantBuffer(GraphicsDevice device, int size) : base(device, size, size * (Unsafe.SizeOf<T>() / 16 + 1) * 16, BufferType.Constant)
         {
             PaddedElementSizeInBytes = SizeInBytes / Size;
             IsPaddingPresent = PaddedElementSizeInBytes > ElementSizeInBytes;

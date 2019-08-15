@@ -1,6 +1,8 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System;
+using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Graphics.Buffers.Enums;
 using SharpDX.Direct3D12;
 
 namespace ComputeSharp.Graphics.Buffers
@@ -17,29 +19,35 @@ namespace ComputeSharp.Graphics.Buffers
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
         /// <param name="sizeInBytes">The size in bytes for the current buffer</param>
-        /// <param name="heapType">The heap type for the current buffer</param>
-        protected internal Buffer(GraphicsDevice device, int size, int sizeInBytes, HeapType heapType) : base(device)
+        /// <param name="bufferType">The buffer type for the current buffer</param>
+        internal Buffer(GraphicsDevice device, int size, int sizeInBytes, BufferType bufferType) : base(device)
         {
             Size = size;
             SizeInBytes = sizeInBytes; // Not necessarily a multiple of the element size, as there could be padding
             ElementSizeInBytes = Unsafe.SizeOf<T>();
-            HeapType = heapType;
+            BufferType = bufferType;
 
-            ResourceFlags flags = heapType == HeapType.Default ? ResourceFlags.AllowUnorderedAccess : ResourceFlags.None;
-            ResourceDescription description = ResourceDescription.Buffer(SizeInBytes, flags);
-            ResourceStates resourceStates = heapType switch
+            // Determine the right heap type and flags
+            (HeapType heapType, ResourceFlags flags, ResourceStates states) = bufferType switch
             {
-                HeapType.Upload => ResourceStates.GenericRead,
-                HeapType.Readback => ResourceStates.CopyDestination,
-                _ => ResourceStates.Common
+                BufferType.Constant => (HeapType.Upload, ResourceFlags.None, ResourceStates.GenericRead),
+                BufferType.ReadOnly => (HeapType.Default, ResourceFlags.None, ResourceStates.Common),
+                BufferType.ReadWrite => (HeapType.Default, ResourceFlags.AllowUnorderedAccess, ResourceStates.Common),
+                BufferType.ReadBack => (HeapType.Readback, ResourceFlags.None, ResourceStates.CopyDestination),
+                BufferType.Transfer => (HeapType.Upload, ResourceFlags.None, ResourceStates.GenericRead),
+                _ => throw new ArgumentException($"Invalid buffer type {bufferType}", nameof(bufferType))
             };
 
-            NativeResource = GraphicsDevice.NativeDevice.CreateCommittedResource(new HeapProperties(heapType), HeapFlags.None, description, resourceStates);
+            // Create the native resource
+            ResourceDescription description = ResourceDescription.Buffer(sizeInBytes, flags);
+            NativeResource = GraphicsDevice.NativeDevice.CreateCommittedResource(new HeapProperties(heapType), HeapFlags.None, description, states);
 
-            (NativeCpuDescriptorHandle, NativeGpuDescriptorHandle) = heapType switch
+            // Create the resource handles, if needed
+            (NativeCpuDescriptorHandle, NativeGpuDescriptorHandle) = bufferType switch
             {
-                HeapType.Default => CreateUnorderedAccessView(),
-                HeapType.Upload => CreateConstantBufferView(),
+                BufferType.Constant => CreateConstantBufferView(),
+                BufferType.ReadOnly => CreateShaderResourceView(),
+                BufferType.ReadWrite => CreateUnorderedAccessView(),
                 _ => default
             };
         }
@@ -60,9 +68,9 @@ namespace ComputeSharp.Graphics.Buffers
         protected int ElementSizeInBytes { get; }
 
         /// <summary>
-        /// Gets the heap type being targeted by the current buffer
+        /// Gets the buffer type for the current <see cref="Buffer{T}"/> instance
         /// </summary>
-        internal HeapType HeapType { get; }
+        internal BufferType BufferType { get; }
 
         /// <summary>
         /// Creates the descriptors for a constant buffer
@@ -86,6 +94,22 @@ namespace ComputeSharp.Graphics.Buffers
             return (cpuHandle, gpuHandle);
         }
 
+        private (CpuDescriptorHandle, GpuDescriptorHandle) CreateShaderResourceView()
+        {
+            (CpuDescriptorHandle cpuHandle, GpuDescriptorHandle gpuHandle) = GraphicsDevice.ShaderResourceViewAllocator.Allocate();
+
+            ShaderResourceViewDescription description = new ShaderResourceViewDescription
+            {
+                Shader4ComponentMapping = 5768,
+                Dimension = ShaderResourceViewDimension.Buffer,
+                Buffer = { ElementCount = Size, StructureByteStride = ElementSizeInBytes }
+            };
+
+            GraphicsDevice.NativeDevice.CreateShaderResourceView(NativeResource, description, cpuHandle);
+
+            return (cpuHandle, gpuHandle);
+        }
+
         /// <summary>
         /// Creates the descriptors for a read write buffer
         /// </summary>
@@ -98,11 +122,7 @@ namespace ComputeSharp.Graphics.Buffers
             UnorderedAccessViewDescription description = new UnorderedAccessViewDescription
             {
                 Dimension = UnorderedAccessViewDimension.Buffer,
-                Buffer =
-                {
-                    ElementCount = Size,
-                    StructureByteStride = ElementSizeInBytes
-                }
+                Buffer = { ElementCount = Size, StructureByteStride = ElementSizeInBytes }
             };
 
             GraphicsDevice.NativeDevice.CreateUnorderedAccessView(NativeResource, null, description, cpuHandle);

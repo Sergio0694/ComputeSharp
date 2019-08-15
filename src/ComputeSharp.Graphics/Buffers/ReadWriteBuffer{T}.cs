@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Graphics.Buffers.Enums;
 using ComputeSharp.Graphics.Helpers;
 using SharpDX.Direct3D12;
 using CommandList = ComputeSharp.Graphics.Commands.CommandList;
@@ -18,7 +19,7 @@ namespace ComputeSharp.Graphics.Buffers
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
-        internal ReadWriteBuffer(GraphicsDevice device, int size) : base(device, size, size * Unsafe.SizeOf<T>(), HeapType.Default) { }
+        internal ReadWriteBuffer(GraphicsDevice device, int size) : base(device, size, size * Unsafe.SizeOf<T>(), BufferType.ReadWrite) { }
 
         /// <summary>
         /// Gets or sets a single <typeparamref name="T"/> value from the current read write buffer
@@ -34,7 +35,7 @@ namespace ComputeSharp.Graphics.Buffers
         /// <inheritdoc/>
         public override void GetData(Span<T> span)
         {
-            using Buffer<T> readbackBaffer = new Buffer<T>(GraphicsDevice, Size, SizeInBytes, HeapType.Readback);
+            using Buffer<T> readbackBaffer = new Buffer<T>(GraphicsDevice, Size, SizeInBytes, BufferType.Transfer);
             using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
             copyCommandList.CopyBufferRegion(this, 0, readbackBaffer, 0, SizeInBytes);
@@ -48,7 +49,7 @@ namespace ComputeSharp.Graphics.Buffers
         /// <inheritdoc/>
         public override void SetData(Span<T> span)
         {
-            using Buffer<T> uploadBuffer = new Buffer<T>(GraphicsDevice, Size, SizeInBytes, HeapType.Upload);
+            using Buffer<T> uploadBuffer = new Buffer<T>(GraphicsDevice, Size, SizeInBytes, BufferType.Transfer);
 
             uploadBuffer.Map(0);
             MemoryHelper.Copy(span, uploadBuffer.MappedResource);
