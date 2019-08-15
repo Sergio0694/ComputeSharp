@@ -27,6 +27,7 @@ namespace ComputeSharp.Shaders.Mappings
             [typeof(Vector4).FullName] = "float4",
             [typeof(Matrix4x4).FullName] = "float4x4",
             [typeof(ThreadIds).FullName] = "uint3",
+            [typeof(ReadOnlyBuffer<>).FullName] = "StructuredBuffer",
             [typeof(ReadWriteBuffer<>).FullName] = "RWStructuredBuffer"
         };
 
@@ -54,15 +55,6 @@ namespace ComputeSharp.Shaders.Mappings
                                                            type == typeof(Matrix4x4);
 
         /// <summary>
-        /// Checks whether or not the input type is a <see cref="ReadWriteBuffer{T}"/> value
-        /// </summary>
-        /// <param name="type">The input <see cref="Type"/> instance to check</param>
-        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a <see cref="ReadWriteBuffer{T}"/> instance</returns>
-        [Pure]
-        public static bool IsReadWriteBufferType(Type type) => type.IsGenericType &&
-                                                               type.GetGenericTypeDefinition() == typeof(ReadWriteBuffer<>);
-
-        /// <summary>
         /// Checks whether or not the input type is a <see cref="ConstantBuffer{T}"/> value
         /// </summary>
         /// <param name="type">The input <see cref="Type"/> instance to check</param>
@@ -70,6 +62,24 @@ namespace ComputeSharp.Shaders.Mappings
         [Pure]
         public static bool IsConstantBufferType(Type type) => type.IsGenericType &&
                                                               type.GetGenericTypeDefinition() == typeof(ConstantBuffer<>);
+
+        /// <summary>
+        /// Checks whether or not the input type is a <see cref="ReadOnlyBuffer{T}"/> value
+        /// </summary>
+        /// <param name="type">The input <see cref="Type"/> instance to check</param>
+        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a <see cref="ReadOnlyBuffer{T}"/> instance</returns>
+        [Pure]
+        public static bool IsReaadOnlyBufferType(Type type) => type.IsGenericType &&
+                                                               type.GetGenericTypeDefinition() == typeof(ReadOnlyBuffer<>);
+
+        /// <summary>
+        /// Checks whether or not the input type is a <see cref="ReadWriteBuffer{T}"/> value
+        /// </summary>
+        /// <param name="type">The input <see cref="Type"/> instance to check</param>
+        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a <see cref="ReadWriteBuffer{T}"/> instance</returns>
+        [Pure]
+        public static bool IsReadWriteBufferType(Type type) => type.IsGenericType &&
+                                                               type.GetGenericTypeDefinition() == typeof(ReadWriteBuffer<>);
 
         /// <summary>
         /// Checks whether or not a given <see cref="Type"/> is an HLSL known type
