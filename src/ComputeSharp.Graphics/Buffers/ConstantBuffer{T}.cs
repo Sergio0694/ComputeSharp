@@ -20,21 +20,7 @@ namespace ComputeSharp.Graphics.Buffers
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
-        internal ConstantBuffer(GraphicsDevice device, int size) : base(device, size, size * (Unsafe.SizeOf<T>() / 16 + 1) * 16, BufferType.Constant)
-        {
-            PaddedElementSizeInBytes = SizeInBytes / Size;
-            IsPaddingPresent = PaddedElementSizeInBytes > ElementSizeInBytes;
-        }
-
-        /// <summary>
-        /// Gets the size in bytes of the current buffer
-        /// </summary>
-        internal int PaddedElementSizeInBytes { get; }
-
-        /// <summary>
-        /// Gets whether or not there is some padding between elements in the current buffer
-        /// </summary>
-        internal bool IsPaddingPresent { get; }
+        internal ConstantBuffer(GraphicsDevice device, int size) : base(device, size, size * (Unsafe.SizeOf<T>() / 16 + 1) * 16, BufferType.Constant) { }
 
         /// <summary>
         /// Gets a single <typeparamref name="T"/> value from the current constant buffer

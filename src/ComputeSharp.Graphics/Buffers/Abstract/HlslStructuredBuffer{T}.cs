@@ -53,7 +53,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <inheritdoc/>
         public override void SetData(HlslBuffer<T> buffer)
         {
-            if (buffer is ConstantBuffer<T> readOnlyBuffer && !readOnlyBuffer.IsPaddingPresent)
+            if (!buffer.IsPaddingPresent)
             {
                 // Directly copy the input buffer
                 using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);

@@ -26,6 +26,7 @@ namespace ComputeSharp.Graphics.Buffers
             SizeInBytes = sizeInBytes; // Not necessarily a multiple of the element size, as there could be padding
             ElementSizeInBytes = Unsafe.SizeOf<T>();
             BufferType = bufferType;
+            PaddedElementSizeInBytes = sizeInBytes / size;
 
             // Determine the right heap type and flags
             (HeapType heapType, ResourceFlags flags, ResourceStates states) = bufferType switch
@@ -66,6 +67,16 @@ namespace ComputeSharp.Graphics.Buffers
         /// Gets the size in bytes of each <typeparamref name="T"/> value contained in the buffer
         /// </summary>
         protected int ElementSizeInBytes { get; }
+
+        /// <summary>
+        /// Gets the size in bytes of the current buffer
+        /// </summary>
+        internal int PaddedElementSizeInBytes { get; }
+
+        /// <summary>
+        /// Gets whether or not there is some padding between elements in the current buffer
+        /// </summary>
+        internal bool IsPaddingPresent => PaddedElementSizeInBytes > ElementSizeInBytes;
 
         /// <summary>
         /// Gets the buffer type for the current <see cref="Buffer{T}"/> instance
