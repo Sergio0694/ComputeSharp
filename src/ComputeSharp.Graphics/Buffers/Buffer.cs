@@ -97,9 +97,12 @@ namespace ComputeSharp.Graphics.Buffers
 
             UnorderedAccessViewDescription description = new UnorderedAccessViewDescription
             {
-                Format = SharpDX.DXGI.Format.R32_Float,
                 Dimension = UnorderedAccessViewDimension.Buffer,
-                Buffer = { ElementCount = Size }
+                Buffer =
+                {
+                    ElementCount = Size,
+                    StructureByteStride = ElementSizeInBytes
+                }
             };
 
             GraphicsDevice.NativeDevice.CreateUnorderedAccessView(NativeResource, null, description, cpuHandle);

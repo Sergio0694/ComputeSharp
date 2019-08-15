@@ -27,7 +27,7 @@ namespace ComputeSharp.Shaders.Mappings
             [typeof(Vector4).FullName] = "float4",
             [typeof(Matrix4x4).FullName] = "float4x4",
             [typeof(ThreadIds).FullName] = "uint3",
-            [typeof(ReadWriteBuffer<>).FullName] = "RWBuffer"
+            [typeof(ReadWriteBuffer<>).FullName] = "RWStructuredBuffer"
         };
 
         /// <summary>
