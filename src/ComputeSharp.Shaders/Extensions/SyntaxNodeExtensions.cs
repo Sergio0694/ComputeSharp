@@ -1,5 +1,8 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System;
+using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using ComputeSharp.Shaders.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -53,6 +56,30 @@ namespace ComputeSharp.Shaders.Extensions
                 memberSymbol.Kind != SymbolKind.Method)
             {
                 return node;
+            }
+
+            // Handle static fields as a special case
+            if (memberSymbol.Kind == SymbolKind.Field &&
+                memberSymbol.IsStatic)
+            {
+                // Retrieve the field info
+                string
+                    typeFullname = memberSymbol.ContainingType.ToString(),
+                    assemblyFullname = memberSymbol.ContainingAssembly.ToString();
+                Type fieldDeclaringType = Type.GetType($"{typeFullname}, {assemblyFullname}");
+                FieldInfo fieldInfo = fieldDeclaringType.GetField(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+
+                // Constant replacement if the field is a static readonly field
+                if (fieldInfo.IsInitOnly && HlslKnownTypes.IsKnownScalarType(fieldInfo.FieldType))
+                {
+                    return fieldInfo.GetValue(null) switch
+                    {
+                        true => SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression, SyntaxFactory.Token(SyntaxKind.TrueKeyword)),
+                        false => SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression, SyntaxFactory.Token(SyntaxKind.TrueKeyword)),
+                        IFormattable scalar => SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.ParseToken(scalar.ToString(null, CultureInfo.InvariantCulture))),
+                        _ => throw new InvalidOperationException($"Invalid field of type {fieldInfo.FieldType}")
+                    };
+                }
             }
 
             // Process the input node if it's a known method invocation
