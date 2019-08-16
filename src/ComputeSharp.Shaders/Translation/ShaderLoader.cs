@@ -57,15 +57,19 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         public RootParameter[] RootParameters { get; private set; }
 
+        private readonly List<(int, GraphicsResource)> _Buffers = new List<(int, GraphicsResource)>();
+
         /// <summary>
         /// Gets the ordered collection of buffers used as fields in the current shader
         /// </summary>
-        public IReadOnlyList<(int Index, GraphicsResource Resource)> Buffers { get; private set; }
+        public IReadOnlyList<(int Index, GraphicsResource Resource)> Buffers => _Buffers;
+
+        private readonly List<(int, object)> _CapturedConstantBufferValues = new List<(int, object)>();
 
         /// <summary>
         /// Gets the ordered collection of captured variables that need to be assigned to constant buffers
         /// </summary>
-        public IReadOnlyList<(int Index, object Value)> CapturedConstantBufferValues { get; private set; }
+        public IReadOnlyList<(int Index, object Value)> CapturedConstantBufferValues => _CapturedConstantBufferValues;
 
         private readonly List<FieldInfo> _FieldsInfo = new List<FieldInfo>();
 
@@ -73,6 +77,11 @@ namespace ComputeSharp.Shaders.Translation
         /// Gets the collection of <see cref="FieldInfo"/> items for the shader fields
         /// </summary>
         public IReadOnlyList<FieldInfo> FieldsInfo => _FieldsInfo;
+
+        /// <summary>
+        /// gets the number of constant buffers in the current instance
+        /// </summary>
+        public int ConstantBuffersCount { get; private set; }
 
         /// <summary>
         /// Gets the name of the <see cref="ThreadIds"/> variable used as input for the shader method
@@ -110,9 +119,6 @@ namespace ComputeSharp.Shaders.Translation
             if (ShaderFields.Any(fieldInfo => fieldInfo.IsStatic)) throw new InvalidOperationException("Empty shader body");
 
             List<DescriptorRange> descriptorRanges = new List<DescriptorRange>();
-            List<(int, GraphicsResource)> buffers = new List<(int, GraphicsResource)>();
-            List<(int, object)> variables = new List<(int, object)>();
-            int constantBuffersCount = 0;
             int readOnlyBuffersCount = 0;
             int readWriteBuffersCount = 0;
 
@@ -126,14 +132,14 @@ namespace ComputeSharp.Shaders.Translation
                 // Constant buffer
                 if (HlslKnownTypes.IsConstantBufferType(fieldType))
                 {
-                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, constantBuffersCount);
+                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, ConstantBuffersCount);
                     descriptorRanges.Add(range);
 
                     // Reference to the underlying buffer
-                    buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
+                    _Buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
 
                     string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
-                    processedFieldInfo = new ConstantBufferFieldInfo(typeName, fieldName, constantBuffersCount++, false);
+                    processedFieldInfo = new ConstantBufferFieldInfo(typeName, fieldName, ConstantBuffersCount++, false);
                 }
                 else if (HlslKnownTypes.IsReadOnlyBufferType(fieldType))
                 {
@@ -142,7 +148,7 @@ namespace ComputeSharp.Shaders.Translation
                     descriptorRanges.Add(range);
 
                     // Reference to the underlying buffer
-                    buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
+                    _Buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
 
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
                     processedFieldInfo = new ReadOnlyBufferFieldInfo(typeName, fieldName, readOnlyBuffersCount++);
@@ -154,7 +160,7 @@ namespace ComputeSharp.Shaders.Translation
                     descriptorRanges.Add(range);
 
                     // Reference to the underlying buffer
-                    buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
+                    _Buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
 
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
                     processedFieldInfo = new ReadWriteBufferFieldInfo(typeName, fieldName, readWriteBuffersCount++);
@@ -162,15 +168,15 @@ namespace ComputeSharp.Shaders.Translation
                 else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
                 {
                     // Constant buffer
-                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, constantBuffersCount);
+                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, ConstantBuffersCount);
                     descriptorRanges.Add(range);
 
                     // Register the captured value
-                    variables.Add((descriptorRanges.Count - 1, fieldValue));
+                    _CapturedConstantBufferValues.Add((descriptorRanges.Count - 1, fieldValue));
 
                     // Constant buffer field
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
-                    processedFieldInfo = new ConstantBufferFieldInfo(typeName, fieldName, constantBuffersCount++, true);
+                    processedFieldInfo = new ConstantBufferFieldInfo(typeName, fieldName, ConstantBuffersCount++, true);
                 }
                 else throw new NotSupportedException($"Unsupported field of type {fieldType.FullName}");
 
@@ -178,8 +184,6 @@ namespace ComputeSharp.Shaders.Translation
             }
 
             RootParameters = descriptorRanges.Select(range => new RootParameter(ShaderVisibility.All, range)).ToArray();
-            Buffers = buffers;
-            CapturedConstantBufferValues = variables;
         }
 
         /// <summary>
