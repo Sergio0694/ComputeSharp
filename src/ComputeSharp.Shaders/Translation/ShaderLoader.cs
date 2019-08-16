@@ -132,8 +132,7 @@ namespace ComputeSharp.Shaders.Translation
                 // Constant buffer
                 if (HlslKnownTypes.IsConstantBufferType(fieldType))
                 {
-                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, ConstantBuffersCount);
-                    descriptorRanges.Add(range);
+                    descriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, ConstantBuffersCount));
 
                     // Reference to the underlying buffer
                     _Buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
@@ -144,8 +143,7 @@ namespace ComputeSharp.Shaders.Translation
                 else if (HlslKnownTypes.IsReadOnlyBufferType(fieldType))
                 {
                     // Root parameter for a readonly buffer
-                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.ShaderResourceView, 1, readOnlyBuffersCount);
-                    descriptorRanges.Add(range);
+                    descriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ShaderResourceView, 1, readOnlyBuffersCount));
 
                     // Reference to the underlying buffer
                     _Buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
@@ -156,8 +154,7 @@ namespace ComputeSharp.Shaders.Translation
                 else if (HlslKnownTypes.IsReadWriteBufferType(fieldType))
                 {
                     // Root parameter for a read write buffer
-                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.UnorderedAccessView, 1, readWriteBuffersCount);
-                    descriptorRanges.Add(range);
+                    descriptorRanges.Add(new DescriptorRange(DescriptorRangeType.UnorderedAccessView, 1, readWriteBuffersCount));
 
                     // Reference to the underlying buffer
                     _Buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
@@ -168,8 +165,7 @@ namespace ComputeSharp.Shaders.Translation
                 else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
                 {
                     // Constant buffer
-                    DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, ConstantBuffersCount);
-                    descriptorRanges.Add(range);
+                    descriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, ConstantBuffersCount));
 
                     // Register the captured value
                     _CapturedConstantBufferValues.Add((descriptorRanges.Count - 1, fieldValue));
@@ -182,6 +178,9 @@ namespace ComputeSharp.Shaders.Translation
 
                 _FieldsInfo.Add(processedFieldInfo);
             }
+
+            // Descriptor for the X, Y and Z target variables
+            descriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, ConstantBuffersCount));
 
             RootParameters = descriptorRanges.Select(range => new RootParameter(ShaderVisibility.All, range)).ToArray();
         }

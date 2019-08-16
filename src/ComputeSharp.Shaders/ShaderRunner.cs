@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ComputeSharp.Graphics;
+using ComputeSharp.Graphics.Buffers;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Extensions;
 using ComputeSharp.Shaders.Renderer;
@@ -66,9 +67,7 @@ namespace ComputeSharp.Shaders
             ShaderInfo shaderInfo = new ShaderInfo
             {
                 FieldsList = shaderLoader.FieldsInfo,
-                ThreadsX = x,
-                ThreadsY = y,
-                ThreadsZ = z,
+                ThreadsXYZConstantBufferIndex = shaderLoader.ConstantBuffersCount,
                 NumThreadsX = threadsX,
                 NumThreadsY = threadsY,
                 NumThreadsZ = threadsZ,
@@ -103,6 +102,12 @@ namespace ComputeSharp.Shaders
                 commandList.SetComputeRootDescriptorTable(variable.Index, resource);
                 buffers.Add(resource);
             }
+
+            // Initialize the loop targets
+            Span<uint> xyzSpan = stackalloc uint[] { (uint)x, (uint)y, (uint)z };
+            ConstantBuffer<uint> xyzBuffer = device.AllocateConstantBuffer(xyzSpan);
+            commandList.SetComputeRootDescriptorTable(shaderLoader.RootParameters.Length - 1, xyzBuffer);
+            buffers.Add(xyzBuffer);
 
             // Dispatch and wait for completion
             commandList.Dispatch(groupsX, groupsY, groupsZ);
