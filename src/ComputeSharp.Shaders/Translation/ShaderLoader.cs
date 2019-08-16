@@ -159,7 +159,7 @@ namespace ComputeSharp.Shaders.Translation
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
                     processedFieldInfo = new ReadWriteBufferFieldInfo(typeName, fieldName, readWriteBuffersCount++);
                 }
-                else if (HlslKnownTypes.IsKnownScalarType(fieldType))
+                else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
                 {
                     // Constant buffer
                     DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, constantBuffersCount);
@@ -201,6 +201,7 @@ namespace ComputeSharp.Shaders.Translation
             // Additional preprocessing
             MethodBody = Regex.Replace(MethodBody, @"\d+[fFdD]", m => m.Value.Replace("f", ""));
             MethodBody = MethodBody.TrimEnd('\n', '\r', ' ');
+            MethodBody = MethodBody.Replace("vector", "_vector"); // The decompiler can name a local Vector[2,3,4] variable as "vector"
         }
     }
 }
