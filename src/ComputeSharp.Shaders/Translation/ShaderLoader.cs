@@ -201,7 +201,7 @@ namespace ComputeSharp.Shaders.Translation
             // Additional preprocessing
             MethodBody = Regex.Replace(MethodBody, @"\d+[fFdD]", m => m.Value.Replace("f", ""));
             MethodBody = MethodBody.TrimEnd('\n', '\r', ' ');
-            MethodBody = MethodBody.Replace("vector", "_vector"); // The decompiler can name a local Vector[2,3,4] variable as "vector"
+            MethodBody = Regex.Replace(MethodBody, @"(?<!A-Za-z)vector(?!\w)", "_vector"); // The decompiler can name a local Vector[2,3,4] variable as "vector"
         }
     }
 }
