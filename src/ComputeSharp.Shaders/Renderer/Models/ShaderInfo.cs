@@ -16,19 +16,9 @@ namespace ComputeSharp.Shaders.Renderer.Models
         public IReadOnlyList<FieldInfo> FieldsList { get; set; }
 
         /// <summary>
-        /// Gets or sets the total number of threads to run on the X axis
+        /// Gets or sets the index for the constant buffer with the info on the target number of iterations on the X, Y and Z axes
         /// </summary>
-        public int ThreadsX { get; set; }
-
-        /// <summary>
-        /// Gets or sets the total number of threads to run on the Y axis
-        /// </summary>
-        public int ThreadsY { get; set; }
-
-        /// <summary>
-        /// Gets or sets the total number of threads to run on the Z axis
-        /// </summary>
-        public int ThreadsZ { get; set; }
+        public int ThreadsXYZConstantBufferIndex { get; set; }
 
         /// <summary>
         /// Gets or sets the number of threads in the X group

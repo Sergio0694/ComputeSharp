@@ -20,13 +20,21 @@ cbuffer {{FieldName}}Buffer : register(b{{BufferIndex}})
 {{/IsReadWriteBuffer}}
 
 {{/FieldsList}}
+{{!Threads XYZ targets buffer}}
+cbuffer __XYZ___Buffer : register(b{{ThreadsXYZConstantBufferIndex}})
+{
+    uint __x__;
+    uint __y__;
+    uint __z__;
+}
+
 {{!Shader entry point}}
 [Shader("compute")]
 [NumThreads({{NumThreadsX}}, {{NumThreadsY}}, {{NumThreadsZ}})]
 void CSMain(uint3 {{ThreadsIdsVariableName}} : SV_DispatchThreadId)
 {
-    if ({{ThreadsIdsVariableName}}.x < {{ThreadsX}} &&
-        {{ThreadsIdsVariableName}}.y < {{ThreadsY}} &&
-        {{ThreadsIdsVariableName}}.z < {{ThreadsZ}})
+    if ({{ThreadsIdsVariableName}}.x < __x__ &&
+        {{ThreadsIdsVariableName}}.y < __y__ &&
+        {{ThreadsIdsVariableName}}.z < __z__)
 {{&ShaderBody}}
 }
