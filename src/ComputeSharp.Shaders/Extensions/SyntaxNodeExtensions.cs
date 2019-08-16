@@ -59,33 +59,54 @@ namespace ComputeSharp.Shaders.Extensions
             }
 
             // Handle static fields as a special case
-            if (memberSymbol.Kind == SymbolKind.Field &&
-                memberSymbol.IsStatic)
+            if (memberSymbol.IsStatic && (
+                memberSymbol.Kind == SymbolKind.Field ||
+                memberSymbol.Kind == SymbolKind.Property))
             {
-                // Retrieve the field info
+                // Get the containing type
                 string
                     typeFullname = memberSymbol.ContainingType.ToString(),
                     assemblyFullname = memberSymbol.ContainingAssembly.ToString();
                 Type fieldDeclaringType = Type.GetType($"{typeFullname}, {assemblyFullname}");
-                FieldInfo fieldInfo = fieldDeclaringType.GetField(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
 
-                // Constant replacement if the field is a static readonly field
-                if (fieldInfo.IsInitOnly && HlslKnownTypes.IsKnownScalarType(fieldInfo.FieldType))
+                // Retrieve the field or property info
+                bool isReadonly;
+                object memberValue;
+                Type memberType;
+                switch (memberSymbol.Kind)
                 {
-                    return fieldInfo.GetValue(null) switch
+                    case SymbolKind.Field:
+                        FieldInfo fieldInfo = fieldDeclaringType.GetField(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                        isReadonly = fieldInfo.IsInitOnly;
+                        memberValue = fieldInfo.GetValue(null);
+                        memberType = fieldInfo.FieldType;
+                        break;
+                    case SymbolKind.Property:
+                        PropertyInfo propertyInfo = fieldDeclaringType.GetProperty(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                        isReadonly = !propertyInfo.CanWrite;
+                        memberValue = propertyInfo.GetValue(null);
+                        memberType = propertyInfo.PropertyType;
+                        break;
+                    default: throw new InvalidOperationException($"Invalid symbol kind: {memberSymbol.Kind}");
+                }
+
+                // Constant replacement if the value is a readonly scalar value
+                if (isReadonly && HlslKnownTypes.IsKnownScalarType(memberType))
+                {
+                    return memberValue switch
                     {
                         true => SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression, SyntaxFactory.Token(SyntaxKind.TrueKeyword)),
                         false => SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression, SyntaxFactory.Token(SyntaxKind.TrueKeyword)),
                         IFormattable scalar => SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.ParseToken(scalar.ToString(null, CultureInfo.InvariantCulture))),
-                        _ => throw new InvalidOperationException($"Invalid field of type {fieldInfo.FieldType}")
+                        _ => throw new InvalidOperationException($"Invalid field of type {memberType}")
                     };
                 }
             }
 
             // Process the input node if it's a known method invocation
-            if (HlslKnownMethods.TryGetMappedName(containingMemberSymbolInfo.Symbol, memberSymbol) is string value)
+            if (HlslKnownMethods.TryGetMappedName(containingMemberSymbolInfo.Symbol, memberSymbol) is string mappedName)
             {
-                return SyntaxFactory.IdentifierName(value).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
+                return SyntaxFactory.IdentifierName(mappedName).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
             }
 
             return node;
