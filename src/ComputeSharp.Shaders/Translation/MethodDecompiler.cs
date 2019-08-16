@@ -12,6 +12,7 @@ using ICSharpCode.Decompiler.CSharp;
 using ICSharpCode.Decompiler.Metadata;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ComputeSharp.Shaders.Translation
 {
@@ -99,9 +100,14 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <summary>
-        /// A <see cref="Regex"/> uused to preprocess the entry point declaration for both lambda expressions and local methods
+        /// A <see cref="Regex"/> used to preprocess the closure type declarations for both lambda expressions and local methods
         /// </summary>
-        private static readonly Regex LambdaMethodDeclarationRegex = new Regex(@"^(private|internal) void <\w+>[\w_|]+(?=\()", RegexOptions.Compiled);
+        private static readonly Regex ClosureTypeDeclarationRegex = new Regex(@"(?<=private sealed class )<\w*>[\w_]+", RegexOptions.Compiled);
+
+        /// <summary>
+        /// A <see cref="Regex"/> used to preprocess the entry point declaration for both lambda expressions and local methods
+        /// </summary>
+        private static readonly Regex LambdaMethodDeclarationRegex = new Regex(@"(private|internal) void <\w+>[\w_|]+(?=\()", RegexOptions.Compiled);
 
         /// <summary>
         /// Decompiles a target method and returns its <see cref="SyntaxTree"/> and <see cref="SemanticModel"/> info
@@ -109,14 +115,15 @@ namespace ComputeSharp.Shaders.Translation
         /// <param name="methodInfo">The input <see cref="MethodInfo"/> to inspect</param>
         /// <param name="rootNode">The root node for the syntax tree of the input method</param>
         /// <param name="semanticModel">The semantic model for the input method</param>
-        public void GetSyntaxTree(MethodInfo methodInfo, out SyntaxNode rootNode, out SemanticModel semanticModel)
+        public void GetSyntaxTree(MethodInfo methodInfo, out MethodDeclarationSyntax rootNode, out SemanticModel semanticModel)
         {
             lock (Lock)
             {
-                // Get the handle of the input method
+                // Get the handle of the containing type method
                 string assemblyPath = methodInfo.DeclaringType?.Assembly.Location ?? throw new InvalidOperationException();
-                EntityHandle methodHandle = MetadataTokenHelpers.TryAsEntityHandle(methodInfo.MetadataToken) ?? throw new InvalidOperationException();
-                // Get or create a decompiler for the target assembly, and decompile the method
+                EntityHandle typeHandle = MetadataTokenHelpers.TryAsEntityHandle(methodInfo.DeclaringType.MetadataToken) ?? throw new InvalidOperationException();
+
+                // Get or create a decompiler for the target assembly, and decompile the type
                 if (!Decompilers.TryGetValue(assemblyPath, out CSharpDecompiler decompiler))
                 {
                     decompiler = CreateDecompiler(assemblyPath);
@@ -125,12 +132,15 @@ namespace ComputeSharp.Shaders.Translation
 
                 // Decompile the method source and fix the method declaration for local methods converted to lambdas
                 string
-                    sourceCode = decompiler.DecompileAsString(methodHandle),
-                    fixedCode = LambdaMethodDeclarationRegex.Replace(sourceCode, "internal void Main");
+                    sourceCode = decompiler.DecompileAsString(typeHandle),
+                    typeFixedCode = ClosureTypeDeclarationRegex.Replace(sourceCode, "Shader"),
+                    methodFixedCode = LambdaMethodDeclarationRegex.Replace(typeFixedCode, "internal void Main");
 
-                // Load the method syntax tree
-                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(fixedCode);
-                rootNode = syntaxTree.GetRoot();
+                // Load the type syntax tree
+                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(methodFixedCode);
+
+                // Get the root node to return
+                rootNode = syntaxTree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().First();
 
                 // Update the incremental compilation and retrieve the syntax tree for the method
                 _Compilation = _Compilation.AddSyntaxTrees(syntaxTree);
