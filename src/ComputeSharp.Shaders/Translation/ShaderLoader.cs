@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Renderer.Models.Fields;
-using ComputeSharp.Shaders.Renderer.Models.Fields.Abstract;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SharpDX.Direct3D12;
@@ -161,7 +159,7 @@ namespace ComputeSharp.Shaders.Translation
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
                     processedFieldInfo = new ReadWriteBufferFieldInfo(typeName, fieldName, readWriteBuffersCount++);
                 }
-                else if (HlslKnownTypes.IsKnownScalarType(fieldType))
+                else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
                 {
                     // Constant buffer
                     DescriptorRange range = new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, constantBuffersCount);
@@ -190,21 +188,20 @@ namespace ComputeSharp.Shaders.Translation
         private void LoadMethodSource()
         {
             // Decompile the shader method
-            MethodDecompiler.Instance.GetSyntaxTree(Action.Method, out SyntaxNode root, out SemanticModel semanticModel);
+            MethodDecompiler.Instance.GetSyntaxTree(Action.Method, out MethodDeclarationSyntax root, out SemanticModel semanticModel);
 
             // Rewrite the shader method (eg. to fix the type declarations)
             ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel);
-            root = syntaxRewriter.Visit(root);
+            root = (MethodDeclarationSyntax)syntaxRewriter.Visit(root);
 
             // Get the thread ids identifier name and shader method body
-            MethodDeclarationSyntax methodNode = root.ChildNodes().OfType<MethodDeclarationSyntax>().First();
-            ThreadsIdsVariableName = methodNode.ParameterList.Parameters.First().Identifier.Text;
-            MethodBody = methodNode.Body.ToFullString();
+            ThreadsIdsVariableName = root.ParameterList.Parameters.First().Identifier.Text;
+            MethodBody = root.Body.ToFullString();
 
             // Additional preprocessing
             MethodBody = Regex.Replace(MethodBody, @"\d+[fFdD]", m => m.Value.Replace("f", ""));
             MethodBody = MethodBody.TrimEnd('\n', '\r', ' ');
-            MethodBody = $"    {MethodBody.Replace(Environment.NewLine, $"{Environment.NewLine}    ")}";
+            MethodBody = Regex.Replace(MethodBody, @"(?<!A-Za-z)vector(?!\w)", "_vector"); // The decompiler can name a local Vector[2,3,4] variable as "vector"
         }
     }
 }
