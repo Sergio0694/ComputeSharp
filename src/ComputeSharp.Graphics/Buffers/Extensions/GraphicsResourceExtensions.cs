@@ -86,7 +86,11 @@ namespace ComputeSharp.Graphics.Buffers.Extensions
             {
                 switch (data[j])
                 {
-                    case bool b: WriteValue(b, ref r0); break;
+                    case bool b:
+                        uint ub = default;
+                        Unsafe.As<uint, bool>(ref ub) = b;
+                        WriteValue(ub, ref r0);
+                        break;
                     case int i: WriteValue(i, ref r0); break;
                     case uint u: WriteValue(u, ref r0); break;
                     case float f: WriteValue(f, ref r0); break;
