@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers;
+using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Enums;
@@ -20,7 +21,17 @@ namespace ComputeSharp.Graphics.Buffers
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
-        internal ConstantBuffer(GraphicsDevice device, int size) : base(device, size, size * (Unsafe.SizeOf<T>() / 16 + 1) * 16, BufferType.Constant) { }
+        internal ConstantBuffer(GraphicsDevice device, int size) : base(device, size, size * GetPaddedSize() * 16, BufferType.Constant) { }
+
+        /// <summary>
+        /// Gets the right padded size for <typeparamref name="T"/> elements to store in the current instance
+        /// </summary>
+        [Pure]
+        private static int GetPaddedSize()
+        {
+            int size = Unsafe.SizeOf<T>();
+            return size % 16 == 0 ? 1 : size / 16 + 1;
+        }
 
         /// <summary>
         /// Gets a single <typeparamref name="T"/> value from the current constant buffer

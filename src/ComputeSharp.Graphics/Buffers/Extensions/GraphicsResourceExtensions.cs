@@ -29,7 +29,7 @@ namespace ComputeSharp.Graphics.Buffers.Extensions
             void WriteValue<T>(T value, ref byte target) where T : unmanaged
             {
                 int size = Unsafe.SizeOf<T>();
-                if (offset % 16 > 16 - size) offset += 16 - offset % 16;
+                if (offset % 16 > 16 - size) offset += offset % 16;
                 Unsafe.As<byte, T>(ref Unsafe.Add(ref target, offset)) = value;
                 offset += size;
             }
