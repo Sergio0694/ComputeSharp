@@ -12,31 +12,46 @@ namespace ComputeSharp.Benchmark
         /// <summary>
         /// The number of samples
         /// </summary>
-        private const int Count = 128;
+        private const int C = 128;
 
         /// <summary>
-        /// The nummber of rows in the <see cref="A"/> matrix
+        /// The nummber of rows in the <see cref="X"/> matrix
         /// </summary>
         private const int N = 100;
 
         /// <summary>
-        /// The number of columns in the <see cref="A"/> matrix (same as the number of rows in the <see cref="B"/> matrix)
+        /// The number of columns in the <see cref="X"/> matrix (same as the number of rows in the <see cref="W"/> matrix)
         /// </summary>
         private const int M = 100;
 
         /// <summary>
-        /// The number of columns in the <see cref="B"/> matrix
+        /// The number of columns in the <see cref="W"/> matrix
         /// </summary>
         private const int P = 100;
 
-        private readonly float[] A;
+        /// <summary>
+        /// The input tensor
+        /// </summary>
+        private readonly float[] X;
 
+        /// <summary>
+        /// The weights tensor
+        /// </summary>
+        private readonly float[] W;
+
+        /// <summary>
+        /// The bias tensor
+        /// </summary>
         private readonly float[] B;
 
-        private readonly float[] C;
+        /// <summary>
+        /// The result tensor
+        /// </summary>
+        private readonly float[] Y;
 
-        private readonly float[] D;
-
+        /// <summary>
+        /// A <see cref="System.Random"/> instance to initialize the tensors
+        /// </summary>
         private static readonly Random Random = new Random();
 
         /// <summary>
@@ -44,10 +59,10 @@ namespace ComputeSharp.Benchmark
         /// </summary>
         public FullyConnectedLayerBenchmark()
         {
-            A = CreateRandomArray(Count * N * M);
-            B = CreateRandomArray(M * P);
-            C = CreateRandomArray(N * P);
-            D = new float[Count * N * P];
+            X = CreateRandomArray(C * N * M);
+            W = CreateRandomArray(M * P);
+            B = CreateRandomArray(P);
+            Y = CreateRandomArray(C * N * P);
         }
 
         /// <summary>
