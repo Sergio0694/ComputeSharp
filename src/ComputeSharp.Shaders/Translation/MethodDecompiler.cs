@@ -142,10 +142,11 @@ namespace ComputeSharp.Shaders.Translation
                     EntityHandle methodHandle = MetadataTokenHelpers.TryAsEntityHandle(methodInfo.MetadataToken) ?? throw new InvalidOperationException();
                     string
                         methodOnlySourceCode = decompiler.DecompileAsString(methodHandle),
-                        methodOnlyFixedSourceCode = LambdaMethodDeclarationRegex.Replace(methodOnlySourceCode, "internal void Main");
+                        methodOnlyFixedSourceCode = LambdaMethodDeclarationRegex.Replace(methodOnlySourceCode, "internal void Main"),
+                        methodOnlyIndentedSourceCode = $"    {methodOnlyFixedSourceCode.Replace(Environment.NewLine, $"{Environment.NewLine}    ")}";
 
                     int lastClosedBracketsIndex = methodFixedCode.LastIndexOf('}');
-                    methodFixedCode = methodFixedCode.Insert(lastClosedBracketsIndex, methodOnlyFixedSourceCode);
+                    methodFixedCode = methodFixedCode.Insert(lastClosedBracketsIndex, methodOnlyIndentedSourceCode);
                 }
 
                 // Load the type syntax tree
