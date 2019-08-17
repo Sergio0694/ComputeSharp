@@ -27,11 +27,6 @@ namespace ComputeSharp.Shaders.Translation
         private readonly Action<ThreadIds> Action;
 
         /// <summary>
-        /// The closure instance for the <see cref="Action"/> field
-        /// </summary>
-        private readonly object ShaderInstance;
-
-        /// <summary>
         /// Creates a new <see cref="ShaderLoader"/> with the specified parameters
         /// </summary>
         /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
@@ -39,7 +34,6 @@ namespace ComputeSharp.Shaders.Translation
         {
             Action = action;
             ShaderType = action.Method.DeclaringType;
-            ShaderInstance = action.Target;
         }
 
         /// <summary>
@@ -60,7 +54,19 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// Gets the ordered collection of buffers used as fields in the current shader
         /// </summary>
-        public IEnumerable<(int Index, GraphicsResource Resource)> Buffers => _BufferFields.Select((field, i) => (i + 1, (GraphicsResource)field.GetValue(ShaderInstance)));
+        /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
+        public IEnumerable<(int Index, GraphicsResource Resource)> GetBuffers(Action<ThreadIds> action) => _BufferFields.Select((field, i) => (i + 1, (GraphicsResource)field.GetValue(action.Target)));
+
+        /// <summary>
+        /// The <see cref="List{T}"/> of <see cref="FieldInfo"/> instances mapping the captured scalar/vector variables in the current shader
+        /// </summary>
+        private readonly List<FieldInfo> _VariableFields = new List<FieldInfo>();
+
+        /// <summary>
+        /// Gets the collection of values of the captured fields for the current shader
+        /// </summary>
+        /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
+        public IEnumerable<object> GetVariables(Action<ThreadIds> action) => _VariableFields.Select(field => field.GetValue(action.Target));
 
         private readonly List<HlslBufferInfo> _BuffersList = new List<HlslBufferInfo>();
 
@@ -75,16 +81,6 @@ namespace ComputeSharp.Shaders.Translation
         /// Gets the collection of <see cref="CapturedFieldInfo"/> items for the shader fields
         /// </summary>
         public IReadOnlyList<CapturedFieldInfo> FieldsList => _FieldsList;
-
-        /// <summary>
-        /// The <see cref="List{T}"/> of <see cref="FieldInfo"/> instances mapping the captured scalar/vector variables in the current shader
-        /// </summary>
-        private readonly List<FieldInfo> _VariableFields = new List<FieldInfo>();
-
-        /// <summary>
-        /// Gets the collection of values of the captured fields for the current shader
-        /// </summary>
-        public IEnumerable<object> FieldValuesList => _VariableFields.Select(field => field.GetValue(ShaderInstance));
 
         /// <summary>
         /// Gets the name of the <see cref="ThreadIds"/> variable used as input for the shader method

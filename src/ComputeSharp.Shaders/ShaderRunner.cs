@@ -89,13 +89,13 @@ namespace ComputeSharp.Shaders
             commandList.SetPipelineState(pipelineState);
 
             // Load the captured buffers
-            foreach (var buffer in shaderLoader.Buffers)
+            foreach (var buffer in shaderLoader.GetBuffers(action))
             {
                 commandList.SetComputeRootDescriptorTable(buffer.Index, buffer.Resource);
             }
 
             // Initialize the loop targets
-            IReadOnlyList<object> variables = new object[] { (uint)x, (uint)y, (uint)z }.Concat(shaderLoader.FieldValuesList).ToArray();
+            IReadOnlyList<object> variables = new object[] { (uint)x, (uint)y, (uint)z }.Concat(shaderLoader.GetVariables(action)).ToArray();
             using GraphicsResource variablesBuffer = device.AllocateConstantBufferFromReflectedValues(variables);
             commandList.SetComputeRootDescriptorTable(0, variablesBuffer);
 
