@@ -17,17 +17,17 @@ namespace ComputeSharp.Benchmark
         /// <summary>
         /// The nummber of rows in the <see cref="X"/> matrix
         /// </summary>
-        private const int N = 128;
+        private const int N = 512;
 
         /// <summary>
         /// The number of columns in the <see cref="X"/> matrix (same as the number of rows in the <see cref="W"/> matrix)
         /// </summary>
-        private const int M = 128;
+        private const int M = 512;
 
         /// <summary>
         /// The number of columns in the <see cref="W"/> matrix
         /// </summary>
-        private const int P = 128;
+        private const int P = 256;
 
         /// <summary>
         /// The input tensor

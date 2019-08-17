@@ -5,13 +5,12 @@ namespace ComputeSharp.Benchmark
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var benchmark = new FullyConnectedLayerBenchmark();
             benchmark.Gpu(); // Warmup
-            return;
 
-            Stopwatch timer = new Stopwatch();
+            Stopwatch timer = Stopwatch.StartNew();
             TimeSpan cpuTime = TimeSpan.Zero, gpuTime = TimeSpan.Zero;
 
             for (int i = 0; i < 10; i++)
@@ -27,10 +26,8 @@ namespace ComputeSharp.Benchmark
             }
 
             Console.WriteLine("======== AVERAGE ========");
-            Console.WriteLine($"CPU: {cpuTime:g}");
-            Console.WriteLine($"GPU: {gpuTime:g}");
-
-            Console.ReadKey();
+            Console.WriteLine($"CPU: {cpuTime / 10:g}");
+            Console.WriteLine($"GPU: {gpuTime / 10:g}");
         }
     }
 }
