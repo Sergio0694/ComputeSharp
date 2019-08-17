@@ -1,23 +1,5 @@
-﻿{{#BuffersList}}
-{{!Constant buffer}}
-{{#IsConstantBuffer}}
-cbuffer {{FieldName}}Buffer : register(b{{BufferIndex}})
-{
-    {{&FieldType}} {{FieldName}}[2];
-}
-{{/IsConstantBuffer}}
-{{!Readonly buffer}}
-{{#IsReadOnlyBuffer}}
-{{&FieldType}} {{FieldName}} : register(t{{BufferIndex}});
-{{/IsReadOnlyBuffer}}
-{{!Read write buffer}}
-{{#IsReadWriteBuffer}}
-{{&FieldType}} {{FieldName}} : SV_DispatchThreadId : register(u{{BufferIndex}});
-{{/IsReadWriteBuffer}}
-
-{{/BuffersList}}
-{{!Captured variables buffer}}
-cbuffer __Variables__Buffer : register(b{{VariablesConstantBufferIndex}})
+﻿{{!Captured variables buffer}}
+cbuffer __Variables__Buffer : register(b0)
 {
     uint __x__;
     uint __y__;
@@ -26,6 +8,26 @@ cbuffer __Variables__Buffer : register(b{{VariablesConstantBufferIndex}})
     {{&FieldType}} {{FieldName}};
 {{/FieldsList}}
 }
+{{#BuffersList}}
+{{#IsConstantBuffer}}
+
+{{!Constant buffer}}
+cbuffer {{FieldName}}Buffer : register(b{{BufferIndex}})
+{
+    {{&FieldType}} {{FieldName}}[2];
+}
+{{/IsConstantBuffer}}
+{{#IsReadOnlyBuffer}}
+
+{{!Readonly buffer}}
+{{&FieldType}} {{FieldName}} : register(t{{BufferIndex}});
+{{/IsReadOnlyBuffer}}
+{{#IsReadWriteBuffer}}
+
+{{!Read write buffer}}
+{{&FieldType}} {{FieldName}} : SV_DispatchThreadId : register(u{{BufferIndex}});
+{{/IsReadWriteBuffer}}
+{{/BuffersList}}
 
 {{!Shader entry point}}
 [Shader("compute")]

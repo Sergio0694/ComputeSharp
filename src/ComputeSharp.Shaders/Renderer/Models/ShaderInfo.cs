@@ -22,11 +22,6 @@ namespace ComputeSharp.Shaders.Renderer.Models
         public IReadOnlyList<CapturedFieldInfo> FieldsList { get; set; }
 
         /// <summary>
-        /// Gets or sets the index for the constant buffer with the captured scalar and vector variables
-        /// </summary>
-        public int VariablesConstantBufferIndex { get; set; }
-
-        /// <summary>
         /// Gets or sets the number of threads in the X group
         /// </summary>
         public int NumThreadsX { get; set; }

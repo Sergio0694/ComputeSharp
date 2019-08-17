@@ -68,7 +68,6 @@ namespace ComputeSharp.Shaders
             {
                 BuffersList = shaderLoader.BuffersList,
                 FieldsList = shaderLoader.FieldsList,
-                VariablesConstantBufferIndex = shaderLoader.ConstantBuffersCount,
                 NumThreadsX = threadsX,
                 NumThreadsY = threadsY,
                 NumThreadsZ = threadsZ,
@@ -98,7 +97,7 @@ namespace ComputeSharp.Shaders
             // Initialize the loop targets
             IReadOnlyList<object> variables = new object[] { (uint)x, (uint)y, (uint)z }.Concat(shaderLoader.FieldValuesList).ToArray();
             using GraphicsResource variablesBuffer = device.AllocateConstantBufferFromReflectedValues(variables);
-            commandList.SetComputeRootDescriptorTable(shaderLoader.RootParameters.Length - 1, variablesBuffer);
+            commandList.SetComputeRootDescriptorTable(0, variablesBuffer);
 
             // Dispatch and wait for completion
             commandList.Dispatch(groupsX, groupsY, groupsZ);
