@@ -53,18 +53,18 @@ int height = 10, width = 10;
 float[] x = new float[height * width]; // Array to sum to y
 float[] y = new float[height * width]; // Result array (assume both had some values)
 
-using ReadOnlyBuffer<float> xBuffer = Gpu.Default.AllocateConstantBuffer(x); 
+using ReadOnlyBuffer<float> xBuffer = Gpu.Default.AllocateReadOnlyBuffer(x); 
 using ReadWriteBuffer<float> yBuffer = Gpu.Default.AllocateReadWriteBuffer(y);
 
 // Shader body
-void Main(ThreadIds id)
+void Kernel(ThreadIds id)
 {
     uint offset = id.X + id.Y * (uint)width;
     yBuffer[offset] += xBuffer[offset];
 }
 
 // Run the shader
-Gpu.Default.For(width, height, Main);
+Gpu.Default.For(width, height, Kernel);
 
 // Get the data back and write it to the y array
 yBuffer.GetData(y);
