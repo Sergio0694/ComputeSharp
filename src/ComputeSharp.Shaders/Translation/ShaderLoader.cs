@@ -139,7 +139,7 @@ namespace ComputeSharp.Shaders.Translation
                     _BufferFields.Add(fieldInfo);
 
                     string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
-                    _BuffersList.Add(new ConstantBufferFieldInfo(typeName, fieldName, constantBuffersCount++));
+                    _BuffersList.Add(new ConstantBufferFieldInfo(fieldType, typeName, fieldName, constantBuffersCount++));
                 }
                 else if (HlslKnownTypes.IsReadOnlyBufferType(fieldType))
                 {
@@ -150,7 +150,7 @@ namespace ComputeSharp.Shaders.Translation
                     _BufferFields.Add(fieldInfo);
 
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
-                    _BuffersList.Add(new ReadOnlyBufferFieldInfo(typeName, fieldName, readOnlyBuffersCount++));
+                    _BuffersList.Add(new ReadOnlyBufferFieldInfo(fieldType, typeName, fieldName, readOnlyBuffersCount++));
                 }
                 else if (HlslKnownTypes.IsReadWriteBufferType(fieldType))
                 {
@@ -161,14 +161,14 @@ namespace ComputeSharp.Shaders.Translation
                     _BufferFields.Add(fieldInfo);
 
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
-                    _BuffersList.Add(new ReadWriteBufferFieldInfo(typeName, fieldName, readWriteBuffersCount++));
+                    _BuffersList.Add(new ReadWriteBufferFieldInfo(fieldType, typeName, fieldName, readWriteBuffersCount++));
                 }
                 else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
                 {
                     // Register the captured field
                     _VariableFields.Add(fieldInfo);
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
-                    _FieldsList.Add(new CapturedFieldInfo(typeName, fieldName));
+                    _FieldsList.Add(new CapturedFieldInfo(fieldType, typeName, fieldName));
                 }
                 else throw new NotSupportedException($"Unsupported field of type {fieldType.FullName}");
             }

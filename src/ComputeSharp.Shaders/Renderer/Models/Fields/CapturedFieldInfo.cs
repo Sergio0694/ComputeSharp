@@ -1,4 +1,6 @@
-﻿namespace ComputeSharp.Shaders.Renderer.Models.Fields
+﻿using System;
+
+namespace ComputeSharp.Shaders.Renderer.Models.Fields
 {
     /// <summary>
     /// A <see langword="class"/> that contains info on a shader field
@@ -6,23 +8,30 @@
     internal class CapturedFieldInfo
     {
         /// <summary>
-        /// Gets or sets the type of the current field
+        /// Gets the type of the current field in the C# source
         /// </summary>
-        public string FieldType { get; set; }
+        public Type FieldCsharpType { get; }
 
         /// <summary>
-        /// Gets or sets the name to use for the current field
+        /// Gets the type of the current field in the HLSL shader
         /// </summary>
-        public string FieldName { get; set; }
+        public string FieldHlslType { get; }
+
+        /// <summary>
+        /// Gets the name to use for the current field
+        /// </summary>
+        public string FieldName { get; }
 
         /// <summary>
         /// Creates a new <see cref="CapturedFieldInfo"/> instance with the specified parameters
         /// </summary>
-        /// <param name="fieldType">The type of the current field</param>
-        /// <param name="fieldName">The name of the current field</param>
-        public CapturedFieldInfo(string fieldType, string fieldName)
+        /// <param name="fieldCsharpType">The type of the current field in the C# source</param>
+        /// <param name="fieldHlslType">The type of the current field in the HLSL shader</param>
+        /// <param name="fieldName">The name to use for the current field</param>
+        public CapturedFieldInfo(Type fieldCsharpType, string fieldHlslType, string fieldName)
         {
-            FieldType = fieldType;
+            FieldCsharpType = fieldCsharpType;
+            FieldHlslType = fieldHlslType;
             FieldName = fieldName;
         }
     }
