@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ComputeSharp.Shaders.Renderer.Models.Fields;
 using ComputeSharp.Shaders.Renderer.Models.Fields.Abstract;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized
@@ -11,24 +12,14 @@ namespace ComputeSharp.Shaders.Renderer.Models
     internal sealed class ShaderInfo
     {
         /// <summary>
-        /// Gets the list of fields being present in the current shader
+        /// Gets the list of captured buffers being present in the current shader
         /// </summary>
-        public IReadOnlyList<FieldInfo> FieldsList { get; set; }
+        public IReadOnlyList<HlslBufferInfo> BuffersList { get; set; }
 
         /// <summary>
-        /// Gets or sets the total number of threads to run on the X axis
+        /// Gets the list of captured variables being present in the current shader
         /// </summary>
-        public int ThreadsX { get; set; }
-
-        /// <summary>
-        /// Gets or sets the total number of threads to run on the Y axis
-        /// </summary>
-        public int ThreadsY { get; set; }
-
-        /// <summary>
-        /// Gets or sets the total number of threads to run on the Z axis
-        /// </summary>
-        public int ThreadsZ { get; set; }
+        public IReadOnlyList<CapturedFieldInfo> FieldsList { get; set; }
 
         /// <summary>
         /// Gets or sets the number of threads in the X group

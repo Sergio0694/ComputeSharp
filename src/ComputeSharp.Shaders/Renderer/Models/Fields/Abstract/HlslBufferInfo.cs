@@ -3,7 +3,7 @@
     /// <summary>
     /// A <see langword="class"/> that contains info on a shader buffer field
     /// </summary>
-    internal abstract class HlslBufferInfo : FieldInfo
+    internal abstract class HlslBufferInfo : CapturedFieldInfo
     {
         /// <summary>
         /// Gets or sets the index of the current buffer, relative to its own type

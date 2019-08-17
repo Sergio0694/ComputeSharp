@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Extensions;
@@ -65,10 +66,8 @@ namespace ComputeSharp.Shaders
             // Render the loaded shader
             ShaderInfo shaderInfo = new ShaderInfo
             {
-                FieldsList = shaderLoader.FieldsInfo,
-                ThreadsX = x,
-                ThreadsY = y,
-                ThreadsZ = z,
+                BuffersList = shaderLoader.BuffersList,
+                FieldsList = shaderLoader.FieldsList,
                 NumThreadsX = threadsX,
                 NumThreadsY = threadsY,
                 NumThreadsZ = threadsZ,
@@ -95,24 +94,14 @@ namespace ComputeSharp.Shaders
                 commandList.SetComputeRootDescriptorTable(buffer.Index, buffer.Resource);
             }
 
-            // Load the captured variables
-            List<GraphicsResource> buffers = new List<GraphicsResource>();
-            foreach (var variable in shaderLoader.CapturedConstantBufferValues)
-            {
-                GraphicsResource resource = device.AllocateConstantBufferFromReflectedSingleValue(variable.Value);
-                commandList.SetComputeRootDescriptorTable(variable.Index, resource);
-                buffers.Add(resource);
-            }
+            // Initialize the loop targets
+            IReadOnlyList<object> variables = new object[] { (uint)x, (uint)y, (uint)z }.Concat(shaderLoader.FieldValuesList).ToArray();
+            using GraphicsResource variablesBuffer = device.AllocateConstantBufferFromReflectedValues(variables);
+            commandList.SetComputeRootDescriptorTable(0, variablesBuffer);
 
             // Dispatch and wait for completion
             commandList.Dispatch(groupsX, groupsY, groupsZ);
             commandList.Flush();
-
-            // Free the allocated resources
-            foreach (GraphicsResource resource in buffers)
-            {
-                resource.Dispose();
-            }
         }
     }
 }

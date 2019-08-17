@@ -8,7 +8,7 @@ namespace ComputeSharp.Shaders.Renderer.Models.Fields
     internal sealed class ReadOnlyBufferFieldInfo : HlslBufferInfo
     {
         /// <summary>
-        /// Gets whether or not the current <see cref="FieldInfo"/> instance represents a readonly buffer (always <see langword="true"/>)
+        /// Gets whether or not the current <see cref="CapturedFieldInfo"/> instance represents a readonly buffer (always <see langword="true"/>)
         /// </summary>
         public bool IsReadOnlyBuffer { get; } = true;
 
