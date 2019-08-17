@@ -24,6 +24,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Tests", "..\te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Tests.Internals", "..\tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj", "{E889E6D6-A814-4950-AAC1-68F1ECFC5BD6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.Benchmark", "..\samples\ComputeSharp.Benchmark\ComputeSharp.Benchmark.csproj", "{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +82,14 @@ Global
 		{E889E6D6-A814-4950-AAC1-68F1ECFC5BD6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E889E6D6-A814-4950-AAC1-68F1ECFC5BD6}.Release|x64.ActiveCfg = Release|Any CPU
 		{E889E6D6-A814-4950-AAC1-68F1ECFC5BD6}.Release|x64.Build.0 = Release|Any CPU
+		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Debug|x64.Build.0 = Debug|Any CPU
+		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Release|x64.ActiveCfg = Release|Any CPU
+		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +98,7 @@ Global
 		{7A48A85D-8866-4DED-A404-653ED09BF396} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 		{E91F4D24-922A-4921-A8D7-9C45A143C45D} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{E889E6D6-A814-4950-AAC1-68F1ECFC5BD6} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
+		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4664C5E3-0340-4E22-BCFD-98AAEDF5F2DC}
