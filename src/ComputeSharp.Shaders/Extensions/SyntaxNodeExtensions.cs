@@ -40,9 +40,10 @@ namespace ComputeSharp.Shaders.Extensions
         /// </summary>
         /// <param name="node">The input <see cref="MemberAccessExpressionSyntax"/> to check and modify if needed</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> to use to load symbols for the input node</param>
+        /// <param name="variable">The info on parsed static fields, if any</param>
         /// <returns>A <see cref="SyntaxNode"/> instance that is compatible with HLSL</returns>
         [Pure]
-        public static SyntaxNode ReplaceMember(this MemberAccessExpressionSyntax node, SemanticModel semanticModel, out (string name, MemberInfo MemberInfo)? variable)
+        public static SyntaxNode ReplaceMember(this MemberAccessExpressionSyntax node, SemanticModel semanticModel, out (string name, FieldInfo FieldInfo)? variable)
         {
             SymbolInfo containingMemberSymbolInfo = semanticModel.GetSymbolInfo(node.Expression);
             SymbolInfo memberSymbolInfo = semanticModel.GetSymbolInfo(node.Name);
@@ -76,22 +77,21 @@ namespace ComputeSharp.Shaders.Extensions
                 bool isReadonly;
                 object memberValue;
                 Type memberType;
-                MemberInfo memberInfo;
+                FieldInfo? fieldInfo;
                 switch (memberSymbol.Kind)
                 {
                     case SymbolKind.Field:
-                        FieldInfo fieldInfo = fieldDeclaringType.GetField(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                        fieldInfo = fieldDeclaringType.GetField(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
                         isReadonly = fieldInfo.IsInitOnly;
                         memberValue = fieldInfo.GetValue(null);
                         memberType = fieldInfo.FieldType;
-                        memberInfo = fieldInfo;
                         break;
                     case SymbolKind.Property:
                         PropertyInfo propertyInfo = fieldDeclaringType.GetProperty(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
                         isReadonly = !propertyInfo.CanWrite;
                         memberValue = propertyInfo.GetValue(null);
                         memberType = propertyInfo.PropertyType;
-                        memberInfo = propertyInfo;
+                        fieldInfo = null;
                         break;
                     default: throw new InvalidOperationException($"Invalid symbol kind: {memberSymbol.Kind}");
                 }
@@ -109,10 +109,10 @@ namespace ComputeSharp.Shaders.Extensions
                 }
 
                 // Captured variable, treat it like any other captured variable in the closure
-                if (!isReadonly)
+                if (!isReadonly && fieldInfo != null)
                 {
-                    string name = $"{containingMemberSymbolInfo.Symbol.Name}_{memberInfo.Name}";
-                    variable = (name, memberInfo);
+                    string name = $"{containingMemberSymbolInfo.Symbol.Name}_{fieldInfo.Name}";
+                    variable = (name, fieldInfo);
                     return SyntaxFactory.IdentifierName(name);
                 }
             }
