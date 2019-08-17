@@ -90,7 +90,7 @@ namespace ComputeSharp.Shaders.Translation
         {
             node = (MemberAccessExpressionSyntax)base.VisitMemberAccessExpression(node);
 
-            return node.ReplaceMember(SemanticModel);
+            return node.ReplaceMember(SemanticModel, out _);
         }
     }
 }
