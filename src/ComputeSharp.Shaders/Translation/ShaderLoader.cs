@@ -32,11 +32,6 @@ namespace ComputeSharp.Shaders.Translation
         private readonly object ShaderInstance;
 
         /// <summary>
-        /// The sequence of fields in the targeted closure
-        /// </summary>
-        private readonly IReadOnlyList<FieldInfo> ShaderFields;
-
-        /// <summary>
         /// Creates a new <see cref="ShaderLoader"/> with the specified parameters
         /// </summary>
         /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
@@ -45,7 +40,6 @@ namespace ComputeSharp.Shaders.Translation
             Action = action;
             ShaderType = action.Method.DeclaringType;
             ShaderInstance = action.Target;
-            ShaderFields = ShaderType.GetFields().ToArray();
         }
 
         /// <summary>
@@ -123,7 +117,8 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         private void LoadFieldsInfo()
         {
-            if (ShaderFields.Any(fieldInfo => fieldInfo.IsStatic)) throw new InvalidOperationException("Empty shader body");
+            IReadOnlyList<FieldInfo> shaderFields = ShaderType.GetFields().ToArray();
+            if (shaderFields.Any(fieldInfo => fieldInfo.IsStatic)) throw new InvalidOperationException("Empty shader body");
 
             List<DescriptorRange> descriptorRanges = new List<DescriptorRange>();
             int constantBuffersCount = 0;
@@ -134,7 +129,7 @@ namespace ComputeSharp.Shaders.Translation
             descriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, constantBuffersCount++));
 
             // Inspect the captured fields
-            foreach (FieldInfo fieldInfo in ShaderFields)
+            foreach (FieldInfo fieldInfo in shaderFields)
             {
                 Type fieldType = fieldInfo.FieldType;
                 string fieldName = fieldInfo.Name;
