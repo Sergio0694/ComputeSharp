@@ -6,37 +6,37 @@
  * For info or issues: https://github.com/Sergio0694/ComputeSharp */
 
 {{!Captured variables buffer}}
-// Captured scalar/vector variables
-cbuffer __Variables__Buffer : register(b0)
+// Scalar/vector variables
+cbuffer _ : register(b0)
 {
     uint __x__; // Target X iterations
     uint __y__; // Target Y iterations
     uint __z__; // Target Z iterations
 {{#FieldsList}}
-    {{&FieldType}} {{FieldName}};
+    {{&FieldHlslType}} {{FieldName}};
 {{/FieldsList}}
 }
 {{#BuffersList}}
 {{#IsConstantBuffer}}
 
 {{!Constant buffer}}
-// Captured ConstantBuffer{{&T}} buffer "{{FieldName}}"
-cbuffer {{FieldName}}Buffer : register(b{{BufferIndex}})
+// {{&FieldCsharpType}} buffer "{{FieldName}}"
+cbuffer _{{FieldName}} : register(b{{BufferIndex}})
 {
-    {{&FieldType}} {{FieldName}}[2];
+    {{&FieldHlslType}} {{FieldName}}[2];
 }
 {{/IsConstantBuffer}}
 {{#IsReadOnlyBuffer}}
 
 {{!Readonly buffer}}
-// Captured ReadOnlyBuffer{{&T}} buffer "{{FieldName}}"
-{{&FieldType}} {{FieldName}} : register(t{{BufferIndex}});
+// {{&FieldCsharpType}} buffer "{{FieldName}}"
+{{&FieldHlslType}} {{FieldName}} : register(t{{BufferIndex}});
 {{/IsReadOnlyBuffer}}
 {{#IsReadWriteBuffer}}
 
 {{!Read write buffer}}
-// Captured ReadWriteBuffer{{&T}} buffer "{{FieldName}}"
-{{&FieldType}} {{FieldName}} : SV_DispatchThreadId : register(u{{BufferIndex}});
+// {{&FieldCsharpType}} buffer "{{FieldName}}"
+{{&FieldHlslType}} {{FieldName}} : SV_DispatchThreadId : register(u{{BufferIndex}});
 {{/IsReadWriteBuffer}}
 {{/BuffersList}}
 
