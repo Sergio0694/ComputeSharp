@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ComputeSharp.NetCore.Tests
+namespace ComputeSharp.Tests
 {
     [TestClass]
     [TestCategory("InvalidShader")]

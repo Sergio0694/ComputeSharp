@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Shaders", "Com
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp", "ComputeSharp\ComputeSharp.csproj", "{314EB353-E7E3-4146-8111-685CC83EC1DE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreComputeShaderSample", "..\samples\NetCoreComputeShaderSample\NetCoreComputeShaderSample.csproj", "{7A48A85D-8866-4DED-A404-653ED09BF396}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Sample", "..\samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj", "{7A48A85D-8866-4DED-A404-653ED09BF396}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_SolutionItems", "_SolutionItems", "{1A9C4108-F61A-4ABE-B5CF-F524521EAE2D}"
 	ProjectSection(SolutionItems) = preProject
@@ -20,9 +20,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{0ED8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.NetCore.Tests", "..\tests\ComputeSharp.NetCore.Tests\ComputeSharp.NetCore.Tests.csproj", "{E91F4D24-922A-4921-A8D7-9C45A143C45D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Tests", "..\tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj", "{E91F4D24-922A-4921-A8D7-9C45A143C45D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.NetCore.Tests.Internals", "..\tests\ComputeSharp.NetCore.Tests.Internals\ComputeSharp.NetCore.Tests.Internals.csproj", "{E889E6D6-A814-4950-AAC1-68F1ECFC5BD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Tests.Internals", "..\tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj", "{E889E6D6-A814-4950-AAC1-68F1ECFC5BD6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.Benchmark", "..\samples\ComputeSharp.Benchmark\ComputeSharp.Benchmark.csproj", "{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,6 +82,14 @@ Global
 		{E889E6D6-A814-4950-AAC1-68F1ECFC5BD6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E889E6D6-A814-4950-AAC1-68F1ECFC5BD6}.Release|x64.ActiveCfg = Release|Any CPU
 		{E889E6D6-A814-4950-AAC1-68F1ECFC5BD6}.Release|x64.Build.0 = Release|Any CPU
+		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Debug|x64.Build.0 = Debug|Any CPU
+		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Release|x64.ActiveCfg = Release|Any CPU
+		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +98,7 @@ Global
 		{7A48A85D-8866-4DED-A404-653ED09BF396} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 		{E91F4D24-922A-4921-A8D7-9C45A143C45D} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
 		{E889E6D6-A814-4950-AAC1-68F1ECFC5BD6} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
+		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4664C5E3-0340-4E22-BCFD-98AAEDF5F2DC}

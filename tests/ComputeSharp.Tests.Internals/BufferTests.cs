@@ -5,7 +5,7 @@ using ComputeSharp.Graphics.Buffers;
 using ComputeSharp.Graphics.Buffers.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ComputeSharp.NetCore.Tests.Internals
+namespace ComputeSharp.Tests.Internals
 {
     [TestClass]
     [TestCategory("Buffers")]

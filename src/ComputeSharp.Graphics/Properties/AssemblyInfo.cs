@@ -2,5 +2,5 @@
 
 [assembly: InternalsVisibleTo("ComputeSharp")]
 [assembly: InternalsVisibleTo("ComputeSharp.Shaders")]
-[assembly: InternalsVisibleTo("ComputeSharp.NetCore.Tests.Internals")]
+[assembly: InternalsVisibleTo("ComputeSharp.Tests.Internals")]
 
