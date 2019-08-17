@@ -187,6 +187,14 @@ namespace ComputeSharp.Shaders.Translation
             ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel);
             root = (MethodDeclarationSyntax)syntaxRewriter.Visit(root);
 
+            // Register the captured static fields
+            foreach (var item in syntaxRewriter.StaticFields)
+            {
+                _VariableFields.Add(item.FieldInfo);
+                string typeName = HlslKnownTypes.GetMappedName(item.FieldInfo.FieldType);
+                _FieldsList.Add(new CapturedFieldInfo(item.FieldInfo.FieldType, typeName, item.Name));
+            }
+
             // Get the thread ids identifier name and shader method body
             ThreadsIdsVariableName = root.ParameterList.Parameters.First().Identifier.Text;
             MethodBody = root.Body.ToFullString();
