@@ -3,7 +3,7 @@
 {{#IsConstantBuffer}}
 cbuffer {{FieldName}}Buffer : register(b{{BufferIndex}})
 {
-    {{&FieldType}} {{FieldName}}{{^IsSingleValue}}[2]{{/IsSingleValue}};
+    {{&FieldType}} {{FieldName}}[2];
 }
 {{/IsConstantBuffer}}
 {{!Readonly buffer}}
@@ -16,8 +16,8 @@ cbuffer {{FieldName}}Buffer : register(b{{BufferIndex}})
 {{/IsReadWriteBuffer}}
 
 {{/FieldsList}}
-{{!Threads XYZ targets buffer}}
-cbuffer __XYZ___Buffer : register(b{{ThreadsXYZConstantBufferIndex}})
+{{!Captured variables buffer}}
+cbuffer __Variables__Buffer : register(b{{ThreadsXYZConstantBufferIndex}})
 {
     uint __x__;
     uint __y__;
