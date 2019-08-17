@@ -19,6 +19,7 @@ namespace ComputeSharp.Benchmark
                 cpuTime += timer.Elapsed;
                 Console.WriteLine($"CPU: {timer.Elapsed:g}");
                 timer.Restart();
+
                 benchmark.Gpu();
                 gpuTime += timer.Elapsed;
                 Console.WriteLine($"GPU: {timer.Elapsed:g}");

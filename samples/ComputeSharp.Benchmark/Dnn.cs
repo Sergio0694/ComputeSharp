@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using ComputeSharp.Graphics.Buffers;
 
@@ -22,7 +23,7 @@ namespace ComputeSharp.Benchmark
         /// <param name="y">The result tensor</param>
         public static void FullyConnectedForwardCpu(int c, int n, int m, int p, float[] x, float[] w, float[] b, float[] y)
         {
-            Parallel.For(0, c, s =>
+            void Kernel(int s)
             {
                 ref float rx = ref x[s * n * m];
                 ref float rw = ref w[0];
@@ -43,7 +44,9 @@ namespace ComputeSharp.Benchmark
                         Unsafe.Add(ref ry, i * p + j) = result + Unsafe.Add(ref rb, j);
                     }
                 }
-            });
+            }
+
+            Parallel.For(0, c, Kernel);
         }
 
         /// <summary>
@@ -64,7 +67,7 @@ namespace ComputeSharp.Benchmark
             using ReadOnlyBuffer<float> b_gpu = Gpu.Default.AllocateReadOnlyBuffer(b);
             using ReadWriteBuffer<float> y_gpu = Gpu.Default.AllocateReadWriteBuffer(y);
 
-            Gpu.Default.For(c, n, p, id =>
+            void Kernel(ThreadIds id)
             {
                 float result = 0f;
 
@@ -74,7 +77,9 @@ namespace ComputeSharp.Benchmark
                 }
 
                 y_gpu[(uint)(id.X * n * p + id.Y * p + id.Z)] = result + b_gpu[id.Z];
-            });
+            };
+
+            Gpu.Default.For(c, n, p, Kernel);
 
             y_gpu.GetData(y);
         }
