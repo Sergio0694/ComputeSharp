@@ -136,6 +136,18 @@ namespace ComputeSharp.Shaders.Translation
                     typeFixedCode = ClosureTypeDeclarationRegex.Replace(sourceCode, "Shader"),
                     methodFixedCode = LambdaMethodDeclarationRegex.Replace(typeFixedCode, "internal void Main");
 
+                // Workaround for some local methods not being decompiled correctly
+                if (!methodFixedCode.Contains("internal void Main"))
+                {
+                    EntityHandle methodHandle = MetadataTokenHelpers.TryAsEntityHandle(methodInfo.MetadataToken) ?? throw new InvalidOperationException();
+                    string
+                        methodOnlySourceCode = decompiler.DecompileAsString(methodHandle),
+                        methodOnlyFixedSourceCode = LambdaMethodDeclarationRegex.Replace(methodOnlySourceCode, "internal void Main");
+
+                    int lastClosedBracketsIndex = methodFixedCode.LastIndexOf('}');
+                    methodFixedCode = methodFixedCode.Insert(lastClosedBracketsIndex, methodOnlyFixedSourceCode);
+                }
+
                 // Load the type syntax tree
                 SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(methodFixedCode);
 
