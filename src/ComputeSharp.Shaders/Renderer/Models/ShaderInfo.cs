@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ComputeSharp.Shaders.Renderer.Models.Fields;
 using ComputeSharp.Shaders.Renderer.Models.Fields.Abstract;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized
@@ -13,7 +14,7 @@ namespace ComputeSharp.Shaders.Renderer.Models
         /// <summary>
         /// Gets the list of fields being present in the current shader
         /// </summary>
-        public IReadOnlyList<FieldInfo> FieldsList { get; set; }
+        public IReadOnlyList<CapturedFieldInfo> FieldsList { get; set; }
 
         /// <summary>
         /// Gets or sets the index for the constant buffer with the info on the target number of iterations on the X, Y and Z axes

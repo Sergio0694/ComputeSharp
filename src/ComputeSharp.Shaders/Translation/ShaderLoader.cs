@@ -9,7 +9,6 @@ using ComputeSharp.Shaders.Renderer.Models.Fields;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SharpDX.Direct3D12;
-using FieldInfo = ComputeSharp.Shaders.Renderer.Models.Fields.Abstract.FieldInfo;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized
 
@@ -71,12 +70,12 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         public IReadOnlyList<(int Index, object Value)> CapturedConstantBufferValues => _CapturedConstantBufferValues;
 
-        private readonly List<FieldInfo> _FieldsInfo = new List<FieldInfo>();
+        private readonly List<CapturedFieldInfo> _FieldsInfo = new List<CapturedFieldInfo>();
 
         /// <summary>
-        /// Gets the collection of <see cref="FieldInfo"/> items for the shader fields
+        /// Gets the collection of <see cref="CapturedFieldInfo"/> items for the shader fields
         /// </summary>
-        public IReadOnlyList<FieldInfo> FieldsInfo => _FieldsInfo;
+        public IReadOnlyList<CapturedFieldInfo> FieldsInfo => _FieldsInfo;
 
         /// <summary>
         /// gets the number of constant buffers in the current instance
@@ -127,7 +126,7 @@ namespace ComputeSharp.Shaders.Translation
                 Type fieldType = fieldInfo.FieldType;
                 string fieldName = fieldInfo.Name;
                 object fieldValue = fieldInfo.GetValue(ShaderInstance);
-                FieldInfo processedFieldInfo;
+                CapturedFieldInfo processedFieldInfo;
 
                 // Constant buffer
                 if (HlslKnownTypes.IsConstantBufferType(fieldType))

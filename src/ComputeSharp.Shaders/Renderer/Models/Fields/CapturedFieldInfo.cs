@@ -1,9 +1,9 @@
-﻿namespace ComputeSharp.Shaders.Renderer.Models.Fields.Abstract
+﻿namespace ComputeSharp.Shaders.Renderer.Models.Fields
 {
     /// <summary>
     /// A <see langword="class"/> that contains info on a shader field
     /// </summary>
-    internal abstract class FieldInfo
+    internal class CapturedFieldInfo
     {
         /// <summary>
         /// Gets or sets the type of the current field
@@ -16,11 +16,11 @@
         public string FieldName { get; set; }
 
         /// <summary>
-        /// Creates a new <see cref="FieldInfo"/> instance with the specified parameters
+        /// Creates a new <see cref="CapturedFieldInfo"/> instance with the specified parameters
         /// </summary>
         /// <param name="fieldType">The type of the current field</param>
         /// <param name="fieldName">The name of the current field</param>
-        protected FieldInfo(string fieldType, string fieldName)
+        public CapturedFieldInfo(string fieldType, string fieldName)
         {
             FieldType = fieldType;
             FieldName = fieldName;

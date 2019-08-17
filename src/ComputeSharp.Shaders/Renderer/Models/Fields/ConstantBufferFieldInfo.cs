@@ -8,7 +8,7 @@ namespace ComputeSharp.Shaders.Renderer.Models.Fields
     internal sealed class ConstantBufferFieldInfo : HlslBufferInfo
     {
         /// <summary>
-        /// Gets whether or not the current <see cref="FieldInfo"/> instance represents a constant buffer (always <see langword="true"/>)
+        /// Gets whether or not the current <see cref="CapturedFieldInfo"/> instance represents a constant buffer (always <see langword="true"/>)
         /// </summary>
         public bool IsConstantBuffer { get; } = true;
 
