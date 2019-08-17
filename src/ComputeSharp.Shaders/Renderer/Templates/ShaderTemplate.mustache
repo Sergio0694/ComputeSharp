@@ -1,4 +1,4 @@
-﻿{{#FieldsList}}
+﻿{{#BuffersList}}
 {{!Constant buffer}}
 {{#IsConstantBuffer}}
 cbuffer {{FieldName}}Buffer : register(b{{BufferIndex}})
@@ -15,13 +15,16 @@ cbuffer {{FieldName}}Buffer : register(b{{BufferIndex}})
 {{&FieldType}} {{FieldName}} : SV_DispatchThreadId : register(u{{BufferIndex}});
 {{/IsReadWriteBuffer}}
 
-{{/FieldsList}}
+{{/BuffersList}}
 {{!Captured variables buffer}}
-cbuffer __Variables__Buffer : register(b{{ThreadsXYZConstantBufferIndex}})
+cbuffer __Variables__Buffer : register(b{{VariablesConstantBufferIndex}})
 {
     uint __x__;
     uint __y__;
     uint __z__;
+{{#FieldsList}}
+    {{&FieldType}} {{FieldName}};
+{{/FieldsList}}
 }
 
 {{!Shader entry point}}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Extensions;
@@ -94,29 +95,14 @@ namespace ComputeSharp.Shaders
                 commandList.SetComputeRootDescriptorTable(buffer.Index, buffer.Resource);
             }
 
-            // Load the captured variables
-            List<GraphicsResource> buffers = new List<GraphicsResource>();
-            foreach (var variable in shaderLoader.CapturedConstantBufferValues)
-            {
-                GraphicsResource resource = device.AllocateConstantBufferFromReflectedSingleValue(variable.Value);
-                commandList.SetComputeRootDescriptorTable(variable.Index, resource);
-                buffers.Add(resource);
-            }
-
             // Initialize the loop targets
-            var xyzBuffer = device.AllocateConstantBufferFromReflectedValues(new object[] { (uint)x, (uint)y, (uint)z });
-            commandList.SetComputeRootDescriptorTable(shaderLoader.RootParameters.Length - 1, xyzBuffer);
-            buffers.Add(xyzBuffer);
+            IReadOnlyList<object> variables = new object[] { (uint)x, (uint)y, (uint)z }.Concat(shaderLoader.FieldValuesList).ToArray();
+            using GraphicsResource variablesBuffer = device.AllocateConstantBufferFromReflectedValues(variables);
+            commandList.SetComputeRootDescriptorTable(shaderLoader.RootParameters.Length - 1, variablesBuffer);
 
             // Dispatch and wait for completion
             commandList.Dispatch(groupsX, groupsY, groupsZ);
             commandList.Flush();
-
-            // Free the allocated resources
-            foreach (GraphicsResource resource in buffers)
-            {
-                resource.Dispose();
-            }
         }
     }
 }

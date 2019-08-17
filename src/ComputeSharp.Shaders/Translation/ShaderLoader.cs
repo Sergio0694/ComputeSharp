@@ -64,13 +64,6 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         public IReadOnlyList<(int Index, GraphicsResource Resource)> Buffers => _Buffers;
 
-        private readonly List<(int, object)> _CapturedConstantBufferValues = new List<(int, object)>();
-
-        /// <summary>
-        /// Gets the ordered collection of captured variables that need to be assigned to constant buffers
-        /// </summary>
-        public IReadOnlyList<(int Index, object Value)> CapturedConstantBufferValues => _CapturedConstantBufferValues;
-
         private readonly List<HlslBufferInfo> _BuffersList = new List<HlslBufferInfo>();
 
         /// <summary>
@@ -84,6 +77,13 @@ namespace ComputeSharp.Shaders.Translation
         /// Gets the collection of <see cref="CapturedFieldInfo"/> items for the shader fields
         /// </summary>
         public IReadOnlyList<CapturedFieldInfo> FieldsList => _FieldsList;
+
+        private readonly List<object> _FieldValuesList = new List<object>();
+
+        /// <summary>
+        /// Gets the collection of values of the captured fields for the current shader
+        /// </summary>
+        public IReadOnlyList<object> FieldValuesList => _FieldValuesList;
 
         /// <summary>
         /// gets the number of constant buffers in the current instance
@@ -168,13 +168,8 @@ namespace ComputeSharp.Shaders.Translation
                 }
                 else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
                 {
-                    // Constant buffer
-                    descriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, ConstantBuffersCount));
-
-                    // Register the captured value
-                    _CapturedConstantBufferValues.Add((descriptorRanges.Count - 1, fieldValue));
-
-                    // Constant buffer field
+                    // Register the captured field
+                    _FieldValuesList.Add(fieldValue);
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
                     _FieldsList.Add(new CapturedFieldInfo(typeName, fieldName));
                 }
