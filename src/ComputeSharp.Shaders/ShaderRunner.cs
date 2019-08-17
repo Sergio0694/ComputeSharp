@@ -38,6 +38,11 @@ namespace ComputeSharp.Shaders
         }
 
         /// <summary>
+        /// The mapping used to cache and reuse compiled shaders
+        /// </summary>
+        private static readonly Dictionary<(Type type, int ThreadsX, int ThreadsY, int ThreadsZ), (ShaderLoader Loader, ShaderBytecode Bytecode)> ShadersCache = new Dictionary<(Type, int, int, int), (ShaderLoader, ShaderBytecode)>();
+
+        /// <summary>
         /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader</param>
@@ -60,42 +65,51 @@ namespace ComputeSharp.Shaders
                 groupsY = y / threadsY + (y % threadsY == 0 ? 0 : 1),
                 groupsZ = z / threadsZ + (z % threadsZ == 0 ? 0 : 1);
 
-            // Load the input shader
-            ShaderLoader shaderLoader = ShaderLoader.Load(action);
-
-            // Render the loaded shader
-            ShaderInfo shaderInfo = new ShaderInfo
+            // Try to get the cache shader
+            var key = (action.Method.DeclaringType, threadsX, threadsY, threadsZ);
+            if (!ShadersCache.TryGetValue(key, out var shaderData))
             {
-                BuffersList = shaderLoader.BuffersList,
-                FieldsList = shaderLoader.FieldsList,
-                NumThreadsX = threadsX,
-                NumThreadsY = threadsY,
-                NumThreadsZ = threadsZ,
-                ThreadsIdsVariableName = shaderLoader.ThreadsIdsVariableName,
-                ShaderBody = shaderLoader.MethodBody
-            };
-            string shaderSource = ShaderRenderer.Instance.Render(shaderInfo);
+                // Load the input shader
+                ShaderLoader shaderLoader = ShaderLoader.Load(action);
 
-            // Compile the loaded shader to HLSL bytecode
-            ShaderBytecode shaderBytecode = ShaderCompiler.Instance.CompileShader(shaderSource);
+                // Render the loaded shader
+                ShaderInfo shaderInfo = new ShaderInfo
+                {
+                    BuffersList = shaderLoader.BuffersList,
+                    FieldsList = shaderLoader.FieldsList,
+                    NumThreadsX = threadsX,
+                    NumThreadsY = threadsY,
+                    NumThreadsZ = threadsZ,
+                    ThreadsIdsVariableName = shaderLoader.ThreadsIdsVariableName,
+                    ShaderBody = shaderLoader.MethodBody
+                };
+                string shaderSource = ShaderRenderer.Instance.Render(shaderInfo);
+
+                // Compile the loaded shader to HLSL bytecode
+                ShaderBytecode shaderBytecode = ShaderCompiler.Instance.CompileShader(shaderSource);
+
+                // Cache for later use
+                shaderData = (shaderLoader, shaderBytecode);
+                ShadersCache.Add(key, shaderData);
+            }
 
             // Create the root signature for the pipeline and get the pipeline state
-            RootSignatureDescription rootSignatureDescription = new RootSignatureDescription(RootSignatureFlags.None, shaderLoader.RootParameters);
+            RootSignatureDescription rootSignatureDescription = new RootSignatureDescription(RootSignatureFlags.None, shaderData.Loader.RootParameters);
             RootSignature rootSignature = device.CreateRootSignature(rootSignatureDescription);
-            PipelineState pipelineState = new PipelineState(device, rootSignature, shaderBytecode);
+            PipelineState pipelineState = new PipelineState(device, rootSignature, shaderData.Bytecode);
 
             // Create the commands list and set the pipeline state
             using CommandList commandList = new CommandList(device, CommandListType.Compute);
             commandList.SetPipelineState(pipelineState);
 
             // Load the captured buffers
-            foreach (var buffer in shaderLoader.GetBuffers(action))
+            foreach (var buffer in shaderData.Loader.GetBuffers(action))
             {
                 commandList.SetComputeRootDescriptorTable(buffer.Index, buffer.Resource);
             }
 
             // Initialize the loop targets
-            IReadOnlyList<object> variables = new object[] { (uint)x, (uint)y, (uint)z }.Concat(shaderLoader.GetVariables(action)).ToArray();
+            IReadOnlyList<object> variables = new object[] { (uint)x, (uint)y, (uint)z }.Concat(shaderData.Loader.GetVariables(action)).ToArray();
             using GraphicsResource variablesBuffer = device.AllocateConstantBufferFromReflectedValues(variables);
             commandList.SetComputeRootDescriptorTable(0, variablesBuffer);
 
