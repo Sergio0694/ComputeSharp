@@ -27,21 +27,6 @@ namespace ComputeSharp.Shaders.Translation
         private readonly Action<ThreadIds> Action;
 
         /// <summary>
-        /// The closure <see cref="Type"/> for the <see cref="Action"/> field
-        /// </summary>
-        private readonly Type ShaderType;
-
-        /// <summary>
-        /// The closure instance for the <see cref="Action"/> field
-        /// </summary>
-        private readonly object ShaderInstance;
-
-        /// <summary>
-        /// The sequence of fields in the targeted closure
-        /// </summary>
-        private readonly IReadOnlyList<System.Reflection.FieldInfo> ShaderFields;
-
-        /// <summary>
         /// Creates a new <see cref="ShaderLoader"/> with the specified parameters
         /// </summary>
         /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
@@ -49,21 +34,39 @@ namespace ComputeSharp.Shaders.Translation
         {
             Action = action;
             ShaderType = action.Method.DeclaringType;
-            ShaderInstance = action.Target;
-            ShaderFields = ShaderType.GetFields().ToArray();
         }
+
+        /// <summary>
+        /// Gets the closure <see cref="Type"/> for the <see cref="Action"/> field
+        /// </summary>
+        public Type ShaderType { get; }
 
         /// <summary>
         /// Gets the <see cref="RootParameter"/> array for the current shader
         /// </summary>
         public RootParameter[] RootParameters { get; private set; }
 
-        private readonly List<(int, GraphicsResource)> _Buffers = new List<(int, GraphicsResource)>();
+        /// <summary>
+        /// The <see cref="List{T}"/> of <see cref="FieldInfo"/> instances mapping the captured buffers in the current shader
+        /// </summary>
+        private readonly List<FieldInfo> _BufferFields = new List<FieldInfo>();
 
         /// <summary>
         /// Gets the ordered collection of buffers used as fields in the current shader
         /// </summary>
-        public IReadOnlyList<(int Index, GraphicsResource Resource)> Buffers => _Buffers;
+        /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
+        public IEnumerable<(int Index, GraphicsResource Resource)> GetBuffers(Action<ThreadIds> action) => _BufferFields.Select((field, i) => (i + 1, (GraphicsResource)field.GetValue(action.Target)));
+
+        /// <summary>
+        /// The <see cref="List{T}"/> of <see cref="FieldInfo"/> instances mapping the captured scalar/vector variables in the current shader
+        /// </summary>
+        private readonly List<FieldInfo> _VariableFields = new List<FieldInfo>();
+
+        /// <summary>
+        /// Gets the collection of values of the captured fields for the current shader
+        /// </summary>
+        /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
+        public IEnumerable<object> GetVariables(Action<ThreadIds> action) => _VariableFields.Select(field => field.GetValue(action.Target));
 
         private readonly List<HlslBufferInfo> _BuffersList = new List<HlslBufferInfo>();
 
@@ -78,13 +81,6 @@ namespace ComputeSharp.Shaders.Translation
         /// Gets the collection of <see cref="CapturedFieldInfo"/> items for the shader fields
         /// </summary>
         public IReadOnlyList<CapturedFieldInfo> FieldsList => _FieldsList;
-
-        private readonly List<object> _FieldValuesList = new List<object>();
-
-        /// <summary>
-        /// Gets the collection of values of the captured fields for the current shader
-        /// </summary>
-        public IReadOnlyList<object> FieldValuesList => _FieldValuesList;
 
         /// <summary>
         /// Gets the name of the <see cref="ThreadIds"/> variable used as input for the shader method
@@ -117,7 +113,8 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         private void LoadFieldsInfo()
         {
-            if (ShaderFields.Any(fieldInfo => fieldInfo.IsStatic)) throw new InvalidOperationException("Empty shader body");
+            IReadOnlyList<FieldInfo> shaderFields = ShaderType.GetFields().ToArray();
+            if (shaderFields.Any(fieldInfo => fieldInfo.IsStatic)) throw new InvalidOperationException("Empty shader body");
 
             List<DescriptorRange> descriptorRanges = new List<DescriptorRange>();
             int constantBuffersCount = 0;
@@ -128,19 +125,18 @@ namespace ComputeSharp.Shaders.Translation
             descriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, constantBuffersCount++));
 
             // Inspect the captured fields
-            foreach (FieldInfo fieldInfo in ShaderFields)
+            foreach (FieldInfo fieldInfo in shaderFields)
             {
                 Type fieldType = fieldInfo.FieldType;
                 string fieldName = fieldInfo.Name;
-                object fieldValue = fieldInfo.GetValue(ShaderInstance);
 
                 // Constant buffer
                 if (HlslKnownTypes.IsConstantBufferType(fieldType))
                 {
                     descriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, constantBuffersCount));
 
-                    // Reference to the underlying buffer
-                    _Buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
+                    // Track the buffer field
+                    _BufferFields.Add(fieldInfo);
 
                     string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
                     _BuffersList.Add(new ConstantBufferFieldInfo(typeName, fieldName, constantBuffersCount++));
@@ -150,8 +146,8 @@ namespace ComputeSharp.Shaders.Translation
                     // Root parameter for a readonly buffer
                     descriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ShaderResourceView, 1, readOnlyBuffersCount));
 
-                    // Reference to the underlying buffer
-                    _Buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
+                    // Track the buffer field
+                    _BufferFields.Add(fieldInfo);
 
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
                     _BuffersList.Add(new ReadOnlyBufferFieldInfo(typeName, fieldName, readOnlyBuffersCount++));
@@ -161,8 +157,8 @@ namespace ComputeSharp.Shaders.Translation
                     // Root parameter for a read write buffer
                     descriptorRanges.Add(new DescriptorRange(DescriptorRangeType.UnorderedAccessView, 1, readWriteBuffersCount));
 
-                    // Reference to the underlying buffer
-                    _Buffers.Add((descriptorRanges.Count - 1, (GraphicsResource)fieldValue));
+                    // Track the buffer field
+                    _BufferFields.Add(fieldInfo);
 
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
                     _BuffersList.Add(new ReadWriteBufferFieldInfo(typeName, fieldName, readWriteBuffersCount++));
@@ -170,7 +166,7 @@ namespace ComputeSharp.Shaders.Translation
                 else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
                 {
                     // Register the captured field
-                    _FieldValuesList.Add(fieldValue);
+                    _VariableFields.Add(fieldInfo);
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
                     _FieldsList.Add(new CapturedFieldInfo(typeName, fieldName));
                 }
