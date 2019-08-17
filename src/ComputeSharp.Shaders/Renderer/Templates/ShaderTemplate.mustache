@@ -13,30 +13,30 @@ cbuffer __Variables__Buffer : register(b0)
     uint __y__; // Target Y iterations
     uint __z__; // Target Z iterations
 {{#FieldsList}}
-    {{&FieldType}} {{FieldName}};
+    {{&FieldHlslType}} {{FieldName}};
 {{/FieldsList}}
 }
 {{#BuffersList}}
 {{#IsConstantBuffer}}
 
 {{!Constant buffer}}
-// Captured ConstantBuffer{{&T}} buffer "{{FieldName}}"
+// Captured {{&FieldCsharpType}} buffer "{{FieldName}}"
 cbuffer {{FieldName}}Buffer : register(b{{BufferIndex}})
 {
-    {{&FieldType}} {{FieldName}}[2];
+    {{&FieldHlslType}} {{FieldName}}[2];
 }
 {{/IsConstantBuffer}}
 {{#IsReadOnlyBuffer}}
 
 {{!Readonly buffer}}
-// Captured ReadOnlyBuffer{{&T}} buffer "{{FieldName}}"
-{{&FieldType}} {{FieldName}} : register(t{{BufferIndex}});
+// Captured ReadOnlyBuffer{{&FieldCsharpType}} buffer "{{FieldName}}"
+{{&FieldHlslType}} {{FieldName}} : register(t{{BufferIndex}});
 {{/IsReadOnlyBuffer}}
 {{#IsReadWriteBuffer}}
 
 {{!Read write buffer}}
-// Captured ReadWriteBuffer{{&T}} buffer "{{FieldName}}"
-{{&FieldType}} {{FieldName}} : SV_DispatchThreadId : register(u{{BufferIndex}});
+// Captured ReadWriteBuffer{{&FieldCsharpType}} buffer "{{FieldName}}"
+{{&FieldHlslType}} {{FieldName}} : SV_DispatchThreadId : register(u{{BufferIndex}});
 {{/IsReadWriteBuffer}}
 {{/BuffersList}}
 
