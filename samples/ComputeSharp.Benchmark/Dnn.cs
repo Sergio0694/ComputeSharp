@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using ComputeSharp.Graphics.Buffers;
 
@@ -32,16 +31,19 @@ namespace ComputeSharp.Benchmark
 
                 for (int i = 0; i < n; i++)
                 {
+                    int x_offset = i * m;
+                    int y_offset = i * p;
+
                     for (int j = 0; j < p; j++)
                     {
                         float result = 0f;
 
                         for (int k = 0; k < m; k++)
                         {
-                            result += Unsafe.Add(ref rx, i * m + k) * Unsafe.Add(ref rw, k * p + j);
+                            result += Unsafe.Add(ref rx, x_offset + k) * Unsafe.Add(ref rw, k * p + j);
                         }
 
-                        Unsafe.Add(ref ry, i * p + j) = result + Unsafe.Add(ref rb, j);
+                        Unsafe.Add(ref ry, y_offset + j) = result + Unsafe.Add(ref rb, j);
                     }
                 }
             }
@@ -60,28 +62,28 @@ namespace ComputeSharp.Benchmark
         /// <param name="w">The weights tensor</param>
         /// <param name="b">The bias tensor</param>
         /// <param name="y">The result tensor</param>
-        public static void FullyConnectedForwardGpu(int c, int n, int m, int p, float[] x, float[] w, float[] b, float[] y)
+        public static void FullyConnectedForwardGpu(
+            int c, int n, int m, int p,
+            ReadOnlyBuffer<float> x, ReadOnlyBuffer<float> w, ReadOnlyBuffer<float> b, ReadWriteBuffer<float> y)
         {
-            using ReadOnlyBuffer<float> x_gpu = Gpu.Default.AllocateReadOnlyBuffer(x);
-            using ReadOnlyBuffer<float> w_gpu = Gpu.Default.AllocateReadOnlyBuffer(w);
-            using ReadOnlyBuffer<float> b_gpu = Gpu.Default.AllocateReadOnlyBuffer(b);
-            using ReadWriteBuffer<float> y_gpu = Gpu.Default.AllocateReadWriteBuffer(y);
+            uint u_n = (uint)n;
+            uint u_m = (uint)m;
+            uint u_p = (uint)p;
 
             void Kernel(ThreadIds id)
             {
+                uint x_offset = id.X * u_n * u_p + id.Y * u_m;
                 float result = 0f;
 
-                for (int k = 0; k < m; k++)
+                for (uint k = 0; k < u_m; k++)
                 {
-                    result += x_gpu[(uint)(id.X * n * p + id.Y * m + k)] * w_gpu[(uint)(k * p + id.Z)];
+                    result += x[x_offset + k] * w[k * u_p + id.Z];
                 }
 
-                y_gpu[(uint)(id.X * n * p + id.Y * p + id.Z)] = result + b_gpu[id.Z];
+                y[id.X * u_n * u_p + id.Y * u_p + id.Z] = result + b[id.Z];
             };
 
             Gpu.Default.For(c, n, p, Kernel);
-
-            y_gpu.GetData(y);
         }
     }
 }

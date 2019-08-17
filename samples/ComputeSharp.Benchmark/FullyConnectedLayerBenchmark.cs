@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using ComputeSharp.Graphics.Buffers;
 
 namespace ComputeSharp.Benchmark
 {
     /// <summary>
     /// A <see langword="class"/> that benchmarks a fully connected layer forward pass on both CPU and GPU
     /// </summary>
-    public class FullyConnectedLayerBenchmark
+    internal sealed class FullyConnectedLayerBenchmark : IDisposable
     {
         /// <summary>
         /// The number of samples
@@ -50,6 +51,26 @@ namespace ComputeSharp.Benchmark
         private readonly float[] Y;
 
         /// <summary>
+        /// The input tensor
+        /// </summary>
+        private readonly ReadOnlyBuffer<float> BufferX;
+
+        /// <summary>
+        /// The weights tensor
+        /// </summary>
+        private readonly ReadOnlyBuffer<float> BufferW;
+
+        /// <summary>
+        /// The bias tensor
+        /// </summary>
+        private readonly ReadOnlyBuffer<float> BufferB;
+
+        /// <summary>
+        /// The result tensor
+        /// </summary>
+        private readonly ReadWriteBuffer<float> BufferY;
+
+        /// <summary>
         /// A <see cref="System.Random"/> instance to initialize the tensors
         /// </summary>
         private static readonly Random Random = new Random();
@@ -63,6 +84,11 @@ namespace ComputeSharp.Benchmark
             W = CreateRandomArray(M * P);
             B = CreateRandomArray(P);
             Y = CreateRandomArray(C * N * P);
+
+            BufferX = ComputeSharp.Gpu.Default.AllocateReadOnlyBuffer(X);
+            BufferW = ComputeSharp.Gpu.Default.AllocateReadOnlyBuffer(W);
+            BufferB = ComputeSharp.Gpu.Default.AllocateReadOnlyBuffer(B);
+            BufferY = ComputeSharp.Gpu.Default.AllocateReadWriteBuffer(Y);
         }
 
         /// <summary>
@@ -90,6 +116,30 @@ namespace ComputeSharp.Benchmark
         /// <summary>
         /// Runs a fully connected forward operation on the GPU
         /// </summary>
-        public void Gpu() => Dnn.FullyConnectedForwardGpu(C, N, M, P, X, W, B, Y);
+        public void GpuWithNoTemporaryBuffers() => Dnn.FullyConnectedForwardGpu(C, N, M, P, BufferX, BufferW, BufferB, BufferY);
+
+        /// <summary>
+        /// Runs a fully connected forward operation on the GPU, creating temporary GPU buffers to perform the operations
+        /// </summary>
+        public void GpuWithTemporaryBuffers()
+        {
+            using ReadOnlyBuffer<float> x = Gpu.Default.AllocateReadOnlyBuffer(X);
+            using ReadOnlyBuffer<float> w = Gpu.Default.AllocateReadOnlyBuffer(W);
+            using ReadOnlyBuffer<float> b = Gpu.Default.AllocateReadOnlyBuffer(B);
+            using ReadWriteBuffer<float> y = Gpu.Default.AllocateReadWriteBuffer(Y);
+
+            Dnn.FullyConnectedForwardGpu(C, N, M, P, x, w, b, y);
+
+            y.GetData(Y);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            BufferX.Dispose();
+            BufferW.Dispose();
+            BufferB.Dispose();
+            BufferY.Dispose();
+        }
     }
 }
