@@ -2,10 +2,10 @@
 using System.Linq;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers;
-using ComputeSharp.NetCore.Tests.Extensions;
+using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ComputeSharp.NetCore.Tests
+namespace ComputeSharp.Tests
 {
     [TestClass]
     [TestCategory("Initialization")]

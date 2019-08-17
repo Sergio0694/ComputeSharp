@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 
-namespace ComputeSharp.NetCore.Tests.Extensions
+namespace ComputeSharp.Tests.Extensions
 {
     /// <summary>
     /// An helper <see langword="class"/> with methods to process fixed-size buffers

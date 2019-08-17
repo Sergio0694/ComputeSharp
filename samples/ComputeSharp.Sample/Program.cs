@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
-using ComputeSharp;
 using ComputeSharp.Graphics.Buffers;
 
-namespace NetCoreComputeShaderSample
+namespace ComputeSharp.Sample
 {
     public class Program
     {
