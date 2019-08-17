@@ -1,4 +1,6 @@
 using System;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Buffers;
 using ComputeSharp.Graphics.Buffers.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,27 +12,23 @@ namespace ComputeSharp.NetCore.Tests.Internals
     public class BufferTests
     {
         [TestMethod]
-        public void ReadWriteBufferGetSetDataFromSingleValueInt()
+        public void ConstantBufferGetSetFromGenericValues()
         {
-            object value = 77;
+            object[] values = { 7, 3.14, Vector2.UnitX, 3.14f };
 
-            using ConstantBuffer<int> buffer = (ConstantBuffer<int>)Gpu.Default.AllocateConstantBufferFromReflectedSingleValue(value);
-            int[] result = buffer.GetData();
+            using ConstantBuffer<Vector4> buffer = (ConstantBuffer<Vector4>)Gpu.Default.AllocateConstantBufferFromReflectedValues(values);
+            Vector4[] data = buffer.GetData();
+            ref byte r0 = ref Unsafe.As<Vector4, byte>(ref data[0]);
 
-            Assert.IsTrue(result.Length == 1);
-            Assert.IsTrue((int)value == result[0]);
-        }
+            int i = Unsafe.As<byte, int>(ref Unsafe.Add(ref r0, 0));            // 0 -> 3, sizeof(int) == 4
+            double d = Unsafe.As<byte, double>(ref Unsafe.Add(ref r0, 4));      // 4 -> 11, sizeof(double) == 8
+            Vector2 v2 = Unsafe.As<byte, Vector2>(ref Unsafe.Add(ref r0, 16));  // 16 -> 23, sizeof(Vector2) == 8
+            float f = Unsafe.As<byte, float>(ref Unsafe.Add(ref r0, 024));      // 24 -> 27, sizeof(float) == 4
 
-        [TestMethod]
-        public void ReadWriteBufferGetSetDataFromSingleValueFloat()
-        {
-            object value = 3.14f;
-
-            using ConstantBuffer<float> buffer = (ConstantBuffer<float>)Gpu.Default.AllocateConstantBufferFromReflectedSingleValue(value); 
-            float[] result = buffer.GetData();
-
-            Assert.IsTrue(result.Length == 1);
-            Assert.IsTrue(MathF.Abs(result[0] - (float)value) < 0.0001f);
+            Assert.IsTrue((int)values[0] == i);
+            Assert.IsTrue(Math.Abs((double)values[1] - d) < 0.0001);
+            Assert.IsTrue((Vector2)values[2] == v2);
+            Assert.IsTrue(MathF.Abs((float)values[3] - f) < 0.0001);
         }
     }
 }
