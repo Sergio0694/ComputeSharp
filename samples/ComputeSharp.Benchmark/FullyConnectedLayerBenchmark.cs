@@ -17,17 +17,17 @@ namespace ComputeSharp.Benchmark
         /// <summary>
         /// The nummber of rows in the <see cref="X"/> matrix
         /// </summary>
-        private const int N = 100;
+        private const int N = 128;
 
         /// <summary>
         /// The number of columns in the <see cref="X"/> matrix (same as the number of rows in the <see cref="W"/> matrix)
         /// </summary>
-        private const int M = 100;
+        private const int M = 128;
 
         /// <summary>
         /// The number of columns in the <see cref="W"/> matrix
         /// </summary>
-        private const int P = 100;
+        private const int P = 128;
 
         /// <summary>
         /// The input tensor
@@ -81,5 +81,15 @@ namespace ComputeSharp.Benchmark
 
             return array;
         }
+
+        /// <summary>
+        /// Runs a fully connected forward operation on the CPU
+        /// </summary>
+        public void Cpu() => Dnn.FullyConnectedForwardCpu(C, N, M, P, X, W, B, Y);
+
+        /// <summary>
+        /// Runs a fully connected forward operation on the GPU
+        /// </summary>
+        public void Gpu() => Dnn.FullyConnectedForwardGpu(C, N, M, P, X, W, B, Y);
     }
 }
