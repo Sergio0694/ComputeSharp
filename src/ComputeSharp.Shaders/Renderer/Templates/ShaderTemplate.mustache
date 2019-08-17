@@ -6,8 +6,8 @@
  * For info or issues: https://github.com/Sergio0694/ComputeSharp */
 
 {{!Captured variables buffer}}
-// Captured scalar/vector variables
-cbuffer __Variables__Buffer : register(b0)
+// Scalar/vector variables
+cbuffer _ : register(b0)
 {
     uint __x__; // Target X iterations
     uint __y__; // Target Y iterations
@@ -20,8 +20,8 @@ cbuffer __Variables__Buffer : register(b0)
 {{#IsConstantBuffer}}
 
 {{!Constant buffer}}
-// Captured {{&FieldCsharpType}} buffer "{{FieldName}}"
-cbuffer {{FieldName}}Buffer : register(b{{BufferIndex}})
+// {{&FieldCsharpType}} buffer "{{FieldName}}"
+cbuffer _{{FieldName}} : register(b{{BufferIndex}})
 {
     {{&FieldHlslType}} {{FieldName}}[2];
 }
@@ -29,13 +29,13 @@ cbuffer {{FieldName}}Buffer : register(b{{BufferIndex}})
 {{#IsReadOnlyBuffer}}
 
 {{!Readonly buffer}}
-// Captured ReadOnlyBuffer{{&FieldCsharpType}} buffer "{{FieldName}}"
+// {{&FieldCsharpType}} buffer "{{FieldName}}"
 {{&FieldHlslType}} {{FieldName}} : register(t{{BufferIndex}});
 {{/IsReadOnlyBuffer}}
 {{#IsReadWriteBuffer}}
 
 {{!Read write buffer}}
-// Captured ReadWriteBuffer{{&FieldCsharpType}} buffer "{{FieldName}}"
+// {{&FieldCsharpType}} buffer "{{FieldName}}"
 {{&FieldHlslType}} {{FieldName}} : SV_DispatchThreadId : register(u{{BufferIndex}});
 {{/IsReadWriteBuffer}}
 {{/BuffersList}}
