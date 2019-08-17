@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using ComputeSharp.Graphics;
-using ComputeSharp.Graphics.Buffers;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Extensions;
 using ComputeSharp.Shaders.Renderer;
@@ -66,8 +65,9 @@ namespace ComputeSharp.Shaders
             // Render the loaded shader
             ShaderInfo shaderInfo = new ShaderInfo
             {
-                FieldsList = shaderLoader.FieldsInfo,
-                ThreadsXYZConstantBufferIndex = shaderLoader.ConstantBuffersCount,
+                BuffersList = shaderLoader.BuffersList,
+                FieldsList = shaderLoader.FieldsList,
+                VariablesConstantBufferIndex = shaderLoader.ConstantBuffersCount,
                 NumThreadsX = threadsX,
                 NumThreadsY = threadsY,
                 NumThreadsZ = threadsZ,

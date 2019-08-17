@@ -12,14 +12,19 @@ namespace ComputeSharp.Shaders.Renderer.Models
     internal sealed class ShaderInfo
     {
         /// <summary>
-        /// Gets the list of fields being present in the current shader
+        /// Gets the list of captured buffers being present in the current shader
+        /// </summary>
+        public IReadOnlyList<HlslBufferInfo> BuffersList { get; set; }
+
+        /// <summary>
+        /// Gets the list of captured variables being present in the current shader
         /// </summary>
         public IReadOnlyList<CapturedFieldInfo> FieldsList { get; set; }
 
         /// <summary>
-        /// Gets or sets the index for the constant buffer with the info on the target number of iterations on the X, Y and Z axes
+        /// Gets or sets the index for the constant buffer with the captured scalar and vector variables
         /// </summary>
-        public int ThreadsXYZConstantBufferIndex { get; set; }
+        public int VariablesConstantBufferIndex { get; set; }
 
         /// <summary>
         /// Gets or sets the number of threads in the X group
