@@ -12,15 +12,6 @@ namespace ComputeSharp.Shaders.Renderer.Models
     internal sealed class ShaderInfo
     {
         /// <summary>
-        /// Gets the library version for the generated shader
-        /// </summary>
-        public string Version { get; } = ThisAssembly.Git.SemVer.Major + "." +
-                                         ThisAssembly.Git.SemVer.Minor + "." +
-                                         ThisAssembly.Git.SemVer.Patch + "|" +
-                                         ThisAssembly.Git.Branch + "+" +
-                                         ThisAssembly.Git.Commit;
-
-        /// <summary>
         /// Gets the text indicating a generic type, which can't be escaped in mustache
         /// </summary>
         public string T { get; } = "<T>";
