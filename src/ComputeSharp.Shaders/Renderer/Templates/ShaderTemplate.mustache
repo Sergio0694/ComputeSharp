@@ -1,9 +1,17 @@
-﻿{{!Captured variables buffer}}
+﻿/* ===============
+ * AUTO GENERATED
+ * ===============
+ * This shader was created by ComputeSharp.
+ * Builder version: {{Version}}
+ * For info or issues: https://github.com/Sergio0694/ComputeSharp */
+
+{{!Captured variables buffer}}
+// Captured scalar/vector variables
 cbuffer __Variables__Buffer : register(b0)
 {
-    uint __x__;
-    uint __y__;
-    uint __z__;
+    uint __x__; // Target X iterations
+    uint __y__; // Target Y iterations
+    uint __z__; // Target Z iterations
 {{#FieldsList}}
     {{&FieldType}} {{FieldName}};
 {{/FieldsList}}
@@ -12,6 +20,7 @@ cbuffer __Variables__Buffer : register(b0)
 {{#IsConstantBuffer}}
 
 {{!Constant buffer}}
+// Captured ConstantBuffer{{&T}} buffer "{{FieldName}}"
 cbuffer {{FieldName}}Buffer : register(b{{BufferIndex}})
 {
     {{&FieldType}} {{FieldName}}[2];
@@ -20,22 +29,25 @@ cbuffer {{FieldName}}Buffer : register(b{{BufferIndex}})
 {{#IsReadOnlyBuffer}}
 
 {{!Readonly buffer}}
+// Captured ReadOnlyBuffer{{&T}} buffer "{{FieldName}}"
 {{&FieldType}} {{FieldName}} : register(t{{BufferIndex}});
 {{/IsReadOnlyBuffer}}
 {{#IsReadWriteBuffer}}
 
 {{!Read write buffer}}
+// Captured ReadWriteBuffer{{&T}} buffer "{{FieldName}}"
 {{&FieldType}} {{FieldName}} : SV_DispatchThreadId : register(u{{BufferIndex}});
 {{/IsReadWriteBuffer}}
 {{/BuffersList}}
 
 {{!Shader entry point}}
+// Shader body
 [Shader("compute")]
 [NumThreads({{NumThreadsX}}, {{NumThreadsY}}, {{NumThreadsZ}})]
 void CSMain(uint3 {{ThreadsIdsVariableName}} : SV_DispatchThreadId)
 {
     if ({{ThreadsIdsVariableName}}.x < __x__ &&
         {{ThreadsIdsVariableName}}.y < __y__ &&
-        {{ThreadsIdsVariableName}}.z < __z__)
+        {{ThreadsIdsVariableName}}.z < __z__) // Automatic bounds check
 {{&ShaderBody}}
 }
