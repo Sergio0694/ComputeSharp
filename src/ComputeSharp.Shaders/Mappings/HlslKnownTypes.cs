@@ -25,7 +25,6 @@ namespace ComputeSharp.Shaders.Mappings
             [typeof(Vector2).FullName] = "float2",
             [typeof(Vector3).FullName] = "float3",
             [typeof(Vector4).FullName] = "float4",
-            [typeof(Matrix4x4).FullName] = "float4x4",
             [typeof(ThreadIds).FullName] = "uint3",
             [typeof(ReadOnlyBuffer<>).FullName] = "StructuredBuffer",
             [typeof(ReadWriteBuffer<>).FullName] = "RWStructuredBuffer"
@@ -51,8 +50,7 @@ namespace ComputeSharp.Shaders.Mappings
         [Pure]
         public static bool IsKnownVectorType(Type type) => type == typeof(Vector2) ||
                                                            type == typeof(Vector3) ||
-                                                           type == typeof(Vector4) ||
-                                                           type == typeof(Matrix4x4);
+                                                           type == typeof(Vector4);
 
         /// <summary>
         /// Checks whether or not the input type is a <see cref="ConstantBuffer{T}"/> value

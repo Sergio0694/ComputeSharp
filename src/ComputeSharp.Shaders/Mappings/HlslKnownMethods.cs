@@ -59,28 +59,7 @@ namespace ComputeSharp.Shaders.Mappings
             ["System.Numerics.Vector4.Transform"] = "mul",
             ["System.Numerics.Vector4.Normalize"] = "normalize",
             ["System.Numerics.Vector4.Zero"] = "(float4)0",
-            ["System.Numerics.Vector4.One"] = "float4(1.0f, 1.0f, 1.0f, 1.0f)",
-
-            // Matrix4x4
-            ["System.Numerics.Matrix4x4.Multiply"] = "mul",
-            ["System.Numerics.Matrix4x4.Transpose"] = "transpose",
-            ["System.Numerics.Matrix4x4.Translation"] = "[3].xyz",
-            ["System.Numerics.Matrix4x4.M11"] = "[0][0]",
-            ["System.Numerics.Matrix4x4.M12"] = "[0][1]",
-            ["System.Numerics.Matrix4x4.M13"] = "[0][2]",
-            ["System.Numerics.Matrix4x4.M14"] = "[0][3]",
-            ["System.Numerics.Matrix4x4.M21"] = "[1][0]",
-            ["System.Numerics.Matrix4x4.M22"] = "[1][1]",
-            ["System.Numerics.Matrix4x4.M23"] = "[1][2]",
-            ["System.Numerics.Matrix4x4.M24"] = "[1][3]",
-            ["System.Numerics.Matrix4x4.M31"] = "[2][0]",
-            ["System.Numerics.Matrix4x4.M32"] = "[2][1]",
-            ["System.Numerics.Matrix4x4.M33"] = "[2][2]",
-            ["System.Numerics.Matrix4x4.M34"] = "[2][3]",
-            ["System.Numerics.Matrix4x4.M41"] = "[3][0]",
-            ["System.Numerics.Matrix4x4.M42"] = "[3][1]",
-            ["System.Numerics.Matrix4x4.M43"] = "[3][2]",
-            ["System.Numerics.Matrix4x4.M44"] = "[3][3]"
+            ["System.Numerics.Vector4.One"] = "float4(1.0f, 1.0f, 1.0f, 1.0f)"
         };
 
         /// <summary>
