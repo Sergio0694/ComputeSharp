@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Numerics;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Buffers.Abstract;
 
@@ -16,59 +13,15 @@ namespace ComputeSharp.Graphics.Buffers.Extensions
     internal static class GraphicsResourceExtensions
     {
         /// <summary>
-        /// The <see cref="Dictionary{TKey,TValue}"/> that maps types to the necessary data to create buffers, for quick lookup
-        /// </summary>
-        private static readonly Dictionary<Type, (ConstructorInfo Constructor, IList Array, MethodInfo Setter)> TypeMapping = new Dictionary<Type, (ConstructorInfo, IList, MethodInfo)>();
-
-        /// <summary>
-        /// Allocates a new constant buffer with the specified generic value
-        /// </summary>
-        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer</param>
-        /// <param name="data">The input <see cref="object"/> to copy to the allocated buffer</param>
-        /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance (as a <see cref="GraphicsResource"/>) with the input data</returns>
-        [Pure]
-        public static GraphicsResource AllocateConstantBufferFromReflectedSingleValue(this GraphicsDevice device, object data)
-        {
-            Type dataType = data.GetType();
-            if (!TypeMapping.TryGetValue(dataType, out var info))
-            {
-                // Get the generic buffer constructor
-                Type bufferType = typeof(ConstantBuffer<>).MakeGenericType(dataType);
-                info.Constructor = bufferType.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic).First();
-
-                // Create the reusable array
-                Type arrayType = dataType.MakeArrayType();
-                ConstructorInfo[] arrayConstructors = arrayType.GetConstructors(BindingFlags.CreateInstance
-                                                                                | BindingFlags.Public
-                                                                                | BindingFlags.Instance
-                                                                                | BindingFlags.OptionalParamBinding);
-                info.Array = (IList)arrayConstructors[0].Invoke(new object[] { 1 });
-
-                // Set the input data to the new buffer
-                info.Setter = bufferType.GetMethod(nameof(HlslBuffer<byte>.SetData), new[] { arrayType });
-
-                // Cache for later reuse
-                TypeMapping.Add(dataType, info);
-            }
-
-            // Create the buffer and set the content
-            GraphicsResource buffer = (GraphicsResource)info.Constructor.Invoke(new object[] { device, 1 });
-            info.Array[0] = data;
-            info.Setter.Invoke(buffer, new object[] { info.Array });
-
-            return buffer;
-        }
-
-        /// <summary>
         /// Allocates a new constant buffer with the specified generic values
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer</param>
-        /// <param name="data">The input <see cref="object"/> array to copy to the allocated buffer</param>
+        /// <param name="data">The input <see cref="object"/> sequence to copy to the allocated buffer</param>
         /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance (as a <see cref="GraphicsResource"/>) with the input data</returns>
         [Pure]
-        public static GraphicsResource AllocateConstantBufferFromReflectedValues(this GraphicsDevice device, object[] data)
+        public static GraphicsResource AllocateConstantBufferFromReflectedValues(this GraphicsDevice device, IReadOnlyList<object> data)
         {
-            Span<Vector4> temporarySpan = stackalloc Vector4[data.Length];
+            Span<Vector4> temporarySpan = stackalloc Vector4[data.Count];
             ref byte r0 = ref Unsafe.As<Vector4, byte>(ref temporarySpan.GetPinnableReference());
             int offset = 0;
 
@@ -82,7 +35,7 @@ namespace ComputeSharp.Graphics.Buffers.Extensions
             }
 
             // Iterate on the input values and write them with the proper padding
-            for (int j = 0; j < data.Length; j++)
+            for (int j = 0; j < data.Count; j++)
             {
                 switch (data[j])
                 {
@@ -103,7 +56,7 @@ namespace ComputeSharp.Graphics.Buffers.Extensions
             }
 
             // Create the array to return
-            ConstantBuffer<Vector4> buffer = new ConstantBuffer<Vector4>(device, data.Length);
+            ConstantBuffer<Vector4> buffer = new ConstantBuffer<Vector4>(device, data.Count);
             buffer.SetData(temporarySpan);
 
             return buffer;
