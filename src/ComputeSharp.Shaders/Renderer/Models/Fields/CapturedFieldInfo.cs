@@ -1,4 +1,5 @@
 ﻿using System;
+using ComputeSharp.Shaders.Extensions;
 
 namespace ComputeSharp.Shaders.Renderer.Models.Fields
 {
@@ -10,7 +11,7 @@ namespace ComputeSharp.Shaders.Renderer.Models.Fields
         /// <summary>
         /// Gets the type of the current field in the C# source
         /// </summary>
-        public Type FieldCsharpType { get; }
+        public string FieldCsharpType { get; }
 
         /// <summary>
         /// Gets the type of the current field in the HLSL shader
@@ -30,7 +31,7 @@ namespace ComputeSharp.Shaders.Renderer.Models.Fields
         /// <param name="fieldName">The name to use for the current field</param>
         public CapturedFieldInfo(Type fieldCsharpType, string fieldHlslType, string fieldName)
         {
-            FieldCsharpType = fieldCsharpType;
+            FieldCsharpType = fieldCsharpType.ToFriendlyString();
             FieldHlslType = fieldHlslType;
             FieldName = fieldName;
         }
