@@ -104,8 +104,7 @@ namespace ComputeSharp.Shaders
             }
 
             // Initialize the loop targets
-            Span<uint> xyzSpan = stackalloc uint[] { (uint)x, (uint)y, (uint)z };
-            ConstantBuffer<uint> xyzBuffer = device.AllocateConstantBuffer(xyzSpan);
+            var xyzBuffer = device.AllocateConstantBufferFromReflectedValues(new object[] { (uint)x, (uint)y, (uint)z });
             commandList.SetComputeRootDescriptorTable(shaderLoader.RootParameters.Length - 1, xyzBuffer);
             buffers.Add(xyzBuffer);
 
