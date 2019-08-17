@@ -1,8 +1,4 @@
 ﻿{{#FieldsList}}
-{{!Static scalar}}
-{{#IsStaticScalarField}}
-static {{&FieldType}} {{FieldName}} = {{FieldValue}};
-{{/IsStaticScalarField}}
 {{!Constant buffer}}
 {{#IsConstantBuffer}}
 cbuffer {{FieldName}}Buffer : register(b{{BufferIndex}})
