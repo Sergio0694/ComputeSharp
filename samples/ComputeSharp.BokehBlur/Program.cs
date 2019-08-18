@@ -19,7 +19,12 @@ namespace ComputeSharp.BokehBlur
         /// <summary>
         /// The radius of the bokeh blur effect to apply
         /// </summary>
-        private const int Radius = 24;
+        private const int Radius = 32;
+
+        /// <summary>
+        /// The gamma exposure value to use when applying the effect
+        /// </summary>
+        private const float Gamma = 3;
 
         static void Main()
         {
@@ -40,7 +45,11 @@ namespace ComputeSharp.BokehBlur
 
                 for (int j = 0; j < width; j++)
                 {
-                    Unsafe.Add(ref r4, j) = Unsafe.Add(ref rPixel, j).ToVector4();
+                    Vector4 v4 = Unsafe.Add(ref rPixel, j).ToVector4();
+                    v4.X = MathF.Pow(v4.X, Gamma);
+                    v4.Y = MathF.Pow(v4.Y, Gamma);
+                    v4.Z = MathF.Pow(v4.Z, Gamma);
+                    Unsafe.Add(ref r4, j) = v4;
                 }
             });
 
@@ -105,10 +114,19 @@ namespace ComputeSharp.BokehBlur
             {
                 ref Rgba32 rPixel = ref image.GetPixelRowSpan(i).GetPinnableReference();
                 ref Vector4 r4 = ref resultArray[i * width];
+                Vector4 low = Vector4.Zero;
+                Vector4 high = new Vector4(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+                float invGamma = 1 / Gamma;
 
                 for (int j = 0; j < width; j++)
                 {
-                    Unsafe.Add(ref rPixel, j).FromVector4(Unsafe.Add(ref r4, j));
+                    Vector4 v4 = Unsafe.Add(ref r4, j);
+                    Vector4 clamp = Vector4.Clamp(v4, low, high);
+                    v4.X = MathF.Pow(clamp.X, invGamma);
+                    v4.Y = MathF.Pow(clamp.Y, invGamma);
+                    v4.Z = MathF.Pow(clamp.Z, invGamma);
+
+                    Unsafe.Add(ref rPixel, j).FromVector4(v4);
                 }
             });
 
