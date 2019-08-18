@@ -55,7 +55,7 @@ namespace ComputeSharp.Tests
                 else if (id.X == 3) buffer[3] = vector4.W;
             };
 
-            Gpu.Default.For(1, action);
+            Gpu.Default.For(4, action);
 
             float[] result = buffer.GetData();
             float[] expected = { 1, 2, 3, 4 };
