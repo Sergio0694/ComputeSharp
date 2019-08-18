@@ -19,7 +19,7 @@ namespace ComputeSharp.BokehBlur
         /// <summary>
         /// The radius of the bokeh blur effect to apply
         /// </summary>
-        private const int Radius = 32;
+        private const int Radius = 24;
 
         static void Main()
         {
@@ -85,9 +85,9 @@ namespace ComputeSharp.BokehBlur
                         int jx = j + x;
 
                         if (iy < 0) iy = -iy;
-                        else if (iy > height) iy -= height;
+                        else if (iy > height) iy = 2 * height - iy;
                         if (jx < 0) jx = -jx;
-                        else if (jx > width) jx -= width;
+                        else if (jx > width) jx = 2 * width - jx;
 
                         int ki = Radius - y;
                         int kj = Radius - x;
