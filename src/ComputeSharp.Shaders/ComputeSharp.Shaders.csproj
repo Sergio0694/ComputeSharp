@@ -27,9 +27,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Renderer\Templates\ShaderTemplate.mustache">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <EmbeddedResource Include="Renderer\Templates\ShaderTemplate.mustache">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

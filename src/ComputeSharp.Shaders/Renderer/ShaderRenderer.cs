@@ -1,6 +1,6 @@
-﻿using System;
-using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.Contracts;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using ComputeSharp.Shaders.Renderer.Models;
 using Stubble.Core;
@@ -22,11 +22,12 @@ namespace ComputeSharp.Shaders.Renderer
         /// </summary>
         private ShaderRenderer()
         {
-            string
-                assemblyPath = Assembly.GetExecutingAssembly().Location,
-                assemblyDirectory = Path.GetDirectoryName(assemblyPath) ?? throw new InvalidOperationException("Can't find the assembly directory"),
-                templatePath = Path.Combine(assemblyDirectory, "Renderer", "Templates", "ShaderTemplate.mustache");
-            Template = File.ReadAllText(templatePath);
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            string filename = assembly.GetManifestResourceNames().First(name => name.EndsWith("ShaderTemplate.mustache"));
+
+            using Stream stream = assembly.GetManifestResourceStream(filename);
+            using StreamReader reader = new StreamReader(stream);
+            Template = reader.ReadToEnd();
         }
 
         /// <summary>
