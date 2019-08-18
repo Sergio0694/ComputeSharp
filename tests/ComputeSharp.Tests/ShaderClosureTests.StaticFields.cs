@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests
 {
     /// <summary>
-    /// A container <see langword="class"/> for static fields and properties to test
+    /// A container <see langword="class"/> for static fields to test
     /// </summary>
     public sealed class StaticFieldsContainer
     {
@@ -23,7 +23,7 @@ namespace ComputeSharp.Tests
         /// <summary>
         /// A <see langword="static"/> <see langword="readonly"/> <see langword="Vector2"/> field
         /// </summary>
-        public static Vector2 ReadonlyVector2 = new Vector2(3.14f, 7.77f);
+        public static readonly Vector2 ReadonlyVector2 = new Vector2(3.14f, 7.77f);
 
         /// <summary>
         /// A <see langword="static"/> <see langword="Vector2"/> field
@@ -39,7 +39,7 @@ namespace ComputeSharp.Tests
     public partial class ShaderClosureTests
     {
         [TestMethod]
-        public void StaticReadonlyScalarAssignToBuffer()
+        public void StaticReadonlyScalarFieldAssignToBuffer()
         {
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
 
@@ -53,7 +53,7 @@ namespace ComputeSharp.Tests
         }
 
         [TestMethod]
-        public void StaticScalarAssignToBuffer()
+        public void StaticScalarFieldAssignToBuffer()
         {
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
 
@@ -67,7 +67,7 @@ namespace ComputeSharp.Tests
         }
 
         [TestMethod]
-        public void StaticScalarRepeatedAssignToBuffer()
+        public void StaticScalarFieldRepeatedAssignToBuffer()
         {
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
 
@@ -81,7 +81,7 @@ namespace ComputeSharp.Tests
         }
 
         [TestMethod]
-        public void StaticReadonlyVectorAssignToBuffer()
+        public void StaticReadonlyVectorFieldAssignToBuffer()
         {
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(2);
 
@@ -100,7 +100,7 @@ namespace ComputeSharp.Tests
         }
 
         [TestMethod]
-        public void StaticVectorAssignToBuffer()
+        public void StaticVectorFieldAssignToBuffer()
         {
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(2);
 
@@ -119,7 +119,7 @@ namespace ComputeSharp.Tests
         }
 
         [TestMethod]
-        public void StaticReadOnlyBufferAssignToBuffer()
+        public void StaticReadOnlyBufferFieldAssignToBuffer()
         {
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(2);
 
