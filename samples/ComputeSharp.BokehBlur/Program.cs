@@ -16,6 +16,11 @@ namespace ComputeSharp.BokehBlur
         /// </summary>
         private const string ImagePath = @"";
 
+        /// <summary>
+        /// The radius of the bokeh blur effect to apply
+        /// </summary>
+        private const int Radius = 12;
+
         static void Main()
         {
             // Load the input image
@@ -48,8 +53,29 @@ namespace ComputeSharp.BokehBlur
                 int j = ij % width;
                 ref Vector4 rin = ref vectorArray[0];
                 ref Vector4 rout = ref resultArray[0];
+                Vector4 total = Vector4.Zero;
+                int pixels = 0;
 
-                Unsafe.Add(ref rout, i * width + j) = Unsafe.Add(ref rin, i * width + j);
+                for (int y = -Radius; y <= Radius; y++)
+                {
+                    for (int x = -Radius; x <= Radius; x++)
+                    {
+                        int iy = i + y;
+                        int jx = j + x;
+
+                        if (iy < 0 || iy > height) continue;
+                        if (jx < 0 || jx > width) continue;
+                        int dx2x1 = jx - j;
+                        int dy2y1 = iy - i;
+                        if (MathF.Sqrt(dx2x1 * dx2x1 + dy2y1 * dy2y1) > Radius) continue;
+
+                        ref Vector4 v4 = ref Unsafe.Add(ref rin, iy * width + jx);
+                        total += v4;
+                        pixels++;
+                    }
+                }
+
+                Unsafe.Add(ref rout, i * width + j) = total / pixels;
             });
 
             // Copy the modified image back
@@ -61,7 +87,7 @@ namespace ComputeSharp.BokehBlur
 
                 for (int j = 0; j < width; j++)
                 {
-                    Unsafe.Add(ref rPixel, i).FromVector4(Unsafe.Add(ref r4, i));
+                    Unsafe.Add(ref rPixel, j).FromVector4(Unsafe.Add(ref r4, j));
                 }
             });
 
