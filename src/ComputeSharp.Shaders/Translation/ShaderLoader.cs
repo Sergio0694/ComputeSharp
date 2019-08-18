@@ -215,7 +215,7 @@ namespace ComputeSharp.Shaders.Translation
             root = (MethodDeclarationSyntax)syntaxRewriter.Visit(root);
 
             // Register the captured static fields
-            foreach (var item in syntaxRewriter.StaticFields)
+            foreach (var item in syntaxRewriter.StaticMembers)
             {
                 LoadFieldInfo(item.Value, item.Key);
             }
