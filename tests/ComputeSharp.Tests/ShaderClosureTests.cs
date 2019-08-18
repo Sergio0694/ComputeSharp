@@ -64,11 +64,11 @@ namespace ComputeSharp.Tests
         }
 
         [TestMethod]
-        public void CopyBetweenWriteableBuffers()
+        public void CopyBetweenConstantAndWriteableBuffers()
         {
             float[] source = Enumerable.Range(0, 100).Select(i => (float)i).ToArray();
 
-            using ReadWriteBuffer<float> input = Gpu.Default.AllocateReadWriteBuffer(source); 
+            using ConstantBuffer<float> input = Gpu.Default.AllocateConstantBuffer(source);
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(source.Length);
 
             Action<ThreadIds> action = id => buffer[id.X] = input[id.X];
@@ -85,7 +85,24 @@ namespace ComputeSharp.Tests
         {
             float[] source = Enumerable.Range(0, 100).Select(i => (float)i).ToArray();
 
-            using ConstantBuffer<float> input = Gpu.Default.AllocateConstantBuffer(source);
+            using ReadOnlyBuffer<float> input = Gpu.Default.AllocateReadOnlyBuffer(source);
+            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(source.Length);
+
+            Action<ThreadIds> action = id => buffer[id.X] = input[id.X];
+
+            Gpu.Default.For(source.Length, action);
+
+            float[] result = buffer.GetData();
+
+            Assert.IsTrue(result.AsSpan().ContentEquals(source));
+        }
+
+        [TestMethod]
+        public void CopyBetweenWriteableBuffers()
+        {
+            float[] source = Enumerable.Range(0, 100).Select(i => (float)i).ToArray();
+
+            using ReadWriteBuffer<float> input = Gpu.Default.AllocateReadWriteBuffer(source);
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(source.Length);
 
             Action<ThreadIds> action = id => buffer[id.X] = input[id.X];
