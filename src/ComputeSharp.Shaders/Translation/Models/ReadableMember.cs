@@ -31,6 +31,25 @@ namespace ComputeSharp.Shaders.Translation.Models
         }
 
         /// <summary>
+        /// Gets the <see cref="Type"/> of the wrapped member for the current instance
+        /// </summary>
+        public Type MemberType
+        {
+            get
+            {
+                if (Field != null) return Field.FieldType;
+                if (Property != null) return Property.PropertyType;
+
+                throw new InvalidOperationException("Field and property can't both be null at the same time");
+            }
+        }
+
+        /// <summary>
+        /// Gets the name of the wrapped member for the current instance
+        /// </summary>
+        public string Name => (Field?.Name ?? Property?.Name) ?? throw new InvalidOperationException("Field and property can't both be null at the same time");
+
+        /// <summary>
         /// Returns the value of the wrapped member for the current instance
         /// </summary>
         /// <param name="instance">The target instance to use to read the value from</param>
