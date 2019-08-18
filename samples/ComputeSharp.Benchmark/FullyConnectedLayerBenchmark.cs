@@ -85,10 +85,10 @@ namespace ComputeSharp.Benchmark
             B = CreateRandomArray(P);
             Y = CreateRandomArray(C * N * P);
 
-            BufferX = ComputeSharp.Gpu.Default.AllocateReadOnlyBuffer(X);
-            BufferW = ComputeSharp.Gpu.Default.AllocateReadOnlyBuffer(W);
-            BufferB = ComputeSharp.Gpu.Default.AllocateReadOnlyBuffer(B);
-            BufferY = ComputeSharp.Gpu.Default.AllocateReadWriteBuffer(Y);
+            BufferX = Gpu.Default.AllocateReadOnlyBuffer(X);
+            BufferW = Gpu.Default.AllocateReadOnlyBuffer(W);
+            BufferB = Gpu.Default.AllocateReadOnlyBuffer(B);
+            BufferY = Gpu.Default.AllocateReadWriteBuffer(Y);
         }
 
         /// <summary>
@@ -131,6 +131,29 @@ namespace ComputeSharp.Benchmark
             Dnn.FullyConnectedForwardGpu(C, N, M, P, x, w, b, y);
 
             y.GetData(Y);
+        }
+
+        /// <summary>
+        /// Checks whether or not thhe CPU and GPU implementations produce the same output
+        /// </summary>
+        public bool EnsureImplementationsMatch()
+        {
+            // Run the CPU implementation and copy the result
+            Cpu();
+            float[] y_cpu = new float[Y.Length];
+            Y.AsSpan().CopyTo(y_cpu);
+
+            // Run the GPU implementation with temporary buffers
+            GpuWithTemporaryBuffers();
+
+            // Compare the two results
+            ref float r_cpu = ref y_cpu[0];
+            ref float r_gpu = ref Y[0];
+            for (int i = 0; i < Y.Length; i++)
+                if (MathF.Abs(Unsafe.Add(ref r_cpu, i) - Unsafe.Add(ref r_gpu, i)) > 0.0001f)
+                    return false;
+
+            return true;
         }
 
         /// <inheritdoc/>
