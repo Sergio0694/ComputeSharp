@@ -43,7 +43,7 @@ namespace ComputeSharp.Shaders.Extensions
         /// <param name="variable">The info on parsed static fields, if any</param>
         /// <returns>A <see cref="SyntaxNode"/> instance that is compatible with HLSL</returns>
         [Pure]
-        public static SyntaxNode ReplaceMember(this MemberAccessExpressionSyntax node, SemanticModel semanticModel, out (string name, FieldInfo FieldInfo)? variable)
+        public static SyntaxNode ReplaceMember(this MemberAccessExpressionSyntax node, SemanticModel semanticModel, out (string Name, FieldInfo FieldInfo)? variable)
         {
             SymbolInfo containingMemberSymbolInfo = semanticModel.GetSymbolInfo(node.Expression);
             SymbolInfo memberSymbolInfo = semanticModel.GetSymbolInfo(node.Name);

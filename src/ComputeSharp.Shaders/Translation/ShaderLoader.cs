@@ -216,7 +216,7 @@ namespace ComputeSharp.Shaders.Translation
             // Register the captured static fields
             foreach (var item in syntaxRewriter.StaticFields)
             {
-                LoadFieldInfo(item.FieldInfo, item.Name);
+                LoadFieldInfo(item.Value, item.Key);
             }
 
             // Get the thread ids identifier name and shader method body
