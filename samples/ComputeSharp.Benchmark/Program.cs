@@ -10,7 +10,7 @@ namespace ComputeSharp.Benchmark
             using var benchmark = new FullyConnectedLayerBenchmark();
 
             Console.WriteLine("======== WARMUP ========");
-            if (benchmark.EnsureImplementationsMatch()) throw new InvalidOperationException("CPU and GPU code don't match");
+            if (!benchmark.EnsureImplementationsMatch()) throw new InvalidOperationException("CPU and GPU code don't match");
 
             Console.WriteLine();
             Console.WriteLine("======== GPU with temporary buffer ========");

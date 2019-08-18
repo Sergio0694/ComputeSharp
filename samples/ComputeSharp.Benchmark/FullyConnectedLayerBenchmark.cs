@@ -149,9 +149,20 @@ namespace ComputeSharp.Benchmark
             // Compare the two results
             ref float r_cpu = ref y_cpu[0];
             ref float r_gpu = ref Y[0];
-            for (int i = 0; i < Y.Length; i++)
-                if (MathF.Abs(Unsafe.Add(ref r_cpu, i) - Unsafe.Add(ref r_gpu, i)) > 0.0001f)
+
+            for (int i = 0; i < y_cpu.Length; i++)
+            {
+                float x_cpu = Unsafe.Add(ref r_cpu, i);
+                float x_gpu = Unsafe.Add(ref r_gpu, i);
+                float absolute = MathF.Abs(x_cpu - x_gpu);
+                float relative = 1e-1f * MathF.Max(MathF.Abs(x_cpu), MathF.Abs(x_gpu));
+
+                if (absolute >= 1e-2f &&
+                    absolute > MathF.Max(1e-2f, relative))
+                {
                     return false;
+                }
+            }
 
             return true;
         }
