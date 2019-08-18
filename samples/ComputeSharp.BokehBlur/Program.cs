@@ -74,8 +74,8 @@ namespace ComputeSharp.BokehBlur
                 int j = ij % width;
                 ref Vector4 rin = ref vectorArray[0];
                 ref Vector4 rout = ref resultArray[0];
+                ref float rk = ref kernel[0];
                 Vector4 total = Vector4.Zero;
-                int pixels = 0;
 
                 for (int y = -Radius; y <= Radius; y++)
                 {
@@ -86,17 +86,15 @@ namespace ComputeSharp.BokehBlur
 
                         if (iy < 0 || iy > height) continue;
                         if (jx < 0 || jx > width) continue;
-                        int dx2x1 = jx - j;
-                        int dy2y1 = iy - i;
-                        if (MathF.Sqrt(dx2x1 * dx2x1 + dy2y1 * dy2y1) > Radius) continue;
 
-                        ref Vector4 v4 = ref Unsafe.Add(ref rin, iy * width + jx);
-                        total += v4;
-                        pixels++;
+                        int ki = Radius - y;
+                        int kj = Radius - x;
+
+                        total += Unsafe.Add(ref rin, iy * width + jx) * Unsafe.Add(ref rk, ki * diameter + kj);
                     }
                 }
 
-                Unsafe.Add(ref rout, i * width + j) = total / pixels;
+                Unsafe.Add(ref rout, i * width + j) = total;
             });
 
             // Copy the modified image back
