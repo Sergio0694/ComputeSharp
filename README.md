@@ -48,9 +48,7 @@ If the shader in C# is capturing some local variable, those will be automaticall
 
 ✅ Local vector types: `System.Numerics.Vector2`, `Vector3`, `Vector4`
 
-✅ `static readonly` fields with scalar type
-
-✅ `static` fields with scalar or vector type
+✅ `static` fields of both scalar and vector types (parent class must be `public`)
 
 ## Advanced usage
 
