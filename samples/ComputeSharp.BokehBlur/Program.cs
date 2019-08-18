@@ -25,7 +25,7 @@ namespace ComputeSharp.BokehBlur
         {
             // Load the input image
             Console.WriteLine(">> Loading image");
-            using Image<Rgb24> image = Image.Load<Rgb24>(ImagePath);
+            using Image<Rgba32> image = Image.Load(ImagePath);
             var (height, width) = (image.Height, image.Width);
 
             // Get the vector buffer
@@ -35,7 +35,7 @@ namespace ComputeSharp.BokehBlur
             // Populate the buffer
             Parallel.For(0, height, i =>
             {
-                ref Rgb24 rPixel = ref image.GetPixelRowSpan(i).GetPinnableReference();
+                ref Rgba32 rPixel = ref image.GetPixelRowSpan(i).GetPinnableReference();
                 ref Vector4 r4 = ref vectorArray[i * width];
 
                 for (int j = 0; j < width; j++)
@@ -84,8 +84,10 @@ namespace ComputeSharp.BokehBlur
                         int iy = i + y;
                         int jx = j + x;
 
-                        if (iy < 0 || iy > height) continue;
-                        if (jx < 0 || jx > width) continue;
+                        if (iy < 0) iy = -iy;
+                        else if (iy > height) iy -= height;
+                        if (jx < 0) jx = -jx;
+                        else if (jx > width) jx -= width;
 
                         int ki = Radius - y;
                         int kj = Radius - x;
@@ -101,7 +103,7 @@ namespace ComputeSharp.BokehBlur
             Console.WriteLine(">> Storing pixel data");
             Parallel.For(0, height, i =>
             {
-                ref Rgb24 rPixel = ref image.GetPixelRowSpan(i).GetPinnableReference();
+                ref Rgba32 rPixel = ref image.GetPixelRowSpan(i).GetPinnableReference();
                 ref Vector4 r4 = ref resultArray[i * width];
 
                 for (int j = 0; j < width; j++)
