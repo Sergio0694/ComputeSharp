@@ -44,6 +44,27 @@ namespace ComputeSharp.BokehBlur
                 }
             });
 
+            Console.WriteLine(">> Creating kernel");
+            int diameter = Radius * 2 + 1;
+            float[] kernel = new float[diameter * diameter];
+            int ones = 0;
+            for (int i = 0; i < diameter; i++)
+            {
+                for (int j = 0; j < diameter; j++)
+                {
+                    if (MathF.Sqrt(MathF.Pow(j - Radius, 2) + MathF.Pow(i - Radius, 2)) - 0.1f <= Radius)
+                    {
+                        kernel[i * diameter + j] = 1;
+                        ones++;
+                    }
+                }
+            }
+
+            Console.WriteLine(">> Normalizing kernel");
+            for (int i = 0; i < diameter; i++)
+                for (int j = 0; j < diameter; j++)
+                    kernel[i * diameter + j] /= ones;
+
             // Apply the effect
             Console.WriteLine(">> Applying effect");
             Vector4[] resultArray = new Vector4[height * width];
