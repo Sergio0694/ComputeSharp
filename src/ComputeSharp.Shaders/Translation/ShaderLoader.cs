@@ -37,6 +37,21 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <summary>
+        /// The number of constant buffers to define in the shader
+        /// </summary>
+        private int _ConstantBuffersCount;
+
+        /// <summary>
+        /// The number of readonly buffers to define in the shader
+        /// </summary>
+        private int _ReadOnlyBuffersCount;
+
+        /// <summary>
+        /// The number of read write buffers to define in the shader
+        /// </summary>
+        private int _ReadWriteBuffersCount;
+
+        /// <summary>
         /// Gets the closure <see cref="Type"/> for the <see cref="Action"/> field
         /// </summary>
         public Type ShaderType { get; }
@@ -123,12 +138,8 @@ namespace ComputeSharp.Shaders.Translation
             IReadOnlyList<FieldInfo> shaderFields = ShaderType.GetFields().ToArray();
             if (shaderFields.Any(fieldInfo => fieldInfo.IsStatic)) throw new InvalidOperationException("Empty shader body");
 
-            int constantBuffersCount = 0;
-            int readOnlyBuffersCount = 0;
-            int readWriteBuffersCount = 0;
-
             // Descriptor for the buffer for captured scalar/vector variables
-            DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, constantBuffersCount++));
+            DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, _ConstantBuffersCount++));
 
             // Inspect the captured fields
             foreach (FieldInfo fieldInfo in shaderFields)
@@ -139,35 +150,35 @@ namespace ComputeSharp.Shaders.Translation
                 // Constant buffer
                 if (HlslKnownTypes.IsConstantBufferType(fieldType))
                 {
-                    DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, constantBuffersCount));
+                    DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, _ConstantBuffersCount));
 
                     // Track the buffer field
                     _BufferFields.Add(fieldInfo);
 
                     string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
-                    _BuffersList.Add(new ConstantBufferFieldInfo(fieldType, typeName, fieldName, constantBuffersCount++));
+                    _BuffersList.Add(new ConstantBufferFieldInfo(fieldType, typeName, fieldName, _ConstantBuffersCount++));
                 }
                 else if (HlslKnownTypes.IsReadOnlyBufferType(fieldType))
                 {
                     // Root parameter for a readonly buffer
-                    DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ShaderResourceView, 1, readOnlyBuffersCount));
+                    DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ShaderResourceView, 1, _ReadOnlyBuffersCount));
 
                     // Track the buffer field
                     _BufferFields.Add(fieldInfo);
 
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
-                    _BuffersList.Add(new ReadOnlyBufferFieldInfo(fieldType, typeName, fieldName, readOnlyBuffersCount++));
+                    _BuffersList.Add(new ReadOnlyBufferFieldInfo(fieldType, typeName, fieldName, _ReadOnlyBuffersCount++));
                 }
                 else if (HlslKnownTypes.IsReadWriteBufferType(fieldType))
                 {
                     // Root parameter for a read write buffer
-                    DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.UnorderedAccessView, 1, readWriteBuffersCount));
+                    DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.UnorderedAccessView, 1, _ReadWriteBuffersCount));
 
                     // Track the buffer field
                     _BufferFields.Add(fieldInfo);
 
                     string typeName = HlslKnownTypes.GetMappedName(fieldType);
-                    _BuffersList.Add(new ReadWriteBufferFieldInfo(fieldType, typeName, fieldName, readWriteBuffersCount++));
+                    _BuffersList.Add(new ReadWriteBufferFieldInfo(fieldType, typeName, fieldName, _ReadWriteBuffersCount++));
                 }
                 else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
                 {
