@@ -43,15 +43,26 @@ namespace ComputeSharp.Shaders.Extensions
         /// <param name="variable">The info on parsed static fields, if any</param>
         /// <returns>A <see cref="SyntaxNode"/> instance that is compatible with HLSL</returns>
         [Pure]
-        public static SyntaxNode ReplaceMember(this MemberAccessExpressionSyntax node, SemanticModel semanticModel, out (string name, FieldInfo FieldInfo)? variable)
+        public static SyntaxNode ReplaceMember(this MemberAccessExpressionSyntax node, SemanticModel semanticModel, out (string Name, FieldInfo FieldInfo)? variable)
         {
-            SymbolInfo containingMemberSymbolInfo = semanticModel.GetSymbolInfo(node.Expression);
-            SymbolInfo memberSymbolInfo = semanticModel.GetSymbolInfo(node.Name);
-
-            ISymbol? memberSymbol = memberSymbolInfo.Symbol ?? memberSymbolInfo.CandidateSymbols.FirstOrDefault();
-
             // Set the variable to null, replace it later on if needed
             variable = null;
+
+            SymbolInfo containingMemberSymbolInfo;
+            ISymbol? memberSymbol;
+            try
+            {
+                containingMemberSymbolInfo = semanticModel.GetSymbolInfo(node.Expression);
+                SymbolInfo memberSymbolInfo = semanticModel.GetSymbolInfo(node.Name);
+                memberSymbol = memberSymbolInfo.Symbol ?? memberSymbolInfo.CandidateSymbols.FirstOrDefault();
+            }
+            catch (ArgumentException)
+            {
+                // Member access on a captured HLSL-compatible field or property
+                string name = node.Name.ToFullString();
+                if (name == "X" || name == "Y" || name == "Z" || name == "W") return node.WithName(SyntaxFactory.IdentifierName(name.ToLowerInvariant()));
+                return node;
+            }
 
             // If the input member has no symbol or is not a field, property or method, just return it
             if (memberSymbol is null ||
@@ -108,8 +119,8 @@ namespace ComputeSharp.Shaders.Extensions
                     };
                 }
 
-                // Captured variable, treat it like any other captured variable in the closure
-                if (!isReadonly && fieldInfo != null)
+                // Captured field, treat it like any other captured variable in the closure
+                if (fieldInfo != null)
                 {
                     string name = $"{containingMemberSymbolInfo.Symbol.Name}_{fieldInfo.Name}";
                     variable = (name, fieldInfo);

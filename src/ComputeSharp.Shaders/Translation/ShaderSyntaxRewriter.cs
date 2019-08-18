@@ -23,12 +23,12 @@ namespace ComputeSharp.Shaders.Translation
         /// <param name="semanticModel"></param>
         public ShaderSyntaxRewriter(SemanticModel semanticModel) => SemanticModel = semanticModel;
 
-        private readonly List<(string, FieldInfo)> _StaticFields = new List<(string, FieldInfo)>();
+        private readonly Dictionary<string, FieldInfo> _StaticFields = new Dictionary<string, FieldInfo>();
 
         /// <summary>
-        /// Gets the collection of captured static fields used by the target code
+        /// Gets the mapping of captured static fields used by the target code
         /// </summary>
-        public IReadOnlyList<(string Name, FieldInfo FieldInfo)> StaticFields => _StaticFields;
+        public IReadOnlyDictionary<string, FieldInfo> StaticFields => _StaticFields;
 
         /// <inheritdoc/>
         public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node)
@@ -101,7 +101,10 @@ namespace ComputeSharp.Shaders.Translation
             SyntaxNode syntaxNode = node.ReplaceMember(SemanticModel, out var variable);
 
             // Register the captured member, if any
-            if (variable.HasValue) _StaticFields.Add(variable.Value);
+            if (variable.HasValue && !_StaticFields.ContainsKey(variable.Value.Name))
+            {
+                _StaticFields.Add(variable.Value.Name, variable.Value.FieldInfo);
+            }
 
             return syntaxNode;
         }
