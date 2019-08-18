@@ -19,7 +19,7 @@ namespace ComputeSharp.BokehBlur
         /// <summary>
         /// The radius of the bokeh blur effect to apply
         /// </summary>
-        private const int Radius = 12;
+        private const int Radius = 32;
 
         static void Main()
         {
@@ -40,7 +40,7 @@ namespace ComputeSharp.BokehBlur
 
                 for (int j = 0; j < width; j++)
                 {
-                    Unsafe.Add(ref r4, j) = Unsafe.Add(ref rPixel, i).ToVector4();
+                    Unsafe.Add(ref r4, j) = Unsafe.Add(ref rPixel, j).ToVector4();
                 }
             });
 
