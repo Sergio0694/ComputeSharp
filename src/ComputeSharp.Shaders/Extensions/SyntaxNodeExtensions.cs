@@ -108,8 +108,8 @@ namespace ComputeSharp.Shaders.Extensions
                     };
                 }
 
-                // Captured variable, treat it like any other captured variable in the closure
-                if (!isReadonly && fieldInfo != null)
+                // Captured field, treat it like any other captured variable in the closure
+                if (fieldInfo != null)
                 {
                     string name = $"{containingMemberSymbolInfo.Symbol.Name}_{fieldInfo.Name}";
                     variable = (name, fieldInfo);
