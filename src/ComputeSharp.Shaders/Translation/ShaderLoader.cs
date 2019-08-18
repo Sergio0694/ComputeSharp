@@ -144,51 +144,61 @@ namespace ComputeSharp.Shaders.Translation
             // Inspect the captured fields
             foreach (FieldInfo fieldInfo in shaderFields)
             {
-                Type fieldType = fieldInfo.FieldType;
-                string fieldName = fieldInfo.Name;
-
-                // Constant buffer
-                if (HlslKnownTypes.IsConstantBufferType(fieldType))
-                {
-                    DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, _ConstantBuffersCount));
-
-                    // Track the buffer field
-                    _BufferFields.Add(fieldInfo);
-
-                    string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
-                    _BuffersList.Add(new ConstantBufferFieldInfo(fieldType, typeName, fieldName, _ConstantBuffersCount++));
-                }
-                else if (HlslKnownTypes.IsReadOnlyBufferType(fieldType))
-                {
-                    // Root parameter for a readonly buffer
-                    DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ShaderResourceView, 1, _ReadOnlyBuffersCount));
-
-                    // Track the buffer field
-                    _BufferFields.Add(fieldInfo);
-
-                    string typeName = HlslKnownTypes.GetMappedName(fieldType);
-                    _BuffersList.Add(new ReadOnlyBufferFieldInfo(fieldType, typeName, fieldName, _ReadOnlyBuffersCount++));
-                }
-                else if (HlslKnownTypes.IsReadWriteBufferType(fieldType))
-                {
-                    // Root parameter for a read write buffer
-                    DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.UnorderedAccessView, 1, _ReadWriteBuffersCount));
-
-                    // Track the buffer field
-                    _BufferFields.Add(fieldInfo);
-
-                    string typeName = HlslKnownTypes.GetMappedName(fieldType);
-                    _BuffersList.Add(new ReadWriteBufferFieldInfo(fieldType, typeName, fieldName, _ReadWriteBuffersCount++));
-                }
-                else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
-                {
-                    // Register the captured field
-                    _VariableFields.Add(fieldInfo);
-                    string typeName = HlslKnownTypes.GetMappedName(fieldType);
-                    _FieldsList.Add(new CapturedFieldInfo(fieldType, typeName, fieldName));
-                }
-                else throw new NotSupportedException($"Unsupported field of type {fieldType.FullName}");
+                LoadFieldInfo(fieldInfo);
             }
+        }
+
+        /// <summary>
+        /// Loads a specified <see cref="FieldInfo"/> and adds it to the shader model
+        /// </summary>
+        /// <param name="fieldInfo">The target <see cref="FieldInfo"/> to load</param>
+        /// <param name="name">The optional explicit name to use for the field</param>
+        private void LoadFieldInfo(FieldInfo fieldInfo, string? name = null)
+        {
+            Type fieldType = fieldInfo.FieldType;
+            string fieldName = name ?? fieldInfo.Name;
+
+            // Constant buffer
+            if (HlslKnownTypes.IsConstantBufferType(fieldType))
+            {
+                DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, _ConstantBuffersCount));
+
+                // Track the buffer field
+                _BufferFields.Add(fieldInfo);
+
+                string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
+                _BuffersList.Add(new ConstantBufferFieldInfo(fieldType, typeName, fieldName, _ConstantBuffersCount++));
+            }
+            else if (HlslKnownTypes.IsReadOnlyBufferType(fieldType))
+            {
+                // Root parameter for a readonly buffer
+                DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ShaderResourceView, 1, _ReadOnlyBuffersCount));
+
+                // Track the buffer field
+                _BufferFields.Add(fieldInfo);
+
+                string typeName = HlslKnownTypes.GetMappedName(fieldType);
+                _BuffersList.Add(new ReadOnlyBufferFieldInfo(fieldType, typeName, fieldName, _ReadOnlyBuffersCount++));
+            }
+            else if (HlslKnownTypes.IsReadWriteBufferType(fieldType))
+            {
+                // Root parameter for a read write buffer
+                DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.UnorderedAccessView, 1, _ReadWriteBuffersCount));
+
+                // Track the buffer field
+                _BufferFields.Add(fieldInfo);
+
+                string typeName = HlslKnownTypes.GetMappedName(fieldType);
+                _BuffersList.Add(new ReadWriteBufferFieldInfo(fieldType, typeName, fieldName, _ReadWriteBuffersCount++));
+            }
+            else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
+            {
+                // Register the captured field
+                _VariableFields.Add(fieldInfo);
+                string typeName = HlslKnownTypes.GetMappedName(fieldType);
+                _FieldsList.Add(new CapturedFieldInfo(fieldType, typeName, fieldName));
+            }
+            else throw new NotSupportedException($"Unsupported field of type {fieldType.FullName}");
         }
 
         /// <summary>
