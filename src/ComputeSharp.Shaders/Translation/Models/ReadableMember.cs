@@ -54,7 +54,7 @@ namespace ComputeSharp.Shaders.Translation.Models
         /// </summary>
         /// <param name="instance">The target instance to use to read the value from</param>
         [Pure]
-        public object GetValue(object instance)
+        public object GetValue(object? instance)
         {
             if (Field != null) return Field.GetValue(instance);
             if (Property != null) return Property.GetValue(instance);

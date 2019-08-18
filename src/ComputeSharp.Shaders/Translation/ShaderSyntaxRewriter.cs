@@ -104,7 +104,7 @@ namespace ComputeSharp.Shaders.Translation
             // Register the captured member, if any
             if (variable.HasValue && !_StaticMembers.ContainsKey(variable.Value.Name))
             {
-                _StaticMembers.Add(variable.Value.Name, variable.Value.FieldInfo);
+                _StaticMembers.Add(variable.Value.Name, variable.Value.MemberInfo);
             }
 
             return syntaxNode;

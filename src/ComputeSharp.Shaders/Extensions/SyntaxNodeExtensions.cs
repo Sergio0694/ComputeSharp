@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using ComputeSharp.Shaders.Mappings;
+using ComputeSharp.Shaders.Translation.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -40,10 +41,10 @@ namespace ComputeSharp.Shaders.Extensions
         /// </summary>
         /// <param name="node">The input <see cref="MemberAccessExpressionSyntax"/> to check and modify if needed</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> to use to load symbols for the input node</param>
-        /// <param name="variable">The info on parsed static fields, if any</param>
+        /// <param name="variable">The info on parsed static members, if any</param>
         /// <returns>A <see cref="SyntaxNode"/> instance that is compatible with HLSL</returns>
         [Pure]
-        public static SyntaxNode ReplaceMember(this MemberAccessExpressionSyntax node, SemanticModel semanticModel, out (string Name, FieldInfo FieldInfo)? variable)
+        public static SyntaxNode ReplaceMember(this MemberAccessExpressionSyntax node, SemanticModel semanticModel, out (string Name, ReadableMember MemberInfo)? variable)
         {
             // Set the variable to null, replace it later on if needed
             variable = null;
@@ -86,46 +87,38 @@ namespace ComputeSharp.Shaders.Extensions
 
                 // Retrieve the field or property info
                 bool isReadonly;
-                object memberValue;
-                Type memberType;
-                FieldInfo? fieldInfo;
+                ReadableMember memberInfo;
                 switch (memberSymbol.Kind)
                 {
                     case SymbolKind.Field:
-                        fieldInfo = fieldDeclaringType.GetField(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                        FieldInfo fieldInfo = fieldDeclaringType.GetField(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
                         isReadonly = fieldInfo.IsInitOnly;
-                        memberValue = fieldInfo.GetValue(null);
-                        memberType = fieldInfo.FieldType;
+                        memberInfo = fieldInfo;
                         break;
                     case SymbolKind.Property:
                         PropertyInfo propertyInfo = fieldDeclaringType.GetProperty(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
                         isReadonly = !propertyInfo.CanWrite;
-                        memberValue = propertyInfo.GetValue(null);
-                        memberType = propertyInfo.PropertyType;
-                        fieldInfo = null;
+                        memberInfo = propertyInfo;
                         break;
                     default: throw new InvalidOperationException($"Invalid symbol kind: {memberSymbol.Kind}");
                 }
 
                 // Constant replacement if the value is a readonly scalar value
-                if (isReadonly && HlslKnownTypes.IsKnownScalarType(memberType))
+                if (isReadonly && HlslKnownTypes.IsKnownScalarType(memberInfo.MemberType))
                 {
-                    return memberValue switch
+                    return memberInfo.GetValue(null) switch
                     {
                         true => SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression, SyntaxFactory.Token(SyntaxKind.TrueKeyword)),
                         false => SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression, SyntaxFactory.Token(SyntaxKind.TrueKeyword)),
                         IFormattable scalar => SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.ParseToken(scalar.ToString(null, CultureInfo.InvariantCulture))),
-                        _ => throw new InvalidOperationException($"Invalid field of type {memberType}")
+                        _ => throw new InvalidOperationException($"Invalid field of type {memberInfo.MemberType}")
                     };
                 }
 
-                // Captured field, treat it like any other captured variable in the closure
-                if (fieldInfo != null)
-                {
-                    string name = $"{containingMemberSymbolInfo.Symbol.Name}_{fieldInfo.Name}";
-                    variable = (name, fieldInfo);
-                    return SyntaxFactory.IdentifierName(name);
-                }
+                // Captured member, treat it like any other captured variable in the closure
+                string name = $"{containingMemberSymbolInfo.Symbol.Name}_{memberInfo.Name}";
+                variable = (name, memberInfo);
+                return SyntaxFactory.IdentifierName(name);
             }
 
             // Process the input node if it's a known method invocation
