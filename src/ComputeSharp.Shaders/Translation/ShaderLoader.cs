@@ -8,6 +8,7 @@ using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Renderer.Models.Fields;
 using ComputeSharp.Shaders.Renderer.Models.Fields.Abstract;
+using ComputeSharp.Shaders.Translation.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SharpDX.Direct3D12;
@@ -69,26 +70,26 @@ namespace ComputeSharp.Shaders.Translation
         public RootParameter[] RootParameters => _RootParameters ??= DescriptorRanges.Select(range => new RootParameter(ShaderVisibility.All, range)).ToArray();
 
         /// <summary>
-        /// The <see cref="List{T}"/> of <see cref="FieldInfo"/> instances mapping the captured buffers in the current shader
+        /// The <see cref="List{T}"/> of <see cref="ReadableMember"/> instances mapping the captured buffers in the current shader
         /// </summary>
-        private readonly List<FieldInfo> _BufferFields = new List<FieldInfo>();
+        private readonly List<ReadableMember> _BufferMembers = new List<ReadableMember>();
 
         /// <summary>
         /// Gets the ordered collection of buffers used as fields in the current shader
         /// </summary>
         /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
-        public IEnumerable<(int Index, GraphicsResource Resource)> GetBuffers(Action<ThreadIds> action) => _BufferFields.Select((field, i) => (i + 1, (GraphicsResource)field.GetValue(action.Target)));
+        public IEnumerable<(int Index, GraphicsResource Resource)> GetBuffers(Action<ThreadIds> action) => _BufferMembers.Select((field, i) => (i + 1, (GraphicsResource)field.GetValue(action.Target)));
 
         /// <summary>
-        /// The <see cref="List{T}"/> of <see cref="FieldInfo"/> instances mapping the captured scalar/vector variables in the current shader
+        /// The <see cref="List{T}"/> of <see cref="ReadableMember"/> instances mapping the captured scalar/vector variables in the current shader
         /// </summary>
-        private readonly List<FieldInfo> _VariableFields = new List<FieldInfo>();
+        private readonly List<ReadableMember> _VariableMembers = new List<ReadableMember>();
 
         /// <summary>
         /// Gets the collection of values of the captured fields for the current shader
         /// </summary>
         /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
-        public IEnumerable<object> GetVariables(Action<ThreadIds> action) => _VariableFields.Select(field => field.GetValue(action.Target));
+        public IEnumerable<object> GetVariables(Action<ThreadIds> action) => _VariableMembers.Select(field => field.GetValue(action.Target));
 
         private readonly List<HlslBufferInfo> _BuffersList = new List<HlslBufferInfo>();
 
@@ -149,14 +150,14 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <summary>
-        /// Loads a specified <see cref="FieldInfo"/> and adds it to the shader model
+        /// Loads a specified <see cref="ReadableMember"/> and adds it to the shader model
         /// </summary>
-        /// <param name="fieldInfo">The target <see cref="FieldInfo"/> to load</param>
+        /// <param name="memberInfo">The target <see cref="ReadableMember"/> to load</param>
         /// <param name="name">The optional explicit name to use for the field</param>
-        private void LoadFieldInfo(FieldInfo fieldInfo, string? name = null)
+        private void LoadFieldInfo(ReadableMember memberInfo, string? name = null)
         {
-            Type fieldType = fieldInfo.FieldType;
-            string fieldName = name ?? fieldInfo.Name;
+            Type fieldType = memberInfo.MemberType;
+            string fieldName = name ?? memberInfo.Name;
 
             // Constant buffer
             if (HlslKnownTypes.IsConstantBufferType(fieldType))
@@ -164,7 +165,7 @@ namespace ComputeSharp.Shaders.Translation
                 DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, _ConstantBuffersCount));
 
                 // Track the buffer field
-                _BufferFields.Add(fieldInfo);
+                _BufferMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
                 _BuffersList.Add(new ConstantBufferFieldInfo(fieldType, typeName, fieldName, _ConstantBuffersCount++));
@@ -175,7 +176,7 @@ namespace ComputeSharp.Shaders.Translation
                 DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ShaderResourceView, 1, _ReadOnlyBuffersCount));
 
                 // Track the buffer field
-                _BufferFields.Add(fieldInfo);
+                _BufferMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
                 _BuffersList.Add(new ReadOnlyBufferFieldInfo(fieldType, typeName, fieldName, _ReadOnlyBuffersCount++));
@@ -186,7 +187,7 @@ namespace ComputeSharp.Shaders.Translation
                 DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.UnorderedAccessView, 1, _ReadWriteBuffersCount));
 
                 // Track the buffer field
-                _BufferFields.Add(fieldInfo);
+                _BufferMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
                 _BuffersList.Add(new ReadWriteBufferFieldInfo(fieldType, typeName, fieldName, _ReadWriteBuffersCount++));
@@ -194,7 +195,7 @@ namespace ComputeSharp.Shaders.Translation
             else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
             {
                 // Register the captured field
-                _VariableFields.Add(fieldInfo);
+                _VariableMembers.Add(memberInfo);
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
                 _FieldsList.Add(new CapturedFieldInfo(fieldType, typeName, fieldName));
             }
@@ -214,7 +215,7 @@ namespace ComputeSharp.Shaders.Translation
             root = (MethodDeclarationSyntax)syntaxRewriter.Visit(root);
 
             // Register the captured static fields
-            foreach (var item in syntaxRewriter.StaticFields)
+            foreach (var item in syntaxRewriter.StaticMembers)
             {
                 LoadFieldInfo(item.Value, item.Key);
             }

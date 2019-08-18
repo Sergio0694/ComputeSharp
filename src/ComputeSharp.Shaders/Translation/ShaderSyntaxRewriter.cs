@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using ComputeSharp.Shaders.Extensions;
+using ComputeSharp.Shaders.Translation.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -23,12 +24,12 @@ namespace ComputeSharp.Shaders.Translation
         /// <param name="semanticModel"></param>
         public ShaderSyntaxRewriter(SemanticModel semanticModel) => SemanticModel = semanticModel;
 
-        private readonly Dictionary<string, FieldInfo> _StaticFields = new Dictionary<string, FieldInfo>();
+        private readonly Dictionary<string, ReadableMember> _StaticMembers = new Dictionary<string, ReadableMember>();
 
         /// <summary>
-        /// Gets the mapping of captured static fields used by the target code
+        /// Gets the mapping of captured static members used by the target code
         /// </summary>
-        public IReadOnlyDictionary<string, FieldInfo> StaticFields => _StaticFields;
+        public IReadOnlyDictionary<string, ReadableMember> StaticMembers => _StaticMembers;
 
         /// <inheritdoc/>
         public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node)
@@ -101,9 +102,9 @@ namespace ComputeSharp.Shaders.Translation
             SyntaxNode syntaxNode = node.ReplaceMember(SemanticModel, out var variable);
 
             // Register the captured member, if any
-            if (variable.HasValue && !_StaticFields.ContainsKey(variable.Value.Name))
+            if (variable.HasValue && !_StaticMembers.ContainsKey(variable.Value.Name))
             {
-                _StaticFields.Add(variable.Value.Name, variable.Value.FieldInfo);
+                _StaticMembers.Add(variable.Value.Name, variable.Value.MemberInfo);
             }
 
             return syntaxNode;

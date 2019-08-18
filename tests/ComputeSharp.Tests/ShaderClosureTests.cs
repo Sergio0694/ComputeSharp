@@ -9,7 +9,7 @@ namespace ComputeSharp.Tests
 {
     [TestClass]
     [TestCategory("ShaderClosure")]
-    public partial class ShaderClosureTests
+    public class ShaderClosureTests
     {
         [TestMethod]
         public void LocalScalarAssignToBuffer()
