@@ -25,7 +25,7 @@ More details available [here](https://www.nuget.org/packages/ComputeSharp/).
 
 # Quick start
 
-**ComputeSharp** exposes a `Gpu` class that acts entry point for all public APIs. It exposes the `Gpu.Default` property that let you access the main GPU device on the current machine, which can be used to allocate buffers and perform operations.
+**ComputeSharp** exposes a `Gpu` class that acts entry point for all public APIs. It exposes the `Gpu.Default` property that lets you access the main GPU device on the current machine, which can be used to allocate buffers and perform operations.
 
 The following sample shows how to allocate a writeable buffer, populate it with a compute shader, and read it back.
 
@@ -42,7 +42,7 @@ float[] array = buffer.GetData();
 
 ## Capturing variables
 
-If the shader in C# is capturing some local variable, those will be automatically copied over to the GPU, so that the HLSL shader will be able to access them just like you'd expect. Additionally, **ComputeSharp** can also resolve static fields being used in a shader. Of course, the captured variables need to be convertible to valid HLSL types: either scalar types (`int`, `uint`, `float`, etc.) or known HLSL structs (eg. `Vector3`). Here is a list of the variable types currently supported by the library:
+If the shader in C# is capturing some local variable, those will be automatically copied over to the GPU, so that the HLSL shader will be able to access them just like you'd expect. Additionally, **ComputeSharp** can also resolve static fields being used in a shader. The captured variables need to be convertible to valid HLSL types: either scalar types (`int`, `uint`, `float`, etc.) or known HLSL structs (eg. `Vector3`). Here is a list of the variable types currently supported by the library:
 
 ✅ Local scalar types: `bool`, `int`, `uint`, `float`, `double`
 
