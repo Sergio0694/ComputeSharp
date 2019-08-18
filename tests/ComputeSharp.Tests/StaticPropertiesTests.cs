@@ -36,7 +36,9 @@ namespace ComputeSharp.Tests
         public static ReadOnlyBuffer<float> StaticBuffer { get; set; } = Gpu.Default.AllocateReadOnlyBuffer(new[] { 3.14f, 7.77f });
     }
 
-    public partial class ShaderClosureTests
+    [TestClass]
+    [TestCategory("StaticProperties")]
+    public class StaticPropertiesTests
     {
         [TestMethod]
         public void StaticReadonlyScalarPropertyAssignToBuffer()
