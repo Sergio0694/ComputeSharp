@@ -1,6 +1,6 @@
-﻿using System;
-using ComputeSharp.Graphics.Buffers.Abstract;
+﻿using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Enums;
+using ComputeSharp.Graphics.Exceptions;
 
 namespace ComputeSharp.Graphics.Buffers
 {
@@ -24,8 +24,8 @@ namespace ComputeSharp.Graphics.Buffers
         /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else</remarks>
         public T this[uint i]
         {
-            get => throw new InvalidOperationException("The indexer APIs can only be used from a compute shader");
-            set => throw new InvalidOperationException("The indexer APIs can only be used from a compute shader");
+            get => throw new InvalidExecutionContextException($"{nameof(ReadWriteBuffer<T>)}<T>[uint i]");
+            set => throw new InvalidExecutionContextException($"{nameof(ReadWriteBuffer<T>)}<T>[uint i]");
         }
     }
 }

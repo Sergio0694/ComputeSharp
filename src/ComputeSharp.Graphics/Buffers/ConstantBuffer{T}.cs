@@ -4,6 +4,7 @@ using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Enums;
+using ComputeSharp.Graphics.Exceptions;
 using ComputeSharp.Graphics.Helpers;
 using SharpDX.Direct3D12;
 using CommandList = ComputeSharp.Graphics.Commands.CommandList;
@@ -38,7 +39,7 @@ namespace ComputeSharp.Graphics.Buffers
         /// </summary>
         /// <param name="i">The index of the value to get</param>
         /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else</remarks>
-        public T this[uint i] => throw new InvalidOperationException("The indexer APIs can only be used from a compute shader");
+        public T this[uint i] => throw new InvalidExecutionContextException($"{nameof(ConstantBuffer<T>)}<T>[uint i]");
 
         /// <inheritdoc/>
         public override void GetData(Span<T> span, int offset, int count)
