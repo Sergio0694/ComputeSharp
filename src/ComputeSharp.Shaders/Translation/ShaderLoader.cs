@@ -199,7 +199,6 @@ namespace ComputeSharp.Shaders.Translation
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
                 _FieldsList.Add(new CapturedFieldInfo(fieldType, typeName, fieldName));
             }
-            else throw new NotSupportedException($"Unsupported field of type {fieldType.FullName}");
         }
 
         /// <summary>
