@@ -13,11 +13,15 @@ namespace ComputeSharp.Graphics.Helpers
         /// </summary>
         /// <typeparam name="T">The type of values in the input <see cref="Span{T}"/></typeparam>
         /// <param name="source">The source <see cref="Span{T}"/> to read</param>
+        /// <param name="sourceOffset">The source offset to start reading data from</param>
         /// <param name="destination">The <see cref="IntPtr"/> for the destination memory area</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void Copy<T>(Span<T> source, IntPtr destination) where T : unmanaged
+        /// <param name="destinationOffset">The destination offset to start writing data to</param>
+        /// <param name="count">The total number of items to copy</param>
+        public static unsafe void Copy<T>(Span<T> source, int sourceOffset, IntPtr destination, int destinationOffset, int count) where T : unmanaged
         {
-            source.CopyTo(new Span<T>(destination.ToPointer(), source.Length));
+            ref T rout = ref Unsafe.AsRef<T>(destination.ToPointer());
+            void* target = Unsafe.AsPointer(ref Unsafe.Add(ref rout, destinationOffset));
+            source.Slice(sourceOffset, count).CopyTo(new Span<T>(target, count));
         }
 
         /// <summary>
@@ -25,11 +29,16 @@ namespace ComputeSharp.Graphics.Helpers
         /// </summary>
         /// <typeparam name="T">The type of values to read</typeparam>
         /// <param name="source">The <see cref="IntPtr"/> that indicates the memory area to read from</param>
+        /// <param name="sourceOffset">The source offset to start reading data from</param>
         /// <param name="destination">The destination <see cref="Span{T}"/> to write</param>
+        /// <param name="destinationOffset">The destination offset to start writing data to</param>
+        /// <param name="count">The total number of items to copy</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void Copy<T>(IntPtr source, Span<T> destination) where T : unmanaged
+        public static unsafe void Copy<T>(IntPtr source, int sourceOffset, Span<T> destination, int destinationOffset, int count) where T : unmanaged
         {
-            new Span<T>(source.ToPointer(), destination.Length).CopyTo(destination);
+            ref T rin = ref Unsafe.AsRef<T>(source.ToPointer());
+            void* target = Unsafe.AsPointer(ref Unsafe.Add(ref rin, sourceOffset));
+            new Span<T>(target, count).CopyTo(destination.Slice(destinationOffset, count));
         }
     }
 }
