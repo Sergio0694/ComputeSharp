@@ -27,7 +27,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, count, count * ElementSizeInBytes, BufferType.Transfer);
             using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
-            copyCommandList.CopyBufferRegion(this, offset, transferBuffer, 0, count * ElementSizeInBytes);
+            copyCommandList.CopyBufferRegion(this, offset * ElementSizeInBytes, transferBuffer, 0, count * ElementSizeInBytes);
             copyCommandList.Flush();
 
             transferBuffer.Map(0);
@@ -46,7 +46,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
-            copyCommandList.CopyBufferRegion(transferBuffer, 0, this, offset, count * ElementSizeInBytes);
+            copyCommandList.CopyBufferRegion(transferBuffer, 0, this, offset * ElementSizeInBytes, count * ElementSizeInBytes);
             copyCommandList.Flush();
         }
 
