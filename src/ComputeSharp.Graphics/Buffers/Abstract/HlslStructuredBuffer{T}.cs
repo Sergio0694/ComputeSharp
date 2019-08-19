@@ -22,31 +22,31 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         internal HlslStructuredBuffer(GraphicsDevice device, int size, BufferType bufferType) : base(device, size, size * Unsafe.SizeOf<T>(), bufferType) { }
 
         /// <inheritdoc/>
-        public override void GetData(Span<T> span)
+        public override void GetData(Span<T> span, int offset, int count)
         {
-            using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, Size, SizeInBytes, BufferType.Transfer);
+            using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, count, count * ElementSizeInBytes, BufferType.Transfer);
             using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
-            copyCommandList.CopyBufferRegion(this, 0, transferBuffer, 0, SizeInBytes);
+            copyCommandList.CopyBufferRegion(this, offset, transferBuffer, 0, count * ElementSizeInBytes);
             copyCommandList.Flush();
 
             transferBuffer.Map(0);
-            MemoryHelper.Copy(transferBuffer.MappedResource, span);
+            MemoryHelper.Copy(transferBuffer.MappedResource, 0, span, 0, count);
             transferBuffer.Unmap(0);
         }
 
         /// <inheritdoc/>
-        public override void SetData(Span<T> span)
+        public override void SetData(Span<T> span, int offset, int count)
         {
-            using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, Size, SizeInBytes, BufferType.Transfer);
+            using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, count, count * ElementSizeInBytes, BufferType.Transfer);
 
             transferBuffer.Map(0);
-            MemoryHelper.Copy(span, transferBuffer.MappedResource);
+            MemoryHelper.Copy(span, 0, transferBuffer.MappedResource, 0, count);
             transferBuffer.Unmap(0);
 
             using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
-            copyCommandList.CopyBufferRegion(transferBuffer, 0, this, 0, SizeInBytes);
+            copyCommandList.CopyBufferRegion(transferBuffer, 0, this, offset, count * ElementSizeInBytes);
             copyCommandList.Flush();
         }
 
