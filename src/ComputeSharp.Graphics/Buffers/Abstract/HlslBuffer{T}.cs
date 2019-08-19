@@ -25,10 +25,19 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// </summary>
         /// <returns>A <typeparamref name="T"/> array with the contents of the current buffer</returns>
         [Pure]
-        public T[] GetData()
+        public T[] GetData() => GetData(0, Size);
+
+        /// <summary>
+        /// Reads the contents of the current <see cref="HlslBuffer{T}"/> instance in a given range and returns an array
+        /// </summary>
+        /// <param name="offset">The offset to start reading data from</param>
+        /// <param name="count">The number of items to read</param>
+        /// <returns>A <typeparamref name="T"/> array with the contents of the specified range from the current buffer</returns>
+        [Pure]
+        public T[] GetData(int offset, int count)
         {
-            T[] data = new T[Size];
-            GetData(data);
+            T[] data = new T[count];
+            GetData(data, offset, count);
 
             return data;
         }
@@ -37,7 +46,15 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// Reads the contents of the current <see cref="HlslBuffer{T}"/> instance and writes them into a target <see cref="Span{T}"/>
         /// </summary>
         /// <param name="span">The input <see cref="Span{T}"/> to write data to</param>
-        public abstract void GetData(Span<T> span);
+        public void GetData(Span<T> span) => GetData(span, 0, Size);
+
+        /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="HlslBuffer{T}"/> instance and writes them into a target <see cref="Span{T}"/>
+        /// </summary>
+        /// <param name="span">The input <see cref="Span{T}"/> to write data to</param>
+        /// <param name="offset">The offset to start reading data from</param>
+        /// <param name="count">The number of items to read</param>
+        public abstract void GetData(Span<T> span, int offset, int count);
 
         /// <summary>
         /// Writes the contents of a given <typeparamref name="T"/> array to the current <see cref="HlslBuffer{T}"/> instance
@@ -46,10 +63,26 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         public void SetData(T[] array) => SetData(array.AsSpan());
 
         /// <summary>
+        /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="HlslBuffer{T}"/> instance
+        /// </summary>
+        /// <param name="array">The input <typeparamref name="T"/> array to read data from</param>
+        /// <param name="offset">The offset to start writing data to</param>
+        /// <param name="count">The number of items to write</param>
+        public void SetData(T[] array, int offset, int count) => SetData(array.AsSpan(), offset, count);
+
+        /// <summary>
         /// Writes the contents of a given <see cref="Span{T}"/> to the current <see cref="HlslBuffer{T}"/> instance
         /// </summary>
         /// <param name="span">The input <see cref="Span{T}"/> to read data from</param>
-        public abstract void SetData(Span<T> span);
+        public void SetData(Span<T> span) => SetData(span, 0, Size);
+
+        /// <summary>
+        /// Writes the contents of a given <see cref="Span{T}"/> to a specified area of the current <see cref="HlslBuffer{T}"/> instance
+        /// </summary>
+        /// <param name="span">The input <see cref="Span{T}"/> to read data from</param>
+        /// <param name="offset">The offset to start writing data to</param>
+        /// <param name="count">The number of items to write</param>
+        public abstract void SetData(Span<T> span, int offset, int count);
 
         /// <summary>
         /// Writes the contents of a given <see cref="HlslBuffer{T}"/> to the current <see cref="HlslBuffer{T}"/> instance

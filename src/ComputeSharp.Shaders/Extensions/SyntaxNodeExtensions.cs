@@ -112,19 +112,20 @@ namespace ComputeSharp.Shaders.Extensions
                 // Constant replacement if the value is a readonly scalar value
                 if (isReadonly && HlslKnownTypes.IsKnownScalarType(memberInfo.MemberType))
                 {
-                    return memberInfo.GetValue(null) switch
+                    LiteralExpressionSyntax expression = memberInfo.GetValue(null) switch
                     {
                         true => SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression, SyntaxFactory.Token(SyntaxKind.TrueKeyword)),
                         false => SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression, SyntaxFactory.Token(SyntaxKind.TrueKeyword)),
                         IFormattable scalar => SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.ParseToken(scalar.ToString(null, CultureInfo.InvariantCulture))),
                         _ => throw new InvalidOperationException($"Invalid field of type {memberInfo.MemberType}")
                     };
+                    return expression.WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
                 }
 
                 // Captured member, treat it like any other captured variable in the closure
                 string name = $"{containingMemberSymbolInfo.Symbol.Name}_{memberInfo.Name}";
                 variable = (name, memberInfo);
-                return SyntaxFactory.IdentifierName(name);
+                return SyntaxFactory.IdentifierName(name).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
             }
 
             return node;

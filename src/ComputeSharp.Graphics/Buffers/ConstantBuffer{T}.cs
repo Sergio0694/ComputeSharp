@@ -41,24 +41,24 @@ namespace ComputeSharp.Graphics.Buffers
         public T this[uint i] => throw new InvalidOperationException("The indexer APIs can only be used from a compute shader");
 
         /// <inheritdoc/>
-        public override void GetData(Span<T> span)
+        public override void GetData(Span<T> span, int offset, int count)
         {
             if (IsPaddingPresent)
             {
                 // Create the temporary array
-                byte[] temporaryArray = ArrayPool<byte>.Shared.Rent(SizeInBytes);
-                Span<byte> temporarySpan = temporaryArray.AsSpan();
+                byte[] temporaryArray = ArrayPool<byte>.Shared.Rent(count * PaddedElementSizeInBytes);
+                Span<byte> temporarySpan = temporaryArray.AsSpan(0, count * PaddedElementSizeInBytes);
 
                 // Copy the padded data to the temporary array
                 Map(0);
-                MemoryHelper.Copy(MappedResource, temporarySpan);
+                MemoryHelper.Copy(MappedResource, offset * PaddedElementSizeInBytes, temporarySpan, 0, count * PaddedElementSizeInBytes);
                 Unmap(0);
 
                 ref byte tin = ref temporarySpan.GetPinnableReference();
                 ref T tout = ref span.GetPinnableReference();
 
                 // Copy the padded data to the target span, removing the padding
-                for (int i = 0; i < Size; i++)
+                for (int i = 0; i < count; i++)
                 {
                     ref byte rsource = ref Unsafe.Add(ref tin, i * PaddedElementSizeInBytes);
                     Unsafe.Add(ref tout, i) = Unsafe.As<byte, T>(ref rsource);
@@ -70,24 +70,24 @@ namespace ComputeSharp.Graphics.Buffers
             {
                 // Directly copy the data back if there is no padding
                 Map(0);
-                MemoryHelper.Copy(MappedResource, span);
+                MemoryHelper.Copy(MappedResource, offset, span, 0, count);
                 Unmap(0);
             }
         }
 
         /// <inheritdoc/>
-        public override void SetData(Span<T> span)
+        public override void SetData(Span<T> span, int offset, int count)
         {
             if (IsPaddingPresent)
             {
                 // Create the temporary array
-                byte[] temporaryArray = ArrayPool<byte>.Shared.Rent(SizeInBytes);
-                Span<byte> temporarySpan = temporaryArray.AsSpan(0, SizeInBytes); // Array pool arrays can be longer
+                byte[] temporaryArray = ArrayPool<byte>.Shared.Rent(count * PaddedElementSizeInBytes);
+                Span<byte> temporarySpan = temporaryArray.AsSpan(0, count * PaddedElementSizeInBytes); // Array pool arrays can be longer
                 ref T tin = ref span.GetPinnableReference();
                 ref byte tout = ref temporarySpan.GetPinnableReference();
 
                 // Copy the input data to the temporary array and add the padding
-                for (int i = 0; i < Size; i++)
+                for (int i = 0; i < count; i++)
                 {
                     ref byte rtarget = ref Unsafe.Add(ref tout, i * PaddedElementSizeInBytes);
                     Unsafe.As<byte, T>(ref rtarget) = Unsafe.Add(ref tin, i);
@@ -95,7 +95,7 @@ namespace ComputeSharp.Graphics.Buffers
 
                 // Copy the padded data to the GPU
                 Map(0);
-                MemoryHelper.Copy(temporarySpan, MappedResource);
+                MemoryHelper.Copy(temporarySpan, 0, MappedResource, offset * PaddedElementSizeInBytes, count * PaddedElementSizeInBytes);
                 Unmap(0);
 
                 ArrayPool<byte>.Shared.Return(temporaryArray);
@@ -104,7 +104,7 @@ namespace ComputeSharp.Graphics.Buffers
             {
                 // Directly copy the input span if there is no padding
                 Map(0);
-                MemoryHelper.Copy(span, MappedResource);
+                MemoryHelper.Copy(span, 0, MappedResource, offset, count);
                 Unmap(0);
             }
         }

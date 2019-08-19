@@ -132,8 +132,6 @@ namespace ComputeSharp.Shaders.Mappings
                 return $"{containingMemberSymbol.Name}{mapped}";
             }
 
-            if (memberSymbol.IsStatic) return $"{containingMemberSymbol.Name}::{memberSymbol.Name}";
-
             return null;
         }
     }
