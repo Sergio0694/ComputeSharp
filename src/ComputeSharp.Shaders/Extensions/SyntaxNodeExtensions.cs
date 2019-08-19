@@ -74,6 +74,12 @@ namespace ComputeSharp.Shaders.Extensions
                 return node;
             }
 
+            // Process the input node if it's a known method invocation
+            if (HlslKnownMethods.TryGetMappedName(containingMemberSymbolInfo.Symbol, memberSymbol) is string mappedName)
+            {
+                return SyntaxFactory.IdentifierName(mappedName).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
+            }
+
             // Handle static fields as a special case
             if (memberSymbol.IsStatic && (
                 memberSymbol.Kind == SymbolKind.Field ||
@@ -119,12 +125,6 @@ namespace ComputeSharp.Shaders.Extensions
                 string name = $"{containingMemberSymbolInfo.Symbol.Name}_{memberInfo.Name}";
                 variable = (name, memberInfo);
                 return SyntaxFactory.IdentifierName(name);
-            }
-
-            // Process the input node if it's a known method invocation
-            if (HlslKnownMethods.TryGetMappedName(containingMemberSymbolInfo.Symbol, memberSymbol) is string mappedName)
-            {
-                return SyntaxFactory.IdentifierName(mappedName).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
             }
 
             return node;
