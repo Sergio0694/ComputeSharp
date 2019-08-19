@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using ComputeSharp.Graphics.Buffers;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
@@ -76,22 +77,19 @@ namespace ComputeSharp.BokehBlur
 
             // Apply the effect
             Console.WriteLine(">> Applying effect");
-            Vector4[] resultArray = new Vector4[height * width];
-            Parallel.For(0, height * width, ij =>
+            using ReadOnlyBuffer<Vector4> image_gpu = Gpu.Default.AllocateReadOnlyBuffer(vectorArray);
+            using ReadOnlyBuffer<float> kernel_gpu = Gpu.Default.AllocateReadOnlyBuffer(kernel);
+            using ReadWriteBuffer<Vector4> result_gpu = Gpu.Default.AllocateReadWriteBuffer<Vector4>(vectorArray.Length);
+            Gpu.Default.For(height, width, id =>
             {
-                int i = ij / width;
-                int j = ij % width;
-                ref Vector4 rin = ref vectorArray[0];
-                ref Vector4 rout = ref resultArray[0];
-                ref float rk = ref kernel[0];
                 Vector4 total = Vector4.Zero;
 
                 for (int y = -Radius; y <= Radius; y++)
                 {
                     for (int x = -Radius; x <= Radius; x++)
                     {
-                        int iy = i + y;
-                        int jx = j + x;
+                        int iy = (int)id.X + y;
+                        int jx = (int)id.Y + x;
 
                         if (iy < 0) iy = -iy;
                         else if (iy > height) iy = 2 * height - iy;
@@ -101,19 +99,23 @@ namespace ComputeSharp.BokehBlur
                         int ki = Radius - y;
                         int kj = Radius - x;
 
-                        total += Unsafe.Add(ref rin, iy * width + jx) * Unsafe.Add(ref rk, ki * diameter + kj);
+                        total += image_gpu[(uint)(iy * width + jx)] * kernel_gpu[(uint)(ki * diameter + kj)];
                     }
                 }
 
-                Unsafe.Add(ref rout, i * width + j) = total;
+                result_gpu[(uint)(id.X * width + id.Y)] = total;
             });
+
+            // Copy data back
+            Console.WriteLine(">> Copying data back");
+            result_gpu.GetData(vectorArray);
 
             // Copy the modified image back
             Console.WriteLine(">> Storing pixel data");
             Parallel.For(0, height, i =>
             {
                 ref Rgba32 rPixel = ref image.GetPixelRowSpan(i).GetPinnableReference();
-                ref Vector4 r4 = ref resultArray[i * width];
+                ref Vector4 r4 = ref vectorArray[i * width];
                 Vector4 low = Vector4.Zero;
                 Vector4 high = new Vector4(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
                 float invGamma = 1 / Gamma;
