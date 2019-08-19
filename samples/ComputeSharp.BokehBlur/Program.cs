@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using ComputeSharp.Graphics.Buffers;
@@ -13,14 +14,9 @@ namespace ComputeSharp.BokehBlur
     class Program
     {
         /// <summary>
-        /// The path of the image to process (the modified version will be saved as a copy)
-        /// </summary>
-        private const string ImagePath = @"";
-
-        /// <summary>
         /// The radius of the bokeh blur effect to apply
         /// </summary>
-        private const int Radius = 32;
+        private const int Radius = 48;
 
         /// <summary>
         /// The gamma exposure value to use when applying the effect
@@ -31,7 +27,8 @@ namespace ComputeSharp.BokehBlur
         {
             // Load the input image
             Console.WriteLine(">> Loading image");
-            using Image<Rgba32> image = Image.Load(ImagePath);
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "city.jpg");
+            using Image<Rgba32> image = Image.Load(path);
             var (height, width) = (image.Height, image.Width);
 
             // Get the vector buffer
@@ -135,8 +132,8 @@ namespace ComputeSharp.BokehBlur
             // Save the resulting image
             Console.WriteLine(">> Saving to disk");
             string targetPath = Path.Combine(
-                Path.GetDirectoryName(ImagePath),
-                $"{Path.GetFileNameWithoutExtension(ImagePath)}_bokeh{Path.GetExtension(ImagePath)}");
+                Path.GetRelativePath(Path.GetDirectoryName(path), @"..\..\..\"),
+                $"{Path.GetFileNameWithoutExtension(path)}_bokeh{Path.GetExtension(path)}");
             image.Save(targetPath);
         }
     }
