@@ -107,7 +107,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// A <see cref="Regex"/> used to preprocess the entry point declaration for both lambda expressions and local methods
         /// </summary>
-        private static readonly Regex LambdaMethodDeclarationRegex = new Regex(@"(private|internal) void <\w+>[\w_|]+(?=\()", RegexOptions.Compiled);
+        private static readonly Regex LambdaMethodDeclarationRegex = new Regex(@"(?:private|internal) void <\w+>[\w_|]+(?=\()", RegexOptions.Compiled);
 
         /// <summary>
         /// Decompiles a target method and returns its <see cref="SyntaxTree"/> and <see cref="SemanticModel"/> info
@@ -134,7 +134,7 @@ namespace ComputeSharp.Shaders.Translation
                 string
                     sourceCode = decompiler.DecompileAsString(typeHandle),
                     typeFixedCode = ClosureTypeDeclarationRegex.Replace(sourceCode, "Shader"),
-                    methodFixedCode = LambdaMethodDeclarationRegex.Replace(typeFixedCode, "internal void Main");
+                    methodFixedCode = LambdaMethodDeclarationRegex.Replace(typeFixedCode, m => $"// {m.Value}{Environment.NewLine}    internal void Main");
 
                 // Workaround for some local methods not being decompiled correctly
                 if (!methodFixedCode.Contains("internal void Main"))
@@ -142,7 +142,7 @@ namespace ComputeSharp.Shaders.Translation
                     EntityHandle methodHandle = MetadataTokenHelpers.TryAsEntityHandle(methodInfo.MetadataToken) ?? throw new InvalidOperationException();
                     string
                         methodOnlySourceCode = decompiler.DecompileAsString(methodHandle),
-                        methodOnlyFixedSourceCode = LambdaMethodDeclarationRegex.Replace(methodOnlySourceCode, "internal void Main"),
+                        methodOnlyFixedSourceCode = LambdaMethodDeclarationRegex.Replace(methodOnlySourceCode, m => $"// {m.Value}{Environment.NewLine}    internal void Main"),
                         methodOnlyIndentedSourceCode = $"    {methodOnlyFixedSourceCode.Replace(Environment.NewLine, $"{Environment.NewLine}    ")}";
 
                     int lastClosedBracketsIndex = methodFixedCode.LastIndexOf('}');
@@ -153,7 +153,7 @@ namespace ComputeSharp.Shaders.Translation
                 SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(methodFixedCode);
 
                 // Get the root node to return
-                rootNode = syntaxTree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().First();
+                rootNode = syntaxTree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().First(node => node.GetLeadingTrivia().ToFullString().Contains(methodInfo.Name));
 
                 // Update the incremental compilation and retrieve the syntax tree for the method
                 _Compilation = _Compilation.AddSyntaxTrees(syntaxTree);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Extensions;
@@ -40,7 +41,7 @@ namespace ComputeSharp.Shaders
         /// <summary>
         /// The mapping used to cache and reuse compiled shaders
         /// </summary>
-        private static readonly Dictionary<(Type type, int ThreadsX, int ThreadsY, int ThreadsZ), (ShaderLoader Loader, ShaderBytecode Bytecode)> ShadersCache = new Dictionary<(Type, int, int, int), (ShaderLoader, ShaderBytecode)>();
+        private static readonly Dictionary<(MethodInfo Method, int ThreadsX, int ThreadsY, int ThreadsZ), (ShaderLoader Loader, ShaderBytecode Bytecode)> ShadersCache = new Dictionary<(MethodInfo, int, int, int), (ShaderLoader, ShaderBytecode)>();
 
         /// <summary>
         /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters
@@ -66,7 +67,7 @@ namespace ComputeSharp.Shaders
                 groupsZ = z / threadsZ + (z % threadsZ == 0 ? 0 : 1);
 
             // Try to get the cache shader
-            var key = (action.Method.DeclaringType, threadsX, threadsY, threadsZ);
+            var key = (action.Method, threadsX, threadsY, threadsZ);
             if (!ShadersCache.TryGetValue(key, out var shaderData))
             {
                 // Load the input shader
