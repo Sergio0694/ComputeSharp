@@ -91,5 +91,59 @@ namespace ComputeSharp.Tests
             Assert.IsTrue(array.AsSpan().ContentEquals(sourceResult));
             Assert.IsTrue(array.AsSpan().ContentEquals(destinationResult));
         }
+
+        [TestMethod]
+        public void ConstantBufferGetRangeData()
+        {
+            float[] array = Enumerable.Range(0, 4096).Select(i => (float)i).ToArray();
+
+            using ConstantBuffer<float> sourceBuffer = Gpu.Default.AllocateConstantBuffer(array);
+
+            float[] sourceResult = sourceBuffer.GetData(128, 100);
+
+            Assert.IsTrue(array.AsSpan(128, 100).ContentEquals(sourceResult));
+        }
+
+        [TestMethod]
+        public void ConstantBufferSetRangeData()
+        {
+            float[] array = Enumerable.Range(0, 256).Select(i => (float)i).ToArray();
+
+            using ConstantBuffer<float> sourceBuffer = Gpu.Default.AllocateConstantBuffer(array);
+
+            array.AsSpan(56, 100).Clear();
+            sourceBuffer.SetData(new float[100], 56, 100);
+
+            float[] sourceResult = sourceBuffer.GetData();
+
+            Assert.IsTrue(array.AsSpan().ContentEquals(sourceResult));
+        }
+
+        [TestMethod]
+        public void ReadWriteBufferGetRangeData()
+        {
+            float[] array = Enumerable.Range(0, 4096).Select(i => (float)i).ToArray();
+
+            using ReadWriteBuffer<float> sourceBuffer = Gpu.Default.AllocateReadWriteBuffer(array);
+
+            float[] sourceResult = sourceBuffer.GetData(128, 100);
+
+            Assert.IsTrue(array.AsSpan(128, 100).ContentEquals(sourceResult));
+        }
+
+        [TestMethod]
+        public void ReadWriteBufferSetRangeData()
+        {
+            float[] array = Enumerable.Range(0, 256).Select(i => (float)i).ToArray();
+
+            using ReadWriteBuffer<float> sourceBuffer = Gpu.Default.AllocateReadWriteBuffer(array);
+
+            array.AsSpan(56, 100).Clear();
+            sourceBuffer.SetData(new float[100], 56, 100);
+
+            float[] sourceResult = sourceBuffer.GetData();
+
+            Assert.IsTrue(array.AsSpan().ContentEquals(sourceResult));
+        }
     }
 }
