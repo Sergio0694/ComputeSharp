@@ -47,7 +47,7 @@ namespace ComputeSharp.Graphics.Buffers
             {
                 // Create the temporary array
                 byte[] temporaryArray = ArrayPool<byte>.Shared.Rent(count * PaddedElementSizeInBytes);
-                Span<byte> temporarySpan = temporaryArray.AsSpan(count * PaddedElementSizeInBytes);
+                Span<byte> temporarySpan = temporaryArray.AsSpan(0, count * PaddedElementSizeInBytes);
 
                 // Copy the padded data to the temporary array
                 Map(0);
