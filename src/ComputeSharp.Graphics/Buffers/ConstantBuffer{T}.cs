@@ -58,7 +58,7 @@ namespace ComputeSharp.Graphics.Buffers
                 ref T tout = ref span.GetPinnableReference();
 
                 // Copy the padded data to the target span, removing the padding
-                for (int i = 0; i < Size; i++)
+                for (int i = 0; i < count; i++)
                 {
                     ref byte rsource = ref Unsafe.Add(ref tin, i * PaddedElementSizeInBytes);
                     Unsafe.Add(ref tout, i) = Unsafe.As<byte, T>(ref rsource);
@@ -87,7 +87,7 @@ namespace ComputeSharp.Graphics.Buffers
                 ref byte tout = ref temporarySpan.GetPinnableReference();
 
                 // Copy the input data to the temporary array and add the padding
-                for (int i = 0; i < Size; i++)
+                for (int i = 0; i < count; i++)
                 {
                     ref byte rtarget = ref Unsafe.Add(ref tout, i * PaddedElementSizeInBytes);
                     Unsafe.As<byte, T>(ref rtarget) = Unsafe.Add(ref tin, i);
