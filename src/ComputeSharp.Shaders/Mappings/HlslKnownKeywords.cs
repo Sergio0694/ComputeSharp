@@ -21,7 +21,7 @@ namespace ComputeSharp.Shaders.Mappings
             "pixelfragment", "point", "precise", "register", "row_major", "sample",
             "sampler", "shared", "snorm", "stateblock", "stateblock_state", "tbuffer",
             "technique", "typedef", "triangle", "triangleadj", "uniform", "unorm",
-            "unsigned", "vector", "vertexfragment"
+            "unsigned", "vector", "vertexfragment", "zero"
         };
 
         private static Regex _KeywordsRegex;
@@ -52,5 +52,13 @@ namespace ComputeSharp.Shaders.Mappings
         /// <returns>The HLSL-compatible variable name name that can be used in an HLSL shader</returns>
         [Pure]
         public static string GetMappedName(string name) => KeywordsRegex.IsMatch(name) ? $"_{name}" : name;
+
+        /// <summary>
+        /// Processes an input text and replaces all the occurrences of reserved keywords
+        /// </summary>
+        /// <param name="text">The input text to process</param>
+        /// <returns>A valid shader body source code that can be used in HLSL</returns>
+        [Pure]
+        public static string GetMappedText(string text) => KeywordsRegex.Replace(text, m => $"_{m.Value}");
     }
 }

@@ -157,7 +157,7 @@ namespace ComputeSharp.Shaders.Translation
         private void LoadFieldInfo(ReadableMember memberInfo, string? name = null)
         {
             Type fieldType = memberInfo.MemberType;
-            string fieldName = name ?? memberInfo.Name;
+            string fieldName = HlslKnownKeywords.GetMappedName(name ?? memberInfo.Name);
 
             // Constant buffer
             if (HlslKnownTypes.IsConstantBufferType(fieldType))
@@ -226,7 +226,7 @@ namespace ComputeSharp.Shaders.Translation
             // Additional preprocessing
             MethodBody = Regex.Replace(MethodBody, @"(?<=\W)(\d+)[fFdD]", m => m.Groups[1].Value);
             MethodBody = MethodBody.TrimEnd('\n', '\r', ' ');
-            MethodBody = Regex.Replace(MethodBody, @"(?<!A-Za-z)vector(?!\w)", "_vector"); // The decompiler can name a local Vector[2,3,4] variable as "vector"
+            MethodBody = HlslKnownKeywords.GetMappedText(MethodBody);
         }
     }
 }
