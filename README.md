@@ -54,7 +54,7 @@ If the shader in C# is capturing some local variable, those will be automaticall
 
 ## Advanced usage
 
-**ComputeSharp** lets you dispatch compute shaders over thread groups from 1 to 3 dimensions, includes supports for readonly buffers, and more. The shader body can both be declared inline, as a separate `Action<ThreadIds>` or as a local method. Here is a more advanced sample showcasing all these features.
+**ComputeSharp** lets you dispatch compute shaders over thread groups from 1 to 3 dimensions, includes supports for constant and readonly buffers, and more. The shader body can both be declared inline, as a separate `Action<ThreadIds>` or as a local method. Additionally, most of the [HLSL intrinsic functions](https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-intrinsic-functions) are available through the `Hlsl` class. Here is a more advanced sample showcasing all these features.
 
 ```C#
 int height = 10, width = 10;
@@ -68,7 +68,7 @@ using ReadWriteBuffer<float> yBuffer = Gpu.Default.AllocateReadWriteBuffer(y);
 void Kernel(ThreadIds id)
 {
     uint offset = id.X + id.Y * (uint)width;
-    yBuffer[offset] += xBuffer[offset];
+    yBuffer[offset] = Hlsl.Pow(xBuffer[offset], 2);
 }
 
 // Run the shader
