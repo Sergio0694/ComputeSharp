@@ -23,6 +23,11 @@ namespace ComputeSharp.BokehBlur
         /// </summary>
         private const float Gamma = 3;
 
+        /// <summary>
+        /// The inverse gamma exposure value to use when applying the effect
+        /// </summary>
+        private const float InverseGamma = 1 / Gamma;
+
         static void Main()
         {
             // Load the input image
@@ -51,6 +56,7 @@ namespace ComputeSharp.BokehBlur
                 }
             });
 
+            // Create the kernel
             Console.WriteLine(">> Creating kernel");
             int diameter = Radius * 2 + 1;
             float[] kernel = new float[diameter * diameter];
@@ -67,6 +73,7 @@ namespace ComputeSharp.BokehBlur
                 }
             }
 
+            // Normalize the kernel
             Console.WriteLine(">> Normalizing kernel");
             for (int i = 0; i < diameter; i++)
                 for (int j = 0; j < diameter; j++)
@@ -115,15 +122,14 @@ namespace ComputeSharp.BokehBlur
                 ref Vector4 r4 = ref vectorArray[i * width];
                 Vector4 low = Vector4.Zero;
                 Vector4 high = new Vector4(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
-                float invGamma = 1 / Gamma;
 
                 for (int j = 0; j < width; j++)
                 {
                     Vector4 v4 = Unsafe.Add(ref r4, j);
                     Vector4 clamp = Vector4.Clamp(v4, low, high);
-                    v4.X = MathF.Pow(clamp.X, invGamma);
-                    v4.Y = MathF.Pow(clamp.Y, invGamma);
-                    v4.Z = MathF.Pow(clamp.Z, invGamma);
+                    v4.X = MathF.Pow(clamp.X, InverseGamma);
+                    v4.Y = MathF.Pow(clamp.Y, InverseGamma);
+                    v4.Z = MathF.Pow(clamp.Z, InverseGamma);
 
                     Unsafe.Add(ref rPixel, j).FromVector4(v4);
                 }
