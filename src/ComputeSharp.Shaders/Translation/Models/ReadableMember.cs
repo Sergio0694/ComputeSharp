@@ -31,6 +31,20 @@ namespace ComputeSharp.Shaders.Translation.Models
         }
 
         /// <summary>
+        /// Gets the <see cref="Type"/> where the current member is declared in
+        /// </summary>
+        public Type DeclaringType
+        {
+            get
+            {
+                if (Field != null) return Field.DeclaringType;
+                if (Property != null) return Property.DeclaringType;
+
+                throw new InvalidOperationException("Field and property can't both be null at the same time");
+            }
+        }
+
+        /// <summary>
         /// Gets the <see cref="Type"/> of the wrapped member for the current instance
         /// </summary>
         public Type MemberType
