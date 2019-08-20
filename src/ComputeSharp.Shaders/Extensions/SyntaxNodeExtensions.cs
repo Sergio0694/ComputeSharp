@@ -65,9 +65,43 @@ namespace ComputeSharp.Shaders.Extensions
                 return node;
             }
 
-            // If the input member has no symbol or is not a field, property or method, just return it
-            if (memberSymbol is null ||
-                memberSymbol.Kind != SymbolKind.Field &&
+            // If the input member has no symbol, try to load it manually
+            if (memberSymbol is null)
+            {
+                string expression = node.WithoutTrivia().ToFullString();
+                int index = expression.LastIndexOf(Type.Delimiter);
+                string fullname = expression.Substring(0, index);
+                if (!(AppDomain.CurrentDomain.GetAssemblies().Select(a => a.GetType(fullname)).FirstOrDefault(t => t != null) is Type type))
+                {
+                    // The current node can't possibly represent a field or a property, so just return it
+                    return node;
+                }
+
+                // Try to get the target static field or property, if present
+                string name = expression.Substring(index + 1, expression.Length - fullname.Length - 1);
+                MemberInfo[] memberInfos = type.GetMember(name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                if (memberInfos.Length == 0) return node;
+                bool isReadonly;
+                ReadableMember memberInfo;
+                switch (memberInfos.First())
+                {
+                    case FieldInfo fieldInfo:
+                        isReadonly = fieldInfo.IsInitOnly;
+                        memberInfo = fieldInfo;
+                        break;
+                    case PropertyInfo propertyInfo:
+                        isReadonly = !propertyInfo.CanWrite;
+                        memberInfo = propertyInfo;
+                        break;
+                    default: throw new InvalidOperationException($"Invalid symbol kind: {memberInfos.First().GetType()}");
+                }
+
+                // Handle the loaded info
+                return ProcessStaticMember(node, memberInfo, isReadonly, ref variable);
+            }
+
+            // If the input member is not a field, property or method, just return it
+            if (memberSymbol.Kind != SymbolKind.Field &&
                 memberSymbol.Kind != SymbolKind.Property &&
                 memberSymbol.Kind != SymbolKind.Method)
             {
@@ -109,26 +143,40 @@ namespace ComputeSharp.Shaders.Extensions
                     default: throw new InvalidOperationException($"Invalid symbol kind: {memberSymbol.Kind}");
                 }
 
-                // Constant replacement if the value is a readonly scalar value
-                if (isReadonly && HlslKnownTypes.IsKnownScalarType(memberInfo.MemberType))
-                {
-                    LiteralExpressionSyntax expression = memberInfo.GetValue(null) switch
-                    {
-                        true => SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression, SyntaxFactory.Token(SyntaxKind.TrueKeyword)),
-                        false => SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression, SyntaxFactory.Token(SyntaxKind.TrueKeyword)),
-                        IFormattable scalar => SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.ParseToken(scalar.ToString(null, CultureInfo.InvariantCulture))),
-                        _ => throw new InvalidOperationException($"Invalid field of type {memberInfo.MemberType}")
-                    };
-                    return expression.WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
-                }
-
-                // Captured member, treat it like any other captured variable in the closure
-                string name = $"{containingMemberSymbolInfo.Symbol.Name}_{memberInfo.Name}";
-                variable = (name, memberInfo);
-                return SyntaxFactory.IdentifierName(name).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
+                // Handle the loaded info
+                return ProcessStaticMember(node, memberInfo, isReadonly, ref variable);
             }
 
             return node;
+        }
+
+        /// <summary>
+        /// Processes a loaded static member, either a field or a property
+        /// </summary>
+        /// <param name="node">The input <see cref="MemberAccessExpressionSyntax"/> to check and modify if needed</param>
+        /// <param name="memberInfo">The wrapped member that needs to be processed</param>
+        /// <param name="isReadonly">Indicates whether or not the target member is readonly</param>
+        /// <param name="variable">The info on parsed static members, if any</param>
+        /// <returns>A <see cref="SyntaxNode"/> instance that is compatible with HLSL</returns>
+        private static SyntaxNode ProcessStaticMember(SyntaxNode node, ReadableMember memberInfo, bool isReadonly, ref (string Name, ReadableMember MemberInfo)? variable)
+        {
+            // Constant replacement if the value is a readonly scalar value
+            if (isReadonly && HlslKnownTypes.IsKnownScalarType(memberInfo.MemberType))
+            {
+                LiteralExpressionSyntax expression = memberInfo.GetValue(null) switch
+                {
+                    true => SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression, SyntaxFactory.Token(SyntaxKind.TrueKeyword)),
+                    false => SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression, SyntaxFactory.Token(SyntaxKind.TrueKeyword)),
+                    IFormattable scalar => SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.ParseToken(scalar.ToString(null, CultureInfo.InvariantCulture))),
+                    _ => throw new InvalidOperationException($"Invalid field of type {memberInfo.MemberType}")
+                };
+                return expression.WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
+            }
+
+            // Captured member, treat it like any other captured variable in the closure
+            string name = $"{memberInfo.DeclaringType.Name}_{memberInfo.Name}";
+            variable = (name, memberInfo);
+            return SyntaxFactory.IdentifierName(name).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
         }
     }
 }
