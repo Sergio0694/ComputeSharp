@@ -12,8 +12,6 @@ namespace ComputeSharp.Graphics.Exceptions
         /// Creates a new <see cref="InvalidExecutionContextException"/> instance
         /// </summary>
         /// <param name="name">The name of the caller API</param>
-        internal InvalidExecutionContextException([CallerMemberName] string? name = null)
-            : base($"The API {name} can only be used from within an HLSL shader")
-        { }
+        internal InvalidExecutionContextException(string name) : base($"The API {name} can only be used from within an HLSL shader") { }
     }
 }
