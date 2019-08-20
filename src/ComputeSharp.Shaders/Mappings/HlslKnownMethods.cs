@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
+using System.Reflection;
 using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.Shaders.Mappings
@@ -10,95 +12,118 @@ namespace ComputeSharp.Shaders.Mappings
     /// </summary>
     internal static class HlslKnownMethods
     {
+        private static IReadOnlyDictionary<string, string> _KnownMethods;
+
         /// <summary>
         /// The mapping of supported known methods to HLSL methods
         /// </summary>
-        private static readonly IReadOnlyDictionary<string, string> KnownMethods = new Dictionary<string, string>
+        private static IReadOnlyDictionary<string, string> KnownMethods
         {
-            // Math
-            ["System.Math.Max"] = "max",
-            ["System.Math.Min"] = "min",
-            ["System.Math.Pow"] = "pow",
-            ["System.Math.Sin"] = "sin",
-            ["System.Math.Sinh"] = "sinh",
-            ["System.Math.Asin"] = "asin",
-            ["System.Math.Cos"] = "cos",
-            ["System.Math.Cosh"] = "cosh",
-            ["System.Math.Acos"] = "acos",
-            ["System.Math.Tan"] = "tan",
-            ["System.Math.Tanh"] = "tanh",
-            ["System.Math.Atan"] = "atan",
-            ["System.Math.Atan2"] = "atan2",
-            ["System.Math.Ceiling"] = "ceil",
-            ["System.Math.Floor"] = "floor",
-            ["System.Math.Clamp"] = "clamp",
-            ["System.Math.Exp"] = "exp",
-            ["System.Math.Log"] = "log",
-            ["System.Math.Log10"] = "log10",
-            ["System.Math.Round"] = "round",
-            ["System.Math.Sqrt"] = "sqrt",
-            ["System.Math.Sign"] = "sign",
-            ["System.Math.Truncate"] = "trunc",
-            ["System.Math.PI"] = "3.1415926535897931",
+            get
+            {
+                if (_KnownMethods != null) return _KnownMethods;
 
-            // MathF
-            ["System.MathF.Max"] = "max",
-            ["System.MathF.Min"] = "min",
-            ["System.MathF.Pow"] = "pow",
-            ["System.MathF.Sin"] = "sin",
-            ["System.MathF.Sinh"] = "sinh",
-            ["System.MathF.Asin"] = "asin",
-            ["System.MathF.Cos"] = "cos",
-            ["System.MathF.Cosh"] = "cosh",
-            ["System.MathF.Acos"] = "acos",
-            ["System.MathF.Tan"] = "tan",
-            ["System.MathF.Tanh"] = "tanh",
-            ["System.MathF.Atan"] = "atan",
-            ["System.MathF.Atan2"] = "atan2",
-            ["System.MathF.Ceiling"] = "ceil",
-            ["System.MathF.Floor"] = "floor",
-            ["System.MathF.Clamp"] = "clamp",
-            ["System.MathF.Exp"] = "exp",
-            ["System.MathF.Log"] = "log",
-            ["System.MathF.Log10"] = "log10",
-            ["System.MathF.Round"] = "round",
-            ["System.MathF.Sqrt"] = "sqrt",
-            ["System.MathF.Sign"] = "sign",
-            ["System.MathF.Truncate"] = "trunc",
-            ["System.MathF.PI"] = "3.14159274f",
+                // Initialize the initial mappings
+                Dictionary<string, string> knownMethods = new Dictionary<string, string>
+                {
+                    // Math
+                    ["System.Math.Max"] = "max",
+                    ["System.Math.Min"] = "min",
+                    ["System.Math.Pow"] = "pow",
+                    ["System.Math.Sin"] = "sin",
+                    ["System.Math.Sinh"] = "sinh",
+                    ["System.Math.Asin"] = "asin",
+                    ["System.Math.Cos"] = "cos",
+                    ["System.Math.Cosh"] = "cosh",
+                    ["System.Math.Acos"] = "acos",
+                    ["System.Math.Tan"] = "tan",
+                    ["System.Math.Tanh"] = "tanh",
+                    ["System.Math.Atan"] = "atan",
+                    ["System.Math.Atan2"] = "atan2",
+                    ["System.Math.Ceiling"] = "ceil",
+                    ["System.Math.Floor"] = "floor",
+                    ["System.Math.Clamp"] = "clamp",
+                    ["System.Math.Exp"] = "exp",
+                    ["System.Math.Log"] = "log",
+                    ["System.Math.Log10"] = "log10",
+                    ["System.Math.Round"] = "round",
+                    ["System.Math.Sqrt"] = "sqrt",
+                    ["System.Math.Sign"] = "sign",
+                    ["System.Math.Truncate"] = "trunc",
+                    ["System.Math.PI"] = "3.1415926535897931",
 
-            // ThreadIds
-            ["ComputeSharp.ThreadIds.X"] = ".x",
-            ["ComputeSharp.ThreadIds.Y"] = ".y",
-            ["ComputeSharp.ThreadIds.Z"] = ".z",
+                    // MathF
+                    ["System.MathF.Max"] = "max",
+                    ["System.MathF.Min"] = "min",
+                    ["System.MathF.Pow"] = "pow",
+                    ["System.MathF.Sin"] = "sin",
+                    ["System.MathF.Sinh"] = "sinh",
+                    ["System.MathF.Asin"] = "asin",
+                    ["System.MathF.Cos"] = "cos",
+                    ["System.MathF.Cosh"] = "cosh",
+                    ["System.MathF.Acos"] = "acos",
+                    ["System.MathF.Tan"] = "tan",
+                    ["System.MathF.Tanh"] = "tanh",
+                    ["System.MathF.Atan"] = "atan",
+                    ["System.MathF.Atan2"] = "atan2",
+                    ["System.MathF.Ceiling"] = "ceil",
+                    ["System.MathF.Floor"] = "floor",
+                    ["System.MathF.Clamp"] = "clamp",
+                    ["System.MathF.Exp"] = "exp",
+                    ["System.MathF.Log"] = "log",
+                    ["System.MathF.Log10"] = "log10",
+                    ["System.MathF.Round"] = "round",
+                    ["System.MathF.Sqrt"] = "sqrt",
+                    ["System.MathF.Sign"] = "sign",
+                    ["System.MathF.Truncate"] = "trunc",
+                    ["System.MathF.PI"] = "3.14159274f",
 
-            // Vector3
-            ["System.Numerics.Vector3.X"] = ".x",
-            ["System.Numerics.Vector3.Y"] = ".y",
-            ["System.Numerics.Vector3.Z"] = ".z",
-            ["System.Numerics.Vector3.Cross"] = "cross",
-            ["System.Numerics.Vector3.Dot"] = "dot",
-            ["System.Numerics.Vector3.Lerp"] = "lerp",
-            ["System.Numerics.Vector3.Transform"] = "mul",
-            ["System.Numerics.Vector3.TransformNormal"] = "mul",
-            ["System.Numerics.Vector3.Normalize"] = "normalize",
-            ["System.Numerics.Vector3.Zero"] = "(float3)0",
-            ["System.Numerics.Vector3.One"] = "float3(1.0f, 1.0f, 1.0f)",
-            ["System.Numerics.Vector3.UnitX"] = "float3(1.0f, 0.0f, 0.0f)",
-            ["System.Numerics.Vector3.UnitY"] = "float3(0.0f, 1.0f, 0.0f)",
-            ["System.Numerics.Vector3.UnitZ"] = "float3(0.0f, 0.0f, 1.0f)",
+                    // ThreadIds
+                    ["ComputeSharp.ThreadIds.X"] = ".x",
+                    ["ComputeSharp.ThreadIds.Y"] = ".y",
+                    ["ComputeSharp.ThreadIds.Z"] = ".z",
 
-            // Vector4
-            ["System.Numerics.Vector4.X"] = ".x",
-            ["System.Numerics.Vector4.Y"] = ".y",
-            ["System.Numerics.Vector4.Z"] = ".z",
-            ["System.Numerics.Vector4.W"] = ".w",
-            ["System.Numerics.Vector4.Lerp"] = "lerp",
-            ["System.Numerics.Vector4.Transform"] = "mul",
-            ["System.Numerics.Vector4.Normalize"] = "normalize",
-            ["System.Numerics.Vector4.Zero"] = "(float4)0",
-            ["System.Numerics.Vector4.One"] = "float4(1.0f, 1.0f, 1.0f, 1.0f)"
-        };
+                    // Vector3
+                    ["System.Numerics.Vector3.X"] = ".x",
+                    ["System.Numerics.Vector3.Y"] = ".y",
+                    ["System.Numerics.Vector3.Z"] = ".z",
+                    ["System.Numerics.Vector3.Cross"] = "cross",
+                    ["System.Numerics.Vector3.Dot"] = "dot",
+                    ["System.Numerics.Vector3.Lerp"] = "lerp",
+                    ["System.Numerics.Vector3.Transform"] = "mul",
+                    ["System.Numerics.Vector3.TransformNormal"] = "mul",
+                    ["System.Numerics.Vector3.Normalize"] = "normalize",
+                    ["System.Numerics.Vector3.Zero"] = "(float3)0",
+                    ["System.Numerics.Vector3.One"] = "float3(1.0f, 1.0f, 1.0f)",
+                    ["System.Numerics.Vector3.UnitX"] = "float3(1.0f, 0.0f, 0.0f)",
+                    ["System.Numerics.Vector3.UnitY"] = "float3(0.0f, 1.0f, 0.0f)",
+                    ["System.Numerics.Vector3.UnitZ"] = "float3(0.0f, 0.0f, 1.0f)",
+
+                    // Vector4
+                    ["System.Numerics.Vector4.X"] = ".x",
+                    ["System.Numerics.Vector4.Y"] = ".y",
+                    ["System.Numerics.Vector4.Z"] = ".z",
+                    ["System.Numerics.Vector4.W"] = ".w",
+                    ["System.Numerics.Vector4.Lerp"] = "lerp",
+                    ["System.Numerics.Vector4.Transform"] = "mul",
+                    ["System.Numerics.Vector4.Normalize"] = "normalize",
+                    ["System.Numerics.Vector4.Zero"] = "(float4)0",
+                    ["System.Numerics.Vector4.One"] = "float4(1.0f, 1.0f, 1.0f, 1.0f)"
+                };
+
+                // Programmatically load mappings from the Hlsl class as well
+                foreach (string name in
+                    from method in typeof(Hlsl).GetMethods(BindingFlags.Public | BindingFlags.Static)
+                    group method by method.Name
+                    into groups
+                    select groups.Key)
+                {
+                    knownMethods.Add($"{typeof(Hlsl).FullName}{Type.Delimiter}{name}", name.ToLowerInvariant());
+                }
+
+                return _KnownMethods = knownMethods;
+            }
+        }
 
         /// <summary>
         /// Checks whether or not a specified method is a known HLSL method
