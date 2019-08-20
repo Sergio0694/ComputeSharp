@@ -65,9 +65,43 @@ namespace ComputeSharp.Shaders.Extensions
                 return node;
             }
 
-            // If the input member has no symbol or is not a field, property or method, just return it
-            if (memberSymbol is null ||
-                memberSymbol.Kind != SymbolKind.Field &&
+            // If the input member has no symbol, try to load it manually
+            if (memberSymbol is null)
+            {
+                string expression = node.WithoutTrivia().ToFullString();
+                int index = expression.LastIndexOf(Type.Delimiter);
+                string fullname = expression.Substring(0, index);
+                if (!(AppDomain.CurrentDomain.GetAssemblies().Select(a => a.GetType(fullname)).FirstOrDefault(t => t != null) is Type type))
+                {
+                    // The current node can't possibly represent a field or a property, so just return it
+                    return node;
+                }
+
+                // Try to get the target static field or property, if present
+                string name = expression.Substring(index + 1, expression.Length - fullname.Length - 1);
+                MemberInfo[] memberInfos = type.GetMember(name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                if (memberInfos.Length == 0) return node;
+                bool isReadonly;
+                ReadableMember memberInfo;
+                switch (memberInfos.First())
+                {
+                    case FieldInfo fieldInfo:
+                        isReadonly = fieldInfo.IsInitOnly;
+                        memberInfo = fieldInfo;
+                        break;
+                    case PropertyInfo propertyInfo:
+                        isReadonly = !propertyInfo.CanWrite;
+                        memberInfo = propertyInfo;
+                        break;
+                    default: throw new InvalidOperationException($"Invalid symbol kind: {memberInfos.First().GetType()}");
+                }
+
+                // Handle the loaded info
+                return ProcessStaticMember(node, memberInfo, isReadonly, ref variable);
+            }
+
+            // If the input member is not a field, property or method, just return it
+            if (memberSymbol.Kind != SymbolKind.Field &&
                 memberSymbol.Kind != SymbolKind.Property &&
                 memberSymbol.Kind != SymbolKind.Method)
             {
