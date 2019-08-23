@@ -25,7 +25,7 @@ More details available [here](https://www.nuget.org/packages/ComputeSharp/).
 
 # Quick start
 
-**ComputeSharp** exposes a `Gpu` class that acts entry point for all public APIs. It exposes the `Gpu.Default` property that lets you access the main GPU device on the current machine, which can be used to allocate buffers and perform operations.
+**ComputeSharp** exposes a `Gpu` class that acts as entry point for all public APIs. It exposes the `Gpu.Default` property that lets you access the main GPU device on the current machine, which can be used to allocate buffers and perform operations.
 
 The following sample shows how to allocate a writeable buffer, populate it with a compute shader, and read it back.
 
