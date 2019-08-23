@@ -48,7 +48,7 @@ namespace ComputeSharp.Graphics
         {
             NativeDevice = device;
             Description = description;
-            WavefrontSize = NativeDevice.D3D12Options1.WaveLaneCountMin;
+            WavefrontSize = 64;
 
             NativeComputeCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(CommandListType.Compute));
             NativeCopyCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(CommandListType.Copy));

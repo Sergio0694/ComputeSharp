@@ -17,7 +17,7 @@
     <repository type="git" url="https://github.com/Sergio0694/ComputeSharp.git" branch="master" commit="25aaf474ea73096dc7da8086d2b1748d43200436" />
     <dependencies>
       <dependency id="Microsoft.Windows.SDK.Contracts" version="10.0.18362.2002-preview" />
-      <dependency id="SharpDX.Direct3D12" version="4.2.1-beta0-gab36f12303" />
+      <dependency id="SharpDX.Direct3D12" version="4.2.0" />
       <dependency id="System.Memory" version="4.5.3" />
       <dependency id="System.Numerics.Vectors" version="4.6.0-preview5.19224.8" />
       <dependency id="System.Runtime.InteropServices.WindowsRuntime" version="4.3.0" />
