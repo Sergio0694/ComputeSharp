@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Metadata;
+using System.Text;
 using System.Text.RegularExpressions;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
@@ -100,6 +101,25 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <summary>
+        /// Creates a new <see cref="CSharpDecompiler"/> instance targeting a given assembly
+        /// </summary>
+        /// <param name="assemblyPath">The path of the assembly to decompile</param>
+        /// <returns>A <see cref="CSharpDecompiler"/> instance that can be used on the targeted assembly</returns>
+        [Pure]
+        private static CSharpDecompiler CreateDecompiler(string assemblyPath)
+        {
+            DecompilerSettings decompilerSettings = new DecompilerSettings(ICSharpCode.Decompiler.CSharp.LanguageVersion.Latest)
+            {
+                ObjectOrCollectionInitializers = false,
+                UsingDeclarations = false,
+                CSharpFormattingOptions = { IndentationString = IndentedTextWriter.DefaultTabString }
+            };
+
+            UniversalAssemblyResolver resolver = new UniversalAssemblyResolver(assemblyPath, false, "netstandard");
+            return new CSharpDecompiler(assemblyPath, resolver, decompilerSettings);
+        }
+
+        /// <summary>
         /// A <see cref="Regex"/> used to preprocess the closure type declarations for both lambda expressions and local methods
         /// </summary>
         private static readonly Regex ClosureTypeDeclarationRegex = new Regex(@"(?<=private sealed class )<\w*>[\w_]+", RegexOptions.Compiled);
@@ -149,8 +169,11 @@ namespace ComputeSharp.Shaders.Translation
                     methodFixedCode = methodFixedCode.Insert(lastClosedBracketsIndex, methodOnlyIndentedSourceCode);
                 }
 
+                // Unwrap the nested fields
+                string unwrappedCode = UnwrapSyntaxTree(methodFixedCode);
+
                 // Load the type syntax tree
-                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(methodFixedCode);
+                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(unwrappedCode);
 
                 // Get the root node to return
                 rootNode = syntaxTree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().First(node => node.GetLeadingTrivia().ToFullString().Contains(methodInfo.Name));
@@ -162,22 +185,75 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <summary>
-        /// Creates a new <see cref="CSharpDecompiler"/> instance targeting a given assembly
+        /// A <see cref="Regex"/> used to find fields that represent nested closure types
         /// </summary>
-        /// <param name="assemblyPath">The path of the assembly to decompile</param>
-        /// <returns>A <see cref="CSharpDecompiler"/> instance that can be used on the targeted assembly</returns>
-        [Pure]
-        private static CSharpDecompiler CreateDecompiler(string assemblyPath)
-        {
-            DecompilerSettings decompilerSettings = new DecompilerSettings(ICSharpCode.Decompiler.CSharp.LanguageVersion.Latest)
-            {
-                ObjectOrCollectionInitializers = false,
-                UsingDeclarations = false,
-                CSharpFormattingOptions = { IndentationString = IndentedTextWriter.DefaultTabString }
-            };
+        private static readonly Regex NestedClosureFieldRegex = new Regex(@"(?<=public )((?:\w+\.)+<>[\w_]+) (CS\$<>[\w_]+)(?=;)", RegexOptions.Compiled);
 
-            UniversalAssemblyResolver resolver = new UniversalAssemblyResolver(assemblyPath, false, "netstandard");
-            return new CSharpDecompiler(assemblyPath, resolver, decompilerSettings);
+        /// <summary>
+        /// A <see cref="Regex"/> used to identify compiler generated fields
+        /// </summary>
+        private static readonly Regex CompilerGeneratedFieldRegex = new Regex(@"CS\$<>[\w_]+\.", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Unwraps all the nested captured fields in the given source code, moving them to the top level
+        /// </summary>
+        /// <param name="source">The input source code to process</param>
+        [Pure]
+        private string UnwrapSyntaxTree(string source)
+        {
+            List<FieldDeclarationSyntax> parsedFields = new List<FieldDeclarationSyntax>();
+
+            // Local function to recursively extract all the nested fields
+            void ParseNestedFields(string source)
+            {
+                // Find the field declarations
+                Match match = NestedClosureFieldRegex.Match(source);
+                if (!match.Success) return;
+
+                // Load the nested closure type
+                string fullname = match.Groups[1].Value.Replace(".<>", "+<>"); // Fullname of a nested type
+                Type type = AppDomain.CurrentDomain.GetAssemblies().Select(a => a.GetType(fullname)).First(t => t != null);
+
+                // Decompile the type and get a readable source code
+                EntityHandle typeHandle = MetadataTokenHelpers.TryAsEntityHandle(type.MetadataToken) ?? throw new InvalidOperationException();
+                CSharpDecompiler decompiler = Decompilers[type.Assembly.Location];
+                string
+                    sourceCode = decompiler.DecompileAsString(typeHandle),
+                    typeFixedCode = ClosureTypeDeclarationRegex.Replace(sourceCode, "Scope");
+
+                // Load the syntax tree and retrieve the list of fields
+                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(typeFixedCode);
+                FieldDeclarationSyntax[] fields = syntaxTree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>().First().ChildNodes().OfType<FieldDeclarationSyntax>().ToArray();
+
+                // Add the captured fields
+                foreach (FieldDeclarationSyntax field in fields)
+                    if (!field.Declaration.Variables.ToFullString().StartsWith("CS$<>"))
+                        parsedFields.Add(field);
+
+                // Explore the new decompiled type
+                ParseNestedFields(typeFixedCode);
+            }
+
+            ParseNestedFields(source);
+
+            if (parsedFields.Count > 0)
+            {
+                // Build the aggregated string with all the captured fields
+                StringBuilder builder = new StringBuilder();
+                foreach (FieldDeclarationSyntax field in parsedFields)
+                    builder.AppendLine(field.ToFullString());
+                string fields = builder.ToString().TrimEnd(' ', '\r', '\n');
+
+                // Replace the field declarations
+                Match match = NestedClosureFieldRegex.Match(source);
+                source = source.Remove(match.Index - 11, match.Length + 12); // leading "    public " and trailing ";"
+                source = source.Insert(match.Index - 11, fields);
+
+                // Adjust the method body to remove references to compiler generated fields
+                source = CompilerGeneratedFieldRegex.Replace(source, string.Empty);
+            }
+
+            return source;
         }
     }
 }

@@ -72,24 +72,46 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// The <see cref="List{T}"/> of <see cref="ReadableMember"/> instances mapping the captured buffers in the current shader
         /// </summary>
-        private readonly List<ReadableMember> _BufferMembers = new List<ReadableMember>();
+        private readonly List<(ReadableMember Member, IEnumerable<ReadableMember>? Parents)> _BufferMembers = new List<(ReadableMember, IEnumerable<ReadableMember>?)>();
 
         /// <summary>
         /// Gets the ordered collection of buffers used as fields in the current shader
         /// </summary>
         /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
-        public IEnumerable<(int Index, GraphicsResource Resource)> GetBuffers(Action<ThreadIds> action) => _BufferMembers.Select((field, i) => (i + 1, (GraphicsResource)field.GetValue(action.Target)));
+        public IEnumerable<(int Index, GraphicsResource Resource)> GetBuffers(Action<ThreadIds> action)
+        {
+            foreach (var (item, i) in _BufferMembers.Select((item, i) => (item, i)))
+            {
+                if (item.Parents == null) yield return (i + 1, (GraphicsResource)item.Member.GetValue(action.Target));
+                else
+                {
+                    object target = item.Parents.Aggregate(action.Target, (obj, member) => member.GetValue(obj));
+                    yield return (i + 1, (GraphicsResource)item.Member.GetValue(target));
+                }
+            }
+        }
 
         /// <summary>
         /// The <see cref="List{T}"/> of <see cref="ReadableMember"/> instances mapping the captured scalar/vector variables in the current shader
         /// </summary>
-        private readonly List<ReadableMember> _VariableMembers = new List<ReadableMember>();
+        private readonly List<(ReadableMember Member, IEnumerable<ReadableMember>? Parents)> _VariableMembers = new List<(ReadableMember, IEnumerable<ReadableMember>?)>();
 
         /// <summary>
         /// Gets the collection of values of the captured fields for the current shader
         /// </summary>
         /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
-        public IEnumerable<object> GetVariables(Action<ThreadIds> action) => _VariableMembers.Select(field => field.GetValue(action.Target));
+        public IEnumerable<object> GetVariables(Action<ThreadIds> action)
+        {
+            foreach (var item in _VariableMembers)
+            {
+                if (item.Parents == null) yield return item.Member.GetValue(action.Target);
+                else
+                {
+                    object target = item.Parents.Aggregate(action.Target, (obj, member) => member.GetValue(obj));
+                    yield return item.Member.GetValue(target);
+                }
+            }
+        }
 
         private readonly List<HlslBufferInfo> _BuffersList = new List<HlslBufferInfo>();
 
@@ -154,7 +176,8 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         /// <param name="memberInfo">The target <see cref="ReadableMember"/> to load</param>
         /// <param name="name">The optional explicit name to use for the field</param>
-        private void LoadFieldInfo(ReadableMember memberInfo, string? name = null)
+        /// <param name="parents">The list of parent fields to reach the current <see cref="ReadableMember"/> from a given <see cref="Action{T}"/></param>
+        private void LoadFieldInfo(ReadableMember memberInfo, string? name = null, IReadOnlyList<ReadableMember>? parents = null)
         {
             Type fieldType = memberInfo.MemberType;
             string fieldName = HlslKnownKeywords.GetMappedName(name ?? memberInfo.Name);
@@ -165,7 +188,7 @@ namespace ComputeSharp.Shaders.Translation
                 DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, _ConstantBuffersCount));
 
                 // Track the buffer field
-                _BufferMembers.Add(memberInfo);
+                _BufferMembers.Add((memberInfo, parents));
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
                 _BuffersList.Add(new ConstantBufferFieldInfo(fieldType, typeName, fieldName, _ConstantBuffersCount++));
@@ -176,7 +199,7 @@ namespace ComputeSharp.Shaders.Translation
                 DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ShaderResourceView, 1, _ReadOnlyBuffersCount));
 
                 // Track the buffer field
-                _BufferMembers.Add(memberInfo);
+                _BufferMembers.Add((memberInfo, parents));
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
                 _BuffersList.Add(new ReadOnlyBufferFieldInfo(fieldType, typeName, fieldName, _ReadOnlyBuffersCount++));
@@ -187,7 +210,7 @@ namespace ComputeSharp.Shaders.Translation
                 DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.UnorderedAccessView, 1, _ReadWriteBuffersCount));
 
                 // Track the buffer field
-                _BufferMembers.Add(memberInfo);
+                _BufferMembers.Add((memberInfo, parents));
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
                 _BuffersList.Add(new ReadWriteBufferFieldInfo(fieldType, typeName, fieldName, _ReadWriteBuffersCount++));
@@ -195,9 +218,22 @@ namespace ComputeSharp.Shaders.Translation
             else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
             {
                 // Register the captured field
-                _VariableMembers.Add(memberInfo);
+                _VariableMembers.Add((memberInfo, parents));
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
                 _FieldsList.Add(new CapturedFieldInfo(fieldType, typeName, fieldName));
+            }
+            else if (fieldType.IsClass && fieldName.StartsWith("CS$<>"))
+            {
+                // Captured scope, update the parents list
+                List<ReadableMember> updatedParents = parents?.ToList() ?? new List<ReadableMember>();
+                updatedParents.Add(memberInfo);
+
+                // Recurse on the new compiler generated class
+                IReadOnlyList<FieldInfo> fields = fieldType.GetFields().ToArray();
+                foreach (FieldInfo fieldInfo in fields)
+                {
+                    LoadFieldInfo(fieldInfo, null, updatedParents);
+                }
             }
         }
 
