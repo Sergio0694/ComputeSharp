@@ -79,40 +79,42 @@ namespace ComputeSharp.BokehBlur
                 for (int j = 0; j < diameter; j++)
                     kernel[i * diameter + j] /= ones;
 
-            // Apply the effect
             Console.WriteLine(">> Applying effect");
-            using ReadOnlyBuffer<Vector4> image_gpu = Gpu.Default.AllocateReadOnlyBuffer(vectorArray);
-            using ReadOnlyBuffer<float> kernel_gpu = Gpu.Default.AllocateReadOnlyBuffer(kernel);
-            using ReadWriteBuffer<Vector4> result_gpu = Gpu.Default.AllocateReadWriteBuffer<Vector4>(vectorArray.Length);
-            Gpu.Default.For(height, width, id =>
+            using (ReadOnlyBuffer<Vector4> image_gpu = Gpu.Default.AllocateReadOnlyBuffer(vectorArray))
+            using (ReadOnlyBuffer<float> kernel_gpu = Gpu.Default.AllocateReadOnlyBuffer(kernel))
+            using (ReadWriteBuffer<Vector4> result_gpu = Gpu.Default.AllocateReadWriteBuffer<Vector4>(vectorArray.Length))
             {
-                Vector4 total = Vector4.Zero;
-
-                for (int y = -Radius; y <= Radius; y++)
+                // Apply the effect
+                Gpu.Default.For(height, width, id =>
                 {
-                    for (int x = -Radius; x <= Radius; x++)
+                    Vector4 total = Vector4.Zero;
+
+                    for (int y = -Radius; y <= Radius; y++)
                     {
-                        int iy = (int)id.X + y;
-                        int jx = (int)id.Y + x;
+                        for (int x = -Radius; x <= Radius; x++)
+                        {
+                            int iy = (int)id.X + y;
+                            int jx = (int)id.Y + x;
 
-                        if (iy < 0) iy = -iy;
-                        else if (iy > height) iy = 2 * height - iy;
-                        if (jx < 0) jx = -jx;
-                        else if (jx > width) jx = 2 * width - jx;
+                            if (iy < 0) iy = -iy;
+                            else if (iy > height) iy = 2 * height - iy;
+                            if (jx < 0) jx = -jx;
+                            else if (jx > width) jx = 2 * width - jx;
 
-                        int ki = Radius - y;
-                        int kj = Radius - x;
+                            int ki = Radius - y;
+                            int kj = Radius - x;
 
-                        total += image_gpu[(uint)(iy * width + jx)] * kernel_gpu[(uint)(ki * diameter + kj)];
+                            total += image_gpu[(uint)(iy * width + jx)] * kernel_gpu[(uint)(ki * diameter + kj)];
+                        }
                     }
-                }
 
-                result_gpu[(uint)(id.X * width + id.Y)] = total;
-            });
+                    result_gpu[(uint)(id.X * width + id.Y)] = total;
+                });
 
-            // Copy data back
-            Console.WriteLine(">> Copying data back");
-            result_gpu.GetData(vectorArray);
+                // Copy data back
+                Console.WriteLine(">> Copying data back");
+                result_gpu.GetData(vectorArray);
+            }
 
             // Copy the modified image back
             Console.WriteLine(">> Storing pixel data");
