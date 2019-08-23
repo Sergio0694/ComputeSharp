@@ -190,6 +190,11 @@ namespace ComputeSharp.Shaders.Translation
         private static readonly Regex NestedClosureFieldRegex = new Regex(@"(?<=public )((?:\w+\.)+<>[\w_]+) (CS\$<>[\w_]+)(?=;)", RegexOptions.Compiled);
 
         /// <summary>
+        /// A <see cref="Regex"/> used to identify compiler generated fields
+        /// </summary>
+        private static readonly Regex CompilerGeneratedFieldRegex = new Regex(@"CS\$<>[\w_]+\.", RegexOptions.Compiled);
+
+        /// <summary>
         /// Unwraps all the nested captured fields in the given source code, moving them to the top level
         /// </summary>
         /// <param name="source">The input source code to process</param>
@@ -239,9 +244,13 @@ namespace ComputeSharp.Shaders.Translation
                     builder.AppendLine(field.ToFullString());
                 string fields = builder.ToString().TrimEnd(' ', '\r', '\n');
 
+                // Replace the field declarations
                 Match match = NestedClosureFieldRegex.Match(source);
-                source = source.Remove(match.Index - 11, match.Length + 12);
+                source = source.Remove(match.Index - 11, match.Length + 12); // leading "    public " and trailing ";"
                 source = source.Insert(match.Index - 11, fields);
+
+                // Adjust the method body to remove references to compiler generated fields
+                source = CompilerGeneratedFieldRegex.Replace(source, string.Empty);
             }
 
             return source;
