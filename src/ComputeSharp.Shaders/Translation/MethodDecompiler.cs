@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Metadata;
+using System.Text;
 using System.Text.RegularExpressions;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
@@ -198,40 +199,50 @@ namespace ComputeSharp.Shaders.Translation
             List<FieldDeclarationSyntax> parsedFields = new List<FieldDeclarationSyntax>();
 
             // Local function to recursively extract all the nested fields
-            void ParseSyntaxTree(string source)
+            void ParseNestedFields(string source)
             {
                 // Find the field declarations
-                MatchCollection matches = NestedClosureFieldRegex.Matches(source);
-                if (matches.Count == 0) return;
+                Match match = NestedClosureFieldRegex.Match(source);
+                if (!match.Success) return;
 
-                foreach (Match match in matches)
-                {
-                    // Load the nested closure type
-                    string fullname = match.Groups[1].Value.Replace(".<>", "+<>"); // Fullname of a nested type
-                    Type type = AppDomain.CurrentDomain.GetAssemblies().Select(a => a.GetType(fullname)).First(t => t != null);
+                // Load the nested closure type
+                string fullname = match.Groups[1].Value.Replace(".<>", "+<>"); // Fullname of a nested type
+                Type type = AppDomain.CurrentDomain.GetAssemblies().Select(a => a.GetType(fullname)).First(t => t != null);
 
-                    // Decompile the type and get a readable source code
-                    EntityHandle typeHandle = MetadataTokenHelpers.TryAsEntityHandle(type.MetadataToken) ?? throw new InvalidOperationException();
-                    CSharpDecompiler decompiler = Decompilers[type.Assembly.Location];
-                    string
-                        sourceCode = decompiler.DecompileAsString(typeHandle),
-                        typeFixedCode = ClosureTypeDeclarationRegex.Replace(sourceCode, "Scope");
+                // Decompile the type and get a readable source code
+                EntityHandle typeHandle = MetadataTokenHelpers.TryAsEntityHandle(type.MetadataToken) ?? throw new InvalidOperationException();
+                CSharpDecompiler decompiler = Decompilers[type.Assembly.Location];
+                string
+                    sourceCode = decompiler.DecompileAsString(typeHandle),
+                    typeFixedCode = ClosureTypeDeclarationRegex.Replace(sourceCode, "Scope");
 
-                    // Load the syntax tree and retrieve the list of fields
-                    SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(typeFixedCode);
-                    FieldDeclarationSyntax[] fields = syntaxTree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>().First().ChildNodes().OfType<FieldDeclarationSyntax>().ToArray();
+                // Load the syntax tree and retrieve the list of fields
+                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(typeFixedCode);
+                FieldDeclarationSyntax[] fields = syntaxTree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>().First().ChildNodes().OfType<FieldDeclarationSyntax>().ToArray();
 
-                    // Add the captured fields
-                    foreach (FieldDeclarationSyntax field in fields)
-                        if (!field.Declaration.Variables.ToFullString().StartsWith("CS$<>"))
-                            parsedFields.Add(field);
+                // Add the captured fields
+                foreach (FieldDeclarationSyntax field in fields)
+                    if (!field.Declaration.Variables.ToFullString().StartsWith("CS$<>"))
+                        parsedFields.Add(field);
 
-                    // Explore the new decompiled type
-                    ParseSyntaxTree(typeFixedCode);
-                }
+                // Explore the new decompiled type
+                ParseNestedFields(typeFixedCode);
             }
 
-            ParseSyntaxTree(source);
+            ParseNestedFields(source);
+
+            if (parsedFields.Count > 0)
+            {
+                // Build the aggregated string with all the captured fields
+                StringBuilder builder = new StringBuilder();
+                foreach (FieldDeclarationSyntax field in parsedFields)
+                    builder.AppendLine(field.ToFullString());
+                string fields = builder.ToString().TrimEnd(' ', '\r', '\n');
+
+                Match match = NestedClosureFieldRegex.Match(source);
+                source = source.Remove(match.Index - 11, match.Length + 12);
+                source = source.Insert(match.Index - 11, fields);
+            }
 
             return source;
         }
