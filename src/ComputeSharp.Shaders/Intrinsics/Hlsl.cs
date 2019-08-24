@@ -648,6 +648,42 @@ namespace ComputeSharp
         public static Vector4 Frac(Vector4 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Frac)}({nameof(Vector4)})");
 
         /// <summary>
+        /// Returns the mantissa and exponent of the specified floating-point value
+        /// </summary>
+        /// <param name="x">The specified floating-point value (if the x parameter is 0, this function returns 0 for both the mantissa and the exponent)</param>
+        /// <param name="exp">The returned exponent of the <paramref name="x"/> parameter</param>
+        /// <returns>The fractional part of the <paramref name="x"/> parameter</returns>
+        [Pure]
+        public static float Frexp(float x, out float exp) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Frexp)}(float,float)");
+
+        /// <summary>
+        /// Returns the mantissa and exponent of the specified floating-point value
+        /// </summary>
+        /// <param name="x">The specified floating-point value (if the x parameter is 0, this function returns 0 for both the mantissa and the exponent)</param>
+        /// <param name="exp">The returned exponent of the <paramref name="x"/> parameter</param>
+        /// <returns>The fractional part of the <paramref name="x"/> parameter</returns>
+        [Pure]
+        public static Vector2 Frexp(Vector2 x, out Vector2 exp) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Frexp)}({nameof(Vector2)},{nameof(Vector2)})");
+
+        /// <summary>
+        /// Returns the mantissa and exponent of the specified floating-point value
+        /// </summary>
+        /// <param name="x">The specified floating-point value (if the x parameter is 0, this function returns 0 for both the mantissa and the exponent)</param>
+        /// <param name="exp">The returned exponent of the <paramref name="x"/> parameter</param>
+        /// <returns>The fractional part of the <paramref name="x"/> parameter</returns>
+        [Pure]
+        public static Vector3 Frexp(Vector3 x, out Vector3 exp) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Frac)}({nameof(Vector3)},{nameof(Vector3)})");
+
+        /// <summary>
+        /// Returns the mantissa and exponent of the specified floating-point value
+        /// </summary>
+        /// <param name="x">The specified floating-point value (if the x parameter is 0, this function returns 0 for both the mantissa and the exponent)</param>
+        /// <param name="exp">The returned exponent of the <paramref name="x"/> parameter</param>
+        /// <returns>The fractional part of the <paramref name="x"/> parameter</returns>
+        [Pure]
+        public static Vector4 Frexp(Vector4 x, out Vector4 exp) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Frexp)}({nameof(Vector4)},{nameof(Vector4)})");
+
+        /// <summary>
         /// Determines if the specified floating-point value is finite
         /// </summary>
         /// <param name="x">The specified value</param>
@@ -942,6 +978,51 @@ namespace ComputeSharp
         /// <remarks>For values of -INF or INF, <see cref="Min(Vector4,Vector4)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
         [Pure]
         public static Vector4 Min(Vector4 x, Vector4 y) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Min)}({nameof(Vector4)},{nameof(Vector4)})");
+
+        /// <summary>
+        /// Splits the value <paramref name="x"/> into fractional and integer parts, each of which has the same sign as <paramref name="x"/>
+        /// </summary>
+        /// <param name="x">The input value</param>
+        /// <param name="ip">The integer portion of <paramref name="x"/></param>
+        /// <returns>The signed-fractional portion of <paramref name="x"/></returns>
+        [Pure]
+        public static int Modf(int x, int ip) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Modf)}(int,int)");
+
+        /// <summary>
+        /// Splits the value <paramref name="x"/> into fractional and integer parts, each of which has the same sign as <paramref name="x"/>
+        /// </summary>
+        /// <param name="x">The input value</param>
+        /// <param name="ip">The integer portion of <paramref name="x"/></param>
+        /// <returns>The signed-fractional portion of <paramref name="x"/></returns>
+        [Pure]
+        public static float Modf(float x, float ip) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Modf)}(float,float)");
+
+        /// <summary>
+        /// Splits the value <paramref name="x"/> into fractional and integer parts, each of which has the same sign as <paramref name="x"/>
+        /// </summary>
+        /// <param name="x">The input value</param>
+        /// <param name="ip">The integer portion of <paramref name="x"/></param>
+        /// <returns>The signed-fractional portion of <paramref name="x"/></returns>
+        [Pure]
+        public static Vector2 Modf(Vector2 x, Vector2 ip) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Modf)}({nameof(Vector2)},{nameof(Vector2)})");
+
+        /// <summary>
+        /// Splits the value <paramref name="x"/> into fractional and integer parts, each of which has the same sign as <paramref name="x"/>
+        /// </summary>
+        /// <param name="x">The input value</param>
+        /// <param name="ip">The integer portion of <paramref name="x"/></param>
+        /// <returns>The signed-fractional portion of <paramref name="x"/></returns>
+        [Pure]
+        public static Vector3 Modf(Vector3 x, Vector3 ip) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Modf)}({nameof(Vector3)},{nameof(Vector3)})");
+
+        /// <summary>
+        /// Splits the value <paramref name="x"/> into fractional and integer parts, each of which has the same sign as <paramref name="x"/>
+        /// </summary>
+        /// <param name="x">The input value</param>
+        /// <param name="ip">The integer portion of <paramref name="x"/></param>
+        /// <returns>The signed-fractional portion of <paramref name="x"/></returns>
+        [Pure]
+        public static Vector4 Modf(Vector4 x, Vector4 ip) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Modf)}({nameof(Vector4)},{nameof(Vector4)})");
 
         /// <summary>
         /// Multiplies <paramref name="x"/> and <paramref name="y"/> using matrix math
@@ -1315,6 +1396,38 @@ namespace ComputeSharp
         /// <returns>The sine of the <paramref name="x"/> parameter</returns>
         [Pure]
         public static Vector4 Sin(Vector4 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Sin)}({nameof(Vector4)})");
+
+        /// <summary>
+        /// Returns the sine and cosine of <paramref name="x"/>
+        /// </summary>
+        /// <param name="x">The specified value, in radians</param>
+        /// <param name="s">Returns the sine of <paramref name="x"/></param>
+        /// <param name="c">Returns the cosine of <paramref name="x"/></param>
+        public static void SinCos(float x, out float s, out float c) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(SinCos)}(float,float,float)");
+
+        /// <summary>
+        /// Returns the sine and cosine of <paramref name="x"/>
+        /// </summary>
+        /// <param name="x">The specified value, in radians</param>
+        /// <param name="s">Returns the sine of <paramref name="x"/></param>
+        /// <param name="c">Returns the cosine of <paramref name="x"/></param>
+        public static void SinCos(Vector2 x, out Vector2 s, out Vector2 c) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(SinCos)}({nameof(Vector2)},{nameof(Vector2)},{nameof(Vector2)})");
+
+        /// <summary>
+        /// Returns the sine and cosine of <paramref name="x"/>
+        /// </summary>
+        /// <param name="x">The specified value, in radians</param>
+        /// <param name="s">Returns the sine of <paramref name="x"/></param>
+        /// <param name="c">Returns the cosine of <paramref name="x"/></param>
+        public static void SinCos(Vector3 x, out Vector3 s, out Vector3 c) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(SinCos)}({nameof(Vector3)},{nameof(Vector3)},{nameof(Vector3)})");
+
+        /// <summary>
+        /// Returns the sine and cosine of <paramref name="x"/>
+        /// </summary>
+        /// <param name="x">The specified value, in radians</param>
+        /// <param name="s">Returns the sine of <paramref name="x"/></param>
+        /// <param name="c">Returns the cosine of <paramref name="x"/></param>
+        public static void SinCos(Vector4 x, out Vector4 s, out Vector4 c) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(SinCos)}({nameof(Vector4)},{nameof(Vector4)},{nameof(Vector4)})");
 
         /// <summary>
         /// Returns the hyperbolic sine of the specified value
