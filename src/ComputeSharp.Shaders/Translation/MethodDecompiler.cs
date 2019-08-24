@@ -173,8 +173,11 @@ namespace ComputeSharp.Shaders.Translation
                 // Unwrap the nested fields
                 string unwrappedSourceCode = UnwrapSyntaxTree(methodFixedCode);
 
+                // Remove the in keyword from the source
+                string inFixedSourceCode = Regex.Replace(unwrappedSourceCode, @"(?<!\w)in ", string.Empty);
+
                 // Tweak the out declarations
-                string outFixedSourceCode = RefactorInlineOutDeclarations(unwrappedSourceCode, methodInfo.Name);
+                string outFixedSourceCode = RefactorInlineOutDeclarations(inFixedSourceCode, methodInfo.Name);
 
                 // Load the type syntax tree
                 SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(outFixedSourceCode);
