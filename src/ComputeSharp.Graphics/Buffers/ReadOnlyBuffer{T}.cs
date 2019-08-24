@@ -18,9 +18,9 @@ namespace ComputeSharp.Graphics.Buffers
         internal ReadOnlyBuffer(GraphicsDevice device, int size) : base(device, size, BufferType.ReadOnly) { }
 
         /// <summary>
-        /// Gets or sets a single <typeparamref name="T"/> value from the current read write buffer
+        /// Gets a single <typeparamref name="T"/> value from the current read write buffer
         /// </summary>
-        /// <param name="i">The index of the value to get or set</param>
+        /// <param name="i">The index of the value to get</param>
         /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else</remarks>
         public T this[uint i] => throw new InvalidExecutionContextException($"{nameof(ReadOnlyBuffer<T>)}<T>[uint i]");
     }
