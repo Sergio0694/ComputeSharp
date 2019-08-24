@@ -296,7 +296,8 @@ namespace ComputeSharp.Shaders.Translation
             }
 
             // Remove the out keyword from the source
-            source = Regex.Replace(source, @"(?<!\w)out ", string.Empty);
+            source = Regex.Replace(source, @"(?<!\w)out [\w.]+ (?=[\w_]+)", string.Empty); // Inline out declarations
+            source = Regex.Replace(source, @"(?<!\w)out ", string.Empty); // Leftovers out keywords
 
             return source;
         }
