@@ -9,7 +9,30 @@ namespace ComputeSharp.Tests
     public class IntrinsicTests
     {
         [TestMethod]
-        public void LocalScalarAssignToBuffer()
+        public void IntrinsicWithInlineOutParamater()
+        {
+            float angle = 80;
+            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(4);
+
+            Action<ThreadIds> action = id =>
+            {
+                buffer[0] = Hlsl.Sin(angle);
+                buffer[1] = Hlsl.Cos(angle);
+                Hlsl.SinCos(angle, out float sine, out float cosine);
+                buffer[2] = sine;
+                buffer[3] = cosine;
+            };
+
+            Gpu.Default.For(1, action);
+
+            float[] result = buffer.GetData();
+
+            Assert.IsTrue(MathF.Abs(result[0] - result[2]) < 0.0001f);
+            Assert.IsTrue(MathF.Abs(result[1] - result[3]) < 0.0001f);
+        }
+
+        [TestMethod]
+        public void IntrinsicWithOutParamaters()
         {
             float angle = 80;
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(4);
