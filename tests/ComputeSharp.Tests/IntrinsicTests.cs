@@ -32,6 +32,26 @@ namespace ComputeSharp.Tests
         }
 
         [TestMethod]
+        public void IntrinsicWithInlineOutParamaterAndDiscard()
+        {
+            float angle = 80;
+            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(2);
+
+            Action<ThreadIds> action = id =>
+            {
+                buffer[0] = Hlsl.Sin(angle);
+                Hlsl.SinCos(angle, out float sine, out _);
+                buffer[1] = sine;
+            };
+
+            Gpu.Default.For(1, action);
+
+            float[] result = buffer.GetData();
+
+            Assert.IsTrue(MathF.Abs(result[0] - result[1]) < 0.0001f);
+        }
+
+        [TestMethod]
         public void IntrinsicWithOutParamaters()
         {
             float angle = 80;
