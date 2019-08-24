@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Text.RegularExpressions;
+using ComputeSharp.Shaders.Mappings;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
 using ICSharpCode.Decompiler.Metadata;
@@ -170,10 +171,13 @@ namespace ComputeSharp.Shaders.Translation
                 }
 
                 // Unwrap the nested fields
-                string unwrappedCode = UnwrapSyntaxTree(methodFixedCode);
+                string unwrappedSourceCode = UnwrapSyntaxTree(methodFixedCode);
+
+                // Tweak the out declarations
+                string outFixedSourceCode = RefactorInlineOutDeclarations(unwrappedSourceCode, methodInfo.Name);
 
                 // Load the type syntax tree
-                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(unwrappedCode);
+                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(outFixedSourceCode);
 
                 // Get the root node to return
                 rootNode = syntaxTree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().First(node => node.GetLeadingTrivia().ToFullString().Contains(methodInfo.Name));
@@ -252,6 +256,44 @@ namespace ComputeSharp.Shaders.Translation
                 // Adjust the method body to remove references to compiler generated fields
                 source = CompilerGeneratedFieldRegex.Replace(source, string.Empty);
             }
+
+            return source;
+        }
+
+        /// <summary>
+        /// Refactors all the inline out expressions with a variable declaration
+        /// </summary>
+        /// <param name="source">The input source code to process</param>
+        /// <param name="entryPoint">The name of the shader method being processed</param>
+        [Pure]
+        private string RefactorInlineOutDeclarations(string source, string entryPoint)
+        {
+            // Replace the discards
+            source = Regex.Replace(source, @"(?<!\w)out ([\w.]+) _(?!_)", m => $"out {m.Groups[1].Value} {new string(Guid.NewGuid().ToByteArray().Select(b => (char)('a' + b % 26)).ToArray())}");
+
+            // Load the syntax tree and the entry node
+            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source);
+            MethodDeclarationSyntax rootNode = syntaxTree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().First(node => node.GetLeadingTrivia().ToFullString().Contains(entryPoint));
+
+            // Get the out declarations to replace
+            var outs = (
+                from argument in rootNode.DescendantNodes().OfType<ArgumentSyntax>()
+                where argument.RefKindKeyword.IsKind(SyntaxKind.OutKeyword) &&
+                      argument.Expression.IsKind(SyntaxKind.DeclarationExpression)
+                let match = Regex.Match(argument.Expression.ToFullString(), @"([\w.]+) ([\w_]+)")
+                let mappedType = HlslKnownTypes.GetMappedName(match.Groups[1].Value)
+                let declatation = $"{mappedType} {match.Groups[2].Value} = ({mappedType})0;"
+                select (match.Groups[1].Value, match.Groups[2].Value, declatation)).ToArray();
+
+            // Insert the explicit declarations at the start of the method
+            int start = rootNode.Body.ChildNodes().First().SpanStart;
+            foreach (var item in outs.Reverse())
+            {
+                source = source.Insert(start, $"{item.declatation}{Environment.NewLine}        ");
+            }
+
+            // Remove the out keyword from the source
+            source = Regex.Replace(source, @"(?<!\w)out ", string.Empty);
 
             return source;
         }
