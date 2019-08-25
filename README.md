@@ -67,7 +67,7 @@ using ReadWriteBuffer<float> yBuffer = Gpu.Default.AllocateReadWriteBuffer(y);
 // Shader body
 void Kernel(ThreadIds id)
 {
-    uint offset = id.X + id.Y * (uint)width;
+    int offset = id.X + id.Y * width;
     yBuffer[offset] = Hlsl.Pow(xBuffer[offset], 2);
 }
 
