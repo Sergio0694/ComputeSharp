@@ -3929,5 +3929,11 @@ namespace ComputeSharp.Shaders.Primitives.Int
         /// Gets an <see cref="Int4"/> value with the <see cref="A"/> value for all components
         /// </summary>
         public Int4 AAAA => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(AAAA)}");
+
+        /// <summary>
+        /// Creates a new <see cref="Int4"/> value with the same value for all its components
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="Int4"/> instance</param>
+        public static implicit operator Int4(int x) => new Int4(x, x, x, x);
     }
 }
