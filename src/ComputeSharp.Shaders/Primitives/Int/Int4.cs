@@ -47,7 +47,7 @@ namespace ComputeSharp.Shaders.Primitives.Int
         /// <summary>
         /// Gets or sets the value of the first color component
         /// </summary>
-        public float R
+        public int R
         {
             get => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(R)}");
             set => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(R)}");
@@ -56,7 +56,7 @@ namespace ComputeSharp.Shaders.Primitives.Int
         /// <summary>
         /// Gets or sets the value of the second color component
         /// </summary>
-        public float G
+        public int G
         {
             get => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(G)}");
             set => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(G)}");
@@ -65,7 +65,7 @@ namespace ComputeSharp.Shaders.Primitives.Int
         /// <summary>
         /// Gets or sets the value of the third color component
         /// </summary>
-        public float B
+        public int B
         {
             get => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(B)}");
             set => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(B)}");
@@ -74,7 +74,7 @@ namespace ComputeSharp.Shaders.Primitives.Int
         /// <summary>
         /// Gets or sets the value of the fourth color component
         /// </summary>
-        public float A
+        public int A
         {
             get => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(A)}");
             set => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(A)}");
@@ -84,7 +84,7 @@ namespace ComputeSharp.Shaders.Primitives.Int
         /// Gets or sets a specific component in the current <see cref="Int4"/> instance
         /// </summary>
         /// <param name="i">The index of the component to access</param>
-        public float this[int i]
+        public int this[int i]
         {
             get => throw new InvalidExecutionContextException($"{nameof(Int4)}[int]");
             set => throw new InvalidExecutionContextException($"{nameof(Int4)}[int]");

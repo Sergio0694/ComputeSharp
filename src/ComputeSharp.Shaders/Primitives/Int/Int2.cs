@@ -33,7 +33,7 @@ namespace ComputeSharp.Shaders.Primitives.Int
         /// <summary>
         /// Gets or sets the value of the first color component
         /// </summary>
-        public float R
+        public int R
         {
             get => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(R)}");
             set => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(R)}");
@@ -42,7 +42,7 @@ namespace ComputeSharp.Shaders.Primitives.Int
         /// <summary>
         /// Gets or sets the value of the second color component
         /// </summary>
-        public float G
+        public int G
         {
             get => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(G)}");
             set => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(G)}");
@@ -52,7 +52,7 @@ namespace ComputeSharp.Shaders.Primitives.Int
         /// Gets or sets a specific component in the current <see cref="Int2"/> instance
         /// </summary>
         /// <param name="i">The index of the component to access</param>
-        public float this[int i]
+        public int this[int i]
         {
             get => throw new InvalidExecutionContextException($"{nameof(Int2)}[int]");
             set => throw new InvalidExecutionContextException($"{nameof(Int2)}[int]");
@@ -64,7 +64,7 @@ namespace ComputeSharp.Shaders.Primitives.Int
         public Int2 XX => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(XX)}");
 
         /// <summary>
-        /// Gets or sets an <see cref="Int3"/> value with the <see cref="X"/> and <see cref="Y"/> values
+        /// Gets or sets an <see cref="Int2"/> value with the <see cref="X"/> and <see cref="Y"/> values
         /// </summary>
         public Int2 XY
         {
@@ -73,7 +73,7 @@ namespace ComputeSharp.Shaders.Primitives.Int
         }
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="Y"/> and <see cref="X"/> values
+        /// Gets an <see cref="Int2"/> value with the <see cref="Y"/> and <see cref="X"/> values
         /// </summary>
         public Int2 YX
         {
@@ -92,7 +92,7 @@ namespace ComputeSharp.Shaders.Primitives.Int
         public Int2 RR => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(RR)}");
 
         /// <summary>
-        /// Gets or sets an <see cref="Int3"/> value with the <see cref="R"/> and <see cref="G"/> values
+        /// Gets or sets an <see cref="Int2"/> value with the <see cref="R"/> and <see cref="G"/> values
         /// </summary>
         public Int2 RG
         {
@@ -101,7 +101,7 @@ namespace ComputeSharp.Shaders.Primitives.Int
         }
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="G"/> and <see cref="R"/> values
+        /// Gets an <see cref="Int2"/> value with the <see cref="G"/> and <see cref="R"/> values
         /// </summary>
         public Int2 GR
         {
