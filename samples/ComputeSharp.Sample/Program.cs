@@ -30,7 +30,7 @@ namespace ComputeSharp.Sample
             // Run the shader
             Gpu.Default.For(100, id =>
             {
-                uint offset = id.X + id.Y * (uint)width;
+                int offset = id.X + id.Y * width;
                 gpuBuffer[offset] *= 2;
             });
 

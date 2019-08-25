@@ -8,16 +8,16 @@
         /// <summary>
         /// The X id of the current thread
         /// </summary>
-        public readonly uint X;
+        public readonly int X;
 
         /// <summary>
         /// The Y id of the current thread
         /// </summary>
-        public readonly uint Y;
+        public readonly int Y;
 
         /// <summary>
         /// The Z id of the current thread
         /// </summary>
-        public readonly uint Z;
+        public readonly int Z;
     }
 }

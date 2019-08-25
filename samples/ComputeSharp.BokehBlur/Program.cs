@@ -93,8 +93,8 @@ namespace ComputeSharp.BokehBlur
                     {
                         for (int x = -Radius; x <= Radius; x++)
                         {
-                            int iy = (int)id.X + y;
-                            int jx = (int)id.Y + x;
+                            int iy = id.X + y;
+                            int jx = id.Y + x;
 
                             if (iy < 0) iy = -iy;
                             else if (iy > height) iy = 2 * height - iy;
@@ -104,11 +104,11 @@ namespace ComputeSharp.BokehBlur
                             int ki = Radius - y;
                             int kj = Radius - x;
 
-                            total += image_gpu[(uint)(iy * width + jx)] * kernel_gpu[(uint)(ki * diameter + kj)];
+                            total += image_gpu[iy * width + jx] * kernel_gpu[ki * diameter + kj];
                         }
                     }
 
-                    result_gpu[(uint)(id.X * width + id.Y)] = total;
+                    result_gpu[id.X * width + id.Y] = total;
                 });
 
                 // Copy data back

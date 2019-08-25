@@ -66,21 +66,17 @@ namespace ComputeSharp.Benchmark
             int c, int n, int m, int p,
             ReadOnlyBuffer<float> x, ReadOnlyBuffer<float> w, ReadOnlyBuffer<float> b, ReadWriteBuffer<float> y)
         {
-            uint u_n = (uint)n;
-            uint u_m = (uint)m;
-            uint u_p = (uint)p;
-
             void Kernel(ThreadIds id)
             {
-                uint x_offset = id.X * u_n * u_p + id.Y * u_m;
+                int x_offset = id.X * n * p + id.Y * m;
                 float result = 0f;
 
-                for (uint k = 0; k < u_m; k++)
+                for (int k = 0; k < m; k++)
                 {
-                    result += x[x_offset + k] * w[k * u_p + id.Z];
+                    result += x[x_offset + k] * w[k * p + id.Z];
                 }
 
-                y[id.X * u_n * u_p + id.Y * u_p + id.Z] = result + b[id.Z];
+                y[id.X * n * p + id.Y * p + id.Z] = result + b[id.Z];
             };
 
             Gpu.Default.For(c, n, p, Kernel);
