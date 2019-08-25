@@ -104,20 +104,6 @@ namespace ComputeSharp.Shaders.Mappings
                                                                type.GetGenericTypeDefinition() == typeof(ReadWriteBuffer<>);
 
         /// <summary>
-        /// Checks whether or not a given <see cref="Type"/> is an HLSL known type
-        /// </summary>
-        /// <param name="type">The input <see cref="Type"/> instance to check</param>
-        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a known HLSL type</returns>
-        [Pure]
-        public static bool IsKnownType(Type type)
-        {
-            Type declaredType = type.IsArray ? type.GetElementType() : type;
-            string fullname = $"{declaredType.Namespace}{Type.Delimiter}{declaredType.Name}";
-
-            return KnownTypes.ContainsKey(fullname);
-        }
-
-        /// <summary>
         /// Gets the mapped HLSL-compatible type name for the input <see cref="Type"/> instance
         /// </summary>
         /// <param name="type">The input <see cref="Type"/> instance to map</param>

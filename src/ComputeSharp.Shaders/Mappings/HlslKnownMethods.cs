@@ -223,19 +223,6 @@ namespace ComputeSharp.Shaders.Mappings
         }
 
         /// <summary>
-        /// Checks whether or not a specified method is a known HLSL method
-        /// </summary>
-        /// <param name="containingMemberSymbol">The containing member symbol for the method to check</param>
-        /// <param name="memberSymbol">The symbol for the method to check</param>
-        /// <returns>A <see langword="bool"/> indicating whether the input method is in fact an HLSL known method</returns>
-        [Pure]
-        public static bool IsKnownMethod(ISymbol containingMemberSymbol, ISymbol memberSymbol)
-        {
-            string fullTypeName = containingMemberSymbol.IsStatic ? containingMemberSymbol.ToString() : memberSymbol.ContainingType.ToString();
-            return KnownMethods.ContainsKey(fullTypeName + Type.Delimiter + memberSymbol.Name);
-        }
-
-        /// <summary>
         /// Tries to get the mapped HLSL-compatible mthod name for the input symbols
         /// </summary>
         /// <param name="containingMemberSymbol">The containing member symbol for the method to check</param>
