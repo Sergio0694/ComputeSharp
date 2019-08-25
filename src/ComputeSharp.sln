@@ -14,6 +14,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_SolutionItems", "_SolutionItems", "{1A9C4108-F61A-4ABE-B5CF-F524521EAE2D}"
 	ProjectSection(SolutionItems) = preProject
 		..\.gitignore = ..\.gitignore
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}"
@@ -26,7 +28,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Tests.Internal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Benchmark", "..\samples\ComputeSharp.Benchmark\ComputeSharp.Benchmark.csproj", "{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.BokehBlur", "..\samples\ComputeSharp.BokehBlur\ComputeSharp.BokehBlur.csproj", "{524CC5DD-1DEE-4A30-9515-AB90965E5207}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.BokehBlur", "..\samples\ComputeSharp.BokehBlur\ComputeSharp.BokehBlur.csproj", "{524CC5DD-1DEE-4A30-9515-AB90965E5207}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
