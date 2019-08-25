@@ -1,0 +1,89 @@
+﻿using System.Runtime.InteropServices;
+using ComputeSharp.Graphics.Exceptions;
+
+namespace ComputeSharp.Shaders.Primitives.Int
+{
+    /// <summary>
+    /// A <see langword="struct"/> that maps the int2 HLSL type
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Size = sizeof(int) * 2)]
+    public struct Int2
+    {
+        /// <summary>
+        /// Creates a new <see cref="Int2"/> instance with the specified parameters
+        /// </summary>
+        /// <param name="x">The value to assign to the first vector component</param>
+        /// <param name="y">The value to assign to the second vector component</param>
+        public Int2(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        /// <summary>
+        /// Gets or sets the value of the first vector component
+        /// </summary>
+        public int X { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of the second vector component
+        /// </summary>
+        public int Y { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value of the first color component
+        /// </summary>
+        public float R
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(R)}");
+            set => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(R)}");
+        }
+
+        /// <summary>
+        /// Gets or sets the value of the second color component
+        /// </summary>
+        public float G
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(G)}");
+            set => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(G)}");
+        }
+
+        /// <summary>
+        /// Gets or sets a specific component in the current <see cref="Int2"/> instance
+        /// </summary>
+        /// <param name="i">The index of the component to access</param>
+        public float this[int i]
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int2)}[int]");
+            set => throw new InvalidExecutionContextException($"{nameof(Int2)}[int]");
+        }
+
+        /// <summary>
+        /// Gets an <see cref="Int2"/> value with the <see cref="X"/> value for all components
+        /// </summary>
+        public Int2 XX => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(XX)}");
+
+        /// <summary>
+        /// Gets or sets an <see cref="Int3"/> value with the <see cref="X"/> and <see cref="Y"/> values
+        /// </summary>
+        public Int2 XY
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(XY)}");
+            set => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(XY)}");
+        }
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="Y"/> and <see cref="X"/> values
+        /// </summary>
+        public Int2 YX
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(YX)}");
+            set => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(YX)}");
+        }
+
+        /// <summary>
+        /// Gets an <see cref="Int2"/> value with the <see cref="Y"/> value for all components
+        /// </summary>
+        public Int2 YY => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(YY)}");
+    }
+}
