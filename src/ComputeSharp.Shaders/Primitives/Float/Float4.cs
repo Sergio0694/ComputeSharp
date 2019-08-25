@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using ComputeSharp.Graphics.Exceptions;
 
-namespace ComputeSharp.Shaders.Primitives.Float
+namespace ComputeSharp
 {
     /// <summary>
     /// A <see langword="struct"/> that maps the float4 HLSL type

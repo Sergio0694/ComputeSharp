@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using ComputeSharp.Graphics.Exceptions;
 
-namespace ComputeSharp.Shaders.Primitives.Int
+namespace ComputeSharp
 {
     /// <summary>
     /// A <see langword="struct"/> that maps the int2 HLSL type

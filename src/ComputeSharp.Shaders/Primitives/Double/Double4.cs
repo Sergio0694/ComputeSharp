@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using ComputeSharp.Graphics.Exceptions;
 
-namespace ComputeSharp.Shaders.Primitives.Double
+namespace ComputeSharp
 {
     /// <summary>
     /// A <see langword="struct"/> that maps the double4 HLSL type
