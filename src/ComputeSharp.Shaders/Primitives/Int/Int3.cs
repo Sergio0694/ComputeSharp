@@ -144,6 +144,75 @@ namespace ComputeSharp.Shaders.Primitives.Int
         public Int2 ZZ => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(ZZ)}");
 
         /// <summary>
+        /// Gets an <see cref="Int2"/> value with the <see cref="R"/> value for all components
+        /// </summary>
+        public Int2 RR => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(RR)}");
+
+        /// <summary>
+        /// Gets or sets an <see cref="Int2"/> value with the <see cref="R"/> and <see cref="G"/> values
+        /// </summary>
+        public Int2 RG
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(RG)}");
+            set => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(RG)}");
+        }
+
+        /// <summary>
+        /// Gets or sets an <see cref="Int2"/> value with the <see cref="R"/> and <see cref="B"/> values
+        /// </summary>
+        public Int2 RB
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(RB)}");
+            set => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(RB)}");
+        }
+
+        /// <summary>
+        /// Gets or sets an <see cref="Int2"/> value with the <see cref="G"/> and <see cref="R"/> values
+        /// </summary>
+        public Int2 GR
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(GR)}");
+            set => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(GR)}");
+        }
+
+        /// <summary>
+        /// Gets an <see cref="Int2"/> value with the <see cref="G"/> value for all components
+        /// </summary>
+        public Int2 GG => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(GG)}");
+
+        /// <summary>
+        /// Gets or sets an <see cref="Int2"/> value with the <see cref="G"/> and <see cref="B"/> values
+        /// </summary>
+        public Int2 GB
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(GB)}");
+            set => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(GB)}");
+        }
+
+        /// <summary>
+        /// Gets or sets an <see cref="Int2"/> value with the <see cref="B"/> and <see cref="R"/> values
+        /// </summary>
+        public Int2 BR
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(BR)}");
+            set => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(BR)}");
+        }
+
+        /// <summary>
+        /// Gets or sets an <see cref="Int2"/> value with the <see cref="B"/> and <see cref="G"/> values
+        /// </summary>
+        public Int2 BG
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(BG)}");
+            set => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(BG)}");
+        }
+
+        /// <summary>
+        /// Gets an <see cref="Int2"/> value with the <see cref="B"/> value for all components
+        /// </summary>
+        public Int2 BB => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(BB)}");
+
+        /// <summary>
         /// Gets an <see cref="Int3"/> value with the <see cref="X"/> value for all components
         /// </summary>
         public Int2 XXX => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(XXX)}");
@@ -301,5 +370,164 @@ namespace ComputeSharp.Shaders.Primitives.Int
         /// Gets an <see cref="Int3"/> value with the <see cref="Z"/> value for all components
         /// </summary>
         public Int2 ZZZ => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(ZZZ)}");
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="R"/> value for all components
+        /// </summary>
+        public Int2 RRR => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(RRR)}");
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="R"/>, <see cref="R"/> and <see cref="G"/> values
+        /// </summary>
+        public Int2 RRG => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(RRG)}");
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="R"/>, <see cref="R"/> and <see cref="B"/> values
+        /// </summary>
+        public Int2 RRB => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(RRB)}");
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="R"/>, <see cref="G"/> and <see cref="R"/> values
+        /// </summary>
+        public Int2 RGR => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(RGR)}");
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="R"/>, <see cref="G"/> and <see cref="G"/> values
+        /// </summary>
+        public Int2 RGG => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(RGG)}");
+
+        /// <summary>
+        /// Gets or sets an <see cref="Int3"/> value with the <see cref="R"/>, <see cref="G"/> and <see cref="B"/> values
+        /// </summary>
+        public Int2 RGB
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(RGB)}");
+            set => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(RGB)}");
+        }
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="R"/>, <see cref="B"/> and <see cref="R"/> values
+        /// </summary>
+        public Int2 RBR => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(RBR)}");
+
+        /// <summary>
+        /// Gets or sets an <see cref="Int3"/> value with the <see cref="R"/>, <see cref="B"/> and <see cref="G"/> values
+        /// </summary>
+        public Int2 RBG
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(RBG)}");
+            set => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(RBG)}");
+        }
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="R"/>, <see cref="B"/> and <see cref="B"/> values
+        /// </summary>
+        public Int2 RBB => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(RBB)}");
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="G"/>, <see cref="R"/> and <see cref="R"/> values
+        /// </summary>
+        public Int2 GRR => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(GRR)}");
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="G"/>, <see cref="R"/> and <see cref="G"/> values
+        /// </summary>
+        public Int2 GRG => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(GRG)}");
+
+        /// <summary>
+        /// Gets or sets an <see cref="Int3"/> value with the <see cref="G"/>, <see cref="R"/> and <see cref="B"/> values
+        /// </summary>
+        public Int2 GRB
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(GRB)}");
+            set => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(GRB)}");
+        }
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="G"/>, <see cref="G"/> and <see cref="R"/> values
+        /// </summary>
+        public Int2 GGR => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(GGR)}");
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="G"/> value for all components
+        /// </summary>
+        public Int2 GGG => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(GGG)}");
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="G"/>, <see cref="G"/> and <see cref="B"/> values
+        /// </summary>
+        public Int2 GGB => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(GGB)}");
+
+        /// <summary>
+        /// Gets or sets an <see cref="Int3"/> value with the <see cref="G"/>, <see cref="B"/> and <see cref="R"/> values
+        /// </summary>
+        public Int2 GBR
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(GBR)}");
+            set => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(GBR)}");
+        }
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="G"/>, <see cref="B"/> and <see cref="G"/> values
+        /// </summary>
+        public Int2 GBG => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(GBG)}");
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="G"/>, <see cref="B"/> and <see cref="B"/> values
+        /// </summary>
+        public Int2 GBB => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(GBB)}");
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="B"/>, <see cref="B"/> and <see cref="B"/> values
+        /// </summary>
+        public Int2 BRR => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(BRR)}");
+
+        /// <summary>
+        /// Gets or sets an <see cref="Int3"/> value with the <see cref="B"/>, <see cref="R"/> and <see cref="G"/> values
+        /// </summary>
+        public Int2 BRG
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(BRG)}");
+            set => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(BRG)}");
+        }
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="B"/>, <see cref="R"/> and <see cref="B"/> values
+        /// </summary>
+        public Int2 BRB => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(BRB)}");
+
+        /// <summary>
+        /// Gets or sets an <see cref="Int3"/> value with the <see cref="B"/>, <see cref="G"/> and <see cref="R"/> values
+        /// </summary>
+        public Int2 BGR
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(BGR)}");
+            set => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(BGR)}");
+        }
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="B"/>, <see cref="G"/> and <see cref="G"/> values
+        /// </summary>
+        public Int2 BGG => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(BGG)}");
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="B"/>, <see cref="G"/> and <see cref="B"/> values
+        /// </summary>
+        public Int2 BGB => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(BGB)}");
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="B"/>, <see cref="B"/> and <see cref="R"/> values
+        /// </summary>
+        public Int2 BBR => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(BBR)}");
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="B"/>, <see cref="B"/> and <see cref="G"/> values
+        /// </summary>
+        public Int2 BBG => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(BBG)}");
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="B"/> value for all components
+        /// </summary>
+        public Int2 BBB => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(BBB)}");
     }
 }

@@ -85,5 +85,33 @@ namespace ComputeSharp.Shaders.Primitives.Int
         /// Gets an <see cref="Int2"/> value with the <see cref="Y"/> value for all components
         /// </summary>
         public Int2 YY => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(YY)}");
+
+        /// <summary>
+        /// Gets an <see cref="Int2"/> value with the <see cref="R"/> value for all components
+        /// </summary>
+        public Int2 RR => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(RR)}");
+
+        /// <summary>
+        /// Gets or sets an <see cref="Int3"/> value with the <see cref="R"/> and <see cref="G"/> values
+        /// </summary>
+        public Int2 RG
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(RG)}");
+            set => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(RG)}");
+        }
+
+        /// <summary>
+        /// Gets an <see cref="Int3"/> value with the <see cref="G"/> and <see cref="R"/> values
+        /// </summary>
+        public Int2 GR
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(GR)}");
+            set => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(GR)}");
+        }
+
+        /// <summary>
+        /// Gets an <see cref="Int2"/> value with the <see cref="G"/> value for all components
+        /// </summary>
+        public Int2 GG => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(GG)}");
     }
 }
