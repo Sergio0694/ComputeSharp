@@ -83,6 +83,19 @@ namespace ComputeSharp.Shaders.Mappings
                     ["ComputeSharp.ThreadIds.Y"] = ".y",
                     ["ComputeSharp.ThreadIds.Z"] = ".z",
 
+                    // Vector2
+                    ["System.Numerics.Vector2.X"] = ".x",
+                    ["System.Numerics.Vector2.Y"] = ".y",
+                    ["System.Numerics.Vector2.Dot"] = "dot",
+                    ["System.Numerics.Vector2.Lerp"] = "lerp",
+                    ["System.Numerics.Vector2.Transform"] = "mul",
+                    ["System.Numerics.Vector2.TransformNormal"] = "mul",
+                    ["System.Numerics.Vector2.Normalize"] = "normalize",
+                    ["System.Numerics.Vector2.Zero"] = "(float2)0",
+                    ["System.Numerics.Vector2.One"] = "float2(1.0f, 1.0f)",
+                    ["System.Numerics.Vector2.UnitX"] = "float2(1.0f, 0.0f)",
+                    ["System.Numerics.Vector2.UnitY"] = "float2(0.0f, 1.0f)",
+
                     // Vector3
                     ["System.Numerics.Vector3.X"] = ".x",
                     ["System.Numerics.Vector3.Y"] = ".y",
