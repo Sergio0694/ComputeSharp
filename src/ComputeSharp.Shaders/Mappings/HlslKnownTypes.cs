@@ -43,6 +43,17 @@ namespace ComputeSharp.Shaders.Mappings
         };
 
         /// <summary>
+        /// Gets the known HLSL vector types available as mapped types
+        /// </summary>
+        public static IReadOnlyList<Type> KnownVectorTypes { get; } = new[]
+        {
+            typeof(Int2), typeof(Int3), typeof(Int4),
+            typeof(UInt2), typeof(UInt3), typeof(UInt4),
+            typeof(Float2), typeof(Float3), typeof(Float4),
+            typeof(Double2), typeof(Double3), typeof(Double4)
+        };
+
+        /// <summary>
         /// Checks whether or not the input type is a known scalar type
         /// </summary>
         /// <param name="type">The input <see cref="Type"/> instance to check</param>

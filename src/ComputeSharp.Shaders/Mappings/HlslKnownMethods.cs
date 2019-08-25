@@ -218,6 +218,15 @@ namespace ComputeSharp.Shaders.Mappings
                     knownMethods.Add($"{typeof(Hlsl).FullName}{Type.Delimiter}{name}", name.ToLowerInvariant());
                 }
 
+                // Programmatically load mappings for the vector types
+                foreach (var item in
+                    from type in HlslKnownTypes.KnownVectorTypes
+                    from property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    select (Type: type, Property: property))
+                {
+                    knownMethods.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", item.Property.Name.ToLowerInvariant());
+                }
+
                 return _KnownMethods = knownMethods;
             }
         }
