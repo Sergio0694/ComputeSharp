@@ -10,6 +10,26 @@ namespace ComputeSharp.Shaders.Primitives.Double
     public struct Double2
     {
         /// <summary>
+        /// Gets an <see cref="Double2"/> value with all components set to 0
+        /// </summary>
+        public static Double2 Zero { get; } = 0;
+
+        /// <summary>
+        /// Gets an <see cref="Double2"/> value with all components set to 1
+        /// </summary>
+        public static Double2 One { get; } = 1;
+
+        /// <summary>
+        /// Gets an <see cref="Double2"/> value with the <see cref="X"/> component set to 1, and the others to 0
+        /// </summary>
+        public static Double2 UnitX { get; } = new Double2(1, 0);
+
+        /// <summary>
+        /// Gets an <see cref="Double2"/> value with the <see cref="Y"/> component set to 1, and the others to 0
+        /// </summary>
+        public static Double2 UnitY { get; } = new Double2(0, 1);
+
+        /// <summary>
         /// Creates a new <see cref="Double2"/> instance with the specified parameters
         /// </summary>
         /// <param name="x">The value to assign to the first vector component</param>
