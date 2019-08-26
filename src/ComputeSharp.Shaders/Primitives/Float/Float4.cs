@@ -3965,5 +3965,33 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="Float4"/> instance</param>
         public static implicit operator Float4(float x) => new Float4(x, x, x, x);
+
+        /// <summary>
+        /// Sums two <see cref="Float4"/> values
+        /// </summary>
+        /// <param name="left">The first <see cref="Float4"/> value to sum</param>
+        /// <param name="right">The second <see cref="Float4"/> value to sum</param>
+        public static Float4 operator +(Float4 left, Float4 right) => throw new InvalidExecutionContextException($"{nameof(Float4)}.+");
+
+        /// <summary>
+        /// Divides two <see cref="Float4"/> values
+        /// </summary>
+        /// <param name="left">The first <see cref="Float4"/> value to divide</param>
+        /// <param name="right">The second <see cref="Float4"/> value to divide</param>
+        public static Float4 operator /(Float4 left, Float4 right) => throw new InvalidExecutionContextException($"{nameof(Float4)}./");
+
+        /// <summary>
+        /// Multiplies two <see cref="Float4"/> values
+        /// </summary>
+        /// <param name="left">The first <see cref="Float4"/> value to multiply</param>
+        /// <param name="right">The second <see cref="Float4"/> value to multiply</param>
+        public static Float4 operator *(Float4 left, Float4 right) => throw new InvalidExecutionContextException($"{nameof(Float4)}.*");
+
+        /// <summary>
+        /// Subtracts two <see cref="Float4"/> values
+        /// </summary>
+        /// <param name="left">The first <see cref="Float4"/> value to subtract</param>
+        /// <param name="right">The second <see cref="Float4"/> value to subtract</param>
+        public static Float4 operator -(Float4 left, Float4 right) => throw new InvalidExecutionContextException($"{nameof(Float4)}.-");
     }
 }

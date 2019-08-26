@@ -3965,5 +3965,33 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="Int4"/> instance</param>
         public static implicit operator Int4(int x) => new Int4(x, x, x, x);
+
+        /// <summary>
+        /// Sums two <see cref="Int4"/> values
+        /// </summary>
+        /// <param name="left">The first <see cref="Int4"/> value to sum</param>
+        /// <param name="right">The second <see cref="Int4"/> value to sum</param>
+        public static Int4 operator +(Int4 left, Int4 right) => throw new InvalidExecutionContextException($"{nameof(Int4)}.+");
+
+        /// <summary>
+        /// Divides two <see cref="Int4"/> values
+        /// </summary>
+        /// <param name="left">The first <see cref="Int4"/> value to divide</param>
+        /// <param name="right">The second <see cref="Int4"/> value to divide</param>
+        public static Int4 operator /(Int4 left, Int4 right) => throw new InvalidExecutionContextException($"{nameof(Int4)}./");
+
+        /// <summary>
+        /// Multiplies two <see cref="Int4"/> values
+        /// </summary>
+        /// <param name="left">The first <see cref="Int4"/> value to multiply</param>
+        /// <param name="right">The second <see cref="Int4"/> value to multiply</param>
+        public static Int4 operator *(Int4 left, Int4 right) => throw new InvalidExecutionContextException($"{nameof(Int4)}.*");
+
+        /// <summary>
+        /// Subtracts two <see cref="Int4"/> values
+        /// </summary>
+        /// <param name="left">The first <see cref="Int4"/> value to subtract</param>
+        /// <param name="right">The second <see cref="Int4"/> value to subtract</param>
+        public static Int4 operator -(Int4 left, Int4 right) => throw new InvalidExecutionContextException($"{nameof(Int4)}.-");
     }
 }

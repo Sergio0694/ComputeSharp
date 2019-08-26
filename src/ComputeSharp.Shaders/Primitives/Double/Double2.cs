@@ -139,5 +139,33 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="Double2"/> instance</param>
         public static implicit operator Double2(double x) => new Double2(x, x);
+
+        /// <summary>
+        /// Sums two <see cref="Double2"/> values
+        /// </summary>
+        /// <param name="left">The first <see cref="Double2"/> value to sum</param>
+        /// <param name="right">The second <see cref="Double2"/> value to sum</param>
+        public static Double2 operator +(Double2 left, Double2 right) => throw new InvalidExecutionContextException($"{nameof(Double2)}.+");
+
+        /// <summary>
+        /// Divides two <see cref="Double2"/> values
+        /// </summary>
+        /// <param name="left">The first <see cref="Double2"/> value to divide</param>
+        /// <param name="right">The second <see cref="Double2"/> value to divide</param>
+        public static Double2 operator /(Double2 left, Double2 right) => throw new InvalidExecutionContextException($"{nameof(Double2)}./");
+
+        /// <summary>
+        /// Multiplies two <see cref="Double2"/> values
+        /// </summary>
+        /// <param name="left">The first <see cref="Double2"/> value to multiply</param>
+        /// <param name="right">The second <see cref="Double2"/> value to multiply</param>
+        public static Double2 operator *(Double2 left, Double2 right) => throw new InvalidExecutionContextException($"{nameof(Double2)}.*");
+
+        /// <summary>
+        /// Subtracts two <see cref="Double2"/> values
+        /// </summary>
+        /// <param name="left">The first <see cref="Double2"/> value to subtract</param>
+        /// <param name="right">The second <see cref="Double2"/> value to subtract</param>
+        public static Double2 operator -(Double2 left, Double2 right) => throw new InvalidExecutionContextException($"{nameof(Double2)}.-");
     }
 }
