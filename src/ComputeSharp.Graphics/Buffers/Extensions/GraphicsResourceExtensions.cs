@@ -45,12 +45,24 @@ namespace ComputeSharp.Graphics.Buffers.Extensions
                         WriteValue(ub, ref r0);
                         break;
                     case int i: WriteValue(i, ref r0); break;
+                    case Int2 i2: WriteValue(i2, ref r0); break;
+                    case Int3 i3: WriteValue(i3, ref r0); break;
+                    case Int4 i4: WriteValue(i4, ref r0); break;
                     case uint u: WriteValue(u, ref r0); break;
+                    case UInt2 ui2: WriteValue(ui2, ref r0); break;
+                    case UInt3 ui3: WriteValue(ui3, ref r0); break;
+                    case UInt4 ui4: WriteValue(ui4, ref r0); break;
                     case float f: WriteValue(f, ref r0); break;
-                    case double d: WriteValue(d, ref r0); break;
+                    case Float2 f2: WriteValue(f2, ref r0); break;
+                    case Float3 f3: WriteValue(f3, ref r0); break;
+                    case Float4 f4: WriteValue(f4, ref r0); break;
                     case Vector2 v2: WriteValue(v2, ref r0); break;
                     case Vector3 v3: WriteValue(v3, ref r0); break;
                     case Vector4 v4: WriteValue(v4, ref r0); break;
+                    case double d: WriteValue(d, ref r0); break;
+                    case Double2 d2: WriteValue(d2, ref r0); break;
+                    case Double3 d3: WriteValue(d3, ref r0); break;
+                    case Double4 d4: WriteValue(d4, ref r0); break;
                     default: throw new InvalidOperationException($"Invalid item of type {data[j].GetType()}");
                 }
             }
