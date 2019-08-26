@@ -2,7 +2,7 @@
 
 # What is it?
 
-**ComputeSharp** is a .NET Standard 2.0 library to run C# code in parallel on the GPU through DX12 and dynamically generated HLSL compute shaders. The available APIs let you allocate GPU buffers and write compute shaders as simple lambda expressions or local methods, with all the captured variables being handled automatically and passed to the running shader.
+**ComputeSharp** is a .NET Standard 2.1 library to run C# code in parallel on the GPU through DX12 and dynamically generated HLSL compute shaders. The available APIs let you allocate GPU buffers and write compute shaders as simple lambda expressions or local methods, with all the captured variables being handled automatically and passed to the running shader.
 
 # Table of Contents
 
@@ -80,10 +80,9 @@ yBuffer.GetData(y);
 
 # Requirements
 
-The **ComputeSharp** library requires .NET Standard 2.0 support, and it is available for applications targeting:
-- .NET Framework >= 4.6.1
-- .NET Core >= 2.0
-- UWP (from SDK 10.0.16299, and only in `Debug` mode for now)
+The **ComputeSharp** library requires .NET Standard 2.1 support, and it is available for applications targeting:
+- .NET Core >= 3.0
+- Windows (x86 or x64)
 
 Additionally, you need an IDE with .NET Core 3.0 and C# 8.0 support to compile the library on your PC.
 
