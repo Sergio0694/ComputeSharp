@@ -8,22 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetDxc" Version="1.2.0-alpha">
-      <ExcludeAssets>native</ExcludeAssets>
-    </PackageReference>
     <PackageReference Include="ICSharpCode.Decompiler" Version="5.0.0.5066-preview4" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.3.0-beta2-final" />
     <PackageReference Include="Stubble.Core" Version="1.4.12" />
+    <PackageReference Include="Vortice.Dxc" Version="1.0.0-gcdd75d017a" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp.Graphics\ComputeSharp.Graphics.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="..\..\lib\win-x64\*.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
