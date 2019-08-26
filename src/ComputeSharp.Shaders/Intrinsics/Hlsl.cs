@@ -23,6 +23,30 @@ namespace ComputeSharp
         /// <param name="x">The specified value</param>
         /// <returns>The absolute value of the <paramref name="x"/> parameter</returns>
         [Pure]
+        public static Int2 Abs(in Int2 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Abs)}({nameof(Int2)})");
+
+        /// <summary>
+        /// Returns the absolute value of the specified value
+        /// </summary>
+        /// <param name="x">The specified value</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter</returns>
+        [Pure]
+        public static Int3 Abs(in Int3 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Abs)}({nameof(Int3)})");
+
+        /// <summary>
+        /// Returns the absolute value of the specified value
+        /// </summary>
+        /// <param name="x">The specified value</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter</returns>
+        [Pure]
+        public static Int4 Abs(in Int4 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Abs)}({nameof(Int4)})");
+
+        /// <summary>
+        /// Returns the absolute value of the specified value
+        /// </summary>
+        /// <param name="x">The specified value</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter</returns>
+        [Pure]
         public static float Abs(in float x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Abs)}(float)");
 
         /// <summary>
@@ -87,6 +111,30 @@ namespace ComputeSharp
         /// <param name="x">The specified value</param>
         /// <returns><see langword="true"/> if all components of the <paramref name="x"/> parameter are non-zero; otherwise, <see langword="false"/></returns>
         [Pure]
+        public static bool All(in Int2 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(All)}({nameof(Int2)})");
+
+        /// <summary>
+        /// Determines if all components of the specified value are non-zero
+        /// </summary>
+        /// <param name="x">The specified value</param>
+        /// <returns><see langword="true"/> if all components of the <paramref name="x"/> parameter are non-zero; otherwise, <see langword="false"/></returns>
+        [Pure]
+        public static bool All(in Int3 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(All)}({nameof(Int3)})");
+
+        /// <summary>
+        /// Determines if all components of the specified value are non-zero
+        /// </summary>
+        /// <param name="x">The specified value</param>
+        /// <returns><see langword="true"/> if all components of the <paramref name="x"/> parameter are non-zero; otherwise, <see langword="false"/></returns>
+        [Pure]
+        public static bool All(in Int4 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(All)}({nameof(Int4)})");
+
+        /// <summary>
+        /// Determines if all components of the specified value are non-zero
+        /// </summary>
+        /// <param name="x">The specified value</param>
+        /// <returns><see langword="true"/> if all components of the <paramref name="x"/> parameter are non-zero; otherwise, <see langword="false"/></returns>
+        [Pure]
         public static bool All(in Vector2 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(All)}({nameof(Vector2)})");
 
         /// <summary>
@@ -104,6 +152,30 @@ namespace ComputeSharp
         /// <returns><see langword="true"/> if all components of the <paramref name="x"/> parameter are non-zero; otherwise, <see langword="false"/></returns>
         [Pure]
         public static bool All(in Vector4 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(All)}({nameof(Vector4)})");
+
+        /// <summary>
+        /// Determines if any components of the specified value are non-zero
+        /// </summary>
+        /// <param name="x">The specified value</param>
+        /// <returns><see langword="true"/> if any components of the <paramref name="x"/> parameter are non-zero; otherwise, <see langword="false"/></returns>
+        [Pure]
+        public static bool Any(in Int2 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Any)}({nameof(Int2)})");
+
+        /// <summary>
+        /// Determines if any components of the specified value are non-zero
+        /// </summary>
+        /// <param name="x">The specified value</param>
+        /// <returns><see langword="true"/> if any components of the <paramref name="x"/> parameter are non-zero; otherwise, <see langword="false"/></returns>
+        [Pure]
+        public static bool Any(in Int3 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Any)}({nameof(Int3)})");
+
+        /// <summary>
+        /// Determines if any components of the specified value are non-zero
+        /// </summary>
+        /// <param name="x">The specified value</param>
+        /// <returns><see langword="true"/> if any components of the <paramref name="x"/> parameter are non-zero; otherwise, <see langword="false"/></returns>
+        [Pure]
+        public static bool Any(in Int4 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Any)}({nameof(Int4)})");
 
         /// <summary>
         /// Determines if any components of the specified value are non-zero
@@ -271,6 +343,39 @@ namespace ComputeSharp
         /// <remarks>For values of -INF or INF, clamp will behave as expected. However for values of NaN, the results are undefined</remarks>
         [Pure]
         public static int Clamp(in int x, in int min, in int max) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Clamp)}(int,int,int)");
+
+        /// <summary>
+        /// Clamps the specified value to the specified minimum and maximum range
+        /// </summary>
+        /// <param name="x">A value to clamp</param>
+        /// <param name="min">The specified minimum range</param>
+        /// <param name="max">The specified maximum range</param>
+        /// <returns>The clamped value for the x parameter</returns>
+        /// <remarks>For values of -INF or INF, clamp will behave as expected. However for values of NaN, the results are undefined</remarks>
+        [Pure]
+        public static Int2 Clamp(in Int2 x, in Int2 min, in Int2 max) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Clamp)}({nameof(Int2)},{nameof(Int2)},{nameof(Int2)})");
+
+        /// <summary>
+        /// Clamps the specified value to the specified minimum and maximum range
+        /// </summary>
+        /// <param name="x">A value to clamp</param>
+        /// <param name="min">The specified minimum range</param>
+        /// <param name="max">The specified maximum range</param>
+        /// <returns>The clamped value for the x parameter</returns>
+        /// <remarks>For values of -INF or INF, clamp will behave as expected. However for values of NaN, the results are undefined</remarks>
+        [Pure]
+        public static Int3 Clamp(in Int3 x, in Int3 min, in Int3 max) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Clamp)}({nameof(Int3)},{nameof(Int3)},{nameof(Int3)})");
+
+        /// <summary>
+        /// Clamps the specified value to the specified minimum and maximum range
+        /// </summary>
+        /// <param name="x">A value to clamp</param>
+        /// <param name="min">The specified minimum range</param>
+        /// <param name="max">The specified maximum range</param>
+        /// <returns>The clamped value for the x parameter</returns>
+        /// <remarks>For values of -INF or INF, clamp will behave as expected. However for values of NaN, the results are undefined</remarks>
+        [Pure]
+        public static Int4 Clamp(in Int4 x, in Int4 min, in Int4 max) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Clamp)}({nameof(Int4)},{nameof(Int4)},{nameof(Int4)})");
 
         /// <summary>
         /// Clamps the specified value to the specified minimum and maximum range
