@@ -48,6 +48,8 @@ If the shader in C# is capturing some local variable, those will be automaticall
 
 ✅ Local vector types: `System.Numerics.Vector2`, `Vector3`, `Vector4`
 
+✅ HLSL vector types: `Float2`, `Float3`, `Float4`, `Int2`, `Int3`, `Int4`, `UInt2`, `Uint3`, `UInt4`, `Double2`, `Double3`, `Double4`
+
 ✅ `static` fields of both scalar, vector or buffer types
 
 ✅ `static` properties, same as with fields
