@@ -3,7 +3,7 @@ using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Enums;
-using SharpDX.Direct3D12;
+using Vortice.DirectX.Direct3D12;
 
 namespace ComputeSharp.Graphics.Buffers
 {
@@ -112,8 +112,8 @@ namespace ComputeSharp.Graphics.Buffers
             ShaderResourceViewDescription description = new ShaderResourceViewDescription
             {
                 Shader4ComponentMapping = 5768,
-                Dimension = ShaderResourceViewDimension.Buffer,
-                Buffer = { ElementCount = Size, StructureByteStride = ElementSizeInBytes }
+                ViewDimension = ShaderResourceViewDimension.Buffer,
+                Buffer = { NumElements = Size, StructureByteStride = ElementSizeInBytes }
             };
 
             GraphicsDevice.NativeDevice.CreateShaderResourceView(NativeResource, description, cpuHandle);
@@ -132,8 +132,8 @@ namespace ComputeSharp.Graphics.Buffers
 
             UnorderedAccessViewDescription description = new UnorderedAccessViewDescription
             {
-                Dimension = UnorderedAccessViewDimension.Buffer,
-                Buffer = { ElementCount = Size, StructureByteStride = ElementSizeInBytes }
+                ViewDimension = UnorderedAccessViewDimension.Buffer,
+                Buffer = { NumElements = Size, StructureByteStride = ElementSizeInBytes }
             };
 
             GraphicsDevice.NativeDevice.CreateUnorderedAccessView(NativeResource, null, description, cpuHandle);

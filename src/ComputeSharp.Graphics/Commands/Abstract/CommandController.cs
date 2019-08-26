@@ -1,5 +1,5 @@
 ﻿using System;
-using SharpDX.Direct3D12;
+using Vortice.DirectX.Direct3D12;
 
 namespace ComputeSharp.Graphics.Commands.Abstract
 {

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Threading;
 using ComputeSharp.Graphics.Commands;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D12;
-using SharpDX.DXGI;
+using Vortice.DirectX.Direct3D;
+using Vortice.DirectX.Direct3D12;
+using Vortice.DirectX.DXGI;
 using CommandList = ComputeSharp.Graphics.Commands.CommandList;
-using Device = SharpDX.Direct3D12.Device;
 
 namespace ComputeSharp.Graphics
 {
@@ -15,9 +14,9 @@ namespace ComputeSharp.Graphics
     public sealed class GraphicsDevice : IDisposable
     {
         /// <summary>
-        /// Gets the <see cref="SharpDX.Direct3D.FeatureLevel"/> value that needs to be supported by GPUs mapped to a <see cref="GraphicsDevice"/> instance
+        /// Gets the <see cref="FeatureLevel"/> value that needs to be supported by GPUs mapped to a <see cref="GraphicsDevice"/> instance
         /// </summary>
-        public const FeatureLevel FeatureLevel = SharpDX.Direct3D.FeatureLevel.Level_12_1;
+        public const FeatureLevel FeatureLevel = Vortice.DirectX.Direct3D.FeatureLevel.Level_12_1;
 
         /// <summary>
         /// The <see cref="System.Threading.AutoResetEvent"/> instance used to wait for completion when executing commands
@@ -25,26 +24,26 @@ namespace ComputeSharp.Graphics
         private readonly AutoResetEvent AutoResetEvent = new AutoResetEvent(false);
 
         /// <summary>
-        /// The <see cref="CommandQueue"/> instance to use for compute operations
+        /// The <see cref="ID3D12CommandQueue"/> instance to use for compute operations
         /// </summary>
-        private readonly CommandQueue NativeComputeCommandQueue;
+        private readonly ID3D12CommandQueue NativeComputeCommandQueue;
 
         /// <summary>
-        /// The <see cref="CommandQueue"/> instance to use for copy operations
+        /// The <see cref="ID3D12CommandQueue"/> instance to use for copy operations
         /// </summary>
-        private readonly CommandQueue NativeCopyCommandQueue;
+        private readonly ID3D12CommandQueue NativeCopyCommandQueue;
 
         /// <summary>
-        /// The <see cref="CommandQueue"/> instance to use for direct operations
+        /// The <see cref="ID3D12CommandQueue"/> instance to use for direct operations
         /// </summary>
-        private readonly CommandQueue NativeDirectCommandQueue;
+        private readonly ID3D12CommandQueue NativeDirectCommandQueue;
 
         /// <summary>
-        /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="Device"/>
+        /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="ID3D12Device"/>
         /// </summary>
-        /// <param name="device">The <see cref="Device"/> to use for the new <see cref="GraphicsDevice"/> instance</param>
+        /// <param name="device">The <see cref="ID3D12Device"/> to use for the new <see cref="GraphicsDevice"/> instance</param>
         /// <param name="description">The available info for the new <see cref="GraphicsDevice"/> instance</param>
-        public GraphicsDevice(Device device, AdapterDescription description)
+        public GraphicsDevice(ID3D12Device device, AdapterDescription description)
         {
             NativeDevice = device;
             Description = description;
@@ -58,9 +57,9 @@ namespace ComputeSharp.Graphics
             CopyAllocatorPool = new CommandAllocatorPool(this, CommandListType.Copy);
             DirectAllocatorPool = new CommandAllocatorPool(this, CommandListType.Direct);
 
-            NativeComputeFence = NativeDevice.CreateFence(0, FenceFlags.None);
-            NativeCopyFence = NativeDevice.CreateFence(0, FenceFlags.None);
-            NativeDirectFence = NativeDevice.CreateFence(0, FenceFlags.None);
+            NativeComputeFence = NativeDevice.CreateFence(0);
+            NativeCopyFence = NativeDevice.CreateFence(0);
+            NativeDirectFence = NativeDevice.CreateFence(0);
 
             ShaderResourceViewAllocator = new DescriptorAllocator(this);
         }
@@ -76,9 +75,9 @@ namespace ComputeSharp.Graphics
         public int WavefrontSize { get; }
 
         /// <summary>
-        /// Gets the <see cref="Device"/> object wrapped by the current instance
+        /// Gets the <see cref="ID3D12Device"/> object wrapped by the current instance
         /// </summary>
-        internal Device NativeDevice { get; }
+        internal ID3D12Device NativeDevice { get; }
 
         /// <summary>
         /// Gets the <see cref="DescriptorAllocator"/> object for the current instance, used when allocating new buffers
@@ -101,19 +100,19 @@ namespace ComputeSharp.Graphics
         internal CommandAllocatorPool DirectAllocatorPool { get; }
 
         /// <summary>
-        /// Gets the <see cref="Fence"/> instance used for compute operations
+        /// Gets the <see cref="ID3D12Fence"/> instance used for compute operations
         /// </summary>
-        internal Fence NativeComputeFence { get; }
+        internal ID3D12Fence NativeComputeFence { get; }
 
         /// <summary>
-        /// Gets the <see cref="Fence"/> instance used for copy operations
+        /// Gets the <see cref="ID3D12Fence"/> instance used for copy operations
         /// </summary>
-        internal Fence NativeCopyFence { get; }
+        internal ID3D12Fence NativeCopyFence { get; }
 
         /// <summary>
-        /// Gets the <see cref="Fence"/> instance used for direct operations
+        /// Gets the <see cref="ID3D12Fence"/> instance used for direct operations
         /// </summary>
-        internal Fence NativeDirectFence { get; }
+        internal ID3D12Fence NativeDirectFence { get; }
 
         /// <summary>
         /// Gets the next fence value for compute operations
@@ -131,13 +130,13 @@ namespace ComputeSharp.Graphics
         internal long NextDirectFenceValue { get; private set; } = 1;
 
         /// <summary>
-        /// Creates a <see cref="RootSignature"/> instance from a description
+        /// Creates a <see cref="ID3D12RootSignature"/> instance from a description
         /// </summary>
-        /// <param name="rootSignatureDescription">A <see cref="RootSignatureDescription"/> instance with the info for the new <see cref="RootSignature"/> object to create</param>
-        /// <returns>A new <see cref="RootSignature"/> instance to use in a compute shader</returns>
-        internal RootSignature CreateRootSignature(RootSignatureDescription rootSignatureDescription)
+        /// <param name="rootSignatureDescription">A <see cref="VersionedRootSignatureDescription"/> instance with the info for the new <see cref="ID3D12RootSignature"/> object to create</param>
+        /// <returns>A new <see cref="ID3D12RootSignature"/> instance to use in a compute shader</returns>
+        internal ID3D12RootSignature CreateRootSignature(VersionedRootSignatureDescription rootSignatureDescription)
         {
-            return NativeDevice.CreateRootSignature(rootSignatureDescription.Serialize());
+            return NativeDevice.CreateRootSignature(rootSignatureDescription);
         }
 
         /// <summary>
@@ -146,7 +145,7 @@ namespace ComputeSharp.Graphics
         /// <param name="commandList">The input <see cref="CommandList"/> to execute</param>
         internal void ExecuteCommandList(CommandList commandList)
         {
-            Fence fence = commandList.CommandListType switch
+            ID3D12Fence fence = commandList.CommandListType switch
             {
                 CommandListType.Direct => NativeDirectFence,
                 CommandListType.Compute => NativeComputeFence,
@@ -173,8 +172,8 @@ namespace ComputeSharp.Graphics
         private long GetFenceValueForCommandList(CommandList commandList)
         {
             CommandAllocatorPool commandAllocatorPool;
-            CommandQueue commandQueue;
-            Fence fence;
+            ID3D12CommandQueue commandQueue;
+            ID3D12Fence fence;
             long fenceValue;
 
             switch (commandList.CommandListType)

@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SharpDX.Direct3D12" Version="4.2.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.6.0-preview8.19405.3" />
+    <PackageReference Include="Vortice.DirectX.Direct3D12" Version="1.0.0-ge816fae51e" />
   </ItemGroup>
 
   <ItemGroup>
