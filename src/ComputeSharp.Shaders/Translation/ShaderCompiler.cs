@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using DotNetDxc;
-using SharpDX.Direct3D12;
+using Vortice.DirectX.Direct3D12;
 
 namespace ComputeSharp.Shaders.Translation
 {
