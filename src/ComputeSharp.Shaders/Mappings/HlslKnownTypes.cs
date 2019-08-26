@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Numerics;
 using System.Text.RegularExpressions;
-using ComputeSharp.Graphics.Buffers;
 
 namespace ComputeSharp.Shaders.Mappings
 {

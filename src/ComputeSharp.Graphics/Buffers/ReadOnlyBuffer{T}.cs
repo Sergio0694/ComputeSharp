@@ -1,8 +1,9 @@
 ﻿using ComputeSharp.Exceptions;
+using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Enums;
 
-namespace ComputeSharp.Graphics.Buffers
+namespace ComputeSharp
 {
     /// <summary>
     /// A <see langword="class"/> representing a typed readonly buffer stored on GPU memory

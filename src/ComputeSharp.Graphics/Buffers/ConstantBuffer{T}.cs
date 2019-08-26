@@ -3,13 +3,14 @@ using System.Buffers;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Exceptions;
+using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Enums;
 using ComputeSharp.Graphics.Helpers;
 using SharpDX.Direct3D12;
 using CommandList = ComputeSharp.Graphics.Commands.CommandList;
 
-namespace ComputeSharp.Graphics.Buffers
+namespace ComputeSharp
 {
     /// <summary>
     /// A <see langword="class"/> representing a typed read write buffer stored on GPU memory

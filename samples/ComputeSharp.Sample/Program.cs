@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using ComputeSharp.Graphics.Buffers;
 
 namespace ComputeSharp.Sample
 {

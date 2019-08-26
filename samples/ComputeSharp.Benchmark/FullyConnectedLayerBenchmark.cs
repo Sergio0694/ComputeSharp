@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
-using ComputeSharp.Graphics.Buffers;
 
 namespace ComputeSharp.Benchmark
 {
