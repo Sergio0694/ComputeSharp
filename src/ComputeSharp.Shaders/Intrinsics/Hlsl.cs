@@ -1396,7 +1396,7 @@ namespace ComputeSharp
         /// <param name="s">A value that linearly interpolates between the <paramref name="x"/> parameter and the <paramref name="y"/> parameter</param>
         /// <returns>The result of the linear interpolation</returns>
         [Pure]
-        public static float Lerp(in float x, in float y, in float s) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Ldexp)}(float,float,float)");
+        public static float Lerp(in float x, in float y, in float s) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Lerp)}(float,float,float)");
 
         /// <summary>
         /// Performs a linear interpolation
@@ -1406,7 +1406,7 @@ namespace ComputeSharp
         /// <param name="s">A value that linearly interpolates between the <paramref name="x"/> parameter and the <paramref name="y"/> parameter</param>
         /// <returns>The result of the linear interpolation</returns>
         [Pure]
-        public static Float2 Lerp(in Float2 x, in Float2 y, in Float2 s) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Ldexp)}({nameof(Float2)},{nameof(Float2)},{nameof(Float2)})");
+        public static Float2 Lerp(in Float2 x, in Float2 y, in Float2 s) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Lerp)}({nameof(Float2)},{nameof(Float2)},{nameof(Float2)})");
 
         /// <summary>
         /// Performs a linear interpolation
@@ -1416,7 +1416,7 @@ namespace ComputeSharp
         /// <param name="s">A value that linearly interpolates between the <paramref name="x"/> parameter and the <paramref name="y"/> parameter</param>
         /// <returns>The result of the linear interpolation</returns>
         [Pure]
-        public static Float3 Lerp(in Float3 x, in Float3 y, in Float3 s) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Ldexp)}({nameof(Float3)},{nameof(Float3)},{nameof(Float3)})");
+        public static Float3 Lerp(in Float3 x, in Float3 y, in Float3 s) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Lerp)}({nameof(Float3)},{nameof(Float3)},{nameof(Float3)})");
 
         /// <summary>
         /// Performs a linear interpolation
@@ -1426,7 +1426,7 @@ namespace ComputeSharp
         /// <param name="s">A value that linearly interpolates between the <paramref name="x"/> parameter and the <paramref name="y"/> parameter</param>
         /// <returns>The result of the linear interpolation</returns>
         [Pure]
-        public static Float2 Lerp(in Float4 x, in Float4 y, in Float4 s) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Ldexp)}({nameof(Float4)},{nameof(Float4)},{nameof(Float4)})");
+        public static Float2 Lerp(in Float4 x, in Float4 y, in Float4 s) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Lerp)}({nameof(Float4)},{nameof(Float4)},{nameof(Float4)})");
 
         /// <summary>
         /// Performs a linear interpolation
@@ -1436,7 +1436,7 @@ namespace ComputeSharp
         /// <param name="s">A value that linearly interpolates between the <paramref name="x"/> parameter and the <paramref name="y"/> parameter</param>
         /// <returns>The result of the linear interpolation</returns>
         [Pure]
-        public static Vector2 Lerp(in Vector2 x, in Vector2 y, in Vector2 s) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Ldexp)}({nameof(Vector2)},{nameof(Vector2)},{nameof(Vector2)})");
+        public static Vector2 Lerp(in Vector2 x, in Vector2 y, in Vector2 s) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Lerp)}({nameof(Vector2)},{nameof(Vector2)},{nameof(Vector2)})");
 
         /// <summary>
         /// Performs a linear interpolation
@@ -1446,7 +1446,7 @@ namespace ComputeSharp
         /// <param name="s">A value that linearly interpolates between the <paramref name="x"/> parameter and the <paramref name="y"/> parameter</param>
         /// <returns>The result of the linear interpolation</returns>
         [Pure]
-        public static Vector3 Lerp(in Vector3 x, in Vector3 y, in Vector3 s) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Ldexp)}({nameof(Vector3)},{nameof(Vector3)},{nameof(Vector3)})");
+        public static Vector3 Lerp(in Vector3 x, in Vector3 y, in Vector3 s) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Lerp)}({nameof(Vector3)},{nameof(Vector3)},{nameof(Vector3)})");
 
         /// <summary>
         /// Performs a linear interpolation
@@ -1456,7 +1456,7 @@ namespace ComputeSharp
         /// <param name="s">A value that linearly interpolates between the <paramref name="x"/> parameter and the <paramref name="y"/> parameter</param>
         /// <returns>The result of the linear interpolation</returns>
         [Pure]
-        public static Vector2 Lerp(in Vector4 x, in Vector4 y, in Vector4 s) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Ldexp)}({nameof(Vector4)},{nameof(Vector4)},{nameof(Vector4)})");
+        public static Vector2 Lerp(in Vector4 x, in Vector4 y, in Vector4 s) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Lerp)}({nameof(Vector4)},{nameof(Vector4)},{nameof(Vector4)})");
 
         /// <summary>
         /// Returns the base-e logarithm of the specified value
