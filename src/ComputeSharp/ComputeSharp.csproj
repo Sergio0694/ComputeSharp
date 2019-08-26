@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.18362.2002-preview" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ComputeSharp.Shaders\ComputeSharp.Shaders.csproj" />
   </ItemGroup>
 

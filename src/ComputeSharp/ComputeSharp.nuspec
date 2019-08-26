@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/Sergio0694/ComputeSharp</projectUrl>
     <iconUrl>https://i.imgur.com/ntvmD6P.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <description>A .NET Standard 2.0 library to run C# code in parallel on the GPU through DX12 and dynamically generated HLSL compute shaders</description>
+    <description>A .NET Standard 2.1 library to run C# code in parallel on the GPU through DX12 and dynamically generated HLSL compute shaders</description>
     <releaseNotes>Initial alpha release</releaseNotes>
     <copyright>Copyright (c) 2019 Sergio Pedri</copyright>
     <tags>dotnet net netcore netstandard csharp library graphics shader hlsl compute gpu</tags>
@@ -18,9 +18,7 @@
     <dependencies>
       <dependency id="Microsoft.Windows.SDK.Contracts" version="10.0.18362.2002-preview" />
       <dependency id="SharpDX.Direct3D12" version="4.2.0" />
-      <dependency id="System.Memory" version="4.5.3" />
-      <dependency id="System.Numerics.Vectors" version="4.6.0-preview5.19224.8" />
-      <dependency id="System.Runtime.InteropServices.WindowsRuntime" version="4.3.0" />
+      <dependency id="System.Runtime.CompilerServices.Unsafe" version="4.6.0-preview8.19405.3" />
       <dependency id="DotNetDxc" version="1.2.0-alpha" />
       <dependency id="ICSharpCode.Decompiler" version="5.0.0.5066-preview4" />
       <dependency id="Microsoft.CodeAnalysis.CSharp" version="3.3.0-beta2-final" />
