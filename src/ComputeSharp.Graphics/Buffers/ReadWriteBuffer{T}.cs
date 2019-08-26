@@ -1,8 +1,9 @@
-﻿using ComputeSharp.Graphics.Buffers.Abstract;
+﻿using ComputeSharp.Exceptions;
+using ComputeSharp.Graphics;
+using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Enums;
-using ComputeSharp.Graphics.Exceptions;
 
-namespace ComputeSharp.Graphics.Buffers
+namespace ComputeSharp
 {
     /// <summary>
     /// A <see langword="class"/> representing a typed read write buffer stored on GPU memory
@@ -22,6 +23,6 @@ namespace ComputeSharp.Graphics.Buffers
         /// </summary>
         /// <param name="i">The index of the value to get or set</param>
         /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else</remarks>
-        public ref T this[int i] => throw new InvalidExecutionContextException($"{nameof(ReadWriteBuffer<T>)}<T>[int i]");
+        public ref T this[int i] => throw new InvalidExecutionContextException($"{nameof(ReadWriteBuffer<T>)}<T>[int]");
     }
 }

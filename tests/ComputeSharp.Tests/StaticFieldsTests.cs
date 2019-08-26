@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Numerics;
-using ComputeSharp.Graphics.Buffers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests

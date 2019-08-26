@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Numerics;
 using System.Text.RegularExpressions;
-using ComputeSharp.Graphics.Buffers;
 
 namespace ComputeSharp.Shaders.Mappings
 {
@@ -26,8 +25,31 @@ namespace ComputeSharp.Shaders.Mappings
             [typeof(Vector3).FullName] = "float3",
             [typeof(Vector4).FullName] = "float4",
             [typeof(ThreadIds).FullName] = "uint3",
+            [typeof(Int2).FullName] = "int2",
+            [typeof(Int3).FullName] = "int3",
+            [typeof(Int4).FullName] = "int4",
+            [typeof(UInt2).FullName] = "uint2",
+            [typeof(UInt3).FullName] = "uint3",
+            [typeof(UInt4).FullName] = "uint4",
+            [typeof(Float2).FullName] = "float2",
+            [typeof(Float3).FullName] = "float3",
+            [typeof(Float4).FullName] = "float4",
+            [typeof(Double2).FullName] = "double2",
+            [typeof(Double3).FullName] = "double3",
+            [typeof(Double4).FullName] = "double4",
             [typeof(ReadOnlyBuffer<>).FullName] = "StructuredBuffer",
             [typeof(ReadWriteBuffer<>).FullName] = "RWStructuredBuffer"
+        };
+
+        /// <summary>
+        /// Gets the known HLSL vector types available as mapped types
+        /// </summary>
+        public static IReadOnlyList<Type> KnownVectorTypes { get; } = new[]
+        {
+            typeof(Int2), typeof(Int3), typeof(Int4),
+            typeof(UInt2), typeof(UInt3), typeof(UInt4),
+            typeof(Float2), typeof(Float3), typeof(Float4),
+            typeof(Double2), typeof(Double3), typeof(Double4)
         };
 
         /// <summary>
@@ -50,7 +72,19 @@ namespace ComputeSharp.Shaders.Mappings
         [Pure]
         public static bool IsKnownVectorType(Type type) => type == typeof(Vector2) ||
                                                            type == typeof(Vector3) ||
-                                                           type == typeof(Vector4);
+                                                           type == typeof(Vector4) ||
+                                                           type == typeof(Int2) ||
+                                                           type == typeof(Int3) ||
+                                                           type == typeof(Int4) ||
+                                                           type == typeof(UInt2) ||
+                                                           type == typeof(UInt3) ||
+                                                           type == typeof(UInt4) ||
+                                                           type == typeof(Float2) ||
+                                                           type == typeof(Float3) ||
+                                                           type == typeof(Float4) ||
+                                                           type == typeof(Double2) ||
+                                                           type == typeof(Double3) ||
+                                                           type == typeof(Double4);
 
         /// <summary>
         /// Checks whether or not the input type is a <see cref="ConstantBuffer{T}"/> value
@@ -78,20 +112,6 @@ namespace ComputeSharp.Shaders.Mappings
         [Pure]
         public static bool IsReadWriteBufferType(Type type) => type.IsGenericType &&
                                                                type.GetGenericTypeDefinition() == typeof(ReadWriteBuffer<>);
-
-        /// <summary>
-        /// Checks whether or not a given <see cref="Type"/> is an HLSL known type
-        /// </summary>
-        /// <param name="type">The input <see cref="Type"/> instance to check</param>
-        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a known HLSL type</returns>
-        [Pure]
-        public static bool IsKnownType(Type type)
-        {
-            Type declaredType = type.IsArray ? type.GetElementType() : type;
-            string fullname = $"{declaredType.Namespace}{Type.Delimiter}{declaredType.Name}";
-
-            return KnownTypes.ContainsKey(fullname);
-        }
 
         /// <summary>
         /// Gets the mapped HLSL-compatible type name for the input <see cref="Type"/> instance

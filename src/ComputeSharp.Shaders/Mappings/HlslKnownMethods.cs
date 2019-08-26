@@ -83,6 +83,19 @@ namespace ComputeSharp.Shaders.Mappings
                     ["ComputeSharp.ThreadIds.Y"] = ".y",
                     ["ComputeSharp.ThreadIds.Z"] = ".z",
 
+                    // Vector2
+                    ["System.Numerics.Vector2.X"] = ".x",
+                    ["System.Numerics.Vector2.Y"] = ".y",
+                    ["System.Numerics.Vector2.Dot"] = "dot",
+                    ["System.Numerics.Vector2.Lerp"] = "lerp",
+                    ["System.Numerics.Vector2.Transform"] = "mul",
+                    ["System.Numerics.Vector2.TransformNormal"] = "mul",
+                    ["System.Numerics.Vector2.Normalize"] = "normalize",
+                    ["System.Numerics.Vector2.Zero"] = "(float2)0",
+                    ["System.Numerics.Vector2.One"] = "float2(1.0f, 1.0f)",
+                    ["System.Numerics.Vector2.UnitX"] = "float2(1.0f, 0.0f)",
+                    ["System.Numerics.Vector2.UnitY"] = "float2(0.0f, 1.0f)",
+
                     // Vector3
                     ["System.Numerics.Vector3.X"] = ".x",
                     ["System.Numerics.Vector3.Y"] = ".y",
@@ -108,7 +121,91 @@ namespace ComputeSharp.Shaders.Mappings
                     ["System.Numerics.Vector4.Transform"] = "mul",
                     ["System.Numerics.Vector4.Normalize"] = "normalize",
                     ["System.Numerics.Vector4.Zero"] = "(float4)0",
-                    ["System.Numerics.Vector4.One"] = "float4(1.0f, 1.0f, 1.0f, 1.0f)"
+                    ["System.Numerics.Vector4.One"] = "float4(1.0f, 1.0f, 1.0f, 1.0f)",
+
+                    // Int2
+                    ["ComputeSharp.Int2.Zero"] = "(int2)0",
+                    ["ComputeSharp.Int2.One"] = "int2(1, 1)",
+                    ["ComputeSharp.Int2.UnitX"] = "int2(1, 0)",
+                    ["ComputeSharp.Int2.UnitY"] = "int2(0, 1)",
+
+                    // Int3
+                    ["ComputeSharp.Int3.Zero"] = "(int3)0",
+                    ["ComputeSharp.Int3.One"] = "int3(1, 1, 1)",
+                    ["ComputeSharp.Int3.UnitX"] = "int3(1, 0, 0)",
+                    ["ComputeSharp.Int3.UnitY"] = "int3(0, 1, 0)",
+                    ["ComputeSharp.Int3.UnitZ"] = "int3(0, 0, 1)",
+
+                    // Int4
+                    ["ComputeSharp.Int4.Zero"] = "(int4)0",
+                    ["ComputeSharp.Int4.One"] = "int4(1, 1, 1, 1)",
+                    ["ComputeSharp.Int4.UnitX"] = "int4(1, 0, 0, 0)",
+                    ["ComputeSharp.Int4.UnitY"] = "int4(0, 1, 0, 0)",
+                    ["ComputeSharp.Int4.UnitZ"] = "int4(0, 0, 1, 0)",
+                    ["ComputeSharp.Int4.UnitW"] = "int4(0, 0, 0, 1)",
+
+                    // UInt2
+                    ["ComputeSharp.UInt2.Zero"] = "(uint2)0",
+                    ["ComputeSharp.UInt2.One"] = "uint2(1u, 1u)",
+                    ["ComputeSharp.UInt2.UnitX"] = "uint2(1u, 0u)",
+                    ["ComputeSharp.UInt2.UnitY"] = "uint2(0u, 1u)",
+
+                    // UInt3
+                    ["ComputeSharp.UInt3.Zero"] = "(uint3)0",
+                    ["ComputeSharp.UInt3.One"] = "uint3(1u, 1u, 1u)",
+                    ["ComputeSharp.UInt3.UnitX"] = "uint3(1u, 0u, 0u)",
+                    ["ComputeSharp.UInt3.UnitY"] = "uint3(0u, 1u, 0u)",
+                    ["ComputeSharp.UInt3.UnitZ"] = "uint3(0u, 0u, 1u)",
+
+                    // UInt4
+                    ["ComputeSharp.UInt4.Zero"] = "(uint4)0",
+                    ["ComputeSharp.UInt4.One"] = "uint4(1u, 1u, 1u, 1u)",
+                    ["ComputeSharp.UInt4.UnitX"] = "uint4(1u, 0u, 0u, 0u)",
+                    ["ComputeSharp.UInt4.UnitY"] = "uint4(0u, 1u, 0u, 0u)",
+                    ["ComputeSharp.UInt4.UnitZ"] = "uint4(0u, 0u, 1u, 0u)",
+                    ["ComputeSharp.UInt4.UnitW"] = "uint4(0u, 0u, 0u, 1u)",
+
+                    // Float2
+                    ["ComputeSharp.Float2.Zero"] = "(float2)0",
+                    ["ComputeSharp.Float2.One"] = "float2(1.0f, 1.0f)",
+                    ["ComputeSharp.Float2.UnitX"] = "float2(1.0f, 0.0f)",
+                    ["ComputeSharp.Float2.UnitY"] = "float2(0.0f, 1.0f)",
+
+                    // Float3
+                    ["ComputeSharp.Float3.Zero"] = "(float3)0",
+                    ["ComputeSharp.Float3.One"] = "float3(1.0f, 1.0f, 1.0f)",
+                    ["ComputeSharp.Float3.UnitX"] = "float3(1.0f, 0.0f, 0.0f)",
+                    ["ComputeSharp.Float3.UnitY"] = "float3(0.0f, 1.0f, 0.0f)",
+                    ["ComputeSharp.Float3.UnitZ"] = "float3(0.0f, 0.0f, 1.0f)",
+
+                    // Float4
+                    ["ComputeSharp.Float4.Zero"] = "(float4)0",
+                    ["ComputeSharp.Float4.One"] = "float4(1.0f, 1.0f, 1.0f, 1.0f)",
+                    ["ComputeSharp.Float4.UnitX"] = "float4(1.0f, 0.0f, 0.0f, 0.0f)",
+                    ["ComputeSharp.Float4.UnitY"] = "float4(0.0f, 1.0f, 0.0f, 0.0f)",
+                    ["ComputeSharp.Float4.UnitZ"] = "float4(0.0f, 0.0f, 1.0f, 0.0f)",
+                    ["ComputeSharp.Float4.UnitW"] = "float4(0.0f, 0.0f, 0.0f, 1.0f)",
+
+                    // Double2
+                    ["ComputeSharp.Double2.Zero"] = "(double2)0",
+                    ["ComputeSharp.Double2.One"] = "double2(1.0, 1.0)",
+                    ["ComputeSharp.Double2.UnitX"] = "double2(1.0, 0.0)",
+                    ["ComputeSharp.Double2.UnitY"] = "double2(0.0, 1.0)",
+
+                    // Double3
+                    ["ComputeSharp.Double3.Zero"] = "(double3)0",
+                    ["ComputeSharp.Double3.One"] = "double3(1.0, 1.0, 1.0)",
+                    ["ComputeSharp.Double3.UnitX"] = "double3(1.0, 0.0, 0.0)",
+                    ["ComputeSharp.Double3.UnitY"] = "double3(0.0, 1.0, 0.0)",
+                    ["ComputeSharp.Double3.UnitZ"] = "double3(0.0, 0.0, 1.0)",
+
+                    // Double4
+                    ["ComputeSharp.Double4.Zero"] = "(double4)0",
+                    ["ComputeSharp.Double4.One"] = "double4(1.0, 1.0, 1.0, 1.0)",
+                    ["ComputeSharp.Double4.UnitX"] = "double4(1.0, 0.0, 0.0, 0.0)",
+                    ["ComputeSharp.Double4.UnitY"] = "double4(0.0, 1.0, 0.0, 0.0)",
+                    ["ComputeSharp.Double4.UnitZ"] = "double4(0.0, 0.0, 1.0, 0.0)",
+                    ["ComputeSharp.Double4.UnitW"] = "double4(0.0, 0.0, 0.0, 1.0)"
                 };
 
                 // Programmatically load mappings from the Hlsl class as well
@@ -121,21 +218,17 @@ namespace ComputeSharp.Shaders.Mappings
                     knownMethods.Add($"{typeof(Hlsl).FullName}{Type.Delimiter}{name}", name.ToLowerInvariant());
                 }
 
+                // Programmatically load mappings for the vector types
+                foreach (var item in
+                    from type in HlslKnownTypes.KnownVectorTypes
+                    from property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    select (Type: type, Property: property))
+                {
+                    knownMethods.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $".{item.Property.Name.ToLowerInvariant()}");
+                }
+
                 return _KnownMethods = knownMethods;
             }
-        }
-
-        /// <summary>
-        /// Checks whether or not a specified method is a known HLSL method
-        /// </summary>
-        /// <param name="containingMemberSymbol">The containing member symbol for the method to check</param>
-        /// <param name="memberSymbol">The symbol for the method to check</param>
-        /// <returns>A <see langword="bool"/> indicating whether the input method is in fact an HLSL known method</returns>
-        [Pure]
-        public static bool IsKnownMethod(ISymbol containingMemberSymbol, ISymbol memberSymbol)
-        {
-            string fullTypeName = containingMemberSymbol.IsStatic ? containingMemberSymbol.ToString() : memberSymbol.ContainingType.ToString();
-            return KnownMethods.ContainsKey(fullTypeName + Type.Delimiter + memberSymbol.Name);
         }
 
         /// <summary>

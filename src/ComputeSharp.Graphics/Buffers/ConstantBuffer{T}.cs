@@ -2,14 +2,15 @@
 using System.Buffers;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using ComputeSharp.Exceptions;
+using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Enums;
-using ComputeSharp.Graphics.Exceptions;
 using ComputeSharp.Graphics.Helpers;
 using SharpDX.Direct3D12;
 using CommandList = ComputeSharp.Graphics.Commands.CommandList;
 
-namespace ComputeSharp.Graphics.Buffers
+namespace ComputeSharp
 {
     /// <summary>
     /// A <see langword="class"/> representing a typed read write buffer stored on GPU memory
@@ -39,7 +40,7 @@ namespace ComputeSharp.Graphics.Buffers
         /// </summary>
         /// <param name="i">The index of the value to get</param>
         /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else</remarks>
-        public T this[int i] => throw new InvalidExecutionContextException($"{nameof(ConstantBuffer<T>)}<T>[int i]");
+        public T this[int i] => throw new InvalidExecutionContextException($"{nameof(ConstantBuffer<T>)}<T>[int]");
 
         /// <inheritdoc/>
         public override void GetData(Span<T> span, int offset, int count)
