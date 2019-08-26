@@ -224,7 +224,7 @@ namespace ComputeSharp.Shaders.Mappings
                     from property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                     select (Type: type, Property: property))
                 {
-                    knownMethods.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", item.Property.Name.ToLowerInvariant());
+                    knownMethods.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $".{item.Property.Name.ToLowerInvariant()}");
                 }
 
                 return _KnownMethods = knownMethods;
