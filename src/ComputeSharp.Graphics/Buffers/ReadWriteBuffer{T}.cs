@@ -1,6 +1,6 @@
-﻿using ComputeSharp.Graphics.Buffers.Abstract;
+﻿using ComputeSharp.Exceptions;
+using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Enums;
-using ComputeSharp.Graphics.Exceptions;
 
 namespace ComputeSharp.Graphics.Buffers
 {
