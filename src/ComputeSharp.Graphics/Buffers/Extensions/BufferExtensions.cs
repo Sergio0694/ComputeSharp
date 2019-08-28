@@ -2,6 +2,7 @@
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ComputeSharp.Core;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
 
@@ -37,9 +38,7 @@ namespace ComputeSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, T[,] array) where T : unmanaged
         {
-            Span<T> span = MemoryMarshal.CreateSpan(ref array[0, 0], array.Length);
-
-            return device.AllocateConstantBuffer(span);
+            return device.AllocateConstantBuffer(array.AsSpan());
         }
 
         /// <summary>
@@ -115,9 +114,7 @@ namespace ComputeSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, T[,] array) where T : unmanaged
         {
-            Span<T> span = MemoryMarshal.CreateSpan(ref array[0, 0], array.Length);
-
-            return device.AllocateReadOnlyBuffer(span);
+            return device.AllocateReadOnlyBuffer(array.AsSpan());
         }
 
         /// <summary>
@@ -193,9 +190,7 @@ namespace ComputeSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, T[,] array) where T : unmanaged
         {
-            Span<T> span = MemoryMarshal.CreateSpan(ref array[0, 0], array.Length);
-
-            return device.AllocateReadWriteBuffer(span);
+            return device.AllocateReadWriteBuffer(array.AsSpan());
         }
 
         /// <summary>
