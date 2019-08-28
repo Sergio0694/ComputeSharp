@@ -90,9 +90,8 @@ Additionally, you need an IDE with .NET Core 3.0 and C# 8.0 support to compile t
 
 # Special thanks
 
-The core of the **ComputeSharp** library is based on some of the code from the [DX12GameEngine](https://github.com/Aminator/DirectX12GameEngine) repository from [Amin Delavar](https://github.com/Aminator). Additionally, **ComputeSharp** uses the following NuGet packages (excluding those from Microsoft):
+The **ComputeSharp** library is based on some of the code from the [DX12GameEngine](https://github.com/Aminator/DirectX12GameEngine) repository by [Amin Delavar](https://github.com/Aminator). Additionally, **ComputeSharp** uses NuGet packages from the following repositories (excluding those from Microsoft):
 
-- [SharpDX.Direct3D12](https://www.nuget.org/packages/SharpDX.Direct3D12)
-- [SharpDX.D3DCompiler](https://www.nuget.org/packages/SharpDX.D3DCompiler)
-- [ICSharpCode.Decompiler](https://www.nuget.org/packages/ICSharpCode.Decompiler)
-- [Stubble.Core](https://www.nuget.org/packages/Stubble.Core)
+- [Vortice.Windows](https://github.com/amerkoleci/Vortice.Windows)
+- [ILSpy](https://github.com/icsharpcode/ILSpy)
+- [Stubble](https://github.com/StubbleOrg/Stubble)
