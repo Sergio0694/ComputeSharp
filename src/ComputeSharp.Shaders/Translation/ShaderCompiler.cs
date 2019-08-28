@@ -28,7 +28,7 @@ namespace ComputeSharp.Shaders.Translation
         [Pure]
         public ShaderBytecode CompileShader(string source)
         {
-            var result = DxcCompiler.Compile(DxcShaderStage.ComputeShader, source, "Main", string.Empty, new DxcCompilerOptions { ShaderModel = DxcShaderModel.Model6_1 });
+            var result = DxcCompiler.Compile(DxcShaderStage.ComputeShader, source, "CSMain", string.Empty, new DxcCompilerOptions { ShaderModel = DxcShaderModel.Model6_1 });
 
             // Get the compiled bytecode in case of success
             if (result.GetStatus() == 0)
