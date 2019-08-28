@@ -78,6 +78,11 @@ namespace ComputeSharp.Shaders.Mappings
                     ["System.MathF.Truncate"] = "trunc",
                     ["System.MathF.PI"] = "3.14159274f",
 
+                    // Float
+                    ["float.IsFinite"] = "isfinite",
+                    ["float.IsInfinity"] = "isinf",
+                    ["float.IsNaN"] = "isnan",
+
                     // ThreadIds
                     ["ComputeSharp.ThreadIds.X"] = ".x",
                     ["ComputeSharp.ThreadIds.Y"] = ".y",
