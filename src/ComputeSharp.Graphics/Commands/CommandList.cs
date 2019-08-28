@@ -1,7 +1,7 @@
 ﻿using System;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Commands.Abstract;
-using SharpDX.Direct3D12;
+using Vortice.DirectX.Direct3D12;
 
 namespace ComputeSharp.Graphics.Commands
 {
@@ -22,23 +22,23 @@ namespace ComputeSharp.Graphics.Commands
             };
             NativeCommandList = GraphicsDevice.NativeDevice.CreateCommandList(CommandListType, CommandAllocator, null);
 
-            // Set the heap descriptor if the command list is for copy operations
+            // Set the heap descriptor if the command list is not for copy operations
             if (CommandListType != CommandListType.Copy)
             {
-                NativeCommandList.SetDescriptorHeaps(GraphicsDevice.ShaderResourceViewAllocator.DescriptorHeap);
+                NativeCommandList.SetDescriptorHeaps(1, new[] { GraphicsDevice.ShaderResourceViewAllocator.DescriptorHeap });
             }
         }
 
 
         /// <summary>
-        /// Gets the <see cref="SharpDX.Direct3D12.CommandAllocator"/> object in use by the current instance
+        /// Gets the <see cref="ID3D12CommandAllocator"/> object in use by the current instance
         /// </summary>
-        public CommandAllocator CommandAllocator { get; }
+        public ID3D12CommandAllocator CommandAllocator { get; }
 
         /// <summary>
-        /// Gets the <see cref="GraphicsCommandList"/> object in use by the current instance
+        /// Gets the <see cref="ID3D12GraphicsCommandList"/> object in use by the current instance
         /// </summary>
-        public GraphicsCommandList NativeCommandList { get; }
+        public ID3D12GraphicsCommandList NativeCommandList { get; }
 
         /// <summary>
         /// Copies a memory region from one resource to another
@@ -71,7 +71,7 @@ namespace ComputeSharp.Graphics.Commands
         public void SetPipelineState(PipelineState pipelineState)
         {
             NativeCommandList.SetComputeRootSignature(pipelineState.RootSignature);
-            NativeCommandList.PipelineState = pipelineState.NativePipelineState;
+            NativeCommandList.SetPipelineState(pipelineState.NativePipelineState);
         }
 
         /// <summary>

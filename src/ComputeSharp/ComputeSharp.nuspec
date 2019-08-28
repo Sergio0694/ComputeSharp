@@ -17,12 +17,12 @@
     <repository type="git" url="https://github.com/Sergio0694/ComputeSharp.git" branch="master" commit="25aaf474ea73096dc7da8086d2b1748d43200436" />
     <dependencies>
       <dependency id="Microsoft.Windows.SDK.Contracts" version="10.0.18362.2002-preview" />
-      <dependency id="SharpDX.Direct3D12" version="4.2.0" />
       <dependency id="System.Runtime.CompilerServices.Unsafe" version="4.6.0-preview8.19405.3" />
-      <dependency id="DotNetDxc" version="1.2.0-alpha" />
+      <dependency id="Vortice.DirectX.Direct3D12" version="1.0.0" />
       <dependency id="ICSharpCode.Decompiler" version="5.0.0.5066-preview4" />
       <dependency id="Microsoft.CodeAnalysis.CSharp" version="3.3.0-beta2-final" />
       <dependency id="Stubble.Core" version="1.4.12" />
+      <dependency id="Vortice.Dxc" version="1.0.0" />
     </dependencies>
   </metadata>
 </package>

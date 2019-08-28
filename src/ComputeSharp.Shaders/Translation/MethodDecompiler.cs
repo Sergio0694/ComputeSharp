@@ -39,16 +39,6 @@ namespace ComputeSharp.Shaders.Translation
         private readonly Dictionary<string, CSharpDecompiler> Decompilers = new Dictionary<string, CSharpDecompiler>();
 
         /// <summary>
-        /// The available <see cref="PEFile"/> instances for the loaded assemblies
-        /// </summary>
-        private readonly IReadOnlyList<PEFile> PEFiles;
-
-        /// <summary>
-        /// The mapping of <see cref="PEFile"/> and <see cref="TypeDefinition"/> values for the discovered <see cref="Type"/> instances
-        /// </summary>
-        private readonly Dictionary<Type, (PEFile PEFile, TypeDefinition TypeDefinition)> TypeDefinitions = new Dictionary<Type, (PEFile, TypeDefinition)>();
-
-        /// <summary>
         /// The incremental <see cref="Compilation"/> instance for the shader assembly
         /// </summary>
         private Compilation _Compilation;
@@ -79,9 +69,6 @@ namespace ComputeSharp.Shaders.Translation
                     }
                 }).ToArray();
             }
-
-            // Load and store all the available PEFile instances
-            PEFiles = assemblyPaths.Select(p => new PEFile(p)).ToArray();
 
             // Ceate an incremental shader assembly with the available references
             IEnumerable<PortableExecutableReference> metadataReferences = assemblyPaths.Select(p => MetadataReference.CreateFromFile(p));
@@ -211,10 +198,10 @@ namespace ComputeSharp.Shaders.Translation
             List<FieldDeclarationSyntax> parsedFields = new List<FieldDeclarationSyntax>();
 
             // Local function to recursively extract all the nested fields
-            void ParseNestedFields(string source)
+            void ParseNestedFields(string typeSource)
             {
                 // Find the field declarations
-                Match match = NestedClosureFieldRegex.Match(source);
+                Match match = NestedClosureFieldRegex.Match(typeSource);
                 if (!match.Success) return;
 
                 // Load the nested closure type

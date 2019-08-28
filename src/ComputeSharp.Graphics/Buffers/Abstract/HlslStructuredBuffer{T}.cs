@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Buffers.Enums;
 using ComputeSharp.Graphics.Helpers;
-using SharpDX.Direct3D12;
+using Vortice.DirectX.Direct3D12;
 using CommandList = ComputeSharp.Graphics.Commands.CommandList;
 
 namespace ComputeSharp.Graphics.Buffers.Abstract

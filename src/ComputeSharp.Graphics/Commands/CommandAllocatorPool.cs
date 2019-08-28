@@ -2,29 +2,29 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using ComputeSharp.Graphics.Commands.Abstract;
-using SharpDX.Direct3D12;
+using Vortice.DirectX.Direct3D12;
 
 namespace ComputeSharp.Graphics.Commands
 {
     /// <summary>
-    /// A <see langword="class"/> that acts as a pool to get new <see cref="CommandAllocator"/> instances wheen needed
+    /// A <see langword="class"/> that acts as a pool to get new <see cref="ID3D12CommandAllocator"/> instances wheen needed
     /// </summary>
     internal sealed class CommandAllocatorPool : CommandController
     {
         /// <summary>
-        /// The queue of currently pooled <see cref="CommandAllocator"/> instances
+        /// The queue of currently pooled <see cref="ID3D12CommandAllocator"/> instances
         /// </summary>
-        private readonly Queue<(CommandAllocator CommandAllocator, long FenceValue)> CommandAllocatorQueue = new Queue<(CommandAllocator, long)>();
+        private readonly Queue<(ID3D12CommandAllocator CommandAllocator, long FenceValue)> CommandAllocatorQueue = new Queue<(ID3D12CommandAllocator, long)>();
 
         /// <inheritdoc/>
         public CommandAllocatorPool(GraphicsDevice device, CommandListType commandListType) : base(device, commandListType) { }
 
         /// <summary>
-        /// Adds a new <see cref="CommandAllocator"/> item to the internal pool queue
+        /// Adds a new <see cref="ID3D12CommandAllocator"/> item to the internal pool queue
         /// </summary>
-        /// <param name="commandAllocator">The input <see cref="CommandAllocator"/> to enqueue</param>
-        /// <param name="fenceValue">The fence value for the input <see cref="CommandAllocator"/></param>
-        public void Enqueue(CommandAllocator commandAllocator, long fenceValue)
+        /// <param name="commandAllocator">The input <see cref="ID3D12CommandAllocator"/> to enqueue</param>
+        /// <param name="fenceValue">The fence value for the input <see cref="ID3D12CommandAllocator"/></param>
+        public void Enqueue(ID3D12CommandAllocator commandAllocator, long fenceValue)
         {
             lock (CommandAllocatorQueue)
             {
@@ -33,16 +33,16 @@ namespace ComputeSharp.Graphics.Commands
         }
 
         /// <summary>
-        /// Gets a new or reused <see cref="CommandAllocator"/> item to use to issue GPU commands
+        /// Gets a new or reused <see cref="ID3D12CommandAllocator"/> item to use to issue GPU commands
         /// </summary>
         [Pure]
-        public CommandAllocator GetCommandAllocator()
+        public ID3D12CommandAllocator GetCommandAllocator()
         {
             lock (CommandAllocatorQueue)
             {
                 if (CommandAllocatorQueue.Count > 0)
                 {
-                    (CommandAllocator commandAllocator, long fenceValue) = CommandAllocatorQueue.Peek();
+                    (ID3D12CommandAllocator commandAllocator, long fenceValue) = CommandAllocatorQueue.Peek();
 
                     long completedValue = CommandListType switch
                     {
@@ -70,7 +70,7 @@ namespace ComputeSharp.Graphics.Commands
         {
             lock (CommandAllocatorQueue)
             {
-                foreach ((CommandAllocator commandAllocator, long _) in CommandAllocatorQueue)
+                foreach ((ID3D12CommandAllocator commandAllocator, long _) in CommandAllocatorQueue)
                 {
                     commandAllocator.Dispose();
                 }

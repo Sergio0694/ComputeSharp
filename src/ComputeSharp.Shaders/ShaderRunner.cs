@@ -8,7 +8,7 @@ using ComputeSharp.Graphics.Buffers.Extensions;
 using ComputeSharp.Shaders.Renderer;
 using ComputeSharp.Shaders.Renderer.Models;
 using ComputeSharp.Shaders.Translation;
-using SharpDX.Direct3D12;
+using Vortice.DirectX.Direct3D12;
 using CommandList = ComputeSharp.Graphics.Commands.CommandList;
 using PipelineState = ComputeSharp.Graphics.Commands.PipelineState;
 
@@ -95,8 +95,8 @@ namespace ComputeSharp.Shaders
             }
 
             // Create the root signature for the pipeline and get the pipeline state
-            RootSignatureDescription rootSignatureDescription = new RootSignatureDescription(RootSignatureFlags.None, shaderData.Loader.RootParameters);
-            RootSignature rootSignature = device.CreateRootSignature(rootSignatureDescription);
+            VersionedRootSignatureDescription rootSignatureDescription = new VersionedRootSignatureDescription(new RootSignatureDescription1(RootSignatureFlags.None, shaderData.Loader.RootParameters));
+            ID3D12RootSignature rootSignature = device.CreateRootSignature(rootSignatureDescription);
             PipelineState pipelineState = new PipelineState(device, rootSignature, shaderData.Bytecode);
 
             // Create the commands list and set the pipeline state

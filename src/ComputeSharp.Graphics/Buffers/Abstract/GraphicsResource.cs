@@ -1,5 +1,5 @@
 ﻿using System;
-using SharpDX.Direct3D12;
+using Vortice.DirectX.Direct3D12;
 
 namespace ComputeSharp.Graphics.Buffers.Abstract
 {
@@ -28,9 +28,9 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         internal IntPtr MappedResource { get; private set; }
 
         /// <summary>
-        /// Gets the <see cref="Resource"/> object currently mapped
+        /// Gets the <see cref="ID3D12Resource"/> object currently mapped
         /// </summary>
-        protected internal Resource? NativeResource { get; set; }
+        protected internal ID3D12Resource? NativeResource { get; set; }
 
         /// <summary>
         /// Gets the <see cref="CpuDescriptorHandle"/> instance for the current resource

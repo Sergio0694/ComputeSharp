@@ -1,4 +1,4 @@
-﻿using SharpDX.Direct3D12;
+﻿using Vortice.DirectX.Direct3D12;
 
 namespace ComputeSharp.Graphics.Commands
 {
@@ -11,25 +11,19 @@ namespace ComputeSharp.Graphics.Commands
         /// Creates a new <see cref="PipelineState"/> instance with the specified parameters
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> to use</param>
-        /// <param name="rootSignature">The <see cref="SharpDX.Direct3D12.RootSignature"/> value for the current shader</param>
+        /// <param name="rootSignature">The <see cref="ID3D12RootSignature"/> value for the current shader</param>
         /// <param name="computeShader">The bytecode for the compute shader to run</param>
-        public PipelineState(GraphicsDevice device, RootSignature rootSignature, ShaderBytecode computeShader)
+        public PipelineState(GraphicsDevice device, ID3D12RootSignature rootSignature, ShaderBytecode computeShader)
         {
-            RootSignaturePointer = rootSignature;
+            RootSignature = rootSignature;
             ComputeShader = computeShader;
-            RootSignature = RootSignaturePointer;
 
             NativePipelineState = device.NativeDevice.CreateComputePipelineState(this);
         }
 
         /// <summary>
-        /// Gets the <see cref="SharpDX.Direct3D12.RootSignature"/> value for the current shader
+        /// Gets the <see cref="ID3D12PipelineState"/> instance for the current <see cref="PipelineState"/> object
         /// </summary>
-        public RootSignature RootSignature { get; }
-
-        /// <summary>
-        /// Gets the <see cref="SharpDX.Direct3D12.PipelineState"/> instance for the current <see cref="PipelineState"/> object
-        /// </summary>
-        public SharpDX.Direct3D12.PipelineState NativePipelineState { get; }
+        public ID3D12PipelineState NativePipelineState { get; }
     }
 }

@@ -4,8 +4,8 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Helpers;
-using SharpDX.DXGI;
-using Device = SharpDX.Direct3D12.Device;
+using Vortice.DirectX.Direct3D12;
+using Vortice.DirectX.DXGI;
 
 namespace ComputeSharp
 {
@@ -42,6 +42,6 @@ namespace ComputeSharp
         public static IEnumerable<GraphicsDevice> EnumerateDevices() => _Devices.Select(device => new GraphicsDevice(device.Device, device.Description));
 
         // The loaded collection of supported devices
-        private static IReadOnlyList<(Device Device, AdapterDescription Description)> _Devices;
+        private static IReadOnlyList<(ID3D12Device Device, AdapterDescription Description)> _Devices;
     }
 }

@@ -11,7 +11,7 @@ using ComputeSharp.Shaders.Renderer.Models.Fields.Abstract;
 using ComputeSharp.Shaders.Translation.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using SharpDX.Direct3D12;
+using Vortice.DirectX.Direct3D12;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized
 
@@ -58,16 +58,16 @@ namespace ComputeSharp.Shaders.Translation
         public Type ShaderType { get; }
 
         /// <summary>
-        /// The <see cref="List{T}"/> of <see cref="DescriptorRange"/> items that are required to load the captured values
+        /// The <see cref="List{T}"/> of <see cref="DescriptorRange1"/> items that are required to load the captured values
         /// </summary>
-        private readonly List<DescriptorRange> DescriptorRanges = new List<DescriptorRange>();
+        private readonly List<DescriptorRange1> DescriptorRanges = new List<DescriptorRange1>();
 
-        private RootParameter[] _RootParameters;
+        private RootParameter1[] _RootParameters;
 
         /// <summary>
-        /// Gets the <see cref="RootParameter"/> array for the current shader
+        /// Gets the <see cref="RootParameter1"/> array for the current shader
         /// </summary>
-        public RootParameter[] RootParameters => _RootParameters ??= DescriptorRanges.Select(range => new RootParameter(ShaderVisibility.All, range)).ToArray();
+        public RootParameter1[] RootParameters => _RootParameters ??= DescriptorRanges.Select(range => new RootParameter1(new RootDescriptorTable1(range), ShaderVisibility.All)).ToArray();
 
         /// <summary>
         /// The <see cref="List{T}"/> of <see cref="ReadableMember"/> instances mapping the captured buffers in the current shader
@@ -162,7 +162,7 @@ namespace ComputeSharp.Shaders.Translation
             if (shaderFields.Any(fieldInfo => fieldInfo.IsStatic)) throw new InvalidOperationException("Empty shader body");
 
             // Descriptor for the buffer for captured scalar/vector variables
-            DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, _ConstantBuffersCount++));
+            DescriptorRanges.Add(new DescriptorRange1(DescriptorRangeType.ConstantBufferView, 1, _ConstantBuffersCount++));
 
             // Inspect the captured fields
             foreach (FieldInfo fieldInfo in shaderFields)
@@ -185,7 +185,7 @@ namespace ComputeSharp.Shaders.Translation
             // Constant buffer
             if (HlslKnownTypes.IsConstantBufferType(fieldType))
             {
-                DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ConstantBufferView, 1, _ConstantBuffersCount));
+                DescriptorRanges.Add(new DescriptorRange1(DescriptorRangeType.ConstantBufferView, 1, _ConstantBuffersCount));
 
                 // Track the buffer field
                 _BufferMembers.Add((memberInfo, parents));
@@ -196,7 +196,7 @@ namespace ComputeSharp.Shaders.Translation
             else if (HlslKnownTypes.IsReadOnlyBufferType(fieldType))
             {
                 // Root parameter for a readonly buffer
-                DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.ShaderResourceView, 1, _ReadOnlyBuffersCount));
+                DescriptorRanges.Add(new DescriptorRange1(DescriptorRangeType.ShaderResourceView, 1, _ReadOnlyBuffersCount));
 
                 // Track the buffer field
                 _BufferMembers.Add((memberInfo, parents));
@@ -207,7 +207,7 @@ namespace ComputeSharp.Shaders.Translation
             else if (HlslKnownTypes.IsReadWriteBufferType(fieldType))
             {
                 // Root parameter for a read write buffer
-                DescriptorRanges.Add(new DescriptorRange(DescriptorRangeType.UnorderedAccessView, 1, _ReadWriteBuffersCount));
+                DescriptorRanges.Add(new DescriptorRange1(DescriptorRangeType.UnorderedAccessView, 1, _ReadWriteBuffersCount));
 
                 // Track the buffer field
                 _BufferMembers.Add((memberInfo, parents));

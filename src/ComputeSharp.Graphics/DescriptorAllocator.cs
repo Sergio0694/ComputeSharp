@@ -1,5 +1,5 @@
 ﻿using System;
-using SharpDX.Direct3D12;
+using Vortice.DirectX.Direct3D12;
 
 namespace ComputeSharp.Graphics
 {
@@ -56,14 +56,14 @@ namespace ComputeSharp.Graphics
             DescriptorHeap = device.NativeDevice.CreateDescriptorHeap(descriptorHeapDescription);
 
             _RemainingHandles = DescriptorsPerHeap;
-            _CurrentCpuHandle = DescriptorHeap.CPUDescriptorHandleForHeapStart;
-            _CurrentGpuHandle = DescriptorHeap.GPUDescriptorHandleForHeapStart;
+            _CurrentCpuHandle = DescriptorHeap.GetCPUDescriptorHandleForHeapStart();
+            _CurrentGpuHandle = DescriptorHeap.GetGPUDescriptorHandleForHeapStart();
         }
 
         /// <summary>
-        /// Gets the <see cref="SharpDX.Direct3D12.DescriptorHeap"/> object in use for the current <see cref="DescriptorAllocator"/> instance
+        /// Gets the <see cref="ID3D12DescriptorHeap"/> object in use for the current <see cref="DescriptorAllocator"/> instance
         /// </summary>
-        public DescriptorHeap DescriptorHeap { get; }
+        public ID3D12DescriptorHeap DescriptorHeap { get; }
 
         /// <summary>
         /// Allocates a new CPU and GPU handle pair to use in a memory buffer
@@ -76,8 +76,8 @@ namespace ComputeSharp.Graphics
                 if (_RemainingHandles == 0)
                 {
                     _RemainingHandles = DescriptorHeap.Description.DescriptorCount;
-                    _CurrentCpuHandle = DescriptorHeap.CPUDescriptorHandleForHeapStart;
-                    _CurrentGpuHandle = DescriptorHeap.GPUDescriptorHandleForHeapStart;
+                    _CurrentCpuHandle = DescriptorHeap.GetCPUDescriptorHandleForHeapStart();
+                    _CurrentGpuHandle = DescriptorHeap.GetGPUDescriptorHandleForHeapStart();
                 }
 
                 CpuDescriptorHandle cpuDescriptorHandle = _CurrentCpuHandle;
