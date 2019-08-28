@@ -35,13 +35,11 @@ namespace ComputeSharp
         /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance with the contents of the input 2D array</returns>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, T[,] array) where T : unmanaged
+        public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, T[,] array) where T : unmanaged
         {
-            fixed (T* p = array)
-            {
-                Span<T> span = new Span<T>(p, array.Length);
-                return device.AllocateConstantBuffer(span);
-            }
+            Span<T> span = MemoryMarshal.CreateSpan(ref array[0, 0], array.Length);
+
+            return device.AllocateConstantBuffer(span);
         }
 
         /// <summary>
@@ -115,13 +113,11 @@ namespace ComputeSharp
         /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input 2D array</returns>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, T[,] array) where T : unmanaged
+        public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, T[,] array) where T : unmanaged
         {
-            fixed (T* p = array)
-            {
-                Span<T> span = new Span<T>(p, array.Length);
-                return device.AllocateReadOnlyBuffer(span);
-            }
+            Span<T> span = MemoryMarshal.CreateSpan(ref array[0, 0], array.Length);
+
+            return device.AllocateReadOnlyBuffer(span);
         }
 
         /// <summary>
@@ -195,13 +191,11 @@ namespace ComputeSharp
         /// <returns>A read write <see cref="ReadWriteBuffer{T}"/> instance with the contents of the input 2D array</returns>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, T[,] array) where T : unmanaged
+        public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, T[,] array) where T : unmanaged
         {
-            fixed (T* p = array)
-            {
-                Span<T> span = new Span<T>(p, array.Length);
-                return device.AllocateReadWriteBuffer(span);
-            }
+            Span<T> span = MemoryMarshal.CreateSpan(ref array[0, 0], array.Length);
+
+            return device.AllocateReadWriteBuffer(span);
         }
 
         /// <summary>
