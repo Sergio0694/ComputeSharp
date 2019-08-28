@@ -1,4 +1,5 @@
 ![](https://i.imgur.com/ufWcoO6.png)
+[![NuGet](https://img.shields.io/nuget/v/ComputeSharp.svg)](https://www.nuget.org/packages/ComputeSharp/) [![NuGet](https://img.shields.io/nuget/dt/ComputeSharp.svg)](https://www.nuget.org/stats/packages/ComputeSharp?groupby=Version)
 
 # What is it?
 
