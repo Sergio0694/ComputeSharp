@@ -31,21 +31,6 @@ namespace ComputeSharp.Shaders.Translation
         public IReadOnlyDictionary<string, ReadableMember> StaticMembers => _StaticMembers;
 
         /// <inheritdoc/>
-        public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node)
-        {
-            node = (MethodDeclarationSyntax)base.VisitMethodDeclaration(node);
-
-            SyntaxTokenList modifiers = new SyntaxTokenList();
-
-            if (node.Modifiers.Any(SyntaxKind.StaticKeyword))
-            {
-                modifiers = modifiers.Add(SyntaxFactory.Token(default, SyntaxKind.StaticKeyword, SyntaxFactory.TriviaList(SyntaxFactory.SyntaxTrivia(SyntaxKind.WhitespaceTrivia, " "))));
-            }
-
-            return node.ReplaceType(node.ReturnType).WithModifiers(modifiers);
-        }
-
-        /// <inheritdoc/>
         public override SyntaxNode VisitParameter(ParameterSyntax node)
         {
             node = (ParameterSyntax)base.VisitParameter(node);
