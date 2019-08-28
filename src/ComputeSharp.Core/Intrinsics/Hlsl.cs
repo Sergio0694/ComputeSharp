@@ -1315,7 +1315,7 @@ namespace ComputeSharp
         /// <param name="x">The specified value</param>
         /// <returns>Returns <see langword="true"/> if the <paramref name="x"/> parameter is infinite, otherwise <see langword="false"/></returns>
         [Pure]
-        public static float IsInfinite(in float x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(IsInfinite)}(float)");
+        public static bool IsInfinite(in float x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(IsInfinite)}(float)");
 
         /// <summary>
         /// Determines if the specified floating-point value is <see cref="float.NaN"/>
@@ -1323,7 +1323,7 @@ namespace ComputeSharp
         /// <param name="x">The specified value</param>
         /// <returns>Returns <see langword="true"/> if the <paramref name="x"/> parameter is <see cref="float.NaN"/>, otherwise <see langword="false"/></returns>
         [Pure]
-        public static float IsNaN(in float x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(IsNaN)}(float)");
+        public static bool IsNaN(in float x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(IsNaN)}(float)");
 
         /// <summary>
         /// Returns the result of multiplying the specified value by two, raised to the power of the specified exponent
