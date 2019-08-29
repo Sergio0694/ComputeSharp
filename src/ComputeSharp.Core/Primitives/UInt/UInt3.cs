@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
@@ -6,33 +7,34 @@ namespace ComputeSharp
     /// <summary>
     /// A <see langword="struct"/> that maps the uint3 HLSL type
     /// </summary>
+    [DebuggerDisplay("({X}, {Y}, {Z})")]
     [StructLayout(LayoutKind.Sequential, Size = sizeof(uint) * 3)]
     public struct UInt3
     {
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with all components set to 0
         /// </summary>
-        public static UInt3 Zero { get; } = 0;
+        public static UInt3 Zero => 0;
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with all components set to 1
         /// </summary>
-        public static UInt3 One { get; } = 1;
+        public static UInt3 One => 1;
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="X"/> component set to 1, and the others to 0
         /// </summary>
-        public static UInt3 UnitX { get; } = new UInt3(1, 0, 0);
+        public static UInt3 UnitX => new UInt3(1, 0, 0);
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="Y"/> component set to 1, and the others to 0
         /// </summary>
-        public static UInt3 UnitY { get; } = new UInt3(0, 1, 0);
+        public static UInt3 UnitY => new UInt3(0, 1, 0);
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="Z"/> component set to 1, and the others to 0
         /// </summary>
-        public static UInt3 UnitZ { get; } = new UInt3(0, 0, 1);
+        public static UInt3 UnitZ => new UInt3(0, 0, 1);
 
         /// <summary>
         /// Creates a new <see cref="UInt3"/> instance with the specified parameters

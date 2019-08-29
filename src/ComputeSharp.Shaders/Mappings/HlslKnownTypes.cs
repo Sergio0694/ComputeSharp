@@ -17,40 +17,46 @@ namespace ComputeSharp.Shaders.Mappings
         private static readonly IReadOnlyDictionary<string, string> KnownTypes = new Dictionary<string, string>
         {
             [typeof(bool).FullName] = "bool",
+            [typeof(Bool2).FullName] = "bool2",
+            [typeof(Bool3).FullName] = "bool3",
+            [typeof(Bool4).FullName] = "bool4",
             [typeof(int).FullName] = "int",
-            [typeof(uint).FullName] = "uint",
-            [typeof(float).FullName] = "float",
-            [typeof(double).FullName] = "double",
-            [typeof(Vector2).FullName] = "float2",
-            [typeof(Vector3).FullName] = "float3",
-            [typeof(Vector4).FullName] = "float4",
-            [typeof(ThreadIds).FullName] = "uint3",
             [typeof(Int2).FullName] = "int2",
             [typeof(Int3).FullName] = "int3",
             [typeof(Int4).FullName] = "int4",
+            [typeof(uint).FullName] = "uint",
             [typeof(UInt2).FullName] = "uint2",
             [typeof(UInt3).FullName] = "uint3",
             [typeof(UInt4).FullName] = "uint4",
+            [typeof(float).FullName] = "float",
             [typeof(Float2).FullName] = "float2",
             [typeof(Float3).FullName] = "float3",
             [typeof(Float4).FullName] = "float4",
+            [typeof(Vector2).FullName] = "float2",
+            [typeof(Vector3).FullName] = "float3",
+            [typeof(Vector4).FullName] = "float4",
+            [typeof(double).FullName] = "double",
             [typeof(Double2).FullName] = "double2",
             [typeof(Double3).FullName] = "double3",
             [typeof(Double4).FullName] = "double4",
+            [typeof(ThreadIds).FullName] = "uint3",
             [typeof(ReadOnlyBuffer<>).FullName] = "StructuredBuffer",
             [typeof(ReadWriteBuffer<>).FullName] = "RWStructuredBuffer"
         };
 
-        /// <summary>
-        /// Gets the known HLSL vector types available as mapped types
-        /// </summary>
-        public static IReadOnlyList<Type> KnownVectorTypes { get; } = new[]
+        private static HashSet<Type> _HlslMappedVectorTypes { get; } = new HashSet<Type>(new[]
         {
+            typeof(Bool2), typeof(Bool3), typeof(Bool4),
             typeof(Int2), typeof(Int3), typeof(Int4),
             typeof(UInt2), typeof(UInt3), typeof(UInt4),
             typeof(Float2), typeof(Float3), typeof(Float4),
             typeof(Double2), typeof(Double3), typeof(Double4)
-        };
+        });
+
+        /// <summary>
+        /// Gets the known HLSL vector types available as mapped types
+        /// </summary>
+        public static IReadOnlyCollection<Type> HlslMappedVectorTypes => _HlslMappedVectorTypes;
 
         /// <summary>
         /// Checks whether or not the input type is a known scalar type
@@ -70,21 +76,10 @@ namespace ComputeSharp.Shaders.Mappings
         /// <param name="type">The input <see cref="Type"/> instance to check</param>
         /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a known HLSL vector type</returns>
         [Pure]
-        public static bool IsKnownVectorType(Type type) => type == typeof(Vector2) ||
+        public static bool IsKnownVectorType(Type type) => _HlslMappedVectorTypes.Contains(type) ||
+                                                           type == typeof(Vector2) ||
                                                            type == typeof(Vector3) ||
-                                                           type == typeof(Vector4) ||
-                                                           type == typeof(Int2) ||
-                                                           type == typeof(Int3) ||
-                                                           type == typeof(Int4) ||
-                                                           type == typeof(UInt2) ||
-                                                           type == typeof(UInt3) ||
-                                                           type == typeof(UInt4) ||
-                                                           type == typeof(Float2) ||
-                                                           type == typeof(Float3) ||
-                                                           type == typeof(Float4) ||
-                                                           type == typeof(Double2) ||
-                                                           type == typeof(Double3) ||
-                                                           type == typeof(Double4);
+                                                           type == typeof(Vector4);
 
         /// <summary>
         /// Checks whether or not the input type is a <see cref="ConstantBuffer{T}"/> value

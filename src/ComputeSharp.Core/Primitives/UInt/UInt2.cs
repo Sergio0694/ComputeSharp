@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
@@ -6,28 +7,29 @@ namespace ComputeSharp
     /// <summary>
     /// A <see langword="struct"/> that maps the uint2 HLSL type
     /// </summary>
+    [DebuggerDisplay("({X}, {Y})")]
     [StructLayout(LayoutKind.Sequential, Size = sizeof(uint) * 2)]
     public struct UInt2
     {
         /// <summary>
         /// Gets an <see cref="UInt2"/> value with all components set to 0
         /// </summary>
-        public static UInt2 Zero { get; } = 0;
+        public static UInt2 Zero => 0;
 
         /// <summary>
         /// Gets an <see cref="UInt2"/> value with all components set to 1
         /// </summary>
-        public static UInt2 One { get; } = 1;
+        public static UInt2 One => 1;
 
         /// <summary>
         /// Gets an <see cref="UInt2"/> value with the <see cref="X"/> component set to 1, and the others to 0
         /// </summary>
-        public static UInt2 UnitX { get; } = new UInt2(1, 0);
+        public static UInt2 UnitX => new UInt2(1, 0);
 
         /// <summary>
         /// Gets an <see cref="UInt2"/> value with the <see cref="Y"/> component set to 1, and the others to 0
         /// </summary>
-        public static UInt2 UnitY { get; } = new UInt2(0, 1);
+        public static UInt2 UnitY => new UInt2(0, 1);
 
         /// <summary>
         /// Creates a new <see cref="UInt2"/> instance with the specified parameters

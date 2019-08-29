@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
@@ -6,38 +7,39 @@ namespace ComputeSharp
     /// <summary>
     /// A <see langword="struct"/> that maps the int4 HLSL type
     /// </summary>
+    [DebuggerDisplay("({X}, {Y}, {Z}, {W})")]
     [StructLayout(LayoutKind.Sequential, Size = sizeof(int) * 4)]
     public struct Int4
     {
         /// <summary>
         /// Gets an <see cref="Int4"/> value with all components set to 0
         /// </summary>
-        public static Int4 Zero { get; } = 0;
+        public static Int4 Zero => 0;
 
         /// <summary>
         /// Gets an <see cref="Int4"/> value with all components set to 1
         /// </summary>
-        public static Int4 One { get; } = 1;
+        public static Int4 One => 1;
 
         /// <summary>
         /// Gets an <see cref="Int4"/> value with the <see cref="X"/> component set to 1, and the others to 0
         /// </summary>
-        public static Int4 UnitX { get; } = new Int4(1, 0, 0, 0);
+        public static Int4 UnitX => new Int4(1, 0, 0, 0);
 
         /// <summary>
         /// Gets an <see cref="Int4"/> value with the <see cref="Y"/> component set to 1, and the others to 0
         /// </summary>
-        public static Int4 UnitY { get; } = new Int4(0, 1, 0, 0);
+        public static Int4 UnitY => new Int4(0, 1, 0, 0);
 
         /// <summary>
         /// Gets an <see cref="Int4"/> value with the <see cref="Z"/> component set to 1, and the others to 0
         /// </summary>
-        public static Int4 UnitZ { get; } = new Int4(0, 0, 1, 0);
+        public static Int4 UnitZ => new Int4(0, 0, 1, 0);
 
         /// <summary>
         /// Gets an <see cref="Int4"/> value with the <see cref="W"/> component set to 1, and the others to 0
         /// </summary>
-        public static Int4 UnitW { get; } = new Int4(0, 0, 0, 1);
+        public static Int4 UnitW => new Int4(0, 0, 0, 1);
 
         /// <summary>
         /// Creates a new <see cref="Int4"/> instance with the specified parameters

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
@@ -128,6 +129,27 @@ namespace ComputeSharp.Shaders.Mappings
                     ["System.Numerics.Vector4.Zero"] = "(float4)0",
                     ["System.Numerics.Vector4.One"] = "float4(1.0f, 1.0f, 1.0f, 1.0f)",
 
+                    // Bool2
+                    ["ComputeSharp.Bool2.False"] = "(bool2)0",
+                    ["ComputeSharp.Bool2.True"] = "bool2(true, true)",
+                    ["ComputeSharp.Bool2.TrueX"] = "bool2(true, false)",
+                    ["ComputeSharp.Bool2.TrueY"] = "bool2(false, true)",
+
+                    // Bool3
+                    ["ComputeSharp.Bool3.False"] = "(bool3)0",
+                    ["ComputeSharp.Bool3.True"] = "bool3(true, true, true)",
+                    ["ComputeSharp.Bool3.TrueX"] = "bool3(true, false, false)",
+                    ["ComputeSharp.Bool3.TrueY"] = "bool3(false, true, false)",
+                    ["ComputeSharp.Bool3.TrueZ"] = "bool3(false, false, true)",
+
+                    // Bool4
+                    ["ComputeSharp.Bool4.False"] = "(bool4)0",
+                    ["ComputeSharp.Bool4.True"] = "bool4(true, true, true, true)",
+                    ["ComputeSharp.Bool4.TrueX"] = "bool4(true, false, false, false)",
+                    ["ComputeSharp.Bool4.TrueY"] = "bool4(false, true, false, false)",
+                    ["ComputeSharp.Bool4.TrueZ"] = "bool4(false, false, true, false)",
+                    ["ComputeSharp.Bool4.TrueW"] = "bool4(false, false, false, true)",
+
                     // Int2
                     ["ComputeSharp.Int2.Zero"] = "(int2)0",
                     ["ComputeSharp.Int2.One"] = "int2(1, 1)",
@@ -225,7 +247,7 @@ namespace ComputeSharp.Shaders.Mappings
 
                 // Programmatically load mappings for the vector types
                 foreach (var item in
-                    from type in HlslKnownTypes.KnownVectorTypes
+                    from type in HlslKnownTypes.HlslMappedVectorTypes
                     from property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                     select (Type: type, Property: property))
                 {
@@ -241,21 +263,15 @@ namespace ComputeSharp.Shaders.Mappings
         /// </summary>
         /// <param name="containingMemberSymbol">The containing member symbol for the method to check</param>
         /// <param name="memberSymbol">The symbol for the method to check</param>
+        /// <param name="mapped">The mapped name, if one is found</param>
         /// <returns>The HLSL-compatible method name that can be used in an HLSL shader</returns>
         [Pure]
-        public static string? TryGetMappedName(ISymbol containingMemberSymbol, ISymbol memberSymbol)
+        public static bool TryGetMappedName(ISymbol containingMemberSymbol, ISymbol memberSymbol, [NotNullWhen(true)] out string? mapped)
         {
             string fullTypeName = containingMemberSymbol.IsStatic ? containingMemberSymbol.ToString() : memberSymbol.ContainingType.ToString();
 
             // Check if the target method is a known method
-            if (KnownMethods.TryGetValue($"{fullTypeName}{Type.Delimiter}{memberSymbol.Name}", out string mapped))
-            {
-                // Return the static method if possible, otherwise access the parent instance
-                if (memberSymbol.IsStatic) return mapped;
-                return $"{containingMemberSymbol.Name}{mapped}";
-            }
-
-            return null;
+            return KnownMethods.TryGetValue($"{fullTypeName}{Type.Delimiter}{memberSymbol.Name}", out mapped);
         }
     }
 }
