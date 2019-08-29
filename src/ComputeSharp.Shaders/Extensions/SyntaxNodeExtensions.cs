@@ -109,9 +109,10 @@ namespace ComputeSharp.Shaders.Extensions
             }
 
             // Process the input node if it's a known method invocation
-            if (HlslKnownMethods.TryGetMappedName(containingMemberSymbolInfo.Symbol, memberSymbol) is string mappedName)
+            if (HlslKnownMethods.TryGetMappedName(containingMemberSymbolInfo.Symbol, memberSymbol, out string? mappedName))
             {
-                return SyntaxFactory.IdentifierName(mappedName).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
+                string expression = memberSymbol.IsStatic ? mappedName : $"{node.Expression}{mappedName}";
+                return SyntaxFactory.IdentifierName(expression).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
             }
 
             // Handle static fields as a special case

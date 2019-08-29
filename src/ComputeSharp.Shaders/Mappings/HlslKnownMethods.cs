@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
@@ -262,21 +263,15 @@ namespace ComputeSharp.Shaders.Mappings
         /// </summary>
         /// <param name="containingMemberSymbol">The containing member symbol for the method to check</param>
         /// <param name="memberSymbol">The symbol for the method to check</param>
+        /// <param name="mapped">The mapped name, if one is found</param>
         /// <returns>The HLSL-compatible method name that can be used in an HLSL shader</returns>
         [Pure]
-        public static string? TryGetMappedName(ISymbol containingMemberSymbol, ISymbol memberSymbol)
+        public static bool TryGetMappedName(ISymbol containingMemberSymbol, ISymbol memberSymbol, [NotNullWhen(true)] out string? mapped)
         {
             string fullTypeName = containingMemberSymbol.IsStatic ? containingMemberSymbol.ToString() : memberSymbol.ContainingType.ToString();
 
             // Check if the target method is a known method
-            if (KnownMethods.TryGetValue($"{fullTypeName}{Type.Delimiter}{memberSymbol.Name}", out string mapped))
-            {
-                // Return the static method if possible, otherwise access the parent instance
-                if (memberSymbol.IsStatic) return mapped;
-                return $"{containingMemberSymbol.Name}{mapped}";
-            }
-
-            return null;
+            return KnownMethods.TryGetValue($"{fullTypeName}{Type.Delimiter}{memberSymbol.Name}", out mapped);
         }
     }
 }
