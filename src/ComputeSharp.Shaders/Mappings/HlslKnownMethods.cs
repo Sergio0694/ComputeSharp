@@ -128,6 +128,12 @@ namespace ComputeSharp.Shaders.Mappings
                     ["System.Numerics.Vector4.Zero"] = "(float4)0",
                     ["System.Numerics.Vector4.One"] = "float4(1.0f, 1.0f, 1.0f, 1.0f)",
 
+                    // Bool2
+                    ["ComputeSharp.Bool2.False"] = "(bool2)0",
+                    ["ComputeSharp.Bool2.True"] = "bool2(true, true)",
+                    ["ComputeSharp.Bool2.TrueX"] = "bool2(true, false)",
+                    ["ComputeSharp.Bool2.TrueY"] = "bool2(false, true)",
+
                     // Int2
                     ["ComputeSharp.Int2.Zero"] = "(int2)0",
                     ["ComputeSharp.Int2.One"] = "int2(1, 1)",

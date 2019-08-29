@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using ComputeSharp.Core;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
