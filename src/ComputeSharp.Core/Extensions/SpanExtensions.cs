@@ -1,8 +1,7 @@
-﻿using System;
-using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
 
-namespace ComputeSharp.Core
+namespace System
 {
     /// <summary>
     /// A <see langword="class"/> that contains extension methods for the <see cref="Span{T}"/>
