@@ -45,11 +45,11 @@ float[] array = buffer.GetData();
 
 If the shader in C# is capturing some local variable, those will be automatically copied over to the GPU, so that the HLSL shader will be able to access them just like you'd expect. Additionally, **ComputeSharp** can also resolve static fields being used in a shader. The captured variables need to be convertible to valid HLSL types: either scalar types (`int`, `uint`, `float`, etc.) or known HLSL structs (eg. `Vector3`). Here is a list of the variable types currently supported by the library:
 
-✅ Local scalar types: `bool`, `int`, `uint`, `float`, `double`
+✅ .NET scalar types: `bool`, `int`, `uint`, `float`, `double`
 
-✅ Local vector types: `System.Numerics.Vector2`, `Vector3`, `Vector4`
+✅ .NET vector types: `System.Numerics.Vector2`, `Vector3`, `Vector4`
 
-✅ HLSL vector types: `Float2`, `Float3`, `Float4`, `Int2`, `Int3`, `Int4`, `UInt2`, `Uint3`, `UInt4`, `Double2`, `Double3`, `Double4`
+✅ HLSL vector types: `Bool2`, `Bool3`, `Bool4`, `Float2`, `Float3`, `Float4`, `Int2`, `Int3`, `Int4`, `UInt2`, `Uint3`, etc.
 
 ✅ `static` fields of both scalar, vector or buffer types
 
