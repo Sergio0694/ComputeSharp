@@ -8,7 +8,7 @@ namespace ComputeSharp.Tests
     public class HlslVectorTypesTests
     {
         [TestMethod]
-        public void LocalScalarAssignToBuffer()
+        public void LocalFloatAssignToFloat2Buffer()
         {
             Float2 f2 = new Float2(1, 2);
             using ReadWriteBuffer<Float2> buffer = Gpu.Default.AllocateReadWriteBuffer<Float2>(1);
@@ -21,6 +21,22 @@ namespace ComputeSharp.Tests
 
             Assert.IsTrue(MathF.Abs(result[0].X - f2.Y) < 0.0001f);
             Assert.IsTrue(MathF.Abs(result[0].Y - f2.X) < 0.0001f);
+        }
+
+        [TestMethod]
+        public void LocalBoolAssignToBool2Buffer()
+        {
+            Bool2 b2 = Bool2.TrueY;
+            using ReadWriteBuffer<Bool2> buffer = Gpu.Default.AllocateReadWriteBuffer<Bool2>(1);
+
+            Action<ThreadIds> action = id => buffer[0] = b2;
+
+            Gpu.Default.For(1, action);
+
+            Bool2[] result = buffer.GetData();
+
+            Assert.IsTrue(result[0].X == b2.X);
+            Assert.IsTrue(result[0].Y == b2.Y);
         }
     }
 }
