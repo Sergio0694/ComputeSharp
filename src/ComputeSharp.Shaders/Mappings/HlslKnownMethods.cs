@@ -134,6 +134,21 @@ namespace ComputeSharp.Shaders.Mappings
                     ["ComputeSharp.Bool2.TrueX"] = "bool2(true, false)",
                     ["ComputeSharp.Bool2.TrueY"] = "bool2(false, true)",
 
+                    // Bool3
+                    ["ComputeSharp.Bool3.False"] = "(bool3)0",
+                    ["ComputeSharp.Bool3.True"] = "bool3(true, true, true)",
+                    ["ComputeSharp.Bool3.TrueX"] = "bool3(true, false, false)",
+                    ["ComputeSharp.Bool3.TrueY"] = "bool3(false, true, false)",
+                    ["ComputeSharp.Bool3.TrueZ"] = "bool3(false, false, true)",
+
+                    // Bool4
+                    ["ComputeSharp.Bool4.False"] = "(bool4)0",
+                    ["ComputeSharp.Bool4.True"] = "bool4(true, true, true, true)",
+                    ["ComputeSharp.Bool4.TrueX"] = "bool4(true, false, false, false)",
+                    ["ComputeSharp.Bool4.TrueY"] = "bool4(false, true, false, false)",
+                    ["ComputeSharp.Bool4.TrueZ"] = "bool4(false, false, true, false)",
+                    ["ComputeSharp.Bool4.TrueW"] = "bool4(false, false, false, true)",
+
                     // Int2
                     ["ComputeSharp.Int2.Zero"] = "(int2)0",
                     ["ComputeSharp.Int2.One"] = "int2(1, 1)",

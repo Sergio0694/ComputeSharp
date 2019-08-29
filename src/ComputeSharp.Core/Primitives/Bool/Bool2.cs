@@ -12,12 +12,12 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Bool2"/> value with all components set to <see langword="false"/>
         /// </summary>
-        public static Bool2 False => new Bool2(false, false);
+        public static Bool2 False => false;
 
         /// <summary>
         /// Gets an <see cref="Bool2"/> value with all components set to <see langword="true"/>
         /// </summary>
-        public static Bool2 True => new Bool2(true, true);
+        public static Bool2 True => true;
 
         /// <summary>
         /// Gets an <see cref="Bool2"/> value with the <see cref="X"/> component set to <see langword="true"/>, and the others to <see langword="false"/>

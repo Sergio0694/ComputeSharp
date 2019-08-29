@@ -45,6 +45,8 @@ namespace ComputeSharp.Graphics.Buffers.Extensions
                         WriteValue(ub, ref r0);
                         break;
                     case Bool2 b2: WriteValue(b2, ref r0); break;
+                    case Bool3 b3: WriteValue(b3, ref r0); break;
+                    case Bool4 b4: WriteValue(b4, ref r0); break;
                     case int i: WriteValue(i, ref r0); break;
                     case Int2 i2: WriteValue(i2, ref r0); break;
                     case Int3 i3: WriteValue(i3, ref r0); break;
