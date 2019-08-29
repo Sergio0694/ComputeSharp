@@ -12,22 +12,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Float2"/> value with all components set to 0
         /// </summary>
-        public static Float2 Zero { get; } = 0;
+        public static Float2 Zero => 0;
 
         /// <summary>
         /// Gets an <see cref="Float2"/> value with all components set to 1
         /// </summary>
-        public static Float2 One { get; } = 1;
+        public static Float2 One => 1;
 
         /// <summary>
         /// Gets an <see cref="Float2"/> value with the <see cref="X"/> component set to 1, and the others to 0
         /// </summary>
-        public static Float2 UnitX { get; } = new Float2(1, 0);
+        public static Float2 UnitX => new Float2(1, 0);
 
         /// <summary>
         /// Gets an <see cref="Float2"/> value with the <see cref="Y"/> component set to 1, and the others to 0
         /// </summary>
-        public static Float2 UnitY { get; } = new Float2(0, 1);
+        public static Float2 UnitY => new Float2(0, 1);
 
         /// <summary>
         /// Creates a new <see cref="Float2"/> instance with the specified parameters

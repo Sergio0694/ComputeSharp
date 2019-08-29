@@ -12,32 +12,32 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Float4"/> value with all components set to 0
         /// </summary>
-        public static Float4 Zero { get; } = 0;
+        public static Float4 Zero => 0;
 
         /// <summary>
         /// Gets an <see cref="Float4"/> value with all components set to 1
         /// </summary>
-        public static Float4 One { get; } = 1;
+        public static Float4 One => 1;
 
         /// <summary>
         /// Gets an <see cref="Float4"/> value with the <see cref="X"/> component set to 1, and the others to 0
         /// </summary>
-        public static Float4 UnitX { get; } = new Float4(1, 0, 0, 0);
+        public static Float4 UnitX => new Float4(1, 0, 0, 0);
 
         /// <summary>
         /// Gets an <see cref="Float4"/> value with the <see cref="Y"/> component set to 1, and the others to 0
         /// </summary>
-        public static Float4 UnitY { get; } = new Float4(0, 1, 0, 0);
+        public static Float4 UnitY => new Float4(0, 1, 0, 0);
 
         /// <summary>
         /// Gets an <see cref="Float4"/> value with the <see cref="Z"/> component set to 1, and the others to 0
         /// </summary>
-        public static Float4 UnitZ { get; } = new Float4(0, 0, 1, 0);
+        public static Float4 UnitZ => new Float4(0, 0, 1, 0);
 
         /// <summary>
         /// Gets an <see cref="Float4"/> value with the <see cref="W"/> component set to 1, and the others to 0
         /// </summary>
-        public static Float4 UnitW { get; } = new Float4(0, 0, 0, 1);
+        public static Float4 UnitW => new Float4(0, 0, 0, 1);
 
         /// <summary>
         /// Creates a new <see cref="Float4"/> instance with the specified parameters

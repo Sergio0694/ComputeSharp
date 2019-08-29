@@ -12,32 +12,32 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Double4"/> value with all components set to 0
         /// </summary>
-        public static Double4 Zero { get; } = 0;
+        public static Double4 Zero => 0;
 
         /// <summary>
         /// Gets an <see cref="Double4"/> value with all components set to 1
         /// </summary>
-        public static Double4 One { get; } = 1;
+        public static Double4 One => 1;
 
         /// <summary>
         /// Gets an <see cref="Double4"/> value with the <see cref="X"/> component set to 1, and the others to 0
         /// </summary>
-        public static Double4 UnitX { get; } = new Double4(1, 0, 0, 0);
+        public static Double4 UnitX => new Double4(1, 0, 0, 0);
 
         /// <summary>
         /// Gets an <see cref="Double4"/> value with the <see cref="Y"/> component set to 1, and the others to 0
         /// </summary>
-        public static Double4 UnitY { get; } = new Double4(0, 1, 0, 0);
+        public static Double4 UnitY => new Double4(0, 1, 0, 0);
 
         /// <summary>
         /// Gets an <see cref="Double4"/> value with the <see cref="Z"/> component set to 1, and the others to 0
         /// </summary>
-        public static Double4 UnitZ { get; } = new Double4(0, 0, 1, 0);
+        public static Double4 UnitZ => new Double4(0, 0, 1, 0);
 
         /// <summary>
         /// Gets an <see cref="Double4"/> value with the <see cref="W"/> component set to 1, and the others to 0
         /// </summary>
-        public static Double4 UnitW { get; } = new Double4(0, 0, 0, 1);
+        public static Double4 UnitW => new Double4(0, 0, 0, 1);
 
         /// <summary>
         /// Creates a new <see cref="Double4"/> instance with the specified parameters

@@ -12,27 +12,27 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Int3"/> value with all components set to 0
         /// </summary>
-        public static Int3 Zero { get; } = 0;
+        public static Int3 Zero => 0;
 
         /// <summary>
         /// Gets an <see cref="Int3"/> value with all components set to 1
         /// </summary>
-        public static Int3 One { get; } = 1;
+        public static Int3 One => 1;
 
         /// <summary>
         /// Gets an <see cref="Int3"/> value with the <see cref="X"/> component set to 1, and the others to 0
         /// </summary>
-        public static Int3 UnitX { get; } = new Int3(1, 0, 0);
+        public static Int3 UnitX => new Int3(1, 0, 0);
 
         /// <summary>
         /// Gets an <see cref="Int3"/> value with the <see cref="Y"/> component set to 1, and the others to 0
         /// </summary>
-        public static Int3 UnitY { get; } = new Int3(0, 1, 0);
+        public static Int3 UnitY => new Int3(0, 1, 0);
 
         /// <summary>
         /// Gets an <see cref="Int3"/> value with the <see cref="Z"/> component set to 1, and the others to 0
         /// </summary>
-        public static Int3 UnitZ { get; } = new Int3(0, 0, 1);
+        public static Int3 UnitZ => new Int3(0, 0, 1);
 
         /// <summary>
         /// Creates a new <see cref="Int3"/> instance with the specified parameters

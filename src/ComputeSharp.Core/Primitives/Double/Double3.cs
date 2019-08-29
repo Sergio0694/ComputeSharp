@@ -12,27 +12,27 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Double3"/> value with all components set to 0
         /// </summary>
-        public static Double3 Zero { get; } = 0;
+        public static Double3 Zero => 0;
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with all components set to 1
         /// </summary>
-        public static Double3 One { get; } = 1;
+        public static Double3 One => 1;
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="X"/> component set to 1, and the others to 0
         /// </summary>
-        public static Double3 UnitX { get; } = new Double3(1, 0, 0);
+        public static Double3 UnitX => new Double3(1, 0, 0);
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="Y"/> component set to 1, and the others to 0
         /// </summary>
-        public static Double3 UnitY { get; } = new Double3(0, 1, 0);
+        public static Double3 UnitY => new Double3(0, 1, 0);
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="Z"/> component set to 1, and the others to 0
         /// </summary>
-        public static Double3 UnitZ { get; } = new Double3(0, 0, 1);
+        public static Double3 UnitZ => new Double3(0, 0, 1);
 
         /// <summary>
         /// Creates a new <see cref="Double3"/> instance with the specified parameters
