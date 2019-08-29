@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
@@ -6,6 +7,7 @@ namespace ComputeSharp
     /// <summary>
     /// A <see langword="struct"/> that maps the uint2 HLSL type
     /// </summary>
+    [DebuggerDisplay("({X}, {Y})")]
     [StructLayout(LayoutKind.Sequential, Size = sizeof(uint) * 2)]
     public struct UInt2
     {
