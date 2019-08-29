@@ -246,7 +246,7 @@ namespace ComputeSharp.Shaders.Mappings
 
                 // Programmatically load mappings for the vector types
                 foreach (var item in
-                    from type in HlslKnownTypes.KnownVectorTypes
+                    from type in HlslKnownTypes.HlslMappedVectorTypes
                     from property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                     select (Type: type, Property: property))
                 {

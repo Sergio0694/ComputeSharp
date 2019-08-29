@@ -18,6 +18,8 @@ namespace ComputeSharp.Shaders.Mappings
         {
             [typeof(bool).FullName] = "bool",
             [typeof(Bool2).FullName] = "bool2",
+            [typeof(Bool3).FullName] = "bool3",
+            [typeof(Bool4).FullName] = "bool4",
             [typeof(int).FullName] = "int",
             [typeof(Int2).FullName] = "int2",
             [typeof(Int3).FullName] = "int3",
@@ -45,9 +47,9 @@ namespace ComputeSharp.Shaders.Mappings
         /// <summary>
         /// Gets the known HLSL vector types available as mapped types
         /// </summary>
-        public static IReadOnlyList<Type> KnownVectorTypes { get; } = new[]
+        public static IReadOnlyList<Type> HlslMappedVectorTypes { get; } = new[]
         {
-            typeof(Bool2),
+            typeof(Bool2), typeof(Bool3), typeof(Bool4),
             typeof(Int2), typeof(Int3), typeof(Int4),
             typeof(UInt2), typeof(UInt3), typeof(UInt4),
             typeof(Float2), typeof(Float3), typeof(Float4),
@@ -73,6 +75,8 @@ namespace ComputeSharp.Shaders.Mappings
         /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a known HLSL vector type</returns>
         [Pure]
         public static bool IsKnownVectorType(Type type) => type == typeof(Bool2) ||
+                                                           type == typeof(Bool3) ||
+                                                           type == typeof(Bool4) ||
                                                            type == typeof(Int2) ||
                                                            type == typeof(Int3) ||
                                                            type == typeof(Int4) ||
