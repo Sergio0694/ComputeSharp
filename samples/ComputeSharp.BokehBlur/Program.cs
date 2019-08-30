@@ -32,7 +32,7 @@ namespace ComputeSharp.BokehBlur
             // Load the input image
             Console.WriteLine(">> Loading image");
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "city.jpg");
-            using Image<Rgba32> image = Image.Load(path);
+            using Image<Rgba32> image = Image.Load<Rgba32>(path);
             var (height, width) = (image.Height, image.Width);
 
             // Get the vector buffer
