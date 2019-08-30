@@ -437,8 +437,6 @@ namespace ComputeSharp.BokehBlur.Processor
         /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to</param>
         /// <param name="z">The weight factor for the real component of the complex pixel values</param>
         /// <param name="w">The weight factor for the imaginary component of the complex pixel values</param>
-        /// <param name="width">The width of the image being processed</param>
-        /// <param name="height">The height of the image being processed</param>
         private void SumProcessingPartials(
             ReadWriteBuffer<Vector4> source,
             ReadWriteBuffer<Vector4> target,
