@@ -293,11 +293,38 @@ namespace ComputeSharp.BokehBlur.Processor
             IMemoryOwner<Vector2> kernel,
             int width, int height)
         {
-            int kernelLength = kernel.Memory.Length;
-            int radiusY = kernelLength >> 1;
-            int maxRow = height - 1;
+            int startY = 0;
+            int endY = height;
+            int startX = 0;
+            int endX = width;
+            int maxY = endY - 1;
+            int maxX = endX - 1;
 
-            // TODO
+            Parallel.For(0, height, y =>
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    Vector4 real = Vector4.Zero;
+                    Vector4 imaginary = Vector4.Zero;
+                    int kernelLength = kernel.Memory.Length;
+                    int radiusY = kernelLength >> 1;
+                    int sourceOffsetColumnBase = x;
+
+                    for (int i = 0; i < kernelLength; i++)
+                    {
+                        int offsetY = (y + i - radiusY).Clamp(startY, maxY);
+                        int offsetX = sourceOffsetColumnBase.Clamp(startX, maxX);
+                        Vector4 color = source.Memory.Span[offsetY * width + offsetX];
+                        Vector2 factors = kernel.Memory.Span[i];
+
+                        real += factors.X * color;
+                        imaginary += factors.Y * color;
+                    }
+
+                    target.Memory.Span[y * width * 2 + x * 2] = real;
+                    target.Memory.Span[y * width * 2 + x * 2 + 1] = imaginary;
+                }
+            });
         }
 
         /// <summary>
@@ -314,12 +341,39 @@ namespace ComputeSharp.BokehBlur.Processor
             IMemoryOwner<Vector2> kernel,
             int width, int height)
         {
-            int kernelLength = kernel.Memory.Length;
-            int radiusX = kernelLength >> 1;
-            int maxRow = height - 1;
-            int maxColumn = width - 1;
+            int startY = 0;
+            int endY = height;
+            int startX = 0;
+            int endX = width;
+            int maxY = endY - 1;
+            int maxX = endX - 1;
 
-            // TODO
+            Parallel.For(0, height, y =>
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    Vector4 real = Vector4.Zero;
+                    Vector4 imaginary = Vector4.Zero;
+                    int kernelLength = kernel.Memory.Length;
+                    int radiusX = kernelLength >> 1;
+                    int sourceOffsetColumnBase = x;
+                    int offsetY = y.Clamp(startY, maxY);
+
+                    for (int i = 0; i < kernelLength; i++)
+                    {
+                        int offsetX = (sourceOffsetColumnBase + i - radiusX).Clamp(startX, maxX);
+                        Vector4 sourceReal = source.Memory.Span[offsetY * width * 2 + offsetX * 2];
+                        Vector4 sourceImaginary = source.Memory.Span[offsetY * width * 2 + offsetX * 2 + 1];
+                        Vector2 factors = kernel.Memory.Span[i];
+
+                        real += factors.X * sourceReal - factors.Y * sourceImaginary;
+                        imaginary += factors.X * sourceImaginary + factors.Y * sourceReal;
+                    }
+
+                    target.Memory.Span[y * width * 2 + x * 2] = real;
+                    target.Memory.Span[y * width * 2 + x * 2 + 1] = imaginary;
+                }
+            });
         }
 
         /// <summary>
@@ -398,7 +452,16 @@ namespace ComputeSharp.BokehBlur.Processor
             float w,
             int width, int height)
         {
-            // TODO
+            Parallel.For(0, height, y =>
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    Vector4 real = source.Memory.Span[y * width * 2 + x * 2];
+                    Vector4 imaginary = source.Memory.Span[y * width * 2 + x * 2 + 1];
+
+                    target.Memory.Span[y * width + x] = real * z + imaginary * w;
+                }
+            });
         }
     }
 }
