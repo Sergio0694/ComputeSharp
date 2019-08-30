@@ -442,15 +442,13 @@ namespace ComputeSharp.BokehBlur.Processor
             float w,
             int width, int height)
         {
-            Gpu.Default.For(height, id =>
+            Gpu.Default.For(width, height, id =>
             {
-                for (int x = 0; x < width; x++)
-                {
-                    Vector4 real = source[id.X * width * 2 + x * 2];
-                    Vector4 imaginary = source[id.X * width * 2 + x * 2 + 1];
+                int offsetXY = id.Y * width * 2 + id.X * 2;
+                Vector4 real = source[offsetXY];
+                Vector4 imaginary = source[offsetXY + 1];
 
-                    target[id.X * width + x] += real * z + imaginary * w;
-                }
+                target[id.Y * width + id.X] += real * z + imaginary * w;
             });
         }
     }
