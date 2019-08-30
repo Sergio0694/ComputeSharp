@@ -293,12 +293,8 @@ namespace ComputeSharp.BokehBlur.Processor
             ReadOnlyBuffer<Vector2> kernel,
             int width, int height)
         {
-            int startY = 0;
-            int endY = height;
-            int startX = 0;
-            int endX = width;
-            int maxY = endY - 1;
-            int maxX = endX - 1;
+            int maxY = height - 1;
+            int maxX = width - 1;
             int kernelLength = kernel.Size;
 
             Gpu.Default.For(width, height, id =>
@@ -310,8 +306,8 @@ namespace ComputeSharp.BokehBlur.Processor
 
                 for (int i = 0; i < kernelLength; i++)
                 {
-                    int offsetY = Hlsl.Clamp(id.Y + i - radiusY, startY, maxY);
-                    int offsetX = Hlsl.Clamp(sourceOffsetColumnBase, startX, maxX);
+                    int offsetY = Hlsl.Clamp(id.Y + i - radiusY, 0, maxY);
+                    int offsetX = Hlsl.Clamp(sourceOffsetColumnBase, 0, maxX);
                     Vector4 color = source[offsetY * width + offsetX];
                     Vector2 factors = kernel[i];
 
@@ -319,8 +315,9 @@ namespace ComputeSharp.BokehBlur.Processor
                     imaginary += factors.Y * color;
                 }
 
-                target[id.Y * width * 2 + id.X * 2] = real;
-                target[id.Y * width * 2 + id.X * 2 + 1] = imaginary;
+                int offsetXY = id.Y * width * 2 + id.X * 2;
+                target[offsetXY] = real;
+                target[offsetXY + 1] = imaginary;
             });
         }
 
@@ -338,12 +335,8 @@ namespace ComputeSharp.BokehBlur.Processor
             ReadOnlyBuffer<Vector2> kernel,
             int width, int height)
         {
-            int startY = 0;
-            int endY = height;
-            int startX = 0;
-            int endX = width;
-            int maxY = endY - 1;
-            int maxX = endX - 1;
+            int maxY = height - 1;
+            int maxX = width - 1;
             int kernelLength = kernel.Size;
 
             Gpu.Default.For(width, height, id =>
@@ -352,21 +345,24 @@ namespace ComputeSharp.BokehBlur.Processor
                 Vector4 imaginary = Vector4.Zero;
                 int radiusX = kernelLength >> 1;
                 int sourceOffsetColumnBase = id.X;
-                int offsetY = Hlsl.Clamp(id.Y, startY, maxY);
+                int offsetY = Hlsl.Clamp(id.Y, 0, maxY);
+                int offsetXY;
 
                 for (int i = 0; i < kernelLength; i++)
                 {
-                    int offsetX = Hlsl.Clamp(sourceOffsetColumnBase + i - radiusX, startX, maxX);
-                    Vector4 sourceReal = source[offsetY * width * 2 + offsetX * 2];
-                    Vector4 sourceImaginary = source[offsetY * width * 2 + offsetX * 2 + 1];
+                    int offsetX = Hlsl.Clamp(sourceOffsetColumnBase + i - radiusX, 0, maxX);
+                    offsetXY = offsetY * width * 2 + offsetX * 2;
+                    Vector4 sourceReal = source[offsetXY];
+                    Vector4 sourceImaginary = source[offsetXY + 1];
                     Vector2 factors = kernel[i];
 
                     real += factors.X * sourceReal - factors.Y * sourceImaginary;
                     imaginary += factors.X * sourceImaginary + factors.Y * sourceReal;
                 }
 
-                target[id.Y * width * 2 + id.X * 2] = real;
-                target[id.Y * width * 2 + id.X * 2 + 1] = imaginary;
+                offsetXY = id.Y * width * 2 + id.X * 2;
+                target[offsetXY] = real;
+                target[offsetXY + 1] = imaginary;
             });
         }
 
