@@ -387,10 +387,10 @@ namespace ComputeSharp.BokehBlur.Processor
             float exp = Gamma;
             int width = sourceImage.Width;
 
-            Parallel.For(0, sourceImage.Height, i =>
+            Parallel.For(0, sourceImage.Height, y =>
             {
-                ref TPixel rPixel = ref sourceImage.GetPixelRowSpan(i).GetPinnableReference();
-                ref Vector4 r4 = ref source4.Memory.Span.GetPinnableReference();
+                ref TPixel rPixel = ref sourceImage.GetPixelRowSpan(y).GetPinnableReference();
+                ref Vector4 r4 = ref source4.Memory.Span.Slice(y * width).GetPinnableReference();
 
                 for (int x = 0; x < width; x++)
                 {
@@ -415,13 +415,13 @@ namespace ComputeSharp.BokehBlur.Processor
             int width = targetImage.Width;
             float expGamma = 1 / Gamma;
 
-            Parallel.For(0, targetImage.Height, i =>
+            Parallel.For(0, targetImage.Height, y =>
             {
                 Vector4 low = Vector4.Zero;
                 var high = new Vector4(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
 
-                ref TPixel rPixel = ref targetImage.GetPixelRowSpan(i).GetPinnableReference();
-                ref Vector4 r4 = ref sourceValues.Memory.Span.Slice(i * width).GetPinnableReference();
+                ref TPixel rPixel = ref targetImage.GetPixelRowSpan(y).GetPinnableReference();
+                ref Vector4 r4 = ref sourceValues.Memory.Span.Slice(y * width).GetPinnableReference();
 
                 for (int x = 0; x < width; x++)
                 {
