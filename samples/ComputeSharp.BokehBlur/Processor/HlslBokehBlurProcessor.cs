@@ -1,5 +1,7 @@
-﻿using SixLabors.ImageSharp.PixelFormats;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing.Processors;
+using SixLabors.Primitives;
 
 namespace ComputeSharp.BokehBlur.Processor
 {
@@ -57,9 +59,9 @@ namespace ComputeSharp.BokehBlur.Processor
         public float Gamma { get; }
 
         /// <inheritdoc/>
-        public IImageProcessor<TPixel> CreatePixelSpecificProcessor<TPixel>() where TPixel : struct, IPixel<TPixel>
+        public IImageProcessor<TPixel> CreatePixelSpecificProcessor<TPixel>(Image<TPixel> source, Rectangle sourceRectangle) where TPixel : struct, IPixel<TPixel>
         {
-            return new HlslBokehBlurProcessor<TPixel>(this);
+            return new HlslBokehBlurProcessor<TPixel>(this, source, sourceRectangle);
         }
     }
 }
