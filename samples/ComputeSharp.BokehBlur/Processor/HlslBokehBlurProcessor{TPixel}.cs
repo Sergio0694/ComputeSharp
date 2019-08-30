@@ -11,7 +11,6 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing.Processors;
-using SixLabors.Memory;
 using SixLabors.Primitives;
 
 namespace ComputeSharp.BokehBlur.Processor
@@ -257,18 +256,18 @@ namespace ComputeSharp.BokehBlur.Processor
             // Preliminary gamma highlight pass
             using IMemoryOwner<Vector4> source4 = GetExposedVector4Buffer(source);
 
-            using IMemoryOwner<Vector4> processingBuffer = source.GetConfiguration().MemoryAllocator.Allocate<Vector4>(source4.Memory.Length, AllocationOptions.Clean);
-            using IMemoryOwner<Vector4> firstPassBuffer = source.GetConfiguration().MemoryAllocator.Allocate<Vector4>(source4.Memory.Length * 2);
-            using IMemoryOwner<Vector4> secondPassBuffer = source.GetConfiguration().MemoryAllocator.Allocate<Vector4>(source4.Memory.Length * 2);
+            using ReadOnlyBuffer<Vector4> sourceBuffer = Gpu.Default.AllocateReadOnlyBuffer(source4.Memory.Span); 
+            using ReadWriteBuffer<Vector4> processingBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Size);
+            using ReadWriteBuffer<Vector4> firstPassBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Size * 2);
+            using ReadWriteBuffer<Vector4> secondPassBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Size * 2);
 
             // Perform two 1D convolutions for each component in the current instance
             for (int i = 0; i < Kernels.Length; i++)
             {
                 // Compute the resulting complex buffer for the current component
-                using IMemoryOwner<Vector2> kernel = source.GetConfiguration().MemoryAllocator.Allocate<Vector2>(Kernels[i].Length);
-                Kernels[i].AsSpan().CopyTo(kernel.Memory.Span);
-                ApplyVerticalConvolution(source4, firstPassBuffer, kernel, source.Width, source.Height);
-                ApplyHorizontalConvolution(firstPassBuffer, secondPassBuffer, kernel, source.Width, source.Height);
+                ReadOnlyBuffer<Vector2> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer(Kernels[i]);
+                ApplyVerticalConvolution(sourceBuffer, firstPassBuffer, kernelBuffer, source.Width, source.Height);
+                ApplyHorizontalConvolution(firstPassBuffer, secondPassBuffer, kernelBuffer, source.Width, source.Height);
 
                 // Add the results of the convolution with the current kernel
                 Vector4 parameters = KernelParameters[i];
@@ -276,21 +275,22 @@ namespace ComputeSharp.BokehBlur.Processor
             }
 
             // Apply the inverse gamma exposure pass, and write the final pixel data
-            ApplyInverseGammaExposure(processingBuffer, source);
+            processingBuffer.GetData(source4.Memory.Span);
+            ApplyInverseGammaExposure(source4, source);
         }
 
         /// <summary>
         /// Performs a vertical 1D complex convolution with the specified parameters
         /// </summary>
-        /// <param name="source">The source <see cref="IMemoryOwner{T}"/> to read data from</param>
-        /// <param name="target">The target <see cref="IMemoryOwner{T}"/> to write the results to</param>
-        /// <param name="kernel">The <see cref="IMemoryOwner{T}"/> with the values for the current complex kernel</param>
+        /// <param name="source">The source <see cref="ReadOnlyBuffer{T}"/> to read data from</param>
+        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to</param>
+        /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel</param>
         /// <param name="width">The width of the image being processed</param>
         /// <param name="height">The height of the image being processed</param>
         private void ApplyVerticalConvolution(
-            IMemoryOwner<Vector4> source,
-            IMemoryOwner<Vector4> target,
-            IMemoryOwner<Vector2> kernel,
+            ReadOnlyBuffer<Vector4> source,
+            ReadWriteBuffer<Vector4> target,
+            ReadOnlyBuffer<Vector2> kernel,
             int width, int height)
         {
             int startY = 0;
@@ -299,46 +299,43 @@ namespace ComputeSharp.BokehBlur.Processor
             int endX = width;
             int maxY = endY - 1;
             int maxX = endX - 1;
+            int kernelLength = kernel.Size;
 
-            Parallel.For(0, height, y =>
+            Gpu.Default.For(width, height, id =>
             {
-                for (int x = 0; x < width; x++)
+                Vector4 real = Vector4.Zero;
+                Vector4 imaginary = Vector4.Zero;
+                int radiusY = kernelLength >> 1;
+                int sourceOffsetColumnBase = id.X;
+
+                for (int i = 0; i < kernelLength; i++)
                 {
-                    Vector4 real = Vector4.Zero;
-                    Vector4 imaginary = Vector4.Zero;
-                    int kernelLength = kernel.Memory.Length;
-                    int radiusY = kernelLength >> 1;
-                    int sourceOffsetColumnBase = x;
+                    int offsetY = Hlsl.Clamp(id.Y + i - radiusY, startY, maxY);
+                    int offsetX = Hlsl.Clamp(sourceOffsetColumnBase, startX, maxX);
+                    Vector4 color = source[offsetY * width + offsetX];
+                    Vector2 factors = kernel[i];
 
-                    for (int i = 0; i < kernelLength; i++)
-                    {
-                        int offsetY = (y + i - radiusY).Clamp(startY, maxY);
-                        int offsetX = sourceOffsetColumnBase.Clamp(startX, maxX);
-                        Vector4 color = source.Memory.Span[offsetY * width + offsetX];
-                        Vector2 factors = kernel.Memory.Span[i];
-
-                        real += factors.X * color;
-                        imaginary += factors.Y * color;
-                    }
-
-                    target.Memory.Span[y * width * 2 + x * 2] = real;
-                    target.Memory.Span[y * width * 2 + x * 2 + 1] = imaginary;
+                    real += factors.X * color;
+                    imaginary += factors.Y * color;
                 }
+
+                target[id.Y * width * 2 + id.X * 2] = real;
+                target[id.Y * width * 2 + id.X * 2 + 1] = imaginary;
             });
         }
 
         /// <summary>
         /// Performs an horizontal 1D complex convolution with the specified parameters
         /// </summary>
-        /// <param name="source">The source <see cref="IMemoryOwner{T}"/> to read data from</param>
-        /// <param name="target">The target <see cref="IMemoryOwner{T}"/> to write the results to</param>
-        /// <param name="kernel">The <see cref="IMemoryOwner{T}"/> with the values for the current complex kernel</param>
+        /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from</param>
+        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to</param>
+        /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel</param>
         /// <param name="width">The width of the image being processed</param>
         /// <param name="height">The height of the image being processed</param>
         private void ApplyHorizontalConvolution(
-            IMemoryOwner<Vector4> source,
-            IMemoryOwner<Vector4> target,
-            IMemoryOwner<Vector2> kernel,
+            ReadWriteBuffer<Vector4> source,
+            ReadWriteBuffer<Vector4> target,
+            ReadOnlyBuffer<Vector2> kernel,
             int width, int height)
         {
             int startY = 0;
@@ -347,32 +344,29 @@ namespace ComputeSharp.BokehBlur.Processor
             int endX = width;
             int maxY = endY - 1;
             int maxX = endX - 1;
+            int kernelLength = kernel.Size;
 
-            Parallel.For(0, height, y =>
+            Gpu.Default.For(width, height, id =>
             {
-                for (int x = 0; x < width; x++)
+                Vector4 real = Vector4.Zero;
+                Vector4 imaginary = Vector4.Zero;
+                int radiusX = kernelLength >> 1;
+                int sourceOffsetColumnBase = id.X;
+                int offsetY = Hlsl.Clamp(id.Y, startY, maxY);
+
+                for (int i = 0; i < kernelLength; i++)
                 {
-                    Vector4 real = Vector4.Zero;
-                    Vector4 imaginary = Vector4.Zero;
-                    int kernelLength = kernel.Memory.Length;
-                    int radiusX = kernelLength >> 1;
-                    int sourceOffsetColumnBase = x;
-                    int offsetY = y.Clamp(startY, maxY);
+                    int offsetX = Hlsl.Clamp(sourceOffsetColumnBase + i - radiusX, startX, maxX);
+                    Vector4 sourceReal = source[offsetY * width * 2 + offsetX * 2];
+                    Vector4 sourceImaginary = source[offsetY * width * 2 + offsetX * 2 + 1];
+                    Vector2 factors = kernel[i];
 
-                    for (int i = 0; i < kernelLength; i++)
-                    {
-                        int offsetX = (sourceOffsetColumnBase + i - radiusX).Clamp(startX, maxX);
-                        Vector4 sourceReal = source.Memory.Span[offsetY * width * 2 + offsetX * 2];
-                        Vector4 sourceImaginary = source.Memory.Span[offsetY * width * 2 + offsetX * 2 + 1];
-                        Vector2 factors = kernel.Memory.Span[i];
-
-                        real += factors.X * sourceReal - factors.Y * sourceImaginary;
-                        imaginary += factors.X * sourceImaginary + factors.Y * sourceReal;
-                    }
-
-                    target.Memory.Span[y * width * 2 + x * 2] = real;
-                    target.Memory.Span[y * width * 2 + x * 2 + 1] = imaginary;
+                    real += factors.X * sourceReal - factors.Y * sourceImaginary;
+                    imaginary += factors.X * sourceImaginary + factors.Y * sourceReal;
                 }
+
+                target[id.Y * width * 2 + id.X * 2] = real;
+                target[id.Y * width * 2 + id.X * 2 + 1] = imaginary;
             });
         }
 
@@ -439,27 +433,27 @@ namespace ComputeSharp.BokehBlur.Processor
         /// <summary>
         /// Sums the partial results for a complex convolution pass over a single kernel component
         /// </summary>
-        /// <param name="source">The source <see cref="IMemoryOwner{T}"/> to read data from</param>
-        /// <param name="target">The target <see cref="IMemoryOwner{T}"/> to write the results to</param>
+        /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from</param>
+        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to</param>
         /// <param name="z">The weight factor for the real component of the complex pixel values</param>
         /// <param name="w">The weight factor for the imaginary component of the complex pixel values</param>
         /// <param name="width">The width of the image being processed</param>
         /// <param name="height">The height of the image being processed</param>
         private void SumProcessingPartials(
-            IMemoryOwner<Vector4> source,
-            IMemoryOwner<Vector4> target,
+            ReadWriteBuffer<Vector4> source,
+            ReadWriteBuffer<Vector4> target,
             float z,
             float w,
             int width, int height)
         {
-            Parallel.For(0, height, y =>
+            Gpu.Default.For(height, id =>
             {
                 for (int x = 0; x < width; x++)
                 {
-                    Vector4 real = source.Memory.Span[y * width * 2 + x * 2];
-                    Vector4 imaginary = source.Memory.Span[y * width * 2 + x * 2 + 1];
+                    Vector4 real = source[id.X * width * 2 + x * 2];
+                    Vector4 imaginary = source[id.X * width * 2 + x * 2 + 1];
 
-                    target.Memory.Span[y * width + x] += real * z + imaginary * w;
+                    target[id.X * width + x] += real * z + imaginary * w;
                 }
             });
         }
