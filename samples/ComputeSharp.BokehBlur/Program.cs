@@ -17,7 +17,7 @@ namespace ComputeSharp.BokehBlur
             using Image<Rgba32> image = Image.Load<Rgba32>(path);
 
             Console.WriteLine(">> Applying blur");
-            image.Mutate(c => c.ApplyProcessor(new HlslBokehBlurProcessor()));
+            image.Mutate(c => c.ApplyProcessor(new HlslBokehBlurProcessor(80, 2, 3)));
 
             Console.WriteLine(">> Saving to disk");
             string targetPath = Path.Combine(
