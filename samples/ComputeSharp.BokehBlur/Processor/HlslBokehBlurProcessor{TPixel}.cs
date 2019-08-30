@@ -11,6 +11,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing.Processors;
+using SixLabors.Memory;
 using SixLabors.Primitives;
 
 namespace ComputeSharp.BokehBlur.Processor
@@ -256,44 +257,43 @@ namespace ComputeSharp.BokehBlur.Processor
             // Preliminary gamma highlight pass
             using IMemoryOwner<Vector4> source4 = GetExposedVector4Buffer(source);
 
-            using ReadOnlyBuffer<Vector4> source4_gpu = Gpu.Default.AllocateReadOnlyBuffer(source4.Memory.Span);
-            using ReadWriteBuffer<Vector4> processing_gpu = Gpu.Default.AllocateReadWriteBuffer<Vector4>(source4.Memory.Length);
-            using ReadWriteBuffer<Vector4> firstPassValues_gpu = Gpu.Default.AllocateReadWriteBuffer<Vector4>(source4.Memory.Length * 2);
-            using ReadWriteBuffer<Vector4> secondPassBuffer_gpu = Gpu.Default.AllocateReadWriteBuffer<Vector4>(source4.Memory.Length * 2);
+            using IMemoryOwner<Vector4> processingBuffer = source.GetConfiguration().MemoryAllocator.Allocate<Vector4>(source4.Memory.Length, AllocationOptions.Clean);
+            using IMemoryOwner<Vector4> firstPassBuffer = source.GetConfiguration().MemoryAllocator.Allocate<Vector4>(source4.Memory.Length * 2);
+            using IMemoryOwner<Vector4> secondPassBuffer = source.GetConfiguration().MemoryAllocator.Allocate<Vector4>(source4.Memory.Length * 2);
 
             // Perform two 1D convolutions for each component in the current instance
             for (int i = 0; i < Kernels.Length; i++)
             {
                 // Compute the resulting complex buffer for the current component
-                using ReadOnlyBuffer<Vector2> kernel_gpu = Gpu.Default.AllocateReadOnlyBuffer(Kernels[i]);
-                ApplyVerticalConvolution(source4_gpu, firstPassValues_gpu, kernel_gpu, source.Width, source.Height);
-                ApplyHorizontalConvolution(firstPassValues_gpu, secondPassBuffer_gpu, kernel_gpu, source.Width, source.Height);
+                using IMemoryOwner<Vector2> kernel = source.GetConfiguration().MemoryAllocator.Allocate<Vector2>(Kernels[i].Length);
+                Kernels[i].AsSpan().CopyTo(kernel.Memory.Span);
+                ApplyVerticalConvolution(source4, firstPassBuffer, kernel, source.Width, source.Height);
+                ApplyHorizontalConvolution(firstPassBuffer, secondPassBuffer, kernel, source.Width, source.Height);
 
                 // Add the results of the convolution with the current kernel
                 Vector4 parameters = KernelParameters[i];
-                SumProcessingPartials(secondPassBuffer_gpu, processing_gpu, parameters.Z, parameters.W, source.Width, source.Height);
+                SumProcessingPartials(secondPassBuffer, processingBuffer, parameters.Z, parameters.W, source.Width, source.Height);
             }
 
             // Apply the inverse gamma exposure pass, and write the final pixel data
-            processing_gpu.GetData(source4.Memory.Span);
-            ApplyInverseGammaExposure(source4, source);
+            ApplyInverseGammaExposure(processingBuffer, source);
         }
 
         /// <summary>
         /// Performs a vertical 1D complex convolution with the specified parameters
         /// </summary>
-        /// <param name="source">The source <see cref="ReadOnlyBuffer{T}"/> to read data from</param>
-        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to</param>
-        /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel</param>
+        /// <param name="source">The source <see cref="IMemoryOwner{T}"/> to read data from</param>
+        /// <param name="target">The target <see cref="IMemoryOwner{T}"/> to write the results to</param>
+        /// <param name="kernel">The <see cref="IMemoryOwner{T}"/> with the values for the current complex kernel</param>
         /// <param name="width">The width of the image being processed</param>
         /// <param name="height">The height of the image being processed</param>
         private void ApplyVerticalConvolution(
-            ReadOnlyBuffer<Vector4> source,
-            ReadWriteBuffer<Vector4> target,
-            ReadOnlyBuffer<Vector2> kernel,
+            IMemoryOwner<Vector4> source,
+            IMemoryOwner<Vector4> target,
+            IMemoryOwner<Vector2> kernel,
             int width, int height)
         {
-            int kernelLength = kernel.Size;
+            int kernelLength = kernel.Memory.Length;
             int radiusY = kernelLength >> 1;
             int maxRow = height - 1;
 
@@ -303,18 +303,18 @@ namespace ComputeSharp.BokehBlur.Processor
         /// <summary>
         /// Performs an horizontal 1D complex convolution with the specified parameters
         /// </summary>
-        /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from</param>
-        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to</param>
-        /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel</param>
+        /// <param name="source">The source <see cref="IMemoryOwner{T}"/> to read data from</param>
+        /// <param name="target">The target <see cref="IMemoryOwner{T}"/> to write the results to</param>
+        /// <param name="kernel">The <see cref="IMemoryOwner{T}"/> with the values for the current complex kernel</param>
         /// <param name="width">The width of the image being processed</param>
         /// <param name="height">The height of the image being processed</param>
         private void ApplyHorizontalConvolution(
-            ReadWriteBuffer<Vector4> source,
-            ReadWriteBuffer<Vector4> target,
-            ReadOnlyBuffer<Vector2> kernel,
+            IMemoryOwner<Vector4> source,
+            IMemoryOwner<Vector4> target,
+            IMemoryOwner<Vector2> kernel,
             int width, int height)
         {
-            int kernelLength = kernel.Size;
+            int kernelLength = kernel.Memory.Length;
             int radiusX = kernelLength >> 1;
             int maxRow = height - 1;
             int maxColumn = width - 1;
@@ -385,15 +385,15 @@ namespace ComputeSharp.BokehBlur.Processor
         /// <summary>
         /// Sums the partial results for a complex convolution pass over a single kernel component
         /// </summary>
-        /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from</param>
-        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to</param>
+        /// <param name="source">The source <see cref="IMemoryOwner{T}"/> to read data from</param>
+        /// <param name="target">The target <see cref="IMemoryOwner{T}"/> to write the results to</param>
         /// <param name="z">The weight factor for the real component of the complex pixel values</param>
         /// <param name="w">The weight factor for the imaginary component of the complex pixel values</param>
         /// <param name="width">The width of the image being processed</param>
         /// <param name="height">The height of the image being processed</param>
         private void SumProcessingPartials(
-            ReadWriteBuffer<Vector4> source,
-            ReadWriteBuffer<Vector4> target,
+            IMemoryOwner<Vector4> source,
+            IMemoryOwner<Vector4> target,
             float z,
             float w,
             int width, int height)
