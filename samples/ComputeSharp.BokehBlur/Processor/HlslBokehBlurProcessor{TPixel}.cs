@@ -459,7 +459,7 @@ namespace ComputeSharp.BokehBlur.Processor
                     Vector4 real = source.Memory.Span[y * width * 2 + x * 2];
                     Vector4 imaginary = source.Memory.Span[y * width * 2 + x * 2 + 1];
 
-                    target.Memory.Span[y * width + x] = real * z + imaginary * w;
+                    target.Memory.Span[y * width + x] += real * z + imaginary * w;
                 }
             });
         }
