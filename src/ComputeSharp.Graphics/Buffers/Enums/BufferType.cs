@@ -21,7 +21,7 @@
         ReadWrite,
 
         /// <summary>
-        /// A readback buffer, used as temporary buffer to read data back from read write buffers, mapped to <see cref="Vortice.DirectX.Direct3D12.HeapType.Readback"/>
+        /// A readback buffer, used as temporary buffer to read data back from buffers in the default heap, mapped to <see cref="Vortice.DirectX.Direct3D12.HeapType.Readback"/>
         /// </summary>
         ReadBack,
 
