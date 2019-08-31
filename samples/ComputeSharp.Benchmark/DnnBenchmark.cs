@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Buffers;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using BenchmarkDotNet.Attributes;
 
 namespace ComputeSharp.Benchmark
 {
     /// <summary>
-    /// A <see langword="class"/> that benchmarks a fully connected layer forward pass on both CPU and GPU
+    /// A <see langword="class"/> that benchmarks the APIs in the <see cref="Dnn"/> class, on both CPU and GPU
     /// </summary>
-    internal sealed class FullyConnectedLayerBenchmark : IDisposable
+    public class DnnBenchmark : IDisposable
     {
         /// <summary>
         /// The number of samples
@@ -32,52 +34,53 @@ namespace ComputeSharp.Benchmark
         /// <summary>
         /// The input tensor
         /// </summary>
-        private readonly float[] X;
+        private float[] X;
 
         /// <summary>
         /// The weights tensor
         /// </summary>
-        private readonly float[] W;
+        private float[] W;
 
         /// <summary>
         /// The bias tensor
         /// </summary>
-        private readonly float[] B;
+        private float[] B;
 
         /// <summary>
         /// The result tensor
         /// </summary>
-        private readonly float[] Y;
+        private float[] Y;
 
         /// <summary>
         /// The input tensor
         /// </summary>
-        private readonly ReadOnlyBuffer<float> BufferX;
+        private ReadOnlyBuffer<float> BufferX;
 
         /// <summary>
         /// The weights tensor
         /// </summary>
-        private readonly ReadOnlyBuffer<float> BufferW;
+        private ReadOnlyBuffer<float> BufferW;
 
         /// <summary>
         /// The bias tensor
         /// </summary>
-        private readonly ReadOnlyBuffer<float> BufferB;
+        private ReadOnlyBuffer<float> BufferB;
 
         /// <summary>
         /// The result tensor
         /// </summary>
-        private readonly ReadWriteBuffer<float> BufferY;
+        private ReadWriteBuffer<float> BufferY;
 
         /// <summary>
         /// A <see cref="System.Random"/> instance to initialize the tensors
         /// </summary>
-        private static readonly Random Random = new Random();
+        private readonly Random Random = new Random();
 
         /// <summary>
-        /// Creates a new <see cref="FullyConnectedLayerBenchmark"/> instance
+        /// Initial setup for a benchmarking session
         /// </summary>
-        public FullyConnectedLayerBenchmark()
+        [GlobalSetup]
+        public void Setup()
         {
             X = CreateRandomArray(C * N * M);
             W = CreateRandomArray(M * P);
@@ -91,13 +94,30 @@ namespace ComputeSharp.Benchmark
         }
 
         /// <summary>
+        /// Clears the memory from the current session
+        /// </summary>
+        [GlobalCleanup]
+        public void Dispose()
+        {
+            ArrayPool<float>.Shared.Return(X);
+            ArrayPool<float>.Shared.Return(W);
+            ArrayPool<float>.Shared.Return(B);
+            ArrayPool<float>.Shared.Return(Y);
+
+            BufferX.Dispose();
+            BufferW.Dispose();
+            BufferB.Dispose();
+            BufferY.Dispose();
+        }
+
+        /// <summary>
         /// Creates a new <see langword="float"/> array of the specified size
         /// </summary>
         /// <param name="size">The size of the new random array to create</param>
         [Pure]
-        private static float[] CreateRandomArray(int size)
+        private float[] CreateRandomArray(int size)
         {
-            float[] array = new float[size];
+            float[] array = ArrayPool<float>.Shared.Rent(size);
             ref float r = ref array[0];
             for (int i = 0; i < size; i++)
             {
@@ -110,16 +130,19 @@ namespace ComputeSharp.Benchmark
         /// <summary>
         /// Runs a fully connected forward operation on the CPU
         /// </summary>
+        [Benchmark]
         public void Cpu() => Dnn.FullyConnectedForwardCpu(C, N, M, P, X, W, B, Y);
 
         /// <summary>
         /// Runs a fully connected forward operation on the GPU
         /// </summary>
+        [Benchmark]
         public void GpuWithNoTemporaryBuffers() => Dnn.FullyConnectedForwardGpu(C, N, M, P, BufferX, BufferW, BufferB, BufferY);
 
         /// <summary>
         /// Runs a fully connected forward operation on the GPU, creating temporary GPU buffers to perform the operations
         /// </summary>
+        [Benchmark]
         public void GpuWithTemporaryBuffers()
         {
             using ReadOnlyBuffer<float> x = Gpu.Default.AllocateReadOnlyBuffer(X);
@@ -130,49 +153,6 @@ namespace ComputeSharp.Benchmark
             Dnn.FullyConnectedForwardGpu(C, N, M, P, x, w, b, y);
 
             y.GetData(Y);
-        }
-
-        /// <summary>
-        /// Checks whether or not thhe CPU and GPU implementations produce the same output
-        /// </summary>
-        public bool EnsureImplementationsMatch()
-        {
-            // Run the CPU implementation and copy the result
-            Cpu();
-            float[] y_cpu = new float[Y.Length];
-            Y.AsSpan().CopyTo(y_cpu);
-
-            // Run the GPU implementation with temporary buffers
-            GpuWithTemporaryBuffers();
-
-            // Compare the two results
-            ref float r_cpu = ref y_cpu[0];
-            ref float r_gpu = ref Y[0];
-
-            for (int i = 0; i < y_cpu.Length; i++)
-            {
-                float x_cpu = Unsafe.Add(ref r_cpu, i);
-                float x_gpu = Unsafe.Add(ref r_gpu, i);
-                float absolute = MathF.Abs(x_cpu - x_gpu);
-                float relative = 1e-1f * MathF.Max(MathF.Abs(x_cpu), MathF.Abs(x_gpu));
-
-                if (absolute >= 1e-2f &&
-                    absolute > MathF.Max(1e-2f, relative))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            BufferX.Dispose();
-            BufferW.Dispose();
-            BufferB.Dispose();
-            BufferY.Dispose();
         }
     }
 }
