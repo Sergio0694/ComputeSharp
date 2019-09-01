@@ -52,9 +52,9 @@ namespace ComputeSharp
                 Span<byte> temporarySpan = temporaryArray.AsSpan(0, count * PaddedElementSizeInBytes);
 
                 // Copy the padded data to the temporary array
-                Map(0);
+                Map();
                 MemoryHelper.Copy(MappedResource, offset * PaddedElementSizeInBytes, temporarySpan, 0, count * PaddedElementSizeInBytes);
-                Unmap(0);
+                Unmap();
 
                 ref byte tin = ref temporarySpan.GetPinnableReference();
                 ref T tout = ref span.GetPinnableReference();
@@ -71,9 +71,9 @@ namespace ComputeSharp
             else
             {
                 // Directly copy the data back if there is no padding
-                Map(0);
+                Map();
                 MemoryHelper.Copy(MappedResource, offset, span, 0, count);
-                Unmap(0);
+                Unmap();
             }
         }
 
@@ -96,18 +96,18 @@ namespace ComputeSharp
                 }
 
                 // Copy the padded data to the GPU
-                Map(0);
+                Map();
                 MemoryHelper.Copy(temporarySpan, 0, MappedResource, offset * PaddedElementSizeInBytes, count * PaddedElementSizeInBytes);
-                Unmap(0);
+                Unmap();
 
                 ArrayPool<byte>.Shared.Return(temporaryArray);
             }
             else
             {
                 // Directly copy the input span if there is no padding
-                Map(0);
+                Map();
                 MemoryHelper.Copy(span, 0, MappedResource, offset, count);
-                Unmap(0);
+                Unmap();
             }
         }
 
