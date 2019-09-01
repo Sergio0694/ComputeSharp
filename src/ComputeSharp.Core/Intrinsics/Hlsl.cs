@@ -298,6 +298,88 @@ namespace ComputeSharp
         public static bool Any(Vector4 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Any)}({nameof(Vector4)})");
 
         /// <summary>
+        /// Reinterprets a cast value (two 32-bit <see langword="uint"/> values) into a <see langword="double"/>
+        /// </summary>
+        /// <param name="lowBits">The low 32-bit pattern of the input value</param>
+        /// <param name="highBits">The high 32-bit pattern of the input value</param>
+        /// <returns>The input (two 32-bit values) recast as a <see langword="double"/></returns>
+        [Pure]
+        public static double AsDouble(uint lowBits, uint highBits) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(AsDouble)}(uint,uint)");
+
+        /// <summary>
+        /// Reinterprets a cast value (two 32-bit <see langword="uint"/> values) into a <see langword="double"/>
+        /// </summary>
+        /// <param name="lowBits">The low 32-bit pattern of the input value</param>
+        /// <param name="highBits">The high 32-bit pattern of the input value</param>
+        /// <returns>The input (two 32-bit values) recast as a <see langword="double"/></returns>
+        [Pure]
+        public static Double2 AsDouble(UInt2 lowBits, UInt2 highBits) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(AsDouble)}({nameof(UInt2)},{nameof(UInt2)})");
+
+        /// <summary>
+        /// Interprets the bit pattern of <paramref name="x"/> as a floating-point number
+        /// </summary>
+        /// <param name="x">The input value</param>
+        /// <returns>The input interpreted as a floating-point number</returns>
+        [Pure]
+        public static float AsFloat(int x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(AsFloat)}(int)");
+
+        /// <summary>
+        /// Interprets the bit pattern of <paramref name="x"/> as a floating-point number
+        /// </summary>
+        /// <param name="x">The input value</param>
+        /// <returns>The input interpreted as a floating-point number</returns>
+        [Pure]
+        public static Float2 AsFloat(Int2 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(AsFloat)}({nameof(Int2)})");
+
+        /// <summary>
+        /// Interprets the bit pattern of <paramref name="x"/> as a floating-point number
+        /// </summary>
+        /// <param name="x">The input value</param>
+        /// <returns>The input interpreted as a floating-point number</returns>
+        [Pure]
+        public static Float3 AsFloat(Int3 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(AsFloat)}({nameof(Int3)})");
+
+        /// <summary>
+        /// Interprets the bit pattern of <paramref name="x"/> as a floating-point number
+        /// </summary>
+        /// <param name="x">The input value</param>
+        /// <returns>The input interpreted as a floating-point number</returns>
+        [Pure]
+        public static Float4 AsFloat(Int4 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(AsFloat)}({nameof(Int4)})");
+
+        /// <summary>
+        /// Interprets the bit pattern of <paramref name="x"/> as a floating-point number
+        /// </summary>
+        /// <param name="x">The input value</param>
+        /// <returns>The input interpreted as a floating-point number</returns>
+        [Pure]
+        public static float AsFloat(uint x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(AsFloat)}(uint)");
+
+        /// <summary>
+        /// Interprets the bit pattern of <paramref name="x"/> as a floating-point number
+        /// </summary>
+        /// <param name="x">The input value</param>
+        /// <returns>The input interpreted as a floating-point number</returns>
+        [Pure]
+        public static Float2 AsFloat(UInt2 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(AsFloat)}({nameof(UInt2)})");
+
+        /// <summary>
+        /// Interprets the bit pattern of <paramref name="x"/> as a floating-point number
+        /// </summary>
+        /// <param name="x">The input value</param>
+        /// <returns>The input interpreted as a floating-point number</returns>
+        [Pure]
+        public static Float3 AsFloat(UInt3 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(AsFloat)}({nameof(UInt3)})");
+
+        /// <summary>
+        /// Interprets the bit pattern of <paramref name="x"/> as a floating-point number
+        /// </summary>
+        /// <param name="x">The input value</param>
+        /// <returns>The input interpreted as a floating-point number</returns>
+        [Pure]
+        public static Float4 AsFloat(UInt4 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(AsFloat)}({nameof(UInt4)})");
+
+        /// <summary>
         /// Returns the arcsine of the specified value
         /// </summary>
         /// <param name="x">The specified value, which should be within the range [-1 to 1]</param>
