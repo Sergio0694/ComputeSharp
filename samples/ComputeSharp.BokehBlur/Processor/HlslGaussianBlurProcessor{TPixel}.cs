@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing.Processors;
-using SixLabors.ImageSharp.Processing.Processors.Convolution;
 using SixLabors.Primitives;
 
 namespace ComputeSharp.BokehBlur.Processor
@@ -88,7 +91,114 @@ namespace ComputeSharp.BokehBlur.Processor
         /// <inheritdoc/>
         public void Apply()
         {
+            using Image<RgbaVector> source = Source.CloneAs<RgbaVector>();
+            Span<Vector4> sourceSpan = MemoryMarshal.Cast<RgbaVector, Vector4>(source.GetPixelSpan());
 
+            using ReadWriteBuffer<Vector4> sourceBuffer = Gpu.Default.AllocateReadWriteBuffer(sourceSpan);
+            using ReadWriteBuffer<Vector4> firstPassBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Size);
+            using ReadOnlyBuffer<float> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer(Kernel);
+
+            ApplyVerticalConvolution(sourceBuffer, firstPassBuffer, kernelBuffer);
+            ApplyHorizontalConvolution(firstPassBuffer, sourceBuffer, kernelBuffer);
+
+            sourceBuffer.GetData(sourceSpan);
+            WriteResultData(source);
+        }
+
+        /// <summary>
+        /// Performs a vertical 1D complex convolution with the specified parameters
+        /// </summary>
+        /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from</param>
+        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to</param>
+        /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel</param>
+        private void ApplyVerticalConvolution(
+            ReadWriteBuffer<Vector4> source,
+            ReadWriteBuffer<Vector4> target,
+            ReadOnlyBuffer<float> kernel)
+        {
+            int height = Source.Height;
+            int width = Source.Width;
+            int maxY = height - 1;
+            int maxX = width - 1;
+            int kernelLength = kernel.Size;
+
+            Gpu.Default.For(width, height, id =>
+            {
+                Vector4 result = Vector4.Zero;
+                int radiusY = kernelLength >> 1;
+                int sourceOffsetColumnBase = id.X;
+
+                for (int i = 0; i < kernelLength; i++)
+                {
+                    int offsetY = Hlsl.Clamp(id.Y + i - radiusY, 0, maxY);
+                    int offsetX = Hlsl.Clamp(sourceOffsetColumnBase, 0, maxX);
+                    Vector4 color = source[offsetY * width + offsetX];
+
+                    result += kernel[i] * color;
+                }
+
+                int offsetXY = id.Y * width + id.X;
+                target[offsetXY] = result;
+            });
+        }
+
+        /// <summary>
+        /// Performs an horizontal 1D complex convolution with the specified parameters
+        /// </summary>
+        /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from</param>
+        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to</param>
+        /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel</param>
+        private void ApplyHorizontalConvolution(
+            ReadWriteBuffer<Vector4> source,
+            ReadWriteBuffer<Vector4> target,
+            ReadOnlyBuffer<float> kernel)
+        {
+            int height = Source.Height;
+            int width = Source.Width;
+            int maxY = height - 1;
+            int maxX = width - 1;
+            int kernelLength = kernel.Size;
+
+            Gpu.Default.For(width, height, id =>
+            {
+                Vector4 result = Vector4.Zero;
+                int radiusX = kernelLength >> 1;
+                int sourceOffsetColumnBase = id.X;
+                int offsetY = Hlsl.Clamp(id.Y, 0, maxY);
+                int offsetXY;
+
+                for (int i = 0; i < kernelLength; i++)
+                {
+                    int offsetX = Hlsl.Clamp(sourceOffsetColumnBase + i - radiusX, 0, maxX);
+                    offsetXY = offsetY * width + offsetX;
+                    Vector4 color = source[offsetXY];
+
+                    result += kernel[i] * color;
+                }
+
+                offsetXY = id.Y * width + id.X;
+                target[offsetXY] = result;
+            });
+        }
+
+        /// <summary>
+        /// Writes the final data to the source image
+        /// </summary>
+        /// <param name="image">The source <see cref="Image{TPixel}"/> to read from</param>
+        private void WriteResultData(Image<RgbaVector> image)
+        {
+            int width = Source.Width;
+
+            Parallel.For(0, Source.Height, y =>
+            {
+                ref TPixel rPixel = ref Source.GetPixelRowSpan(y).GetPinnableReference();
+                ref Vector4 r4 = ref MemoryMarshal.Cast<RgbaVector, Vector4>(image.GetPixelRowSpan(y)).GetPinnableReference();
+
+                for (int x = 0; x < width; x++)
+                {
+                    Unsafe.Add(ref rPixel, x).FromVector4(Unsafe.Add(ref r4, x));
+                }
+            });
         }
 
         /// <inheritdoc/>
