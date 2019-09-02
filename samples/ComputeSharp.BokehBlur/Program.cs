@@ -5,6 +5,7 @@ using ComputeSharp.BokehBlur.Processor;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Processing.Processors;
 
 namespace ComputeSharp.BokehBlur
 {
@@ -14,16 +15,25 @@ namespace ComputeSharp.BokehBlur
         {
             Console.WriteLine(">> Loading image");
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "city.jpg");
-            using Image<Rgba32> image = Image.Load<Rgba32>(path);
+            using Image<Rgb24> image = Image.Load<Rgb24>(path);
 
-            Console.WriteLine(">> Applying blur");
-            image.Mutate(c => c.ApplyProcessor(new HlslBokehBlurProcessor(80, 2, 3)));
+            // Apply a series of processors and save the results
+            foreach (var effect in new (string Name, IImageProcessor Processor)[]
+            {
+                ("bokeh", new HlslBokehBlurProcessor(80, 2, 3)),
+                ("gaussian", new HlslGaussianBlurProcessor(80))
+            })
+            {
+                Console.WriteLine($">> Applying {effect.Name}");
+                using Image<Rgb24> copy = image.Clone();
+                copy.Mutate(c => c.ApplyProcessor(effect.Processor));
 
-            Console.WriteLine(">> Saving to disk");
-            string targetPath = Path.Combine(
-                Path.GetRelativePath(Path.GetDirectoryName(path), @"..\..\..\"),
-                $"{Path.GetFileNameWithoutExtension(path)}_bokeh{Path.GetExtension(path)}");
-            image.Save(targetPath);
+                Console.WriteLine($">> Saving {effect.Name} to disk");
+                string targetPath = Path.Combine(
+                    Path.GetRelativePath(Path.GetDirectoryName(path), @"..\..\..\"),
+                    $"{Path.GetFileNameWithoutExtension(path)}_{effect.Name}{Path.GetExtension(path)}");
+                copy.Save(targetPath);
+            }
         }
     }
 }
