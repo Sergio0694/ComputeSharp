@@ -87,7 +87,7 @@ namespace ComputeSharp.Shaders
                 string shaderSource = ShaderRenderer.Instance.Render(shaderInfo);
 
                 // Compile the loaded shader to HLSL bytecode
-                ShaderBytecode shaderBytecode = ShaderCompiler.Instance.CompileShader(shaderSource);
+                ShaderBytecode shaderBytecode = ShaderCompiler.CompileShader(shaderSource);
 
                 // Cache for later use
                 shaderData = (shaderLoader, shaderBytecode);
