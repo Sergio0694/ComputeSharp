@@ -10,7 +10,7 @@
     <PackageReference Include="ICSharpCode.Decompiler" Version="5.0.0.5066-preview4" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.3.0-beta2-final" />
     <PackageReference Include="Stubble.Core" Version="1.4.12" />
-    <PackageReference Include="Vortice.Dxc" Version="1.0.0" />
+    <PackageReference Include="Vortice.Dxc" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>

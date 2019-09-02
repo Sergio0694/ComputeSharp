@@ -10,6 +10,12 @@ namespace ComputeSharp.Shaders.Translation
     /// </summary>
     internal sealed class ShaderCompiler
     {
+        // Loads the dxil.dll library, needed to create a pipeline state for a shader to dispatch
+        static ShaderCompiler()
+        {
+            Dxil.LoadLibrary();
+        }
+
         /// <summary>
         /// Gets the singleton <see cref="ShaderCompiler"/> instance to use
         /// </summary>
