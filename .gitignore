@@ -331,3 +331,4 @@ ASALocalRun/
 
 # Sample bokeh blur image
 **/*_bokeh.jpg
+**/*_gaussian.jpg
