@@ -1,13 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using ComputeSharp.BokehBlur.Processor;
+using ComputeSharp.BokehBlur.Processors;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors;
 
-namespace ComputeSharp.BokehBlur
+namespace ComputeSharp.ImageProcessing
 {
     class Program
     {

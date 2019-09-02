@@ -9,7 +9,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing.Processors;
 using SixLabors.Primitives;
 
-namespace ComputeSharp.BokehBlur.Processor
+namespace ComputeSharp.BokehBlur.Processors
 {
     /// <summary>
     /// Applies Gaussian blur processing to an image.

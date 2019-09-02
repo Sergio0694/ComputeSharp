@@ -3,7 +3,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing.Processors;
 using SixLabors.Primitives;
 
-namespace ComputeSharp.BokehBlur.Processor
+namespace ComputeSharp.BokehBlur.Processors
 {
     /// <summary>
     /// Defines Gaussian blur by a (Sigma, Radius) pair

@@ -13,7 +13,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing.Processors;
 using SixLabors.Primitives;
 
-namespace ComputeSharp.BokehBlur.Processor
+namespace ComputeSharp.BokehBlur.Processors
 {
     /// <summary>
     /// Applies bokeh blur processing to the image
