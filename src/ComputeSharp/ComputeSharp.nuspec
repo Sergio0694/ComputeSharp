@@ -6,7 +6,7 @@
     <title>ComputeSharp</title>
     <authors>Sergio Pedri</authors>
     <owners>Sergio Pedri</owners>
-    <license type="expression">GPL-3.0-or-later</license>
+    <license type="expression">MIT</license>
     <projectUrl>https://github.com/Sergio0694/ComputeSharp</projectUrl>
     <iconUrl>https://i.imgur.com/ntvmD6P.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
