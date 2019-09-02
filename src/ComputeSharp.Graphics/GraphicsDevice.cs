@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 using ComputeSharp.Graphics.Commands;
+using Vortice.Direct3D12;
 using Vortice.DirectX.Direct3D;
-using Vortice.DirectX.Direct3D12;
-using Vortice.DirectX.DXGI;
+using Vortice.DXGI;
 using CommandList = ComputeSharp.Graphics.Commands.CommandList;
 
 namespace ComputeSharp.Graphics

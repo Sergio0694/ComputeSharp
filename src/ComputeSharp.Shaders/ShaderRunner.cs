@@ -8,7 +8,7 @@ using ComputeSharp.Graphics.Buffers.Extensions;
 using ComputeSharp.Shaders.Renderer;
 using ComputeSharp.Shaders.Renderer.Models;
 using ComputeSharp.Shaders.Translation;
-using Vortice.DirectX.Direct3D12;
+using Vortice.Direct3D12;
 using CommandList = ComputeSharp.Graphics.Commands.CommandList;
 using PipelineState = ComputeSharp.Graphics.Commands.PipelineState;
 

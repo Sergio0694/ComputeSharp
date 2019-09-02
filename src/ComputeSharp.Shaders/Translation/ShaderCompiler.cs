@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
-using Vortice.DirectX.Direct3D12;
+using Vortice.Direct3D12;
 using Vortice.Dxc;
 
 namespace ComputeSharp.Shaders.Translation
