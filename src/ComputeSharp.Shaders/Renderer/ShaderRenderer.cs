@@ -27,6 +27,7 @@ namespace ComputeSharp.Shaders.Renderer
 
             using Stream stream = assembly.GetManifestResourceStream(filename);
             using StreamReader reader = new StreamReader(stream);
+
             Template = reader.ReadToEnd();
         }
 

@@ -60,12 +60,6 @@ namespace ComputeSharp.Shaders
             int threadsX, int threadsY, int threadsZ,
             Action<ThreadIds> action)
         {
-            // Calculate the dispatch values
-            int
-                groupsX = x / threadsX + (x % threadsX == 0 ? 0 : 1),
-                groupsY = y / threadsY + (y % threadsY == 0 ? 0 : 1),
-                groupsZ = z / threadsZ + (z % threadsZ == 0 ? 0 : 1);
-
             // Try to get the cache shader
             var key = (action.Method, threadsX, threadsY, threadsZ);
             if (!ShadersCache.TryGetValue(key, out var shaderData))
@@ -113,6 +107,12 @@ namespace ComputeSharp.Shaders
             IReadOnlyList<object> variables = new object[] { (uint)x, (uint)y, (uint)z }.Concat(shaderData.Loader.GetVariables(action)).ToArray();
             using GraphicsResource variablesBuffer = device.AllocateConstantBufferFromReflectedValues(variables);
             commandList.SetComputeRootDescriptorTable(0, variablesBuffer);
+
+            // Calculate the dispatch values
+            int
+                groupsX = x / threadsX + (x % threadsX == 0 ? 0 : 1),
+                groupsY = y / threadsY + (y % threadsY == 0 ? 0 : 1),
+                groupsZ = z / threadsZ + (z % threadsZ == 0 ? 0 : 1);
 
             // Dispatch and wait for completion
             commandList.Dispatch(groupsX, groupsY, groupsZ);
