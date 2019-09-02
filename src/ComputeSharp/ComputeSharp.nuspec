@@ -9,7 +9,7 @@
     <license type="expression">GPL-3.0-or-later</license>
     <projectUrl>https://github.com/Sergio0694/ComputeSharp</projectUrl>
     <iconUrl>https://i.imgur.com/ntvmD6P.png</iconUrl>
-    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A .NET Standard 2.1 library to run C# code in parallel on the GPU through DX12 and dynamically generated HLSL compute shaders</description>
     <releaseNotes>Initial alpha release</releaseNotes>
     <copyright>Copyright (c) 2019 Sergio Pedri</copyright>
