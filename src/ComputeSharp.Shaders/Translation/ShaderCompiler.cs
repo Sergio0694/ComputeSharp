@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
-using Vortice.DirectX.Direct3D12;
+using Vortice.Direct3D12;
 using Vortice.Dxc;
 
 namespace ComputeSharp.Shaders.Translation
@@ -8,17 +8,19 @@ namespace ComputeSharp.Shaders.Translation
     /// <summary>
     /// A <see langword="class"/> that uses the <see cref="DxcCompiler"/> APIs to compile compute shaders
     /// </summary>
-    internal sealed class ShaderCompiler
+    internal static class ShaderCompiler
     {
-        /// <summary>
-        /// Gets the singleton <see cref="ShaderCompiler"/> instance to use
-        /// </summary>
-        public static ShaderCompiler Instance { get; } = new ShaderCompiler();
+        // Loads the dxil.dll library, needed to create a pipeline state for a shader to dispatch
+        static ShaderCompiler()
+        {
+            Dxil.LoadLibrary();
+            Library = Dxc.CreateDxcLibrary(); // This needs to be loaded after dxil.dll
+        }
 
         /// <summary>
         /// The <see cref="IDxcLibrary"/> instance to use to create the bytecode for HLSL sources
         /// </summary>
-        private readonly IDxcLibrary Library = Dxc.CreateDxcLibrary();
+        private static readonly IDxcLibrary Library;
 
         /// <summary>
         /// Compiles a new HLSL shader from the input source code
@@ -26,7 +28,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <param name="source">The HLSL source code to compile</param>
         /// <returns>The bytecode for the compiled shader</returns>
         [Pure]
-        public ShaderBytecode CompileShader(string source)
+        public static ShaderBytecode CompileShader(string source)
         {
             var result = DxcCompiler.Compile(DxcShaderStage.ComputeShader, source, "CSMain", string.Empty, new DxcCompilerOptions { ShaderModel = DxcShaderModel.Model6_1 });
 

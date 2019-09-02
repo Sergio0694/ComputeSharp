@@ -11,7 +11,7 @@ using ComputeSharp.Shaders.Renderer.Models.Fields.Abstract;
 using ComputeSharp.Shaders.Translation.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Vortice.DirectX.Direct3D12;
+using Vortice.Direct3D12;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized
 

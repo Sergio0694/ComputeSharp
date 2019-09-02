@@ -1,7 +1,7 @@
 ﻿using System;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Commands.Abstract;
-using Vortice.DirectX.Direct3D12;
+using Vortice.Direct3D12;
 
 namespace ComputeSharp.Graphics.Commands
 {

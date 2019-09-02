@@ -4,8 +4,8 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Helpers;
-using Vortice.DirectX.Direct3D12;
-using Vortice.DirectX.DXGI;
+using Vortice.Direct3D12;
+using Vortice.DXGI;
 
 namespace ComputeSharp
 {
