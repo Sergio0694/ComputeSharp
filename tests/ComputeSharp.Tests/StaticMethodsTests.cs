@@ -13,6 +13,9 @@ namespace ComputeSharp.Tests
         public static float Square(float x) => x * x;
 
         [Pure]
+        internal static float InternalSquare(float x) => x * x;
+
+        [Pure]
         public static Float4 Range(float x) => new Float4(x, x + 1, x + 2, x + 3);
 
         [Pure]
@@ -33,6 +36,18 @@ namespace ComputeSharp.Tests
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
 
             Gpu.Default.For(1, id => buffer[0] = StaticMethodsContainer.Square(3));
+
+            float[] result = buffer.GetData();
+
+            Assert.IsTrue(MathF.Abs(result[0] - 9) < 0.0001f);
+        }
+
+        [TestMethod]
+        public void InternalFloatToFloatFunc()
+        {
+            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
+
+            Gpu.Default.For(1, id => buffer[0] = StaticMethodsContainer.InternalSquare(3));
 
             float[] result = buffer.GetData();
 

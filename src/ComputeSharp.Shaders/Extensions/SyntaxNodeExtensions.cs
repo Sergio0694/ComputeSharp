@@ -95,6 +95,10 @@ namespace ComputeSharp.Shaders.Extensions
                         isReadonly = !propertyInfo.CanWrite;
                         memberInfo = propertyInfo;
                         break;
+                    case MethodInfo methodInfo:
+                        string methodName = $"{methodInfo.DeclaringType.Name}_{methodInfo.Name}";
+                        method = (methodName, methodInfo);
+                        return SyntaxFactory.IdentifierName(methodName).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
                     default: throw new InvalidOperationException($"Invalid symbol kind: {memberInfos.First().GetType()}");
                 }
 
