@@ -17,11 +17,13 @@ namespace ComputeSharp.Tests
 
         [Pure]
         public static int Sum(Float4 x) => (int)(x.X + x.Y + x.Z + x.W);
+
+        public static void Assign(int x, out int y) => y = x;
     }
 
     [TestClass]
-    [TestCategory("StaticMethodTests")]
-    public class StaticMethodTests
+    [TestCategory("StaticMethodsTests")]
+    public class StaticMethodsTests
     {
         [TestMethod]
         public void FloatToFloatFunc()
@@ -60,6 +62,18 @@ namespace ComputeSharp.Tests
             int[] result = buffer.GetData();
 
             Assert.IsTrue(result[0] == 20);
+        }
+
+        [TestMethod]
+        public void IntToOutIntFunc()
+        {
+            using ReadWriteBuffer<int> buffer = Gpu.Default.AllocateReadWriteBuffer<int>(1);
+
+            Gpu.Default.For(1, id => StaticMethodsContainer.Assign(7, out buffer[0]));
+
+            int[] result = buffer.GetData();
+
+            Assert.IsTrue(result[0] == 7);
         }
     }
 }
