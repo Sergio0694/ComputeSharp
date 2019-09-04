@@ -49,6 +49,19 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <inheritdoc/>
+        public override SyntaxNode VisitArgument(ArgumentSyntax node)
+        {
+            node = (ArgumentSyntax)base.VisitArgument(node);
+
+            if (node.RefKindKeyword.IsKind(SyntaxKind.RefKeyword))
+            {
+                node = node.WithRefKindKeyword(SyntaxFactory.Token(SyntaxKind.None));
+            }
+
+            return node;
+        }
+
+        /// <inheritdoc/>
         public override SyntaxNode VisitCastExpression(CastExpressionSyntax node)
         {
             node = (CastExpressionSyntax)base.VisitCastExpression(node);
