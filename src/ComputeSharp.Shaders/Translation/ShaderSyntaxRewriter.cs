@@ -105,5 +105,19 @@ namespace ComputeSharp.Shaders.Translation
 
             return syntaxNode;
         }
+
+        /// <inheritdoc/>
+        public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node)
+        {
+            node = (MethodDeclarationSyntax)base.VisitMethodDeclaration(node);
+
+            // Replace the return type node, if needed
+            if (!node.ReturnType.ToString().Equals("void"))
+            {
+                return node.ReplaceType(node.ReturnType);
+            }
+
+            return node;
+        }
     }
 }
