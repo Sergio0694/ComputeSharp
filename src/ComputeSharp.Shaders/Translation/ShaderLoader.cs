@@ -13,6 +13,7 @@ using ComputeSharp.Shaders.Renderer.Models.Functions;
 using ComputeSharp.Shaders.Translation.Enums;
 using ComputeSharp.Shaders.Translation.Models;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Vortice.Direct3D12;
 using ParameterInfo = ComputeSharp.Shaders.Renderer.Models.Functions.ParameterInfo;
@@ -311,10 +312,11 @@ namespace ComputeSharp.Shaders.Translation
             // Get the function parameters
             IReadOnlyList<ParameterInfo> parameters = (
                 from parameter in root.ParameterList.Parameters.Select((p, i) => (Node: p, Index: i))
+                let modifier = parameter.Node.Modifiers.Any(token => token.IsKind(SyntaxKind.OutKeyword)) ? "out" : "in"
                 let type = parameter.Node.Type.ToFullString()
                 let parameterName = parameter.Node.Identifier.ToFullString()
                 let last = parameter.Index == root.ParameterList.Parameters.Count - 1
-                select new ParameterInfo(type, parameterName, last)).ToArray();
+                select new ParameterInfo(modifier, type, parameterName, last)).ToArray();
 
             // Get the function body
             string body = root.Body.ToFullString();

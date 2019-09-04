@@ -42,7 +42,7 @@ cbuffer _{{FieldName}} : register(b{{BufferIndex}})
 {{!Shader private functions}}
 {{#FunctionsList}}
 // {{FunctionCsharpReturnType}} {{FunctionFullName}}({{FunctionCsharpParameters}})
-{{ReturnType}} {{FunctionName}}({{#ParametersList}}{{ParameterType}} {{ParameterName}}{{^IsLastParameter}}, {{/IsLastParameter}}{{/ParametersList}})
+{{ReturnType}} {{FunctionName}}({{#ParametersList}}{{ParameterModifier}} {{ParameterType}} {{ParameterName}}{{^IsLastParameter}}, {{/IsLastParameter}}{{/ParametersList}})
 {{FunctionBody}}
 {{/FunctionsList}}
 
