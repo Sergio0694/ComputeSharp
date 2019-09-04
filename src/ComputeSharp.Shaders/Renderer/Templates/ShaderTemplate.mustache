@@ -39,6 +39,13 @@ cbuffer _{{FieldName}} : register(b{{BufferIndex}})
 {{/IsReadWriteBuffer}}
 {{/BuffersList}}
 
+{{!Shader private functions}}
+{{#FunctionsList}}
+// {{FunctionCsharpReturnType}} {{FunctionFullName}}({{FunctionCsharpParameters}})
+{{ReturnType}} {{FunctionName}}({{#ParametersList}}{{ParameterModifier}} {{ParameterType}} {{ParameterName}}{{^IsLastParameter}}, {{/IsLastParameter}}{{/ParametersList}})
+{{FunctionBody}}
+{{/FunctionsList}}
+
 {{!Shader entry point}}
 // Shader body
 [Shader("compute")]

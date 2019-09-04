@@ -5,13 +5,18 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Shaders.Extensions;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Renderer.Models.Fields;
 using ComputeSharp.Shaders.Renderer.Models.Fields.Abstract;
+using ComputeSharp.Shaders.Renderer.Models.Functions;
+using ComputeSharp.Shaders.Translation.Enums;
 using ComputeSharp.Shaders.Translation.Models;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Vortice.Direct3D12;
+using ParameterInfo = ComputeSharp.Shaders.Renderer.Models.Functions.ParameterInfo;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized
 
@@ -137,6 +142,13 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         public string MethodBody { get; private set; }
 
+        private readonly List<FunctionInfo> _FunctionsList = new List<FunctionInfo>();
+
+        /// <summary>
+        /// Gets the collection of <see cref="FunctionInfo"/> items for the shader
+        /// </summary>
+        public IReadOnlyList<FunctionInfo> FunctionsList => _FunctionsList;
+
         /// <summary>
         /// Loads and processes an input <see cref="Action{T}"/>
         /// </summary>
@@ -243,16 +255,22 @@ namespace ComputeSharp.Shaders.Translation
         private void LoadMethodSource()
         {
             // Decompile the shader method
-            MethodDecompiler.Instance.GetSyntaxTree(Action.Method, out MethodDeclarationSyntax root, out SemanticModel semanticModel);
+            MethodDecompiler.Instance.GetSyntaxTree(Action.Method, MethodType.Closure, out MethodDeclarationSyntax root, out SemanticModel semanticModel);
 
             // Rewrite the shader method (eg. to fix the type declarations)
             ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel);
             root = (MethodDeclarationSyntax)syntaxRewriter.Visit(root);
 
-            // Register the captured static fields
-            foreach (var item in syntaxRewriter.StaticMembers)
+            // Register the captured static members
+            foreach (var member in syntaxRewriter.StaticMembers)
             {
-                LoadFieldInfo(item.Value, item.Key);
+                LoadFieldInfo(member.Value, member.Key);
+            }
+
+            // Register the captured static methods
+            foreach (var method in syntaxRewriter.StaticMethods)
+            {
+                LoadStaticMethodSource(method.Key, method.Value);
             }
 
             // Get the thread ids identifier name and shader method body
@@ -263,6 +281,60 @@ namespace ComputeSharp.Shaders.Translation
             MethodBody = Regex.Replace(MethodBody, @"(?<=\W)(\d+)[fFdD]", m => m.Groups[1].Value);
             MethodBody = MethodBody.TrimEnd('\n', '\r', ' ');
             MethodBody = HlslKnownKeywords.GetMappedText(MethodBody);
+        }
+
+        /// <summary>
+        /// Loads additional static methods used by the shader
+        /// </summary>
+        /// <param name="name">The HLSL name of the new method to load</param>
+        /// <param name="methodInfo">The <see cref="MethodInfo"/> instance for the method to load</param>
+        private void LoadStaticMethodSource(string name, MethodInfo methodInfo)
+        {
+            // Decompile the target method
+            MethodDecompiler.Instance.GetSyntaxTree(methodInfo, MethodType.Static, out MethodDeclarationSyntax root, out SemanticModel semanticModel);
+
+            // Rewrite the method
+            ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel);
+            root = (MethodDeclarationSyntax)syntaxRewriter.Visit(root);
+
+            // Register the captured static members
+            foreach (var member in syntaxRewriter.StaticMembers)
+            {
+                LoadFieldInfo(member.Value, member.Key);
+            }
+
+            // Register the captured static methods
+            foreach (var method in syntaxRewriter.StaticMethods)
+            {
+                LoadStaticMethodSource(method.Key, method.Value);
+            }
+
+            // Get the function parameters
+            IReadOnlyList<ParameterInfo> parameters = (
+                from parameter in root.ParameterList.Parameters.Select((p, i) => (Node: p, Index: i))
+                let modifiers = parameter.Node.Modifiers
+                let type = parameter.Node.Type.ToFullString()
+                let parameterName = parameter.Node.Identifier.ToFullString()
+                let last = parameter.Index == root.ParameterList.Parameters.Count - 1
+                select new ParameterInfo(modifiers, type, parameterName, last)).ToArray();
+
+            // Get the function body
+            string body = root.Body.ToFullString();
+            body = Regex.Replace(body, @"(?<=\W)(\d+)[fFdD]", m => m.Groups[1].Value);
+            body = body.TrimEnd('\n', '\r', ' ');
+            body = HlslKnownKeywords.GetMappedText(body);
+
+            // Get the final function info instance
+            FunctionInfo functionInfo = new FunctionInfo(
+                methodInfo.ReturnType,
+                $"{methodInfo.DeclaringType.FullName}{Type.Delimiter}{methodInfo.Name}",
+                string.Join(", ", methodInfo.GetParameters().Select(p => $"{p.ParameterType.ToFriendlyString()} {p.Name}")),
+                root.ReturnType.ToFullString(),
+                name,
+                parameters,
+                body);
+
+            _FunctionsList.Add(functionInfo);
         }
     }
 }

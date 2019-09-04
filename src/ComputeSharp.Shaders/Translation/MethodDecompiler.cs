@@ -9,6 +9,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Text.RegularExpressions;
 using ComputeSharp.Shaders.Mappings;
+using ComputeSharp.Shaders.Translation.Enums;
 using ICSharpCode.Decompiler;
 using ICSharpCode.Decompiler.CSharp;
 using ICSharpCode.Decompiler.Metadata;
@@ -108,66 +109,49 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <summary>
-        /// A <see cref="Regex"/> used to preprocess the closure type declarations for both lambda expressions and local methods
+        /// Decompiles a method or the whole declaring type
         /// </summary>
-        private static readonly Regex ClosureTypeDeclarationRegex = new Regex(@"(?<=private sealed class )<\w*>[\w_]+", RegexOptions.Compiled);
+        /// <param name="methodInfo">The target <see cref="MethodInfo"/> to decompile</param>
+        /// <param name="methodOnly">Specifies whether or not to force the decompilation of just the given method, even if not static</param>
+        /// <returns>The decompiled source code</returns>
+        [Pure]
+        private string DecompileMethodOrDeclaringType(MethodInfo methodInfo, bool methodOnly = false)
+        {
+            // Get the handle of the containing type method
+            string assemblyPath = methodInfo.DeclaringType?.Assembly.Location ?? throw new InvalidOperationException();
+            int metadataToken = methodInfo.IsStatic || methodOnly ? methodInfo.MetadataToken : methodInfo.DeclaringType.MetadataToken;
+            EntityHandle typeHandle = MetadataTokenHelpers.TryAsEntityHandle(metadataToken) ?? throw new InvalidOperationException();
 
-        /// <summary>
-        /// A <see cref="Regex"/> used to preprocess the entry point declaration for both lambda expressions and local methods
-        /// </summary>
-        private static readonly Regex LambdaMethodDeclarationRegex = new Regex(@"(?:private|internal) void <\w+>[\w_|]+(?=\()", RegexOptions.Compiled);
+            // Get or create a decompiler for the target assembly, and decompile the type
+            if (!Decompilers.TryGetValue(assemblyPath, out CSharpDecompiler decompiler))
+            {
+                decompiler = CreateDecompiler(assemblyPath);
+                Decompilers.Add(assemblyPath, decompiler);
+            }
+
+            return decompiler.DecompileAsString(typeHandle);
+        }
 
         /// <summary>
         /// Decompiles a target method and returns its <see cref="SyntaxTree"/> and <see cref="SemanticModel"/> info
         /// </summary>
         /// <param name="methodInfo">The input <see cref="MethodInfo"/> to inspect</param>
+        /// <param name="methodType">The type of method to decompile</param>
         /// <param name="rootNode">The root node for the syntax tree of the input method</param>
         /// <param name="semanticModel">The semantic model for the input method</param>
-        public void GetSyntaxTree(MethodInfo methodInfo, out MethodDeclarationSyntax rootNode, out SemanticModel semanticModel)
+        public void GetSyntaxTree(MethodInfo methodInfo, MethodType methodType, out MethodDeclarationSyntax rootNode, out SemanticModel semanticModel)
         {
             lock (Lock)
             {
-                // Get the handle of the containing type method
-                string assemblyPath = methodInfo.DeclaringType?.Assembly.Location ?? throw new InvalidOperationException();
-                EntityHandle typeHandle = MetadataTokenHelpers.TryAsEntityHandle(methodInfo.DeclaringType.MetadataToken) ?? throw new InvalidOperationException();
-
-                // Get or create a decompiler for the target assembly, and decompile the type
-                if (!Decompilers.TryGetValue(assemblyPath, out CSharpDecompiler decompiler))
+                string sourceCode = methodType switch
                 {
-                    decompiler = CreateDecompiler(assemblyPath);
-                    Decompilers.Add(assemblyPath, decompiler);
-                }
-
-                // Decompile the method source and fix the method declaration for local methods converted to lambdas
-                string
-                    sourceCode = decompiler.DecompileAsString(typeHandle),
-                    typeFixedCode = ClosureTypeDeclarationRegex.Replace(sourceCode, "Shader"),
-                    methodFixedCode = LambdaMethodDeclarationRegex.Replace(typeFixedCode, m => $"// {m.Value}{Environment.NewLine}    internal void Main");
-
-                // Workaround for some local methods not being decompiled correctly
-                if (!methodFixedCode.Contains("internal void Main"))
-                {
-                    EntityHandle methodHandle = MetadataTokenHelpers.TryAsEntityHandle(methodInfo.MetadataToken) ?? throw new InvalidOperationException();
-                    string
-                        methodOnlySourceCode = decompiler.DecompileAsString(methodHandle),
-                        methodOnlyFixedSourceCode = LambdaMethodDeclarationRegex.Replace(methodOnlySourceCode, m => $"// {m.Value}{Environment.NewLine}    internal void Main"),
-                        methodOnlyIndentedSourceCode = $"    {methodOnlyFixedSourceCode.Replace(Environment.NewLine, $"{Environment.NewLine}    ")}";
-
-                    int lastClosedBracketsIndex = methodFixedCode.LastIndexOf('}');
-                    methodFixedCode = methodFixedCode.Insert(lastClosedBracketsIndex, methodOnlyIndentedSourceCode);
-                }
-
-                // Unwrap the nested fields
-                string unwrappedSourceCode = UnwrapSyntaxTree(methodFixedCode);
-
-                // Remove the in keyword from the source
-                string inFixedSourceCode = Regex.Replace(unwrappedSourceCode, @"(?<!\w)in ", string.Empty);
-
-                // Tweak the out declarations
-                string outFixedSourceCode = RefactorInlineOutDeclarations(inFixedSourceCode, methodInfo.Name);
+                    MethodType.Closure => GetSyntaxTreeForClosureMethod(methodInfo),
+                    MethodType.Static => GetSyntaxTreeForStaticMethod(methodInfo),
+                    _ => throw new ArgumentOutOfRangeException(nameof(methodType), $"Invalid method type: {methodType}")
+                };
 
                 // Load the type syntax tree
-                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(outFixedSourceCode);
+                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
 
                 // Get the root node to return
                 rootNode = syntaxTree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().First(node => node.GetLeadingTrivia().ToFullString().Contains(methodInfo.Name));
@@ -177,6 +161,74 @@ namespace ComputeSharp.Shaders.Translation
                 semanticModel = _Compilation.GetSemanticModel(syntaxTree);
             }
         }
+
+        /// <summary>
+        /// Decompiles a target closure method
+        /// </summary>
+        /// <param name="methodInfo">The input <see cref="MethodInfo"/> to inspect</param>
+        [Pure]
+        private string GetSyntaxTreeForClosureMethod(MethodInfo methodInfo)
+        {
+            // Decompile the method source and fix the method declaration for local methods converted to lambdas
+            string
+                sourceCode = DecompileMethodOrDeclaringType(methodInfo),
+                typeFixedCode = ClosureTypeDeclarationRegex.Replace(sourceCode, "Shader"),
+                methodFixedCode = LambdaMethodDeclarationRegex.Replace(typeFixedCode, m => $"// {m.Value}{Environment.NewLine}    internal void Main");
+
+            // Workaround for some local methods not being decompiled correctly
+            if (!methodFixedCode.Contains("internal void Main"))
+            {
+                string
+                    methodOnlySourceCode = DecompileMethodOrDeclaringType(methodInfo, true),
+                    methodOnlyFixedSourceCode = LambdaMethodDeclarationRegex.Replace(methodOnlySourceCode, m => $"// {m.Value}{Environment.NewLine}    internal void Main"),
+                    methodOnlyIndentedSourceCode = $"    {methodOnlyFixedSourceCode.Replace(Environment.NewLine, $"{Environment.NewLine}    ")}";
+
+                int lastClosedBracketsIndex = methodFixedCode.LastIndexOf('}');
+                methodFixedCode = methodFixedCode.Insert(lastClosedBracketsIndex, methodOnlyIndentedSourceCode);
+            }
+
+            // Unwrap the nested fields
+            string unwrappedSourceCode = UnwrapSyntaxTree(methodFixedCode);
+
+            // Remove the in keyword from the source
+            string inFixedSourceCode = Regex.Replace(unwrappedSourceCode, @"(?<!\w)in ", string.Empty);
+
+            // Tweak the out declarations
+            string outFixedSourceCode = RefactorInlineOutDeclarations(inFixedSourceCode, methodInfo.Name);
+
+            return outFixedSourceCode;
+        }
+
+        /// <summary>
+        /// Decompiles a target method and returns its <see cref="SyntaxTree"/> and <see cref="SemanticModel"/> info
+        /// </summary>
+        /// <param name="methodInfo">The input <see cref="MethodInfo"/> to inspect</param>
+        [Pure]
+        private string GetSyntaxTreeForStaticMethod(MethodInfo methodInfo)
+        {
+            string
+                sourceCode = DecompileMethodOrDeclaringType(methodInfo),
+                prototype = sourceCode.Split(Environment.NewLine)[0],
+                commentedSourceCode = $"// {methodInfo.Name}{Environment.NewLine}{sourceCode}",
+                inFixedSourceCode = Regex.Replace(commentedSourceCode, @"(?<!\w)in ", string.Empty),
+                outFixedSourceCode = RefactorInlineOutDeclarations(inFixedSourceCode, methodInfo.Name);
+
+            // Restore the original prototype, as some out parameters might have been removed
+            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(outFixedSourceCode);
+            BlockSyntax block = syntaxTree.GetRoot().DescendantNodes().OfType<BlockSyntax>().First();
+
+            return $"// {methodInfo.Name}{Environment.NewLine}{prototype}{Environment.NewLine}{block.ToFullString()}";
+        }
+
+        /// <summary>
+        /// A <see cref="Regex"/> used to preprocess the closure type declarations for both lambda expressions and local methods
+        /// </summary>
+        private static readonly Regex ClosureTypeDeclarationRegex = new Regex(@"(?<=private sealed class )<\w*>[\w_]+", RegexOptions.Compiled);
+
+        /// <summary>
+        /// A <see cref="Regex"/> used to preprocess the entry point declaration for both lambda expressions and local methods
+        /// </summary>
+        private static readonly Regex LambdaMethodDeclarationRegex = new Regex(@"(?:private|internal) void <\w+>[\w_|]+(?=\()", RegexOptions.Compiled);
 
         /// <summary>
         /// A <see cref="Regex"/> used to find fields that represent nested closure types
@@ -272,14 +324,14 @@ namespace ComputeSharp.Shaders.Translation
                       argument.Expression.IsKind(SyntaxKind.DeclarationExpression)
                 let match = Regex.Match(argument.Expression.ToFullString(), @"([\w.]+) ([\w_]+)")
                 let mappedType = HlslKnownTypes.GetMappedName(match.Groups[1].Value)
-                let declatation = $"{mappedType} {match.Groups[2].Value} = ({mappedType})0;"
-                select (match.Groups[1].Value, match.Groups[2].Value, declatation)).ToArray();
+                let declaration = $"{mappedType} {match.Groups[2].Value} = ({mappedType})0;"
+                select declaration).ToArray();
 
             // Insert the explicit declarations at the start of the method
             int start = rootNode.Body.ChildNodes().First().SpanStart;
-            foreach (var item in outs.Reverse())
+            foreach (var declaration in outs.Reverse())
             {
-                source = source.Insert(start, $"{item.declatation}{Environment.NewLine}        ");
+                source = source.Insert(start, $"{declaration}{Environment.NewLine}        ");
             }
 
             // Remove the out keyword from the source
