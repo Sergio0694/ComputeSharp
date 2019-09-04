@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ComputeSharp.Shaders.Renderer.Models.Fields;
 using ComputeSharp.Shaders.Renderer.Models.Fields.Abstract;
+using ComputeSharp.Shaders.Renderer.Models.Functions;
 
 #pragma warning disable CS8618 // Non-nullable field is uninitialized
 
@@ -12,12 +13,12 @@ namespace ComputeSharp.Shaders.Renderer.Models
     internal sealed class ShaderInfo
     {
         /// <summary>
-        /// Gets the list of captured buffers being present in the current shader
+        /// Gets or sets the list of captured buffers being present in the current shader
         /// </summary>
         public IReadOnlyList<HlslBufferInfo> BuffersList { get; set; }
 
         /// <summary>
-        /// Gets the list of captured variables being present in the current shader
+        /// Gets or sets the list of captured variables being present in the current shader
         /// </summary>
         public IReadOnlyList<CapturedFieldInfo> FieldsList { get; set; }
 
@@ -45,5 +46,10 @@ namespace ComputeSharp.Shaders.Renderer.Models
         /// Gets or sets the shader body to compile
         /// </summary>
         public string ShaderBody { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list of static functions used by the shader
+        /// </summary>
+        public IReadOnlyList<FunctionInfo> FunctionsList { get; set; }
     }
 }

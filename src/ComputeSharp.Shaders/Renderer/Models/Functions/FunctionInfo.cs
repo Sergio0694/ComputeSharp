@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ComputeSharp.Shaders.Extensions;
 
 namespace ComputeSharp.Shaders.Renderer.Models.Functions
@@ -34,6 +35,11 @@ namespace ComputeSharp.Shaders.Renderer.Models.Functions
         public string FunctionName { get; }
 
         /// <summary>
+        /// Gets the list of parameters for the current function
+        /// </summary>
+        public IReadOnlyList<ParameterInfo> ParametersList { get; }
+
+        /// <summary>
         /// Gets the body of the current function
         /// </summary>
         public string FunctionBody { get; }
@@ -46,6 +52,7 @@ namespace ComputeSharp.Shaders.Renderer.Models.Functions
         /// <param name="functionCsharpParameters">The parameters of the function in the C# source</param>
         /// <param name="returnType">The return type of the current function</param>
         /// <param name="functionName">The name of the current function</param>
+        /// <param name="parameters">The function parameters, if any</param>
         /// <param name="functionBody">The current function</param>
         public FunctionInfo(
             Type functionCsharpType,
@@ -53,6 +60,7 @@ namespace ComputeSharp.Shaders.Renderer.Models.Functions
             string functionCsharpParameters,
             string returnType,
             string functionName,
+            IReadOnlyList<ParameterInfo> parameters,
             string functionBody)
         {
             FunctionCsharpReturnType = functionCsharpType.ToFriendlyString();
@@ -60,6 +68,7 @@ namespace ComputeSharp.Shaders.Renderer.Models.Functions
             FunctionCsharpParameters = functionCsharpParameters;
             ReturnType = returnType;
             FunctionName = functionName;
+            ParametersList = parameters;
             FunctionBody = functionBody;
         }
     }
