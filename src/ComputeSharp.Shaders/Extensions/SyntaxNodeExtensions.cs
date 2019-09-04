@@ -42,12 +42,14 @@ namespace ComputeSharp.Shaders.Extensions
         /// <param name="node">The input <see cref="MemberAccessExpressionSyntax"/> to check and modify if needed</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> to use to load symbols for the input node</param>
         /// <param name="variable">The info on parsed static members, if any</param>
+        /// <param name="method">The info on parsed static methods, if any</param>
         /// <returns>A <see cref="SyntaxNode"/> instance that is compatible with HLSL</returns>
         [Pure]
-        public static SyntaxNode ReplaceMember(this MemberAccessExpressionSyntax node, SemanticModel semanticModel, out (string Name, ReadableMember MemberInfo)? variable)
+        public static SyntaxNode ReplaceMember(this MemberAccessExpressionSyntax node, SemanticModel semanticModel, out (string Name, ReadableMember MemberInfo)? variable, out (string Name, MethodInfo MethodInfo)? method)
         {
-            // Set the variable to null, replace it later on if needed
+            // Set the out parameters to null, replace them later on if needed
             variable = null;
+            method = null;
 
             SymbolInfo containingMemberSymbolInfo;
             ISymbol? memberSymbol;
@@ -115,37 +117,48 @@ namespace ComputeSharp.Shaders.Extensions
                 return SyntaxFactory.IdentifierName(expression).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
             }
 
-            // Handle static fields as a special case
+            // Handle static members as a special case
             if (memberSymbol.IsStatic && (
                 memberSymbol.Kind == SymbolKind.Field ||
-                memberSymbol.Kind == SymbolKind.Property))
+                memberSymbol.Kind == SymbolKind.Property ||
+                memberSymbol.Kind == SymbolKind.Method))
             {
                 // Get the containing type
                 string
                     typeFullname = memberSymbol.ContainingType.ToString(),
                     assemblyFullname = memberSymbol.ContainingAssembly.ToString();
-                Type fieldDeclaringType = Type.GetType($"{typeFullname}, {assemblyFullname}");
+                Type memberDeclaringType = Type.GetType($"{typeFullname}, {assemblyFullname}");
 
-                // Retrieve the field or property info
-                bool isReadonly;
-                ReadableMember memberInfo;
-                switch (memberSymbol.Kind)
+                // Static field or property
+                if (memberSymbol.Kind == SymbolKind.Field || memberSymbol.Kind == SymbolKind.Property)
                 {
-                    case SymbolKind.Field:
-                        FieldInfo fieldInfo = fieldDeclaringType.GetField(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-                        isReadonly = fieldInfo.IsInitOnly;
-                        memberInfo = fieldInfo;
-                        break;
-                    case SymbolKind.Property:
-                        PropertyInfo propertyInfo = fieldDeclaringType.GetProperty(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-                        isReadonly = !propertyInfo.CanWrite;
-                        memberInfo = propertyInfo;
-                        break;
-                    default: throw new InvalidOperationException($"Invalid symbol kind: {memberSymbol.Kind}");
+                    bool isReadonly;
+                    ReadableMember memberInfo;
+                    switch (memberSymbol.Kind)
+                    {
+                        case SymbolKind.Field:
+                            FieldInfo fieldInfo = memberDeclaringType.GetField(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                            isReadonly = fieldInfo.IsInitOnly;
+                            memberInfo = fieldInfo;
+                            break;
+                        case SymbolKind.Property:
+                            PropertyInfo propertyInfo = memberDeclaringType.GetProperty(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                            isReadonly = !propertyInfo.CanWrite;
+                            memberInfo = propertyInfo;
+                            break;
+                        default: throw new InvalidOperationException($"Invalid symbol kind: {memberSymbol.Kind}");
+                    }
+
+                    // Handle the loaded info
+                    return ProcessStaticMember(node, memberInfo, isReadonly, ref variable);
                 }
 
-                // Handle the loaded info
-                return ProcessStaticMember(node, memberInfo, isReadonly, ref variable);
+                // Static method
+                MethodInfo methodInfo = memberDeclaringType.GetMethod(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                string name = $"{methodInfo.DeclaringType.Name}_{methodInfo.Name}";
+                method = (name, methodInfo);
+
+                return SyntaxFactory.IdentifierName(name).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
             }
 
             return node;

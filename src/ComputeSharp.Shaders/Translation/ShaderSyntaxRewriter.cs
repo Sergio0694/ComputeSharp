@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using ComputeSharp.Shaders.Extensions;
 using ComputeSharp.Shaders.Translation.Models;
 using Microsoft.CodeAnalysis;
@@ -29,6 +30,13 @@ namespace ComputeSharp.Shaders.Translation
         /// Gets the mapping of captured static members used by the target code
         /// </summary>
         public IReadOnlyDictionary<string, ReadableMember> StaticMembers => _StaticMembers;
+
+        private readonly Dictionary<string, MethodInfo> _StaticMethods = new Dictionary<string, MethodInfo>();
+
+        /// <summary>
+        /// Gets the mapping of captured static methods used by the target code
+        /// </summary>
+        public IReadOnlyDictionary<string, MethodInfo> StaticMethods => _StaticMethods;
 
         /// <inheritdoc/>
         public override SyntaxNode VisitParameter(ParameterSyntax node)
@@ -83,12 +91,16 @@ namespace ComputeSharp.Shaders.Translation
         public override SyntaxNode VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
         {
             node = (MemberAccessExpressionSyntax)base.VisitMemberAccessExpression(node);
-            SyntaxNode syntaxNode = node.ReplaceMember(SemanticModel, out var variable);
+            SyntaxNode syntaxNode = node.ReplaceMember(SemanticModel, out var variable, out var method);
 
-            // Register the captured member, if any
+            // Register the captured members, if any
             if (variable.HasValue && !_StaticMembers.ContainsKey(variable.Value.Name))
             {
                 _StaticMembers.Add(variable.Value.Name, variable.Value.MemberInfo);
+            }
+            if (method.HasValue && !_StaticMethods.ContainsKey(method.Value.Name))
+            {
+                _StaticMethods.Add(method.Value.Name, method.Value.MethodInfo);
             }
 
             return syntaxNode;
