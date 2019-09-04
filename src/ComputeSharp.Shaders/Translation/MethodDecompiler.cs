@@ -108,6 +108,30 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <summary>
+        /// Decompiles a method or the whole declaring type
+        /// </summary>
+        /// <param name="methodInfo">The target <see cref="MethodInfo"/> to decompile</param>
+        /// <param name="methodOnly">Specifies whether or not to force the decompilation of just the given method, even if not static</param>
+        /// <returns>The decompiled source code</returns>
+        [Pure]
+        private string DecompileMethodOrDeclaringType(MethodInfo methodInfo, bool methodOnly = false)
+        {
+            // Get the handle of the containing type method
+            string assemblyPath = methodInfo.DeclaringType?.Assembly.Location ?? throw new InvalidOperationException();
+            int metadataToken = methodInfo.IsStatic || methodOnly ? methodInfo.MetadataToken : methodInfo.DeclaringType.MetadataToken;
+            EntityHandle typeHandle = MetadataTokenHelpers.TryAsEntityHandle(metadataToken) ?? throw new InvalidOperationException();
+
+            // Get or create a decompiler for the target assembly, and decompile the type
+            if (!Decompilers.TryGetValue(assemblyPath, out CSharpDecompiler decompiler))
+            {
+                decompiler = CreateDecompiler(assemblyPath);
+                Decompilers.Add(assemblyPath, decompiler);
+            }
+
+            return decompiler.DecompileAsString(typeHandle);
+        }
+
+        /// <summary>
         /// A <see cref="Regex"/> used to preprocess the closure type declarations for both lambda expressions and local methods
         /// </summary>
         private static readonly Regex ClosureTypeDeclarationRegex = new Regex(@"(?<=private sealed class )<\w*>[\w_]+", RegexOptions.Compiled);
@@ -127,29 +151,17 @@ namespace ComputeSharp.Shaders.Translation
         {
             lock (Lock)
             {
-                // Get the handle of the containing type method
-                string assemblyPath = methodInfo.DeclaringType?.Assembly.Location ?? throw new InvalidOperationException();
-                EntityHandle typeHandle = MetadataTokenHelpers.TryAsEntityHandle(methodInfo.DeclaringType.MetadataToken) ?? throw new InvalidOperationException();
-
-                // Get or create a decompiler for the target assembly, and decompile the type
-                if (!Decompilers.TryGetValue(assemblyPath, out CSharpDecompiler decompiler))
-                {
-                    decompiler = CreateDecompiler(assemblyPath);
-                    Decompilers.Add(assemblyPath, decompiler);
-                }
-
                 // Decompile the method source and fix the method declaration for local methods converted to lambdas
                 string
-                    sourceCode = decompiler.DecompileAsString(typeHandle),
+                    sourceCode = DecompileMethodOrDeclaringType(methodInfo),
                     typeFixedCode = ClosureTypeDeclarationRegex.Replace(sourceCode, "Shader"),
                     methodFixedCode = LambdaMethodDeclarationRegex.Replace(typeFixedCode, m => $"// {m.Value}{Environment.NewLine}    internal void Main");
 
                 // Workaround for some local methods not being decompiled correctly
                 if (!methodFixedCode.Contains("internal void Main"))
                 {
-                    EntityHandle methodHandle = MetadataTokenHelpers.TryAsEntityHandle(methodInfo.MetadataToken) ?? throw new InvalidOperationException();
                     string
-                        methodOnlySourceCode = decompiler.DecompileAsString(methodHandle),
+                        methodOnlySourceCode = DecompileMethodOrDeclaringType(methodInfo, true),
                         methodOnlyFixedSourceCode = LambdaMethodDeclarationRegex.Replace(methodOnlySourceCode, m => $"// {m.Value}{Environment.NewLine}    internal void Main"),
                         methodOnlyIndentedSourceCode = $"    {methodOnlyFixedSourceCode.Replace(Environment.NewLine, $"{Environment.NewLine}    ")}";
 
