@@ -208,7 +208,8 @@ namespace ComputeSharp.Shaders.Translation
         {
             string
                 sourceCode = DecompileMethodOrDeclaringType(methodInfo),
-                inFixedSourceCode = Regex.Replace(sourceCode, @"(?<!\w)in ", string.Empty),
+                commentedSourceCode = $"// {methodInfo.Name}{Environment.NewLine}{sourceCode}",
+                inFixedSourceCode = Regex.Replace(commentedSourceCode, @"(?<!\w)in ", string.Empty),
                 outFixedSourceCode = RefactorInlineOutDeclarations(inFixedSourceCode, methodInfo.Name);
 
             return outFixedSourceCode;
