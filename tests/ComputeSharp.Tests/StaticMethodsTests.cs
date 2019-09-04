@@ -19,6 +19,8 @@ namespace ComputeSharp.Tests
         public static int Sum(Float4 x) => (int)(x.X + x.Y + x.Z + x.W);
 
         public static void Assign(int x, out int y) => y = x;
+
+        public static void ReadAndSquare(ref int x) => x *= x;
     }
 
     [TestClass]
@@ -74,6 +76,19 @@ namespace ComputeSharp.Tests
             int[] result = buffer.GetData();
 
             Assert.IsTrue(result[0] == 7);
+        }
+
+        [TestMethod]
+        public void IntToRefIntFunc()
+        {
+            int[] data = { 3 };
+            using ReadWriteBuffer<int> buffer = Gpu.Default.AllocateReadWriteBuffer(data);
+
+            Gpu.Default.For(1, id => StaticMethodsContainer.ReadAndSquare(ref buffer[0]));
+
+            buffer.GetData(data);
+
+            Assert.IsTrue(data[0] == 9);
         }
     }
 }
