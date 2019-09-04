@@ -50,3 +50,13 @@ void CSMain(uint3 {{ThreadsIdsVariableName}} : SV_DispatchThreadId)
         {{ThreadsIdsVariableName}}.z < __z__) // Automatic bounds check
 {{&ShaderBody}}
 }
+
+{{!Shader private functions}}
+{{#FunctionsList}}
+// {{FunctionCsharpReturnType}} {{FunctionFullName}}({{FunctionCsharpParameters}})
+{{ReturnType}} {{FunctionName}}(
+    {{#ParametersList}}
+    {{ParameterHlslType}} {{ParameterName}} {{^IsLastParameter}},{{/IsLastParameter}}
+    {{/ParametersList}})
+{{FunctionBody}}
+{{/FunctionsList}}
