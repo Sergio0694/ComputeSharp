@@ -208,11 +208,16 @@ namespace ComputeSharp.Shaders.Translation
         {
             string
                 sourceCode = DecompileMethodOrDeclaringType(methodInfo),
+                prototype = sourceCode.Split(Environment.NewLine)[0],
                 commentedSourceCode = $"// {methodInfo.Name}{Environment.NewLine}{sourceCode}",
                 inFixedSourceCode = Regex.Replace(commentedSourceCode, @"(?<!\w)in ", string.Empty),
                 outFixedSourceCode = RefactorInlineOutDeclarations(inFixedSourceCode, methodInfo.Name);
 
-            return outFixedSourceCode;
+            // Restore the original prototype, as some out parameters might have been removed
+            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(outFixedSourceCode);
+            BlockSyntax block = syntaxTree.GetRoot().DescendantNodes().OfType<BlockSyntax>().First();
+
+            return $"// {methodInfo.Name}{Environment.NewLine}{prototype}{Environment.NewLine}{block.ToFullString()}";
         }
 
         /// <summary>
@@ -319,14 +324,14 @@ namespace ComputeSharp.Shaders.Translation
                       argument.Expression.IsKind(SyntaxKind.DeclarationExpression)
                 let match = Regex.Match(argument.Expression.ToFullString(), @"([\w.]+) ([\w_]+)")
                 let mappedType = HlslKnownTypes.GetMappedName(match.Groups[1].Value)
-                let declatation = $"{mappedType} {match.Groups[2].Value} = ({mappedType})0;"
-                select (match.Groups[1].Value, match.Groups[2].Value, declatation)).ToArray();
+                let declaration = $"{mappedType} {match.Groups[2].Value} = ({mappedType})0;"
+                select declaration).ToArray();
 
             // Insert the explicit declarations at the start of the method
             int start = rootNode.Body.ChildNodes().First().SpanStart;
-            foreach (var item in outs.Reverse())
+            foreach (var declaration in outs.Reverse())
             {
-                source = source.Insert(start, $"{item.declatation}{Environment.NewLine}        ");
+                source = source.Insert(start, $"{declaration}{Environment.NewLine}        ");
             }
 
             // Remove the out keyword from the source
