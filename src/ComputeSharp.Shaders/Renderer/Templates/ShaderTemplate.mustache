@@ -39,6 +39,17 @@ cbuffer _{{FieldName}} : register(b{{BufferIndex}})
 {{/IsReadWriteBuffer}}
 {{/BuffersList}}
 
+{{!Shader private functions}}
+{{#FunctionsList}}
+// {{FunctionCsharpReturnType}} {{FunctionFullName}}({{FunctionCsharpParameters}})
+{{ReturnType}} {{FunctionName}}(
+    {{#ParametersList}}
+    {{ParameterType}} {{ParameterName}} {{^IsLastParameter}},{{/IsLastParameter}}
+    {{/ParametersList}}
+    )
+{{FunctionBody}}
+{{/FunctionsList}}
+
 {{!Shader entry point}}
 // Shader body
 [Shader("compute")]
@@ -50,13 +61,3 @@ void CSMain(uint3 {{ThreadsIdsVariableName}} : SV_DispatchThreadId)
         {{ThreadsIdsVariableName}}.z < __z__) // Automatic bounds check
 {{&ShaderBody}}
 }
-
-{{!Shader private functions}}
-{{#FunctionsList}}
-// {{FunctionCsharpReturnType}} {{FunctionFullName}}({{FunctionCsharpParameters}})
-{{ReturnType}} {{FunctionName}}(
-    {{#ParametersList}}
-    {{ParameterHlslType}} {{ParameterName}} {{^IsLastParameter}},{{/IsLastParameter}}
-    {{/ParametersList}})
-{{FunctionBody}}
-{{/FunctionsList}}

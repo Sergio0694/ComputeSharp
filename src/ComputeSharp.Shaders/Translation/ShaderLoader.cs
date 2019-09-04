@@ -325,7 +325,7 @@ namespace ComputeSharp.Shaders.Translation
             // Get the final function info instance
             FunctionInfo functionInfo = new FunctionInfo(
                 methodInfo.ReturnType,
-                name,
+                $"{methodInfo.DeclaringType.FullName}{Type.Delimiter}{methodInfo.Name}",
                 string.Join(", ", methodInfo.GetParameters().Select(p => $"{p.ParameterType.ToFriendlyString()} {p.Name}")),
                 root.ReturnType.ToFullString(),
                 name,
