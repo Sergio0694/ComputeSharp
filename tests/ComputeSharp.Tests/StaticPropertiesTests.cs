@@ -33,6 +33,11 @@ namespace ComputeSharp.Tests
         /// A <see langword="static"/> <see cref="ReadOnlyBuffer{T}"/> property
         /// </summary>
         public static ReadOnlyBuffer<float> StaticBuffer { get; set; } = Gpu.Default.AllocateReadOnlyBuffer(new[] { 3.14f, 7.77f });
+
+        /// <summary>
+        /// A <see langword="static"/> <see cref="Func{T,TResult}"/> property
+        /// </summary>
+        public static Func<float, float> SquareFunc { get; } = x => x * x;
     }
 
     [TestClass]
