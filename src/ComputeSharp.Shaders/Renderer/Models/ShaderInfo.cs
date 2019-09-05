@@ -51,5 +51,10 @@ namespace ComputeSharp.Shaders.Renderer.Models
         /// Gets or sets the list of static functions used by the shader
         /// </summary>
         public IReadOnlyList<FunctionInfo> FunctionsList { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list of local (implicit) functions used by the shader
+        /// </summary>
+        public IReadOnlyList<LocalFunctionInfo> LocalFunctionsList { get; set; }
     }
 }

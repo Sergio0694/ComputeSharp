@@ -76,7 +76,8 @@ namespace ComputeSharp.Shaders
                     NumThreadsZ = threadsZ,
                     ThreadsIdsVariableName = shaderLoader.ThreadsIdsVariableName,
                     ShaderBody = shaderLoader.MethodBody,
-                    FunctionsList = shaderLoader.FunctionsList
+                    FunctionsList = shaderLoader.FunctionsList,
+                    LocalFunctionsList = shaderLoader.LocalFunctionsList
                 };
                 string shaderSource = ShaderRenderer.Instance.Render(shaderInfo);
 

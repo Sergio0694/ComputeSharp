@@ -148,6 +148,13 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         public IReadOnlyList<FunctionInfo> FunctionsList => _FunctionsList;
 
+        private readonly List<LocalFunctionInfo> _LocalFunctionsList = new List<LocalFunctionInfo>();
+
+        /// <summary>
+        /// Gets the collection of <see cref="LocalFunctionInfo"/> items for the shader
+        /// </summary>
+        public IReadOnlyList<LocalFunctionInfo> LocalFunctionsList => _LocalFunctionsList;
+
         /// <summary>
         /// Gets a unique hash code for a given <see cref="Action{T}"/>
         /// </summary>
@@ -159,8 +166,9 @@ namespace ComputeSharp.Shaders.Translation
 
             foreach (FieldInfo fieldInfo in action.Method.DeclaringType.GetFields())
             {
-                if (fieldInfo.FieldType.IsClass && fieldInfo.FieldType.IsGenericType &&
-                    fieldInfo.GetValue(action.Target) is Delegate func && func.Method.IsStatic &&
+                if (fieldInfo.FieldType.IsDelegate() &&
+                    fieldInfo.GetValue(action.Target) is Delegate func &&
+                    (func.Method.IsStatic || func.Method.DeclaringType.IsStatelessDelegateContainer()) &&
                     (HlslKnownTypes.IsKnownScalarType(func.Method.ReturnType) || HlslKnownTypes.IsKnownVectorType(func.Method.ReturnType)) &&
                     fieldInfo.FieldType.GenericTypeArguments.All(type => HlslKnownTypes.IsKnownScalarType(type) ||
                                                                          HlslKnownTypes.IsKnownVectorType(type)))
@@ -270,8 +278,9 @@ namespace ComputeSharp.Shaders.Translation
                     LoadFieldInfo(fieldInfo, null, updatedParents);
                 }
             }
-            else if (fieldType.IsClass && fieldType.IsGenericType &&
-                     memberInfo.GetValue(Action.Target) is Delegate func && func.Method.IsStatic &&
+            else if (fieldType.IsDelegate() &&
+                     memberInfo.GetValue(Action.Target) is Delegate func &&
+                     (func.Method.IsStatic || func.Method.DeclaringType.IsStatelessDelegateContainer()) &&
                      (HlslKnownTypes.IsKnownScalarType(func.Method.ReturnType) || HlslKnownTypes.IsKnownVectorType(func.Method.ReturnType)) &&
                      fieldType.GenericTypeArguments.All(type => HlslKnownTypes.IsKnownScalarType(type) ||
                                                                 HlslKnownTypes.IsKnownVectorType(type)))
@@ -292,6 +301,11 @@ namespace ComputeSharp.Shaders.Translation
             // Rewrite the shader method (eg. to fix the type declarations)
             ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel);
             root = (MethodDeclarationSyntax)syntaxRewriter.Visit(root);
+
+            // Extract the implicit local functions
+            var locals = root.DescendantNodes().OfType<LocalFunctionStatementSyntax>().ToArray();
+            root = root.RemoveNodes(locals, SyntaxRemoveOptions.KeepNoTrivia);
+            _LocalFunctionsList.AddRange(locals.Select(local => new LocalFunctionInfo(local.ToFullString().RemoveLeftPadding().Trim(' ', '\r', '\n'))));
 
             // Register the captured static members
             foreach (var member in syntaxRewriter.StaticMembers)

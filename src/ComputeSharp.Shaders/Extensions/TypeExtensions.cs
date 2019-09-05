@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace ComputeSharp.Shaders.Extensions
 {
@@ -10,6 +12,23 @@ namespace ComputeSharp.Shaders.Extensions
     /// </summary>
     internal static class TypeExtensions
     {
+        /// <summary>
+        /// Gets whether or not the input <see cref="Type"/> represents a <see cref="Delegate"/>
+        /// </summary>
+        /// <param name="type">The input type to analyze</param>
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsDelegate(this Type type) => type.IsClass &&
+                                                         type.IsSubclassOf(typeof(Delegate));
+
+        /// <summary>
+        /// Gets whether or not the input <see cref="Type"/> represents a <see cref="Delegate"/> with no captured variables
+        /// </summary>
+        /// <param name="type">The input type to analyze</param>
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsStatelessDelegateContainer(this Type type) => type.GetFields(BindingFlags.Static | BindingFlags.Public).Length > 0;
+
         /// <summary>
         /// The mapping of supported known types to display string
         /// </summary>

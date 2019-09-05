@@ -75,5 +75,65 @@ namespace ComputeSharp.Tests
 
             Assert.IsTrue(MathF.Abs(result[0] - expected) < 0.0001f);
         }
+
+        public delegate float Squarer(float x);
+
+        [TestMethod]
+        public void CustomStaticDelegate()
+        {
+            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
+
+            Squarer square = StaticMethodsContainer.Square;
+
+            Gpu.Default.For(1, id => buffer[0] = square(3));
+
+            float[] result = buffer.GetData();
+
+            Assert.IsTrue(MathF.Abs(result[0] - 9) < 0.0001f);
+        }
+
+        [TestMethod]
+        public void InlineStatelessDelegate()
+        {
+            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
+
+            Func<float, float> f = x => x * x;
+
+            Gpu.Default.For(1, id => buffer[0] = f(3));
+
+            float[] result = buffer.GetData();
+
+            Assert.IsTrue(MathF.Abs(result[0] - 9) < 0.0001f);
+        }
+
+        [TestMethod]
+        public void StatelessLocalFunctionToDelegate()
+        {
+            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
+
+            float Func(float x) => x * x;
+
+            Func<float, float> f = Func;
+
+            Gpu.Default.For(1, id => buffer[0] = f(3));
+
+            float[] result = buffer.GetData();
+
+            Assert.IsTrue(MathF.Abs(result[0] - 9) < 0.0001f);
+        }
+
+        [TestMethod]
+        public void StatelessLocalFunction()
+        {
+            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
+
+            float f(float x) => x * x;
+
+            Gpu.Default.For(1, id => buffer[0] = f(3));
+
+            float[] result = buffer.GetData();
+
+            Assert.IsTrue(MathF.Abs(result[0] - 9) < 0.0001f);
+        }
     }
 }
