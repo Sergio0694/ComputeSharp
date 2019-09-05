@@ -149,6 +149,30 @@ namespace ComputeSharp.Shaders.Translation
         public IReadOnlyList<FunctionInfo> FunctionsList => _FunctionsList;
 
         /// <summary>
+        /// Gets a unique hash code for a given <see cref="Action{T}"/>
+        /// </summary>
+        /// <param name="action">The input <see cref="Action{T}"/> instance to inspect</param>
+        [Pure]
+        public static int GetHashCode(Action<ThreadIds> action)
+        {
+            int hashcode = action.Method.GetHashCode();
+
+            foreach (FieldInfo fieldInfo in action.Method.DeclaringType.GetFields())
+            {
+                if (fieldInfo.FieldType.IsClass && fieldInfo.FieldType.IsGenericType &&
+                    fieldInfo.GetValue(action.Target) is Delegate func && func.Method.IsStatic &&
+                    (HlslKnownTypes.IsKnownScalarType(func.Method.ReturnType) || HlslKnownTypes.IsKnownVectorType(func.Method.ReturnType)) &&
+                    fieldInfo.FieldType.GenericTypeArguments.All(type => HlslKnownTypes.IsKnownScalarType(type) ||
+                                                                         HlslKnownTypes.IsKnownVectorType(type)))
+                {
+                    hashcode = unchecked(hashcode * 17 + func.Method.GetHashCode());
+                }
+            }
+
+            return hashcode;
+        }
+
+        /// <summary>
         /// Loads and processes an input <see cref="Action{T}"/>
         /// </summary>
         /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
@@ -247,7 +271,6 @@ namespace ComputeSharp.Shaders.Translation
                 }
             }
             else if (fieldType.IsClass && fieldType.IsGenericType &&
-                     fieldType.IsSubclassOf(typeof(Delegate)) &&
                      memberInfo.GetValue(Action.Target) is Delegate func && func.Method.IsStatic &&
                      (HlslKnownTypes.IsKnownScalarType(func.Method.ReturnType) || HlslKnownTypes.IsKnownVectorType(func.Method.ReturnType)) &&
                      fieldType.GenericTypeArguments.All(type => HlslKnownTypes.IsKnownScalarType(type) ||
