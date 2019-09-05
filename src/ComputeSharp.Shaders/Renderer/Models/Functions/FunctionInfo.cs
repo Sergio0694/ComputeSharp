@@ -7,7 +7,7 @@ namespace ComputeSharp.Shaders.Renderer.Models.Functions
     /// <summary>
     /// A <see langword="class"/> that contains info on a shader function
     /// </summary>
-    internal class FunctionInfo
+    internal sealed class FunctionInfo
     {
         /// <summary>
         /// Gets the return type of the current function in the C# source

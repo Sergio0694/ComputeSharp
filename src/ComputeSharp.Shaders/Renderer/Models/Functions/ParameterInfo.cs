@@ -8,7 +8,7 @@ namespace ComputeSharp.Shaders.Renderer.Models.Functions
     /// <summary>
     /// A <see langword="class"/> that contains info on a function parameter
     /// </summary>
-    internal class ParameterInfo
+    internal sealed class ParameterInfo
     {
         /// <summary>
         /// Gets the modifier to use for the current parameter
