@@ -55,7 +55,9 @@ If the shader in C# is capturing some local variable, those will be automaticall
 
 ✅ `static` properties, same as with fields
 
-✅ `Func<T>` or any delegate with a valid HLSL signature, with the target method being `static`
+✅ `Func<T>`s or delegates with a valid HLSL signature, with the target method being `static`
+
+✅ `Func<T>`s, local methods or delegates with no captured variables
 
 ## Advanced usage
 
