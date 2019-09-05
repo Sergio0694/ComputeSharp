@@ -38,10 +38,10 @@ cbuffer _{{FieldName}} : register(b{{BufferIndex}})
 {{&FieldHlslType}} {{FieldName}} : register(u{{BufferIndex}});
 {{/IsReadWriteBuffer}}
 {{/BuffersList}}
+{{#FunctionsList}}
 
 {{!Shader private functions}}
-{{#FunctionsList}}
-// {{FunctionCsharpReturnType}} {{FunctionFullName}}({{FunctionCsharpParameters}})
+// {{FunctionCsharpReturnType}} {{&FunctionFullName}}({{FunctionCsharpParameters}})
 {{ReturnType}} {{FunctionName}}({{#ParametersList}}{{ParameterModifier}} {{ParameterType}} {{ParameterName}}{{^IsLastParameter}}, {{/IsLastParameter}}{{/ParametersList}})
 {{FunctionBody}}
 {{/FunctionsList}}
