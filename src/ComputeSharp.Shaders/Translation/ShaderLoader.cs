@@ -299,7 +299,7 @@ namespace ComputeSharp.Shaders.Translation
             MethodDecompiler.Instance.GetSyntaxTree(Action.Method, MethodType.Closure, out MethodDeclarationSyntax root, out SemanticModel semanticModel);
 
             // Rewrite the shader method (eg. to fix the type declarations)
-            ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel);
+            ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel, ShaderType);
             root = (MethodDeclarationSyntax)syntaxRewriter.Visit(root);
 
             // Extract the implicit local functions
@@ -340,7 +340,7 @@ namespace ComputeSharp.Shaders.Translation
             MethodDecompiler.Instance.GetSyntaxTree(methodInfo, MethodType.Static, out MethodDeclarationSyntax root, out SemanticModel semanticModel);
 
             // Rewrite the method
-            ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel);
+            ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel, methodInfo.DeclaringType);
             root = (MethodDeclarationSyntax)syntaxRewriter.Visit(root);
 
             // Register the captured static members

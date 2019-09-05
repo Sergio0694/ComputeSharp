@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using ComputeSharp.Shaders.Extensions;
 using ComputeSharp.Shaders.Translation.Models;
@@ -19,10 +20,19 @@ namespace ComputeSharp.Shaders.Translation
         private readonly SemanticModel SemanticModel;
 
         /// <summary>
+        /// The declaring type that hosts the root from which the current syntax tree is inspected
+        /// </summary>
+        private readonly Type DeclaringType;
+
+        /// <summary>
         /// Creates a new <see cref="ShaderSyntaxRewriter"/> instance with the specified parameters
         /// </summary>
         /// <param name="semanticModel"></param>
-        public ShaderSyntaxRewriter(SemanticModel semanticModel) => SemanticModel = semanticModel;
+        public ShaderSyntaxRewriter(SemanticModel semanticModel, Type declaringType)
+        {
+            SemanticModel = semanticModel;
+            DeclaringType = declaringType;
+        }
 
         private readonly Dictionary<string, ReadableMember> _StaticMembers = new Dictionary<string, ReadableMember>();
 
@@ -117,6 +127,21 @@ namespace ComputeSharp.Shaders.Translation
             }
 
             return syntaxNode;
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode VisitInvocationExpression(InvocationExpressionSyntax node)
+        {
+            node = (InvocationExpressionSyntax)base.VisitInvocationExpression(node);
+            node = node.ReplaceInvocation(DeclaringType, out var method);
+
+            // Register the captured member, if present
+            if (method.HasValue && !_StaticMethods.ContainsKey(method.Value.Name))
+            {
+                _StaticMethods.Add(method.Value.Name, method.Value.MethodInfo);
+            }
+
+            return node;
         }
 
         /// <inheritdoc/>

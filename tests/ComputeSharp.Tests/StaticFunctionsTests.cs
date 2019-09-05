@@ -135,5 +135,19 @@ namespace ComputeSharp.Tests
 
             Assert.IsTrue(MathF.Abs(result[0] - 9) < 0.0001f);
         }
+
+        public static float Square(float x) => x * x;
+
+        [TestMethod]
+        public void StaticMethodInSameClass()
+        {
+            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
+
+            Gpu.Default.For(1, id => buffer[0] = Square(3));
+
+            float[] result = buffer.GetData();
+
+            Assert.IsTrue(MathF.Abs(result[0] - 9) < 0.0001f);
+        }
     }
 }

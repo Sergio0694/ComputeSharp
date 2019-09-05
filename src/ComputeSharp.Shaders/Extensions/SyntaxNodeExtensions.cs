@@ -169,6 +169,33 @@ namespace ComputeSharp.Shaders.Extensions
         }
 
         /// <summary>
+        /// Checks a <see cref="InvocationExpressionSyntax"/> instance and replaces it to be HLSL compatible, if needed
+        /// </summary>
+        /// <param name="node">The input <see cref="InvocationExpressionSyntax"/> to check and modify if needed</param>
+        /// <param name="method">The info on parsed static methods, if any</param>
+        /// <returns>A <see cref="SyntaxNode"/> instance that is compatible with HLSL</returns>
+        [Pure]
+        public static InvocationExpressionSyntax ReplaceInvocation(this InvocationExpressionSyntax node, Type declaringType, out (string Name, MethodInfo MethodInfo)? method)
+        {
+            // Set the method to null
+            method = null;
+
+            string cSharpName = node.Expression.ToString();
+            while ((declaringType = declaringType.DeclaringType) != null)
+            {
+                MethodInfo methodInfo = declaringType.GetMethod(cSharpName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                if (methodInfo == null) return node;
+
+                string name = $"{methodInfo.DeclaringType.Name}_{methodInfo.Name}";
+                method = (name, methodInfo);
+
+                return SyntaxFactory.InvocationExpression(SyntaxFactory.ParseExpression(name), node.ArgumentList).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
+            }
+
+            return node;
+        }
+
+        /// <summary>
         /// Processes a loaded static member, either a field or a property
         /// </summary>
         /// <param name="node">The input <see cref="MemberAccessExpressionSyntax"/> to check and modify if needed</param>
