@@ -35,7 +35,7 @@ cbuffer _{{FieldName}} : register(b{{BufferIndex}})
 
 {{!Read write buffer}}
 // {{&FieldCsharpType}} buffer "{{FieldName}}"
-{{&FieldHlslType}} {{FieldName}} : SV_DispatchThreadId : register(u{{BufferIndex}});
+{{&FieldHlslType}} {{FieldName}} : register(u{{BufferIndex}});
 {{/IsReadWriteBuffer}}
 {{/BuffersList}}
 
