@@ -305,7 +305,14 @@ namespace ComputeSharp.Shaders.Translation
             // Extract the implicit local functions
             var locals = root.DescendantNodes().OfType<LocalFunctionStatementSyntax>().ToArray();
             root = root.RemoveNodes(locals, SyntaxRemoveOptions.KeepNoTrivia);
-            _LocalFunctionsList.AddRange(locals.Select(local => new LocalFunctionInfo(local.ToFullString().RemoveLeftPadding().Trim(' ', '\r', '\n'))));
+            foreach (var local in locals)
+            {
+                string alignedLocal = local.ToFullString().RemoveLeftPadding().Trim(' ', '\r', '\n');
+                alignedLocal = Regex.Replace(alignedLocal, @"(?<=\W)(\d+)[fFdD]", m => m.Groups[1].Value);
+                alignedLocal = HlslKnownKeywords.GetMappedText(alignedLocal);
+
+                _LocalFunctionsList.Add(new LocalFunctionInfo(alignedLocal));
+            }
 
             // Register the captured static members
             foreach (var member in syntaxRewriter.StaticMembers)
