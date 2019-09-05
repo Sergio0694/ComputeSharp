@@ -75,5 +75,37 @@ namespace ComputeSharp.Tests
 
             Assert.IsTrue(MathF.Abs(result[0] - expected) < 0.0001f);
         }
+
+        public delegate float Squarer(float x);
+
+        [TestMethod]
+        public void CustomStaticDelegate()
+        {
+            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
+
+            Squarer square = StaticMethodsContainer.Square;
+
+            Gpu.Default.For(1, id => buffer[0] = square(3));
+
+            float[] result = buffer.GetData();
+
+            Assert.IsTrue(MathF.Abs(result[0] - 9) < 0.0001f);
+        }
+
+        [TestMethod]
+        public void InlineStatelessDelegate()
+        {
+            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
+
+            Func<float, float> f = x => x * x;
+
+            Func<int, float> invert = x => -x;
+
+            Gpu.Default.For(1, id => buffer[0] = f(3) + invert(8));
+
+            float[] result = buffer.GetData();
+
+            Assert.IsTrue(MathF.Abs(result[0] - 1) < 0.0001f);
+        }
     }
 }
