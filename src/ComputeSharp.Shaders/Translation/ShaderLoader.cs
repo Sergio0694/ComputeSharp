@@ -159,7 +159,7 @@ namespace ComputeSharp.Shaders.Translation
 
             foreach (FieldInfo fieldInfo in action.Method.DeclaringType.GetFields())
             {
-                if (fieldInfo.FieldType.IsClass && fieldInfo.FieldType.IsGenericType &&
+                if (fieldInfo.FieldType.IsDelegate() &&
                     fieldInfo.GetValue(action.Target) is Delegate func && func.Method.IsStatic &&
                     (HlslKnownTypes.IsKnownScalarType(func.Method.ReturnType) || HlslKnownTypes.IsKnownVectorType(func.Method.ReturnType)) &&
                     fieldInfo.FieldType.GenericTypeArguments.All(type => HlslKnownTypes.IsKnownScalarType(type) ||
@@ -270,7 +270,7 @@ namespace ComputeSharp.Shaders.Translation
                     LoadFieldInfo(fieldInfo, null, updatedParents);
                 }
             }
-            else if (fieldType.IsClass && fieldType.IsGenericType &&
+            else if (fieldType.IsDelegate() &&
                      memberInfo.GetValue(Action.Target) is Delegate func && func.Method.IsStatic &&
                      (HlslKnownTypes.IsKnownScalarType(func.Method.ReturnType) || HlslKnownTypes.IsKnownVectorType(func.Method.ReturnType)) &&
                      fieldType.GenericTypeArguments.All(type => HlslKnownTypes.IsKnownScalarType(type) ||
