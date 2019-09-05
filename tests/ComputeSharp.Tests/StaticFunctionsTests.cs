@@ -121,5 +121,19 @@ namespace ComputeSharp.Tests
 
             Assert.IsTrue(MathF.Abs(result[0] - 9) < 0.0001f);
         }
+
+        [TestMethod]
+        public void StatelessLocalFunction()
+        {
+            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
+
+            float f(float x) => x * x;
+
+            Gpu.Default.For(1, id => buffer[0] = f(3));
+
+            float[] result = buffer.GetData();
+
+            Assert.IsTrue(MathF.Abs(result[0] - 9) < 0.0001f);
+        }
     }
 }
