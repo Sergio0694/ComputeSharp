@@ -273,7 +273,6 @@ namespace ComputeSharp.Shaders.Translation
                 // Captured static Func<T> (and available generic type combinations)
                 LoadStaticMethodSource(fieldName, func.Method);
             }
-            else throw new InvalidOperationException($"Invalid captured variable \"{fieldName}\" of type {fieldType}");
         }
 
         /// <summary>
