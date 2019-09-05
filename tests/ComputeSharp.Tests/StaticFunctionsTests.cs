@@ -99,13 +99,27 @@ namespace ComputeSharp.Tests
 
             Func<float, float> f = x => x * x;
 
-            Func<int, float> invert = x => -x;
-
-            Gpu.Default.For(1, id => buffer[0] = f(3) + invert(8));
+            Gpu.Default.For(1, id => buffer[0] = f(3));
 
             float[] result = buffer.GetData();
 
-            Assert.IsTrue(MathF.Abs(result[0] - 1) < 0.0001f);
+            Assert.IsTrue(MathF.Abs(result[0] - 9) < 0.0001f);
+        }
+
+        [TestMethod]
+        public void StatelessLocalFunctionToDelegate()
+        {
+            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
+
+            float Func(float x) => x * x;
+
+            Func<float, float> f = Func;
+
+            Gpu.Default.For(1, id => buffer[0] = f(3));
+
+            float[] result = buffer.GetData();
+
+            Assert.IsTrue(MathF.Abs(result[0] - 9) < 0.0001f);
         }
     }
 }
