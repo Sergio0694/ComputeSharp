@@ -175,5 +175,27 @@ namespace ComputeSharp.Tests
 
             Assert.IsTrue(MathF.Abs(result[0] - 9) < 0.0001f);
         }
+
+        [TestMethod]
+        public void ReadmeSample()
+        {
+            float[] buffer = { 3 };
+            using ReadWriteBuffer<float> xBuffer = Gpu.Default.AllocateReadWriteBuffer(buffer);
+
+            static float Sigmoid(float x) => 1 / (1 + Hlsl.Exp(-x));
+
+            void Kernel(ThreadIds id)
+            {
+                int offset = id.X + id.Y * 1;
+                float pow = Hlsl.Pow(xBuffer[offset], 2); // 9
+                xBuffer[offset] = Sigmoid(pow); // 0.9998766
+            }
+
+            Gpu.Default.For(1, Kernel);
+
+            float[] result = xBuffer.GetData();
+
+            Assert.IsTrue(MathF.Abs(result[0] - 0.9998766f) < 0.0001f);
+        }
     }
 }
