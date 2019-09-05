@@ -172,6 +172,7 @@ namespace ComputeSharp.Shaders.Extensions
         /// Checks a <see cref="InvocationExpressionSyntax"/> instance and replaces it to be HLSL compatible, if needed
         /// </summary>
         /// <param name="node">The input <see cref="InvocationExpressionSyntax"/> to check and modify if needed</param>
+        /// <param name="declaringType">The <see cref="Type"/> in which the input syntax tree is declared in</param>
         /// <param name="variable">The info on parsed static members, if any</param>
         /// <param name="method">The info on parsed static methods, if any</param>
         /// <returns>A <see cref="SyntaxNode"/> instance that is compatible with HLSL</returns>
@@ -183,15 +184,11 @@ namespace ComputeSharp.Shaders.Extensions
             method = null;
 
             // Explore the nested classes from bottom to top
-            string cSharpName = node.Expression.ToString();
-            while ((declaringType = declaringType.DeclaringType) != null)
+            if (declaringType.TryFindAncestorMember(node.Expression.ToString(), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, out var result))
             {
-                MemberInfo[] memberInfos = declaringType.GetMember(cSharpName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-                if (!(memberInfos.FirstOrDefault() is MemberInfo first)) continue;
-
                 // If a static method or delegate is found, track it
-                string name = $"{declaringType.Name}_{first.Name}";
-                switch (first)
+                string name = $"{result.Value.DeclaringType.Name}_{result.Value.MemberInfo.Name}";
+                switch (result.Value.MemberInfo)
                 {
                     case FieldInfo fieldInfo:
                         variable = (name, fieldInfo);
@@ -200,10 +197,10 @@ namespace ComputeSharp.Shaders.Extensions
                         variable = (name, propertyInfo);
                         break;
                     case MethodInfo methodInfo:
-                        
+
                         method = (name, methodInfo);
                         return SyntaxFactory.InvocationExpression(SyntaxFactory.ParseExpression(name), node.ArgumentList).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
-                    default: throw new InvalidOperationException($"Invalid symbol kind: {memberInfos.First().GetType()}");
+                    default: throw new InvalidOperationException($"Invalid symbol kind: {result.Value.MemberInfo.GetType()}");
                 }
 
                 // Return the mapped expression
