@@ -266,10 +266,14 @@ namespace ComputeSharp.Shaders.Translation
                      fieldTypeDefinition == typeof(Func<,,,,,,,,,,,,,>) ||
                      fieldTypeDefinition == typeof(Func<,,,,,,,,,,,,,,>) ||
                      fieldTypeDefinition == typeof(Func<,,,,,,,,,,,,,,,>) ||
-                     fieldTypeDefinition == typeof(Func<,,,,,,,,,,,,,,,,>)))
+                     fieldTypeDefinition == typeof(Func<,,,,,,,,,,,,,,,,>)) &&
+                     fieldType.GenericTypeArguments.All(type => HlslKnownTypes.IsKnownScalarType(type) ||
+                                                                HlslKnownTypes.IsKnownVectorType(type)))
             {
+                // Captured static Func<T> (and available generic type combinations)
                 LoadStaticMethodSource(fieldName, func.Method);
             }
+            else throw new InvalidOperationException($"Invalid captured variable \"{fieldName}\" of type {fieldType}");
         }
 
         /// <summary>
