@@ -13,7 +13,6 @@ using ComputeSharp.Shaders.Renderer.Models.Functions;
 using ComputeSharp.Shaders.Translation.Enums;
 using ComputeSharp.Shaders.Translation.Models;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Vortice.Direct3D12;
 using ParameterInfo = ComputeSharp.Shaders.Renderer.Models.Functions.ParameterInfo;
@@ -246,6 +245,30 @@ namespace ComputeSharp.Shaders.Translation
                 {
                     LoadFieldInfo(fieldInfo, null, updatedParents);
                 }
+            }
+            else if (fieldType.IsClass && fieldType.IsGenericType &&
+                     fieldType.IsSubclassOf(typeof(Delegate)) &&
+                     memberInfo.GetValue(Action.Target) is Delegate func && func.Method.IsStatic &&
+                     fieldType.GetGenericTypeDefinition() is Type fieldTypeDefinition && (
+                     fieldTypeDefinition == typeof(Func<>) ||
+                     fieldTypeDefinition == typeof(Func<,>) ||
+                     fieldTypeDefinition == typeof(Func<,,>) ||
+                     fieldTypeDefinition == typeof(Func<,,,>) ||
+                     fieldTypeDefinition == typeof(Func<,,,,>) ||
+                     fieldTypeDefinition == typeof(Func<,,,,,>) ||
+                     fieldTypeDefinition == typeof(Func<,,,,,,>) ||
+                     fieldTypeDefinition == typeof(Func<,,,,,,,>) ||
+                     fieldTypeDefinition == typeof(Func<,,,,,,,,>) ||
+                     fieldTypeDefinition == typeof(Func<,,,,,,,,,>) ||
+                     fieldTypeDefinition == typeof(Func<,,,,,,,,,,>) ||
+                     fieldTypeDefinition == typeof(Func<,,,,,,,,,,,>) ||
+                     fieldTypeDefinition == typeof(Func<,,,,,,,,,,,,>) ||
+                     fieldTypeDefinition == typeof(Func<,,,,,,,,,,,,,>) ||
+                     fieldTypeDefinition == typeof(Func<,,,,,,,,,,,,,,>) ||
+                     fieldTypeDefinition == typeof(Func<,,,,,,,,,,,,,,,>) ||
+                     fieldTypeDefinition == typeof(Func<,,,,,,,,,,,,,,,,>)))
+            {
+                LoadStaticMethodSource(fieldName, func.Method);
             }
         }
 
