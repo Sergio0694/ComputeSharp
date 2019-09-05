@@ -27,7 +27,7 @@ namespace ComputeSharp.Tests
     }
 
     [TestClass]
-    [TestCategory("StaticMethodsTests")]
+    [TestCategory("StaticMethods")]
     public class StaticMethodsTests
     {
         [TestMethod]
