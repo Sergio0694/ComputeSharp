@@ -249,28 +249,11 @@ namespace ComputeSharp.Shaders.Translation
             else if (fieldType.IsClass && fieldType.IsGenericType &&
                      fieldType.IsSubclassOf(typeof(Delegate)) &&
                      memberInfo.GetValue(Action.Target) is Delegate func && func.Method.IsStatic &&
-                     fieldType.GetGenericTypeDefinition() is Type fieldTypeDefinition && (
-                     fieldTypeDefinition == typeof(Func<>) ||
-                     fieldTypeDefinition == typeof(Func<,>) ||
-                     fieldTypeDefinition == typeof(Func<,,>) ||
-                     fieldTypeDefinition == typeof(Func<,,,>) ||
-                     fieldTypeDefinition == typeof(Func<,,,,>) ||
-                     fieldTypeDefinition == typeof(Func<,,,,,>) ||
-                     fieldTypeDefinition == typeof(Func<,,,,,,>) ||
-                     fieldTypeDefinition == typeof(Func<,,,,,,,>) ||
-                     fieldTypeDefinition == typeof(Func<,,,,,,,,>) ||
-                     fieldTypeDefinition == typeof(Func<,,,,,,,,,>) ||
-                     fieldTypeDefinition == typeof(Func<,,,,,,,,,,>) ||
-                     fieldTypeDefinition == typeof(Func<,,,,,,,,,,,>) ||
-                     fieldTypeDefinition == typeof(Func<,,,,,,,,,,,,>) ||
-                     fieldTypeDefinition == typeof(Func<,,,,,,,,,,,,,>) ||
-                     fieldTypeDefinition == typeof(Func<,,,,,,,,,,,,,,>) ||
-                     fieldTypeDefinition == typeof(Func<,,,,,,,,,,,,,,,>) ||
-                     fieldTypeDefinition == typeof(Func<,,,,,,,,,,,,,,,,>)) &&
+                     (HlslKnownTypes.IsKnownScalarType(func.Method.ReturnType) || HlslKnownTypes.IsKnownVectorType(func.Method.ReturnType)) &&
                      fieldType.GenericTypeArguments.All(type => HlslKnownTypes.IsKnownScalarType(type) ||
                                                                 HlslKnownTypes.IsKnownVectorType(type)))
             {
-                // Captured static Func<T> (and available generic type combinations)
+                // Captured static delegates with a return type
                 LoadStaticMethodSource(fieldName, func.Method);
             }
         }
