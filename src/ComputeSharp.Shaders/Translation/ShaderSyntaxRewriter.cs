@@ -133,9 +133,13 @@ namespace ComputeSharp.Shaders.Translation
         public override SyntaxNode VisitInvocationExpression(InvocationExpressionSyntax node)
         {
             node = (InvocationExpressionSyntax)base.VisitInvocationExpression(node);
-            node = node.ReplaceInvocation(DeclaringType, out var method);
+            node = node.ReplaceInvocation(DeclaringType, out var variable, out var method);
 
-            // Register the captured member, if present
+            // Register the captured members, if any
+            if (variable.HasValue && !_StaticMembers.ContainsKey(variable.Value.Name))
+            {
+                _StaticMembers.Add(variable.Value.Name, variable.Value.MemberInfo);
+            }
             if (method.HasValue && !_StaticMethods.ContainsKey(method.Value.Name))
             {
                 _StaticMethods.Add(method.Value.Name, method.Value.MethodInfo);
