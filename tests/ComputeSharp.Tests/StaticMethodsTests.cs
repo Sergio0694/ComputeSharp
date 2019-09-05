@@ -13,6 +13,9 @@ namespace ComputeSharp.Tests
         public static float Square(float x) => x * x;
 
         [Pure]
+        public static float Negate(float x) => -x;
+
+        [Pure]
         internal static float InternalSquare(float x) => x * x;
 
         [Pure]
