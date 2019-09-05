@@ -45,6 +45,12 @@ cbuffer _{{FieldName}} : register(b{{BufferIndex}})
 {{ReturnType}} {{FunctionName}}({{#ParametersList}}{{ParameterModifier}} {{ParameterType}} {{ParameterName}}{{^IsLastParameter}}, {{/IsLastParameter}}{{/ParametersList}})
 {{FunctionBody}}
 {{/FunctionsList}}
+{{#LocalFunctionsList}}
+
+{{!Shader implicit functions}}
+// {{FunctionPrototype}}
+{{FunctionDeclaration}}
+{{/LocalFunctionsList}}
 
 {{!Shader entry point}}
 // Shader body
