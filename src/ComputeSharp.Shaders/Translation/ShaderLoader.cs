@@ -361,7 +361,7 @@ namespace ComputeSharp.Shaders.Translation
                 methodInfo.ReturnType,
                 $"{methodInfo.DeclaringType.FullName}{Type.Delimiter}{methodInfo.Name}",
                 string.Join(", ", methodInfo.GetParameters().Select(p => $"{p.ParameterType.ToFriendlyString()} {p.Name}")),
-                root.ReturnType.ToFullString(),
+                root.ReturnType.ToString(),
                 name,
                 parameters,
                 body);
