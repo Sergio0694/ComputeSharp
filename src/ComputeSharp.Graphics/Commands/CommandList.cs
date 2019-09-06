@@ -1,4 +1,5 @@
 ﻿using System;
+using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Commands.Abstract;
 using Vortice.Direct3D12;
@@ -61,6 +62,8 @@ namespace ComputeSharp.Graphics.Commands
         public void SetComputeRootDescriptorTable(int rootParameterIndex, GraphicsResource resource)
         {
             if (resource.NativeGpuDescriptorHandle == null) throw new InvalidOperationException("Invalid graphics resource GPU descriptor");
+            if (resource.GraphicsDevice != GraphicsDevice) throw new GraphicsDeviceMismatchException(GraphicsDevice, resource);
+
             NativeCommandList.SetComputeRootDescriptorTable(rootParameterIndex, resource.NativeGpuDescriptorHandle.Value);
         }
 
