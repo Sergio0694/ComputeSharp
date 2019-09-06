@@ -27,7 +27,8 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// Creates a new <see cref="ShaderSyntaxRewriter"/> instance with the specified parameters
         /// </summary>
-        /// <param name="semanticModel"></param>
+        /// <param name="semanticModel">The <see cref="Microsoft.CodeAnalysis.SemanticModel"/> instance to use to rewrite the decompiled code</param>
+        /// <param name="declaringType">The declaring type that hosts the root from which the current syntax tree is inspected</param>
         public ShaderSyntaxRewriter(SemanticModel semanticModel, Type declaringType)
         {
             SemanticModel = semanticModel;
@@ -47,6 +48,21 @@ namespace ComputeSharp.Shaders.Translation
         /// Gets the mapping of captured static methods used by the target code
         /// </summary>
         public IReadOnlyDictionary<string, MethodInfo> StaticMethods => _StaticMethods;
+
+        /// <inheritdoc/>
+        public override SyntaxNode VisitIdentifierName(IdentifierNameSyntax node)
+        {
+            node = (IdentifierNameSyntax)base.VisitIdentifierName(node);
+            node = node.ReplaceIdentifierName(DeclaringType, out var variable);
+
+            // Register the captured member, if any
+            if (variable.HasValue && !_StaticMembers.ContainsKey(variable.Value.Name))
+            {
+                _StaticMembers.Add(variable.Value.Name, variable.Value.MemberInfo);
+            }
+
+            return node;
+        }
 
         /// <inheritdoc/>
         public override SyntaxNode VisitParameter(ParameterSyntax node)

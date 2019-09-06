@@ -59,6 +59,18 @@ namespace ComputeSharp.Shaders.Mappings
         public static IReadOnlyCollection<Type> HlslMappedVectorTypes => _HlslMappedVectorTypes;
 
         /// <summary>
+        /// Checks whether or not the input type is a known HLSL-compatible type
+        /// </summary>
+        /// <param name="type">The input <see cref="Type"/> instance to check</param>
+        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a known HLSL type</returns>
+        [Pure]
+        public static bool IsKnownType(Type type) => IsKnownScalarType(type) ||
+                                                     IsKnownVectorType(type) ||
+                                                     IsConstantBufferType(type) ||
+                                                     IsReadOnlyBufferType(type) ||
+                                                     IsReadWriteBufferType(type);
+
+        /// <summary>
         /// Checks whether or not the input type is a known scalar type
         /// </summary>
         /// <param name="type">The input <see cref="Type"/> instance to check</param>
