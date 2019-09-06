@@ -1,5 +1,5 @@
-﻿using System;
-using ComputeSharp.Shaders.Extensions;
+﻿using ComputeSharp.Graphics.Extensions;
+using System;
 
 namespace ComputeSharp.Shaders.Renderer.Models.Fields
 {

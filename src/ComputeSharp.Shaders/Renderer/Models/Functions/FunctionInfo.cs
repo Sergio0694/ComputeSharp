@@ -1,6 +1,6 @@
-﻿using System;
+﻿using ComputeSharp.Graphics.Extensions;
+using System;
 using System.Collections.Generic;
-using ComputeSharp.Shaders.Extensions;
 
 namespace ComputeSharp.Shaders.Renderer.Models.Functions
 {
