@@ -46,7 +46,9 @@ namespace ComputeSharp.Graphics
         public GraphicsDevice(ID3D12Device device, AdapterDescription description)
         {
             NativeDevice = device;
-            Description = description;
+            Name = description.Description;
+            MemorySize = description.DedicatedVideoMemory;
+            ComputeUnits = device.Options1.TotalLaneCount;
             WavefrontSize = device.Options1.WaveLaneCountMin;
 
             NativeComputeCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(CommandListType.Compute));
@@ -65,9 +67,19 @@ namespace ComputeSharp.Graphics
         }
 
         /// <summary>
-        /// Gets the available info for the current <see cref="GraphicsDevice"/> instance
+        /// Gets the name of the current <see cref="GraphicsDevice"/> instance
         /// </summary>
-        public AdapterDescription Description { get; }
+        public string Name { get; }
+
+        /// <summary>
+        /// Gets the size of the dedicated video memory for the current <see cref="GraphicsDevice"/> instance
+        /// </summary>
+        public long MemorySize { get; }
+
+        /// <summary>
+        /// Gets the number of total lanes on the current device (eg. CUDA cores on an nVidia GPU)
+        /// </summary>
+        public int ComputeUnits { get; }
 
         /// <summary>
         /// Gets the number of lanes in a SIMD wave on the current device (also known as "wavefront size" or "warp width")
