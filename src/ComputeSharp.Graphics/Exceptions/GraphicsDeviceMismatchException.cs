@@ -23,9 +23,21 @@ namespace ComputeSharp.Exceptions
         {
             StringBuilder builder = new StringBuilder();
             builder.AppendLine("Invalid pairing of graphics devices used to run a compute shader and allocate memory buffers.");
-            builder.AppendLine($"The target device to run the compute shader is \"{device.Name}\" (id: {device.NativeDevice.AdapterLuid}).");
-            builder.AppendLine($"The buffer of type {resource.GetType().ToFriendlyString()} was allocated on device \"{resource.GraphicsDevice.Name}\" (id: {resource.GraphicsDevice.NativeDevice.AdapterLuid}).");
-            builder.AppendLine("Make sure to always allocate buffers on the same device used to actually run the code that accesses them.");
+
+            // Check if the device is effectively the same but with two instances pointing to the same adapter
+            if (device.NativeDevice.AdapterLuid == resource.GraphicsDevice.NativeDevice.AdapterLuid)
+            {
+                builder.AppendLine("The graphics devices used to allocate buffers and run the shader must be the same instance, not just be using the same physical device.");
+                builder.AppendLine("You can still run different shaders on different devices, but a shader run on one device must only use buffers allocated by the same device instance.");
+            }
+            else
+            {
+                // Actually different devices
+                builder.AppendLine($"The target device to run the compute shader is \"{device.Name}\" (id: {device.NativeDevice.AdapterLuid}).");
+                builder.AppendLine($"The buffer of type {resource.GetType().ToFriendlyString()} was allocated on device \"{resource.GraphicsDevice.Name}\" (id: {resource.GraphicsDevice.NativeDevice.AdapterLuid}).");
+                builder.AppendLine("Make sure to always allocate buffers on the same device used to actually run the code that accesses them.");
+            }
+            
 
             return builder.ToString();
         }
