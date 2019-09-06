@@ -33,6 +33,11 @@ namespace ComputeSharp.Tests
         /// A <see langword="static"/> <see cref="ReadOnlyBuffer{T}"/> property
         /// </summary>
         public static ReadOnlyBuffer<float> StaticBuffer { get; set; } = Gpu.Default.AllocateReadOnlyBuffer(new[] { 3.14f, 7.77f });
+
+        /// <summary>
+        /// A <see langword="static"/> <see cref="Func{T,TResult}"/> property
+        /// </summary>
+        public static Func<float, float> SquareFunc { get; } = x => x * x;
     }
 
     [TestClass]
@@ -137,6 +142,22 @@ namespace ComputeSharp.Tests
 
             Assert.IsTrue(MathF.Abs(result[0] - expected[0]) < 0.0001f);
             Assert.IsTrue(MathF.Abs(result[1] - expected[1]) < 0.0001f);
+        }
+
+        public static int SomeNumber = 7;
+
+        [TestMethod]
+        public void StaticLocalScalarFieldAssignToBuffer()
+        {
+            using ReadWriteBuffer<int> buffer = Gpu.Default.AllocateReadWriteBuffer<int>(1);
+
+            Action<ThreadIds> action = id => buffer[0] = SomeNumber;
+
+            Gpu.Default.For(1, action);
+
+            int[] result = buffer.GetData();
+
+            Assert.IsTrue(result[0] == SomeNumber);
         }
     }
 }

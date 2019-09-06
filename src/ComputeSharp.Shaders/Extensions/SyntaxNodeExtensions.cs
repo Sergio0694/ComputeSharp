@@ -169,6 +169,83 @@ namespace ComputeSharp.Shaders.Extensions
         }
 
         /// <summary>
+        /// Checks a <see cref="InvocationExpressionSyntax"/> instance and replaces it to be HLSL compatible, if needed
+        /// </summary>
+        /// <param name="node">The input <see cref="InvocationExpressionSyntax"/> to check and modify if needed</param>
+        /// <param name="declaringType">The <see cref="Type"/> in which the input syntax tree is declared in</param>
+        /// <param name="variable">The info on parsed static members, if any</param>
+        /// <param name="method">The info on parsed static methods, if any</param>
+        /// <returns>A <see cref="SyntaxNode"/> instance that is compatible with HLSL</returns>
+        [Pure]
+        public static InvocationExpressionSyntax ReplaceInvocation(this InvocationExpressionSyntax node, Type declaringType, out (string Name, ReadableMember MemberInfo)? variable, out (string Name, MethodInfo MethodInfo)? method)
+        {
+            // Set the variable and method to null
+            variable = null;
+            method = null;
+
+            // Explore the nested classes from bottom to top
+            if (declaringType.TryFindAncestorMember(node.Expression.ToString(), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, out var result))
+            {
+                // If a static method or delegate is found, track it
+                string name = $"{result.Value.DeclaringType.Name}_{result.Value.MemberInfo.Name}";
+                switch (result.Value.MemberInfo)
+                {
+                    case FieldInfo fieldInfo:
+                        variable = (name, fieldInfo);
+                        break;
+                    case PropertyInfo propertyInfo:
+                        variable = (name, propertyInfo);
+                        break;
+                    case MethodInfo methodInfo:
+                        method = (name, methodInfo);
+                        return SyntaxFactory.InvocationExpression(SyntaxFactory.ParseExpression(name), node.ArgumentList).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
+                    default: throw new InvalidOperationException($"Invalid symbol kind: {result.Value.MemberInfo.GetType()}");
+                }
+
+                // Return the mapped expression
+                return SyntaxFactory.InvocationExpression(SyntaxFactory.ParseExpression(name), node.ArgumentList).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
+            }
+
+            return node;
+        }
+
+        /// <summary>
+        /// Checks a <see cref="IdentifierNameSyntax"/> instance and replaces it to be HLSL compatible, if needed
+        /// </summary>
+        /// <param name="node">The input <see cref="IdentifierNameSyntax"/> to check and modify if needed</param>
+        /// <param name="declaringType">The <see cref="Type"/> in which the input syntax tree is declared in</param>
+        /// <param name="variable">The info on parsed static members, if any</param>
+        /// <returns>A <see cref="SyntaxNode"/> instance that is compatible with HLSL</returns>
+        [Pure]
+        public static IdentifierNameSyntax ReplaceIdentifierName(this IdentifierNameSyntax node, Type declaringType, out (string Name, ReadableMember MemberInfo)? variable)
+        {
+            // Set the variable to null
+            variable = null;
+
+            // Explore the nested classes from bottom to top
+            if (declaringType.TryFindAncestorMember(node.Identifier.ToString(), BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, out var result))
+            {
+                // If a static scalar or vector member is found, track it
+                string name = $"{result.Value.DeclaringType.Name}_{result.Value.MemberInfo.Name}";
+                switch (result.Value.MemberInfo)
+                {
+                    case FieldInfo fieldInfo when HlslKnownTypes.IsKnownType(fieldInfo.FieldType):
+                        variable = (name, fieldInfo);
+                        break;
+                    case PropertyInfo propertyInfo when HlslKnownTypes.IsKnownType(propertyInfo.PropertyType):
+                        variable = (name, propertyInfo);
+                        break;
+                    default: return node;
+                }
+
+                // Return the mapped expression
+                return SyntaxFactory.IdentifierName(name).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
+            }
+
+            return node;
+        }
+
+        /// <summary>
         /// Processes a loaded static member, either a field or a property
         /// </summary>
         /// <param name="node">The input <see cref="MemberAccessExpressionSyntax"/> to check and modify if needed</param>

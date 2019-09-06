@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
@@ -28,6 +29,29 @@ namespace ComputeSharp.Shaders.Extensions
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsStatelessDelegateContainer(this Type type) => type.GetFields(BindingFlags.Static | BindingFlags.Public).Length > 0;
+
+        /// <summary>
+        /// Tries to find an ancestor member starting from the input <see cref="Type"/>
+        /// </summary>
+        /// <param name="type">The input type to start the search from</param>
+        /// <param name="name">The name of the member to retrieve</param>
+        /// <param name="bindingAttr">A bitmask comprised of one or more <see cref="BindingFlags"></see> that specify how the search is conducted</param>
+        /// <returns><see langword="true"/> when a member with the given name is found, <see langword="false"/> otherwise</returns>
+        public static bool TryFindAncestorMember(this Type type, string name, BindingFlags bindingAttr, [NotNullWhen(true)] out (Type DeclaringType, MemberInfo MemberInfo)? result)
+        {
+            while ((type = type.DeclaringType) != null)
+            {
+                MemberInfo[] memberInfos = type.GetMember(name, bindingAttr);
+                if (memberInfos.Length > 0)
+                {
+                    result = (type, memberInfos[0]);
+                    return true;
+                }
+            }
+
+            result = null;
+            return false;
+        }
 
         /// <summary>
         /// The mapping of supported known types to display string

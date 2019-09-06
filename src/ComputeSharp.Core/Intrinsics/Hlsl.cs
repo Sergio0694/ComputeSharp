@@ -849,7 +849,7 @@ namespace ComputeSharp
         /// <param name="x">The input value</param>
         /// <returns>The number of bits</returns>
         [Pure]
-        public static uint CountBits(uint x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(CountBits)}({nameof(Vector4)})");
+        public static uint CountBits(uint x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(CountBits)}(uint)");
 
         /// <summary>
         /// Returns the cross product of two <see cref="Float3"/> values
