@@ -127,6 +127,11 @@ namespace ComputeSharp.Graphics
         internal ID3D12Fence NativeDirectFence { get; }
 
         /// <summary>
+        /// The <see cref="object"/> used to lock command list executions
+        /// </summary>
+        private readonly object Lock = new object();
+
+        /// <summary>
         /// Gets the next fence value for compute operations
         /// </summary>
         internal long NextComputeFenceValue { get; private set; } = 1;
@@ -169,7 +174,7 @@ namespace ComputeSharp.Graphics
 
             if (fenceValue <= fence.CompletedValue) return;
 
-            lock (fence)
+            lock (Lock)
             {
                 fence.SetEventOnCompletion(fenceValue, AutoResetEvent.SafeWaitHandle.DangerousGetHandle());
                 AutoResetEvent.WaitOne();
@@ -194,25 +199,19 @@ namespace ComputeSharp.Graphics
                     commandAllocatorPool = ComputeAllocatorPool;
                     commandQueue = NativeComputeCommandQueue;
                     fence = NativeComputeFence;
-                    fenceValue = NextComputeFenceValue;
-
-                    NextComputeFenceValue++;
+                    fenceValue = NextComputeFenceValue++;
                     break;
                 case CommandListType.Copy:
                     commandAllocatorPool = CopyAllocatorPool;
                     commandQueue = NativeCopyCommandQueue;
                     fence = NativeCopyFence;
-                    fenceValue = NextCopyFenceValue;
-
-                    NextCopyFenceValue++;
+                    fenceValue = NextCopyFenceValue++;
                     break;
                 case CommandListType.Direct:
                     commandAllocatorPool = DirectAllocatorPool;
                     commandQueue = NativeDirectCommandQueue;
                     fence = NativeDirectFence;
-                    fenceValue = NextDirectFenceValue;
-
-                    NextDirectFenceValue++;
+                    fenceValue = NextDirectFenceValue++;
                     break;
                 default: throw new NotSupportedException($"Unsupported command list of type {commandList.CommandListType}");
             }
