@@ -30,11 +30,6 @@ namespace ComputeSharp.Shaders.Translation
         public static MethodDecompiler Instance { get; } = new MethodDecompiler();
 
         /// <summary>
-        /// The dummy object used to handle concurrent decompilation requests
-        /// </summary>
-        private readonly object Lock = new object();
-
-        /// <summary>
         /// The mapping of available <see cref="CSharpDecompiler"/> instances targeting different assemblies
         /// </summary>
         private readonly Dictionary<string, CSharpDecompiler> Decompilers = new Dictionary<string, CSharpDecompiler>();
@@ -141,25 +136,22 @@ namespace ComputeSharp.Shaders.Translation
         /// <param name="semanticModel">The semantic model for the input method</param>
         public void GetSyntaxTree(MethodInfo methodInfo, MethodType methodType, out MethodDeclarationSyntax rootNode, out SemanticModel semanticModel)
         {
-            lock (Lock)
+            string sourceCode = methodType switch
             {
-                string sourceCode = methodType switch
-                {
-                    MethodType.Closure => GetSyntaxTreeForClosureMethod(methodInfo),
-                    MethodType.Static => GetSyntaxTreeForStaticMethod(methodInfo),
-                    _ => throw new ArgumentOutOfRangeException(nameof(methodType), $"Invalid method type: {methodType}")
-                };
+                MethodType.Closure => GetSyntaxTreeForClosureMethod(methodInfo),
+                MethodType.Static => GetSyntaxTreeForStaticMethod(methodInfo),
+                _ => throw new ArgumentOutOfRangeException(nameof(methodType), $"Invalid method type: {methodType}")
+            };
 
-                // Load the type syntax tree
-                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
+            // Load the type syntax tree
+            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
 
-                // Get the root node to return
-                rootNode = syntaxTree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().First(node => node.GetLeadingTrivia().ToFullString().Contains(methodInfo.Name));
+            // Get the root node to return
+            rootNode = syntaxTree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().First(node => node.GetLeadingTrivia().ToFullString().Contains(methodInfo.Name));
 
-                // Update the incremental compilation and retrieve the syntax tree for the method
-                _Compilation = _Compilation.AddSyntaxTrees(syntaxTree);
-                semanticModel = _Compilation.GetSemanticModel(syntaxTree);
-            }
+            // Update the incremental compilation and retrieve the syntax tree for the method
+            _Compilation = _Compilation.AddSyntaxTrees(syntaxTree);
+            semanticModel = _Compilation.GetSemanticModel(syntaxTree);
         }
 
         /// <summary>

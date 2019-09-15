@@ -40,7 +40,7 @@ namespace ComputeSharp.Shaders
         /// <summary>
         /// The mapping used to cache and reuse compiled shaders
         /// </summary>
-        private static readonly Dictionary<(int Id, int ThreadsX, int ThreadsY, int ThreadsZ), (ShaderLoader Loader, ShaderBytecode Bytecode)> ShadersCache = new Dictionary<(int, int, int, int), (ShaderLoader, ShaderBytecode)>();
+        private static readonly Dictionary<(int Id, int ThreadsX, int ThreadsY, int ThreadsZ), (ShaderLoader, ShaderBytecode)> ShadersCache = new Dictionary<(int, int, int, int), (ShaderLoader, ShaderBytecode)>();
 
         /// <summary>
         /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters
@@ -60,33 +60,37 @@ namespace ComputeSharp.Shaders
             Action<ThreadIds> action)
         {
             // Try to get the cache shader
-            var key = (ShaderLoader.GetHashCode(action), threadsX, threadsY, threadsZ);
-            if (!ShadersCache.TryGetValue(key, out var shaderData))
+            (ShaderLoader Loader, ShaderBytecode Bytecode) shaderData;
+            lock (ShadersCache)
             {
-                // Load the input shader
-                ShaderLoader shaderLoader = ShaderLoader.Load(action);
-
-                // Render the loaded shader
-                ShaderInfo shaderInfo = new ShaderInfo
+                var key = (ShaderLoader.GetHashCode(action), threadsX, threadsY, threadsZ);
+                if (!ShadersCache.TryGetValue(key, out shaderData))
                 {
-                    BuffersList = shaderLoader.BuffersList,
-                    FieldsList = shaderLoader.FieldsList,
-                    NumThreadsX = threadsX,
-                    NumThreadsY = threadsY,
-                    NumThreadsZ = threadsZ,
-                    ThreadsIdsVariableName = shaderLoader.ThreadsIdsVariableName,
-                    ShaderBody = shaderLoader.MethodBody,
-                    FunctionsList = shaderLoader.FunctionsList,
-                    LocalFunctionsList = shaderLoader.LocalFunctionsList
-                };
-                string shaderSource = ShaderRenderer.Instance.Render(shaderInfo);
+                    // Load the input shader
+                    ShaderLoader shaderLoader = ShaderLoader.Load(action);
 
-                // Compile the loaded shader to HLSL bytecode
-                ShaderBytecode shaderBytecode = ShaderCompiler.CompileShader(shaderSource);
+                    // Render the loaded shader
+                    ShaderInfo shaderInfo = new ShaderInfo
+                    {
+                        BuffersList = shaderLoader.BuffersList,
+                        FieldsList = shaderLoader.FieldsList,
+                        NumThreadsX = threadsX,
+                        NumThreadsY = threadsY,
+                        NumThreadsZ = threadsZ,
+                        ThreadsIdsVariableName = shaderLoader.ThreadsIdsVariableName,
+                        ShaderBody = shaderLoader.MethodBody,
+                        FunctionsList = shaderLoader.FunctionsList,
+                        LocalFunctionsList = shaderLoader.LocalFunctionsList
+                    };
+                    string shaderSource = ShaderRenderer.Instance.Render(shaderInfo);
 
-                // Cache for later use
-                shaderData = (shaderLoader, shaderBytecode);
-                ShadersCache.Add(key, shaderData);
+                    // Compile the loaded shader to HLSL bytecode
+                    ShaderBytecode shaderBytecode = ShaderCompiler.CompileShader(shaderSource);
+
+                    // Cache for later use
+                    shaderData = (shaderLoader, shaderBytecode);
+                    ShadersCache.Add(key, shaderData);
+                }
             }
 
             // Create the root signature for the pipeline and get the pipeline state
