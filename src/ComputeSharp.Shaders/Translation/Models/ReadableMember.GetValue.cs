@@ -42,7 +42,7 @@ namespace ComputeSharp.Shaders.Translation.Models
         private Getter BuildDynamicGetter()
         {
             // Create a new dynamic method for the current member
-            DynamicMethod method = new DynamicMethod($"Get{Id}", typeof(object), new[] { typeof(object) }, DeclaringType);
+            DynamicMethod method = new DynamicMethod($"Get{Name}", typeof(object), new[] { typeof(object) }, DeclaringType);
             ILGenerator il = method.GetILGenerator();
 
             // Load the argument (the object instance) and cast it to the right type, if needed
