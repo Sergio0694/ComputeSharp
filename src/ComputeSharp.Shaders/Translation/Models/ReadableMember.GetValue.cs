@@ -13,19 +13,34 @@ namespace ComputeSharp.Shaders.Translation.Models
         private static readonly Dictionary<string, Getter> GettersMapping = new Dictionary<string, Getter>();
 
         /// <summary>
+        /// The local <see cref="Getter"/> instance, if already loaded
+        /// </summary>
+        private Getter? _Getter;
+
+        /// <summary>
         /// Returns the value of the wrapped member for the current instance
         /// </summary>
         /// <param name="instance">The target instance to use to read the value from</param>
         [Pure]
         public object GetValue(object? instance)
         {
-            if (!GettersMapping.TryGetValue(Id, out Getter getter))
+            if (_Getter == null)
             {
-                getter = BuildDynamicGetter();
-                GettersMapping.Add(Id, getter);
+                /* If the local delegate is available, use it and save the dictionary
+                 * access entirely. If it's not, try to get the delegate from the dictionary
+                 * first. This can save unnecessary overhead if a delegate for the same member has
+                 * already been built, eg. if it belongs to a captured field that is used by two different
+                 * shaders in the same closure. Once the getter is built, cache it and invoke it */
+                if (GettersMapping.TryGetValue(Id, out Getter getter)) _Getter = getter;
+                else
+                {
+                    _Getter = getter = BuildDynamicGetter();
+                    GettersMapping.Add(Id, getter);
+                }
+
             }
 
-            return getter(instance);
+            return _Getter(instance);
         }
 
         /// <summary>
