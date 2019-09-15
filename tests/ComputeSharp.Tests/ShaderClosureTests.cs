@@ -112,5 +112,59 @@ namespace ComputeSharp.Tests
 
             Assert.IsTrue(result.AsSpan().ContentEquals(source));
         }
+
+        [TestMethod]
+        public void CopyBetweenNestedClosuresEasy()
+        {
+            int value1 = 1;
+            using (ReadWriteBuffer<int> buffer1 = Gpu.Default.AllocateReadWriteBuffer<int>(1))
+            {
+                int value2 = 2;
+                Action<ThreadIds> action = id =>
+                {
+                    int sum = value1 + value2;
+                    buffer1[0] = sum;
+                };
+
+                Gpu.Default.For(1, action);
+
+                int[] result1 = buffer1.GetData();
+
+                Assert.IsTrue(result1[0] == value1 + value2);
+            }
+        }
+
+        [TestMethod]
+        public void CopyBetweenNestedClosuresHard()
+        {
+            int value1 = 1;
+            using (ReadWriteBuffer<int> buffer1 = Gpu.Default.AllocateReadWriteBuffer<int>(1))
+            {
+                int value2 = 2;
+                using (ReadWriteBuffer<int> buffer2 = Gpu.Default.AllocateReadWriteBuffer<int>(1))
+                {
+                    int value3 = 3;
+                    using (ReadWriteBuffer<int> buffer3 = Gpu.Default.AllocateReadWriteBuffer<int>(1))
+                    {
+                        int value4 = 4;
+                        Action<ThreadIds> action = id =>
+                        {
+                            int sum = value1 + value2 + value3 + value4;
+                            buffer1[0] = buffer2[0] = buffer3[0] = sum;
+                        };
+
+                        Gpu.Default.For(1, action);
+
+                        int[] result1 = buffer1.GetData();
+                        int[] result2 = buffer2.GetData();
+                        int[] result3 = buffer3.GetData();
+
+                        Assert.IsTrue(result1[0] == value1 + value2 + value3 + value4);
+                        Assert.IsTrue(result1[0] == result2[0]);
+                        Assert.IsTrue(result1[0] == result3[0]);
+                    }
+                }
+            }
+        }
     }
 }
