@@ -85,14 +85,15 @@ namespace ComputeSharp.Shaders.Translation
         /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
         public IEnumerable<(int Index, GraphicsResource Resource)> GetBuffers(Action<ThreadIds> action)
         {
-            foreach (var (item, i) in _BufferMembers.Select((item, i) => (item, i)))
+            int index = 1;
+            foreach (var item in _BufferMembers)
             {
-                if (item.Parents == null) yield return (i + 1, (GraphicsResource)item.Member.GetValue(action.Target));
-                else
-                {
-                    object target = item.Parents.Aggregate(action.Target, (obj, member) => member.GetValue(obj));
-                    yield return (i + 1, (GraphicsResource)item.Member.GetValue(target));
-                }
+                object target = action.Target;
+                if (item.Parents != null)
+                    foreach (var parent in item.Parents)
+                        target = parent.GetValue(target);
+
+                yield return (index++, (GraphicsResource)item.Member.GetValue(target));
             }
         }
 
@@ -109,12 +110,12 @@ namespace ComputeSharp.Shaders.Translation
         {
             foreach (var item in _VariableMembers)
             {
-                if (item.Parents == null) yield return item.Member.GetValue(action.Target);
-                else
-                {
-                    object target = item.Parents.Aggregate(action.Target, (obj, member) => member.GetValue(obj));
-                    yield return item.Member.GetValue(target);
-                }
+                object target = action.Target;
+                if (item.Parents != null)
+                    foreach (var parent in item.Parents)
+                        target = parent.GetValue(target);
+
+                yield return item.Member.GetValue(target);
             }
         }
 
