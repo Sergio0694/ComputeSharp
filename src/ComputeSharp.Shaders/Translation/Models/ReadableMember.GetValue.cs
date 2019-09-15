@@ -47,7 +47,7 @@ namespace ComputeSharp.Shaders.Translation.Models
 
             // Load the argument (the object instance) and cast it to the right type
             il.Emit(OpCodes.Ldarg_0);
-            il.Emit(OpCodes.Castclass, DeclaringType);
+            il.Emit(DeclaringType.IsValueType ? OpCodes.Unbox : OpCodes.Castclass, DeclaringType);
 
             // Get the member value with the appropriate method
             if (Property != null) il.EmitCall(OpCodes.Callvirt, Property.GetMethod, null);
