@@ -77,7 +77,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// The <see cref="List{T}"/> of <see cref="ReadableMember"/> instances mapping the captured buffers in the current shader
         /// </summary>
-        private readonly List<(ReadableMember Member, IEnumerable<ReadableMember>? Parents)> _BufferMembers = new List<(ReadableMember, IEnumerable<ReadableMember>?)>();
+        private readonly List<ReadableMember> _BufferMembers = new List<ReadableMember>();
 
         /// <summary>
         /// Gets the ordered collection of buffers used as fields in the current shader
@@ -88,19 +88,14 @@ namespace ComputeSharp.Shaders.Translation
             int index = 1;
             foreach (var item in _BufferMembers)
             {
-                object target = action.Target;
-                if (item.Parents != null)
-                    foreach (var parent in item.Parents)
-                        target = parent.GetValue(target);
-
-                yield return (index++, (GraphicsResource)item.Member.GetValue(target));
+                yield return (index++, (GraphicsResource)item.GetValue(action.Target));
             }
         }
 
         /// <summary>
         /// The <see cref="List{T}"/> of <see cref="ReadableMember"/> instances mapping the captured scalar/vector variables in the current shader
         /// </summary>
-        private readonly List<(ReadableMember Member, IEnumerable<ReadableMember>? Parents)> _VariableMembers = new List<(ReadableMember, IEnumerable<ReadableMember>?)>();
+        private readonly List<ReadableMember> _VariableMembers = new List<ReadableMember>();
 
         /// <summary>
         /// Gets the collection of values of the captured fields for the current shader
@@ -110,12 +105,7 @@ namespace ComputeSharp.Shaders.Translation
         {
             foreach (var item in _VariableMembers)
             {
-                object target = action.Target;
-                if (item.Parents != null)
-                    foreach (var parent in item.Parents)
-                        target = parent.GetValue(target);
-
-                yield return item.Member.GetValue(target);
+                yield return item.GetValue(action.Target);
             }
         }
 
@@ -233,7 +223,8 @@ namespace ComputeSharp.Shaders.Translation
                 DescriptorRanges.Add(new DescriptorRange1(DescriptorRangeType.ConstantBufferView, 1, _ConstantBuffersCount));
 
                 // Track the buffer field
-                _BufferMembers.Add((memberInfo, parents));
+                memberInfo.Parents = parents;
+                _BufferMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
                 _BuffersList.Add(new ConstantBufferFieldInfo(fieldType, typeName, fieldName, _ConstantBuffersCount++));
@@ -244,7 +235,8 @@ namespace ComputeSharp.Shaders.Translation
                 DescriptorRanges.Add(new DescriptorRange1(DescriptorRangeType.ShaderResourceView, 1, _ReadOnlyBuffersCount));
 
                 // Track the buffer field
-                _BufferMembers.Add((memberInfo, parents));
+                memberInfo.Parents = parents;
+                _BufferMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
                 _BuffersList.Add(new ReadOnlyBufferFieldInfo(fieldType, typeName, fieldName, _ReadOnlyBuffersCount++));
@@ -255,7 +247,8 @@ namespace ComputeSharp.Shaders.Translation
                 DescriptorRanges.Add(new DescriptorRange1(DescriptorRangeType.UnorderedAccessView, 1, _ReadWriteBuffersCount));
 
                 // Track the buffer field
-                _BufferMembers.Add((memberInfo, parents));
+                memberInfo.Parents = parents;
+                _BufferMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
                 _BuffersList.Add(new ReadWriteBufferFieldInfo(fieldType, typeName, fieldName, _ReadWriteBuffersCount++));
@@ -263,7 +256,9 @@ namespace ComputeSharp.Shaders.Translation
             else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
             {
                 // Register the captured field
-                _VariableMembers.Add((memberInfo, parents));
+                memberInfo.Parents = parents;
+                _VariableMembers.Add(memberInfo);
+
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
                 _FieldsList.Add(new CapturedFieldInfo(fieldType, typeName, fieldName));
             }
