@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Reflection.Emit;
 
 namespace ComputeSharp.Shaders.Translation.Models
@@ -65,17 +66,26 @@ namespace ComputeSharp.Shaders.Translation.Models
             DynamicMethod method = new DynamicMethod($"Get{Name}", typeof(object), new[] { typeof(object) }, DeclaringType);
             ILGenerator il = method.GetILGenerator();
 
+            // Info for hierarchical access
+            ReadableMember[] hierarchy = (Parents ?? Array.Empty<ReadableMember>()).Concat(new[] { this }).ToArray();
+
             // Load the argument (the object instance) and cast it to the right type, if needed
             if (!IsStatic)
             {
                 il.Emit(OpCodes.Ldarg_0);
-                il.Emit(DeclaringType.IsValueType ? OpCodes.Unbox : OpCodes.Castclass, DeclaringType);
+
+                Type unboxType = hierarchy[0].DeclaringType;
+                il.Emit(unboxType.IsValueType ? OpCodes.Unbox : OpCodes.Castclass, unboxType);
             }
 
-            // Get the member value with the appropriate method
-            if (Property != null) il.EmitCall(IsStatic ? OpCodes.Call : OpCodes.Callvirt, Property.GetMethod, null);
-            else if (Field != null) il.Emit(IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, Field);
-            else throw new InvalidOperationException("Field and property can't both be null at the same time");
+            // Unroll the member access
+            foreach (ReadableMember member in hierarchy)
+            {
+                // Get the member value with the appropriate method
+                if (member.Property != null) il.EmitCall(member.IsStatic ? OpCodes.Call : OpCodes.Callvirt, member.Property.GetMethod, null);
+                else if (member.Field != null) il.Emit(member.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, member.Field);
+                else throw new InvalidOperationException("Field and property can't both be null at the same time");
+            }
 
             // Box the value, if needed
             if (MemberType.IsValueType) il.Emit(OpCodes.Box, MemberType);
