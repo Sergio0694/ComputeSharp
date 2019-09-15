@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Reflection;
 
 namespace ComputeSharp.Shaders.Translation.Models
@@ -7,8 +6,13 @@ namespace ComputeSharp.Shaders.Translation.Models
     /// <summary>
     /// A <see langword="class"/> that wraps a readable member of another <see langword="class"/> and provides access to it
     /// </summary>
-    internal sealed class ReadableMember
+    internal sealed partial class ReadableMember
     {
+        /// <summary>
+        /// The id of the current member
+        /// </summary>
+        private readonly string Id;
+
         /// <summary>
         /// The <see cref="FieldInfo"/> object wrapped by the current instance, if present
         /// </summary>
@@ -28,6 +32,7 @@ namespace ComputeSharp.Shaders.Translation.Models
         {
             Field = field;
             Property = property;
+            Id = $"{DeclaringType.FullName}{Type.Delimiter}{Name}".Replace(Type.Delimiter, '_');
         }
 
         /// <summary>
@@ -62,19 +67,6 @@ namespace ComputeSharp.Shaders.Translation.Models
         /// Gets the name of the wrapped member for the current instance
         /// </summary>
         public string Name => (Field?.Name ?? Property?.Name) ?? throw new InvalidOperationException("Field and property can't both be null at the same time");
-
-        /// <summary>
-        /// Returns the value of the wrapped member for the current instance
-        /// </summary>
-        /// <param name="instance">The target instance to use to read the value from</param>
-        [Pure]
-        public object GetValue(object? instance)
-        {
-            if (Field != null) return Field.GetValue(instance);
-            if (Property != null) return Property.GetValue(instance);
-
-            throw new InvalidOperationException("Field and property can't both be null at the same time");
-        }
 
         /// <summary>
         /// Converts a <see cref="FieldInfo"/> object into a <see cref="ReadableMember"/> instance
