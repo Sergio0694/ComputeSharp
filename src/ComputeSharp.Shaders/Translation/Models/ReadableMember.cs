@@ -69,6 +69,20 @@ namespace ComputeSharp.Shaders.Translation.Models
         public string Name => (Field?.Name ?? Property?.Name) ?? throw new InvalidOperationException("Field and property can't both be null at the same time");
 
         /// <summary>
+        /// Gets whether or not the current member is not an instance member
+        /// </summary>
+        public bool IsStatic
+        {
+            get
+            {
+                if (Field != null) return Field.IsStatic;
+                if (Property != null) return Property.GetMethod.IsStatic;
+
+                throw new InvalidOperationException("Field and property can't both be null at the same time");
+            }
+        }
+
+        /// <summary>
         /// Converts a <see cref="FieldInfo"/> object into a <see cref="ReadableMember"/> instance
         /// </summary>
         /// <param name="field">The input <see cref="FieldInfo"/> object to wrap</param>
