@@ -88,7 +88,7 @@ namespace ComputeSharp.Shaders.Translation
             int index = 1;
             foreach (var item in _BufferMembers)
             {
-                yield return (index++, (GraphicsResource)item.GetValue(action.Target));
+                yield return (index++, (GraphicsResource)item.DangerousGetValue(action.Target));
             }
         }
 
@@ -105,7 +105,7 @@ namespace ComputeSharp.Shaders.Translation
         {
             foreach (var item in _VariableMembers)
             {
-                yield return item.GetValue(action.Target);
+                yield return item.DangerousGetValue(action.Target);
             }
         }
 
@@ -260,6 +260,14 @@ namespace ComputeSharp.Shaders.Translation
                 // Captured static delegates with a return type
                 LoadStaticMethodSource(fieldName, func.Method);
             }
+
+            /* Build the dynamic IL accessor for the current member, if one is
+             * not available already. This is done during while the shader is
+             * being loaded and not just when needed because the internal cache
+             * system for the accessors is not thread safe. Preloading the accessor here
+             * leverages the external lock around the shader loading, ensuring
+             * that no race conditions occur when accessing the cached mapping */
+            memberInfo.PreloadAccessor();
         }
 
         /// <summary>

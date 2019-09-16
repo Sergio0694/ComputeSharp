@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 
 namespace ComputeSharp.Shaders.Translation.Models
 {
@@ -19,11 +20,9 @@ namespace ComputeSharp.Shaders.Translation.Models
         private Getter? _Getter;
 
         /// <summary>
-        /// Returns the value of the wrapped member for the current instance
+        /// Ensures the dynamic accessor for the current instance is loaded and ready to use
         /// </summary>
-        /// <param name="instance">The target instance to use to read the value from</param>
-        [Pure]
-        public object GetValue(object? instance)
+        public void PreloadAccessor()
         {
             if (_Getter == null)
             {
@@ -38,10 +37,28 @@ namespace ComputeSharp.Shaders.Translation.Models
                     _Getter = getter = BuildDynamicGetter();
                     GettersMapping.Add(Id, getter);
                 }
-
             }
+        }
 
-            return _Getter(instance);
+        /// <summary>
+        /// Returns the value of the wrapped member for the current instance
+        /// </summary>
+        /// <param name="instance">The target instance to use to read the value from</param>
+        /// <remarks>This method doesn't ensure that the accessor is available</remarks>
+        /// <exception cref="NullReferenceException">The dynamic accessor is not available</exception>
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public object DangerousGetValue(object? instance) => _Getter!(instance);
+
+        /// <summary>
+        /// Returns the value of the wrapped member for the current instance
+        /// </summary>
+        /// <param name="instance">The target instance to use to read the value from</param>
+        [Pure]
+        public object GetValue(object? instance)
+        {
+            PreloadAccessor();
+            return _Getter!(instance);
         }
 
         /// <summary>
