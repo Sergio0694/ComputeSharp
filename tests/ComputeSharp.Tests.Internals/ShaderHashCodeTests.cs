@@ -17,14 +17,14 @@ namespace ComputeSharp.Tests.Internals
             Action<ThreadIds> action1 = id => buffer[0] = value;
 
             int
-                hash1 = ShaderLoader.GetHashCode(action1),
-                hash2 = ShaderLoader.GetHashCode(action1);
+                hash1 = ShaderHashCodeProvider.GetHashCode(action1),
+                hash2 = ShaderHashCodeProvider.GetHashCode(action1);
 
             Assert.IsTrue(hash1 == hash2);
 
             Action<ThreadIds> action2 = id => buffer[0] = value;
 
-            int hash3 = ShaderLoader.GetHashCode(action2);
+            int hash3 = ShaderHashCodeProvider.GetHashCode(action2);
 
             Assert.IsFalse(hash1 == hash3);
         }
@@ -39,14 +39,14 @@ namespace ComputeSharp.Tests.Internals
             Action<ThreadIds> action = id => buffer[0] = f(2);
 
             int
-                hash1 = ShaderLoader.GetHashCode(action),
-                hash2 = ShaderLoader.GetHashCode(action);
+                hash1 = ShaderHashCodeProvider.GetHashCode(action),
+                hash2 = ShaderHashCodeProvider.GetHashCode(action);
 
             Assert.IsTrue(hash1 == hash2);
 
             f = x => x + 1;
 
-            int hash3 = ShaderLoader.GetHashCode(action);
+            int hash3 = ShaderHashCodeProvider.GetHashCode(action);
 
             Assert.IsFalse(hash1 == hash3);
         }

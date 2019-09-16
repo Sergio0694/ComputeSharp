@@ -64,7 +64,7 @@ namespace ComputeSharp.Shaders
             CachedShader shaderData;
             lock (ShadersCache)
             {
-                var key = (ShaderLoader.GetHashCode(action), threadsX, threadsY, threadsZ);
+                var key = (ShaderHashCodeProvider.GetHashCode(action), threadsX, threadsY, threadsZ);
                 if (!ShadersCache.TryGetValue(key, out shaderData))
                 {
                     // Load the input shader

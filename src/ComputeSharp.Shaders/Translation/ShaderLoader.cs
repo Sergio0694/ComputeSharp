@@ -148,31 +148,6 @@ namespace ComputeSharp.Shaders.Translation
         public IReadOnlyList<LocalFunctionInfo> LocalFunctionsList => _LocalFunctionsList;
 
         /// <summary>
-        /// Gets a unique hash code for a given <see cref="Action{T}"/>
-        /// </summary>
-        /// <param name="action">The input <see cref="Action{T}"/> instance to inspect</param>
-        [Pure]
-        public static int GetHashCode(Action<ThreadIds> action)
-        {
-            int hashcode = action.Method.GetHashCode();
-
-            foreach (FieldInfo fieldInfo in action.Method.DeclaringType.GetFields())
-            {
-                if (fieldInfo.FieldType.IsDelegate() &&
-                    fieldInfo.GetValue(action.Target) is Delegate func &&
-                    (func.Method.IsStatic || func.Method.DeclaringType.IsStatelessDelegateContainer()) &&
-                    (HlslKnownTypes.IsKnownScalarType(func.Method.ReturnType) || HlslKnownTypes.IsKnownVectorType(func.Method.ReturnType)) &&
-                    fieldInfo.FieldType.GenericTypeArguments.All(type => HlslKnownTypes.IsKnownScalarType(type) ||
-                                                                         HlslKnownTypes.IsKnownVectorType(type)))
-                {
-                    hashcode = unchecked(hashcode * 17 + func.Method.GetHashCode());
-                }
-            }
-
-            return hashcode;
-        }
-
-        /// <summary>
         /// Loads and processes an input <see cref="Action{T}"/>
         /// </summary>
         /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
