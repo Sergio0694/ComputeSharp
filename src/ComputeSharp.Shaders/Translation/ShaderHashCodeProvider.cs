@@ -54,8 +54,9 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// A <see langword="delegate"/> that represents an aggregate hash function for a given instance
         /// </summary>
-        /// <param name="obj">The source object to get the member from</param>
-        /// <returns>The value of the member, upcast to <see cref="object"/></returns>
+        /// <param name="hash">The initial hash value</param>
+        /// <param name="instance">The closure instance to use to compute the final hash value</param>
+        /// <returns>The final hash value for the input closure</returns>
         private delegate int Hasher(int hash, object instance);
 
         /// <summary>
