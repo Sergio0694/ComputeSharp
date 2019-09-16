@@ -8,6 +8,20 @@ namespace ComputeSharp.Tests
     public class HlslVectorTypesTests
     {
         [TestMethod]
+        public void SequentialCompilation()
+        {
+            Float2 f2 = new Float2(1, 2);
+            using ReadWriteBuffer<Float2> buffer = Gpu.Default.AllocateReadWriteBuffer<Float2>(2);
+
+            Action<ThreadIds> action1 = id => buffer[0] = f2.YX;
+
+            Action<ThreadIds> action2 = id => buffer[1] = f2.YX;
+
+            Gpu.Default.For(1, action1);
+            Gpu.Default.For(1, action2);
+        }
+
+        [TestMethod]
         public void LocalFloatAssignToFloat2Buffer()
         {
             Float2 f2 = new Float2(1, 2);
