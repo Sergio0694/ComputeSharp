@@ -95,7 +95,7 @@ namespace ComputeSharp.Shaders.Translation
                 // if (ValidateDelegate(field)) {
                 il.Emit(OpCodes.Ldloc_0);
                 il.Emit(OpCodes.Ldfld, fieldInfo);
-                il.EmitCall(OpCodes.Callvirt, validateDelegateInfo, null);
+                il.EmitCall(OpCodes.Call, validateDelegateInfo, null);
                 il.Emit(OpCodes.Brfalse_S, label);
 
                 // hash = hash * 17 + field.Method.GetHashCode();
