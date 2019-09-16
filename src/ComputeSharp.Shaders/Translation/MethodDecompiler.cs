@@ -150,8 +150,8 @@ namespace ComputeSharp.Shaders.Translation
             rootNode = syntaxTree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().First(node => node.GetLeadingTrivia().ToFullString().Contains(methodInfo.Name));
 
             // Update the incremental compilation and retrieve the syntax tree for the method
-            _Compilation = _Compilation.AddSyntaxTrees(syntaxTree);
-            semanticModel = _Compilation.GetSemanticModel(syntaxTree);
+            Compilation compilation = _Compilation.AddSyntaxTrees(syntaxTree);
+            semanticModel = compilation.GetSemanticModel(syntaxTree);
         }
 
         /// <summary>
