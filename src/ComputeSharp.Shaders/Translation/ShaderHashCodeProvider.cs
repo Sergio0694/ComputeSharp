@@ -70,8 +70,11 @@ namespace ComputeSharp.Shaders.Translation
             DynamicMethod method = new DynamicMethod("GetHashCodeForHlslDelegates", typeof(int), new[] { typeof(int), typeof(object) }, declaringType);
             ILGenerator il = method.GetILGenerator();
 
+            // Declare the local variable to store the target instance
+            il.DeclareLocal(declaringType);
+
             // Load the argument (the object instance)
-            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Ldarg_1);
             il.Emit(OpCodes.Castclass, declaringType);
             il.Emit(OpCodes.Stloc_0);
 
