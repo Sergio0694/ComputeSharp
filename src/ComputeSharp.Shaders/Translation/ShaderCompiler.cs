@@ -1,5 +1,5 @@
-﻿using System;
-using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.Contracts;
+using ComputeSharp.Exceptions;
 using Vortice.Direct3D12;
 using Vortice.Dxc;
 
@@ -43,7 +43,7 @@ namespace ComputeSharp.Shaders.Translation
 
             // Compile error
             string resultText = Dxc.GetStringFromBlob(Library, result.GetErrors());
-            throw new Exception(resultText);
+            throw new HlslCompilationException(resultText);
         }
     }
 }
