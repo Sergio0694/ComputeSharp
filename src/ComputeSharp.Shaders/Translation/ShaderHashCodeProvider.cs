@@ -13,7 +13,7 @@ namespace ComputeSharp.Shaders.Translation
     /// <summary>
     /// A <see langword="static"/> <see langword="class"/> that handles the cache system for the generated shaders
     /// </summary>
-    internal static class ShaderCacheManager
+    internal static class ShaderHashCodeProvider
     {
         /// <summary>
         /// The mapping of hashcodes to aggregate hashing functions
@@ -21,10 +21,11 @@ namespace ComputeSharp.Shaders.Translation
         private static readonly Dictionary<int, Hasher?> HasherMapping = new Dictionary<int, Hasher?>();
 
         /// <summary>
-        /// Gets a unique key for the input shader closure
+        /// Gets a unique hashcode for the input shader closure
         /// </summary>
         /// <param name="action">The input <see cref="Action{T}"/> representing the shader to run</param>
-        private static int GetKey(Action<ThreadIds> action)
+        [Pure]
+        public static int GetHashCode(Action<ThreadIds> action)
         {
             // Get the delegate hashcode
             MethodInfo methodInfo = action.Method;
@@ -76,7 +77,7 @@ namespace ComputeSharp.Shaders.Translation
 
             // Unroll the member access
             MethodInfo
-                validateDelegateInfo = typeof(ShaderCacheManager).GetMethod(nameof(ValidateDelegate)),
+                validateDelegateInfo = typeof(ShaderHashCodeProvider).GetMethod(nameof(ValidateDelegate)),
                 getMethodInfo = typeof(Delegate).GetProperty(nameof(Delegate.Method)).GetMethod,
                 getHashCodeInfo = typeof(object).GetMethod(nameof(GetHashCode));
             foreach (FieldInfo fieldInfo in fieldInfos)
