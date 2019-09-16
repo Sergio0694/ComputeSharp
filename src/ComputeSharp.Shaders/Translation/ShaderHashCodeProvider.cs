@@ -77,7 +77,7 @@ namespace ComputeSharp.Shaders.Translation
 
             // Unroll the member access
             MethodInfo
-                validateDelegateInfo = typeof(ShaderHashCodeProvider).GetMethod(nameof(ValidateDelegate)),
+                validateDelegateInfo = typeof(ShaderHashCodeProvider).GetMethod(nameof(ValidateDelegate), BindingFlags.NonPublic | BindingFlags.Static),
                 getMethodInfo = typeof(Delegate).GetProperty(nameof(Delegate.Method)).GetMethod,
                 getHashCodeInfo = typeof(object).GetMethod(nameof(GetHashCode));
             foreach (FieldInfo fieldInfo in fieldInfos)
