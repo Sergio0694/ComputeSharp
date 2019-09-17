@@ -69,7 +69,7 @@ namespace ComputeSharp
         /// <summary>
         /// Gets or sets the value of the first color component
         /// </summary>
-        public uint R
+        public bool R
         {
             get => throw new InvalidExecutionContextException($"{nameof(Bool2)}.{nameof(R)}");
             set => throw new InvalidExecutionContextException($"{nameof(Bool2)}.{nameof(R)}");
@@ -78,7 +78,7 @@ namespace ComputeSharp
         /// <summary>
         /// Gets or sets the value of the second color component
         /// </summary>
-        public uint G
+        public bool G
         {
             get => throw new InvalidExecutionContextException($"{nameof(Bool2)}.{nameof(G)}");
             set => throw new InvalidExecutionContextException($"{nameof(Bool2)}.{nameof(G)}");
@@ -88,7 +88,7 @@ namespace ComputeSharp
         /// Gets or sets a specific component in the current <see cref="Bool2"/> instance
         /// </summary>
         /// <param name="i">The index of the component to access</param>
-        public float this[int i]
+        public bool this[int i]
         {
             get => throw new InvalidExecutionContextException($"{nameof(Bool2)}[int]");
             set => throw new InvalidExecutionContextException($"{nameof(Bool2)}[int]");
