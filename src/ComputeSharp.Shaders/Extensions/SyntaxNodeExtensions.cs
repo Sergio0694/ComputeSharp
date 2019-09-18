@@ -5,11 +5,8 @@ using System.Linq;
 using System.Reflection;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Translation.Models;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace ComputeSharp.Shaders.Extensions
+namespace Microsoft.CodeAnalysis.CSharp.Syntax
 {
     /// <summary>
     /// A <see langword="class"/> with some extension methods for C# syntax nodes

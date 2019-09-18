@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection.Emit;
-using ComputeSharp.Shaders.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests.Internals

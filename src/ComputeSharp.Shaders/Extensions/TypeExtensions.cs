@@ -1,10 +1,9 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace ComputeSharp.Shaders.Extensions
+namespace System
 {
     /// <summary>
     /// A <see langword="class"/> that provides extension methods for the <see cref="Type"/> type

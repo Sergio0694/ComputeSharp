@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Extensions;
-using ComputeSharp.Shaders.Extensions;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Renderer.Models.Fields;
 using ComputeSharp.Shaders.Renderer.Models.Fields.Abstract;

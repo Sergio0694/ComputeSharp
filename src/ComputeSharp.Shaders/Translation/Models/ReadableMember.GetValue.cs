@@ -4,7 +4,6 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
-using ComputeSharp.Shaders.Extensions;
 
 namespace ComputeSharp.Shaders.Translation.Models
 {
