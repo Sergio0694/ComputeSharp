@@ -103,15 +103,19 @@ namespace ComputeSharp.Shaders
             using CommandList commandList = new CommandList(device, CommandListType.Compute);
             commandList.SetPipelineState(pipelineState);
 
+            // Extract the dispatch data for the shader invocation
+            using var dispatchData = shaderData.Loader.GetDispatchData(action, x, y, z);
+
             // Load the captured buffers
-            foreach (var buffer in shaderData.Loader.GetBuffers(action))
+            Span<GraphicsResource> resources = dispatchData.Resources;
+            for (int i = 0; i < resources.Length; i++)
             {
-                commandList.SetComputeRootDescriptorTable(buffer.Index, buffer.Resource);
+                commandList.SetComputeRootDescriptorTable(i + 1, resources[i]);
             }
 
             // Initialize the loop targets
-            IReadOnlyList<object> variables = new object[] { (uint)x, (uint)y, (uint)z }.Concat(shaderData.Loader.GetVariables(action)).ToArray();
-            using GraphicsResource variablesBuffer = device.AllocateConstantBufferFromReflectedValues(variables);
+            Span<Int4> variables = dispatchData.Variables;
+            using GraphicsResource variablesBuffer = device.AllocateConstantBuffer(variables);
             commandList.SetComputeRootDescriptorTable(0, variablesBuffer);
 
             // Calculate the dispatch values

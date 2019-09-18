@@ -86,7 +86,7 @@ namespace ComputeSharp.Shaders.Translation
 
                     // Declare the local variables
                     il.DeclareLocal(ShaderType);
-                    foreach (ReadableMember member in map.OrderBy(p => p.Value).Select(p => p.Key))
+                    foreach (ReadableMember member in map.OrderBy(p => p.Value).Skip(1).Select(p => p.Key))
                     {
                         il.DeclareLocal(member.MemberType);
                     }

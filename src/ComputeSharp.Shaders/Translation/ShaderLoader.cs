@@ -198,7 +198,7 @@ namespace ComputeSharp.Shaders.Translation
 
                 // Track the buffer field
                 memberInfo.Parents = parents;
-                _BufferMembers.Add(memberInfo);
+                _CapturedMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
                 _BuffersList.Add(new ConstantBufferFieldInfo(fieldType, typeName, fieldName, _ConstantBuffersCount++));
@@ -210,7 +210,7 @@ namespace ComputeSharp.Shaders.Translation
 
                 // Track the buffer field
                 memberInfo.Parents = parents;
-                _BufferMembers.Add(memberInfo);
+                _CapturedMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
                 _BuffersList.Add(new ReadOnlyBufferFieldInfo(fieldType, typeName, fieldName, _ReadOnlyBuffersCount++));
@@ -222,7 +222,7 @@ namespace ComputeSharp.Shaders.Translation
 
                 // Track the buffer field
                 memberInfo.Parents = parents;
-                _BufferMembers.Add(memberInfo);
+                _CapturedMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
                 _BuffersList.Add(new ReadWriteBufferFieldInfo(fieldType, typeName, fieldName, _ReadWriteBuffersCount++));
@@ -231,7 +231,7 @@ namespace ComputeSharp.Shaders.Translation
             {
                 // Register the captured field
                 memberInfo.Parents = parents;
-                _VariableMembers.Add(memberInfo);
+                _CapturedMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
                 _FieldsList.Add(new CapturedFieldInfo(fieldType, typeName, fieldName));
