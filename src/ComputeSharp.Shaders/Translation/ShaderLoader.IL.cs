@@ -102,7 +102,7 @@ namespace ComputeSharp.Shaders.Translation
                         if (HlslKnownTypes.IsKnownBufferType(member.MemberType))
                         {
                             // Load the offset address into the resource buffers
-                            il.Emit(OpCodes.Ldarg_0);
+                            il.Emit(OpCodes.Ldarg_1);
                             if (_ResourcesCount > 0) il.EmitAddOffset<GraphicsResource>(_ResourcesCount);
                             _ResourcesCount++;
 
@@ -121,7 +121,7 @@ namespace ComputeSharp.Shaders.Translation
                             if (_VariablesByteSize % 16 > 16 - size) _VariablesByteSize += 16 - _VariablesByteSize % 16;
 
                             // Load the target address into the variables buffer
-                            il.Emit(OpCodes.Ldarg_1);
+                            il.Emit(OpCodes.Ldarg_2);
                             il.EmitAddOffset(_VariablesByteSize);
 
                             // Load the variable and store it in the loaded address
