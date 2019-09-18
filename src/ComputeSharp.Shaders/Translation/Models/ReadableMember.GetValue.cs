@@ -71,7 +71,7 @@ namespace ComputeSharp.Shaders.Translation.Models
         /// <summary>
         /// Gets or sets the list of parent members to access the current one from the root instance
         /// </summary>
-        public IEnumerable<ReadableMember>? Parents { get; set; }
+        public IReadOnlyList<ReadableMember>? Parents { get; set; }
 
         /// <summary>
         /// Builds a dynamic IL method to retrieve the value of the current member
