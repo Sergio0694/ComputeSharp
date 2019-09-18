@@ -1,9 +1,8 @@
-﻿using System;
-using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace ComputeSharp.Shaders.Extensions
+namespace System
 {
     /// <summary>
     /// A <see langword="class"/> that provides extension methods for the <see langword="string"/> type
