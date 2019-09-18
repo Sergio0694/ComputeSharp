@@ -127,7 +127,8 @@ namespace System.Reflection.Emit
         {
             if (type.IsValueType)
             {
-                il.Emit(Marshal.SizeOf(type) switch
+                // Pick the optimal opcode to set a value type
+                OpCode opcode = Marshal.SizeOf(type) switch
                 {
                     // Use the faster op codes for sizes <= 8
                     1 => OpCodes.Stind_I1,
@@ -139,7 +140,11 @@ namespace System.Reflection.Emit
 
                     // Default to stobj for all other value types
                     _ => OpCodes.Stobj
-                });
+                };
+
+                // Also pass the type token if stobj is used
+                if (opcode == OpCodes.Stobj) il.Emit(opcode, type);
+                else il.Emit(opcode);
             }
             else il.Emit(OpCodes.Stind_Ref);
         }
