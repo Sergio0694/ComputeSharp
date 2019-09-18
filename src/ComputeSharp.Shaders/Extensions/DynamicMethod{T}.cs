@@ -11,15 +11,20 @@ namespace ComputeSharp.Shaders.Extensions
     /// A <see langword="class"/> that can be used to easily (lol) create dynamic methods
     /// </summary>
     /// <typeparam name="T">The type of <see cref="Delegate"/> that will be used to wrap the new methods</typeparam>
-    public static class DynamicMethod<T> where T : Delegate
+    internal static class DynamicMethod<T> where T : Delegate
     {
+        /// <summary>
+        /// The owner type for new dynamic methods
+        /// </summary>
+        private static readonly Type OwnerType = typeof(DynamicMethod<T>);
+
         /// <summary>
         /// The return type of the <typeparamref name="T"/> <see langword="delegate"/>
         /// </summary>
         private static readonly Type ReturnType;
 
         /// <summary>
-        /// The array of types of the arguments of the <typeparamref name="T"/> <see langword="delegate"/>
+        /// The types of the arguments of the <typeparamref name="T"/> <see langword="delegate"/>
         /// </summary>
         private static readonly Type[] ParameterTypes;
 
@@ -41,15 +46,14 @@ namespace ComputeSharp.Shaders.Extensions
         /// <summary>
         /// Creates a new <typeparamref name="T"/> <see langword="delegate"/> for the target owner
         /// </summary>
-        /// <param name="owner">The <see cref="Type"/> instance that will own the new method</param>
         /// <param name="builder">An <see cref="Action"/> that builds the IL bytecode for the new method</param>
         /// <returns>A new dynamic method wrapped as a <typeparamref name="T"/> <see langword="delegate"/></returns>
         [Pure]
-        public static T New(Type owner, Action<ILGenerator> builder)
+        public static T New(Action<ILGenerator> builder)
         {
             // Create a new dynamic method with a unique id
             string id = $"__IL__{typeof(T).Name}_{Interlocked.Increment(ref _Count)}";
-            DynamicMethod method = new DynamicMethod(id, ReturnType, ParameterTypes, owner);
+            DynamicMethod method = new DynamicMethod(id, ReturnType, ParameterTypes, OwnerType);
 
             // Build the IL bytecode
             ILGenerator il = method.GetILGenerator();
