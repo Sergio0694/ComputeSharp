@@ -67,58 +67,54 @@ namespace ComputeSharp.Shaders.Translation
         [Pure]
         private static Hasher BuildDynamicHasher(Type declaringType, IReadOnlyCollection<FieldInfo> fieldInfos)
         {
-            // Create a new dynamic method for the current member
-            DynamicMethod method = new DynamicMethod("GetHashCodeForHlslDelegates", typeof(int), new[] { typeof(int), typeof(object) }, declaringType);
-            ILGenerator il = method.GetILGenerator();
-
-            // Declare the local variable to store the target instance
-            il.DeclareLocal(declaringType);
-
-            // Load the argument (the object instance)
-            il.Emit(OpCodes.Ldarg_1);
-            il.Emit(OpCodes.Castclass, declaringType);
-            il.Emit(OpCodes.Stloc_0);
-
-            // Unroll the member access
-            MethodInfo
-                validateDelegateInfo = typeof(ShaderHashCodeProvider).GetMethod(nameof(ValidateDelegate), BindingFlags.NonPublic | BindingFlags.Static),
-                getMethodInfo = typeof(Delegate).GetProperty(nameof(Delegate.Method)).GetMethod,
-                getHashCodeInfo = typeof(object).GetMethod(nameof(GetHashCode));
-            foreach (FieldInfo fieldInfo in fieldInfos)
+            return DynamicMethod<Hasher>.New(il =>
             {
-                Label label = il.DefineLabel();
+                // Declare the local variable to store the target instance
+                il.DeclareLocal(declaringType);
 
-                // if (fieldInfo.GetValue(obj) != null) {
-                il.Emit(OpCodes.Ldloc_0);
-                il.Emit(OpCodes.Ldfld, fieldInfo);
-                il.Emit(OpCodes.Brfalse_S, label);
+                // Load the argument (the object instance)
+                il.Emit(OpCodes.Ldarg_1);
+                il.Emit(OpCodes.Castclass, declaringType);
+                il.Emit(OpCodes.Stloc_0);
 
-                // if (ValidateDelegate(field)) {
-                il.Emit(OpCodes.Ldloc_0);
-                il.Emit(OpCodes.Ldfld, fieldInfo);
-                il.EmitCall(OpCodes.Call, validateDelegateInfo, null);
-                il.Emit(OpCodes.Brfalse_S, label);
+                // Unroll the member access
+                MethodInfo
+                    validateDelegateInfo = typeof(ShaderHashCodeProvider).GetMethod(nameof(ValidateDelegate), BindingFlags.NonPublic | BindingFlags.Static),
+                    getMethodInfo = typeof(Delegate).GetProperty(nameof(Delegate.Method)).GetMethod,
+                    getHashCodeInfo = typeof(object).GetMethod(nameof(GetHashCode));
+                foreach (FieldInfo fieldInfo in fieldInfos)
+                {
+                    Label label = il.DefineLabel();
 
-                // hash = hash * 17 + field.Method.GetHashCode();
+                    // if (fieldInfo.GetValue(obj) != null) {
+                    il.Emit(OpCodes.Ldloc_0);
+                    il.Emit(OpCodes.Ldfld, fieldInfo);
+                    il.Emit(OpCodes.Brfalse_S, label);
+
+                    // if (ValidateDelegate(field)) {
+                    il.Emit(OpCodes.Ldloc_0);
+                    il.Emit(OpCodes.Ldfld, fieldInfo);
+                    il.EmitCall(OpCodes.Call, validateDelegateInfo, null);
+                    il.Emit(OpCodes.Brfalse_S, label);
+
+                    // hash = hash * 17 + field.Method.GetHashCode();
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Ldc_I4, 17);
+                    il.Emit(OpCodes.Mul);
+                    il.Emit(OpCodes.Ldloc_0);
+                    il.Emit(OpCodes.Ldfld, fieldInfo);
+                    il.EmitCall(OpCodes.Callvirt, getMethodInfo, null);
+                    il.EmitCall(OpCodes.Callvirt, getHashCodeInfo, null);
+                    il.Emit(OpCodes.Add);
+                    il.Emit(OpCodes.Starg_S, 0);
+
+                    il.MarkLabel(label);
+                }
+
+                // Return the computed hash
                 il.Emit(OpCodes.Ldarg_0);
-                il.Emit(OpCodes.Ldc_I4, 17);
-                il.Emit(OpCodes.Mul);
-                il.Emit(OpCodes.Ldloc_0);
-                il.Emit(OpCodes.Ldfld, fieldInfo);
-                il.EmitCall(OpCodes.Callvirt, getMethodInfo, null);
-                il.EmitCall(OpCodes.Callvirt, getHashCodeInfo, null);
-                il.Emit(OpCodes.Add);
-                il.Emit(OpCodes.Starg_S, 0);
-
-                il.MarkLabel(label);
-            }
-
-            // Return the computed hash
-            il.Emit(OpCodes.Ldarg_0);
-            il.Emit(OpCodes.Ret);
-
-            // Build and return the delegate
-            return (Hasher)method.CreateDelegate(typeof(Hasher));
+                il.Emit(OpCodes.Ret);
+            });
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using ComputeSharp.Shaders.Extensions;
 
 namespace ComputeSharp.Shaders.Translation.Models
 {
@@ -79,39 +80,35 @@ namespace ComputeSharp.Shaders.Translation.Models
         [Pure]
         private Getter BuildDynamicGetter()
         {
-            // Create a new dynamic method for the current member
-            DynamicMethod method = new DynamicMethod($"Get{Name}", typeof(object), new[] { typeof(object) }, DeclaringType);
-            ILGenerator il = method.GetILGenerator();
-
-            // Info for hierarchical access
-            ReadableMember[] hierarchy = (Parents ?? Array.Empty<ReadableMember>()).Concat(new[] { this }).ToArray();
-
-            // Load the argument (the object instance) and cast it to the right type, if needed
-            if (!IsStatic)
+            return DynamicMethod<Getter>.New(il =>
             {
-                il.Emit(OpCodes.Ldarg_0);
+                // Info for hierarchical access
+                ReadableMember[] hierarchy = (Parents ?? Array.Empty<ReadableMember>()).Concat(new[] { this }).ToArray();
 
-                Type unboxType = hierarchy[0].DeclaringType;
-                il.Emit(unboxType.IsValueType ? OpCodes.Unbox : OpCodes.Castclass, unboxType);
-            }
+                // Load the argument (the object instance) and cast it to the right type, if needed
+                if (!IsStatic)
+                {
+                    il.Emit(OpCodes.Ldarg_0);
 
-            // Unroll the member access
-            foreach (ReadableMember member in hierarchy)
-            {
-                // Get the member value with the appropriate method
-                if (member.Property != null) il.EmitCall(member.IsStatic ? OpCodes.Call : OpCodes.Callvirt, member.Property.GetMethod, null);
-                else if (member.Field != null) il.Emit(member.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, member.Field);
-                else throw new InvalidOperationException("Field and property can't both be null at the same time");
-            }
+                    Type unboxType = hierarchy[0].DeclaringType;
+                    il.Emit(unboxType.IsValueType ? OpCodes.Unbox : OpCodes.Castclass, unboxType);
+                }
 
-            // Box the value, if needed
-            if (MemberType.IsValueType) il.Emit(OpCodes.Box, MemberType);
+                // Unroll the member access
+                foreach (ReadableMember member in hierarchy)
+                {
+                    // Get the member value with the appropriate method
+                    if (member.Property != null) il.EmitCall(member.IsStatic ? OpCodes.Call : OpCodes.Callvirt, member.Property.GetMethod, null);
+                    else if (member.Field != null) il.Emit(member.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, member.Field);
+                    else throw new InvalidOperationException("Field and property can't both be null at the same time");
+                }
 
-            // Return the member value from the top of the evaluation stack
-            il.Emit(OpCodes.Ret);
+                // Box the value, if needed
+                if (MemberType.IsValueType) il.Emit(OpCodes.Box, MemberType);
 
-            // Build and return the delegate
-            return (Getter)method.CreateDelegate(typeof(Getter));
+                // Return the member value from the top of the evaluation stack
+                il.Emit(OpCodes.Ret);
+            });
         }
     }
 }
