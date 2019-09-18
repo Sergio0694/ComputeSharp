@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace System.Reflection.Emit
 {
@@ -85,9 +86,17 @@ namespace System.Reflection.Emit
         /// <summary>
         /// Puts the appropriate <see langword="ldc.i4"/>, <see langword="conv.i"/> and <see langword="add"/> instructions to advance a reference onto the stream of instructions
         /// </summary>
+        /// <typeparam name="T">The type of reference at the top of the stack</typeparam>
         /// <param name="il">The input <see cref="ILGenerator"/> instance to use to emit instructions</param>
         /// <param name="offset">The offset to use to advance the current reference on top of the execution stack</param>
-        public static void EmitAddByteOffset(this ILGenerator il, int offset)
+        public static void EmitAddOffset<T>(this ILGenerator il, int offset) => il.EmitAddOffset(Unsafe.SizeOf<T>() * offset);
+
+        /// <summary>
+        /// Puts the appropriate <see langword="ldc.i4"/>, <see langword="conv.i"/> and <see langword="add"/> instructions to advance a reference onto the stream of instructions
+        /// </summary>
+        /// <param name="il">The input <see cref="ILGenerator"/> instance to use to emit instructions</param>
+        /// <param name="offset">The offset in bytes to use to advance the current reference on top of the execution stack</param>
+        public static void EmitAddOffset(this ILGenerator il, int offset)
         {
             // Push the offset to the stack
             if (offset > 8) il.Emit(OpCodes.Ldc_I4, offset);
@@ -115,19 +124,23 @@ namespace System.Reflection.Emit
         /// <param name="type">The type of value being written to the current reference on top of the execution stack</param>
         public static void EmitStoreToAddress(this ILGenerator il, Type type)
         {
-            il.Emit(Marshal.SizeOf(type) switch
+            if (type.IsValueType)
             {
-                // Use the faster op codes for sizes <= 8
-                1 => OpCodes.Stind_I1,
-                2 => OpCodes.Stind_I2,
-                4 when type == typeof(float) => OpCodes.Stind_R4,
-                4 => OpCodes.Stind_I4,
-                8 when type == typeof(double) => OpCodes.Stind_R8,
-                8 when type == typeof(long) || type == typeof(ulong) => OpCodes.Stind_I8,
+                il.Emit(Marshal.SizeOf(type) switch
+                {
+                    // Use the faster op codes for sizes <= 8
+                    1 => OpCodes.Stind_I1,
+                    2 => OpCodes.Stind_I2,
+                    4 when type == typeof(float) => OpCodes.Stind_R4,
+                    4 => OpCodes.Stind_I4,
+                    8 when type == typeof(double) => OpCodes.Stind_R8,
+                    8 when type == typeof(long) || type == typeof(ulong) => OpCodes.Stind_I8,
 
-                // Default to stobj for all other value types
-                _ => OpCodes.Stobj
-            });
+                    // Default to stobj for all other value types
+                    _ => OpCodes.Stobj
+                });
+            }
+            else il.Emit(OpCodes.Stind_Ref);
         }
     }
 }
