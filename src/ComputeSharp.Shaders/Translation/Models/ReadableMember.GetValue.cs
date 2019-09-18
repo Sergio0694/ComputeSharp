@@ -88,18 +88,13 @@ namespace ComputeSharp.Shaders.Translation.Models
                 if (!IsStatic)
                 {
                     il.Emit(OpCodes.Ldarg_0);
-
-                    Type unboxType = hierarchy[0].DeclaringType;
-                    il.Emit(unboxType.IsValueType ? OpCodes.Unbox : OpCodes.Castclass, unboxType);
+                    il.EmitCastOrUnbox(hierarchy[0].DeclaringType);
                 }
 
                 // Unroll the member access
                 foreach (ReadableMember member in hierarchy)
                 {
-                    // Get the member value with the appropriate method
-                    if (member.Property != null) il.EmitCall(member.IsStatic ? OpCodes.Call : OpCodes.Callvirt, member.Property.GetMethod, null);
-                    else if (member.Field != null) il.Emit(member.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, member.Field);
-                    else throw new InvalidOperationException("Field and property can't both be null at the same time");
+                    il.EmitReadMember(member);
                 }
 
                 // Box the value, if needed

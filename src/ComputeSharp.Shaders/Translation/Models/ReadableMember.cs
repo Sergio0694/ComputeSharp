@@ -14,14 +14,9 @@ namespace ComputeSharp.Shaders.Translation.Models
         private readonly string Id;
 
         /// <summary>
-        /// The <see cref="FieldInfo"/> object wrapped by the current instance, if present
+        /// The <see cref="MemberInfo"/> object wrapped by the current instance
         /// </summary>
-        private readonly FieldInfo? Field;
-
-        /// <summary>
-        /// The <see cref="PropertyInfo"/> object wrapped by the current instance, if present
-        /// </summary>
-        private readonly PropertyInfo? Property;
+        private readonly MemberInfo Member;
 
         /// <summary>
         /// Creates a new <see cref="ReadableMember"/> instance with the given parameters
@@ -30,22 +25,23 @@ namespace ComputeSharp.Shaders.Translation.Models
         private ReadableMember(MemberInfo memberInfo)
         {
             // General properties
+            Id = $"{memberInfo.DeclaringType.FullName}{Type.Delimiter}{memberInfo.Name}";
+            Member = memberInfo;
             Name = memberInfo.Name;
-            Id = $"{memberInfo.DeclaringType.FullName}{Type.Delimiter}{Name}";
             DeclaringType = memberInfo.DeclaringType;
 
             // Type specific properties
             if (memberInfo is FieldInfo fieldInfo)
             {
-                Field = fieldInfo;
-                IsStatic = Field.IsStatic;
-                MemberType = Field.FieldType;
+                Member = fieldInfo;
+                IsStatic = fieldInfo.IsStatic;
+                MemberType = fieldInfo.FieldType;
             }
             else if (memberInfo is PropertyInfo propertyInfo)
             {
-                Property = propertyInfo;
-                IsStatic = Property.GetMethod.IsStatic;
-                MemberType = Property.PropertyType;
+                Member = propertyInfo;
+                IsStatic = propertyInfo.GetMethod.IsStatic;
+                MemberType = propertyInfo.PropertyType;
             }
             else throw new InvalidOperationException("Field and property can't both be null at the same time");
         }
@@ -81,5 +77,11 @@ namespace ComputeSharp.Shaders.Translation.Models
         /// </summary>
         /// <param name="property">The input <see cref="PropertyInfo"/> object to wrap</param>
         public static implicit operator ReadableMember(PropertyInfo property) => new ReadableMember(property);
+
+        /// <summary>
+        /// Converts a <see cref="ReadableMember"/> object into a <see cref="MemberInfo"/> instance
+        /// </summary>
+        /// <param name="member">The input <see cref="ReadableMember"/> object to unwrap</param>
+        public static implicit operator MemberInfo(ReadableMember member) => member.Member;
     }
 }

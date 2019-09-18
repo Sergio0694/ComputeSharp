@@ -8,6 +8,35 @@ namespace System.Reflection.Emit
     internal static class ILGeneratorExtensions
     {
         /// <summary>
+        /// Puts the appropriate <see langword="unbox"/> or <see langword="castclass"/> instruction to unbox/cast a value onto the stream of instructions
+        /// </summary>
+        /// <param name="il">The input <see cref="ILGenerator"/> instance to use to emit instructions</param>
+        /// <param name="type">The type of value to convert</param>
+        public static void EmitCastOrUnbox(this ILGenerator il, Type type)
+        {
+            il.Emit(type.IsValueType ? OpCodes.Unbox : OpCodes.Castclass, type);
+        }
+
+        /// <summary>
+        /// Puts the appropriate <see langword="ldsfld"/>, <see langword="ldfld"/>, <see langword="call"/> or <see langword="callvirt"/> instruction to read a member onte the stream of instructions
+        /// </summary>
+        /// <param name="il">The input <see cref="ILGenerator"/> instance to use to emit instructions</param>
+        /// <param name="member">The member to read</param>
+        public static void EmitReadMember(this ILGenerator il, MemberInfo member)
+        {
+            switch (member)
+            {
+                case FieldInfo field:
+                    il.Emit(field.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, field);
+                    break;
+                case PropertyInfo property when property.CanRead:
+                    il.EmitCall(property.GetMethod.IsStatic ? OpCodes.Call : OpCodes.Callvirt, property.GetMethod, null);
+                    break;
+                default: throw new ArgumentException($"The input {member.GetType()} instance can't be read");
+            }
+        }
+
+        /// <summary>
         /// Puts the appropriate <see langword="ldc.i4"/>, <see langword="conv.i"/> and <see langword="add"/> instructions to advance a reference onto the stream of instructions
         /// </summary>
         /// <param name="il">The input <see cref="ILGenerator"/> instance to use to emit instructions</param>
