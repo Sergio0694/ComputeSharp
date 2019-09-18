@@ -99,8 +99,7 @@ namespace System.Reflection.Emit
         public static void EmitAddOffset(this ILGenerator il, int offset)
         {
             // Push the offset to the stack
-            if (offset > 8) il.Emit(OpCodes.Ldc_I4, offset);
-            else
+            if (offset <= 8)
             {
                 il.Emit(offset switch
                 {
@@ -111,6 +110,8 @@ namespace System.Reflection.Emit
                     _ => throw new InvalidOperationException("Huh?")
                 });
             }
+            else if (offset <= 127) il.Emit(OpCodes.Ldc_I4_S, (byte)offset);
+            else il.Emit(OpCodes.Ldc_I4, offset);
 
             // Converts the offset to native int and adds to the address
             il.Emit(OpCodes.Conv_I);

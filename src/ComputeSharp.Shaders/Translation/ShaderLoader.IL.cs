@@ -123,6 +123,7 @@ namespace ComputeSharp.Shaders.Translation
                             // Load the target address into the variables buffer
                             il.Emit(OpCodes.Ldarg_2);
                             il.EmitAddOffset(_VariablesByteSize);
+                            _VariablesByteSize += size;
 
                             // Load the variable and store it in the loaded address
                             LoadMember(member);
