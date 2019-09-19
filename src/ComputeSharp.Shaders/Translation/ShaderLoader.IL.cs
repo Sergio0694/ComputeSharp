@@ -105,16 +105,8 @@ namespace ComputeSharp.Shaders.Translation
                             il.Emit(OpCodes.Ldarg_1);
                             if (_ResourcesCount > 0) il.EmitAddOffset<GraphicsResource>(_ResourcesCount);
                             _ResourcesCount++;
-
-                            /* Load the current member accordingly.
-                             * When this method returns, the value of the current
-                             * member will be at the top of the execution stack */
-                            LoadMember(member);
-
-                            il.EmitStoreToAddress(member.MemberType);
                         }
-                        else if (HlslKnownTypes.IsKnownScalarType(member.MemberType) ||
-                                 HlslKnownTypes.IsKnownVectorType(member.MemberType))
+                        else if (HlslKnownTypes.IsKnownScalarType(member.MemberType) || HlslKnownTypes.IsKnownVectorType(member.MemberType))
                         {
                             // Calculate the right offset with 16-bytes padding (HLSL constant buffer)
                             int size = Marshal.SizeOf(member.MemberType);
@@ -124,12 +116,15 @@ namespace ComputeSharp.Shaders.Translation
                             il.Emit(OpCodes.Ldarg_2);
                             il.EmitAddOffset(_VariablesByteSize);
                             _VariablesByteSize += size;
-
-                            // Load the variable and store it in the loaded address
-                            LoadMember(member);
-                            il.EmitStoreToAddress(member.MemberType);
                         }
                         else throw new InvalidOperationException($"Invalid captured member of type {member.MemberType}");
+
+                        /* Load the current member accordingly.
+                         * When this method returns, the value of the current
+                         * member will be at the top of the execution stack */
+                        LoadMember(member);
+
+                        il.EmitStoreToAddress(member.MemberType);
                     }
 
                     il.Emit(OpCodes.Ret);

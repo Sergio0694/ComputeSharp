@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
-using ComputeSharp.Graphics.Buffers.Extensions;
 using ComputeSharp.Shaders.Renderer;
 using ComputeSharp.Shaders.Renderer.Models;
 using ComputeSharp.Shaders.Translation;
