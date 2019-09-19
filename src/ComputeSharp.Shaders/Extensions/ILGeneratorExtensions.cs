@@ -33,7 +33,7 @@ namespace System.Reflection.Emit
                     1 => OpCodes.Ldloc_1,
                     2 => OpCodes.Ldloc_2,
                     3 => OpCodes.Ldloc_3,
-                    _ => throw new InvalidOperationException("Huh?")
+                    _ => throw new InvalidOperationException($"Invalid local variable index [{index}]")
                 });
             }
             else if (index <= 255) il.Emit(OpCodes.Ldloc_S, (byte)index);
@@ -56,7 +56,7 @@ namespace System.Reflection.Emit
                     1 => OpCodes.Stloc_1,
                     2 => OpCodes.Stloc_2,
                     3 => OpCodes.Stloc_3,
-                    _ => throw new InvalidOperationException("Huh?")
+                    _ => throw new InvalidOperationException($"Invalid local variable index [{index}]")
                 });
             }
             else if (index <= 255) il.Emit(OpCodes.Stloc_S, (byte)index);
@@ -99,15 +99,22 @@ namespace System.Reflection.Emit
         public static void EmitAddOffset(this ILGenerator il, int offset)
         {
             // Push the offset to the stack
-            if (offset <= 8)
+            if (offset < 128) il.Emit(OpCodes.Ldc_I4, offset);
+            else if (offset < 0) il.Emit(OpCodes.Ldc_I4_S, (sbyte)offset);
+            else if (offset <= 8)
             {
                 il.Emit(offset switch
                 {
+                    0 => OpCodes.Ldc_I4_0,
                     1 => OpCodes.Ldc_I4_1,
                     2 => OpCodes.Ldc_I4_2,
+                    3 => OpCodes.Ldc_I4_3,
                     4 => OpCodes.Ldc_I4_4,
+                    5 => OpCodes.Ldc_I4_5,
+                    6 => OpCodes.Ldc_I4_6,
+                    7 => OpCodes.Ldc_I4_7,
                     8 => OpCodes.Ldc_I4_8,
-                    _ => throw new InvalidOperationException("Huh?")
+                    _ => throw new InvalidOperationException($"Invalid offset value [{offset}]")
                 });
             }
             else if (offset <= 127) il.Emit(OpCodes.Ldc_I4_S, (byte)offset);
@@ -131,10 +138,10 @@ namespace System.Reflection.Emit
                 OpCode opcode = Marshal.SizeOf(type) switch
                 {
                     // Use the faster op codes for sizes <= 8
-                    1 => OpCodes.Stind_I1,
-                    2 => OpCodes.Stind_I2,
+                    1 when type == typeof(bool) || type == typeof(byte) || type == typeof(sbyte) => OpCodes.Stind_I1,
+                    2 when type == typeof(short) || type == typeof(ushort) => OpCodes.Stind_I2,
                     4 when type == typeof(float) => OpCodes.Stind_R4,
-                    4 => OpCodes.Stind_I4,
+                    4 when type == typeof(int) || type == typeof(uint) => OpCodes.Stind_I4,
                     8 when type == typeof(double) => OpCodes.Stind_R8,
                     8 when type == typeof(long) || type == typeof(ulong) => OpCodes.Stind_I8,
 
