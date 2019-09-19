@@ -4,7 +4,6 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Renderer.Models.Fields;
@@ -24,7 +23,7 @@ namespace ComputeSharp.Shaders.Translation
     /// <summary>
     /// A <see langword="class"/> responsible for loading and processing <see cref="Action{T}"/> instances
     /// </summary>
-    internal sealed class ShaderLoader
+    internal sealed partial class ShaderLoader
     {
         /// <summary>
         /// The <see cref="Action{T}"/> that represents the shader to load
@@ -72,41 +71,6 @@ namespace ComputeSharp.Shaders.Translation
         /// Gets the <see cref="RootParameter1"/> array for the current shader
         /// </summary>
         public RootParameter1[] RootParameters => _RootParameters ??= DescriptorRanges.Select(range => new RootParameter1(new RootDescriptorTable1(range), ShaderVisibility.All)).ToArray();
-
-        /// <summary>
-        /// The <see cref="List{T}"/> of <see cref="ReadableMember"/> instances mapping the captured buffers in the current shader
-        /// </summary>
-        private readonly List<ReadableMember> _BufferMembers = new List<ReadableMember>();
-
-        /// <summary>
-        /// Gets the ordered collection of buffers used as fields in the current shader
-        /// </summary>
-        /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
-        public IEnumerable<(int Index, GraphicsResource Resource)> GetBuffers(Action<ThreadIds> action)
-        {
-            int index = 1;
-            foreach (var item in _BufferMembers)
-            {
-                yield return (index++, (GraphicsResource)item.DangerousGetValue(action.Target));
-            }
-        }
-
-        /// <summary>
-        /// The <see cref="List{T}"/> of <see cref="ReadableMember"/> instances mapping the captured scalar/vector variables in the current shader
-        /// </summary>
-        private readonly List<ReadableMember> _VariableMembers = new List<ReadableMember>();
-
-        /// <summary>
-        /// Gets the collection of values of the captured fields for the current shader
-        /// </summary>
-        /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
-        public IEnumerable<object> GetVariables(Action<ThreadIds> action)
-        {
-            foreach (var item in _VariableMembers)
-            {
-                yield return item.DangerousGetValue(action.Target);
-            }
-        }
 
         private readonly List<HlslBufferInfo> _BuffersList = new List<HlslBufferInfo>();
 
@@ -198,7 +162,7 @@ namespace ComputeSharp.Shaders.Translation
 
                 // Track the buffer field
                 memberInfo.Parents = parents;
-                _BufferMembers.Add(memberInfo);
+                _CapturedMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
                 _BuffersList.Add(new ConstantBufferFieldInfo(fieldType, typeName, fieldName, _ConstantBuffersCount++));
@@ -210,7 +174,7 @@ namespace ComputeSharp.Shaders.Translation
 
                 // Track the buffer field
                 memberInfo.Parents = parents;
-                _BufferMembers.Add(memberInfo);
+                _CapturedMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
                 _BuffersList.Add(new ReadOnlyBufferFieldInfo(fieldType, typeName, fieldName, _ReadOnlyBuffersCount++));
@@ -222,7 +186,7 @@ namespace ComputeSharp.Shaders.Translation
 
                 // Track the buffer field
                 memberInfo.Parents = parents;
-                _BufferMembers.Add(memberInfo);
+                _CapturedMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
                 _BuffersList.Add(new ReadWriteBufferFieldInfo(fieldType, typeName, fieldName, _ReadWriteBuffersCount++));
@@ -231,7 +195,7 @@ namespace ComputeSharp.Shaders.Translation
             {
                 // Register the captured field
                 memberInfo.Parents = parents;
-                _VariableMembers.Add(memberInfo);
+                _CapturedMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
                 _FieldsList.Add(new CapturedFieldInfo(fieldType, typeName, fieldName));
@@ -259,14 +223,6 @@ namespace ComputeSharp.Shaders.Translation
                 // Captured static delegates with a return type
                 LoadStaticMethodSource(fieldName, func.Method);
             }
-
-            /* Build the dynamic IL accessor for the current member, if one is
-             * not available already. This is done during while the shader is
-             * being loaded and not just when needed because the internal cache
-             * system for the accessors is not thread safe. Preloading the accessor here
-             * leverages the external lock around the shader loading, ensuring
-             * that no race conditions occur when accessing the cached mapping */
-            memberInfo.PreloadAccessor();
         }
 
         /// <summary>

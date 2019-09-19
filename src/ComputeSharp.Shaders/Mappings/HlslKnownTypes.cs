@@ -94,6 +94,16 @@ namespace ComputeSharp.Shaders.Mappings
                                                            type == typeof(Vector4);
 
         /// <summary>
+        /// Checks whether or not the input type is a known buffer type
+        /// </summary>
+        /// <param name="type">The input <see cref="Type"/> instance to check</param>
+        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a known buffer type</returns>
+        [Pure]
+        public static bool IsKnownBufferType(Type type) => IsConstantBufferType(type) ||
+                                                           IsReadOnlyBufferType(type) ||
+                                                           IsReadWriteBufferType(type);
+
+        /// <summary>
         /// Checks whether or not the input type is a <see cref="ConstantBuffer{T}"/> value
         /// </summary>
         /// <param name="type">The input <see cref="Type"/> instance to check</param>

@@ -98,14 +98,14 @@ namespace ComputeSharp.Shaders.Translation
 
                     // hash = hash * 17 + field.Method.GetHashCode();
                     il.Emit(OpCodes.Ldarg_0);
-                    il.Emit(OpCodes.Ldc_I4, 17);
+                    il.Emit(OpCodes.Ldc_I4_S, (byte)17);
                     il.Emit(OpCodes.Mul);
                     il.Emit(OpCodes.Ldloc_0);
                     il.Emit(OpCodes.Ldfld, fieldInfo);
                     il.EmitCall(OpCodes.Callvirt, getMethodInfo, null);
                     il.EmitCall(OpCodes.Callvirt, getHashCodeInfo, null);
                     il.Emit(OpCodes.Add);
-                    il.Emit(OpCodes.Starg_S, 0);
+                    il.Emit(OpCodes.Starg_S, (byte)0);
 
                     il.MarkLabel(label);
                 }
