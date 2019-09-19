@@ -83,5 +83,17 @@ namespace ComputeSharp.Shaders.Translation.Models
         /// </summary>
         /// <param name="member">The input <see cref="ReadableMember"/> object to unwrap</param>
         public static implicit operator MemberInfo(ReadableMember member) => member.Member;
+
+        /// <summary>
+        /// Converts a <see cref="ReadableMember"/> object into a <see cref="FieldInfo"/> instance
+        /// </summary>
+        /// <param name="member">The input <see cref="ReadableMember"/> object to unwrap</param>
+        public static implicit operator FieldInfo(ReadableMember member) => (FieldInfo)member.Member;
+
+        /// <summary>
+        /// Converts a <see cref="ReadableMember"/> object into a <see cref="PropertyInfo"/> instance
+        /// </summary>
+        /// <param name="member">The input <see cref="ReadableMember"/> object to unwrap</param>
+        public static implicit operator PropertyInfo(ReadableMember member) => (PropertyInfo)member.Member;
     }
 }

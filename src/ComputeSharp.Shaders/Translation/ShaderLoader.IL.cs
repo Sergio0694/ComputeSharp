@@ -74,7 +74,7 @@ namespace ComputeSharp.Shaders.Translation
                                 if (i == 0) il.EmitLoadLocal(0);
                                 for (; i < member.Parents.Count; i++)
                                 {
-                                    il.Emit(OpCodes.Ldfld, member.Parents[i].MemberType);
+                                    il.Emit(OpCodes.Ldfld, member.Parents[i]);
                                     il.EmitStoreLocal(map[member.Parents[i]]);
                                     il.EmitLoadLocal(map[member.Parents[i]]);
                                 }
