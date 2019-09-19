@@ -4,7 +4,6 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Renderer.Models.Fields;
@@ -72,41 +71,6 @@ namespace ComputeSharp.Shaders.Translation
         /// Gets the <see cref="RootParameter1"/> array for the current shader
         /// </summary>
         public RootParameter1[] RootParameters => _RootParameters ??= DescriptorRanges.Select(range => new RootParameter1(new RootDescriptorTable1(range), ShaderVisibility.All)).ToArray();
-
-        /// <summary>
-        /// The <see cref="List{T}"/> of <see cref="ReadableMember"/> instances mapping the captured buffers in the current shader
-        /// </summary>
-        private readonly List<ReadableMember> _BufferMembers = new List<ReadableMember>();
-
-        /// <summary>
-        /// Gets the ordered collection of buffers used as fields in the current shader
-        /// </summary>
-        /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
-        public IEnumerable<(int Index, GraphicsResource Resource)> GetBuffers(Action<ThreadIds> action)
-        {
-            int index = 1;
-            foreach (var item in _BufferMembers)
-            {
-                yield return (index++, (GraphicsResource)item.DangerousGetValue(action.Target));
-            }
-        }
-
-        /// <summary>
-        /// The <see cref="List{T}"/> of <see cref="ReadableMember"/> instances mapping the captured scalar/vector variables in the current shader
-        /// </summary>
-        private readonly List<ReadableMember> _VariableMembers = new List<ReadableMember>();
-
-        /// <summary>
-        /// Gets the collection of values of the captured fields for the current shader
-        /// </summary>
-        /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
-        public IEnumerable<object> GetVariables(Action<ThreadIds> action)
-        {
-            foreach (var item in _VariableMembers)
-            {
-                yield return item.DangerousGetValue(action.Target);
-            }
-        }
 
         private readonly List<HlslBufferInfo> _BuffersList = new List<HlslBufferInfo>();
 
