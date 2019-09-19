@@ -51,6 +51,13 @@ namespace ComputeSharp.Shaders.Translation
         [Pure]
         public DispatchData GetDispatchData(Action<ThreadIds> action, int x, int y, int z)
         {
+            /* Create the data loader instance, if not available already.
+             * This will also initialize the other local fields in the shader
+             * loader class, which are used to rent the buffers used to store
+             * the captured resources and variables. This is why this call
+             * has to be the first one in this method, it must NOT be moved */
+            DispatchDataLoader loader = _DispatchDataLoader ??= BuildDispatchDataLoader();
+
             // Resources and variables buffers
             GraphicsResource[] resources = ArrayPool<GraphicsResource>.Shared.Rent(_ResourcesCount);
             byte[] variables = ArrayPool<byte>.Shared.Rent(_VariablesByteSize);
@@ -63,7 +70,6 @@ namespace ComputeSharp.Shaders.Translation
             Unsafe.Add(ref Unsafe.As<byte, int>(ref r1), 2) = z;
 
             // Invoke the dynamic method to extract the captured data
-            DispatchDataLoader loader = _DispatchDataLoader ??= BuildDispatchDataLoader();
             loader(action.Target, ref r0, ref r1);
 
             return new DispatchData(resources, _ResourcesCount, variables, _VariablesByteSize);

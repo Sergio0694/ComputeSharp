@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Reflection;
 
 namespace ComputeSharp.Shaders.Translation.Models
@@ -6,13 +8,8 @@ namespace ComputeSharp.Shaders.Translation.Models
     /// <summary>
     /// A <see langword="class"/> that wraps a readable member of another <see langword="class"/> and provides access to it
     /// </summary>
-    internal sealed partial class ReadableMember
+    internal sealed class ReadableMember
     {
-        /// <summary>
-        /// The id of the current member
-        /// </summary>
-        private readonly string Id;
-
         /// <summary>
         /// The <see cref="MemberInfo"/> object wrapped by the current instance
         /// </summary>
@@ -25,7 +22,6 @@ namespace ComputeSharp.Shaders.Translation.Models
         private ReadableMember(MemberInfo memberInfo)
         {
             // General properties
-            Id = $"{memberInfo.DeclaringType.FullName}{Type.Delimiter}{memberInfo.Name}";
             Member = memberInfo;
             Name = memberInfo.Name;
             DeclaringType = memberInfo.DeclaringType;
@@ -65,6 +61,26 @@ namespace ComputeSharp.Shaders.Translation.Models
         /// Gets the <see cref="Type"/> of the wrapped member for the current instance
         /// </summary>
         public Type MemberType { get; }
+
+        /// <summary>
+        /// Gets or sets the list of parent members to access the current one from the root instance
+        /// </summary>
+        public IReadOnlyList<ReadableMember>? Parents { get; set; }
+
+        /// <summary>
+        /// Returns the value of the wrapped member for the current instance
+        /// </summary>
+        /// <param name="instance">The target instance to use to read the value from</param>
+        [Pure]
+        public object GetValue(object? instance)
+        {
+            return Member switch
+            {
+                FieldInfo field => field.GetValue(instance),
+                PropertyInfo property => property.GetValue(instance),
+                _ => throw new InvalidOperationException("Field and property can't both be null at the same time")
+            };
+        }
 
         /// <summary>
         /// Converts a <see cref="FieldInfo"/> object into a <see cref="ReadableMember"/> instance
