@@ -104,7 +104,7 @@ namespace ComputeSharp.Shaders
             commandList.SetPipelineState(pipelineState);
 
             // Extract the dispatch data for the shader invocation
-            using var dispatchData = shaderData.Loader.GetDispatchData(action, x, y, z);
+            using DispatchData dispatchData = shaderData.Loader.GetDispatchData(action, x, y, z);
 
             // Load the captured buffers
             Span<GraphicsResource> resources = dispatchData.Resources;

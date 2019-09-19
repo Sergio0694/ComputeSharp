@@ -35,7 +35,7 @@ namespace ComputeSharp.Shaders.Translation
         private MembersLoader? _MembersLoader;
 
         [Pure]
-        public ShaderDispatchData GetDispatchData(Action<ThreadIds> action, int x, int y, int z)
+        public DispatchData GetDispatchData(Action<ThreadIds> action, int x, int y, int z)
         {
             if (_MembersLoader == null)
             {
@@ -150,48 +150,7 @@ namespace ComputeSharp.Shaders.Translation
             // Invoke the dynamic method to extract the captured data
             _MembersLoader(action.Target, ref r0, ref r1);
 
-            return new ShaderDispatchData(resources, _ResourcesCount, variables, _VariablesByteSize);
-        }
-
-        public readonly ref struct ShaderDispatchData
-        {
-            private readonly GraphicsResource[] ResourcesArray;
-
-            private readonly byte[] VariablesArray;
-
-            private readonly int ResourcesCount;
-
-            private readonly int VariablesInt4Size;
-
-            public Span<GraphicsResource> Resources
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => ResourcesArray.AsSpan(0, ResourcesCount);
-            }
-
-            public Span<Int4> Variables
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get
-                {
-                    ref Int4 r = ref Unsafe.As<byte, Int4>(ref VariablesArray[0]);
-                    return MemoryMarshal.CreateSpan(ref r, VariablesInt4Size);
-                }
-            }
-
-            public ShaderDispatchData(GraphicsResource[] resourcesArray, int resourcesCount, byte[] variablesArray, int variablesInt4Size)
-            {
-                ResourcesArray = resourcesArray;
-                VariablesArray = variablesArray;
-                ResourcesCount = resourcesCount;
-                VariablesInt4Size = variablesInt4Size;
-            }
-
-            public void Dispose()
-            {
-                ArrayPool<GraphicsResource>.Shared.Return(ResourcesArray);
-                ArrayPool<byte>.Shared.Return(VariablesArray);
-            }
+            return new DispatchData(resources, _ResourcesCount, variables, _VariablesByteSize);
         }
     }
 }
