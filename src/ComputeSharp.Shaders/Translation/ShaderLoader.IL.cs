@@ -151,7 +151,7 @@ namespace ComputeSharp.Shaders.Translation
                     else if (HlslKnownTypes.IsKnownScalarType(member.MemberType) || HlslKnownTypes.IsKnownVectorType(member.MemberType))
                     {
                         // Calculate the right offset with 16-bytes padding (HLSL constant buffer)
-                        int size = Marshal.SizeOf(member.MemberType);
+                        int size = member.MemberType == typeof(bool) ? sizeof(uint) : Marshal.SizeOf(member.MemberType); // bool is 4 bytes in HLSL
                         if (_VariablesByteSize % 16 > 16 - size) _VariablesByteSize += 16 - _VariablesByteSize % 16;
 
                         // Load the target address into the variables buffer
