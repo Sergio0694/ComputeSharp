@@ -42,6 +42,35 @@ namespace ComputeSharp.Tests
         }
 
         [TestMethod]
+        public void ShaderWithBoolType()
+        {
+            using ReadWriteBuffer<Bool> bools = Gpu.Default.AllocateReadWriteBuffer(new Bool[] { true, false, true, true });
+            using ReadWriteBuffer<int> ints = Gpu.Default.AllocateReadWriteBuffer<int>(4);
+
+            void Foo(ThreadIds id)
+            {
+                if (bools[id.X]) ints[id.X] = id.X + 1;
+                bools[id.X] = (id.X % 2) == 0;
+            }
+
+            Gpu.Default.For(4, Foo);
+
+            Bool[] boolResults = bools.GetData();
+
+            Assert.IsTrue(boolResults[0]);
+            Assert.IsFalse(boolResults[1]);
+            Assert.IsTrue(boolResults[2]);
+            Assert.IsFalse(boolResults[3]);
+
+            int[] intResults = ints.GetData();
+
+            Assert.IsTrue(intResults[0] == 1);
+            Assert.IsTrue(intResults[1] == 0);
+            Assert.IsTrue(intResults[2] == 3);
+            Assert.IsTrue(intResults[3] == 4);
+        }
+
+        [TestMethod]
         public void LocalScalarAssignToBufferWithinLocalMethod()
         {
             float value = 10;

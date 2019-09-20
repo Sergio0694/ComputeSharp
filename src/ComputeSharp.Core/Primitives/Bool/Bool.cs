@@ -28,6 +28,9 @@ namespace ComputeSharp
         /// <inheritdoc/>
         public override int GetHashCode() => Value.GetHashCode();
 
+        /// <inheritdoc/>
+        public override string ToString() => Value.ToString();
+
         /// <summary>
         /// Checks whether or not two <see cref="Bool"/> instances represent the same <see cref="bool"/> value
         /// </summary>
