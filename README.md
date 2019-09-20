@@ -61,6 +61,12 @@ If the shader in C# is capturing some local variable, those will be automaticall
 
 ✅ `static` fields and properties with a supported delegate type
 
+## Allocating GPU buffers
+
+There are a number of extension APIs for the `GraphicsDevice` class that can be used to allocate GPU buffers of three types: `ConstantBuffer<T>`, `ReadOnlyBuffer<T>` and `ReadWriteBuffer<T>`. The first is packed to 16 bytes and provides the fastest possible access for buffer elements, but it has a limited maximum size (around 64KB) and requires additional overhead when copying data to and from it if the size of each element is not a multiple of 16. The other buffer types are tightly packed and work great for all kinds of operations, and can be thought of the HLSL equivalent of `T[]` arrays in C#. If you're in doubt about which buffer type to use, just use either `ReadOnlyBuffer<T>` or `ReadWriteBuffer<T>`, depending on whether or not you also need write access to that buffer on the GPU side.
+
+**NOTE:** although the APIs to allocate buffers are simply generic methods with a `T : unmanaged` constrain, they should only be used with C# types that are fully mapped to HLSL types. That means either `int`, `uint`, `float`, `double`, .NET vector types or HLSL vector types. The `bool` type is only supported in `ConstantBuffer<T>` instances.
+
 ## Advanced usage
 
 **ComputeSharp** lets you dispatch compute shaders over thread groups from 1 to 3 dimensions, includes supports for constant and readonly buffers, and more. The shader body can both be declared inline, as a separate `Action<ThreadIds>` or as a local method. Additionally, most of the [HLSL intrinsic functions](https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-intrinsic-functions) are available through the `Hlsl` class. Here is a more advanced sample showcasing all these features.
