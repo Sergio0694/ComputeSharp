@@ -17,6 +17,7 @@ namespace ComputeSharp.Shaders.Mappings
         private static readonly IReadOnlyDictionary<string, string> KnownTypes = new Dictionary<string, string>
         {
             [typeof(bool).FullName] = "bool",
+            [typeof(Bool).FullName] = "bool",
             [typeof(Bool2).FullName] = "bool2",
             [typeof(Bool3).FullName] = "bool3",
             [typeof(Bool4).FullName] = "bool4",
@@ -77,6 +78,7 @@ namespace ComputeSharp.Shaders.Mappings
         /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a known HLSL scalar type</returns>
         [Pure]
         public static bool IsKnownScalarType(Type type) => type == typeof(bool) ||
+                                                           type == typeof(Bool) ||
                                                            type == typeof(int) ||
                                                            type == typeof(uint) ||
                                                            type == typeof(float) ||
