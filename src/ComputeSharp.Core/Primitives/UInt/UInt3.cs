@@ -5,7 +5,7 @@ using ComputeSharp.Exceptions;
 namespace ComputeSharp
 {
     /// <summary>
-    /// A <see langword="struct"/> that maps the uint3 HLSL type
+    /// A <see langword="struct"/> that maps the <see langword="uint3"/> HLSL type
     /// </summary>
     [DebuggerDisplay("({X}, {Y}, {Z})")]
     [StructLayout(LayoutKind.Sequential, Size = sizeof(uint) * 3)]
