@@ -51,13 +51,6 @@ namespace ComputeSharp.Shaders.Translation
         [Pure]
         public DispatchData GetDispatchData(Action<ThreadIds> action, int x, int y, int z)
         {
-            /* Create the data loader instance, if not available already.
-             * This will also initialize the other local fields in the shader
-             * loader class, which are used to rent the buffers used to store
-             * the captured resources and variables. This is why this call
-             * has to be the first one in this method, it must NOT be moved */
-            DispatchDataLoader loader = _DispatchDataLoader ??= BuildDispatchDataLoader();
-
             // Resources and variables buffers
             GraphicsResource[] resources = ArrayPool<GraphicsResource>.Shared.Rent(_ResourcesCount);
             byte[] variables = ArrayPool<byte>.Shared.Rent(_VariablesByteSize);
@@ -70,7 +63,7 @@ namespace ComputeSharp.Shaders.Translation
             Unsafe.Add(ref Unsafe.As<byte, int>(ref r1), 2) = z;
 
             // Invoke the dynamic method to extract the captured data
-            loader(action.Target, ref r0, ref r1);
+            _DispatchDataLoader!(action.Target, ref r0, ref r1);
 
             return new DispatchData(resources, _ResourcesCount, variables, _VariablesByteSize);
         }
@@ -78,8 +71,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// Builds a new <see cref="DispatchDataLoader"/> instance that loads the dispatch data for the current shader type
         /// </summary>
-        [Pure]
-        private DispatchDataLoader BuildDispatchDataLoader()
+        private void BuildDispatchDataLoader()
         {
             // Mapping of parent members to index of the relative local variable
             var map =
@@ -96,7 +88,7 @@ namespace ComputeSharp.Shaders.Translation
             HashSet<int> loaded = new HashSet<int>(new[] { 0 });
 
             // Build the dynamic IL method
-            return DynamicMethod<DispatchDataLoader>.New(il =>
+            _DispatchDataLoader = DynamicMethod<DispatchDataLoader>.New(il =>
             {
                 // Loads a given member on the top of the execution stack
                 void LoadMember(ReadableMember member)

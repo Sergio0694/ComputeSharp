@@ -122,6 +122,7 @@ namespace ComputeSharp.Shaders.Translation
 
             @this.LoadFieldsInfo();
             @this.LoadMethodSource();
+            @this.BuildDispatchDataLoader();
 
             return @this;
         }
