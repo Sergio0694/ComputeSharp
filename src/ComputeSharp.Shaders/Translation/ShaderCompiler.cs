@@ -10,17 +10,10 @@ namespace ComputeSharp.Shaders.Translation
     /// </summary>
     internal static class ShaderCompiler
     {
-        // Loads the dxil.dll library, needed to create a pipeline state for a shader to dispatch
-        static ShaderCompiler()
-        {
-            Dxil.LoadLibrary();
-            Library = Dxc.CreateDxcLibrary(); // This needs to be loaded after dxil.dll
-        }
-
         /// <summary>
         /// The <see cref="IDxcLibrary"/> instance to use to create the bytecode for HLSL sources
         /// </summary>
-        private static readonly IDxcLibrary Library;
+        private static readonly IDxcLibrary Library = Dxc.CreateDxcLibrary();
 
         /// <summary>
         /// Compiles a new HLSL shader from the input source code
