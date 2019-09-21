@@ -99,7 +99,7 @@ namespace System.Reflection.Emit
         public static void EmitAddOffset(this ILGenerator il, int offset)
         {
             // Push the offset to the stack
-            if (offset < 128) il.Emit(OpCodes.Ldc_I4, offset);
+            if (offset < -128) il.Emit(OpCodes.Ldc_I4, offset);
             else if (offset < 0) il.Emit(OpCodes.Ldc_I4_S, (sbyte)offset);
             else if (offset <= 8)
             {
