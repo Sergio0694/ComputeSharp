@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>ComputeSharp</id>
-    <version>1.0.0</version>
+    <version>1.3.0</version>
     <title>ComputeSharp</title>
     <authors>Sergio Pedri</authors>
     <owners>Sergio Pedri</owners>
@@ -11,18 +11,18 @@
     <iconUrl>https://i.imgur.com/ntvmD6P.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A .NET Standard 2.1 library to run C# code in parallel on the GPU through DX12 and dynamically generated HLSL compute shaders</description>
-    <releaseNotes>Initial alpha release</releaseNotes>
+    <releaseNotes>New ComputeSharp.Bool type, speed optimizations and bug fixes</releaseNotes>
     <copyright>Copyright (c) 2019 Sergio Pedri</copyright>
     <tags>dotnet net netcore netstandard csharp library graphics shader hlsl compute gpu</tags>
     <repository type="git" url="https://github.com/Sergio0694/ComputeSharp.git" branch="master" />
     <dependencies>
-      <dependency id="System.Runtime.CompilerServices.Unsafe" version="4.6.0-preview8.19405.3" />
-      <dependency id="Vortice.Direct3D12" version="1.2.0" />
-      <dependency id="ICSharpCode.Decompiler" version="5.0.0.5066-preview4" />
-      <dependency id="Microsoft.CodeAnalysis.CSharp" version="3.3.0-beta2-final" />
-      <dependency id="Stubble.Core" version="1.4.12" />
-      <dependency id="Vortice.Dxc" version="1.2.0" />
       <dependency id="Microsoft.Windows.SDK.Contracts" version="10.0.18362.2002-preview" />
+      <dependency id="System.Runtime.CompilerServices.Unsafe" version="4.6.0-rc1.19456.4" />
+      <dependency id="Vortice.Direct3D12" version="1.3.0" />
+      <dependency id="ICSharpCode.Decompiler" version="5.0.0.5124" />
+      <dependency id="Microsoft.CodeAnalysis.CSharp" version="3.3.1-beta3-final" />
+      <dependency id="Stubble.Core" version="1.4.12" />
+      <dependency id="Vortice.Dxc" version="1.3.0" />
     </dependencies>
   </metadata>
 </package>
