@@ -15,14 +15,23 @@ namespace ComputeSharp
     public static class Gpu
     {
         /// <summary>
+        /// Initializes the <see cref="Devices"/> field and <see cref="IsSupported"/> property
+        /// </summary>
+        static Gpu()
+        {
+            Devices = DeviceHelper.QueryAllSupportedDevices();
+            IsSupported = Devices.Any();
+        }
+
+        /// <summary>
         /// The loaded collection of supported devices and descriptions
         /// </summary>
-        private static IReadOnlyList<(ID3D12Device Device, AdapterDescription Description)>? _Devices;
+        private static readonly IReadOnlyList<(ID3D12Device Device, AdapterDescription Description)> Devices;
 
         /// <summary>
         /// Gets whether or not the <see cref="Gpu"/> APIs can be used on the current machine (ie. if there is at least a supported GPU device)
         /// </summary>
-        public static bool IsSupported { get; } = (_Devices = DeviceHelper.QueryAllSupportedDevices()).Any();
+        public static bool IsSupported { get; }
 
         private static GraphicsDevice? _Default;
 
@@ -35,7 +44,7 @@ namespace ComputeSharp
             {
                 if (!IsSupported) throw new NotSupportedException("There isn't a supported GPU device on the current machine");
 
-                return _Default ??= new GraphicsDevice(_Devices![0].Device, _Devices[0].Description);
+                return _Default ??= new GraphicsDevice(Devices[0].Device, Devices[0].Description);
             }
         }
 
@@ -44,6 +53,6 @@ namespace ComputeSharp
         /// </summary>
         /// <returns>A sequence of supported <see cref="GraphicsDevice"/> objects that can be used to run compute shaders</returns>
         [Pure]
-        public static IEnumerable<GraphicsDevice> EnumerateDevices() => _Devices.Select(device => new GraphicsDevice(device.Device, device.Description));
+        public static IEnumerable<GraphicsDevice> EnumerateDevices() => Devices.Select(device => new GraphicsDevice(device.Device, device.Description));
     }
 }
