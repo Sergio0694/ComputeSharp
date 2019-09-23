@@ -13,7 +13,7 @@ namespace ComputeSharp.Shaders.Mappings
     /// </summary>
     internal static class HlslKnownMethods
     {
-        private static IReadOnlyDictionary<string, string> _KnownMethods;
+        private static IReadOnlyDictionary<string, string>? _KnownMethods;
 
         /// <summary>
         /// The mapping of supported known methods to HLSL methods

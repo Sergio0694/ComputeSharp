@@ -15,11 +15,16 @@ namespace ComputeSharp
     public static class Gpu
     {
         /// <summary>
+        /// The loaded collection of supported devices and descriptions
+        /// </summary>
+        private static IReadOnlyList<(ID3D12Device Device, AdapterDescription Description)>? _Devices;
+
+        /// <summary>
         /// Gets whether or not the <see cref="Gpu"/> APIs can be used on the current machine (ie. if there is at least a supported GPU device)
         /// </summary>
         public static bool IsSupported { get; } = (_Devices = DeviceHelper.QueryAllSupportedDevices()).Any();
 
-        private static GraphicsDevice _Default;
+        private static GraphicsDevice? _Default;
 
         /// <summary>
         /// Gets the default <see cref="GraphicsDevice"/> instance for the current machine
@@ -30,7 +35,7 @@ namespace ComputeSharp
             {
                 if (!IsSupported) throw new NotSupportedException("There isn't a supported GPU device on the current machine");
 
-                return _Default ??= new GraphicsDevice(_Devices[0].Device, _Devices[0].Description);
+                return _Default ??= new GraphicsDevice(_Devices![0].Device, _Devices[0].Description);
             }
         }
 
@@ -40,8 +45,5 @@ namespace ComputeSharp
         /// <returns>A sequence of supported <see cref="GraphicsDevice"/> objects that can be used to run compute shaders</returns>
         [Pure]
         public static IEnumerable<GraphicsDevice> EnumerateDevices() => _Devices.Select(device => new GraphicsDevice(device.Device, device.Description));
-
-        // The loaded collection of supported devices
-        private static IReadOnlyList<(ID3D12Device Device, AdapterDescription Description)> _Devices;
     }
 }

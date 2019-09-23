@@ -24,7 +24,7 @@ namespace ComputeSharp.Shaders.Mappings
             "unsigned", "vector", "vertexfragment", "zero"
         };
 
-        private static Regex _KeywordsRegex;
+        private static Regex? _KeywordsRegex;
 
         /// <summary>
         /// The <see cref="Regex"/> to use to match variable names
