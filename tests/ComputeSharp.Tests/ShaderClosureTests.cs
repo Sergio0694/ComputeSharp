@@ -182,20 +182,23 @@ namespace ComputeSharp.Tests
         [TestMethod]
         public void CopyBetweenNestedClosuresHard()
         {
-            int value1 = 1;
+            int value1 = 1, value2 = 55, value3 = 77;
             using (ReadWriteBuffer<int> buffer1 = Gpu.Default.AllocateReadWriteBuffer<int>(1))
             {
-                int value2 = 2;
+                int value4 = 2, value5 = 24, value6 = 99;
                 using (ReadWriteBuffer<int> buffer2 = Gpu.Default.AllocateReadWriteBuffer<int>(1))
                 {
-                    int value3 = 3;
+                    int value7 = 3, value8 = 12, value9 = 333;
                     using (ReadWriteBuffer<int> buffer3 = Gpu.Default.AllocateReadWriteBuffer<int>(1))
                     {
-                        int value4 = 4;
+                        int value10 = 4, value11 = 22;
                         Action<ThreadIds> action = id =>
                         {
-                            int sum = value1 + value2 + value3 + value4;
-                            buffer1[0] = buffer2[0] = buffer3[0] = sum;
+                            int sum_gpu =
+                                value1 + value2 + value3 + value4 +
+                                value5 + value6 + value7 + value8 +
+                                value9 + value10 + value11;
+                            buffer1[0] = buffer2[0] = buffer3[0] = sum_gpu;
                         };
 
                         Gpu.Default.For(1, action);
@@ -204,9 +207,14 @@ namespace ComputeSharp.Tests
                         int[] result2 = buffer2.GetData();
                         int[] result3 = buffer3.GetData();
 
-                        Assert.IsTrue(result1[0] == value1 + value2 + value3 + value4);
-                        Assert.IsTrue(result1[0] == result2[0]);
-                        Assert.IsTrue(result1[0] == result3[0]);
+                        int sum_cpu =
+                            value1 + value2 + value3 + value4 +
+                            value5 + value6 + value7 + value8 +
+                            value9 + value10 + value11;
+
+                        Assert.IsTrue(result1[0] == sum_cpu);
+                        Assert.IsTrue(result2[0] == sum_cpu);
+                        Assert.IsTrue(result3[0] == sum_cpu);
                     }
                 }
             }
