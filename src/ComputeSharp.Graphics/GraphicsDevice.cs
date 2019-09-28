@@ -63,7 +63,7 @@ namespace ComputeSharp.Graphics
             NativeCopyFence = NativeDevice.CreateFence(0);
             NativeDirectFence = NativeDevice.CreateFence(0);
 
-            ShaderResourceViewAllocator = new DescriptorAllocator(this);
+            ShaderResourceViewAllocator = new DescriptorAllocator(NativeDevice);
         }
 
         /// <summary>

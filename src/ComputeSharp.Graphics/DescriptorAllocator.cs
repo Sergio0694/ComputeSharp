@@ -41,10 +41,10 @@ namespace ComputeSharp.Graphics
         /// <summary>
         /// Creates a new <see cref="DescriptorAllocator"/> instance with the specified parameters
         /// </summary>
-        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use</param>
-        public DescriptorAllocator(GraphicsDevice device)
+        /// <param name="device">The <see cref="ID3D12Device"/> instance to use</param>
+        public DescriptorAllocator(ID3D12Device device)
         {
-            DescriptorSize = device.NativeDevice.GetDescriptorHandleIncrementSize(DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView);
+            DescriptorSize = device.GetDescriptorHandleIncrementSize(DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView);
 
             DescriptorHeapDescription descriptorHeapDescription = new DescriptorHeapDescription
             {
@@ -53,7 +53,7 @@ namespace ComputeSharp.Graphics
                 Type = DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView
             };
 
-            DescriptorHeap = device.NativeDevice.CreateDescriptorHeap(descriptorHeapDescription);
+            DescriptorHeap = device.CreateDescriptorHeap(descriptorHeapDescription);
 
             _RemainingHandles = DescriptorsPerHeap;
             _CurrentCpuHandle = DescriptorHeap.GetCPUDescriptorHandleForHeapStart();
