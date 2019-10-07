@@ -26,7 +26,7 @@ namespace ComputeSharp.Graphics.Helpers
                 foreach (IDXGIAdapter1 adapter in factory.EnumAdapters1())
                 {
                     if (adapter.Description.DedicatedVideoMemory == 0) continue;
-                    if (D3D12.D3D12CreateDevice(adapter, FeatureLevel.Level_12_1, out ID3D12Device device).Success)
+                    if (D3D12.D3D12CreateDevice(adapter, FeatureLevel.Level_12_0, out ID3D12Device device).Success)
                         devices.Add((device, adapter.Description));
                 }
 
