@@ -267,19 +267,18 @@ namespace ComputeSharp.BokehBlur.Processors
             using ReadOnlyBuffer<Vector4> sourceBuffer = Gpu.Default.AllocateReadOnlyBuffer(source4.Memory.Span); 
             using ReadWriteBuffer<Vector4> processingBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Size);
             using ReadWriteBuffer<Vector4> firstPassBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Size * 2);
-            using ReadWriteBuffer<Vector4> secondPassBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Size * 2);
+            using ReadOnlyBuffer<Vector2> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer<Vector2>(KernelSize);
+
+            ref Vector4 param0 = ref KernelParameters[0]; // Avoid bounds check to access the kernel parameters
 
             // Perform two 1D convolutions for each component in the current instance
             for (int i = 0; i < Kernels.Length; i++)
             {
-                // Compute the resulting complex buffer for the current component
-                ReadOnlyBuffer<Vector2> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer(Kernels[i]);
-                ApplyVerticalConvolution(sourceBuffer, firstPassBuffer, kernelBuffer);
-                ApplyHorizontalConvolution(firstPassBuffer, secondPassBuffer, kernelBuffer);
+                kernelBuffer.SetData(Kernels[i]);
+                Vector4 parameters = Unsafe.Add(ref param0, i);
 
-                // Add the results of the convolution with the current kernel
-                Vector4 parameters = KernelParameters[i];
-                SumProcessingPartials(secondPassBuffer, processingBuffer, parameters.Z, parameters.W);
+                ApplyVerticalConvolution(sourceBuffer, firstPassBuffer, kernelBuffer);
+                ApplyHorizontalConvolutionAndAccumulatePartials(firstPassBuffer, processingBuffer, kernelBuffer, parameters.Z, parameters.W);
             }
 
             // Apply the inverse gamma exposure pass, and write the final pixel data
@@ -334,10 +333,14 @@ namespace ComputeSharp.BokehBlur.Processors
         /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from</param>
         /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to</param>
         /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel</param>
-        private void ApplyHorizontalConvolution(
+        /// <param name="z">The weight factor for the real component of the complex pixel values</param>
+        /// <param name="w">The weight factor for the imaginary component of the complex pixel values</param>
+        private void ApplyHorizontalConvolutionAndAccumulatePartials(
             ReadWriteBuffer<Vector4> source,
             ReadWriteBuffer<Vector4> target,
-            ReadOnlyBuffer<Vector2> kernel)
+            ReadOnlyBuffer<Vector2> kernel,
+            float z,
+            float w)
         {
             int height = Source.Height;
             int width = Source.Width;
@@ -352,12 +355,11 @@ namespace ComputeSharp.BokehBlur.Processors
                 int radiusX = kernelLength >> 1;
                 int sourceOffsetColumnBase = id.X;
                 int offsetY = Hlsl.Clamp(id.Y, 0, maxY);
-                int offsetXY;
 
                 for (int i = 0; i < kernelLength; i++)
                 {
                     int offsetX = Hlsl.Clamp(sourceOffsetColumnBase + i - radiusX, 0, maxX);
-                    offsetXY = offsetY * width * 2 + offsetX * 2;
+                    var offsetXY = offsetY * width * 2 + offsetX * 2;
                     Vector4 sourceReal = source[offsetXY];
                     Vector4 sourceImaginary = source[offsetXY + 1];
                     Vector2 factors = kernel[i];
@@ -366,9 +368,7 @@ namespace ComputeSharp.BokehBlur.Processors
                     imaginary += factors.X * sourceImaginary + factors.Y * sourceReal;
                 }
 
-                offsetXY = id.Y * width * 2 + id.X * 2;
-                target[offsetXY] = real;
-                target[offsetXY + 1] = imaginary;
+                target[id.Y * width + id.X] += real * z + imaginary * w;
             });
         }
 
@@ -427,32 +427,6 @@ namespace ComputeSharp.BokehBlur.Processors
 
                     Unsafe.Add(ref rPixel, x).FromVector4(v);
                 }
-            });
-        }
-
-        /// <summary>
-        /// Sums the partial results for a complex convolution pass over a single kernel component
-        /// </summary>
-        /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from</param>
-        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to</param>
-        /// <param name="z">The weight factor for the real component of the complex pixel values</param>
-        /// <param name="w">The weight factor for the imaginary component of the complex pixel values</param>
-        private void SumProcessingPartials(
-            ReadWriteBuffer<Vector4> source,
-            ReadWriteBuffer<Vector4> target,
-            float z,
-            float w)
-        {
-            int height = Source.Height;
-            int width = Source.Width;
-
-            Gpu.Default.For(width, height, id =>
-            {
-                int offsetXY = id.Y * width * 2 + id.X * 2;
-                Vector4 real = source[offsetXY];
-                Vector4 imaginary = source[offsetXY + 1];
-
-                target[id.Y * width + id.X] += real * z + imaginary * w;
             });
         }
 
