@@ -1714,7 +1714,7 @@ namespace ComputeSharp
         /// <param name="x">The first specified value</param>
         /// <param name="y">The second specified exponent</param>
         /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value</returns>
-        /// <remarks>For values of -INF or INF, <see cref="Max(int,in int)"/> will behave as expected</remarks>
+        /// <remarks>For values of -INF or INF, <see cref="Max(int, int)"/> will behave as expected</remarks>
         [Pure]
         public static int Max(int x, int y) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Max)}(int,int)");
 
@@ -1724,7 +1724,7 @@ namespace ComputeSharp
         /// <param name="x">The first specified value</param>
         /// <param name="y">The second specified exponent</param>
         /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value</returns>
-        /// <remarks>For values of -INF or INF, <see cref="Max(float,in float)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
+        /// <remarks>For values of -INF or INF, <see cref="Max(float, float)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
         [Pure]
         public static float Max(float x, float y) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Max)}(float,float)");
 
@@ -1734,7 +1734,7 @@ namespace ComputeSharp
         /// <param name="x">The first specified value</param>
         /// <param name="y">The second specified exponent</param>
         /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value</returns>
-        /// <remarks>For values of -INF or INF, <see cref="Max(Float2,in Float2)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
+        /// <remarks>For values of -INF or INF, <see cref="Max(Float2, Float2)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
         [Pure]
         public static Float2 Max(Float2 x, Float2 y) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Max)}({nameof(Float2)},{nameof(Float2)})");
 
@@ -1744,7 +1744,7 @@ namespace ComputeSharp
         /// <param name="x">The first specified value</param>
         /// <param name="y">The second specified exponent</param>
         /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value</returns>
-        /// <remarks>For values of -INF or INF, <see cref="Max(Float3,in Float3)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
+        /// <remarks>For values of -INF or INF, <see cref="Max(Float3, Float3)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
         [Pure]
         public static Float3 Max(Float3 x, Float3 y) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Max)}({nameof(Float3)},{nameof(Float3)})");
 
@@ -1754,7 +1754,7 @@ namespace ComputeSharp
         /// <param name="x">The first specified value</param>
         /// <param name="y">The second specified exponent</param>
         /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value</returns>
-        /// <remarks>For values of -INF or INF, <see cref="Max(Float4,in Float4)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
+        /// <remarks>For values of -INF or INF, <see cref="Max(Float4, Float4)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
         [Pure]
         public static Float4 Max(Float4 x, Float4 y) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Max)}({nameof(Float4)},{nameof(Float4)})");
 
@@ -1764,7 +1764,7 @@ namespace ComputeSharp
         /// <param name="x">The first specified value</param>
         /// <param name="y">The second specified exponent</param>
         /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value</returns>
-        /// <remarks>For values of -INF or INF, <see cref="Max(Vector2,in Vector2)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
+        /// <remarks>For values of -INF or INF, <see cref="Max(Vector2, Vector2)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
         [Pure]
         public static Vector2 Max(Vector2 x, Vector2 y) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Max)}({nameof(Vector2)},{nameof(Vector2)})");
 
@@ -1774,7 +1774,7 @@ namespace ComputeSharp
         /// <param name="x">The first specified value</param>
         /// <param name="y">The second specified exponent</param>
         /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value</returns>
-        /// <remarks>For values of -INF or INF, <see cref="Max(Vector3,in Vector3)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
+        /// <remarks>For values of -INF or INF, <see cref="Max(Vector3, Vector3)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
         [Pure]
         public static Vector3 Max(Vector3 x, Vector3 y) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Max)}({nameof(Vector3)},{nameof(Vector3)})");
 
@@ -1784,7 +1784,7 @@ namespace ComputeSharp
         /// <param name="x">The first specified value</param>
         /// <param name="y">The second specified exponent</param>
         /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value</returns>
-        /// <remarks>For values of -INF or INF, <see cref="Max(Vector4,in Vector4)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
+        /// <remarks>For values of -INF or INF, <see cref="Max(Vector4, Vector4)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
         [Pure]
         public static Vector4 Max(Vector4 x, Vector4 y) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Max)}({nameof(Vector4)},{nameof(Vector4)})");
 
@@ -1794,7 +1794,7 @@ namespace ComputeSharp
         /// <param name="x">The first specified value</param>
         /// <param name="y">The second specified exponent</param>
         /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value</returns>
-        /// <remarks>For values of -INF or INF, <see cref="Min(int,in int)"/> will behave as expected</remarks>
+        /// <remarks>For values of -INF or INF, <see cref="Min(int, int)"/> will behave as expected</remarks>
         [Pure]
         public static int Min(int x, int y) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Min)}(int,int)");
 
@@ -1804,7 +1804,7 @@ namespace ComputeSharp
         /// <param name="x">The first specified value</param>
         /// <param name="y">The second specified exponent</param>
         /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value</returns>
-        /// <remarks>For values of -INF or INF, <see cref="Min(float,in float)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
+        /// <remarks>For values of -INF or INF, <see cref="Min(float, float)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
         [Pure]
         public static float Min(float x, float y) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Min)}(float,float)");
 
@@ -1814,7 +1814,7 @@ namespace ComputeSharp
         /// <param name="x">The first specified value</param>
         /// <param name="y">The second specified exponent</param>
         /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value</returns>
-        /// <remarks>For values of -INF or INF, <see cref="Min(Float2,in Float2)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
+        /// <remarks>For values of -INF or INF, <see cref="Min(Float2, Float2)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
         [Pure]
         public static Float2 Min(Float2 x, Float2 y) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Min)}({nameof(Float2)},{nameof(Float2)})");
 
@@ -1824,7 +1824,7 @@ namespace ComputeSharp
         /// <param name="x">The first specified value</param>
         /// <param name="y">The second specified exponent</param>
         /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value</returns>
-        /// <remarks>For values of -INF or INF, <see cref="Min(Float3,in Float3)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
+        /// <remarks>For values of -INF or INF, <see cref="Min(Float3, Float3)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
         [Pure]
         public static Float3 Min(Float3 x, Float3 y) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Min)}({nameof(Float3)},{nameof(Float3)})");
 
@@ -1834,7 +1834,7 @@ namespace ComputeSharp
         /// <param name="x">The first specified value</param>
         /// <param name="y">The second specified exponent</param>
         /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value</returns>
-        /// <remarks>For values of -INF or INF, <see cref="Min(Float4,in Float4)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
+        /// <remarks>For values of -INF or INF, <see cref="Min(Float4, Float4)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
         [Pure]
         public static Float4 Min(Float4 x, Float4 y) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Min)}({nameof(Float4)},{nameof(Float4)})");
 
@@ -1844,7 +1844,7 @@ namespace ComputeSharp
         /// <param name="x">The first specified value</param>
         /// <param name="y">The second specified exponent</param>
         /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value</returns>
-        /// <remarks>For values of -INF or INF, <see cref="Min(Vector2,in Vector2)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
+        /// <remarks>For values of -INF or INF, <see cref="Min(Vector2, Vector2)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
         [Pure]
         public static Vector2 Min(Vector2 x, Vector2 y) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Min)}({nameof(Vector2)},{nameof(Vector2)})");
 
@@ -1854,7 +1854,7 @@ namespace ComputeSharp
         /// <param name="x">The first specified value</param>
         /// <param name="y">The second specified exponent</param>
         /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value</returns>
-        /// <remarks>For values of -INF or INF, <see cref="Min(Vector3,in Vector3)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
+        /// <remarks>For values of -INF or INF, <see cref="Min(Vector3, Vector3)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
         [Pure]
         public static Vector3 Min(Vector3 x, Vector3 y) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Min)}({nameof(Vector3)},{nameof(Vector3)})");
 
@@ -1864,7 +1864,7 @@ namespace ComputeSharp
         /// <param name="x">The first specified value</param>
         /// <param name="y">The second specified exponent</param>
         /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value</returns>
-        /// <remarks>For values of -INF or INF, <see cref="Min(Vector4,in Vector4)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
+        /// <remarks>For values of -INF or INF, <see cref="Min(Vector4, Vector4)"/> will behave as expected, but for for values of <see cref="float.NaN"/>, the results are undefined</remarks>
         [Pure]
         public static Vector4 Min(Vector4 x, Vector4 y) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Min)}({nameof(Vector4)},{nameof(Vector4)})");
 
