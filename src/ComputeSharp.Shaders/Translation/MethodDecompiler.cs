@@ -137,7 +137,7 @@ namespace ComputeSharp.Shaders.Translation
         {
             string sourceCode = methodType switch
             {
-                MethodType.Execute => GetSyntaxTreeForClosureMethod(methodInfo),
+                MethodType.Execute => GetSyntaxTreeForExecuteMethod(methodInfo),
                 MethodType.Static => GetSyntaxTreeForStaticMethod(methodInfo),
                 _ => throw new ArgumentOutOfRangeException(nameof(methodType), $"Invalid method type: {methodType}")
             };
@@ -150,7 +150,8 @@ namespace ComputeSharp.Shaders.Translation
                 .GetRoot()
                 .DescendantNodes()
                 .OfType<MethodDeclarationSyntax>()
-                .First(node => node.Identifier.ToString().Equals(methodInfo.Name));
+                .First(node => node.Identifier.ToString().Equals(methodInfo.Name) ||
+                               node.GetLeadingTrivia().ToFullString().Contains(methodInfo.Name));
 
             // Update the incremental compilation and retrieve the syntax tree for the method
             Compilation compilation = _Compilation.AddSyntaxTrees(syntaxTree);
@@ -162,7 +163,7 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         /// <param name="methodInfo">The input <see cref="MethodInfo"/> to inspect</param>
         [Pure]
-        private string GetSyntaxTreeForClosureMethod(MethodInfo methodInfo)
+        private string GetSyntaxTreeForExecuteMethod(MethodInfo methodInfo)
         {
             // Decompile the method source
             string sourceCode = DecompileMethodOrDeclaringType(methodInfo);
@@ -186,8 +187,16 @@ namespace ComputeSharp.Shaders.Translation
             string
                 sourceCode = DecompileMethodOrDeclaringType(methodInfo, true),
                 methodFixedCode = sourceCode.Replace(methodInfo.Name, Regex.Replace(methodInfo.Name, "[<>|]", "_")),
-                prototype = methodFixedCode.Split(Environment.NewLine)[0],
-                commentedSourceCode = $"// {methodInfo.Name}{Environment.NewLine}{methodFixedCode}",
+                methodWithoutAttributes = CSharpSyntaxTree
+                    .ParseText(methodFixedCode)
+                    .GetRoot()
+                    .DescendantNodes()
+                    .OfType<MethodDeclarationSyntax>()
+                    .First()
+                    .WithAttributeLists(default)
+                    .ToString(),
+                prototype = methodWithoutAttributes.Split(Environment.NewLine)[0],
+                commentedSourceCode = $"// {methodInfo.Name}{Environment.NewLine}{methodWithoutAttributes}",
                 inFixedSourceCode = Regex.Replace(commentedSourceCode, @"(?<!\w)in ", string.Empty),
                 outFixedSourceCode = RefactorInlineOutDeclarations(inFixedSourceCode, methodInfo.Name);
 
@@ -215,7 +224,8 @@ namespace ComputeSharp.Shaders.Translation
                 .GetRoot()
                 .DescendantNodes()
                 .OfType<MethodDeclarationSyntax>()
-                .First(node => node.Identifier.ToString().Equals(entryPoint));
+                .First(node => node.Identifier.ToString().Equals(entryPoint) ||
+                               node.GetLeadingTrivia().ToFullString().Contains(entryPoint));
 
             // Get the out declarations to replace
             var outs = (
