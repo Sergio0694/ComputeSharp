@@ -60,6 +60,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// Gets a unique hashcode for the input compute shader instance
         /// </summary>
+        /// <typeparam name="T">The type of compute shader currently in use</typeparam>
         /// <param name="shader">The input <typeparamref name="T"/> instance representing the shader to run</param>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -78,6 +79,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// A <see langword="delegate"/> that represents an aggregate hash function for a given <typeparamref name="T"/> instance
         /// </summary>
+        /// <typeparam name="T">The type of compute shader currently in use</typeparam>
         /// <param name="hash">The initial hash value</param>
         /// <param name="shader">The compute shader instance to use to compute the final hash value</param>
         /// <returns>The final hash value for the input closure</returns>
@@ -87,6 +89,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// Builds a new <see cref="Hasher"/> instance for the target <see cref="Type"/> and sequence of <see cref="FieldInfo"/> values
         /// </summary>
+        /// <typeparam name="T">The type of compute shader currently in use</typeparam>
         /// <param name="fieldInfos">The list of captured fields to inspect</param>
         [Pure]
         private static Hasher<T> BuildDynamicHasher<T>(IReadOnlyCollection<FieldInfo> fieldInfos)
@@ -96,7 +99,7 @@ namespace ComputeSharp.Shaders.Translation
             {
                 MethodInfo
                     getMethodInfo = typeof(Delegate).GetProperty(nameof(Delegate.Method)).GetMethod,
-                    getHashCodeInfo = typeof(object).GetMethod(nameof(GetHashCode));
+                    getHashCodeInfo = typeof(object).GetMethod(nameof(object.GetHashCode));
                 foreach (FieldInfo fieldInfo in fieldInfos)
                 {
                     // (hashcode << 5) + hashcode
@@ -182,7 +185,7 @@ namespace ComputeSharp.Shaders.Translation
                 MethodInfo
                     validateDelegateInfo = typeof(ShaderHashCodeProvider).GetMethod(nameof(ValidateDelegate), BindingFlags.NonPublic | BindingFlags.Static),
                     getMethodInfo = typeof(Delegate).GetProperty(nameof(Delegate.Method)).GetMethod,
-                    getHashCodeInfo = typeof(object).GetMethod(nameof(GetHashCode));
+                    getHashCodeInfo = typeof(object).GetMethod(nameof(object.GetHashCode));
                 foreach (FieldInfo fieldInfo in fieldInfos)
                 {
                     Label label = il.DefineLabel();
