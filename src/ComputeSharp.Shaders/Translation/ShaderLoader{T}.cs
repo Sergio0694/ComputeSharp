@@ -202,19 +202,6 @@ namespace ComputeSharp.Shaders.Translation
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
                 _FieldsList.Add(new CapturedFieldInfo(fieldType, typeName, fieldName));
             }
-            else if (fieldType.IsClass && fieldName.StartsWith("CS$<>"))
-            {
-                // Captured scope, update the parents list
-                List<ReadableMember> updatedParents = parents?.ToList() ?? new List<ReadableMember>();
-                updatedParents.Add(memberInfo);
-
-                // Recurse on the new compiler generated class
-                IReadOnlyList<FieldInfo> fields = fieldType.GetFields().ToArray();
-                foreach (FieldInfo fieldInfo in fields)
-                {
-                    LoadFieldInfo(fieldInfo, null, updatedParents);
-                }
-            }
             else if (fieldType.IsDelegate() &&
                      memberInfo.GetValue(Shader) is Delegate func &&
                      (func.Method.IsStatic || func.Method.DeclaringType.IsStatelessDelegateContainer()) &&
