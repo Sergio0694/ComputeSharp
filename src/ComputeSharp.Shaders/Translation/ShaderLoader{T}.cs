@@ -208,7 +208,7 @@ namespace ComputeSharp.Shaders.Translation
         {
             // Decompile the shader method
             MethodInfo methodInfo = typeof(T).GetMethod(nameof(IComputeShader.Execute));
-            MethodDecompiler.Instance.GetSyntaxTree(methodInfo, MethodType.Closure, out MethodDeclarationSyntax root, out SemanticModel semanticModel);
+            MethodDecompiler.Instance.GetSyntaxTree(methodInfo, MethodType.Execute, out MethodDeclarationSyntax root, out SemanticModel semanticModel);
 
             // Rewrite the shader method (eg. to fix the type declarations)
             ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel, typeof(T));

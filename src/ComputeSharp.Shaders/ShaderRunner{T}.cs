@@ -89,7 +89,7 @@ namespace ComputeSharp.Shaders
                     ShaderBytecode shaderBytecode = ShaderCompiler.CompileShader(shaderSource);
 
                     // Cache for later use
-                    ShadersCache.GetOrAddValueRef(key) = new CachedShader<T>(shaderLoader, shaderBytecode);
+                    ShadersCache.GetOrAddValueRef(key) = shaderData = new CachedShader<T>(shaderLoader, shaderBytecode);
                 }
             }
 

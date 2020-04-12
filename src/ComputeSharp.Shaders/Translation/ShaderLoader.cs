@@ -232,7 +232,7 @@ namespace ComputeSharp.Shaders.Translation
         private void LoadMethodSource()
         {
             // Decompile the shader method
-            MethodDecompiler.Instance.GetSyntaxTree(Action.Method, MethodType.Closure, out MethodDeclarationSyntax root, out SemanticModel semanticModel);
+            MethodDecompiler.Instance.GetSyntaxTree(Action.Method, MethodType.Execute, out MethodDeclarationSyntax root, out SemanticModel semanticModel);
 
             // Rewrite the shader method (eg. to fix the type declarations)
             ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel, ShaderType);
