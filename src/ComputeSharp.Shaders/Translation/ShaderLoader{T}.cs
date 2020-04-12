@@ -151,8 +151,7 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         /// <param name="memberInfo">The target <see cref="ReadableMember"/> to load</param>
         /// <param name="name">The optional explicit name to use for the field</param>
-        /// <param name="parents">The list of parent fields to reach the current <see cref="ReadableMember"/> from a given <see cref="Action{T}"/></param>
-        private void LoadFieldInfo(ReadableMember memberInfo, string? name = null, IReadOnlyList<ReadableMember>? parents = null)
+        private void LoadFieldInfo(ReadableMember memberInfo, string? name = null)
         {
             Type fieldType = memberInfo.MemberType;
             string fieldName = HlslKnownKeywords.GetMappedName(name ?? memberInfo.Name);
@@ -162,8 +161,6 @@ namespace ComputeSharp.Shaders.Translation
             {
                 DescriptorRanges.Add(new DescriptorRange1(DescriptorRangeType.ConstantBufferView, 1, _ConstantBuffersCount));
 
-                // Track the buffer field
-                memberInfo.Parents = parents;
                 _CapturedMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
@@ -174,8 +171,6 @@ namespace ComputeSharp.Shaders.Translation
                 // Root parameter for a readonly buffer
                 DescriptorRanges.Add(new DescriptorRange1(DescriptorRangeType.ShaderResourceView, 1, _ReadOnlyBuffersCount));
 
-                // Track the buffer field
-                memberInfo.Parents = parents;
                 _CapturedMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
@@ -186,8 +181,6 @@ namespace ComputeSharp.Shaders.Translation
                 // Root parameter for a read write buffer
                 DescriptorRanges.Add(new DescriptorRange1(DescriptorRangeType.UnorderedAccessView, 1, _ReadWriteBuffersCount));
 
-                // Track the buffer field
-                memberInfo.Parents = parents;
                 _CapturedMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
@@ -195,8 +188,6 @@ namespace ComputeSharp.Shaders.Translation
             }
             else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
             {
-                // Register the captured field
-                memberInfo.Parents = parents;
                 _CapturedMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
