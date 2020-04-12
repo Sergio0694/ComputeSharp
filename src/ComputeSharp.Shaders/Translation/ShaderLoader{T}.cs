@@ -28,22 +28,9 @@ namespace ComputeSharp.Shaders.Translation
         where T : struct, IComputeShader
     {
         /// <summary>
-        /// The current (boxed) shader being loaded
+        /// Creates a new <see cref="ShaderLoader{T}"/> instance
         /// </summary>
-        /// <remarks>
-        /// The overhead for the boxing can be ignored here since this will
-        /// only be done once per shader type/variables combination
-        /// </remarks>
-        private readonly object Shader;
-
-        /// <summary>
-        /// Creates a new <see cref="ShaderLoader{T}"/> with the specified parameters
-        /// </summary>
-        /// <param name="shader">The <typeparamref name="T"/> instance to use to build the shader</param>
-        private ShaderLoader(T shader)
-        {
-            Shader = shader;
-        }
+        private ShaderLoader() { }
 
         /// <summary>
         /// The number of constant buffers to define in the shader
@@ -118,10 +105,15 @@ namespace ComputeSharp.Shaders.Translation
         [Pure]
         public static ShaderLoader<T> Load(in T shader)
         {
-            ShaderLoader<T> @this = new ShaderLoader<T>(shader);
+            ShaderLoader<T> @this = new ShaderLoader<T>();
 
-            @this.LoadFieldsInfo();
-            @this.LoadMethodSource();
+            /* Reading members through reflection requires an object parameter,
+             * so here we're just boxing the input shader once to avoid allocating
+             * it multiple times in the managed heap while processing the shader. */
+            object box = shader;
+
+            @this.LoadFieldsInfo(box);
+            @this.LoadMethodSource(box);
             @this.BuildDispatchDataLoader();
 
             return @this;
@@ -130,7 +122,8 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// Loads the fields info for the current shader being loaded
         /// </summary>
-        private void LoadFieldsInfo()
+        /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader</param>
+        private void LoadFieldsInfo(object shader)
         {
             IReadOnlyList<FieldInfo> shaderFields = typeof(T).GetFields().ToArray();
 
@@ -142,16 +135,17 @@ namespace ComputeSharp.Shaders.Translation
             // Inspect the captured fields
             foreach (FieldInfo fieldInfo in shaderFields)
             {
-                LoadFieldInfo(fieldInfo);
+                LoadFieldInfo(shader, fieldInfo);
             }
         }
 
         /// <summary>
         /// Loads a specified <see cref="ReadableMember"/> and adds it to the shader model
         /// </summary>
+        /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader</param>
         /// <param name="memberInfo">The target <see cref="ReadableMember"/> to load</param>
         /// <param name="name">The optional explicit name to use for the field</param>
-        private void LoadFieldInfo(ReadableMember memberInfo, string? name = null)
+        private void LoadFieldInfo(object shader, ReadableMember memberInfo, string? name = null)
         {
             Type fieldType = memberInfo.MemberType;
             string fieldName = HlslKnownKeywords.GetMappedName(name ?? memberInfo.Name);
@@ -194,14 +188,14 @@ namespace ComputeSharp.Shaders.Translation
                 _FieldsList.Add(new CapturedFieldInfo(fieldType, typeName, fieldName));
             }
             else if (fieldType.IsDelegate() &&
-                     memberInfo.GetValue(Shader) is Delegate func &&
+                     memberInfo.GetValue(shader) is Delegate func &&
                      (func.Method.IsStatic || func.Method.DeclaringType.IsStatelessDelegateContainer()) &&
                      (HlslKnownTypes.IsKnownScalarType(func.Method.ReturnType) || HlslKnownTypes.IsKnownVectorType(func.Method.ReturnType)) &&
                      fieldType.GenericTypeArguments.All(type => HlslKnownTypes.IsKnownScalarType(type) ||
                                                                 HlslKnownTypes.IsKnownVectorType(type)))
             {
                 // Captured static delegates with a return type
-                LoadStaticMethodSource(fieldName, func.Method);
+                LoadStaticMethodSource(shader, fieldName, func.Method);
             }
             else throw new ArgumentException($"Invalid captured variable of type {fieldType} with name \"{memberInfo.Name}\"");
         }
@@ -209,7 +203,8 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// Loads the entry method for the current shader being loaded
         /// </summary>
-        private void LoadMethodSource()
+        /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader</param>
+        private void LoadMethodSource(object shader)
         {
             // Decompile the shader method
             MethodInfo methodInfo = typeof(T).GetMethod(nameof(IComputeShader.Execute));
@@ -234,13 +229,13 @@ namespace ComputeSharp.Shaders.Translation
             // Register the captured static members
             foreach (var member in syntaxRewriter.StaticMembers)
             {
-                LoadFieldInfo(member.Value, member.Key);
+                LoadFieldInfo(shader, member.Value, member.Key);
             }
 
             // Register the captured static methods
             foreach (var method in syntaxRewriter.StaticMethods)
             {
-                LoadStaticMethodSource(method.Key, method.Value);
+                LoadStaticMethodSource(shader, method.Key, method.Value);
             }
 
             // Get the thread ids identifier name and shader method body
@@ -256,9 +251,10 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// Loads additional static methods used by the shader
         /// </summary>
+        /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader</param>
         /// <param name="name">The HLSL name of the new method to load</param>
         /// <param name="methodInfo">The <see cref="MethodInfo"/> instance for the method to load</param>
-        private void LoadStaticMethodSource(string name, MethodInfo methodInfo)
+        private void LoadStaticMethodSource(object shader, string name, MethodInfo methodInfo)
         {
             // Decompile the target method
             MethodDecompiler.Instance.GetSyntaxTree(methodInfo, MethodType.Static, out MethodDeclarationSyntax root, out SemanticModel semanticModel);
@@ -270,13 +266,13 @@ namespace ComputeSharp.Shaders.Translation
             // Register the captured static members
             foreach (var member in syntaxRewriter.StaticMembers)
             {
-                LoadFieldInfo(member.Value, member.Key);
+                LoadFieldInfo(shader, member.Value, member.Key);
             }
 
             // Register the captured static methods
             foreach (var method in syntaxRewriter.StaticMethods)
             {
-                LoadStaticMethodSource(method.Key, method.Value);
+                LoadStaticMethodSource(shader, method.Key, method.Value);
             }
 
             // Get the function parameters
