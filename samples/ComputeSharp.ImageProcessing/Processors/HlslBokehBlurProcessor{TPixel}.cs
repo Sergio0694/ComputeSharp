@@ -6,9 +6,9 @@ using System.Diagnostics.Contracts;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
+using SixLabors.ImageSharp.Memory;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing.Processors;
 
@@ -257,31 +257,36 @@ namespace ComputeSharp.BokehBlur.Processors
         /// <inheritdoc/>
         protected override void OnFrameApply(ImageFrame<TPixel> source)
         {
-            // Preliminary gamma highlight pass
-            using IMemoryOwner<Vector4> source4 = GetExposedVector4Buffer(source);
+            IMemoryGroup<TPixel> group = source.GetPixelMemoryGroup();
 
-            using ReadOnlyBuffer<Vector4> sourceBuffer = Gpu.Default.AllocateReadOnlyBuffer(source4.Memory.Span);
-            using ReadWriteBuffer<Vector4> processingBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Size);
-            using ReadWriteBuffer<Vector4> firstPassBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Size * 2);
-            using ReadOnlyBuffer<Vector2> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer<Vector2>(KernelSize);
-
-            ref Vector4 param0 = ref KernelParameters[0]; // Avoid bounds check to access the kernel parameters
-
-            // Perform two 1D convolutions for each component in the current instance
-            for (int i = 0; i < Kernels.Length; i++)
+            for (int i = group.Count - 1; i >= 0; i--)
             {
-                kernelBuffer.SetData(Kernels[i]);
-                Vector4 parameters = Unsafe.Add(ref param0, i);
+                // Preliminary gamma highlight pass
+                using IMemoryOwner<Vector4> source4 = GetExposedVector4Buffer(group[i]);
 
-                ApplyVerticalConvolution(sourceBuffer, firstPassBuffer, kernelBuffer);
-                ApplyHorizontalConvolutionAndAccumulatePartials(firstPassBuffer, processingBuffer, kernelBuffer, parameters.Z, parameters.W);
+                using ReadOnlyBuffer<Vector4> sourceBuffer = Gpu.Default.AllocateReadOnlyBuffer(source4.Memory.Span);
+                using ReadWriteBuffer<Vector4> processingBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Size);
+                using ReadWriteBuffer<Vector4> firstPassBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Size * 2);
+                using ReadOnlyBuffer<Vector2> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer<Vector2>(KernelSize);
+
+                ref Vector4 param0 = ref KernelParameters[0]; // Avoid bounds check to access the kernel parameters
+
+                // Perform two 1D convolutions for each component in the current instance
+                for (int j = 0; j < Kernels.Length; j++)
+                {
+                    kernelBuffer.SetData(Kernels[j]);
+                    Vector4 parameters = Unsafe.Add(ref param0, j);
+
+                    ApplyVerticalConvolution(sourceBuffer, firstPassBuffer, kernelBuffer);
+                    ApplyHorizontalConvolutionAndAccumulatePartials(firstPassBuffer, processingBuffer, kernelBuffer, parameters.Z, parameters.W);
+                }
+
+                // Apply the inverse gamma exposure pass
+                processingBuffer.GetData(source4.Memory.Span);
+
+                // Write the final pixel data
+                ApplyInverseGammaExposure(source4.Memory, group[i]);
             }
-
-            // Apply the inverse gamma exposure pass
-            processingBuffer.GetData(source4.Memory.Span);
-
-            // Write the final pixel data
-            ApplyInverseGammaExposure(source4, source);
         }
 
         /// <summary>
@@ -429,59 +434,134 @@ namespace ComputeSharp.BokehBlur.Processors
         /// </summary>
         /// <param name="source">The source image</param>
         [Pure]
-        private IMemoryOwner<Vector4> GetExposedVector4Buffer(ImageFrame<TPixel> source)
+        private IMemoryOwner<Vector4> GetExposedVector4Buffer(Memory<TPixel> source)
         {
-            IMemoryOwner<Vector4> source4 = Configuration.MemoryAllocator.Allocate<Vector4>(source.Width * source.Height);
+            IMemoryOwner<Vector4> target = Configuration.MemoryAllocator.Allocate<Vector4>(source.Length);
+
             float exp = Gamma;
             int width = Source.Width;
+            int height = source.Length / width;
 
-            Parallel.For(0, source.Height, y =>
+            ParallelRowIterator.IterateRows(
+                Configuration,
+                new Rectangle(0, 0, width, height),
+                new GetExposedVector4BufferProcessor(width, exp, source, target.Memory, Configuration));
+
+            return target;
+        }
+
+        /// <summary>
+        /// The processor for <see cref="GetExposedVector4Buffer"/>
+        /// </summary>
+        private readonly struct GetExposedVector4BufferProcessor : IRowOperation
+        {
+            private readonly int width;
+            private readonly float exp;
+
+            private readonly Memory<TPixel> source;
+            private readonly Memory<Vector4> target;
+            private readonly Configuration configuration;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public GetExposedVector4BufferProcessor(
+                int width,
+                float exp,
+                Memory<TPixel> source,
+                Memory<Vector4> target,
+                Configuration configuration)
             {
-                ref TPixel rPixel = ref source.GetPixelRowSpan(y).GetPinnableReference();
-                ref Vector4 r4 = ref source4.Memory.Span.Slice(y * width).GetPinnableReference();
+                this.width = width;
+                this.exp = exp;
+                this.source = source;
+                this.target = target;
+                this.configuration = configuration;
+            }
 
-                for (int x = 0; x < width; x++)
+            /// <inheritdoc/>
+            public void Invoke(int y)
+            {
+                int offset = y * width;
+
+                Span<TPixel> rowTPixel = source.Span.Slice(offset, width);
+                Span<Vector4> rowVector4 = target.Span.Slice(offset, width);
+
+                PixelOperations<TPixel>.Instance.ToVector4(configuration, rowTPixel, rowVector4);
+
+                foreach (ref Vector4 v in rowVector4)
                 {
-                    ref Vector4 v = ref Unsafe.Add(ref r4, x);
-                    v = Unsafe.Add(ref rPixel, x).ToVector4();
                     v.X = MathF.Pow(v.X, exp);
                     v.Y = MathF.Pow(v.Y, exp);
                     v.Z = MathF.Pow(v.Z, exp);
                 }
-            });
-
-            return source4;
+            }
         }
 
         /// <summary>
         /// Applies the inverse gamma exposure pass to compute the final pixel values for a target image
         /// </summary>
-        /// <param name="sourceValues">The source <see cref="Vector4"/> buffer to read from</param>
-        /// <param name="source">The source image</param>
-        private void ApplyInverseGammaExposure(IMemoryOwner<Vector4> sourceValues, ImageFrame<TPixel> source)
+        /// <param name="source">The source <see cref="Vector4"/> buffer to read from</param>
+        /// <param name="target">The target image</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void ApplyInverseGammaExposure(Memory<Vector4> source, Memory<TPixel> target)
         {
-            int width = source.Width;
+            int width = Source.Width;
+            int height = source.Length / width;
             float expGamma = 1 / Gamma;
 
-            Parallel.For(0, source.Height, y =>
+            ParallelRowIterator.IterateRows(
+                Configuration,
+                new Rectangle(0, 0, width, height),
+                new ApplyInverseGammaExposureProcessor(width, expGamma, source, target, Configuration));
+        }
+
+        /// <summary>
+        /// The processor for <see cref="ApplyInverseGammaExposure"/>
+        /// </summary>
+        private readonly struct ApplyInverseGammaExposureProcessor : IRowOperation
+        {
+            private readonly int width;
+            private readonly float exp;
+
+            private readonly Memory<Vector4> source;
+            private readonly Memory<TPixel> target;
+            private readonly Configuration configuration;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public ApplyInverseGammaExposureProcessor(
+                int width,
+                float exp,
+                Memory<Vector4> source,
+                Memory<TPixel> target,
+                Configuration configuration)
             {
+                this.width = width;
+                this.exp = exp;
+                this.source = source;
+                this.target = target;
+                this.configuration = configuration;
+            }
+
+            /// <inheritdoc/>
+            public void Invoke(int y)
+            {
+                int offset = y * width;
+
+                Span<Vector4> rowVector4 = source.Span.Slice(offset, width);
+                Span<TPixel> rowTPixel = target.Span.Slice(offset, width);
+
                 Vector4 low = Vector4.Zero;
                 var high = new Vector4(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
 
-                ref TPixel rPixel = ref source.GetPixelRowSpan(y).GetPinnableReference();
-                ref Vector4 r4 = ref sourceValues.Memory.Span.Slice(y * width).GetPinnableReference();
-
-                for (int x = 0; x < width; x++)
+                foreach (ref Vector4 v in rowVector4)
                 {
-                    Vector4 v = Unsafe.Add(ref r4, x);
                     var clamp = Vector4.Clamp(v, low, high);
-                    v.X = MathF.Pow(clamp.X, expGamma);
-                    v.Y = MathF.Pow(clamp.Y, expGamma);
-                    v.Z = MathF.Pow(clamp.Z, expGamma);
-
-                    Unsafe.Add(ref rPixel, x).FromVector4(v);
+                    v.X = MathF.Pow(clamp.X, exp);
+                    v.Y = MathF.Pow(clamp.Y, exp);
+                    v.Z = MathF.Pow(clamp.Z, exp);
                 }
-            });
+
+                PixelOperations<TPixel>.Instance.FromVector4Destructive(configuration, rowVector4, rowTPixel);
+            }
         }
     }
 }

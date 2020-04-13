@@ -3,7 +3,6 @@ using System.IO;
 using System.Reflection;
 using ComputeSharp.BokehBlur.Processors;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors;
 
@@ -15,7 +14,7 @@ namespace ComputeSharp.ImageProcessing
         {
             Console.WriteLine(">> Loading image");
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "city.jpg");
-            using Image<Rgb24> image = Image.Load<Rgb24>(path);
+            using Image image = Image.Load(path);
 
             // Apply a series of processors and save the results
             foreach (var effect in new (string Name, IImageProcessor Processor)[]
@@ -25,8 +24,7 @@ namespace ComputeSharp.ImageProcessing
             })
             {
                 Console.WriteLine($">> Applying {effect.Name}");
-                using Image<Rgb24> copy = image.Clone();
-                copy.Mutate(c => c.ApplyProcessor(effect.Processor));
+                using Image copy = image.Clone(c => c.ApplyProcessor(effect.Processor));
 
                 Console.WriteLine($">> Saving {effect.Name} to disk");
                 string targetPath = Path.Combine(
