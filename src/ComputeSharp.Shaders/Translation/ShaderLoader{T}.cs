@@ -125,7 +125,11 @@ namespace ComputeSharp.Shaders.Translation
         /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader</param>
         private void LoadFieldsInfo(object shader)
         {
-            IReadOnlyList<FieldInfo> shaderFields = typeof(T).GetFields(BindingFlags.Instance | BindingFlags.NonPublic).ToArray();
+            IReadOnlyList<FieldInfo> shaderFields = typeof(T).GetFields(
+                BindingFlags.Instance |
+                BindingFlags.Static |
+                BindingFlags.Public |
+                BindingFlags.NonPublic).ToArray();
 
             if (shaderFields.Count == 0) throw new InvalidOperationException("Empty shader body");
 
