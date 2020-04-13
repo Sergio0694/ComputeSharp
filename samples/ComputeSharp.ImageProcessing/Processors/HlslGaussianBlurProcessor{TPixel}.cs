@@ -111,6 +111,7 @@ namespace ComputeSharp.BokehBlur.Processors
         /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from</param>
         /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to</param>
         /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ApplyVerticalConvolution(
             ReadWriteBuffer<Vector4> source,
             ReadWriteBuffer<Vector4> target,
@@ -118,28 +119,52 @@ namespace ComputeSharp.BokehBlur.Processors
         {
             int height = Source.Height;
             int width = Source.Width;
-            int maxY = height - 1;
-            int maxX = width - 1;
-            int kernelLength = kernel.Size;
 
-            Gpu.Default.For(width, height, id =>
+            Gpu.Default.For(width, height, new VerticalConvolutionProcessor
+            {
+                width = width,
+                maxY = height - 1,
+                maxX = width - 1,
+                kernelLength = kernel.Size,
+                source = source,
+                target = target,
+                kernel = kernel
+            });
+        }
+
+        /// <summary>
+        /// Kernel for <see cref="ApplyVerticalConvolution"/>
+        /// </summary>
+        private struct VerticalConvolutionProcessor : IComputeShader
+        {
+            public int width;
+            public int maxY;
+            public int maxX;
+            public int kernelLength;
+
+            public ReadWriteBuffer<Vector4> source;
+            public ReadWriteBuffer<Vector4> target;
+            public ReadOnlyBuffer<float> kernel;
+
+            /// <inheritdoc/>
+            public void Execute(ThreadIds ids)
             {
                 Vector4 result = Vector4.Zero;
                 int radiusY = kernelLength >> 1;
-                int sourceOffsetColumnBase = id.X;
+                int sourceOffsetColumnBase = ids.X;
 
                 for (int i = 0; i < kernelLength; i++)
                 {
-                    int offsetY = Hlsl.Clamp(id.Y + i - radiusY, 0, maxY);
+                    int offsetY = Hlsl.Clamp(ids.Y + i - radiusY, 0, maxY);
                     int offsetX = Hlsl.Clamp(sourceOffsetColumnBase, 0, maxX);
                     Vector4 color = source[offsetY * width + offsetX];
 
                     result += kernel[i] * color;
                 }
 
-                int offsetXY = id.Y * width + id.X;
+                int offsetXY = ids.Y * width + ids.X;
                 target[offsetXY] = result;
-            });
+            }
         }
 
         /// <summary>
@@ -148,6 +173,7 @@ namespace ComputeSharp.BokehBlur.Processors
         /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from</param>
         /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to</param>
         /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ApplyHorizontalConvolution(
             ReadWriteBuffer<Vector4> source,
             ReadWriteBuffer<Vector4> target,
@@ -155,16 +181,40 @@ namespace ComputeSharp.BokehBlur.Processors
         {
             int height = Source.Height;
             int width = Source.Width;
-            int maxY = height - 1;
-            int maxX = width - 1;
-            int kernelLength = kernel.Size;
 
-            Gpu.Default.For(width, height, id =>
+            Gpu.Default.For(width, height, new HorizontalConvolutionProcessor
+            {
+                width = width,
+                maxY = height - 1,
+                maxX = width - 1,
+                kernelLength = kernel.Size,
+                source = source,
+                target = target,
+                kernel = kernel
+            });
+        }
+
+        /// <summary>
+        /// Kernel for <see cref="ApplyHorizontalConvolution"/>
+        /// </summary>
+        private struct HorizontalConvolutionProcessor : IComputeShader
+        {
+            public int width;
+            public int maxY;
+            public int maxX;
+            public int kernelLength;
+
+            public ReadWriteBuffer<Vector4> source;
+            public ReadWriteBuffer<Vector4> target;
+            public ReadOnlyBuffer<float> kernel;
+
+            /// <inheritdoc/>
+            public void Execute(ThreadIds ids)
             {
                 Vector4 result = Vector4.Zero;
                 int radiusX = kernelLength >> 1;
-                int sourceOffsetColumnBase = id.X;
-                int offsetY = Hlsl.Clamp(id.Y, 0, maxY);
+                int sourceOffsetColumnBase = ids.X;
+                int offsetY = Hlsl.Clamp(ids.Y, 0, maxY);
                 int offsetXY;
 
                 for (int i = 0; i < kernelLength; i++)
@@ -176,9 +226,9 @@ namespace ComputeSharp.BokehBlur.Processors
                     result += kernel[i] * color;
                 }
 
-                offsetXY = id.Y * width + id.X;
+                offsetXY = ids.Y * width + ids.X;
                 target[offsetXY] = result;
-            });
+            }
         }
 
         /// <summary>
