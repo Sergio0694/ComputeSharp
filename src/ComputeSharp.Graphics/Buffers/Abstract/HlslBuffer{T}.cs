@@ -71,18 +71,18 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         public void SetData(T[] array, int offset, int count) => SetData(array.AsSpan(), offset, count);
 
         /// <summary>
-        /// Writes the contents of a given <see cref="Span{T}"/> to the current <see cref="HlslBuffer{T}"/> instance
+        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to the current <see cref="HlslBuffer{T}"/> instance
         /// </summary>
-        /// <param name="span">The input <see cref="Span{T}"/> to read data from</param>
-        public void SetData(Span<T> span) => SetData(span, 0, Size);
+        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> to read data from</param>
+        public void SetData(ReadOnlySpan<T> span) => SetData(span, 0, Size);
 
         /// <summary>
-        /// Writes the contents of a given <see cref="Span{T}"/> to a specified area of the current <see cref="HlslBuffer{T}"/> instance
+        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to a specified area of the current <see cref="HlslBuffer{T}"/> instance
         /// </summary>
-        /// <param name="span">The input <see cref="Span{T}"/> to read data from</param>
+        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> to read data from</param>
         /// <param name="offset">The offset to start writing data to</param>
         /// <param name="count">The number of items to write</param>
-        public abstract void SetData(Span<T> span, int offset, int count);
+        public abstract void SetData(ReadOnlySpan<T> span, int offset, int count);
 
         /// <summary>
         /// Writes the contents of a given <see cref="HlslBuffer{T}"/> to the current <see cref="HlslBuffer{T}"/> instance

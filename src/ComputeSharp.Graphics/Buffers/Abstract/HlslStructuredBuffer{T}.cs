@@ -36,12 +36,12 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         }
 
         /// <inheritdoc/>
-        public override void SetData(Span<T> span, int offset, int count)
+        public override void SetData(ReadOnlySpan<T> span, int offset, int count)
         {
             using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, count, count * ElementSizeInBytes, BufferType.Transfer);
 
             transferBuffer.Map();
-            MemoryHelper.Copy(span, 0, transferBuffer.MappedResource, 0, count);
+            MemoryHelper.Copy(span, transferBuffer.MappedResource, 0, count);
             transferBuffer.Unmap();
 
             using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
