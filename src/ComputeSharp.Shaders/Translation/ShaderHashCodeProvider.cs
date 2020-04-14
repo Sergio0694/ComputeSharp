@@ -81,7 +81,7 @@ namespace ComputeSharp.Shaders.Translation
             where T : struct, IComputeShader;
 
         /// <summary>
-        /// Builds a new <see cref="Hasher"/> instance for the target <see cref="Type"/> and sequence of <see cref="FieldInfo"/> values
+        /// Builds a new <see cref="Hasher{T}"/> instance for the target <see cref="Type"/> and sequence of <see cref="FieldInfo"/> values
         /// </summary>
         /// <typeparam name="T">The type of compute shader currently in use</typeparam>
         /// <param name="fieldInfos">The list of captured fields to inspect</param>
