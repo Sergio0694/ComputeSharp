@@ -53,9 +53,10 @@ namespace ComputeSharp
                 Span<byte> temporarySpan = temporaryArray.AsSpan(0, count * PaddedElementSizeInBytes);
 
                 // Copy the padded data to the temporary array
-                Map();
-                MemoryHelper.Copy(MappedResource, offset * PaddedElementSizeInBytes, temporarySpan, 0, count * PaddedElementSizeInBytes);
-                Unmap();
+                using (MappedResource resource = MapResource())
+                {
+                    MemoryHelper.Copy(resource.Pointer, offset * PaddedElementSizeInBytes, temporarySpan, 0, count * PaddedElementSizeInBytes);
+                }
 
                 ref byte tin = ref temporarySpan.GetPinnableReference();
                 ref T tout = ref span.GetPinnableReference();
@@ -72,9 +73,9 @@ namespace ComputeSharp
             else
             {
                 // Directly copy the data back if there is no padding
-                Map();
-                MemoryHelper.Copy(MappedResource, offset, span, 0, count);
-                Unmap();
+                using MappedResource resource = MapResource();
+
+                MemoryHelper.Copy(resource.Pointer, offset, span, 0, count);
             }
         }
 
@@ -97,18 +98,19 @@ namespace ComputeSharp
                 }
 
                 // Copy the padded data to the GPU
-                Map();
-                MemoryHelper.Copy(temporarySpan, MappedResource, offset * PaddedElementSizeInBytes, count * PaddedElementSizeInBytes);
-                Unmap();
+                using (MappedResource resource = MapResource())
+                {
+                    MemoryHelper.Copy(temporarySpan, resource.Pointer, offset * PaddedElementSizeInBytes, count * PaddedElementSizeInBytes);
+                }
 
                 ArrayPool<byte>.Shared.Return(temporaryArray);
             }
             else
             {
                 // Directly copy the input span if there is no padding
-                Map();
-                MemoryHelper.Copy(span, MappedResource, offset, count);
-                Unmap();
+                using MappedResource resource = MapResource();
+
+                MemoryHelper.Copy(span, resource.Pointer, offset, count);
             }
         }
 

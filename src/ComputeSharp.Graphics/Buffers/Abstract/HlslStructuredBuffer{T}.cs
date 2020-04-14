@@ -30,9 +30,9 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             copyCommandList.CopyBufferRegion(this, offset * ElementSizeInBytes, transferBuffer, 0, count * ElementSizeInBytes);
             copyCommandList.Flush();
 
-            transferBuffer.Map();
-            MemoryHelper.Copy(transferBuffer.MappedResource, 0, span, 0, count);
-            transferBuffer.Unmap();
+            using MappedResource resource = transferBuffer.MapResource();
+
+            MemoryHelper.Copy(resource.Pointer, 0, span, 0, count);
         }
 
         /// <inheritdoc/>
@@ -40,9 +40,10 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         {
             using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, count, count * ElementSizeInBytes, BufferType.Transfer);
 
-            transferBuffer.Map();
-            MemoryHelper.Copy(span, transferBuffer.MappedResource, 0, count);
-            transferBuffer.Unmap();
+            using (MappedResource resource = transferBuffer.MapResource())
+            {
+                MemoryHelper.Copy(span, resource.Pointer, 0, count);
+            }
 
             using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
