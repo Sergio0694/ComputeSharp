@@ -19,11 +19,6 @@ namespace ComputeSharp.Graphics
         public const Direct3DFeatureLevel FeatureLevel = Direct3DFeatureLevel.Level_12_1;
 
         /// <summary>
-        /// The <see cref="System.Threading.AutoResetEvent"/> instance used to wait for completion when executing commands
-        /// </summary>
-        private readonly AutoResetEvent AutoResetEvent = new AutoResetEvent(false);
-
-        /// <summary>
         /// The <see cref="ID3D12CommandQueue"/> instance to use for compute operations
         /// </summary>
         private readonly ID3D12CommandQueue NativeComputeCommandQueue;
@@ -127,11 +122,6 @@ namespace ComputeSharp.Graphics
         internal ID3D12Fence NativeDirectFence { get; }
 
         /// <summary>
-        /// The <see cref="object"/> used to lock command list executions
-        /// </summary>
-        private readonly object Lock = new object();
-
-        /// <summary>
         /// Gets the next fence value for compute operations
         /// </summary>
         internal long NextComputeFenceValue { get; private set; } = 1;
@@ -174,11 +164,11 @@ namespace ComputeSharp.Graphics
 
             if (fenceValue <= fence.CompletedValue) return;
 
-            lock (Lock)
-            {
-                fence.SetEventOnCompletion(fenceValue, AutoResetEvent.SafeWaitHandle.DangerousGetHandle());
-                AutoResetEvent.WaitOne();
-            }
+            using ManualResetEvent fenceEvent = new ManualResetEvent(false);
+
+            fence.SetEventOnCompletion(fenceValue, fenceEvent);
+
+            fenceEvent.WaitOne();
         }
 
         /// <summary>
@@ -244,8 +234,6 @@ namespace ComputeSharp.Graphics
             NativeDirectFence.Dispose();
 
             NativeDevice.Dispose();
-
-            AutoResetEvent.Dispose();
         }
     }
 }
