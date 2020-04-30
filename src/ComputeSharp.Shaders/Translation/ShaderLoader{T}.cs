@@ -244,7 +244,7 @@ namespace ComputeSharp.Shaders.Translation
 
             // Get the thread ids identifier name and shader method body
             ThreadsIdsVariableName = root.ParameterList.Parameters.First().Identifier.Text;
-            MethodBody = root.Body.ToFullString();
+            MethodBody = root.Body!.ToFullString();
 
             // Additional preprocessing
             MethodBody = Regex.Replace(MethodBody, @"(?<=\W)(\d+)[fFdD]", m => m.Groups[1].Value);
@@ -283,13 +283,13 @@ namespace ComputeSharp.Shaders.Translation
             IReadOnlyList<ParameterInfo> parameters = (
                 from parameter in root.ParameterList.Parameters.Select((p, i) => (Node: p, Index: i))
                 let modifiers = parameter.Node.Modifiers
-                let type = parameter.Node.Type.ToFullString()
+                let type = parameter.Node.Type!.ToFullString()
                 let parameterName = parameter.Node.Identifier.ToFullString()
                 let last = parameter.Index == root.ParameterList.Parameters.Count - 1
                 select new ParameterInfo(modifiers, type, parameterName, last)).ToArray();
 
             // Get the function body
-            string body = root.Body.ToFullString();
+            string body = root.Body!.ToFullString();
             body = Regex.Replace(body, @"(?<=\W)(\d+)[fFdD]", m => m.Groups[1].Value);
             body = body.TrimEnd('\n', '\r', ' ');
             body = HlslKnownKeywords.GetMappedText(body);
