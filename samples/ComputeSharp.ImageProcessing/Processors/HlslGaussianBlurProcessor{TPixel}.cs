@@ -87,11 +87,9 @@ namespace ComputeSharp.BokehBlur.Processors
         /// <inheritdoc/>
         protected override void OnFrameApply(ImageFrame<TPixel> source)
         {
-            IMemoryGroup<TPixel> group = source.GetPixelMemoryGroup();
-
-            for (int i = group.Count - 1; i >= 0; i--)
+            foreach (Memory<TPixel> memory in source.GetPixelMemoryGroup())
             {
-                Span<TPixel> spanTPixel = group[i].Span;
+                Span<TPixel> spanTPixel = memory.Span;
 
                 using IMemoryOwner<Vector4> group4 = Configuration.MemoryAllocator.Allocate<Vector4>(spanTPixel.Length);
 

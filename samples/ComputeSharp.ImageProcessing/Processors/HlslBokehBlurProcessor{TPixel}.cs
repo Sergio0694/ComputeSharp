@@ -8,7 +8,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
-using SixLabors.ImageSharp.Memory;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing.Processors;
 
@@ -257,12 +256,10 @@ namespace ComputeSharp.BokehBlur.Processors
         /// <inheritdoc/>
         protected override void OnFrameApply(ImageFrame<TPixel> source)
         {
-            IMemoryGroup<TPixel> group = source.GetPixelMemoryGroup();
-
-            for (int i = group.Count - 1; i >= 0; i--)
+            foreach (Memory<TPixel> memory in source.GetPixelMemoryGroup())
             {
                 // Preliminary gamma highlight pass
-                using IMemoryOwner<Vector4> source4 = GetExposedVector4Buffer(group[i]);
+                using IMemoryOwner<Vector4> source4 = GetExposedVector4Buffer(memory);
 
                 using ReadOnlyBuffer<Vector4> sourceBuffer = Gpu.Default.AllocateReadOnlyBuffer(source4.Memory.Span);
                 using ReadWriteBuffer<Vector4> processingBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Size);
@@ -285,7 +282,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 processingBuffer.GetData(source4.Memory.Span);
 
                 // Write the final pixel data
-                ApplyInverseGammaExposure(source4.Memory, group[i]);
+                ApplyInverseGammaExposure(source4.Memory, memory);
             }
         }
 
