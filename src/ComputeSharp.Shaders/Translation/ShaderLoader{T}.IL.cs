@@ -11,7 +11,7 @@ using ComputeSharp.Shaders.Translation.Models;
 
 namespace ComputeSharp.Shaders.Translation
 {
-    /// <inheritdoc cref="ShaderLoader"/>
+    /// <inheritdoc cref="ShaderLoader{T}"/>
     internal sealed partial class ShaderLoader<T>
     {
         /// <summary>
