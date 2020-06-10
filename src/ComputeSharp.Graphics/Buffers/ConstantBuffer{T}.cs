@@ -34,7 +34,7 @@ namespace ComputeSharp
         {
             int size = Unsafe.SizeOf<T>();
 
-            // Equivalent to rounding up to nearest 256. We add 255 then t
+            // Equivalent to rounding up to nearest 256. We add 255 then trim off the bits which are less significant than 256
             return (size + 255) & ~255;
         }
 
