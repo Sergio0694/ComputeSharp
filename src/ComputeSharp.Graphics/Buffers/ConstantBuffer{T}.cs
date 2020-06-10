@@ -24,7 +24,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
-        internal ConstantBuffer(GraphicsDevice device, int size) : base(device, size, size * GetPaddedSize() * 16, BufferType.Constant) { }
+        internal ConstantBuffer(GraphicsDevice device, int size) : base(device, size, size * GetPaddedSize(), BufferType.Constant) { }
 
         /// <summary>
         /// Gets the right padded size for <typeparamref name="T"/> elements to store in the current instance
@@ -33,7 +33,7 @@ namespace ComputeSharp
         private static int GetPaddedSize()
         {
             int size = Unsafe.SizeOf<T>();
-            return size % 16 == 0 ? 1 : size / 16 + 1;
+            return (size + 15) & ~15;
         }
 
         /// <summary>
@@ -44,31 +44,20 @@ namespace ComputeSharp
         public T this[int i] => throw new InvalidExecutionContextException($"{nameof(ConstantBuffer<T>)}<T>[int]");
 
         /// <inheritdoc/>
-        public override void GetData(Span<T> span, int offset, int count)
+        public override unsafe void GetData(Span<T> span, int offset, int count)
         {
             if (IsPaddingPresent)
             {
-                // Create the temporary array
-                byte[] temporaryArray = ArrayPool<byte>.Shared.Rent(count * PaddedElementSizeInBytes);
-                Span<byte> temporarySpan = temporaryArray.AsSpan(0, count * PaddedElementSizeInBytes);
-
                 // Copy the padded data to the temporary array
                 using (MappedResource resource = MapResource())
                 {
-                    MemoryHelper.Copy(resource.Pointer, offset * PaddedElementSizeInBytes, temporarySpan, 0, count * PaddedElementSizeInBytes);
+                    ref var dest = ref MemoryMarshal.GetReference(span);
+                    byte* untypedSrc = (byte*)resource.Pointer;
+                    for (var i = offset; i < count; i++)
+                    {
+                        Unsafe.Add(ref dest, i) = *(T*)&untypedSrc[i * GetPaddedSize()];
+                    }
                 }
-
-                ref byte tin = ref temporarySpan.GetPinnableReference();
-                ref T tout = ref span.GetPinnableReference();
-
-                // Copy the padded data to the target span, removing the padding
-                for (int i = 0; i < count; i++)
-                {
-                    ref byte rsource = ref Unsafe.Add(ref tin, i * PaddedElementSizeInBytes);
-                    Unsafe.Add(ref tout, i) = Unsafe.As<byte, T>(ref rsource);
-                }
-
-                ArrayPool<byte>.Shared.Return(temporaryArray);
             }
             else
             {
@@ -80,36 +69,23 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        public override void SetData(ReadOnlySpan<T> span, int offset, int count)
+        /// <inheritdoc/>
+        public override unsafe void SetData(ReadOnlySpan<T> span, int offset, int count)
         {
+            using MappedResource resource = MapResource();
             if (IsPaddingPresent)
             {
-                // Create the temporary array
-                byte[] temporaryArray = ArrayPool<byte>.Shared.Rent(count * PaddedElementSizeInBytes);
-                ReadOnlySpan<byte> temporarySpan = temporaryArray.AsSpan(0, count * PaddedElementSizeInBytes); // Array pool arrays can be longer
-                ref T tin = ref MemoryMarshal.GetReference(span);
-                ref byte tout = ref MemoryMarshal.GetReference(temporarySpan);
-
-                // Copy the input data to the temporary array and add the padding
-                for (int i = 0; i < count; i++)
+                // Copy element-by-element
+                ref var src = ref MemoryMarshal.GetReference(span);
+                byte* untypedDest = (byte*)resource.Pointer;
+                for (var i = offset; i < count; i++)
                 {
-                    ref byte rtarget = ref Unsafe.Add(ref tout, i * PaddedElementSizeInBytes);
-                    Unsafe.As<byte, T>(ref rtarget) = Unsafe.Add(ref tin, i);
+                    *(T*)&untypedDest[i * GetPaddedSize()] = Unsafe.Add(ref src, i);
                 }
-
-                // Copy the padded data to the GPU
-                using (MappedResource resource = MapResource())
-                {
-                    MemoryHelper.Copy(temporarySpan, resource.Pointer, offset * PaddedElementSizeInBytes, count * PaddedElementSizeInBytes);
-                }
-
-                ArrayPool<byte>.Shared.Return(temporaryArray);
             }
             else
             {
                 // Directly copy the input span if there is no padding
-                using MappedResource resource = MapResource();
-
                 MemoryHelper.Copy(span, resource.Pointer, offset, count);
             }
         }
