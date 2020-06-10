@@ -2,6 +2,7 @@
 using System.Buffers;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
@@ -23,7 +24,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
-        internal ConstantBuffer(GraphicsDevice device, int size) : base(device, size, size * GetPaddedSize() * 16, BufferType.Constant) { }
+        internal ConstantBuffer(GraphicsDevice device, int size) : base(device, size, size * GetPaddedSize() * /* what is the meaning of this magic num? */ 16, BufferType.Constant) { }
 
         /// <summary>
         /// Gets the right padded size for <typeparamref name="T"/> elements to store in the current instance
@@ -32,7 +33,9 @@ namespace ComputeSharp
         private static int GetPaddedSize()
         {
             int size = Unsafe.SizeOf<T>();
-            return size % 16 == 0 ? 1 : size / 16 + 1;
+
+            // Equivalent to rounding up to nearest 256. We add 255 then t
+            return (size + 255) & ~255;
         }
 
         /// <summary>
@@ -43,30 +46,20 @@ namespace ComputeSharp
         public T this[int i] => throw new InvalidExecutionContextException($"{nameof(ConstantBuffer<T>)}<T>[int]");
 
         /// <inheritdoc/>
-        public override void GetData(Span<T> span, int offset, int count)
+        public override unsafe void GetData(Span<T> span, int offset, int count)
         {
             if (IsPaddingPresent)
             {
-                // Create the temporary array
-                byte[] temporaryArray = ArrayPool<byte>.Shared.Rent(count * PaddedElementSizeInBytes);
-                Span<byte> temporarySpan = temporaryArray.AsSpan(0, count * PaddedElementSizeInBytes);
-
-                // Copy the padded data to the temporary array
                 Map();
-                MemoryHelper.Copy(MappedResource, offset * PaddedElementSizeInBytes, temporarySpan, 0, count * PaddedElementSizeInBytes);
-                Unmap();
 
-                ref byte tin = ref temporarySpan.GetPinnableReference();
-                ref T tout = ref span.GetPinnableReference();
-
-                // Copy the padded data to the target span, removing the padding
-                for (int i = 0; i < count; i++)
+                ref var dest = ref MemoryMarshal.GetReference(span);
+                for (var i = offset; i < count; i++)
                 {
-                    ref byte rsource = ref Unsafe.Add(ref tin, i * PaddedElementSizeInBytes);
-                    Unsafe.Add(ref tout, i) = Unsafe.As<byte, T>(ref rsource);
+                    // why is this exposed as an IntPtr? It should really be void*/T*/byte*
+                    Unsafe.Add(ref dest, i) = ((T*) MappedResource)[i * GetPaddedSize()];
                 }
 
-                ArrayPool<byte>.Shared.Return(temporaryArray);
+                Unmap();
             }
             else
             {
@@ -78,29 +71,20 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        public override void SetData(Span<T> span, int offset, int count)
+        public override unsafe void SetData(Span<T> span, int offset, int count)
         {
             if (IsPaddingPresent)
             {
-                // Create the temporary array
-                byte[] temporaryArray = ArrayPool<byte>.Shared.Rent(count * PaddedElementSizeInBytes);
-                Span<byte> temporarySpan = temporaryArray.AsSpan(0, count * PaddedElementSizeInBytes); // Array pool arrays can be longer
-                ref T tin = ref span.GetPinnableReference();
-                ref byte tout = ref temporarySpan.GetPinnableReference();
+                Map();
 
-                // Copy the input data to the temporary array and add the padding
-                for (int i = 0; i < count; i++)
+                ref var src = ref MemoryMarshal.GetReference(span);
+                for (var i = offset; i < count; i++)
                 {
-                    ref byte rtarget = ref Unsafe.Add(ref tout, i * PaddedElementSizeInBytes);
-                    Unsafe.As<byte, T>(ref rtarget) = Unsafe.Add(ref tin, i);
+                    // why is this exposed as an IntPtr? It should really be void*/T*/byte*
+                    ((T*)MappedResource)[i * GetPaddedSize()] = Unsafe.Add(ref src, i);
                 }
 
-                // Copy the padded data to the GPU
-                Map();
-                MemoryHelper.Copy(temporarySpan, 0, MappedResource, offset * PaddedElementSizeInBytes, count * PaddedElementSizeInBytes);
                 Unmap();
-
-                ArrayPool<byte>.Shared.Return(temporaryArray);
             }
             else
             {
