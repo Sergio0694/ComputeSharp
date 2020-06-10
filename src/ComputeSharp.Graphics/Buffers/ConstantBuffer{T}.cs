@@ -24,7 +24,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
-        internal ConstantBuffer(GraphicsDevice device, int size) : base(device, size, size * GetPaddedSize() * /* what is the meaning of this magic num? */ 16, BufferType.Constant) { }
+        internal ConstantBuffer(GraphicsDevice device, int size) : base(device, size, size * GetPaddedSize(), BufferType.Constant) { }
 
         /// <summary>
         /// Gets the right padded size for <typeparamref name="T"/> elements to store in the current instance
@@ -53,10 +53,11 @@ namespace ComputeSharp
                 Map();
 
                 ref var dest = ref MemoryMarshal.GetReference(span);
+                byte* untypedSrc = (byte*)MappedResource;
                 for (var i = offset; i < count; i++)
                 {
                     // why is this exposed as an IntPtr? It should really be void*/T*/byte*
-                    Unsafe.Add(ref dest, i) = ((T*) MappedResource)[i * GetPaddedSize()];
+                    Unsafe.Add(ref dest, i) = *(T*)&untypedSrc[i * GetPaddedSize()];
                 }
 
                 Unmap();
@@ -78,10 +79,11 @@ namespace ComputeSharp
                 Map();
 
                 ref var src = ref MemoryMarshal.GetReference(span);
+                byte* untypedDest = (byte*)MappedResource;
                 for (var i = offset; i < count; i++)
                 {
                     // why is this exposed as an IntPtr? It should really be void*/T*/byte*
-                    ((T*)MappedResource)[i * GetPaddedSize()] = Unsafe.Add(ref src, i);
+                    *(T*)&untypedDest[i * GetPaddedSize()] = Unsafe.Add(ref src, i);
                 }
 
                 Unmap();
