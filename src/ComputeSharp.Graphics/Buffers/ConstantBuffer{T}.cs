@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Buffers;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -34,6 +33,7 @@ namespace ComputeSharp
         private static int GetPaddedSize()
         {
             int size = Unsafe.SizeOf<T>();
+
             return (size + 15) & ~15;
         }
 
@@ -48,43 +48,45 @@ namespace ComputeSharp
         public override unsafe void GetData(Span<T> span, int offset, int count)
         {
             using MappedResource resource = MapResource();
+
             if (IsPaddingPresent)
             {
-                // Copy the padded data to the temporary array
-                {
-                    ref var dest = ref MemoryMarshal.GetReference(span);
-                    ref byte untypedSrc = ref Unsafe.AsRef<byte>((void*)resource.Pointer);
-                    untypedSrc = ref Unsafe.Add(ref untypedSrc, offset * GetPaddedSize());
+                ref T spanRef = ref MemoryMarshal.GetReference(span);
+                ref byte resourceRef = ref Unsafe.AsRef<byte>((void*)resource.Pointer);
 
-                    for (var i = 0; i < count; i++)
-                    {
-                        Unsafe.Add(ref dest, i) = Unsafe.As<byte, T>(ref Unsafe.Add(ref untypedSrc, i * GetPaddedSize()));
-                    }
+                // Move to the initial ref
+                resourceRef = ref Unsafe.Add(ref resourceRef, offset * GetPaddedSize());
+
+                for (var i = 0; i < count; i++)
+                {
+                    ref byte targetRef = ref Unsafe.Add(ref resourceRef, i * GetPaddedSize());
+
+                    Unsafe.Add(ref spanRef, i) = Unsafe.As<byte, T>(ref targetRef);
                 }
             }
-            else
-            {
-                MemoryHelper.Copy(resource.Pointer, offset, span, 0, count);
-            }
+            else MemoryHelper.Copy(resource.Pointer, offset, span, 0, count);
         }
 
         /// <inheritdoc/>
         public override unsafe void SetData(ReadOnlySpan<T> span, int offset, int count)
         {
             using MappedResource resource = MapResource();
+
             if (IsPaddingPresent)
             {
-                // Copy element-by-element
-                ref var src = ref MemoryMarshal.GetReference(span);
-                ref byte untypedDest = ref Unsafe.AsRef<byte>((void*)resource.Pointer);
-                untypedDest = ref Unsafe.Add(ref untypedDest, offset * GetPaddedSize());
+                ref T spanRef = ref MemoryMarshal.GetReference(span);
+                ref byte resourceRef = ref Unsafe.AsRef<byte>((void*)resource.Pointer);
+
+                // Move to the initial offset
+                resourceRef = ref Unsafe.Add(ref resourceRef, offset * GetPaddedSize());
 
                 for (var i = 0; i < count; i++)
                 {
-                    Unsafe.As<byte, T>(ref Unsafe.Add(ref untypedDest, i * GetPaddedSize())) = Unsafe.Add(ref src, i);
+                    ref byte targetRef = ref Unsafe.Add(ref resourceRef, i * GetPaddedSize());
+
+                    Unsafe.As<byte, T>(ref targetRef) = Unsafe.Add(ref spanRef, i);
                 }
             }
-            // Directly copy as there is no padding
             else MemoryHelper.Copy(span, resource.Pointer, offset, count);
         }
 
