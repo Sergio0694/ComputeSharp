@@ -25,10 +25,11 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         public override void GetData(Span<T> span, int offset, int count)
         {
             using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, count, count * ElementSizeInBytes, BufferType.ReadBack);
-            using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
-            copyCommandList.CopyBufferRegion(this, offset * ElementSizeInBytes, transferBuffer, 0, count * ElementSizeInBytes);
-            copyCommandList.Flush();
+            using (CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy))
+            {
+                copyCommandList.CopyBufferRegion(this, offset * ElementSizeInBytes, transferBuffer, 0, count * ElementSizeInBytes);
+            }
 
             using MappedResource resource = transferBuffer.MapResource();
 
@@ -48,7 +49,6 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
             copyCommandList.CopyBufferRegion(transferBuffer, 0, this, offset * ElementSizeInBytes, count * ElementSizeInBytes);
-            copyCommandList.Flush();
         }
 
         /// <inheritdoc/>
@@ -60,7 +60,6 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
                 copyCommandList.CopyBufferRegion(buffer, 0, this, 0, SizeInBytes);
-                copyCommandList.Flush();
             }
             else SetDataWithCpuBuffer(buffer);
         }
