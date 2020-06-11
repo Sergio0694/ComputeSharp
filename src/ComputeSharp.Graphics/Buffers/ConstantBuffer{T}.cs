@@ -84,11 +84,8 @@ namespace ComputeSharp
                     Unsafe.As<byte, T>(ref Unsafe.Add(ref untypedDest, i * GetPaddedSize())) = Unsafe.Add(ref src, i);
                 }
             }
-            else
-            {
-                // Directly copy the input span if there is no padding
-                MemoryHelper.Copy(span, resource.Pointer, offset, count);
-            }
+            // Directly copy as there is no padding
+            else MemoryHelper.Copy(span, resource.Pointer, offset, count);
         }
 
         /// <inheritdoc/>
