@@ -30,6 +30,7 @@ namespace ComputeSharp
         /// Gets the right padded size for <typeparamref name="T"/> elements to store in the current instance
         /// </summary>
         [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static int GetPaddedSize()
         {
             int size = Unsafe.SizeOf<T>();
@@ -46,29 +47,27 @@ namespace ComputeSharp
         /// <inheritdoc/>
         public override unsafe void GetData(Span<T> span, int offset, int count)
         {
+            using MappedResource resource = MapResource();
             if (IsPaddingPresent)
             {
                 // Copy the padded data to the temporary array
-                using (MappedResource resource = MapResource())
                 {
                     ref var dest = ref MemoryMarshal.GetReference(span);
-                    byte* untypedSrc = (byte*)resource.Pointer;
-                    for (var i = offset; i < count; i++)
+                    ref byte untypedSrc = ref Unsafe.AsRef<byte>((void*)resource.Pointer);
+                    untypedSrc = ref Unsafe.Add(ref untypedSrc, offset * GetPaddedSize());
+
+                    for (var i = 0; i < count; i++)
                     {
-                        Unsafe.Add(ref dest, i) = *(T*)&untypedSrc[i * GetPaddedSize()];
+                        Unsafe.Add(ref dest, i) = Unsafe.As<byte, T>(ref Unsafe.Add(ref untypedSrc, i * GetPaddedSize()));
                     }
                 }
             }
             else
             {
-                // Directly copy the data back if there is no padding
-                using MappedResource resource = MapResource();
-
                 MemoryHelper.Copy(resource.Pointer, offset, span, 0, count);
             }
         }
 
-        /// <inheritdoc/>
         /// <inheritdoc/>
         public override unsafe void SetData(ReadOnlySpan<T> span, int offset, int count)
         {
@@ -77,10 +76,12 @@ namespace ComputeSharp
             {
                 // Copy element-by-element
                 ref var src = ref MemoryMarshal.GetReference(span);
-                byte* untypedDest = (byte*)resource.Pointer;
-                for (var i = offset; i < count; i++)
+                ref byte untypedDest = ref Unsafe.AsRef<byte>((void*)resource.Pointer);
+                untypedDest = ref Unsafe.Add(ref untypedDest, offset * GetPaddedSize());
+
+                for (var i = 0; i < count; i++)
                 {
-                    *(T*)&untypedDest[i * GetPaddedSize()] = Unsafe.Add(ref src, i);
+                    Unsafe.As<byte, T>(ref Unsafe.Add(ref untypedDest, i * GetPaddedSize())) = Unsafe.Add(ref src, i);
                 }
             }
             else
