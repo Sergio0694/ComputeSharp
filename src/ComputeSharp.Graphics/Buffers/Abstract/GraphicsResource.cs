@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Vortice.Direct3D12;
 
 namespace ComputeSharp.Graphics.Buffers.Abstract
@@ -23,11 +24,6 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         public GraphicsDevice GraphicsDevice { get; }
 
         /// <summary>
-        /// Gets the <see cref="IntPtr"/> associated to the currently mapped resource
-        /// </summary>
-        internal IntPtr MappedResource { get; private set; }
-
-        /// <summary>
         /// Gets the <see cref="ID3D12Resource"/> object currently mapped
         /// </summary>
         protected internal ID3D12Resource? NativeResource { get; set; }
@@ -45,24 +41,50 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <summary>
         /// Maps the current resource to a specified subresource
         /// </summary>
-        /// <returns>An <see cref="IntPtr"/> for the newly mapped resource</returns>
-        internal IntPtr Map()
+        /// <returns>A <see cref="MappedResource"/> instance representing the mapped resource</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal MappedResource MapResource()
         {
-            IntPtr mappedResource = NativeResource?.Map(0) ?? throw new InvalidOperationException("Missing resource");
-            MappedResource = mappedResource;
-            return mappedResource;
-        }
+            var resource = NativeResource ?? throw new InvalidOperationException("Missing resource");
 
-        /// <summary>
-        /// Unmaps a subresource specified by a given index
-        /// </summary>
-        internal void Unmap()
-        {
-            NativeResource?.Unmap(0);
-            MappedResource = IntPtr.Zero;
+            return new MappedResource(resource);
         }
 
         /// <inheritdoc/>
         public virtual void Dispose() => NativeResource?.Dispose();
+
+        /// <summary>
+        /// A type representing a mapped memory resource
+        /// </summary>
+        internal readonly ref struct MappedResource
+        {
+            /// <summary>
+            /// The target <see cref="ID3D12Resource"/> to map
+            /// </summary>
+            private readonly ID3D12Resource Resource;
+
+            /// <summary>
+            /// The pointer to the mapped resource
+            /// </summary>
+            public readonly IntPtr Pointer;
+
+            /// <summary>
+            /// Creates a new <see cref="MappedResource"/> instance for a given <see cref="ID3D12Resource"/> value
+            /// </summary>
+            /// <param name="resource">The input <see cref="ID3D12Resource"/> instance to map</param>
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public MappedResource(ID3D12Resource resource)
+            {
+                Resource = resource;
+                Pointer = resource.Map(0);
+            }
+
+            /// <inheritdoc cref="IDisposable.Dispose"/>
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void Dispose()
+            {
+                Resource.Unmap(0);
+            }
+        }
     }
 }

@@ -130,7 +130,7 @@ namespace ComputeSharp.Benchmark
         /// <summary>
         /// Runs a fully connected forward operation on the CPU
         /// </summary>
-        [Benchmark]
+        [Benchmark(Baseline = true)]
         public void Cpu() => Dnn.FullyConnectedForwardCpu(C, N, M, P, X, W, B, Y);
 
         /// <summary>

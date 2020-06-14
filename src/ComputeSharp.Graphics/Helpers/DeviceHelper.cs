@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using Vortice.Direct3D;
 using Vortice.Direct3D12;
-using Vortice.DirectX.Direct3D;
 using Vortice.DXGI;
 
 namespace ComputeSharp.Graphics.Helpers
@@ -23,7 +23,7 @@ namespace ComputeSharp.Graphics.Helpers
             {
                 List<(ID3D12Device, AdapterDescription)> devices = new List<(ID3D12Device, AdapterDescription)>();
 
-                foreach (IDXGIAdapter1 adapter in factory.EnumAdapters1())
+                foreach (IDXGIAdapter1 adapter in factory.Adapters1)
                 {
                     if (adapter.Description.DedicatedVideoMemory == 0) continue;
                     if (D3D12.D3D12CreateDevice(adapter, FeatureLevel.Level_12_0, out ID3D12Device device).Success)

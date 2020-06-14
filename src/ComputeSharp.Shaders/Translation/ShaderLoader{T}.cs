@@ -21,24 +21,16 @@ using ParameterInfo = ComputeSharp.Shaders.Renderer.Models.Functions.ParameterIn
 namespace ComputeSharp.Shaders.Translation
 {
     /// <summary>
-    /// A <see langword="class"/> responsible for loading and processing <see cref="Action{T}"/> instances
+    /// A <see langword="class"/> responsible for loading and processing shaders of a given type
     /// </summary>
-    internal sealed partial class ShaderLoader
+    /// <typeparam name="T">The type of compute shader currently in use</typeparam>
+    internal sealed partial class ShaderLoader<T>
+        where T : struct, IComputeShader
     {
         /// <summary>
-        /// The <see cref="Action{T}"/> that represents the shader to load
+        /// Creates a new <see cref="ShaderLoader{T}"/> instance
         /// </summary>
-        private readonly Action<ThreadIds> Action;
-
-        /// <summary>
-        /// Creates a new <see cref="ShaderLoader"/> with the specified parameters
-        /// </summary>
-        /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
-        private ShaderLoader(Action<ThreadIds> action)
-        {
-            Action = action;
-            ShaderType = action.Method.DeclaringType;
-        }
+        private ShaderLoader() { }
 
         /// <summary>
         /// The number of constant buffers to define in the shader
@@ -56,16 +48,11 @@ namespace ComputeSharp.Shaders.Translation
         private int _ReadWriteBuffersCount;
 
         /// <summary>
-        /// Gets the closure <see cref="Type"/> for the <see cref="Action"/> field
-        /// </summary>
-        public Type ShaderType { get; }
-
-        /// <summary>
         /// The <see cref="List{T}"/> of <see cref="DescriptorRange1"/> items that are required to load the captured values
         /// </summary>
         private readonly List<DescriptorRange1> DescriptorRanges = new List<DescriptorRange1>();
 
-        private RootParameter1[] _RootParameters;
+        private RootParameter1[]? _RootParameters;
 
         /// <summary>
         /// Gets the <see cref="RootParameter1"/> array for the current shader
@@ -111,17 +98,22 @@ namespace ComputeSharp.Shaders.Translation
         public IReadOnlyList<LocalFunctionInfo> LocalFunctionsList => _LocalFunctionsList;
 
         /// <summary>
-        /// Loads and processes an input <see cref="Action{T}"/>
+        /// Loads and processes an input<typeparamref name="T"/> shadeer
         /// </summary>
-        /// <param name="action">The <see cref="Action{T}"/> to use to build the shader</param>
+        /// <param name="shader">The <typeparamref name="T"/> instance to use to build the shader</param>
         /// <returns>A new <see cref="ShaderLoader"/> instance representing the input shader</returns>
         [Pure]
-        public static ShaderLoader Load(Action<ThreadIds> action)
+        public static ShaderLoader<T> Load(in T shader)
         {
-            ShaderLoader @this = new ShaderLoader(action);
+            ShaderLoader<T> @this = new ShaderLoader<T>();
 
-            @this.LoadFieldsInfo();
-            @this.LoadMethodSource();
+            /* Reading members through reflection requires an object parameter,
+             * so here we're just boxing the input shader once to avoid allocating
+             * it multiple times in the managed heap while processing the shader. */
+            object box = shader;
+
+            @this.LoadFieldsInfo(box);
+            @this.LoadMethodSource(box);
             @this.BuildDispatchDataLoader();
 
             return @this;
@@ -130,10 +122,16 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// Loads the fields info for the current shader being loaded
         /// </summary>
-        private void LoadFieldsInfo()
+        /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader</param>
+        private void LoadFieldsInfo(object shader)
         {
-            IReadOnlyList<FieldInfo> shaderFields = ShaderType.GetFields().ToArray();
-            if (shaderFields.Any(fieldInfo => fieldInfo.IsStatic)) throw new InvalidOperationException("Empty shader body");
+            IReadOnlyList<FieldInfo> shaderFields = typeof(T).GetFields(
+                BindingFlags.Instance |
+                BindingFlags.Static |
+                BindingFlags.Public |
+                BindingFlags.NonPublic).ToArray();
+
+            if (shaderFields.Count == 0) throw new InvalidOperationException("Empty shader body");
 
             // Descriptor for the buffer for captured scalar/vector variables
             DescriptorRanges.Add(new DescriptorRange1(DescriptorRangeType.ConstantBufferView, 1, _ConstantBuffersCount++));
@@ -141,17 +139,17 @@ namespace ComputeSharp.Shaders.Translation
             // Inspect the captured fields
             foreach (FieldInfo fieldInfo in shaderFields)
             {
-                LoadFieldInfo(fieldInfo);
+                LoadFieldInfo(shader, fieldInfo);
             }
         }
 
         /// <summary>
         /// Loads a specified <see cref="ReadableMember"/> and adds it to the shader model
         /// </summary>
+        /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader</param>
         /// <param name="memberInfo">The target <see cref="ReadableMember"/> to load</param>
         /// <param name="name">The optional explicit name to use for the field</param>
-        /// <param name="parents">The list of parent fields to reach the current <see cref="ReadableMember"/> from a given <see cref="Action{T}"/></param>
-        private void LoadFieldInfo(ReadableMember memberInfo, string? name = null, IReadOnlyList<ReadableMember>? parents = null)
+        private void LoadFieldInfo(object shader, ReadableMember memberInfo, string? name = null)
         {
             Type fieldType = memberInfo.MemberType;
             string fieldName = HlslKnownKeywords.GetMappedName(name ?? memberInfo.Name);
@@ -161,8 +159,6 @@ namespace ComputeSharp.Shaders.Translation
             {
                 DescriptorRanges.Add(new DescriptorRange1(DescriptorRangeType.ConstantBufferView, 1, _ConstantBuffersCount));
 
-                // Track the buffer field
-                memberInfo.Parents = parents;
                 _CapturedMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
@@ -173,8 +169,6 @@ namespace ComputeSharp.Shaders.Translation
                 // Root parameter for a readonly buffer
                 DescriptorRanges.Add(new DescriptorRange1(DescriptorRangeType.ShaderResourceView, 1, _ReadOnlyBuffersCount));
 
-                // Track the buffer field
-                memberInfo.Parents = parents;
                 _CapturedMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
@@ -185,8 +179,6 @@ namespace ComputeSharp.Shaders.Translation
                 // Root parameter for a read write buffer
                 DescriptorRanges.Add(new DescriptorRange1(DescriptorRangeType.UnorderedAccessView, 1, _ReadWriteBuffersCount));
 
-                // Track the buffer field
-                memberInfo.Parents = parents;
                 _CapturedMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
@@ -194,48 +186,36 @@ namespace ComputeSharp.Shaders.Translation
             }
             else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
             {
-                // Register the captured field
-                memberInfo.Parents = parents;
                 _CapturedMembers.Add(memberInfo);
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
                 _FieldsList.Add(new CapturedFieldInfo(fieldType, typeName, fieldName));
             }
-            else if (fieldType.IsClass && fieldName.StartsWith("CS$<>"))
-            {
-                // Captured scope, update the parents list
-                List<ReadableMember> updatedParents = parents?.ToList() ?? new List<ReadableMember>();
-                updatedParents.Add(memberInfo);
-
-                // Recurse on the new compiler generated class
-                IReadOnlyList<FieldInfo> fields = fieldType.GetFields().ToArray();
-                foreach (FieldInfo fieldInfo in fields)
-                {
-                    LoadFieldInfo(fieldInfo, null, updatedParents);
-                }
-            }
             else if (fieldType.IsDelegate() &&
-                     memberInfo.GetValue(Action.Target) is Delegate func &&
+                     memberInfo.GetValue(shader) is Delegate func &&
                      (func.Method.IsStatic || func.Method.DeclaringType.IsStatelessDelegateContainer()) &&
                      (HlslKnownTypes.IsKnownScalarType(func.Method.ReturnType) || HlslKnownTypes.IsKnownVectorType(func.Method.ReturnType)) &&
                      fieldType.GenericTypeArguments.All(type => HlslKnownTypes.IsKnownScalarType(type) ||
                                                                 HlslKnownTypes.IsKnownVectorType(type)))
             {
                 // Captured static delegates with a return type
-                LoadStaticMethodSource(fieldName, func.Method);
+                LoadStaticMethodSource(shader, fieldName, func.Method);
             }
+            else throw new ArgumentException($"Invalid captured variable of type {fieldType} with name \"{memberInfo.Name}\"");
         }
 
         /// <summary>
         /// Loads the entry method for the current shader being loaded
         /// </summary>
-        private void LoadMethodSource()
+        /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader</param>
+        private void LoadMethodSource(object shader)
         {
             // Decompile the shader method
-            MethodDecompiler.Instance.GetSyntaxTree(Action.Method, MethodType.Closure, out MethodDeclarationSyntax root, out SemanticModel semanticModel);
+            MethodInfo methodInfo = typeof(T).GetMethod(nameof(IComputeShader.Execute));
+            MethodDecompiler.Instance.GetSyntaxTree(methodInfo, MethodType.Execute, out MethodDeclarationSyntax root, out SemanticModel semanticModel);
 
             // Rewrite the shader method (eg. to fix the type declarations)
-            ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel, ShaderType);
+            ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel, typeof(T));
             root = (MethodDeclarationSyntax)syntaxRewriter.Visit(root);
 
             // Extract the implicit local functions
@@ -253,18 +233,18 @@ namespace ComputeSharp.Shaders.Translation
             // Register the captured static members
             foreach (var member in syntaxRewriter.StaticMembers)
             {
-                LoadFieldInfo(member.Value, member.Key);
+                LoadFieldInfo(shader, member.Value, member.Key);
             }
 
             // Register the captured static methods
             foreach (var method in syntaxRewriter.StaticMethods)
             {
-                LoadStaticMethodSource(method.Key, method.Value);
+                LoadStaticMethodSource(shader, method.Key, method.Value);
             }
 
             // Get the thread ids identifier name and shader method body
             ThreadsIdsVariableName = root.ParameterList.Parameters.First().Identifier.Text;
-            MethodBody = root.Body.ToFullString();
+            MethodBody = root.Body!.ToFullString();
 
             // Additional preprocessing
             MethodBody = Regex.Replace(MethodBody, @"(?<=\W)(\d+)[fFdD]", m => m.Groups[1].Value);
@@ -275,9 +255,10 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// Loads additional static methods used by the shader
         /// </summary>
+        /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader</param>
         /// <param name="name">The HLSL name of the new method to load</param>
         /// <param name="methodInfo">The <see cref="MethodInfo"/> instance for the method to load</param>
-        private void LoadStaticMethodSource(string name, MethodInfo methodInfo)
+        private void LoadStaticMethodSource(object shader, string name, MethodInfo methodInfo)
         {
             // Decompile the target method
             MethodDecompiler.Instance.GetSyntaxTree(methodInfo, MethodType.Static, out MethodDeclarationSyntax root, out SemanticModel semanticModel);
@@ -289,26 +270,26 @@ namespace ComputeSharp.Shaders.Translation
             // Register the captured static members
             foreach (var member in syntaxRewriter.StaticMembers)
             {
-                LoadFieldInfo(member.Value, member.Key);
+                LoadFieldInfo(shader, member.Value, member.Key);
             }
 
             // Register the captured static methods
             foreach (var method in syntaxRewriter.StaticMethods)
             {
-                LoadStaticMethodSource(method.Key, method.Value);
+                LoadStaticMethodSource(shader, method.Key, method.Value);
             }
 
             // Get the function parameters
             IReadOnlyList<ParameterInfo> parameters = (
                 from parameter in root.ParameterList.Parameters.Select((p, i) => (Node: p, Index: i))
                 let modifiers = parameter.Node.Modifiers
-                let type = parameter.Node.Type.ToFullString()
+                let type = parameter.Node.Type!.ToFullString()
                 let parameterName = parameter.Node.Identifier.ToFullString()
                 let last = parameter.Index == root.ParameterList.Parameters.Count - 1
                 select new ParameterInfo(modifiers, type, parameterName, last)).ToArray();
 
             // Get the function body
-            string body = root.Body.ToFullString();
+            string body = root.Body!.ToFullString();
             body = Regex.Replace(body, @"(?<=\W)(\d+)[fFdD]", m => m.Groups[1].Value);
             body = body.TrimEnd('\n', '\r', ' ');
             body = HlslKnownKeywords.GetMappedText(body);

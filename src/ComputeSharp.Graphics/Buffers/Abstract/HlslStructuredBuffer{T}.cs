@@ -25,29 +25,30 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         public override void GetData(Span<T> span, int offset, int count)
         {
             using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, count, count * ElementSizeInBytes, BufferType.ReadBack);
-            using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
-            copyCommandList.CopyBufferRegion(this, offset * ElementSizeInBytes, transferBuffer, 0, count * ElementSizeInBytes);
-            copyCommandList.Flush();
+            using (CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy))
+            {
+                copyCommandList.CopyBufferRegion(this, offset * ElementSizeInBytes, transferBuffer, 0, count * ElementSizeInBytes);
+            }
 
-            transferBuffer.Map();
-            MemoryHelper.Copy(transferBuffer.MappedResource, 0, span, 0, count);
-            transferBuffer.Unmap();
+            using MappedResource resource = transferBuffer.MapResource();
+
+            MemoryHelper.Copy(resource.Pointer, 0, span, 0, count);
         }
 
         /// <inheritdoc/>
-        public override void SetData(Span<T> span, int offset, int count)
+        public override void SetData(ReadOnlySpan<T> span, int offset, int count)
         {
             using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, count, count * ElementSizeInBytes, BufferType.Transfer);
 
-            transferBuffer.Map();
-            MemoryHelper.Copy(span, 0, transferBuffer.MappedResource, 0, count);
-            transferBuffer.Unmap();
+            using (MappedResource resource = transferBuffer.MapResource())
+            {
+                MemoryHelper.Copy(span, resource.Pointer, 0, count);
+            }
 
             using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
             copyCommandList.CopyBufferRegion(transferBuffer, 0, this, offset * ElementSizeInBytes, count * ElementSizeInBytes);
-            copyCommandList.Flush();
         }
 
         /// <inheritdoc/>
@@ -59,7 +60,6 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
                 copyCommandList.CopyBufferRegion(buffer, 0, this, 0, SizeInBytes);
-                copyCommandList.Flush();
             }
             else SetDataWithCpuBuffer(buffer);
         }

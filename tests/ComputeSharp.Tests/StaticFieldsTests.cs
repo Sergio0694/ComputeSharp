@@ -39,18 +39,38 @@ namespace ComputeSharp.Tests
     [TestCategory("StaticFields")]
     public class StaticFieldsTests
     {
+        private struct StaticReadonlyScalarFieldAssignToBuffer_Shader : IComputeShader
+        {
+            public ReadWriteBuffer<float> B;
+
+            public void Execute(ThreadIds ids)
+            {
+                B[0] = StaticFieldsContainer.ReadonlyFloat;
+            }
+        }
+
         [TestMethod]
         public void StaticReadonlyScalarFieldAssignToBuffer()
         {
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
 
-            Action<ThreadIds> action = id => buffer[0] = StaticFieldsContainer.ReadonlyFloat;
+            var shader = new StaticReadonlyScalarFieldAssignToBuffer_Shader { B = buffer };
 
-            Gpu.Default.For(1, action);
+            Gpu.Default.For(1, shader);
 
             float[] result = buffer.GetData();
 
             Assert.IsTrue(MathF.Abs(result[0] - StaticFieldsContainer.ReadonlyFloat) < 0.0001f);
+        }
+
+        private struct StaticScalarFieldAssignToBuffer_Shader : IComputeShader
+        {
+            public ReadWriteBuffer<float> B;
+
+            public void Execute(ThreadIds ids)
+            {
+                B[0] = StaticFieldsContainer.StaticFloat;
+            }
         }
 
         [TestMethod]
@@ -58,13 +78,23 @@ namespace ComputeSharp.Tests
         {
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
 
-            Action<ThreadIds> action = id => buffer[0] = StaticFieldsContainer.StaticFloat;
+            var shader = new StaticScalarFieldAssignToBuffer_Shader { B = buffer };
 
-            Gpu.Default.For(1, action);
+            Gpu.Default.For(1, shader);
 
             float[] result = buffer.GetData();
 
             Assert.IsTrue(MathF.Abs(result[0] - StaticFieldsContainer.StaticFloat) < 0.0001f);
+        }
+
+        private struct StaticScalarFieldRepeatedAssignToBuffer_Shader : IComputeShader
+        {
+            public ReadWriteBuffer<float> B;
+
+            public void Execute(ThreadIds ids)
+            {
+                B[0] = StaticFieldsContainer.StaticFloat + StaticFieldsContainer.StaticFloat;
+            }
         }
 
         [TestMethod]
@@ -72,13 +102,24 @@ namespace ComputeSharp.Tests
         {
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
 
-            Action<ThreadIds> action = id => buffer[0] = StaticFieldsContainer.StaticFloat + StaticFieldsContainer.StaticFloat;
+            var shader = new StaticScalarFieldRepeatedAssignToBuffer_Shader { B = buffer };
 
-            Gpu.Default.For(1, action);
+            Gpu.Default.For(1, shader);
 
             float[] result = buffer.GetData();
 
             Assert.IsTrue(MathF.Abs(result[0] - StaticFieldsContainer.StaticFloat * 2) < 0.0001f);
+        }
+
+        private struct StaticReadonlyVectorFieldAssignToBuffer_Shader : IComputeShader
+        {
+            public ReadWriteBuffer<float> B;
+
+            public void Execute(ThreadIds ids)
+            {
+                if (ids.X == 0) B[0] = StaticFieldsContainer.ReadonlyVector2.X;
+                else B[1] = StaticFieldsContainer.ReadonlyVector2.Y;
+            }
         }
 
         [TestMethod]
@@ -86,13 +127,9 @@ namespace ComputeSharp.Tests
         {
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(2);
 
-            Action<ThreadIds> action = id =>
-            {
-                if (id.X == 0) buffer[0] = StaticFieldsContainer.ReadonlyVector2.X;
-                else buffer[1] = StaticFieldsContainer.ReadonlyVector2.Y;
-            };
+            var shader = new StaticReadonlyVectorFieldAssignToBuffer_Shader { B = buffer };
 
-            Gpu.Default.For(2, action);
+            Gpu.Default.For(2, shader);
 
             float[] result = buffer.GetData();
 
@@ -100,18 +137,25 @@ namespace ComputeSharp.Tests
             Assert.IsTrue(MathF.Abs(result[1] - StaticFieldsContainer.ReadonlyVector2.Y) < 0.0001f);
         }
 
+        private struct StaticVectorFieldAssignToBuffer_Shader : IComputeShader
+        {
+            public ReadWriteBuffer<float> B;
+
+            public void Execute(ThreadIds ids)
+            {
+                if (ids.X == 0) B[0] = StaticFieldsContainer.StaticVector2.X;
+                else B[1] = StaticFieldsContainer.StaticVector2.Y;
+            }
+        }
+
         [TestMethod]
         public void StaticVectorFieldAssignToBuffer()
         {
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(2);
 
-            Action<ThreadIds> action = id =>
-            {
-                if (id.X == 0) buffer[0] = StaticFieldsContainer.StaticVector2.X;
-                else buffer[1] = StaticFieldsContainer.StaticVector2.Y;
-            };
+            var shader = new StaticVectorFieldAssignToBuffer_Shader { B = buffer };
 
-            Gpu.Default.For(2, action);
+            Gpu.Default.For(2, shader);
 
             float[] result = buffer.GetData();
 
@@ -119,18 +163,25 @@ namespace ComputeSharp.Tests
             Assert.IsTrue(MathF.Abs(result[1] - StaticFieldsContainer.StaticVector2.Y) < 0.0001f);
         }
 
+        private struct StaticReadOnlyBufferFieldAssignToBuffer_Shader : IComputeShader
+        {
+            public ReadWriteBuffer<float> B;
+
+            public void Execute(ThreadIds ids)
+            {
+                if (ids.X == 0) B[0] = StaticFieldsContainer.StaticBuffer[0];
+                else B[1] = StaticFieldsContainer.StaticBuffer[1];
+            }
+        }
+
         [TestMethod]
         public void StaticReadOnlyBufferFieldAssignToBuffer()
         {
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(2);
 
-            Action<ThreadIds> action = id =>
-            {
-                if (id.X == 0) buffer[0] = StaticFieldsContainer.StaticBuffer[0];
-                else buffer[1] = StaticFieldsContainer.StaticBuffer[1];
-            };
+            var shader = new StaticReadOnlyBufferFieldAssignToBuffer_Shader { B = buffer };
 
-            Gpu.Default.For(2, action);
+            Gpu.Default.For(2, shader);
 
             float[] result = buffer.GetData();
             float[] expected = StaticFieldsContainer.StaticBuffer.GetData();

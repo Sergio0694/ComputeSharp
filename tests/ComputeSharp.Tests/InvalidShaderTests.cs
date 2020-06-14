@@ -10,24 +10,41 @@ namespace ComputeSharp.Tests
     [TestCategory("InvalidShader")]
     public class InvalidShaderTests
     {
-        [TestMethod]
-        public void EmptyShaderCompileError()
+        private struct EmptyShaderCompileError_Shader : IComputeShader
         {
-            Action<ThreadIds> action = id => { };
-
-            Assert.ThrowsException<InvalidOperationException>(() => Gpu.Default.For(10, action));
+            public void Execute(ThreadIds ids) { }
         }
 
         [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void EmptyShaderCompileError()
+        {
+            var shader = default(EmptyShaderCompileError_Shader);
+
+            Gpu.Default.For(10, shader);
+        }
+
+        private struct DeviceMismatchException_Shader : IComputeShader
+        {
+            public ReadWriteBuffer<int> B;
+
+            public void Execute(ThreadIds ids)
+            {
+                B[0] = 1;
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(GraphicsDeviceMismatchException))]
         public void DeviceMismatchException()
         {
             ReadWriteBuffer<int> buffer = Gpu.Default.AllocateReadWriteBuffer<int>(1);
 
             GraphicsDevice device = Gpu.EnumerateDevices().First();
 
-            Action<ThreadIds> action = id => buffer[0] = 1;
+            var shader = new DeviceMismatchException_Shader { B = buffer };
 
-            Assert.ThrowsException<GraphicsDeviceMismatchException>(() => device.For(1, action));
+            device.For(1, shader);
         }
     }
 }

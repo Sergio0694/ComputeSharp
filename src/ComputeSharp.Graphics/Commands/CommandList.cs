@@ -88,23 +88,13 @@ namespace ComputeSharp.Graphics.Commands
             NativeCommandList.Dispatch(threadGroupCountX, threadGroupCountY, threadGroupCountZ);
         }
 
-        /// <summary>
-        /// Executes the pending operations and waits for them to be completed
-        /// </summary>
-        public void Flush()
-        {
-            Close();
-            GraphicsDevice.ExecuteCommandList(this);
-        }
-
-        /// <summary>
-        /// Closes the current native command list
-        /// </summary>
-        public void Close() => NativeCommandList.Close();
-
         /// <inheritdoc/>
         public override void Dispose()
         {
+            NativeCommandList.Close();
+
+            GraphicsDevice.ExecuteCommandList(this);
+
             switch (CommandListType)
             {
                 case CommandListType.Direct:

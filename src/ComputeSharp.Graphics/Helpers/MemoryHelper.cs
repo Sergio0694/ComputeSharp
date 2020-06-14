@@ -9,19 +9,19 @@ namespace ComputeSharp.Graphics.Helpers
     internal static class MemoryHelper
     {
         /// <summary>
-        /// Copies the content of a <see cref="Span{T}"/> to the area pointed by an input <see cref="IntPtr"/> value
+        /// Copies the content of a <see cref="ReadOnlySpan{T}"/> to the area pointed by an input <see cref="IntPtr"/> value
         /// </summary>
-        /// <typeparam name="T">The type of values in the input <see cref="Span{T}"/></typeparam>
-        /// <param name="source">The source <see cref="Span{T}"/> to read</param>
-        /// <param name="sourceOffset">The source offset to start reading data from</param>
+        /// <typeparam name="T">The type of values in the input <see cref="ReadOnlySpan{T}"/></typeparam>
+        /// <param name="source">The source <see cref="ReadOnlySpan{T}"/> to read</param>
         /// <param name="destination">The <see cref="IntPtr"/> for the destination memory area</param>
         /// <param name="destinationOffset">The destination offset to start writing data to</param>
         /// <param name="count">The total number of items to copy</param>
-        public static unsafe void Copy<T>(Span<T> source, int sourceOffset, IntPtr destination, int destinationOffset, int count) where T : unmanaged
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Copy<T>(ReadOnlySpan<T> source, IntPtr destination, int destinationOffset, int count) where T : unmanaged
         {
-            ref T rout = ref Unsafe.AsRef<T>(destination.ToPointer());
-            void* target = Unsafe.AsPointer(ref Unsafe.Add(ref rout, destinationOffset));
-            source.Slice(sourceOffset, count).CopyTo(new Span<T>(target, count));
+            T* p = (T*)destination.ToPointer() + destinationOffset;
+
+            source.CopyTo(new Span<T>(p, count));
         }
 
         /// <summary>

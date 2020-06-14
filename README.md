@@ -31,11 +31,27 @@ More details available [here](https://www.nuget.org/packages/ComputeSharp/).
 The following sample shows how to allocate a writeable buffer, populate it with a compute shader, and read it back.
 
 ```C#
+// Define a simple shader
+public readonly struct MyShader : IComputeShader
+{
+    public readonly ReadWriteBuffer<float> buffer;
+
+    public MyShader(ReadWriteBuffer<float> buffer)
+    {
+        this.buffer = buffer;
+    }
+
+    public void Execute(ThreadIds ids)
+    {
+        buffer[ids.X] = ids.X;
+    }
+}
+
 // Allocate a writeable buffer on the GPU, with the contents of the array
 using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1000);
 
 // Run the shader
-Gpu.Default.For(1000, id => buffer[id.X] = id.X);
+Gpu.Default.For(1000, new MyShader(buffer));
 
 // Get the data back
 float[] array = buffer.GetData();
@@ -69,9 +85,41 @@ There are a number of extension APIs for the `GraphicsDevice` class that can be 
 
 ## Advanced usage
 
-**ComputeSharp** lets you dispatch compute shaders over thread groups from 1 to 3 dimensions, includes supports for constant and readonly buffers, and more. The shader body can both be declared inline, as a separate `Action<ThreadIds>` or as a local method. Additionally, most of the [HLSL intrinsic functions](https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-intrinsic-functions) are available through the `Hlsl` class. Here is a more advanced sample showcasing all these features.
+**ComputeSharp** lets you dispatch compute shaders over thread groups from 1 to 3 dimensions, includes supports for constant and readonly buffers, and more. Additionally, most of the [HLSL intrinsic functions](https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-intrinsic-functions) are available through the `Hlsl` class. Here is a more advanced sample showcasing all these features.
 
 ```C#
+// Define a class with some utility static functions
+public static class Activations
+{
+    public static float Sigmoid(float x) => 1 / (1 + Hlsl.Exp(-x));
+}
+
+// Define the shader
+public readonly struct ActivationShader : IComputeShader
+{
+    private readonly int width;
+
+    public readonly ReadOnlyBuffer<float> x;
+    public readonly ReadWriteBuffer<float> y;
+
+    public ActivationShader(
+        int width,
+        ReadOnlyBuffer<float> x,
+        ReadWriteBuffer<float> y)
+    {
+        this.width = width;
+        this.x = x;
+        this.y = y;
+    }
+
+    public void Execute(ThreadIds ids)
+    {
+        int offset = ids.X + ids.Y * width;
+        float pow = Hlsl.Pow(x[offset], 2);
+        y[offset] = Activations.Sigmoid(pow);
+    }
+}
+
 int height = 10, width = 10;
 float[] x = new float[height * width]; // Array to sum to y
 float[] y = new float[height * width]; // Result array (assume both had some values)
@@ -79,18 +127,8 @@ float[] y = new float[height * width]; // Result array (assume both had some val
 using ReadOnlyBuffer<float> xBuffer = Gpu.Default.AllocateReadOnlyBuffer(x); 
 using ReadWriteBuffer<float> yBuffer = Gpu.Default.AllocateReadWriteBuffer(y);
 
-static float Sigmoid(float x) => 1 / (1 + Hlsl.Exp(-x));
-
-// Shader body
-void Kernel(ThreadIds id)
-{
-    int offset = id.X + id.Y * width;
-    float pow = Hlsl.Pow(xBuffer[offset], 2);
-    yBuffer[offset] = Sigmoid(pow);
-}
-
 // Run the shader
-Gpu.Default.For(width, height, Kernel);
+Gpu.Default.For(width, height, new ActivationShader(width, xBuffer, yBuffer));
 
 // Get the data back and write it to the y array
 yBuffer.GetData(y);
@@ -102,7 +140,7 @@ The **ComputeSharp** library requires .NET Standard 2.1 support, and it is avail
 - .NET Core >= 3.0
 - Windows (x86 or x64)
 
-Additionally, you need an IDE with .NET Core 3.0 and C# 8.0 support to compile the library and samples on your PC.
+Additionally, you need an IDE with .NET Core 3.1 and C# 8.0 support to compile the library and samples on your PC.
 
 # Special thanks
 

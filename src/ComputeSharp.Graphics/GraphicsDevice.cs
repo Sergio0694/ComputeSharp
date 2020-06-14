@@ -2,9 +2,9 @@
 using System.Threading;
 using ComputeSharp.Graphics.Commands;
 using Vortice.Direct3D12;
-using Vortice.DirectX.Direct3D;
 using Vortice.DXGI;
 using CommandList = ComputeSharp.Graphics.Commands.CommandList;
+using Direct3DFeatureLevel = Vortice.Direct3D.FeatureLevel;
 
 namespace ComputeSharp.Graphics
 {
@@ -16,12 +16,7 @@ namespace ComputeSharp.Graphics
         /// <summary>
         /// Gets the <see cref="FeatureLevel"/> value that needs to be supported by GPUs mapped to a <see cref="GraphicsDevice"/> instance
         /// </summary>
-        public const FeatureLevel FeatureLevel = Vortice.DirectX.Direct3D.FeatureLevel.Level_12_1;
-
-        /// <summary>
-        /// The <see cref="System.Threading.AutoResetEvent"/> instance used to wait for completion when executing commands
-        /// </summary>
-        private readonly AutoResetEvent AutoResetEvent = new AutoResetEvent(false);
+        public const Direct3DFeatureLevel FeatureLevel = Direct3DFeatureLevel.Level_12_1;
 
         /// <summary>
         /// The <see cref="ID3D12CommandQueue"/> instance to use for compute operations
@@ -127,11 +122,6 @@ namespace ComputeSharp.Graphics
         internal ID3D12Fence NativeDirectFence { get; }
 
         /// <summary>
-        /// The <see cref="object"/> used to lock command list executions
-        /// </summary>
-        private readonly object Lock = new object();
-
-        /// <summary>
         /// Gets the next fence value for compute operations
         /// </summary>
         internal long NextComputeFenceValue { get; private set; } = 1;
@@ -174,11 +164,11 @@ namespace ComputeSharp.Graphics
 
             if (fenceValue <= fence.CompletedValue) return;
 
-            lock (Lock)
-            {
-                fence.SetEventOnCompletion(fenceValue, AutoResetEvent.SafeWaitHandle.DangerousGetHandle());
-                AutoResetEvent.WaitOne();
-            }
+            using ManualResetEvent fenceEvent = new ManualResetEvent(false);
+
+            fence.SetEventOnCompletion(fenceValue, fenceEvent);
+
+            fenceEvent.WaitOne();
         }
 
         /// <summary>
@@ -244,8 +234,6 @@ namespace ComputeSharp.Graphics
             NativeDirectFence.Dispose();
 
             NativeDevice.Dispose();
-
-            AutoResetEvent.Dispose();
         }
     }
 }

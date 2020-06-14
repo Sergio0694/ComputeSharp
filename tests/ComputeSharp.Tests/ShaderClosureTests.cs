@@ -10,19 +10,33 @@ namespace ComputeSharp.Tests
     [TestCategory("ShaderClosure")]
     public class ShaderClosureTests
     {
+        private struct LocalScalarAssignToBuffer_Shader<T> : IComputeShader where T : unmanaged
+        {
+            public T Value;
+            public T Zero;
+            public ReadWriteBuffer<T> B;
+
+            public void Execute(ThreadIds ids)
+            {
+                if (ids.X % 2 == 0) B[ids.X] = Value;
+                else B[ids.X] = Zero;
+            }
+        }
+
         private static void LocalScalarAssignToBuffer<T>(T value, Func<T, T, bool> equals) where T : unmanaged
         {
             using ReadWriteBuffer<T> buffer = Gpu.Default.AllocateReadWriteBuffer<T>(4);
 
             T zero = default;
 
-            Action<ThreadIds> action = id =>
+            var shader = new LocalScalarAssignToBuffer_Shader<T>
             {
-                if (id.X % 2 == 0) buffer[id.X] = value;
-                else buffer[id.X] = zero;
+                Value = value,
+                Zero = zero,
+                B = buffer
             };
 
-            Gpu.Default.For(4, action);
+            Gpu.Default.For(4, shader);
 
             T[] result = buffer.GetData();
 
@@ -41,19 +55,27 @@ namespace ComputeSharp.Tests
             LocalScalarAssignToBuffer<Bool>(true, (a, b) => a == b);
         }
 
+        private struct ShaderWithBoolType_Shader : IComputeShader
+        {
+            public ReadWriteBuffer<Bool> B;
+            public ReadWriteBuffer<int> I;
+
+            public void Execute(ThreadIds ids)
+            {
+                if (B[ids.X]) I[ids.X] = ids.X + 1;
+                B[ids.X] = (ids.X % 2) == 0;
+            }
+        }
+
         [TestMethod]
         public void ShaderWithBoolType()
         {
             using ReadWriteBuffer<Bool> bools = Gpu.Default.AllocateReadWriteBuffer(new Bool[] { true, false, true, true });
             using ReadWriteBuffer<int> ints = Gpu.Default.AllocateReadWriteBuffer<int>(4);
 
-            void Foo(ThreadIds id)
-            {
-                if (bools[id.X]) ints[id.X] = id.X + 1;
-                bools[id.X] = (id.X % 2) == 0;
-            }
+            var shader = new ShaderWithBoolType_Shader { B = bools, I = ints };
 
-            Gpu.Default.For(4, Foo);
+            Gpu.Default.For(4, shader);
 
             Bool[] boolResults = bools.GetData();
 
@@ -70,19 +92,18 @@ namespace ComputeSharp.Tests
             Assert.IsTrue(intResults[3] == 4);
         }
 
-        [TestMethod]
-        public void LocalScalarAssignToBufferWithinLocalMethod()
+        private struct LocalKnownVectorAssignToBuffer_Shader : IComputeShader
         {
-            float value = 10;
-            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
+            public Vector4 V4;
+            public ReadWriteBuffer<float> B;
 
-            void Foo(ThreadIds id) => buffer[0] = value;
-
-            Gpu.Default.For(1, Foo);
-
-            float[] result = buffer.GetData();
-
-            Assert.IsTrue((int)result[0] == (int)value);
+            public void Execute(ThreadIds ids)
+            {
+                if (ids.X == 0) B[0] = V4.X;
+                else if (ids.X == 1) B[1] = V4.Y;
+                else if (ids.X == 2) B[2] = V4.Z;
+                else if (ids.X == 3) B[3] = V4.W;
+            }
         }
 
         [TestMethod]
@@ -91,20 +112,25 @@ namespace ComputeSharp.Tests
             Vector4 vector4 = new Vector4(1, 2, 3, 4);
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(4);
 
-            Action<ThreadIds> action = id =>
-            {
-                if (id.X == 0) buffer[0] = vector4.X;
-                else if (id.X == 1) buffer[1] = vector4.Y;
-                else if (id.X == 2) buffer[2] = vector4.Z;
-                else if (id.X == 3) buffer[3] = vector4.W;
-            };
+            var shader = new LocalKnownVectorAssignToBuffer_Shader { V4 = vector4, B = buffer };
 
-            Gpu.Default.For(4, action);
+            Gpu.Default.For(4, shader);
 
             float[] result = buffer.GetData();
             float[] expected = { 1, 2, 3, 4 };
 
             Assert.IsTrue(result.AsSpan().ContentEquals(expected));
+        }
+
+        private struct CopyBetweenConstantAndWriteableBuffers_Shader : IComputeShader
+        {
+            public ConstantBuffer<float> C;
+            public ReadWriteBuffer<float> B;
+
+            public void Execute(ThreadIds ids)
+            {
+                B[ids.X] = C[ids.X];
+            }
         }
 
         [TestMethod]
@@ -115,13 +141,24 @@ namespace ComputeSharp.Tests
             using ConstantBuffer<float> input = Gpu.Default.AllocateConstantBuffer(source);
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(source.Length);
 
-            Action<ThreadIds> action = id => buffer[id.X] = input[id.X];
+            var shader = new CopyBetweenConstantAndWriteableBuffers_Shader { C = input, B = buffer };
 
-            Gpu.Default.For(source.Length, action);
+            Gpu.Default.For(source.Length, shader);
 
             float[] result = buffer.GetData();
 
             Assert.IsTrue(result.AsSpan().ContentEquals(source));
+        }
+
+        private struct CopyBetweenReadOnlyAndWriteableBuffers_Shader : IComputeShader
+        {
+            public ReadOnlyBuffer<float> IN;
+            public ReadWriteBuffer<float> OUT;
+
+            public void Execute(ThreadIds ids)
+            {
+                OUT[ids.X] = IN[ids.X];
+            }
         }
 
         [TestMethod]
@@ -132,13 +169,24 @@ namespace ComputeSharp.Tests
             using ReadOnlyBuffer<float> input = Gpu.Default.AllocateReadOnlyBuffer(source);
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(source.Length);
 
-            Action<ThreadIds> action = id => buffer[id.X] = input[id.X];
+            var shader = new CopyBetweenReadOnlyAndWriteableBuffers_Shader { IN = input, OUT = buffer };
 
-            Gpu.Default.For(source.Length, action);
+            Gpu.Default.For(source.Length, shader);
 
             float[] result = buffer.GetData();
 
             Assert.IsTrue(result.AsSpan().ContentEquals(source));
+        }
+
+        private struct CopyBetweenWriteableBuffers_Shader : IComputeShader
+        {
+            public ReadWriteBuffer<float> IN;
+            public ReadWriteBuffer<float> OUT;
+
+            public void Execute(ThreadIds ids)
+            {
+                OUT[ids.X] = IN[ids.X];
+            }
         }
 
         [TestMethod]
@@ -149,75 +197,13 @@ namespace ComputeSharp.Tests
             using ReadWriteBuffer<float> input = Gpu.Default.AllocateReadWriteBuffer(source);
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(source.Length);
 
-            Action<ThreadIds> action = id => buffer[id.X] = input[id.X];
+            var shader = new CopyBetweenWriteableBuffers_Shader { IN = input, OUT = buffer };
 
-            Gpu.Default.For(source.Length, action);
+            Gpu.Default.For(source.Length, shader);
 
             float[] result = buffer.GetData();
 
             Assert.IsTrue(result.AsSpan().ContentEquals(source));
-        }
-
-        [TestMethod]
-        public void CopyBetweenNestedClosuresEasy()
-        {
-            int value1 = 1;
-            using (ReadWriteBuffer<int> buffer1 = Gpu.Default.AllocateReadWriteBuffer<int>(1))
-            {
-                int value2 = 2;
-                Action<ThreadIds> action = id =>
-                {
-                    int sum = value1 + value2;
-                    buffer1[0] = sum;
-                };
-
-                Gpu.Default.For(1, action);
-
-                int[] result1 = buffer1.GetData();
-
-                Assert.IsTrue(result1[0] == value1 + value2);
-            }
-        }
-
-        [TestMethod]
-        public void CopyBetweenNestedClosuresHard()
-        {
-            int value1 = 1, value2 = 55, value3 = 77;
-            using (ReadWriteBuffer<int> buffer1 = Gpu.Default.AllocateReadWriteBuffer<int>(1))
-            {
-                int value4 = 2, value5 = 24, value6 = 99;
-                using (ReadWriteBuffer<int> buffer2 = Gpu.Default.AllocateReadWriteBuffer<int>(1))
-                {
-                    int value7 = 3, value8 = 12, value9 = 333;
-                    using (ReadWriteBuffer<int> buffer3 = Gpu.Default.AllocateReadWriteBuffer<int>(1))
-                    {
-                        int value10 = 4, value11 = 22;
-                        Action<ThreadIds> action = id =>
-                        {
-                            int sum_gpu =
-                                value1 + value2 + value3 + value4 +
-                                value5 + value6 + value7 + value8 +
-                                value9 + value10 + value11;
-                            buffer1[0] = buffer2[0] = buffer3[0] = sum_gpu;
-                        };
-
-                        Gpu.Default.For(1, action);
-
-                        int[] result1 = buffer1.GetData();
-                        int[] result2 = buffer2.GetData();
-                        int[] result3 = buffer3.GetData();
-
-                        int sum_cpu =
-                            value1 + value2 + value3 + value4 +
-                            value5 + value6 + value7 + value8 +
-                            value9 + value10 + value11;
-
-                        Assert.IsTrue(result1[0] == sum_cpu);
-                        Assert.IsTrue(result2[0] == sum_cpu);
-                        Assert.IsTrue(result3[0] == sum_cpu);
-                    }
-                }
-            }
         }
     }
 }

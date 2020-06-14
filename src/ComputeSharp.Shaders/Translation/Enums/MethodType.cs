@@ -6,9 +6,9 @@
     internal enum MethodType
     {
         /// <summary>
-        /// An instance method that belongs to a closure class
+        /// The instance <see cref="IComputeShader.Execute"/> method on some shader type
         /// </summary>
-        Closure,
+        Execute,
 
         /// <summary>
         /// A standalone, static method

@@ -27,11 +27,7 @@ namespace ComputeSharp.Sample
             using ReadWriteBuffer<float> gpuBuffer = Gpu.Default.AllocateReadWriteBuffer(array);
 
             // Run the shader
-            Gpu.Default.For(100, id =>
-            {
-                int offset = id.X + id.Y * width;
-                gpuBuffer[offset] *= 2;
-            });
+            Gpu.Default.For(100, new MainKernel(width, gpuBuffer));
 
             // Get the data back
             gpuBuffer.GetData(array);
@@ -40,6 +36,30 @@ namespace ComputeSharp.Sample
             Console.WriteLine("===================== AFTER ======================");
             PrintMatrix(array, width, height);
             Console.WriteLine("==================================================");
+        }
+
+        /// <summary>
+        /// Kernel for <see cref="Main"/>
+        /// </summary>
+        private readonly struct MainKernel : IComputeShader
+        {
+            private readonly int width;
+
+            private readonly ReadWriteBuffer<float> buffer;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public MainKernel(int width, ReadWriteBuffer<float> buffer)
+            {
+                this.width = width;
+                this.buffer = buffer;
+            }
+
+            /// <inheritdoc/>
+            public void Execute(ThreadIds ids)
+            {
+                int offset = ids.X + ids.Y * width;
+                buffer[offset] *= 2;
+            }
         }
 
         /// <summary>

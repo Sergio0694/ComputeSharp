@@ -9,14 +9,24 @@ namespace ComputeSharp.Tests
     [TestCategory("ShaderDispatch")]
     public class ShaderDispatch
     {
+        private struct WriteToReadWriteBufferDispatch1D_Shader : IComputeShader
+        {
+            public ReadWriteBuffer<float> B;
+
+            public void Execute(ThreadIds ids)
+            {
+                B[ids.X] = ids.X;
+            }
+        }
+
         [TestMethod]
         public void WriteToReadWriteBufferDispatch1D()
         {
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(100);
 
-            Action<ThreadIds> action = id => buffer[id.X] = id.X;
+            var shader = new WriteToReadWriteBufferDispatch1D_Shader { B = buffer };
 
-            Gpu.Default.For(100, action);
+            Gpu.Default.For(100, shader);
 
             float[] array = buffer.GetData();
             float[] expected = Enumerable.Range(0, 100).Select(i => (float)i).ToArray();
@@ -29,14 +39,24 @@ namespace ComputeSharp.Tests
         {
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(100);
 
-            Action<ThreadIds> action = id => buffer[id.X] = id.X;
+            var shader = new WriteToReadWriteBufferDispatch1D_Shader { B = buffer };
 
-            Gpu.Default.For(100, 1, 1, 64, 1, 1, action);
+            Gpu.Default.For(100, 1, 1, 64, 1, 1, shader);
 
             float[] array = buffer.GetData();
             float[] expected = Enumerable.Range(0, 100).Select(i => (float)i).ToArray();
 
             Assert.IsTrue(array.AsSpan().ContentEquals(expected));
+        }
+
+        private struct WriteToReadWriteBufferDispatch2D_Shader : IComputeShader
+        {
+            public ReadWriteBuffer<float> B;
+
+            public void Execute(ThreadIds ids)
+            {
+                B[ids.X + ids.Y * 10] = ids.X + ids.Y * 10;
+            }
         }
 
         [TestMethod]
@@ -44,9 +64,9 @@ namespace ComputeSharp.Tests
         {
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(100);
 
-            Action<ThreadIds> action = id => buffer[id.X + id.Y * 10] = id.X + id.Y * 10;
+            var shader = new WriteToReadWriteBufferDispatch2D_Shader { B = buffer };
 
-            Gpu.Default.For(10, 10, action);
+            Gpu.Default.For(10, 10, shader);
 
             float[] array = buffer.GetData();
             float[] expected = Enumerable.Range(0, 100).Select(i => (float)i).ToArray();
@@ -54,14 +74,24 @@ namespace ComputeSharp.Tests
             Assert.IsTrue(array.AsSpan().ContentEquals(expected));
         }
 
+        private struct WriteToReadWriteBufferDispatch3D_Shader : IComputeShader
+        {
+            public ReadWriteBuffer<float> B;
+
+            public void Execute(ThreadIds ids)
+            {
+                B[ids.X + ids.Y * 10 + ids.Z * 100] = ids.X + ids.Y * 10 + ids.Z * 100;
+            }
+        }
+
         [TestMethod]
         public void WriteToReadWriteBufferDispatch3D()
         {
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1000);
 
-            Action<ThreadIds> action = id => buffer[id.X + id.Y * 10 + id.Z * 100] = id.X + id.Y * 10 + id.Z * 100;
+            var shader = new WriteToReadWriteBufferDispatch3D_Shader { B = buffer };
 
-            Gpu.Default.For(10, 10, 10, action);
+            Gpu.Default.For(10, 10, 10, shader);
 
             float[] array = buffer.GetData();
             float[] expected = Enumerable.Range(0, 1000).Select(i => (float)i).ToArray();
@@ -74,9 +104,9 @@ namespace ComputeSharp.Tests
         {
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1000);
 
-            Action<ThreadIds> action = id => buffer[id.X + id.Y * 10 + id.Z * 100] = id.X + id.Y * 10 + id.Z * 100;
+            var shader = new WriteToReadWriteBufferDispatch3D_Shader { B = buffer };
 
-            Gpu.Default.For(10, 10, 10, 4, 4, 4, action);
+            Gpu.Default.For(10, 10, 10, 4, 4, 4, shader);
 
             float[] array = buffer.GetData();
             float[] expected = Enumerable.Range(0, 1000).Select(i => (float)i).ToArray();

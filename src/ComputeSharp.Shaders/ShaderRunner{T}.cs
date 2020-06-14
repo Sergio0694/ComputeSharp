@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Shaders.Renderer;
 using ComputeSharp.Shaders.Renderer.Models;
 using ComputeSharp.Shaders.Translation;
 using ComputeSharp.Shaders.Translation.Models;
+using Microsoft.Collections.Extensions;
 using Vortice.Direct3D12;
 using CommandList = ComputeSharp.Graphics.Commands.CommandList;
 using PipelineState = ComputeSharp.Graphics.Commands.PipelineState;
@@ -15,7 +15,9 @@ namespace ComputeSharp.Shaders
     /// <summary>
     /// A <see langword="class"/> responsible for performing all the necessary operations to compile and run a compute shader
     /// </summary>
-    internal static class ShaderRunner
+    /// <typeparam name="T">The type of compute shader to run</typeparam>
+    internal static class ShaderRunner<T>
+        where T : struct, IComputeShader
     {
         /// <summary>
         /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters
@@ -24,8 +26,8 @@ namespace ComputeSharp.Shaders
         /// <param name="x">The number of iterations to run on the X axis</param>
         /// <param name="y">The number of iterations to run on the Y axis</param>
         /// <param name="z">The number of iterations to run on the Z axis</param>
-        /// <param name="action">The input <see cref="Action{T}"/> representing the compute shader to run</param>
-        public static void Run(GraphicsDevice device, int x, int y, int z, Action<ThreadIds> action)
+        /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run</param>
+        public static void Run(GraphicsDevice device, int x, int y, int z, in T shader)
         {
             // Calculate the optimized thread num values
             int threadsX, threadsY = 1, threadsZ = 1;
@@ -33,13 +35,13 @@ namespace ComputeSharp.Shaders
             else if (z == 1) threadsX = threadsY = 8;
             else threadsX = threadsY = threadsZ = 4;
 
-            Run(device, x, y, z, threadsX, threadsY, threadsZ, action);
+            Run(device, x, y, z, threadsX, threadsY, threadsZ, shader);
         }
 
         /// <summary>
         /// The mapping used to cache and reuse compiled shaders
         /// </summary>
-        private static readonly Dictionary<(int Id, int ThreadsX, int ThreadsY, int ThreadsZ), CachedShader> ShadersCache = new Dictionary<(int, int, int, int), CachedShader>();
+        private static readonly DictionarySlim<ShaderKey, CachedShader<T>> ShadersCache = new DictionarySlim<ShaderKey, CachedShader<T>>();
 
         /// <summary>
         /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters
@@ -51,22 +53,22 @@ namespace ComputeSharp.Shaders
         /// <param name="threadsX">The number of threads in each thread group for the X axis</param>
         /// <param name="threadsY">The number of threads in each thread group for the Y axis</param>
         /// <param name="threadsZ">The number of threads in each thread group for the Z axis</param>
-        /// <param name="action">The input <see cref="Action{T}"/> representing the compute shader to run</param>
+        /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run</param>
         public static void Run(
             GraphicsDevice device,
             int x, int y, int z,
             int threadsX, int threadsY, int threadsZ,
-            Action<ThreadIds> action)
+            in T shader)
         {
             // Try to get the cache shader
-            CachedShader shaderData;
+            CachedShader<T> shaderData;
             lock (ShadersCache)
             {
-                var key = (ShaderHashCodeProvider.GetHashCode(action), threadsX, threadsY, threadsZ);
+                var key = new ShaderKey(ShaderHashCodeProvider.GetHashCode(shader), threadsX, threadsY, threadsZ);
                 if (!ShadersCache.TryGetValue(key, out shaderData))
                 {
                     // Load the input shader
-                    ShaderLoader shaderLoader = ShaderLoader.Load(action);
+                    ShaderLoader<T> shaderLoader = ShaderLoader<T>.Load(shader);
 
                     // Render the loaded shader
                     ShaderInfo shaderInfo = new ShaderInfo
@@ -87,8 +89,7 @@ namespace ComputeSharp.Shaders
                     ShaderBytecode shaderBytecode = ShaderCompiler.CompileShader(shaderSource);
 
                     // Cache for later use
-                    shaderData = new CachedShader(shaderLoader, shaderBytecode);
-                    ShadersCache.Add(key, shaderData);
+                    ShadersCache.GetOrAddValueRef(key) = shaderData = new CachedShader<T>(shaderLoader, shaderBytecode);
                 }
             }
 
@@ -102,7 +103,7 @@ namespace ComputeSharp.Shaders
             commandList.SetPipelineState(pipelineState);
 
             // Extract the dispatch data for the shader invocation
-            using DispatchData dispatchData = shaderData.Loader.GetDispatchData(action, x, y, z);
+            using DispatchData dispatchData = shaderData.Loader.GetDispatchData(shader, x, y, z);
 
             // Load the captured buffers
             Span<GraphicsResource> resources = dispatchData.Resources;
@@ -124,7 +125,6 @@ namespace ComputeSharp.Shaders
 
             // Dispatch and wait for completion
             commandList.Dispatch(groupsX, groupsY, groupsZ);
-            commandList.Flush();
         }
     }
 }

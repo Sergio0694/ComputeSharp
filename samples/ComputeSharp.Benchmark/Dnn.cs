@@ -61,24 +61,60 @@ namespace ComputeSharp.Benchmark
         /// <param name="w">The weights tensor</param>
         /// <param name="b">The bias tensor</param>
         /// <param name="y">The result tensor</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void FullyConnectedForwardGpu(
             int c, int n, int m, int p,
             ReadOnlyBuffer<float> x, ReadOnlyBuffer<float> w, ReadOnlyBuffer<float> b, ReadWriteBuffer<float> y)
         {
-            void Kernel(ThreadIds id)
+            Gpu.Default.For(c, n, p, new FullyConnectedForwardKernel(n, m, p, x, w, b, y));
+        }
+
+        /// <summary>
+        /// Kernel for <see cref="FullyConnectedForwardGpu"/>
+        /// </summary>
+        private readonly struct FullyConnectedForwardKernel : IComputeShader
+        {
+            private readonly int n;
+            private readonly int m;
+            private readonly int p;
+
+            private readonly ReadOnlyBuffer<float> x;
+            private readonly ReadOnlyBuffer<float> w;
+            private readonly ReadOnlyBuffer<float> b;
+            private readonly ReadWriteBuffer<float> y;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public FullyConnectedForwardKernel(
+                int n,
+                int m,
+                int p,
+                ReadOnlyBuffer<float> x,
+                ReadOnlyBuffer<float> w,
+                ReadOnlyBuffer<float> b,
+                ReadWriteBuffer<float> y)
             {
-                int x_offset = id.X * n * p + id.Y * m;
+                this.n = n;
+                this.m = m;
+                this.p = p;
+                this.x = x;
+                this.w = w;
+                this.b = b;
+                this.y = y;
+            }
+
+            /// <inheritdoc/>
+            public void Execute(ThreadIds ids)
+            {
+                int x_offset = ids.X * n * p + ids.Y * m;
                 float result = 0f;
 
                 for (int k = 0; k < m; k++)
                 {
-                    result += x[x_offset + k] * w[k * p + id.Z];
+                    result += x[x_offset + k] * w[k * p + ids.Z];
                 }
 
-                y[id.X * n * p + id.Y * p + id.Z] = result + b[id.Z];
-            };
-
-            Gpu.Default.For(c, n, p, Kernel);
+                y[ids.X * n * p + ids.Y * p + ids.Z] = result + b[ids.Z];
+            }
         }
     }
 }

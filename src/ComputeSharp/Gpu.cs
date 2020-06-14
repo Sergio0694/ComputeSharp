@@ -21,6 +21,11 @@ namespace ComputeSharp
         {
             Devices = DeviceHelper.QueryAllSupportedDevices();
             IsSupported = Devices.Any();
+
+            if (IsSupported)
+            {
+                _Default = new GraphicsDevice(Devices[0].Device, Devices[0].Description);
+            }
         }
 
         /// <summary>
@@ -28,25 +33,17 @@ namespace ComputeSharp
         /// </summary>
         private static readonly IReadOnlyList<(ID3D12Device Device, AdapterDescription Description)> Devices;
 
-        /// <summary>
-        /// Gets whether or not the <see cref="Gpu"/> APIs can be used on the current machine (ie. if there is at least a supported GPU device)
-        /// </summary>
-        public static bool IsSupported { get; }
-
-        private static GraphicsDevice? _Default;
+        private static readonly GraphicsDevice? _Default;
 
         /// <summary>
         /// Gets the default <see cref="GraphicsDevice"/> instance for the current machine
         /// </summary>
-        public static GraphicsDevice Default
-        {
-            get
-            {
-                if (!IsSupported) throw new NotSupportedException("There isn't a supported GPU device on the current machine");
+        public static GraphicsDevice Default => _Default ?? throw new NotSupportedException("There isn't a supported GPU device on the current machine");
 
-                return _Default ??= new GraphicsDevice(Devices[0].Device, Devices[0].Description);
-            }
-        }
+        /// <summary>
+        /// Gets whether or not the <see cref="Gpu"/> APIs can be used on the current machine (ie. if there is at least a supported GPU device)
+        /// </summary>
+        public static bool IsSupported { get; }
 
         /// <summary>
         /// Enumerates all the available <see cref="GraphicsDevice"/> objects on the current machine

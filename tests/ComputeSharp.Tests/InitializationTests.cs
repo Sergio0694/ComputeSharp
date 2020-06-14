@@ -17,6 +17,16 @@ namespace ComputeSharp.Tests
             else Assert.ThrowsException<NotSupportedException>(() => Gpu.Default);
         }
 
+        private struct RunShaderOnAllDevicesShader : IComputeShader
+        {
+            public ReadWriteBuffer<float> B;
+
+            public void Execute(ThreadIds ids)
+            {
+                B[ids.X] = ids.X;
+            }
+        }
+
         [TestMethod]
         public void RunShaderOnAllDevices()
         {
@@ -24,9 +34,9 @@ namespace ComputeSharp.Tests
             {
                 using (ReadWriteBuffer<float> buffer = gpu.AllocateReadWriteBuffer<float>(100))
                 {
-                    Action<ThreadIds> action = id => buffer[id.X] = id.X;
+                    var shader = new RunShaderOnAllDevicesShader { B = buffer };
 
-                    gpu.For(100, action);
+                    gpu.For(100, shader);
 
                     float[] array = buffer.GetData();
                     float[] expected = Enumerable.Range(0, 100).Select(i => (float)i).ToArray();

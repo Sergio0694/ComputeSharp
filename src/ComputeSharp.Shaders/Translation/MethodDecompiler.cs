@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Metadata;
-using System.Text;
 using System.Text.RegularExpressions;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Translation.Enums;
@@ -138,7 +137,7 @@ namespace ComputeSharp.Shaders.Translation
         {
             string sourceCode = methodType switch
             {
-                MethodType.Closure => GetSyntaxTreeForClosureMethod(methodInfo),
+                MethodType.Execute => GetSyntaxTreeForExecuteMethod(methodInfo),
                 MethodType.Static => GetSyntaxTreeForStaticMethod(methodInfo),
                 _ => throw new ArgumentOutOfRangeException(nameof(methodType), $"Invalid method type: {methodType}")
             };
@@ -147,7 +146,12 @@ namespace ComputeSharp.Shaders.Translation
             SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
 
             // Get the root node to return
-            rootNode = syntaxTree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().First(node => node.GetLeadingTrivia().ToFullString().Contains(methodInfo.Name));
+            rootNode = syntaxTree
+                .GetRoot()
+                .DescendantNodes()
+                .OfType<MethodDeclarationSyntax>()
+                .First(node => node.Identifier.ToString().Equals(methodInfo.Name) ||
+                               node.GetLeadingTrivia().ToFullString().Contains(methodInfo.Name));
 
             // Update the incremental compilation and retrieve the syntax tree for the method
             Compilation compilation = _Compilation.AddSyntaxTrees(syntaxTree);
@@ -159,31 +163,13 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         /// <param name="methodInfo">The input <see cref="MethodInfo"/> to inspect</param>
         [Pure]
-        private string GetSyntaxTreeForClosureMethod(MethodInfo methodInfo)
+        private string GetSyntaxTreeForExecuteMethod(MethodInfo methodInfo)
         {
-            // Decompile the method source and fix the method declaration for local methods converted to lambdas
-            string
-                sourceCode = DecompileMethodOrDeclaringType(methodInfo),
-                typeFixedCode = ClosureTypeDeclarationRegex.Replace(sourceCode, "Shader"),
-                methodFixedCode = LambdaMethodDeclarationRegex.Replace(typeFixedCode, m => $"// {m.Value}{Environment.NewLine}    internal void Main");
-
-            // Workaround for some local methods not being decompiled correctly
-            if (!methodFixedCode.Contains("internal void Main"))
-            {
-                string
-                    methodOnlySourceCode = DecompileMethodOrDeclaringType(methodInfo, true),
-                    methodOnlyFixedSourceCode = LambdaMethodDeclarationRegex.Replace(methodOnlySourceCode, m => $"// {m.Value}{Environment.NewLine}    internal void Main"),
-                    methodOnlyIndentedSourceCode = $"    {methodOnlyFixedSourceCode.Replace(Environment.NewLine, $"{Environment.NewLine}    ")}";
-
-                int lastClosedBracketsIndex = methodFixedCode.LastIndexOf('}');
-                methodFixedCode = methodFixedCode.Insert(lastClosedBracketsIndex, methodOnlyIndentedSourceCode);
-            }
-
-            // Unwrap the nested fields
-            string unwrappedSourceCode = UnwrapSyntaxTree(methodFixedCode);
+            // Decompile the method source
+            string sourceCode = DecompileMethodOrDeclaringType(methodInfo);
 
             // Remove the in keyword from the source
-            string inFixedSourceCode = Regex.Replace(unwrappedSourceCode, @"(?<!\w)in ", string.Empty);
+            string inFixedSourceCode = Regex.Replace(sourceCode, @"(?<!\w)in ", string.Empty);
 
             // Tweak the out declarations
             string outFixedSourceCode = RefactorInlineOutDeclarations(inFixedSourceCode, methodInfo.Name);
@@ -201,8 +187,16 @@ namespace ComputeSharp.Shaders.Translation
             string
                 sourceCode = DecompileMethodOrDeclaringType(methodInfo, true),
                 methodFixedCode = sourceCode.Replace(methodInfo.Name, Regex.Replace(methodInfo.Name, "[<>|]", "_")),
-                prototype = methodFixedCode.Split(Environment.NewLine)[0],
-                commentedSourceCode = $"// {methodInfo.Name}{Environment.NewLine}{methodFixedCode}",
+                methodWithoutAttributes = CSharpSyntaxTree
+                    .ParseText(methodFixedCode)
+                    .GetRoot()
+                    .DescendantNodes()
+                    .OfType<MethodDeclarationSyntax>()
+                    .First()
+                    .WithAttributeLists(default)
+                    .ToString(),
+                prototype = methodWithoutAttributes.Split(Environment.NewLine)[0],
+                commentedSourceCode = $"// {methodInfo.Name}{Environment.NewLine}{methodWithoutAttributes}",
                 inFixedSourceCode = Regex.Replace(commentedSourceCode, @"(?<!\w)in ", string.Empty),
                 outFixedSourceCode = RefactorInlineOutDeclarations(inFixedSourceCode, methodInfo.Name);
 
@@ -211,88 +205,6 @@ namespace ComputeSharp.Shaders.Translation
             BlockSyntax block = syntaxTree.GetRoot().DescendantNodes().OfType<BlockSyntax>().First();
 
             return $"// {methodInfo.Name}{Environment.NewLine}{prototype}{Environment.NewLine}{block.ToFullString()}";
-        }
-
-        /// <summary>
-        /// A <see cref="Regex"/> used to preprocess the closure type declarations for both lambda expressions and local methods
-        /// </summary>
-        private static readonly Regex ClosureTypeDeclarationRegex = new Regex(@"(?<=private sealed class )<\w*>[\w_]+", RegexOptions.Compiled);
-
-        /// <summary>
-        /// A <see cref="Regex"/> used to preprocess the entry point declaration for both lambda expressions and local methods
-        /// </summary>
-        private static readonly Regex LambdaMethodDeclarationRegex = new Regex(@"(?:private|internal) void <\w+>[\w_|]+(?=\()", RegexOptions.Compiled);
-
-        /// <summary>
-        /// A <see cref="Regex"/> used to find fields that represent nested closure types
-        /// </summary>
-        private static readonly Regex NestedClosureFieldRegex = new Regex(@"(?<=public )((?:\w+\.)+<>[\w_]+) (CS\$<>[\w_]+)(?=;)", RegexOptions.Compiled);
-
-        /// <summary>
-        /// A <see cref="Regex"/> used to identify compiler generated fields
-        /// </summary>
-        private static readonly Regex CompilerGeneratedFieldRegex = new Regex(@"CS\$<>[\w_]+\.", RegexOptions.Compiled);
-
-        /// <summary>
-        /// Unwraps all the nested captured fields in the given source code, moving them to the top level
-        /// </summary>
-        /// <param name="source">The input source code to process</param>
-        [Pure]
-        private string UnwrapSyntaxTree(string source)
-        {
-            List<FieldDeclarationSyntax> parsedFields = new List<FieldDeclarationSyntax>();
-
-            // Local function to recursively extract all the nested fields
-            void ParseNestedFields(string typeSource)
-            {
-                // Find the field declarations
-                Match match = NestedClosureFieldRegex.Match(typeSource);
-                if (!match.Success) return;
-
-                // Load the nested closure type
-                string fullname = match.Groups[1].Value.Replace(".<>", "+<>"); // Fullname of a nested type
-                Type type = AppDomain.CurrentDomain.GetAssemblies().Select(a => a.GetType(fullname)).First(t => t != null);
-
-                // Decompile the type and get a readable source code
-                EntityHandle typeHandle = MetadataTokenHelpers.TryAsEntityHandle(type.MetadataToken) ?? throw new InvalidOperationException();
-                CSharpDecompiler decompiler = Decompilers[type.Assembly.Location];
-                string
-                    sourceCode = decompiler.DecompileAsString(typeHandle),
-                    typeFixedCode = ClosureTypeDeclarationRegex.Replace(sourceCode, "Scope");
-
-                // Load the syntax tree and retrieve the list of fields
-                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(typeFixedCode);
-                FieldDeclarationSyntax[] fields = syntaxTree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>().First().ChildNodes().OfType<FieldDeclarationSyntax>().ToArray();
-
-                // Add the captured fields
-                foreach (FieldDeclarationSyntax field in fields)
-                    if (!field.Declaration.Variables.ToFullString().StartsWith("CS$<>"))
-                        parsedFields.Add(field);
-
-                // Explore the new decompiled type
-                ParseNestedFields(typeFixedCode);
-            }
-
-            ParseNestedFields(source);
-
-            if (parsedFields.Count > 0)
-            {
-                // Build the aggregated string with all the captured fields
-                StringBuilder builder = new StringBuilder();
-                foreach (FieldDeclarationSyntax field in parsedFields)
-                    builder.AppendLine(field.ToFullString());
-                string fields = builder.ToString().TrimEnd(' ', '\r', '\n');
-
-                // Replace the field declarations
-                Match match = NestedClosureFieldRegex.Match(source);
-                source = source.Remove(match.Index - 11, match.Length + 12); // leading "    public " and trailing ";"
-                source = source.Insert(match.Index - 11, fields);
-
-                // Adjust the method body to remove references to compiler generated fields
-                source = CompilerGeneratedFieldRegex.Replace(source, string.Empty);
-            }
-
-            return source;
         }
 
         /// <summary>
@@ -308,7 +220,12 @@ namespace ComputeSharp.Shaders.Translation
 
             // Load the syntax tree and the entry node
             SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source);
-            MethodDeclarationSyntax rootNode = syntaxTree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().First(node => node.GetLeadingTrivia().ToFullString().Contains(entryPoint));
+            MethodDeclarationSyntax rootNode = syntaxTree
+                .GetRoot()
+                .DescendantNodes()
+                .OfType<MethodDeclarationSyntax>()
+                .First(node => node.Identifier.ToString().Equals(entryPoint) ||
+                               node.GetLeadingTrivia().ToFullString().Contains(entryPoint));
 
             // Get the out declarations to replace
             var outs = (
