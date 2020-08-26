@@ -218,6 +218,9 @@ namespace ComputeSharp.Shaders.Translation
             // Replace the discards
             source = Regex.Replace(source, @"(?<!\w)out ([\w.]+) _(?!_)", m => $"out {m.Groups[1].Value} {new string(Guid.NewGuid().ToByteArray().Select(b => (char)('a' + b % 26)).ToArray())}");
 
+            // Fix invalid C# names with @ prefix
+            source = Regex.Replace(source, @"@(\w+)", m => $"__at__{m.Groups[1].Value}");
+
             // Load the syntax tree and the entry node
             SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source);
             MethodDeclarationSyntax rootNode = syntaxTree
