@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.1" />
-    <PackageReference Include="Vortice.Direct3D12" Version="1.6.0" />
+    <PackageReference Include="Vortice.Direct3D12" Version="1.7.37" />
   </ItemGroup>
 
   <ItemGroup>

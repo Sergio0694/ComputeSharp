@@ -143,7 +143,7 @@ namespace ComputeSharp.Graphics
         /// <returns>A new <see cref="ID3D12RootSignature"/> instance to use in a compute shader</returns>
         internal ID3D12RootSignature CreateRootSignature(VersionedRootSignatureDescription rootSignatureDescription)
         {
-            return NativeDevice.CreateRootSignature(rootSignatureDescription);
+            return NativeDevice.CreateRootSignature(0, rootSignatureDescription);
         }
 
         /// <summary>

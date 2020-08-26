@@ -18,7 +18,7 @@ namespace ComputeSharp.Graphics.Commands
             RootSignature = rootSignature;
             ComputeShader = computeShader;
 
-            NativePipelineState = device.NativeDevice.CreateComputePipelineState(this);
+            NativePipelineState = device.NativeDevice.CreateComputePipelineState<ID3D12PipelineState>(this);
         }
 
         /// <summary>

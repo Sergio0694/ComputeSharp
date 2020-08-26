@@ -21,7 +21,7 @@ namespace ComputeSharp.Graphics.Commands
                 CommandListType.Direct => GraphicsDevice.DirectAllocatorPool.GetCommandAllocator(),
                 _ => throw new NotSupportedException($"Unsupported command list type with value {CommandListType}")
             };
-            NativeCommandList = GraphicsDevice.NativeDevice.CreateCommandList(CommandListType, CommandAllocator, null);
+            NativeCommandList = GraphicsDevice.NativeDevice.CreateCommandList(0, CommandListType, CommandAllocator, null);
 
             // Set the heap descriptor if the command list is not for copy operations
             if (CommandListType != CommandListType.Copy)

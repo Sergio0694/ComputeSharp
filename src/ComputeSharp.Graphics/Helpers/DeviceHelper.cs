@@ -23,11 +23,16 @@ namespace ComputeSharp.Graphics.Helpers
             {
                 List<(ID3D12Device, AdapterDescription)> devices = new List<(ID3D12Device, AdapterDescription)>();
 
-                foreach (IDXGIAdapter1 adapter in factory.Adapters1)
+                int i = 0;
+
+                while (factory.EnumAdapters1(i++, out IDXGIAdapter1? adapter).Success && !(adapter is null))
                 {
                     if (adapter.Description.DedicatedVideoMemory == 0) continue;
+
                     if (D3D12.D3D12CreateDevice(adapter, FeatureLevel.Level_12_0, out ID3D12Device device).Success)
+                    {
                         devices.Add((device, adapter.Description));
+                    }
                 }
 
                 return devices;
