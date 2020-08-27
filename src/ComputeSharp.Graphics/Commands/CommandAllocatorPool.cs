@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Runtime.InteropServices;
 using ComputeSharp.Graphics.Commands.Abstract;
+using SharpGen.Runtime;
 using Vortice.Direct3D12;
 
 namespace ComputeSharp.Graphics.Commands
@@ -40,6 +42,7 @@ namespace ComputeSharp.Graphics.Commands
         {
             lock (CommandAllocatorQueue)
             {
+                // Reuse an existing command allocator, if one is present in the queue
                 if (CommandAllocatorQueue.Count > 0)
                 {
                     (ID3D12CommandAllocator commandAllocator, long fenceValue) = CommandAllocatorQueue.Peek();
@@ -61,7 +64,15 @@ namespace ComputeSharp.Graphics.Commands
                     }
                 }
 
-                return GraphicsDevice.NativeDevice.CreateCommandAllocator(CommandListType);
+                // Create a new command allocator
+                Result result = GraphicsDevice.NativeDevice.CreateCommandAllocator(CommandListType, out ID3D12CommandAllocator? nativeCommandAllocator);
+
+                if (result.Failure)
+                {
+                    throw new COMException("Failed to create the command allocator", result.Code);
+                }
+
+                return nativeCommandAllocator!;
             }
         }
 

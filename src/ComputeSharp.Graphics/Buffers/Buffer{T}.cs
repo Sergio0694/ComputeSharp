@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Enums;
+using SharpGen.Runtime;
 using Vortice.Direct3D12;
 
 namespace ComputeSharp.Graphics.Buffers
@@ -41,7 +43,14 @@ namespace ComputeSharp.Graphics.Buffers
 
             // Create the native resource
             ResourceDescription description = ResourceDescription.Buffer(sizeInBytes, flags);
-            NativeResource = GraphicsDevice.NativeDevice.CreateCommittedResource(new HeapProperties(heapType), HeapFlags.None, description, states);
+            Result result = GraphicsDevice.NativeDevice.CreateCommittedResource(new HeapProperties(heapType), HeapFlags.None, description, states, out ID3D12Resource? resource);
+
+            if (result.Failure)
+            {
+                throw new COMException("Failed to create the committed resource", result.Code);
+            }
+
+            NativeResource = resource!;
 
             // Create the resource handles, if needed
             (NativeCpuDescriptorHandle, NativeGpuDescriptorHandle) = bufferType switch

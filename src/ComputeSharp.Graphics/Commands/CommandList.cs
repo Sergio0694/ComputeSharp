@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Commands.Abstract;
+using SharpGen.Runtime;
 using Vortice.Direct3D12;
 
 namespace ComputeSharp.Graphics.Commands
@@ -21,7 +23,15 @@ namespace ComputeSharp.Graphics.Commands
                 CommandListType.Direct => GraphicsDevice.DirectAllocatorPool.GetCommandAllocator(),
                 _ => throw new NotSupportedException($"Unsupported command list type with value {CommandListType}")
             };
-            NativeCommandList = GraphicsDevice.NativeDevice.CreateCommandList(0, CommandListType, CommandAllocator, null);
+
+            Result result = GraphicsDevice.NativeDevice.CreateCommandList(0, commandListType, CommandAllocator, null, out ID3D12GraphicsCommandList? nativeCommandList);
+
+            if (result.Failure)
+            {
+                throw new COMException("Failed to create the commands list", result.Code);
+            }
+
+            NativeCommandList = nativeCommandList!;
 
             // Set the heap descriptor if the command list is not for copy operations
             if (CommandListType != CommandListType.Copy)
