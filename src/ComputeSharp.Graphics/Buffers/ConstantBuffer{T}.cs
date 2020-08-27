@@ -99,6 +99,7 @@ namespace ComputeSharp
                 using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
 
                 copyCommandList.CopyBufferRegion(buffer, 0, this, 0, SizeInBytes);
+                copyCommandList.ExecuteAndWaitForCompletion();
             }
             else SetDataWithCpuBuffer(buffer);
         }

@@ -88,7 +88,7 @@ namespace ComputeSharp.Graphics.Commands
         }
 
         /// <summary>
-        /// Executes the pending command list using the specified thread group values
+        /// Dispatches the pending shader using the specified thread group values
         /// </summary>
         /// <param name="threadGroupCountX">The number of thread groups to schedule for the X axis</param>
         /// <param name="threadGroupCountY">The number of thread groups to schedule for the Y axis</param>
@@ -98,13 +98,19 @@ namespace ComputeSharp.Graphics.Commands
             NativeCommandList.Dispatch(threadGroupCountX, threadGroupCountY, threadGroupCountZ);
         }
 
-        /// <inheritdoc/>
-        public override void Dispose()
+        /// <summary>
+        /// Executes the commands in the current commands list, and waits for completion
+        /// </summary>
+        public void ExecuteAndWaitForCompletion()
         {
             NativeCommandList.Close();
 
             GraphicsDevice.ExecuteCommandList(this);
+        }
 
+        /// <inheritdoc/>
+        public override void Dispose()
+        {
             switch (CommandListType)
             {
                 case CommandListType.Direct:
