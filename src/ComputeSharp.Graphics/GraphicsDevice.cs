@@ -164,11 +164,7 @@ namespace ComputeSharp.Graphics
 
             if (fenceValue <= fence.CompletedValue) return;
 
-            using ManualResetEvent fenceEvent = new ManualResetEvent(false);
-
-            fence.SetEventOnCompletion(fenceValue, fenceEvent);
-
-            fenceEvent.WaitOne();
+            fence.SetEventOnCompletion(fenceValue, default(IntPtr));
         }
 
         /// <summary>
