@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using ComputeSharp.Graphics.Commands;
 using Vortice.Direct3D12;
 using Vortice.DXGI;
