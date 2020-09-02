@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Shaders.Renderer;
 using ComputeSharp.Shaders.Renderer.Models;
 using ComputeSharp.Shaders.Translation;
 using ComputeSharp.Shaders.Translation.Models;
-using Microsoft.Collections.Extensions;
 using Vortice.Direct3D12;
 using CommandList = ComputeSharp.Graphics.Commands.CommandList;
 using PipelineState = ComputeSharp.Graphics.Commands.PipelineState;
@@ -41,7 +41,7 @@ namespace ComputeSharp.Shaders
         /// <summary>
         /// The mapping used to cache and reuse compiled shaders
         /// </summary>
-        private static readonly DictionarySlim<ShaderKey, CachedShader<T>> ShadersCache = new DictionarySlim<ShaderKey, CachedShader<T>>();
+        private static readonly Dictionary<ShaderKey, CachedShader<T>> ShadersCache = new Dictionary<ShaderKey, CachedShader<T>>();
 
         /// <summary>
         /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters
@@ -89,7 +89,7 @@ namespace ComputeSharp.Shaders
                     ShaderBytecode shaderBytecode = ShaderCompiler.CompileShader(shaderSource);
 
                     // Cache for later use
-                    ShadersCache.GetOrAddValueRef(key) = shaderData = new CachedShader<T>(shaderLoader, shaderBytecode);
+                    ShadersCache.Add(key, shaderData = new CachedShader<T>(shaderLoader, shaderBytecode));
                 }
             }
 
