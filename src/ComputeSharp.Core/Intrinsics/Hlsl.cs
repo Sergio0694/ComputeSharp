@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.Contracts;
 using System.Numerics;
+using ComputeSharp.Core.Attributes;
 using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
@@ -1382,6 +1383,206 @@ namespace ComputeSharp
         /// <returns>The fractional part of the <paramref name="x"/> parameter</returns>
         [Pure]
         public static Vector4 Frexp(Vector4 x, out Vector4 exp) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Frexp)}({nameof(Vector4)},{nameof(Vector4)})");
+
+        /// <summary>
+        /// Performs a guaranteed atomic add of a value to a destination.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value</param>
+        [PreserveMemberName]
+        public static void InterlockedAdd(int destination, int value) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedAdd)}(int,int)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic add of a value to a destination.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value</param>
+        [PreserveMemberName]
+        public static void InterlockedAdd(uint destination, uint value) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedAdd)}(uint,uint)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic add of a value to a destination.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value</param>
+        /// <param name="original">The original input value</param>
+        [PreserveMemberName]
+        public static void InterlockedAdd(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedAdd)}(int,int,int)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic add of a value to a destination.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value</param>
+        /// <param name="original">The original input value</param>
+        [PreserveMemberName]
+        public static void InterlockedAdd(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedAdd)}(uint,uint,uint)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic and of a value to a destination.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value</param>
+        [PreserveMemberName]
+        public static void InterlockedAnd(int destination, int value) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedAnd)}(int,int)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic and of a value to a destination.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value</param>
+        [PreserveMemberName]
+        public static void InterlockedAnd(uint destination, uint value) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedAnd)}(uint,uint)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic and of a value to a destination.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value</param>
+        /// <param name="original">The original input value</param>
+        [PreserveMemberName]
+        public static void InterlockedAnd(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedAnd)}(int,int,int)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic and of a value to a destination.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value</param>
+        /// <param name="original">The original input value</param>
+        [PreserveMemberName]
+        public static void InterlockedAnd(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedAnd)}(uint,uint,uint)");
+
+        /// <summary>
+        /// Atomically compares the destination with the comparison value. If they are identical, the destination
+        /// is overwritten with the input value. The original value is set to the destination's original value.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="comparison">The comparison value.</param>
+        /// <param name="value">The input value.</param>
+        /// <param name="original">The original value.</param>
+        [PreserveMemberName]
+        public static void InterlockedCompareExchange(int destination, int comparison, int value, out int original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedCompareExchange)}(int,int,int,int)");
+
+        /// <summary>
+        /// Atomically compares the destination with the comparison value. If they are identical, the destination
+        /// is overwritten with the input value. The original value is set to the destination's original value.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="comparison">The comparison value.</param>
+        /// <param name="value">The input value.</param>
+        /// <param name="original">The original value.</param>
+        [PreserveMemberName]
+        public static void InterlockedCompareExchange(uint destination, uint comparison, uint value, out uint original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedCompareExchange)}(uint,uint,uint,uint)");
+
+        /// <summary>
+        /// Atomically compares the destination to the comparison value. If they
+        /// are identical, the destination is overwritten with the input value.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="comparison">The comparison value.</param>
+        /// <param name="value">The input value.</param>
+        [PreserveMemberName]
+        public static void InterlockedCompareStore(int destination, int comparison, int value) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedCompareStore)}(int,int,int)");
+
+        /// <summary>
+        /// Atomically compares the destination to the comparison value. If they
+        /// are identical, the destination is overwritten with the input value.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="comparison">The comparison value.</param>
+        /// <param name="value">The input value.</param>
+        [PreserveMemberName]
+        public static void InterlockedCompareStore(uint destination, uint comparison, uint value) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedCompareStore)}(uint,uint,uint)");
+
+        /// <summary>
+        /// Assigns value to dest and returns the original value.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value.</param>
+        /// <param name="original">The original value.</param>
+        [PreserveMemberName]
+        public static void InterlockedExchange(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedExchange)}(int,int,int)");
+
+        /// <summary>
+        /// Assigns value to dest and returns the original value.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value.</param>
+        /// <param name="original">The original value.</param>
+        [PreserveMemberName]
+        public static void InterlockedExchange(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedExchange)}(uint,uint,uint)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic max.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value.</param>
+        /// <param name="original">The original value.</param>
+        [PreserveMemberName]
+        public static void InterlockedMax(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedMax)}(int,int,int)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic max.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value.</param>
+        /// <param name="original">The original value.</param>
+        [PreserveMemberName]
+        public static void InterlockedMax(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedMax)}(uint,uint,uint)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic min.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value.</param>
+        /// <param name="original">The original value.</param>
+        [PreserveMemberName]
+        public static void InterlockedMin(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedMin)}(int,int,int)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic min.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value.</param>
+        /// <param name="original">The original value.</param>
+        [PreserveMemberName]
+        public static void InterlockedMin(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedMin)}(uint,uint,uint)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic or.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value.</param>
+        /// <param name="original">The original value.</param>
+        [PreserveMemberName]
+        public static void InterlockedOr(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedOr)}(int,int,int)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic or.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value.</param>
+        /// <param name="original">The original value.</param>
+        [PreserveMemberName]
+        public static void InterlockedOr(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedOr)}(uint,uint,uint)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic xor.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value.</param>
+        /// <param name="original">The original value.</param>
+        [PreserveMemberName]
+        public static void InterlockedXor(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedXor)}(int,int,int)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic xor.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value.</param>
+        /// <param name="original">The original value.</param>
+        [PreserveMemberName]
+        public static void InterlockedXor(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedXor)}(uint,uint,uint)");
 
         /// <summary>
         /// Determines if the specified floating-point value is finite
