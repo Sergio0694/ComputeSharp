@@ -75,7 +75,7 @@ namespace ComputeSharp.Shaders.Translation.Models
         /// </summary>
         public void Dispose()
         {
-            ArrayPool<GraphicsResource>.Shared.Return(ResourcesArray);
+            ArrayPool<GraphicsResource>.Shared.Return(ResourcesArray, true);
             ArrayPool<byte>.Shared.Return(VariablesArray);
         }
     }
