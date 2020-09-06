@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
+using ComputeSharp.Core.Attributes;
 using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.Shaders.Mappings
@@ -236,13 +237,20 @@ namespace ComputeSharp.Shaders.Mappings
                 };
 
                 // Programmatically load mappings from the Hlsl class as well
-                foreach (string name in
+                foreach (var method in
                     from method in typeof(Hlsl).GetMethods(BindingFlags.Public | BindingFlags.Static)
                     group method by method.Name
                     into groups
-                    select groups.Key)
+                    select (Name: groups.Key, MethodInfo: groups.First()))
                 {
-                    knownMethods.Add($"{typeof(Hlsl).FullName}{Type.Delimiter}{name}", name.ToLowerInvariant());
+                    // Check whether the current method should be translated with the original name
+                    // or with the lowercase version. This is needed because all C# methods are exposed
+                    // with the upper camel case format, while HLSL intrinsics use multiple different formats.
+                    string hlslName = method.MethodInfo.GetCustomAttribute<PreserveMemberNameAttribute>() != null
+                        ? method.Name
+                        : method.Name.ToLowerInvariant();
+
+                    knownMethods.Add($"{typeof(Hlsl).FullName}{Type.Delimiter}{method.Name}", hlslName);
                 }
 
                 // Programmatically load mappings for the vector types
