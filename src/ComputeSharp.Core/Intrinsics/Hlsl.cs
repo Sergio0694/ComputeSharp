@@ -1517,6 +1517,22 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="destination">The destination value.</param>
         /// <param name="value">The input value.</param>
+        [PreserveMemberName]
+        public static void InterlockedMax(int destination, int value) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedMax)}(int,int)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic max.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value.</param>
+        [PreserveMemberName]
+        public static void InterlockedMax(uint destination, uint value) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedMax)}(uint,uint)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic max.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value.</param>
         /// <param name="original">The original value.</param>
         [PreserveMemberName]
         public static void InterlockedMax(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedMax)}(int,int,int)");
@@ -1529,6 +1545,22 @@ namespace ComputeSharp
         /// <param name="original">The original value.</param>
         [PreserveMemberName]
         public static void InterlockedMax(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedMax)}(uint,uint,uint)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic min.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value.</param>
+        [PreserveMemberName]
+        public static void InterlockedMin(int destination, int value) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedMin)}(int,int)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic min.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value.</param>
+        [PreserveMemberName]
+        public static void InterlockedMin(uint destination, uint value) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedMin)}(uint,uint)");
 
         /// <summary>
         /// Performs a guaranteed atomic min.
@@ -1553,6 +1585,22 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="destination">The destination value.</param>
         /// <param name="value">The input value.</param>
+        [PreserveMemberName]
+        public static void InterlockedOr(int destination, int value) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedOr)}(int,int)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic or.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value.</param>
+        [PreserveMemberName]
+        public static void InterlockedOr(uint destination, uint value) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedOr)}(uint,uint)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic or.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value.</param>
         /// <param name="original">The original value.</param>
         [PreserveMemberName]
         public static void InterlockedOr(int destination, int value, out int original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedOr)}(int,int,int)");
@@ -1565,6 +1613,22 @@ namespace ComputeSharp
         /// <param name="original">The original value.</param>
         [PreserveMemberName]
         public static void InterlockedOr(uint destination, uint value, out uint original) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedOr)}(uint,uint,uint)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic xor.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value.</param>
+        [PreserveMemberName]
+        public static void InterlockedXor(int destination, int value) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedXor)}(int,int)");
+
+        /// <summary>
+        /// Performs a guaranteed atomic xor.
+        /// </summary>
+        /// <param name="destination">The destination value.</param>
+        /// <param name="value">The input value.</param>
+        [PreserveMemberName]
+        public static void InterlockedXor(uint destination, uint value) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(InterlockedXor)}(uint,uint)");
 
         /// <summary>
         /// Performs a guaranteed atomic xor.
