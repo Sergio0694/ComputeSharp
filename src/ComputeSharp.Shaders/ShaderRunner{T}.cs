@@ -119,9 +119,9 @@ namespace ComputeSharp.Shaders
 
             // Calculate the dispatch values
             int
-                groupsX = x / threadsX + (x % threadsX == 0 ? 0 : 1),
-                groupsY = y / threadsY + (y % threadsY == 0 ? 0 : 1),
-                groupsZ = z / threadsZ + (z % threadsZ == 0 ? 0 : 1);
+                groupsX = Math.DivRem(x, threadsX, out int modX) + (modX == 0 ? 0 : 1),
+                groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1),
+                groupsZ = Math.DivRem(z, threadsZ, out int modZ) + (modZ == 0 ? 0 : 1);
 
             // Dispatch and wait for completion
             commandList.Dispatch(groupsX, groupsY, groupsZ);
