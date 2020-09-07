@@ -9,62 +9,6 @@ namespace System.Reflection.Emit
     internal static class ILGeneratorExtensions
     {
         /// <summary>
-        /// Puts the appropriate <see langword="unbox"/> or <see langword="castclass"/> instruction to unbox/cast a value onto the stream of instructions
-        /// </summary>
-        /// <param name="il">The input <see cref="ILGenerator"/> instance to use to emit instructions</param>
-        /// <param name="type">The type of value to convert</param>
-        public static void EmitCastOrUnbox(this ILGenerator il, Type type)
-        {
-            il.Emit(type.IsValueType ? OpCodes.Unbox : OpCodes.Castclass, type);
-        }
-
-        /// <summary>
-        /// Puts the appropriate <see langword="ldloc"/> instruction to read a local variable onto the stream of instructions
-        /// </summary>
-        /// <param name="il">The input <see cref="ILGenerator"/> instance to use to emit instructions</param>
-        /// <param name="index">The index of the local variable to load</param>
-        public static void EmitLoadLocal(this ILGenerator il, int index)
-        {
-            if (index <= 3)
-            {
-                il.Emit(index switch
-                {
-                    0 => OpCodes.Ldloc_0,
-                    1 => OpCodes.Ldloc_1,
-                    2 => OpCodes.Ldloc_2,
-                    3 => OpCodes.Ldloc_3,
-                    _ => throw new InvalidOperationException($"Invalid local variable index [{index}]")
-                });
-            }
-            else if (index <= 255) il.Emit(OpCodes.Ldloc_S, (byte)index);
-            else if (index <= 65534) il.Emit(OpCodes.Ldloc, (short)index);
-            else throw new ArgumentOutOfRangeException($"Invalid local index {index}");
-        }
-
-        /// <summary>
-        /// Puts the appropriate <see langword="stloc"/> instruction to write a local variable onto the stream of instructions
-        /// </summary>
-        /// <param name="il">The input <see cref="ILGenerator"/> instance to use to emit instructions</param>
-        /// <param name="index">The index of the local variable to store</param>
-        public static void EmitStoreLocal(this ILGenerator il, int index)
-        {
-            if (index <= 3)
-            {
-                il.Emit(index switch
-                {
-                    0 => OpCodes.Stloc_0,
-                    1 => OpCodes.Stloc_1,
-                    2 => OpCodes.Stloc_2,
-                    3 => OpCodes.Stloc_3,
-                    _ => throw new InvalidOperationException($"Invalid local variable index [{index}]")
-                });
-            }
-            else if (index <= 255) il.Emit(OpCodes.Stloc_S, (byte)index);
-            else if (index <= 65534) il.Emit(OpCodes.Stloc, (short)index);
-            else throw new ArgumentOutOfRangeException($"Invalid local index {index}");
-        }
-
-        /// <summary>
         /// Puts the appropriate <see langword="ldsfld"/>, <see langword="ldfld"/>, <see langword="call"/> or <see langword="callvirt"/> instruction to read a member onte the stream of instructions
         /// </summary>
         /// <param name="il">The input <see cref="ILGenerator"/> instance to use to emit instructions</param>
