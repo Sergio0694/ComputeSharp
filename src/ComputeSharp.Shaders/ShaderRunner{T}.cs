@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Shaders.Renderer;
@@ -60,43 +61,28 @@ namespace ComputeSharp.Shaders
             int threadsX, int threadsY, int threadsZ,
             in T shader)
         {
-            // Try to get the cache shader
+            // Create the shader key
+            ShaderKey key = new ShaderKey(ShaderHashCodeProvider.GetHashCode(shader), threadsX, threadsY, threadsZ);
             CachedShader<T> shaderData;
+            PipelineState pipelineState;
+
             lock (ShadersCache)
             {
-                var key = new ShaderKey(ShaderHashCodeProvider.GetHashCode(shader), threadsX, threadsY, threadsZ);
+                // Get or preload the shader
                 if (!ShadersCache.TryGetValue(key, out shaderData))
                 {
-                    // Load the input shader
-                    ShaderLoader<T> shaderLoader = ShaderLoader<T>.Load(shader);
-
-                    // Render the loaded shader
-                    ShaderInfo shaderInfo = new ShaderInfo
-                    {
-                        BuffersList = shaderLoader.BuffersList,
-                        FieldsList = shaderLoader.FieldsList,
-                        NumThreadsX = threadsX,
-                        NumThreadsY = threadsY,
-                        NumThreadsZ = threadsZ,
-                        ThreadsIdsVariableName = shaderLoader.ThreadsIdsVariableName,
-                        ShaderBody = shaderLoader.MethodBody,
-                        FunctionsList = shaderLoader.FunctionsList,
-                        LocalFunctionsList = shaderLoader.LocalFunctionsList
-                    };
-                    string shaderSource = ShaderRenderer.Instance.Render(shaderInfo);
-
-                    // Compile the loaded shader to HLSL bytecode
-                    ShaderBytecode shaderBytecode = ShaderCompiler.CompileShader(shaderSource);
+                    LoadShader(threadsX, threadsY, threadsZ, shader, out shaderData);
 
                     // Cache for later use
-                    ShadersCache.Add(key, shaderData = new CachedShader<T>(shaderLoader, shaderBytecode));
+                    ShadersCache.Add(key, shaderData);
+                }
+
+                // Create the reusable pipeline state
+                if (!shaderData.CachedPipelines.TryGetValue(device, out pipelineState))
+                {
+                    CreatePipelineState(device, shaderData, out pipelineState);
                 }
             }
-
-            // Create the root signature for the pipeline and get the pipeline state
-            VersionedRootSignatureDescription rootSignatureDescription = new VersionedRootSignatureDescription(new RootSignatureDescription1(RootSignatureFlags.None, shaderData.Loader.RootParameters));
-            ID3D12RootSignature rootSignature = device.CreateRootSignature(rootSignatureDescription);
-            PipelineState pipelineState = new PipelineState(device, rootSignature, shaderData.Bytecode);
 
             // Create the commands list and set the pipeline state
             using CommandList commandList = new CommandList(device, CommandListType.Compute);
@@ -126,6 +112,60 @@ namespace ComputeSharp.Shaders
             // Dispatch and wait for completion
             commandList.Dispatch(groupsX, groupsY, groupsZ);
             commandList.ExecuteAndWaitForCompletion();
+        }
+
+        /// <summary>
+        /// Loads a shader with the specified parameters
+        /// </summary>
+        /// <param name="threadsX">The number of threads in each thread group for the X axis</param>
+        /// <param name="threadsY">The number of threads in each thread group for the Y axis</param>
+        /// <param name="threadsZ">The number of threads in each thread group for the Z axis</param>
+        /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run</param>
+        /// <param name="shaderData">The <see cref="CachedShader{T}"/> instance to return with the cached shader data</param>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void LoadShader(int threadsX, int threadsY, int threadsZ, in T shader, out CachedShader<T> shaderData)
+        {
+            // Load the input shader
+            ShaderLoader<T> shaderLoader = ShaderLoader<T>.Load(shader);
+
+            // Render the loaded shader
+            string shaderSource = ShaderRenderer.Instance.Render(new ShaderInfo
+            {
+                BuffersList = shaderLoader.BuffersList,
+                FieldsList = shaderLoader.FieldsList,
+                NumThreadsX = threadsX,
+                NumThreadsY = threadsY,
+                NumThreadsZ = threadsZ,
+                ThreadsIdsVariableName = shaderLoader.ThreadsIdsVariableName,
+                ShaderBody = shaderLoader.MethodBody,
+                FunctionsList = shaderLoader.FunctionsList,
+                LocalFunctionsList = shaderLoader.LocalFunctionsList
+            });
+
+            // Compile the loaded shader to HLSL bytecode
+            ShaderBytecode shaderBytecode = ShaderCompiler.CompileShader(shaderSource);
+
+            // Get the cached shader data
+            shaderData = new CachedShader<T>(shaderLoader, shaderBytecode);
+        }
+
+        /// <summary>
+        /// Creates and caches a <see cref="PipelineState"/> instance for a given shader
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader</param>
+        /// <param name="shaderData">The <see cref="CachedShader{T}"/> instance with the data on the loaded shader</param>
+        /// <param name="pipelineState">The resulting <see cref="PipelineState"/> instance to use to run the shader</param>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void CreatePipelineState(GraphicsDevice device, in CachedShader<T> shaderData, out PipelineState pipelineState)
+        {
+            // Create the root signature for the pipeline and get the pipeline state
+            RootSignatureDescription1 rootSignatureDescription = new RootSignatureDescription1(RootSignatureFlags.None, shaderData.Loader.RootParameters);
+            VersionedRootSignatureDescription versionedRootSignatureDescription = new VersionedRootSignatureDescription(rootSignatureDescription);
+            ID3D12RootSignature rootSignature = device.CreateRootSignature(versionedRootSignatureDescription);
+            pipelineState = new PipelineState(device, rootSignature, shaderData.Bytecode);
+
+            // Cache the pipeline state for the target device
+            shaderData.CachedPipelines.Add(device, pipelineState);
         }
     }
 }

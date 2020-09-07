@@ -1,4 +1,7 @@
-﻿using Vortice.Direct3D12;
+﻿using System.Runtime.CompilerServices;
+using ComputeSharp.Graphics;
+using ComputeSharp.Graphics.Commands;
+using Vortice.Direct3D12;
 
 namespace ComputeSharp.Shaders.Translation.Models
 {
@@ -10,7 +13,7 @@ namespace ComputeSharp.Shaders.Translation.Models
         where T : struct, IComputeShader
     {
         /// <summary>
-        /// The <see cref="ShaderLoader"/> instance with the shader metadata
+        /// The <see cref="ShaderLoader{T}"/> instance with the shader metadata
         /// </summary>
         public readonly ShaderLoader<T> Loader;
 
@@ -20,14 +23,20 @@ namespace ComputeSharp.Shaders.Translation.Models
         public readonly ShaderBytecode Bytecode;
 
         /// <summary>
-        /// Creates a new <see cref="CachedShader"/> instance with the specified parameters
+        /// The map of cached <see cref="PipelineState"/> instances for each GPU in use.
         /// </summary>
-        /// <param name="loader">The <see cref="ShaderLoader"/> instance with the shader metadata</param>
+        public readonly ConditionalWeakTable<GraphicsDevice, PipelineState> CachedPipelines;
+
+        /// <summary>
+        /// Creates a new <see cref="CachedShader{T}"/> instance with the specified parameters
+        /// </summary>
+        /// <param name="loader">The <see cref="ShaderLoader{T}"/> instance with the shader metadata</param>
         /// <param name="bytecode">The compiled shader bytecode</param>
         public CachedShader(ShaderLoader<T> loader, ShaderBytecode bytecode)
         {
             Loader = loader;
             Bytecode = bytecode;
+            CachedPipelines = new ConditionalWeakTable<GraphicsDevice, PipelineState>();
         }
     }
 }
