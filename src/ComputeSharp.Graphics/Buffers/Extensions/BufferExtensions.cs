@@ -3,6 +3,7 @@ using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
+using Microsoft.Toolkit.HighPerformance.Extensions;
 
 namespace ComputeSharp
 {
