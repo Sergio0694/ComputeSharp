@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
@@ -13,6 +14,32 @@ using PipelineState = ComputeSharp.Graphics.Commands.PipelineState;
 
 namespace ComputeSharp.Shaders
 {
+    /// <summary>
+    /// A <see langword="class"/> with helper methods to support <see cref="ShaderRunner{T}"/>.
+    /// This type is primarily needed to avoid having fields being repeated per generic instantiation.
+    /// </summary>
+    internal static class ShaderRunner
+    {
+        /// <summary>
+        /// A thread-safe map of reusable GPU buffers for captured locals
+        /// </summary>
+        [ThreadStatic]
+        private static ConditionalWeakTable<GraphicsDevice, ConstantBuffer<Int4>>? variablesBuffers;
+
+        /// <summary>
+        /// Gets the reusable <see cref="ConstantBuffer{T}"/> instance for a shader invocation
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader</param>
+        /// <returns>The reusable <see cref="ConstantBuffer{T}"/> instance to populate</returns>
+        [Pure]
+        public static ConstantBuffer<Int4> GetVariablesBuffer(GraphicsDevice device)
+        {
+            var map = variablesBuffers ??= new ConditionalWeakTable<GraphicsDevice, ConstantBuffer<Int4>>();
+
+            return map.GetValue(device, gpu => new ConstantBuffer<Int4>(gpu, 4096));
+        }
+    }
+
     /// <summary>
     /// A <see langword="class"/> responsible for performing all the necessary operations to compile and run a compute shader
     /// </summary>
@@ -98,9 +125,9 @@ namespace ComputeSharp.Shaders
                 commandList.SetComputeRootDescriptorTable(i + 1, resources[i]);
             }
 
-            // Initialize the loop targets
-            Span<Int4> variables = dispatchData.Variables;
-            using GraphicsResource variablesBuffer = device.AllocateConstantBuffer(variables);
+            // Initialize the loop targets and the captured values
+            ConstantBuffer<Int4> variablesBuffer = ShaderRunner.GetVariablesBuffer(device);
+            variablesBuffer.SetData(dispatchData.Variables);
             commandList.SetComputeRootDescriptorTable(0, variablesBuffer);
 
             // Calculate the dispatch values
