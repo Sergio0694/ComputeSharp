@@ -2,11 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
+    <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp.Shaders\ComputeSharp.Shaders.csproj" />
+    <ProjectReference
+      Include="..\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj"
+      OutputItemType="Analyzer"
+      ReferenceOutputAssembly="false"/>
   </ItemGroup>
 
   <ItemGroup>
