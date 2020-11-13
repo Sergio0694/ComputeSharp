@@ -20,7 +20,6 @@ namespace ComputeSharp.Graphics.Commands
             {
                 CommandListType.Compute => GraphicsDevice.ComputeAllocatorPool.GetCommandAllocator(),
                 CommandListType.Copy => GraphicsDevice.CopyAllocatorPool.GetCommandAllocator(),
-                CommandListType.Direct => GraphicsDevice.DirectAllocatorPool.GetCommandAllocator(),
                 _ => throw new NotSupportedException($"Unsupported command list type with value {CommandListType}")
             };
 
@@ -113,9 +112,6 @@ namespace ComputeSharp.Graphics.Commands
         {
             switch (CommandListType)
             {
-                case CommandListType.Direct:
-                    GraphicsDevice.DirectAllocatorPool.Enqueue(CommandAllocator, GraphicsDevice.NextDirectFenceValue - 1);
-                    break;
                 case CommandListType.Compute:
                     GraphicsDevice.ComputeAllocatorPool.Enqueue(CommandAllocator, GraphicsDevice.NextComputeFenceValue - 1);
                     break;

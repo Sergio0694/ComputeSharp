@@ -51,7 +51,6 @@ namespace ComputeSharp.Graphics.Commands
                     {
                         CommandListType.Compute => GraphicsDevice.NativeComputeFence.CompletedValue,
                         CommandListType.Copy => GraphicsDevice.NativeCopyFence.CompletedValue,
-                        CommandListType.Direct => GraphicsDevice.NativeDirectFence.CompletedValue,
                         _ => throw new NotSupportedException($"Unsupported command list type with value {CommandListType}")
                     };
 

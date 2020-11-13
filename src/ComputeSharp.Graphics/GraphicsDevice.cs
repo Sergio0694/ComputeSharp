@@ -28,11 +28,6 @@ namespace ComputeSharp.Graphics
         private readonly ID3D12CommandQueue NativeCopyCommandQueue;
 
         /// <summary>
-        /// The <see cref="ID3D12CommandQueue"/> instance to use for direct operations
-        /// </summary>
-        private readonly ID3D12CommandQueue NativeDirectCommandQueue;
-
-        /// <summary>
         /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="ID3D12Device"/>
         /// </summary>
         /// <param name="device">The <see cref="ID3D12Device"/> to use for the new <see cref="GraphicsDevice"/> instance</param>
@@ -47,15 +42,12 @@ namespace ComputeSharp.Graphics
 
             NativeComputeCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(CommandListType.Compute));
             NativeCopyCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(CommandListType.Copy));
-            NativeDirectCommandQueue = NativeDevice.CreateCommandQueue(new CommandQueueDescription(CommandListType.Direct));
 
             ComputeAllocatorPool = new CommandAllocatorPool(this, CommandListType.Compute);
             CopyAllocatorPool = new CommandAllocatorPool(this, CommandListType.Copy);
-            DirectAllocatorPool = new CommandAllocatorPool(this, CommandListType.Direct);
 
             NativeComputeFence = NativeDevice.CreateFence(0);
             NativeCopyFence = NativeDevice.CreateFence(0);
-            NativeDirectFence = NativeDevice.CreateFence(0);
 
             ShaderResourceViewAllocator = new DescriptorAllocator(NativeDevice);
         }
@@ -101,11 +93,6 @@ namespace ComputeSharp.Graphics
         internal CommandAllocatorPool CopyAllocatorPool { get; }
 
         /// <summary>
-        /// Gets the <see cref="CommandAllocatorPool"/> instance for direct operations
-        /// </summary>
-        internal CommandAllocatorPool DirectAllocatorPool { get; }
-
-        /// <summary>
         /// Gets the <see cref="ID3D12Fence"/> instance used for compute operations
         /// </summary>
         internal ID3D12Fence NativeComputeFence { get; }
@@ -116,11 +103,6 @@ namespace ComputeSharp.Graphics
         internal ID3D12Fence NativeCopyFence { get; }
 
         /// <summary>
-        /// Gets the <see cref="ID3D12Fence"/> instance used for direct operations
-        /// </summary>
-        internal ID3D12Fence NativeDirectFence { get; }
-
-        /// <summary>
         /// Gets the next fence value for compute operations
         /// </summary>
         internal long NextComputeFenceValue { get; private set; } = 1;
@@ -129,11 +111,6 @@ namespace ComputeSharp.Graphics
         /// Gets the next fence value for copy operations
         /// </summary>
         internal long NextCopyFenceValue { get; private set; } = 1;
-
-        /// <summary>
-        /// Gets the next fence value for direct operations
-        /// </summary>
-        internal long NextDirectFenceValue { get; private set; } = 1;
 
         /// <summary>
         /// Creates a <see cref="ID3D12RootSignature"/> instance from a description
@@ -153,7 +130,6 @@ namespace ComputeSharp.Graphics
         {
             ID3D12Fence fence = commandList.CommandListType switch
             {
-                CommandListType.Direct => NativeDirectFence,
                 CommandListType.Compute => NativeComputeFence,
                 CommandListType.Copy => NativeCopyFence,
                 _ => throw new NotSupportedException("This command list type is not supported.")
@@ -192,12 +168,6 @@ namespace ComputeSharp.Graphics
                     fence = NativeCopyFence;
                     fenceValue = NextCopyFenceValue++;
                     break;
-                case CommandListType.Direct:
-                    commandAllocatorPool = DirectAllocatorPool;
-                    commandQueue = NativeDirectCommandQueue;
-                    fence = NativeDirectFence;
-                    fenceValue = NextDirectFenceValue++;
-                    break;
                 default: throw new NotSupportedException($"Unsupported command list of type {commandList.CommandListType}");
             }
 
@@ -211,22 +181,16 @@ namespace ComputeSharp.Graphics
         /// <inheritdoc/>
         public void Dispose()
         {
-            NativeDirectCommandQueue.Signal(NativeDirectFence, NextDirectFenceValue);
-            NativeDirectCommandQueue.Wait(NativeDirectFence, NextDirectFenceValue);
-
             ShaderResourceViewAllocator.Dispose();
 
             ComputeAllocatorPool.Dispose();
             CopyAllocatorPool.Dispose();
-            DirectAllocatorPool.Dispose();
 
             NativeComputeCommandQueue.Dispose();
             NativeCopyCommandQueue.Dispose();
-            NativeDirectCommandQueue.Dispose();
 
             NativeComputeFence.Dispose();
-            NativeDirectFence.Dispose();
-            NativeDirectFence.Dispose();
+            NativeCopyFence.Dispose();
 
             NativeDevice.Dispose();
         }
