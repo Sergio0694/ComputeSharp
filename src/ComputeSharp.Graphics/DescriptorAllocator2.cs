@@ -1,7 +1,6 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using ComputeSharp.Graphics.Helpers;
+using System;
 using TerraFX.Interop;
-using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Graphics
 {
@@ -51,28 +50,13 @@ namespace ComputeSharp.Graphics
         /// <param name="device">The <see cref="ID3D12Device"/> instance to use</param>
         public DescriptorAllocator2(ID3D12Device* device)
         {
-            D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc;
-            d3d12DescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE.D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-            d3d12DescriptorHeapDesc.NumDescriptors = DescriptorsPerHeap;
-            d3d12DescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAGS.D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-            d3d12DescriptorHeapDesc.NodeMask = 0;
-            Guid d3d12DescriptorHeapDescGuid = FX.IID_ID3D12DescriptorHeap;
-            ID3D12DescriptorHeap* d3d12DescriptorHeap;
-
-            int result = device->CreateDescriptorHeap(
-                &d3d12DescriptorHeapDesc,
-                &d3d12DescriptorHeapDescGuid,
-                (void**)&d3d12DescriptorHeap);
-
-            if (FX.FAILED(result)) Marshal.ThrowExceptionForHR(result);
-
-            D3D12DescriptorHeap = d3d12DescriptorHeap;
+            D3D12DescriptorHeap = D3D12Helper.CreateDescriptorHeap(device, DescriptorsPerHeap);
 
             this.allocationLock = new object();
             this.descriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE.D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-            this.d3d12CpuDescriptorHandle = d3d12DescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-            this.d3d12GpuDescriptorHandle = d3d12DescriptorHeap->GetGPUDescriptorHandleForHeapStart();
-            this.remainingHandles = DescriptorsPerHeap;
+            this.d3d12CpuDescriptorHandle = D3D12DescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+            this.d3d12GpuDescriptorHandle = D3D12DescriptorHeap->GetGPUDescriptorHandleForHeapStart();
+            this.remainingHandles = D3D12DescriptorHeap->GetDesc().NumDescriptors;
         }
 
         /// <summary>
@@ -86,9 +70,9 @@ namespace ComputeSharp.Graphics
             {
                 if (this.remainingHandles == 0)
                 {
-                    this.remainingHandles = D3D12DescriptorHeap->GetDesc().NumDescriptors;
                     this.d3d12CpuDescriptorHandle = D3D12DescriptorHeap->GetCPUDescriptorHandleForHeapStart();
                     this.d3d12GpuDescriptorHandle = D3D12DescriptorHeap->GetGPUDescriptorHandleForHeapStart();
+                    this.remainingHandles = D3D12DescriptorHeap->GetDesc().NumDescriptors;
                 }
 
                 d3d12CpuDescriptorHandle = this.d3d12CpuDescriptorHandle;
