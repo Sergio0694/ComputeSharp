@@ -91,7 +91,7 @@ namespace ComputeSharp.Shaders
             // Create the shader key
             ShaderKey key = new ShaderKey(ShaderHashCodeProvider.GetHashCode(shader), threadsX, threadsY, threadsZ);
             CachedShader<T> shaderData;
-            PipelineState pipelineState;
+            PipelineState? pipelineState;
 
             lock (ShadersCache)
             {

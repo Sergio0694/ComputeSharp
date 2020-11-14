@@ -92,8 +92,8 @@ namespace ComputeSharp.Shaders.Translation
             return DynamicMethod<Hasher<T>>.New(il =>
             {
                 MethodInfo
-                    getMethodInfo = typeof(Delegate).GetProperty(nameof(Delegate.Method)).GetMethod,
-                    getHashCodeInfo = typeof(object).GetMethod(nameof(object.GetHashCode));
+                    getMethodInfo = typeof(Delegate).GetProperty(nameof(Delegate.Method))!.GetMethod!,
+                    getHashCodeInfo = typeof(object).GetMethod(nameof(object.GetHashCode))!;
                 foreach (FieldInfo fieldInfo in fieldInfos)
                 {
                     // (hashcode << 5) + hashcode

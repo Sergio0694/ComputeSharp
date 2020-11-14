@@ -70,7 +70,7 @@ namespace ComputeSharp.Shaders.Translation
             _Compilation = CSharpCompilation.Create("ShaderAssembly").WithReferences(metadataReferences);
 
             // Monitor for new assemblies being loaded
-            AppDomain.CurrentDomain.AssemblyLoad += CurrentDomain_AssemblyLoad;
+            AppDomain.CurrentDomain.AssemblyLoad += CurrentDomain_AssemblyLoad!;
         }
 
         // Increment the shader assembly when a new assembly is loaded
@@ -117,7 +117,7 @@ namespace ComputeSharp.Shaders.Translation
             EntityHandle typeHandle = MetadataTokenHelpers.TryAsEntityHandle(metadataToken) ?? throw new InvalidOperationException();
 
             // Get or create a decompiler for the target assembly, and decompile the type
-            if (!Decompilers.TryGetValue(assemblyPath, out CSharpDecompiler decompiler))
+            if (!Decompilers.TryGetValue(assemblyPath, out CSharpDecompiler? decompiler))
             {
                 decompiler = CreateDecompiler(assemblyPath);
                 Decompilers.Add(assemblyPath, decompiler);
@@ -241,7 +241,7 @@ namespace ComputeSharp.Shaders.Translation
                 select declaration).ToArray();
 
             // Insert the explicit declarations at the start of the method
-            int start = rootNode.Body.ChildNodes().First().SpanStart;
+            int start = rootNode.Body!.ChildNodes().First().SpanStart;
             foreach (var declaration in outs.Reverse())
             {
                 source = source.Insert(start, $"{declaration}{Environment.NewLine}        ");

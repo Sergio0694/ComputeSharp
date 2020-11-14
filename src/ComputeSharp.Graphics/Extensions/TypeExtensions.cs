@@ -33,11 +33,11 @@ namespace ComputeSharp.Graphics.Extensions
             if (type.IsArray)
             {
                 int rank = type.GetArrayRank();
-                return $"{type.GetElementType().ToFriendlyString()}[{new string(Enumerable.Repeat(',', rank - 1).ToArray())}]";
+                return $"{type.GetElementType()!.ToFriendlyString()}[{new string(Enumerable.Repeat(',', rank - 1).ToArray())}]";
             }
 
             // Non generic types
-            string name;
+            string? name;
             if (type.GetGenericArguments().Length == 0) return KnownTypes.TryGetValue(type, out name) ? name : type.Name;
 
             // Generic types

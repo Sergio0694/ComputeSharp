@@ -16,33 +16,33 @@ namespace ComputeSharp.Shaders.Mappings
         /// </summary>
         private static readonly IReadOnlyDictionary<string, string> KnownTypes = new Dictionary<string, string>
         {
-            [typeof(bool).FullName] = "bool",
-            [typeof(Bool).FullName] = "bool",
-            [typeof(Bool2).FullName] = "bool2",
-            [typeof(Bool3).FullName] = "bool3",
-            [typeof(Bool4).FullName] = "bool4",
-            [typeof(int).FullName] = "int",
-            [typeof(Int2).FullName] = "int2",
-            [typeof(Int3).FullName] = "int3",
-            [typeof(Int4).FullName] = "int4",
-            [typeof(uint).FullName] = "uint",
-            [typeof(UInt2).FullName] = "uint2",
-            [typeof(UInt3).FullName] = "uint3",
-            [typeof(UInt4).FullName] = "uint4",
-            [typeof(float).FullName] = "float",
-            [typeof(Float2).FullName] = "float2",
-            [typeof(Float3).FullName] = "float3",
-            [typeof(Float4).FullName] = "float4",
-            [typeof(Vector2).FullName] = "float2",
-            [typeof(Vector3).FullName] = "float3",
-            [typeof(Vector4).FullName] = "float4",
-            [typeof(double).FullName] = "double",
-            [typeof(Double2).FullName] = "double2",
-            [typeof(Double3).FullName] = "double3",
-            [typeof(Double4).FullName] = "double4",
-            [typeof(ThreadIds).FullName] = "uint3",
-            [typeof(ReadOnlyBuffer<>).FullName] = "StructuredBuffer",
-            [typeof(ReadWriteBuffer<>).FullName] = "RWStructuredBuffer"
+            [typeof(bool).FullName!] = "bool",
+            [typeof(Bool).FullName!] = "bool",
+            [typeof(Bool2).FullName!] = "bool2",
+            [typeof(Bool3).FullName!] = "bool3",
+            [typeof(Bool4).FullName!] = "bool4",
+            [typeof(int).FullName!] = "int",
+            [typeof(Int2).FullName!] = "int2",
+            [typeof(Int3).FullName!] = "int3",
+            [typeof(Int4).FullName!] = "int4",
+            [typeof(uint).FullName!] = "uint",
+            [typeof(UInt2).FullName!] = "uint2",
+            [typeof(UInt3).FullName!] = "uint3",
+            [typeof(UInt4).FullName!] = "uint4",
+            [typeof(float).FullName!] = "float",
+            [typeof(Float2).FullName!] = "float2",
+            [typeof(Float3).FullName!] = "float3",
+            [typeof(Float4).FullName!] = "float4",
+            [typeof(Vector2).FullName!] = "float2",
+            [typeof(Vector3).FullName!] = "float3",
+            [typeof(Vector4).FullName!] = "float4",
+            [typeof(double).FullName!] = "double",
+            [typeof(Double2).FullName!] = "double2",
+            [typeof(Double3).FullName!] = "double3",
+            [typeof(Double4).FullName!] = "double4",
+            [typeof(ThreadIds).FullName!] = "uint3",
+            [typeof(ReadOnlyBuffer<>).FullName!] = "StructuredBuffer",
+            [typeof(ReadWriteBuffer<>).FullName!] = "RWStructuredBuffer"
         };
 
         private static HashSet<Type> _HlslMappedVectorTypes { get; } = new HashSet<Type>(new[]
@@ -140,10 +140,10 @@ namespace ComputeSharp.Shaders.Mappings
         [Pure]
         public static string GetMappedName(Type type)
         {
-            Type declaredType = type.IsArray ? type.GetElementType() : type;
+            Type declaredType = type.IsArray ? type.GetElementType()! : type;
             string
                 fullname = $"{declaredType.Namespace}{Type.Delimiter}{declaredType.Name}",
-                mappedName = KnownTypes.TryGetValue(fullname, out string mapped) ? mapped : declaredType.Name,
+                mappedName = KnownTypes.TryGetValue(fullname, out string? mapped) ? mapped : declaredType.Name,
                 hlslName = declaredType.IsGenericType ? mappedName + $"<{GetMappedName(declaredType.GetGenericArguments()[0])}>" : mappedName;
 
             return hlslName;
@@ -161,7 +161,7 @@ namespace ComputeSharp.Shaders.Mappings
             string
                 genericArguments = indexOfOpenBracket >= 0 ? name.Substring(indexOfOpenBracket) : string.Empty,
                 polishedName = indexOfOpenBracket >= 0 ? name.Remove(indexOfOpenBracket) + "`1" : name,
-                mappedName = KnownTypes.TryGetValue(polishedName, out string mapped) ? mapped : Regex.Match(polishedName, @"[^\.]+$").Value;
+                mappedName = KnownTypes.TryGetValue(polishedName, out string? mapped) ? mapped : Regex.Match(polishedName, @"[^\.]+$").Value;
 
             return $"{mappedName}{genericArguments}";
         }

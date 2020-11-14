@@ -276,7 +276,7 @@ namespace ComputeSharp.Shaders.Mappings
         [Pure]
         public static bool TryGetMappedName(ISymbol containingMemberSymbol, ISymbol memberSymbol, [NotNullWhen(true)] out string? mapped)
         {
-            string fullTypeName = containingMemberSymbol.IsStatic ? containingMemberSymbol.ToString() : memberSymbol.ContainingType.ToString();
+            string fullTypeName = containingMemberSymbol.IsStatic ? containingMemberSymbol.ToString()! : memberSymbol.ContainingType.ToString()!;
 
             // Check if the target method is a known method
             return KnownMethods.TryGetValue($"{fullTypeName}{Type.Delimiter}{memberSymbol.Name}", out mapped);

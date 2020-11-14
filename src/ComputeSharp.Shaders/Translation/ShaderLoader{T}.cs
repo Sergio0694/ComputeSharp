@@ -193,7 +193,7 @@ namespace ComputeSharp.Shaders.Translation
             }
             else if (fieldType.IsDelegate() &&
                      memberInfo.GetValue(shader) is Delegate func &&
-                     (func.Method.IsStatic || func.Method.DeclaringType.IsStatelessDelegateContainer()) &&
+                     (func.Method.IsStatic || func.Method.DeclaringType!.IsStatelessDelegateContainer()) &&
                      (HlslKnownTypes.IsKnownScalarType(func.Method.ReturnType) || HlslKnownTypes.IsKnownVectorType(func.Method.ReturnType)) &&
                      fieldType.GenericTypeArguments.All(type => HlslKnownTypes.IsKnownScalarType(type) ||
                                                                 HlslKnownTypes.IsKnownVectorType(type)))
@@ -211,7 +211,7 @@ namespace ComputeSharp.Shaders.Translation
         private void LoadMethodSource(object shader)
         {
             // Decompile the shader method
-            MethodInfo methodInfo = typeof(T).GetMethod(nameof(IComputeShader.Execute));
+            MethodInfo methodInfo = typeof(T).GetMethod(nameof(IComputeShader.Execute))!;
             MethodDecompiler.Instance.GetSyntaxTree(methodInfo, MethodType.Execute, out MethodDeclarationSyntax root, out SemanticModel semanticModel);
 
             // Rewrite the shader method (eg. to fix the type declarations)
@@ -220,7 +220,7 @@ namespace ComputeSharp.Shaders.Translation
 
             // Extract the implicit local functions
             var locals = root.DescendantNodes().OfType<LocalFunctionStatementSyntax>().ToArray();
-            root = root.RemoveNodes(locals, SyntaxRemoveOptions.KeepNoTrivia);
+            root = root.RemoveNodes(locals, SyntaxRemoveOptions.KeepNoTrivia)!;
             foreach (var local in locals)
             {
                 string alignedLocal = local.ToFullString().RemoveLeftPadding().Trim(' ', '\r', '\n');
@@ -264,7 +264,7 @@ namespace ComputeSharp.Shaders.Translation
             MethodDecompiler.Instance.GetSyntaxTree(methodInfo, MethodType.Static, out MethodDeclarationSyntax root, out SemanticModel semanticModel);
 
             // Rewrite the method
-            ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel, methodInfo.DeclaringType);
+            ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel, methodInfo.DeclaringType!);
             root = (MethodDeclarationSyntax)syntaxRewriter.Visit(root);
 
             // Register the captured static members
@@ -297,7 +297,7 @@ namespace ComputeSharp.Shaders.Translation
             // Get the final function info instance
             FunctionInfo functionInfo = new FunctionInfo(
                 methodInfo.ReturnType,
-                $"{methodInfo.DeclaringType.FullName}{Type.Delimiter}{methodInfo.Name}",
+                $"{methodInfo.DeclaringType!.FullName}{Type.Delimiter}{methodInfo.Name}",
                 string.Join(", ", methodInfo.GetParameters().Select(p => $"{p.ParameterType.ToFriendlyString()} {p.Name}")),
                 root.ReturnType.ToString(),
                 name,

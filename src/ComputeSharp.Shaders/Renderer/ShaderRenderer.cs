@@ -25,7 +25,7 @@ namespace ComputeSharp.Shaders.Renderer
             Assembly assembly = Assembly.GetExecutingAssembly();
             string filename = assembly.GetManifestResourceNames().First(name => name.EndsWith("ShaderTemplate.mustache"));
 
-            using Stream stream = assembly.GetManifestResourceStream(filename);
+            using Stream stream = assembly.GetManifestResourceStream(filename)!;
             using StreamReader reader = new StreamReader(stream);
 
             Template = reader.ReadToEnd();

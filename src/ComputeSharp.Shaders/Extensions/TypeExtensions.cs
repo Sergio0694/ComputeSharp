@@ -36,7 +36,7 @@ namespace System
         /// <returns><see langword="true"/> when a member with the given name is found, <see langword="false"/> otherwise</returns>
         public static bool TryFindAncestorMember(this Type type, string name, BindingFlags bindingAttr, [NotNullWhen(true)] out (Type DeclaringType, MemberInfo MemberInfo)? result)
         {
-            while ((type = type.DeclaringType) != null)
+            while ((type = type.DeclaringType!) != null)
             {
                 MemberInfo[] memberInfos = type.GetMember(name, bindingAttr);
                 if (memberInfos.Length > 0)

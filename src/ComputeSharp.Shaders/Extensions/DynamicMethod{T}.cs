@@ -30,7 +30,7 @@ namespace System.Reflection.Emit
         /// </summary>
         static DynamicMethod()
         {
-            MethodInfo method = typeof(T).GetMethod("Invoke");
+            MethodInfo method = typeof(T).GetMethod("Invoke")!;
             ReturnType = method.ReturnType;
             ParameterTypes = method.GetParameters().Select(p => p.ParameterType).ToArray();
         }

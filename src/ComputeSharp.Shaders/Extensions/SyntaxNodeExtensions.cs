@@ -94,7 +94,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
                         memberInfo = propertyInfo;
                         break;
                     case MethodInfo methodInfo:
-                        string methodName = $"{methodInfo.DeclaringType.Name}_{methodInfo.Name}";
+                        string methodName = $"{methodInfo.DeclaringType!.Name}_{methodInfo.Name}";
                         method = (methodName, methodInfo);
                         return SyntaxFactory.IdentifierName(methodName).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
                     default: throw new InvalidOperationException($"Invalid symbol kind: {memberInfos.First().GetType()}");
@@ -113,7 +113,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
             }
 
             // Process the input node if it's a known method invocation
-            if (HlslKnownMethods.TryGetMappedName(containingMemberSymbolInfo.Symbol, memberSymbol, out string? mappedName))
+            if (HlslKnownMethods.TryGetMappedName(containingMemberSymbolInfo.Symbol!, memberSymbol, out string? mappedName))
             {
                 string expression = memberSymbol.IsStatic ? mappedName : $"{node.Expression}{mappedName}";
                 return SyntaxFactory.IdentifierName(expression).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
@@ -127,9 +127,9 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
             {
                 // Get the containing type
                 string
-                    typeFullname = memberSymbol.ContainingType.ToString(),
-                    assemblyFullname = memberSymbol.ContainingAssembly.ToString();
-                Type memberDeclaringType = Type.GetType($"{typeFullname}, {assemblyFullname}");
+                    typeFullname = memberSymbol.ContainingType.ToString()!,
+                    assemblyFullname = memberSymbol.ContainingAssembly.ToString()!;
+                Type memberDeclaringType = Type.GetType($"{typeFullname}, {assemblyFullname}")!;
 
                 // Static field or property
                 if (memberSymbol.Kind == SymbolKind.Field || memberSymbol.Kind == SymbolKind.Property)
@@ -139,12 +139,12 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
                     switch (memberSymbol.Kind)
                     {
                         case SymbolKind.Field:
-                            FieldInfo fieldInfo = memberDeclaringType.GetField(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                            FieldInfo fieldInfo = memberDeclaringType.GetField(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)!;
                             isReadonly = fieldInfo.IsInitOnly;
                             memberInfo = fieldInfo;
                             break;
                         case SymbolKind.Property:
-                            PropertyInfo propertyInfo = memberDeclaringType.GetProperty(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                            PropertyInfo propertyInfo = memberDeclaringType.GetProperty(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)!;
                             isReadonly = !propertyInfo.CanWrite;
                             memberInfo = propertyInfo;
                             break;
@@ -156,8 +156,8 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
                 }
 
                 // Static method
-                MethodInfo methodInfo = memberDeclaringType.GetMethod(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-                string name = $"{methodInfo.DeclaringType.Name}_{methodInfo.Name}";
+                MethodInfo methodInfo = memberDeclaringType.GetMethod(memberSymbol.Name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)!;
+                string name = $"{methodInfo.DeclaringType!.Name}_{methodInfo.Name}";
                 method = (name, methodInfo);
 
                 return SyntaxFactory.IdentifierName(name).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());

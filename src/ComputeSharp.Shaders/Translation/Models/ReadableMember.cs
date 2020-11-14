@@ -24,7 +24,7 @@ namespace ComputeSharp.Shaders.Translation.Models
             // General properties
             Member = memberInfo;
             Name = memberInfo.Name;
-            DeclaringType = memberInfo.DeclaringType;
+            DeclaringType = memberInfo.DeclaringType!;
 
             // Type specific properties
             if (memberInfo is FieldInfo fieldInfo)
@@ -36,7 +36,7 @@ namespace ComputeSharp.Shaders.Translation.Models
             else if (memberInfo is PropertyInfo propertyInfo)
             {
                 Member = propertyInfo;
-                IsStatic = propertyInfo.GetMethod.IsStatic;
+                IsStatic = propertyInfo.GetMethod!.IsStatic;
                 MemberType = propertyInfo.PropertyType;
             }
             else throw new InvalidOperationException("Field and property can't both be null at the same time");
@@ -76,8 +76,8 @@ namespace ComputeSharp.Shaders.Translation.Models
         {
             return Member switch
             {
-                FieldInfo field => field.GetValue(instance),
-                PropertyInfo property => property.GetValue(instance),
+                FieldInfo field => field.GetValue(instance)!,
+                PropertyInfo property => property.GetValue(instance)!,
                 _ => throw new InvalidOperationException("Field and property can't both be null at the same time")
             };
         }

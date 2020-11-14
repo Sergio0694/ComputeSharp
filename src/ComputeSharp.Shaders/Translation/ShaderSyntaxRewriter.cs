@@ -51,7 +51,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <inheritdoc/>
         public override SyntaxNode VisitIdentifierName(IdentifierNameSyntax node)
         {
-            node = (IdentifierNameSyntax)base.VisitIdentifierName(node);
+            node = (IdentifierNameSyntax)base.VisitIdentifierName(node)!;
             node = node.ReplaceIdentifierName(DeclaringType, out var variable);
 
             // Register the captured member, if any
@@ -66,9 +66,9 @@ namespace ComputeSharp.Shaders.Translation
         /// <inheritdoc/>
         public override SyntaxNode VisitParameter(ParameterSyntax node)
         {
-            node = (ParameterSyntax)base.VisitParameter(node);
+            node = (ParameterSyntax)base.VisitParameter(node)!;
             node = node.WithAttributeLists(default);
-            node = node.ReplaceType(node.Type);
+            node = node.ReplaceType(node.Type!);
 
             return node;
         }
@@ -76,7 +76,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <inheritdoc/>
         public override SyntaxNode VisitArgument(ArgumentSyntax node)
         {
-            node = (ArgumentSyntax)base.VisitArgument(node);
+            node = (ArgumentSyntax)base.VisitArgument(node)!;
 
             if (node.RefKindKeyword.IsKind(SyntaxKind.RefKeyword))
             {
@@ -89,7 +89,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <inheritdoc/>
         public override SyntaxNode VisitCastExpression(CastExpressionSyntax node)
         {
-            node = (CastExpressionSyntax)base.VisitCastExpression(node);
+            node = (CastExpressionSyntax)base.VisitCastExpression(node)!;
 
             return node.ReplaceType(node.Type);
         }
@@ -97,7 +97,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <inheritdoc/>
         public override SyntaxNode VisitLocalDeclarationStatement(LocalDeclarationStatementSyntax node)
         {
-            node = (LocalDeclarationStatementSyntax)base.VisitLocalDeclarationStatement(node);
+            node = (LocalDeclarationStatementSyntax)base.VisitLocalDeclarationStatement(node)!;
 
             return node.ReplaceType(node.Declaration.Type);
         }
@@ -105,10 +105,10 @@ namespace ComputeSharp.Shaders.Translation
         /// <inheritdoc/>
         public override SyntaxNode VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
         {
-            node = (ObjectCreationExpressionSyntax)base.VisitObjectCreationExpression(node);
+            node = (ObjectCreationExpressionSyntax)base.VisitObjectCreationExpression(node)!;
             node = node.ReplaceType(node.Type);
 
-            if (node.ArgumentList.Arguments.Count == 0)
+            if (node.ArgumentList!.Arguments.Count == 0)
             {
                 return SyntaxFactory.CastExpression(node.Type, SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(0)));
             }
@@ -119,7 +119,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <inheritdoc/>
         public override SyntaxNode VisitDefaultExpression(DefaultExpressionSyntax node)
         {
-            node = (DefaultExpressionSyntax)base.VisitDefaultExpression(node);
+            node = (DefaultExpressionSyntax)base.VisitDefaultExpression(node)!;
             node = node.ReplaceType(node.Type);
 
             return SyntaxFactory.CastExpression(node.Type, SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(0)));
@@ -128,7 +128,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <inheritdoc/>
         public override SyntaxNode VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
         {
-            node = (MemberAccessExpressionSyntax)base.VisitMemberAccessExpression(node);
+            node = (MemberAccessExpressionSyntax)base.VisitMemberAccessExpression(node)!;
             SyntaxNode syntaxNode = node.ReplaceMember(SemanticModel, out var variable, out var method);
 
             // Register the captured members, if any
@@ -147,7 +147,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <inheritdoc/>
         public override SyntaxNode VisitInvocationExpression(InvocationExpressionSyntax node)
         {
-            node = (InvocationExpressionSyntax)base.VisitInvocationExpression(node);
+            node = (InvocationExpressionSyntax)base.VisitInvocationExpression(node)!;
             node = node.ReplaceInvocation(DeclaringType, out var variable, out var method);
 
             // Register the captured members, if any
@@ -166,7 +166,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <inheritdoc/>
         public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
-            node = (MethodDeclarationSyntax)base.VisitMethodDeclaration(node);
+            node = (MethodDeclarationSyntax)base.VisitMethodDeclaration(node)!;
 
             // Replace the return type node, if needed
             if (!node.ReturnType.ToString().Equals("void"))

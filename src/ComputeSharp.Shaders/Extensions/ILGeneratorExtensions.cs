@@ -21,7 +21,7 @@ namespace System.Reflection.Emit
                     il.Emit(field.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, field);
                     break;
                 case PropertyInfo property when property.CanRead:
-                    il.EmitCall(property.GetMethod.IsStatic ? OpCodes.Call : OpCodes.Callvirt, property.GetMethod, null);
+                    il.EmitCall(property.GetMethod!.IsStatic ? OpCodes.Call : OpCodes.Callvirt, property.GetMethod, null);
                     break;
                 default: throw new ArgumentException($"The input {member.GetType()} instance can't be read");
             }
