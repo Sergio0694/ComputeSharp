@@ -1,4 +1,4 @@
-﻿using ComputeSharp.Graphics.Helpers;
+﻿using ComputeSharp.Graphics.Extensions;
 using System;
 using TerraFX.Interop;
 
@@ -50,7 +50,7 @@ namespace ComputeSharp.Graphics
         /// <param name="device">The <see cref="ID3D12Device"/> instance to use</param>
         public DescriptorAllocator2(ID3D12Device* device)
         {
-            D3D12DescriptorHeap = D3D12Helper.CreateDescriptorHeap(device, DescriptorsPerHeap);
+            D3D12DescriptorHeap = device->CreateDescriptorHeap(DescriptorsPerHeap);
 
             this.allocationLock = new object();
             this.descriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE.D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);

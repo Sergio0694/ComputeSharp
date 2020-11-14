@@ -4,10 +4,10 @@ using System.Runtime.InteropServices;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
 
-namespace ComputeSharp.Graphics.Helpers
+namespace ComputeSharp.Graphics.Extensions
 {
     /// <summary>
-    /// A <see langword="class"/> with helper methods to perform some D3D12 operations.
+    /// A <see langword="class"/> with extensions for the <see cref="ID3D12Device"/> type.
     /// </summary>
     internal static unsafe class D3D12Helper
     {
@@ -18,7 +18,7 @@ namespace ComputeSharp.Graphics.Helpers
         /// <param name="type">The type of command queue to create.</param>
         /// <returns>A pointer to the newly allocated <see cref="ID3D12CommandQueue"/> instance.</returns>
         /// <exception cref="Exception">Thrown when the creation of the command queue fails.</exception>
-        public static ID3D12CommandQueue* CreateCommandQueue(ID3D12Device* d3d12device, D3D12_COMMAND_LIST_TYPE type)
+        public static ID3D12CommandQueue* CreateCommandQueue(this ref ID3D12Device d3d12device, D3D12_COMMAND_LIST_TYPE type)
         {
             D3D12_COMMAND_QUEUE_DESC d3d12CommandQueueDesc;
             d3d12CommandQueueDesc.Type = D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_COMPUTE;
@@ -28,7 +28,7 @@ namespace ComputeSharp.Graphics.Helpers
             Guid d3d12CommandQueueDescGuid = FX.IID_ID3D12CommandQueue;
             ID3D12CommandQueue* commandQueue;
 
-            int result = d3d12device->CreateCommandQueue(
+            int result = d3d12device.CreateCommandQueue(
                 &d3d12CommandQueueDesc,
                 &d3d12CommandQueueDescGuid,
                 (void**)&commandQueue);
@@ -44,12 +44,12 @@ namespace ComputeSharp.Graphics.Helpers
         /// <param name="d3d12device">The target <see cref="ID3D12Device"/> to use to create the fence.</param>
         /// <returns>A pointer to the newly allocated <see cref="ID3D12Fence"/> instance.</returns>
         /// <exception cref="Exception">Thrown when the creation of the command queue fails.</exception>
-        public static ID3D12Fence* CreateFence(ID3D12Device* d3d12device)
+        public static ID3D12Fence* CreateFence(this ref ID3D12Device d3d12device)
         {
             Guid d3D12FenceGuid = FX.IID_ID3D12Fence;
             ID3D12Fence* d3d12Fence;
 
-            int result = d3d12device->CreateFence(
+            int result = d3d12device.CreateFence(
                 0,
                 D3D12_FENCE_FLAGS.D3D12_FENCE_FLAG_NONE,
                 &d3D12FenceGuid,
@@ -67,7 +67,7 @@ namespace ComputeSharp.Graphics.Helpers
         /// <param name="descriptorsCount">The number of descriptors to allocate.</param>
         /// <returns>A pointer to the newly allocated <see cref="ID3D12DescriptorHeap"/> instance.</returns>
         /// <exception cref="Exception">Thrown when the creation of the command queue fails.</exception>
-        public static ID3D12DescriptorHeap* CreateDescriptorHeap(ID3D12Device* d3d12device, uint descriptorsCount)
+        public static ID3D12DescriptorHeap* CreateDescriptorHeap(this ref ID3D12Device d3d12device, uint descriptorsCount)
         {
             D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc;
             d3d12DescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE.D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
@@ -77,7 +77,7 @@ namespace ComputeSharp.Graphics.Helpers
             Guid d3d12DescriptorHeapDescGuid = FX.IID_ID3D12DescriptorHeap;
             ID3D12DescriptorHeap* d3d12DescriptorHeap;
 
-            int result = d3d12device->CreateDescriptorHeap(
+            int result = d3d12device.CreateDescriptorHeap(
                 &d3d12DescriptorHeapDesc,
                 &d3d12DescriptorHeapDescGuid,
                 (void**)&d3d12DescriptorHeap);
@@ -87,13 +87,20 @@ namespace ComputeSharp.Graphics.Helpers
             return d3d12DescriptorHeap;
         }
 
+        /// <summary>
+        /// Checks the feature support of a given type for a given device.
+        /// </summary>
+        /// <typeparam name="TFeature">The type of feature support data to retrieve.</typeparam>
+        /// <param name="d3d12device">The target <see cref="ID3D12Device"/> to use to check features for.</param>
+        /// <param name="d3d12feature">The type of features to check.</param>
+        /// <returns>A <see typeparamref="TFeature"/> value with the features data.</returns>
         [Pure]
-        public static unsafe TFeature CheckFeatureSupport<TFeature>(ID3D12Device* d3d12device, D3D12_FEATURE d3d12feature)
+        public static unsafe TFeature CheckFeatureSupport<TFeature>(this ref ID3D12Device d3d12device, D3D12_FEATURE d3d12feature)
             where TFeature : unmanaged
         {
             TFeature feature;
 
-            int result = d3d12device->CheckFeatureSupport(d3d12feature, &feature, (uint)sizeof(TFeature));
+            int result = d3d12device.CheckFeatureSupport(d3d12feature, &feature, (uint)sizeof(TFeature));
 
             if (FX.FAILED(result)) Marshal.ThrowExceptionForHR(result);
 
