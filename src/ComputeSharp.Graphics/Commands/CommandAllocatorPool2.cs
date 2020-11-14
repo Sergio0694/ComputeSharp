@@ -10,7 +10,7 @@ namespace ComputeSharp.Graphics.Commands
     /// <summary>
     /// A type that acts as a pool to get new <see cref="ID3D12CommandAllocator"/> instances wheen needed.
     /// </summary>
-    internal unsafe struct CommandAllocatorPool2
+    internal readonly unsafe struct CommandAllocatorPool2
     {
         /// <summary>
         /// The command list type being used by the current instance.

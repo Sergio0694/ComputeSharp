@@ -48,7 +48,7 @@ namespace ComputeSharp.Graphics
         /// <summary>
         /// The <see cref="DescriptorAllocator2"/> instance to use when allocating new buffers.
         /// </summary>
-        internal readonly DescriptorAllocator2 ShaderResourceViewDescriptorAllocator;
+        internal DescriptorAllocator2 ShaderResourceViewDescriptorAllocator;
 
         /// <summary>
         /// The next fence value for compute operations using <see cref="D3D12ComputeCommandQueue"/>.

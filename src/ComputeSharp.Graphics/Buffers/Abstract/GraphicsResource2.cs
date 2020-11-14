@@ -20,7 +20,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// Creates a new <see cref="GraphicsResource"/> instance with the specified parameters.
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
-        protected GraphicsResource2(GraphicsDevice device, ID3D12Resource* d3d12resource)
+        protected GraphicsResource2(GraphicsDevice2 device, ID3D12Resource* d3d12resource)
         {
             D3D12Resource = d3d12resource;
 
@@ -30,7 +30,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <summary>
         /// Gets the <see cref="GraphicsDevice"/> associated with the current instance.
         /// </summary>
-        public GraphicsDevice GraphicsDevice { get; }
+        public GraphicsDevice2 GraphicsDevice { get; }
 
         /// <summary>
         /// Maps the current resource to a specified subresource.
