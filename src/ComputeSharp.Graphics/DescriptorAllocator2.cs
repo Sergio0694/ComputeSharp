@@ -99,5 +99,11 @@ namespace ComputeSharp.Graphics
                 this.remainingHandles--;
             }
         }
+
+        /// <inheritdoc cref="IDisposable.Dispose"/>
+        public void Dispose()
+        {
+            D3D12DescriptorHeap->Release();
+        }
     }
 }
