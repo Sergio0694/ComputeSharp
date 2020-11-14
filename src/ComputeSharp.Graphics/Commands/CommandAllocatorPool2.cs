@@ -2,9 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Runtime.InteropServices;
 using TerraFX.Interop;
-using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Graphics.Commands
 {
