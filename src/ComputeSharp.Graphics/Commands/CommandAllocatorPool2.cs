@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ComputeSharp.Graphics.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
@@ -69,18 +70,7 @@ namespace ComputeSharp.Graphics.Commands
                     }
                 }
 
-                // Create a new command allocator
-                ID3D12CommandAllocator* d3D12CommandAllocator;
-                Guid d3D12CommandAllocatorGuid = FX.IID_ID3D12CommandAllocator;
-
-                int result = d3D12Device->CreateCommandAllocator(
-                    this.d3d12CommandListType,
-                    &d3D12CommandAllocatorGuid,
-                    (void**)&d3D12CommandAllocator);
-
-                if (FX.FAILED(result)) Marshal.ThrowExceptionForHR(result);
-
-                return d3D12CommandAllocator;
+                return d3D12Device->CreateCommandAllocator(this.d3d12CommandListType);
             }
         }
 

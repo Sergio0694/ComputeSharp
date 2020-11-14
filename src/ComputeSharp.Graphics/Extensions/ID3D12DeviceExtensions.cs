@@ -133,6 +133,30 @@ namespace ComputeSharp.Graphics.Extensions
         }
 
         /// <summary>
+        /// Creates a new <see cref="ID3D12CommandAllocator"/> for a given device.
+        /// </summary>
+        /// <param name="d3d12device">The target <see cref="ID3D12Device"/> to use to create the command allocator.</param>
+        /// <param name="d3d12CommandListType">The type of command list to create.</param>
+        /// <returns>A pointer to the newly allocated <see cref="ID3D12CommandAllocator"/> instance.</returns>
+        /// <exception cref="Exception">Thrown when the creation of the command allocator fails.</exception>
+        public static ID3D12CommandAllocator* CreateCommandAllocator(
+            this ref ID3D12Device d3d12device,
+            D3D12_COMMAND_LIST_TYPE d3d12CommandListType)
+        {
+            ID3D12CommandAllocator* d3D12CommandAllocator;
+            Guid d3D12CommandAllocatorGuid = FX.IID_ID3D12CommandAllocator;
+
+            int result = d3d12device.CreateCommandAllocator(
+                d3d12CommandListType,
+                &d3D12CommandAllocatorGuid,
+                (void**)&d3D12CommandAllocator);
+
+            if (FX.FAILED(result)) Marshal.ThrowExceptionForHR(result);
+
+            return d3D12CommandAllocator;
+        }
+
+        /// <summary>
         /// Checks the feature support of a given type for a given device.
         /// </summary>
         /// <typeparam name="TFeature">The type of feature support data to retrieve.</typeparam>
