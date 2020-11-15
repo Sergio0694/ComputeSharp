@@ -67,6 +67,8 @@ namespace ComputeSharp.Shaders.Extensions
                 &d3D12RootSignatureGuid,
                 (void**)&d3D12RootSignature);
 
+            d3D3Blob->Release();
+
             ThrowHelper.ThrowIfFailed(result);
 
             return d3D12RootSignature;

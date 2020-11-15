@@ -1,8 +1,6 @@
 ﻿using ComputeSharp.Graphics.Helpers;
 using System;
-using System.Runtime.InteropServices;
 using TerraFX.Interop;
-using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Graphics.Extensions
 {
