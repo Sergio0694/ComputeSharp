@@ -53,12 +53,12 @@ namespace ComputeSharp.Graphics
         /// <summary>
         /// The next fence value for compute operations using <see cref="D3D12ComputeCommandQueue"/>.
         /// </summary>
-        internal long NextD3D12ComputeFenceValue = 1;
+        internal ulong NextD3D12ComputeFenceValue = 1;
 
         /// <summary>
         /// The next fence value for copy operations using <see cref="D3D12CopyCommandQueue"/>.
         /// </summary>
-        internal long NextD3D12CopyFenceValue = 1;
+        internal ulong NextD3D12CopyFenceValue = 1;
 
         /// <summary>
         /// Creates a new <see cref="GraphicsDevice2"/> instance for the input <see cref="ID3D12Device"/>.

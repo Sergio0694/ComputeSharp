@@ -136,7 +136,7 @@ namespace ComputeSharp.Graphics.Extensions
         /// Creates a new <see cref="ID3D12CommandAllocator"/> for a given device.
         /// </summary>
         /// <param name="d3d12device">The target <see cref="ID3D12Device"/> to use to create the command allocator.</param>
-        /// <param name="d3d12CommandListType">The type of command list to create.</param>
+        /// <param name="d3d12CommandListType">The type of command list allocator to create.</param>
         /// <returns>A pointer to the newly allocated <see cref="ID3D12CommandAllocator"/> instance.</returns>
         /// <exception cref="Exception">Thrown when the creation of the command allocator fails.</exception>
         public static ID3D12CommandAllocator* CreateCommandAllocator(
@@ -154,6 +154,34 @@ namespace ComputeSharp.Graphics.Extensions
             if (FX.FAILED(result)) Marshal.ThrowExceptionForHR(result);
 
             return d3D12CommandAllocator;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="ID3D12GraphicsCommandList"/> for a given device.
+        /// </summary>
+        /// <param name="d3d12device">The target <see cref="ID3D12Device"/> to use to create the command list.</param>
+        /// <param name="d3d12CommandListType">The type of command list to create.</param>
+        /// <returns>A pointer to the newly allocated <see cref="ID3D12GraphicsCommandList"/> instance.</returns>
+        /// <exception cref="Exception">Thrown when the creation of the command list fails.</exception>
+        public static ID3D12GraphicsCommandList* CreateCommandList(
+            this ref ID3D12Device d3d12device,
+            D3D12_COMMAND_LIST_TYPE d3d12CommandListType,
+            ID3D12CommandAllocator* d3D12CommandAllocator)
+        {
+            ID3D12GraphicsCommandList* d3d12GraphicsCommandList;
+            Guid d3D12GraphicsCommandListGuid = FX.IID_ID3D12GraphicsCommandList;
+
+            int result = d3d12device.CreateCommandList(
+                0,
+                d3d12CommandListType,
+                d3D12CommandAllocator,
+                null,
+                &d3D12GraphicsCommandListGuid,
+                (void**)&d3d12GraphicsCommandList);
+
+            if (FX.FAILED(result)) Marshal.ThrowExceptionForHR(result);
+
+            return d3d12GraphicsCommandList;
         }
 
         /// <summary>
