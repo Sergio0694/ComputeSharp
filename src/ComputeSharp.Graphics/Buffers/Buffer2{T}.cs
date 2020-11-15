@@ -7,6 +7,7 @@ using static TerraFX.Interop.D3D12_HEAP_TYPE;
 using static TerraFX.Interop.D3D12_RESOURCE_FLAGS;
 using static TerraFX.Interop.D3D12_RESOURCE_STATES;
 using static TerraFX.Interop.D3D12_SRV_DIMENSION;
+using static TerraFX.Interop.D3D12_UAV_DIMENSION;
 using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Graphics.Buffers
@@ -145,7 +146,7 @@ namespace ComputeSharp.Graphics.Buffers
         private void CreateUnorderedAccessView()
         {
             D3D12_UNORDERED_ACCESS_VIEW_DESC d3D12UnorderedAccessViewDescription = default;
-            d3D12UnorderedAccessViewDescription.ViewDimension = D3D12_UAV_DIMENSION.D3D12_UAV_DIMENSION_BUFFER;
+            d3D12UnorderedAccessViewDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
             d3D12UnorderedAccessViewDescription.Buffer.NumElements = (uint)Size;
             d3D12UnorderedAccessViewDescription.Buffer.StructureByteStride = (uint)ElementSizeInBytes;
 

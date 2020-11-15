@@ -2,6 +2,8 @@
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop;
+using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
+using static TerraFX.Interop.D3D12_FEATURE;
 
 namespace ComputeSharp.Graphics
 {
@@ -68,18 +70,18 @@ namespace ComputeSharp.Graphics
         internal GraphicsDevice2(ID3D12Device* d3d12device, DXGI_ADAPTER_DESC1* dxgiDescription1)
         {
             D3D12Device = d3d12device;
-            D3D12ComputeCommandQueue = d3d12device->CreateCommandQueue(D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_COMPUTE);
-            D3D12CopyCommandQueue = d3d12device->CreateCommandQueue(D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_COPY);
+            D3D12ComputeCommandQueue = d3d12device->CreateCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE);
+            D3D12CopyCommandQueue = d3d12device->CreateCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY);
             D3D12ComputeFence = d3d12device->CreateFence();
             D3D12CopyFence = d3d12device->CreateFence();
-            ComputeCommandAllocatorPool = new CommandAllocatorPool2(D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_COMPUTE);
-            CopyCommandAllocatorPool = new CommandAllocatorPool2(D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_COPY);
+            ComputeCommandAllocatorPool = new CommandAllocatorPool2(D3D12_COMMAND_LIST_TYPE_COMPUTE);
+            CopyCommandAllocatorPool = new CommandAllocatorPool2(D3D12_COMMAND_LIST_TYPE_COPY);
             ShaderResourceViewDescriptorAllocator = new DescriptorAllocator2(d3d12device);
 
             Name = new string((char*)dxgiDescription1->Description);
             MemorySize = dxgiDescription1->DedicatedVideoMemory;
 
-            var d3D12Options1Data = d3d12device->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS1>(D3D12_FEATURE.D3D12_FEATURE_D3D12_OPTIONS1);
+            var d3D12Options1Data = d3d12device->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS1>(D3D12_FEATURE_D3D12_OPTIONS1);
 
             ComputeUnits = d3D12Options1Data.TotalLaneCount;
             WavefrontSize = d3D12Options1Data.WaveLaneCountMin;

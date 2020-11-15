@@ -1,6 +1,7 @@
 ﻿using ComputeSharp.Graphics.Extensions;
 using System;
 using TerraFX.Interop;
+using static TerraFX.Interop.D3D12_DESCRIPTOR_HEAP_TYPE;
 
 namespace ComputeSharp.Graphics
 {
@@ -53,7 +54,7 @@ namespace ComputeSharp.Graphics
             D3D12DescriptorHeap = device->CreateDescriptorHeap(DescriptorsPerHeap);
 
             this.allocationLock = new object();
-            this.descriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE.D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+            this.descriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
             this.d3d12CpuDescriptorHandle = D3D12DescriptorHeap->GetCPUDescriptorHandleForHeapStart();
             this.d3d12GpuDescriptorHandle = D3D12DescriptorHeap->GetGPUDescriptorHandleForHeapStart();
             this.remainingHandles = D3D12DescriptorHeap->GetDesc().NumDescriptors;
