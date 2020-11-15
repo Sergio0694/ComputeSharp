@@ -16,7 +16,7 @@ namespace ComputeSharp.Graphics.Extensions
     /// <summary>
     /// A <see langword="class"/> with extensions for the <see cref="ID3D12Device"/> type.
     /// </summary>
-    internal static unsafe class D3D12Helper
+    internal static unsafe class ID3D12DeviceExtensions
     {
         /// <summary>
         /// Creates a new <see cref="ID3D12CommandQueue"/> of the specified type, for a given device.
