@@ -1,6 +1,6 @@
-﻿using System;
+﻿using ComputeSharp.Graphics.Helpers;
+using System;
 using System.Diagnostics.Contracts;
-using System.Runtime.InteropServices;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 using static TerraFX.Interop.D3D12_COMMAND_QUEUE_FLAGS;
@@ -40,7 +40,7 @@ namespace ComputeSharp.Graphics.Extensions
                 &d3d12CommandQueueDescGuid,
                 (void**)&commandQueue);
 
-            if (FX.FAILED(result)) Marshal.ThrowExceptionForHR(result);
+            ThrowHelper.ThrowIfFailed(result);
 
             return commandQueue;
         }
@@ -62,7 +62,7 @@ namespace ComputeSharp.Graphics.Extensions
                 &d3D12FenceGuid,
                 (void**)&d3d12Fence);
 
-            if (FX.FAILED(result)) Marshal.ThrowExceptionForHR(result);
+            ThrowHelper.ThrowIfFailed(result);
 
             return d3d12Fence;
         }
@@ -89,7 +89,7 @@ namespace ComputeSharp.Graphics.Extensions
                 &d3d12DescriptorHeapDescGuid,
                 (void**)&d3d12DescriptorHeap);
 
-            if (FX.FAILED(result)) Marshal.ThrowExceptionForHR(result);
+            ThrowHelper.ThrowIfFailed(result);
 
             return d3d12DescriptorHeap;
         }
@@ -127,7 +127,7 @@ namespace ComputeSharp.Graphics.Extensions
                 &d3D12ResourceGuid,
                 (void**)&d3D12Resource);
 
-            if (FX.FAILED(result)) Marshal.ThrowExceptionForHR(result);
+            ThrowHelper.ThrowIfFailed(result);
 
             return d3D12Resource;
         }
@@ -151,7 +151,7 @@ namespace ComputeSharp.Graphics.Extensions
                 &d3D12CommandAllocatorGuid,
                 (void**)&d3D12CommandAllocator);
 
-            if (FX.FAILED(result)) Marshal.ThrowExceptionForHR(result);
+            ThrowHelper.ThrowIfFailed(result);
 
             return d3D12CommandAllocator;
         }
@@ -179,7 +179,7 @@ namespace ComputeSharp.Graphics.Extensions
                 &d3D12GraphicsCommandListGuid,
                 (void**)&d3d12GraphicsCommandList);
 
-            if (FX.FAILED(result)) Marshal.ThrowExceptionForHR(result);
+            ThrowHelper.ThrowIfFailed(result);
 
             return d3d12GraphicsCommandList;
         }
@@ -199,7 +199,7 @@ namespace ComputeSharp.Graphics.Extensions
 
             int result = d3d12device.CheckFeatureSupport(d3d12feature, &feature, (uint)sizeof(TFeature));
 
-            if (FX.FAILED(result)) Marshal.ThrowExceptionForHR(result);
+            ThrowHelper.ThrowIfFailed(result);
 
             return feature;
         }

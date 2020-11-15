@@ -1,5 +1,5 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using ComputeSharp.Graphics.Helpers;
+using System;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_PIPELINE_STATE_FLAGS;
 using static TerraFX.Interop.D3D12_ROOT_PARAMETER_TYPE;
@@ -54,12 +54,7 @@ namespace ComputeSharp.Shaders.Extensions
                     &d3D3Blob,
                     &d3D3BlobError);
 
-                if (FX.FAILED(result))
-                {
-                    if (d3D3BlobError != null) d3D3BlobError->Release();
-
-                    Marshal.ThrowExceptionForHR(result);
-                }
+                ThrowHelper.ThrowIfFailed(result, d3D3BlobError);
             }
 
             Guid d3D12RootSignatureGuid = FX.IID_ID3D12RootSignature;
@@ -72,12 +67,7 @@ namespace ComputeSharp.Shaders.Extensions
                 &d3D12RootSignatureGuid,
                 (void**)&d3D12RootSignature);
 
-            if (FX.FAILED(result))
-            {
-                if (d3D3Blob != null) d3D3Blob->Release();
-
-                Marshal.ThrowExceptionForHR(result);
-            }
+            ThrowHelper.ThrowIfFailed(result);
 
             return d3D12RootSignature;
         }
@@ -109,7 +99,7 @@ namespace ComputeSharp.Shaders.Extensions
                 &d3d12ComputePipelineStateGuid,
                 (void**)&d3D12PipelineState);
 
-            if (FX.FAILED(result)) Marshal.ThrowExceptionForHR(result);
+            ThrowHelper.ThrowIfFailed(result);
 
             return d3D12PipelineState;
         }

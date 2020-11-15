@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ComputeSharp.Graphics.Helpers;
+using System;
 using System.Runtime.InteropServices;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
@@ -22,7 +23,7 @@ namespace ComputeSharp.Graphics.Extensions
 
             int result = d3d12resource.Map(0, null, (void**)&ptr);
 
-            if (FX.FAILED(result)) Marshal.ThrowExceptionForHR(result);
+            ThrowHelper.ThrowIfFailed(result);
 
             return ptr;
         }
