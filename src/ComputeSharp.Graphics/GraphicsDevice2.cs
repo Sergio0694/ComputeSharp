@@ -1,6 +1,8 @@
 ﻿using ComputeSharp.Core.Interop;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
+using ComputeSharp.Graphics.Helpers;
+using System.Runtime.CompilerServices;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 using static TerraFX.Interop.D3D12_FEATURE;
@@ -121,22 +123,6 @@ namespace ComputeSharp.Graphics
             this.shaderResourceViewDescriptorAllocator.Allocate(out d3d12CpuDescriptorHandle, out d3d12GpuDescriptorHandle);
         }
 
-        /// <inheritdoc cref="CommandAllocatorPool2.Enqueue"/>
-        /// <param name="d3D12CommandAllocator">The <see cref="ID3D12CommandAllocator"/> instance to return to the pool.</param>
-        /// <param name="d3d12CommandListType">The type of command allocator to return to the pool.</param>
-        internal void EnqueueCommandAllocator(ComPtr<ID3D12CommandAllocator> d3D12CommandAllocator, D3D12_COMMAND_LIST_TYPE d3d12CommandListType)
-        {
-            switch (d3d12CommandListType)
-            {
-                case D3D12_COMMAND_LIST_TYPE_COMPUTE:
-                    this.computeCommandAllocatorPool.Enqueue(d3D12CommandAllocator, this.nextD3D12ComputeFenceValue);
-                    break;
-                case D3D12_COMMAND_LIST_TYPE_COPY:
-                    this.copyCommandAllocatorPool.Enqueue(d3D12CommandAllocator, this.nextD3D12CopyFenceValue);
-                    break;
-            };
-        }
-
         /// <inheritdoc cref="CommandAllocatorPool2.GetCommandAllocator"/>
         /// <param name="d3d12CommandListType">The type of command allocator to rent.</param>
         internal ComPtr<ID3D12CommandAllocator> GetCommandAllocator(D3D12_COMMAND_LIST_TYPE d3d12CommandListType)
@@ -158,6 +144,54 @@ namespace ComputeSharp.Graphics
             ID3D12DescriptorHeap* d3D12DescriptorHeap = this.shaderResourceViewDescriptorAllocator.D3D12DescriptorHeap;
 
             d3D12GraphicsCommandList->SetDescriptorHeaps(1, &d3D12DescriptorHeap);
+        }
+
+        /// <summary>
+        /// Executes a given command list and waits for the operation to be completed.
+        /// </summary>
+        /// <param name="commandList">The input <see cref="CommandList2"/> to execute.</param>
+        internal void ExecuteCommandList(ref CommandList2 commandList)
+        {
+            ref readonly CommandAllocatorPool2 commandAllocatorPool = ref Unsafe.NullRef<CommandAllocatorPool2>();
+            ID3D12CommandQueue* d3D12CommandQueue;
+            ID3D12Fence* d3D12Fence;
+            ulong d3D12FenceValue;
+
+            // Get the target command queue, fence and pool for the list type
+            switch (commandList.D3d12CommandListType)
+            {
+                case D3D12_COMMAND_LIST_TYPE_COMPUTE:
+                    commandAllocatorPool = ref this.computeCommandAllocatorPool;
+                    d3D12CommandQueue = this.d3D12ComputeCommandQueue;
+                    d3D12Fence = this.d3D12ComputeFence;
+                    d3D12FenceValue = this.nextD3D12ComputeFenceValue++;
+                    break;
+                case D3D12_COMMAND_LIST_TYPE_COPY:
+                    commandAllocatorPool = ref this.copyCommandAllocatorPool;
+                    d3D12CommandQueue = this.d3D12CopyCommandQueue;
+                    d3D12Fence = this.d3D12CopyFence;
+                    d3D12FenceValue = this.nextD3D12CopyFenceValue++;
+                    break;
+                default: throw null!;
+            }
+
+            // Enqueue the command allocator pool so that it can be reused later
+            commandAllocatorPool.Enqueue(commandList.DetachD3D12CommandAllocator(), d3D12FenceValue);
+
+            // Execute the command list and signal to the target fence
+            d3D12CommandQueue->ExecuteCommandLists(1, commandList.GetD3D12CommandListAddressOf());
+
+            int result = d3D12CommandQueue->Signal(d3D12Fence, d3D12FenceValue);
+
+            ThrowHelper.ThrowIfFailed(result);
+
+            // If the fence value hasn't been reached, wait until the operation completes
+            if (d3D12FenceValue > d3D12Fence->GetCompletedValue())
+            {
+                result = d3D12Fence->SetEventOnCompletion(d3D12FenceValue, default);
+
+                ThrowHelper.ThrowIfFailed(result);
+            }
         }
 
         /// <inheritdoc/>

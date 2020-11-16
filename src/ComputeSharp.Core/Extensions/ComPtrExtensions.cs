@@ -69,15 +69,11 @@ namespace ComputeSharp
         /// </remarks>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe ComPtr<U> Upcast<T, U>(this in ComPtr<T> ptr)
+        public static unsafe ref readonly ComPtr<U> Upcast<T, U>(this in ComPtr<T> ptr)
             where T : unmanaged
             where U : unmanaged
         {
-            ComPtr<U> copy = default;
-
-            *(T**)Unsafe.AsPointer(ref copy) = ptr.Get();
-
-            return copy;
+            return ref Unsafe.As<ComPtr<T>, ComPtr<U>>(ref Unsafe.AsRef(in ptr));
         }
     }
 }
