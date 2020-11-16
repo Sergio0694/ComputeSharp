@@ -1,4 +1,5 @@
 ﻿using ComputeSharp.Graphics.Extensions;
+using ComputeSharp.Graphics.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -36,7 +37,7 @@ namespace ComputeSharp.Graphics.Commands
         /// </summary>
         /// <param name="commandAllocator">The input <see cref="ID3D12CommandAllocator"/> to enqueue.</param>
         /// <param name="fenceValue">The fence value for the input <see cref="ID3D12CommandAllocator"/>.</param>
-        public void Enqueue(ID3D12CommandAllocator* commandAllocator, ulong fenceValue)
+        public void Enqueue(ComPtr<ID3D12CommandAllocator> commandAllocator, ulong fenceValue)
         {
             lock (this.d3d12CommandAllocatorQueue)
             {
@@ -47,9 +48,11 @@ namespace ComputeSharp.Graphics.Commands
         /// <summary>
         /// Gets a new or reused <see cref="ID3D12CommandAllocator"/> item to use to issue GPU commands.
         /// </summary>
-        [Pure]
-        public ID3D12CommandAllocator* GetCommandAllocator(ID3D12Device* d3D12Device, ID3D12Fence* d3D12Fence)
+        /// <returns>The rented <see cref="ID3D12CommandAllocator"/> object to use.</returns>
+        public ComPtr<ID3D12CommandAllocator> GetCommandAllocator(ID3D12Device* d3D12Device, ID3D12Fence* d3D12Fence)
         {
+            using ComPtr<ID3D12CommandAllocator> d3D12CommandAllocator = default;
+
             lock (this.d3d12CommandAllocatorQueue)
             {
                 // See if there is a reusable command allocator
@@ -57,14 +60,18 @@ namespace ComputeSharp.Graphics.Commands
                 {
                     ID3D12CommandAllocatorEntry d3D12CommandAllocatorEntry = this.d3d12CommandAllocatorQueue.Peek();
 
+                    d3D12CommandAllocatorEntry.D3D12CommandAllocator.Swap(ref *&d3D12CommandAllocator);
+
                     // We found one that is no longer in use, reset it and return it
                     if (d3D12CommandAllocatorEntry.FenceValue <= d3D12Fence->GetCompletedValue())
                     {
-                        this.d3d12CommandAllocatorQueue.Dequeue();
+                        _ = this.d3d12CommandAllocatorQueue.Dequeue();
 
-                        d3D12CommandAllocatorEntry.D3D12CommandAllocator->Reset();
+                        int result = d3D12CommandAllocator.Get()->Reset();
 
-                        return d3D12CommandAllocatorEntry.D3D12CommandAllocator;
+                        ThrowHelper.ThrowIfFailed(result);
+
+                        return d3D12CommandAllocator.Move();
                     }
                 }
 
@@ -75,18 +82,26 @@ namespace ComputeSharp.Graphics.Commands
         /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose()
         {
-            throw new NotImplementedException();
+            lock (this.d3d12CommandAllocatorQueue)
+            {
+                foreach (var entry in this.d3d12CommandAllocatorQueue)
+                {
+                    entry.D3D12CommandAllocator.Dispose();
+                }
+
+                this.d3d12CommandAllocatorQueue.Clear();
+            }
         }
 
         /// <summary>
         /// A type that stores info on pooled <see cref="ID3D12CommandAllocator"/> references.
         /// </summary>
-        private readonly unsafe struct ID3D12CommandAllocatorEntry
+        private unsafe struct ID3D12CommandAllocatorEntry
         {
             /// <summary>
             /// The current <see cref="ID3D12CommandAllocator"/> reference.
             /// </summary>
-            public readonly ID3D12CommandAllocator* D3D12CommandAllocator;
+            public ComPtr<ID3D12CommandAllocator> D3D12CommandAllocator;
 
             /// <summary>
             /// The fence value for the current <see cref="ID3D12CommandAllocator"/> reference.
@@ -98,7 +113,7 @@ namespace ComputeSharp.Graphics.Commands
             /// </summary>
             /// <param name="d3D12CommandAllocator">The input <see cref="ID3D12CommandAllocator"/> reference.</param>
             /// <param name="fenceValue">The fence value for the input <see cref="ID3D12CommandAllocator"/> reference.</param>
-            public ID3D12CommandAllocatorEntry(ID3D12CommandAllocator* d3D12CommandAllocator, ulong fenceValue)
+            public ID3D12CommandAllocatorEntry(ComPtr<ID3D12CommandAllocator> d3D12CommandAllocator, ulong fenceValue)
             {
                 D3D12CommandAllocator = d3D12CommandAllocator;
                 FenceValue = fenceValue;

@@ -67,7 +67,7 @@ namespace ComputeSharp.Graphics.Buffers
 
             if (bufferType is BufferType.Constant or BufferType.ReadOnly or BufferType.ReadWrite)
             {
-                GraphicsDevice.ShaderResourceViewDescriptorAllocator.Allocate(out D3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
+                GraphicsDevice.AllocateShaderResourceViewDescriptorHandles(out D3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 
                 switch (bufferType)
                 {
