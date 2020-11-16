@@ -85,10 +85,10 @@ namespace ComputeSharp.Graphics.Commands
         /// Sets a given <see cref="PipelineState"/> object ready to be executed.
         /// </summary>
         /// <param name="pipelineState">The input <see cref="PipelineState"/> to setup.</param>
-        public void SetPipelineState(PipelineState pipelineState)
+        public void SetPipelineData(PipelineData pipelineData)
         {
-            // TODO: D3D12GraphicsCommandList->SetComputeRootSignature()
-            // TODO: D3D12GraphicsCommandList->SetPipelineState()
+            D3D12GraphicsCommandList->SetComputeRootSignature(pipelineData.D3D12RootSignature);
+            D3D12GraphicsCommandList->SetPipelineState(pipelineData.D3D12PipelineState);
         }
 
         /// <summary>
