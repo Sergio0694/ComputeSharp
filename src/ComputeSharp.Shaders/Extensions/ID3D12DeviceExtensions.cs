@@ -20,11 +20,14 @@ namespace ComputeSharp.Shaders.Extensions
         /// <param name="d3D12DescriptorRanges1">The input descriptor ranges for the signature to create.</param>
         /// <returns>A pointer to the newly allocated <see cref="ID3D12RootSignature"/> instance.</returns>
         /// <exception cref="Exception">Thrown when the creation of the root signature fails.</exception>
-        public static ID3D12RootSignature* CreateRootSignature(
+        public static ComPtr<ID3D12RootSignature> CreateRootSignature(
             this ref ID3D12Device d3d12device,
             ReadOnlySpan<D3D12_DESCRIPTOR_RANGE1> d3D12DescriptorRanges1)
         {
-            ID3DBlob* d3D3Blob, d3D3BlobError;
+            using ComPtr<ID3DBlob> d3D3Blob = default;
+            using ComPtr<ID3DBlob> d3D3BlobError = default;
+            using ComPtr<ID3D12RootSignature> d3D12RootSignature = default;
+
             int result;
 
             fixed (D3D12_DESCRIPTOR_RANGE1* d3D12DescriptorRange1 = d3D12DescriptorRanges1)
@@ -51,27 +54,24 @@ namespace ComputeSharp.Shaders.Extensions
                 // we just work with the resulting blobs, so the input data can be unpinned.
                 result = FX.D3D12SerializeVersionedRootSignature(
                     &d3d12VersionedRootSignatureDescription,
-                    &d3D3Blob,
-                    &d3D3BlobError);
+                    d3D3Blob.GetAddressOf(),
+                    d3D3BlobError.GetAddressOf());
 
                 ThrowHelper.ThrowIfFailed(result, d3D3BlobError);
             }
 
             Guid d3D12RootSignatureGuid = FX.IID_ID3D12RootSignature;
-            ID3D12RootSignature* d3D12RootSignature;
 
             result = d3d12device.CreateRootSignature(
                 0,
-                d3D3Blob->GetBufferPointer(),
-                d3D3Blob->GetBufferSize(),
+                d3D3Blob.Get()->GetBufferPointer(),
+                d3D3Blob.Get()->GetBufferSize(),
                 &d3D12RootSignatureGuid,
-                (void**)&d3D12RootSignature);
-
-            d3D3Blob->Release();
+                d3D12RootSignature.GetVoidAddressOf());
 
             ThrowHelper.ThrowIfFailed(result);
 
-            return d3D12RootSignature;
+            return d3D12RootSignature.Move();
         }
 
         /// <summary>
@@ -82,11 +82,13 @@ namespace ComputeSharp.Shaders.Extensions
         /// <param name="d3d12ShaderBytecode">The shader bytecode to use for the pipeline state.</param>
         /// <returns>A pointer to the newly allocated <see cref="ID3D12PipelineState"/> instance.</returns>
         /// <exception cref="Exception">Thrown when the creation of the pipeline state fails.</exception>
-        public static ID3D12PipelineState* CreateComputePipelineState(
+        public static ComPtr<ID3D12PipelineState> CreateComputePipelineState(
             this ref ID3D12Device d3d12device,
             ID3D12RootSignature* d3D12RootSignature,
             D3D12_SHADER_BYTECODE d3d12ShaderBytecode)
         {
+            using ComPtr<ID3D12PipelineState> d3D12PipelineState = default;
+
             D3D12_COMPUTE_PIPELINE_STATE_DESC d3d12ComputePipelineStateDescription;
             d3d12ComputePipelineStateDescription.pRootSignature = d3D12RootSignature;
             d3d12ComputePipelineStateDescription.CS = d3d12ShaderBytecode;
@@ -94,16 +96,15 @@ namespace ComputeSharp.Shaders.Extensions
             d3d12ComputePipelineStateDescription.CachedPSO = default;
             d3d12ComputePipelineStateDescription.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
             Guid d3d12ComputePipelineStateGuid = FX.IID_ID3D12PipelineState;
-            ID3D12PipelineState* d3D12PipelineState;
 
             int result = d3d12device.CreateComputePipelineState(
                 &d3d12ComputePipelineStateDescription,
                 &d3d12ComputePipelineStateGuid,
-                (void**)&d3D12PipelineState);
+                d3D12PipelineState.GetVoidAddressOf());
 
             ThrowHelper.ThrowIfFailed(result);
 
-            return d3D12PipelineState;
+            return d3D12PipelineState.Move();
         }
     }
 }

@@ -70,6 +70,7 @@ namespace ComputeSharp.Shaders.Translation
         {
             using ComPtr<IDxcBlobEncoding> dxcBlobEncoding = default;
             using ComPtr<IDxcOperationResult> dxcOperationResult = default;
+            using ComPtr<IDxcBlob> dxcBlobBytecode = default;
 
             int result;
 
@@ -112,13 +113,11 @@ namespace ComputeSharp.Shaders.Translation
             // The compilation was successful, so we can extract the shader bytecode
             if (status == 0)
             {
-                using ComPtr<IDxcBlob> dxcBlob = default;
-
-                result = dxcOperationResult.Get()->GetResult(dxcBlob.GetAddressOf());
+                result = dxcOperationResult.Get()->GetResult(dxcBlobBytecode.GetAddressOf());
 
                 ThrowHelper.ThrowIfFailed(result);
 
-                return dxcBlob.Move();
+                return dxcBlobBytecode.Move();
             }
 
             return ThrowHslsCompilationException(dxcOperationResult);
