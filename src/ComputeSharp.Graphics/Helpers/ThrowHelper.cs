@@ -31,28 +31,6 @@ namespace ComputeSharp.Graphics.Helpers
         /// Throws a <see cref="Win32Exception"/> if <paramref name="result"/> represents an error.
         /// </summary>
         /// <param name="result">The input <see cref="HRESULT"/> to check.</param>
-        /// <param name="resource">An owned resource to dispose if it is not a null reference.</param>
-        /// <exception cref="Win32Exception">Thrown if <paramref name="result"/> represents an error.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void ThrowIfFailed(int result, void* resource)
-        {
-            if (result < 0)
-            {
-                static void Throw(int result, void* resource)
-                {
-                    if (resource != null) ((IUnknown*)resource)->Release();
-
-                    throw new Win32Exception(result);
-                }
-
-                Throw(result, resource);
-            }
-        }
-
-        /// <summary>
-        /// Throws a <see cref="Win32Exception"/> if <paramref name="result"/> represents an error.
-        /// </summary>
-        /// <param name="result">The input <see cref="HRESULT"/> to check.</param>
         /// <param name="d3d3blobError">A <see cref="ID3DBlob"/> pointer representing an error message.</param>
         /// <exception cref="Win32Exception">Thrown if <paramref name="result"/> represents an error.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

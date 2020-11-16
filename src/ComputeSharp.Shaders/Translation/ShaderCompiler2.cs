@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
+using System.Runtime.CompilerServices;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Helpers;
 using TerraFX.Interop;
@@ -15,81 +17,79 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// The <see cref="IDxcCompiler"/> instance to use to create the bytecode for HLSL sources.
         /// </summary>
-        private static readonly IDxcCompiler* DxcCompiler;
+        private static readonly ComPtr<IDxcCompiler> DxcCompiler;
 
         /// <summary>
         /// The <see cref="IDxcLibrary"/> instance to use to work with <see cref="DxcCompiler"/>.
         /// </summary>
-        private static readonly IDxcLibrary* DxcLibrary;
+        private static readonly ComPtr<IDxcLibrary> DxcLibrary;
 
         /// <summary>
         /// The <see cref="IDxcIncludeHandler"/> instance used to compile shaders with <see cref="DxcCompiler"/>.
         /// </summary>
-        private static readonly IDxcIncludeHandler* DxcIncludeHandler;
+        private static readonly ComPtr<IDxcIncludeHandler> DxcIncludeHandler;
 
         /// <summary>
         /// Initializes <see cref="DxcCompiler"/>, <see cref="DxcLibrary"/> and <see cref="DxcIncludeHandler"/>
         /// </summary>
         static ShaderCompiler2()
         {
+            using ComPtr<IDxcCompiler> dxcCompiler = default;
+            using ComPtr<IDxcLibrary> dxcLibrary = default;
+            using ComPtr<IDxcIncludeHandler> dxcIncludeHandler = default;
+
             Guid dxcCompilerCLGuid = FX.CLSID_DxcCompiler;
             Guid dxcCompilerGuid = FX.IID_IDxcCompiler;
-            IDxcCompiler* dxcCompiler;
+            Guid dxcLibraryCLGuid = FX.CLSID_DxcLibrary;
+            Guid dxcLibraryGuid = FX.IID_IDxcLibrary;
 
-            int result = FX.DxcCreateInstance(&dxcCompilerCLGuid, &dxcCompilerGuid, (void**)&dxcCompiler);
+            int result = FX.DxcCreateInstance(&dxcCompilerCLGuid, &dxcCompilerGuid, dxcCompiler.GetVoidAddressOf());
+
+            ThrowHelper.ThrowIfFailed(result);
+
+            result = FX.DxcCreateInstance(&dxcLibraryCLGuid, &dxcLibraryGuid, dxcLibrary.GetVoidAddressOf());
+
+            ThrowHelper.ThrowIfFailed(result);
+
+            result = dxcLibrary.Get()->CreateIncludeHandler(dxcIncludeHandler.GetAddressOf());
 
             ThrowHelper.ThrowIfFailed(result);
 
             DxcCompiler = dxcCompiler;
-
-            Guid dxcLibraryCLGuid = FX.CLSID_DxcLibrary;
-            Guid dxcLibraryGuid = FX.IID_IDxcLibrary;
-            IDxcLibrary* dxcLibrary;
-
-            result = FX.DxcCreateInstance(&dxcLibraryCLGuid, &dxcLibraryGuid, (void**)&dxcLibrary);
-
-            ThrowHelper.ThrowIfFailed(result);
-
             DxcLibrary = dxcLibrary;
-
-            IDxcIncludeHandler* dxcIncludeHandler;
-
-            result = dxcLibrary->CreateIncludeHandler(&dxcIncludeHandler);
-
-            ThrowHelper.ThrowIfFailed(result);
-
             DxcIncludeHandler = dxcIncludeHandler;
         }
 
         /// <summary>
-        /// Compiles a new HLSL shader from the input source code
+        /// Compiles a new HLSL shader from the input source code.
         /// </summary>
-        /// <param name="source">The HLSL source code to compile</param>
-        /// <returns>The bytecode for the compiled shader</returns>
+        /// <param name="source">The HLSL source code to compile.</param>
+        /// <returns>The bytecode for the compiled shader.</returns>
         [Pure]
-        public static IDxcBlob* CompileShader(string source)
+        public static ComPtr<IDxcBlob> CompileShader(ReadOnlySpan<char> source)
         {
+            using ComPtr<IDxcBlobEncoding> dxcBlobEncoding = default;
+            using ComPtr<IDxcOperationResult> dxcOperationResult = default;
+
             int result;
-            IDxcBlobEncoding* dxcBlobEncoding;
-            IDxcOperationResult* dxcOperationResult;
 
             // Get the encoded blob from the source code
             fixed (char* p = source)
             {
-                result = DxcLibrary->CreateBlobWithEncodingOnHeapCopy(p, (uint)source.Length * 2, 1200, &dxcBlobEncoding);
+                result = DxcLibrary.Get()->CreateBlobWithEncodingOnHeapCopy(p, (uint)source.Length * 2, 1200, dxcBlobEncoding.GetAddressOf());
 
                 ThrowHelper.ThrowIfFailed(result);
             }
 
+            // Try to compile the new compute shader
             fixed (char* entryPoint = "CSMain")
             fixed (char* shaderProfile = "cs_6_1")
             fixed (char* optimization = "-O3")
             {
                 char nullTerminator = '\0';
 
-                // Try to compile the new compute shader
-                result = DxcCompiler->Compile(
-                    (IDxcBlob*)dxcBlobEncoding,
+                result = DxcCompiler.Get()->Compile(
+                    dxcBlobEncoding.Upcast<IDxcBlobEncoding, IDxcBlob>().Get(),
                     (ushort*)&nullTerminator,
                     (ushort*)entryPoint,
                     (ushort*)shaderProfile,
@@ -97,50 +97,62 @@ namespace ComputeSharp.Shaders.Translation
                     1,
                     null,
                     0,
-                    DxcIncludeHandler,
-                    &dxcOperationResult);
+                    DxcIncludeHandler.Get(),
+                    dxcOperationResult.GetAddressOf());
 
-                dxcBlobEncoding->Release();
-
-                // Handle failures during the operation that are not external to the compiler itself.
-                // That is, if this call is successful, the compiler might still have found an error
-                // in the source code, but the operation itself would have been run correctly. Here
-                // we handle the scenario where that is not the case, so we dispose if needed and throw.
-                ThrowHelper.ThrowIfFailed(result, dxcOperationResult);
+                ThrowHelper.ThrowIfFailed(result);
             }
 
             int status;
 
-            // Check whether the actual compilation was executed successfully (exit code 0)
-            result = dxcOperationResult->GetStatus(&status);
-
-            ThrowHelper.ThrowIfFailed(result, dxcOperationResult);
-
-            if (status != 0)
-            {
-                ThrowHslsCompilationException(dxcOperationResult);
-            }
-
-            IDxcBlob* dxcBlob;
-
-            result = dxcOperationResult->GetResult(&dxcBlob);
+            result = dxcOperationResult.Get()->GetStatus(&status);
 
             ThrowHelper.ThrowIfFailed(result);
 
-            return dxcBlob;
+            // The compilation was successful, so we can extract the shader bytecode
+            if (status == 0)
+            {
+                using ComPtr<IDxcBlob> dxcBlob = default;
+
+                result = dxcOperationResult.Get()->GetResult(dxcBlob.GetAddressOf());
+
+                ThrowHelper.ThrowIfFailed(result);
+
+                return dxcBlob.Move();
+            }
+
+            return ThrowHslsCompilationException(dxcOperationResult);
         }
 
-        private static void ThrowHslsCompilationException(IDxcOperationResult* dxcOperationResult)
+        /// <summary>
+        /// Throws an exception when a shader compilation fails.
+        /// </summary>
+        /// <param name="dxcOperationResult">The input (faulting) operation.</param>
+        /// <returns>This method always throws and never actually returs.</returns>
+        [DoesNotReturn]
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static ComPtr<IDxcBlob> ThrowHslsCompilationException(ComPtr<IDxcOperationResult> dxcOperationResult)
         {
-            IDxcBlobEncoding* dxcBlobEncodingError;
+            using ComPtr<IDxcBlobEncoding> dxcBlobEncodingError = default;
 
-            int result = dxcOperationResult->GetErrorBuffer(&dxcBlobEncodingError);
+            int result = dxcOperationResult.Get()->GetErrorBuffer(dxcBlobEncodingError.GetAddressOf());
 
-            dxcOperationResult->Release();
+            ThrowHelper.ThrowIfFailed(result);
 
-            ThrowHelper.ThrowIfFailed(result, dxcBlobEncodingError);
+            using ComPtr<IDxcBlobUtf16> dxcBlobUtf16Error = default;
 
-            throw new HlslCompilationException("Shader compilation error");
+            result = DxcLibrary.Get()->GetBlobAsUtf16(
+                dxcBlobEncodingError.Upcast<IDxcBlobEncoding, IDxcBlob>().Get(),
+                dxcBlobUtf16Error.Upcast<IDxcBlobUtf16, IDxcBlobEncoding>().GetAddressOf());
+
+            ThrowHelper.ThrowIfFailed(result);
+
+            string message = new string(
+                (char*)dxcBlobUtf16Error.Get()->GetStringPointer(),
+                0,
+                checked((int)dxcBlobUtf16Error.Get()->GetStringLength()));
+
+            throw new HlslCompilationException(message);
         }
     }
 }
