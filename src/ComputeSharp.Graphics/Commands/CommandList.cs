@@ -110,18 +110,6 @@ namespace ComputeSharp.Graphics.Commands
         /// <inheritdoc/>
         public override void Dispose()
         {
-            switch (CommandListType)
-            {
-                case CommandListType.Compute:
-                    GraphicsDevice.ComputeAllocatorPool.Enqueue(CommandAllocator, GraphicsDevice.NextComputeFenceValue - 1);
-                    break;
-                case CommandListType.Copy:
-                    GraphicsDevice.CopyAllocatorPool.Enqueue(CommandAllocator, GraphicsDevice.NextCopyFenceValue - 1);
-                    break;
-                default:
-                    throw new NotSupportedException($"Unsupported command list type with value {CommandListType}");
-            }
-
             NativeCommandList.Dispose();
         }
     }
