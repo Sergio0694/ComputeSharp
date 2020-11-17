@@ -76,15 +76,14 @@ namespace ComputeSharp.Shaders.Translation
             }
 
             // Try to compile the new compute shader
+            fixed (char* shaderName = "")
             fixed (char* entryPoint = "CSMain")
             fixed (char* shaderProfile = "cs_6_1")
             fixed (char* optimization = "-O3")
             {
-                char nullTerminator = '\0';
-
                 DxcCompiler.Get()->Compile(
                     dxcBlobEncoding.Upcast<IDxcBlobEncoding, IDxcBlob>().Get(),
-                    (ushort*)&nullTerminator,
+                    (ushort*)shaderName,
                     (ushort*)entryPoint,
                     (ushort*)shaderProfile,
                     (ushort**)&optimization,
