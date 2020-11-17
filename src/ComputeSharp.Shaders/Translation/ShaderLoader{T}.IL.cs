@@ -92,7 +92,7 @@ namespace ComputeSharp.Shaders.Translation
                             il.EmitAddOffset<D3D12_GPU_DESCRIPTOR_HANDLE>(this.totalResourceCount);
                         }
 
-                        il.Emit(OpCodes.Ldarg_0);
+                        if (!member.IsStatic) il.Emit(OpCodes.Ldarg_0);
                         il.EmitReadMember(member);
 
                         // Access Buffer<T>.D3D12GpuDescriptorHandle
@@ -101,7 +101,7 @@ namespace ComputeSharp.Shaders.Translation
                             BindingFlags.NonPublic | BindingFlags.Instance)!;
 
                         il.EmitReadMember(gpuDescriptorInfo);
-                        il.EmitStoreToAddress(member.MemberType);
+                        il.EmitStoreToAddress(typeof(D3D12_GPU_DESCRIPTOR_HANDLE));
 
                         this.totalResourceCount++;
                     }
@@ -122,19 +122,14 @@ namespace ComputeSharp.Shaders.Translation
                         il.Emit(OpCodes.Ldarg_2);
                         il.EmitAddOffset(totalVariablesByteSize);
 
+                        if (!member.IsStatic) il.Emit(OpCodes.Ldarg_0);
+
+                        il.EmitReadMember(member);
+                        il.EmitStoreToAddress(member.MemberType);
+
                         this.totalVariablesByteSize += size;
                     }
                     else throw new InvalidOperationException($"Invalid captured member of type {member.MemberType}");
-
-                    // Load the reference to the input delegate if the member is not static
-                    if (!member.IsStatic)
-                    {
-                        il.Emit(OpCodes.Ldarg_0);
-                    }
-
-                    // Read the current member and store it to the target address
-                    il.EmitReadMember(member);
-                    il.EmitStoreToAddress(member.MemberType);
                 }
 
                 il.Emit(OpCodes.Ret);
