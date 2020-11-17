@@ -2,12 +2,14 @@
 using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Graphics.Buffers;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Translation.Models;
+using TerraFX.Interop;
 
 namespace ComputeSharp.Shaders.Translation
 {
@@ -18,9 +20,9 @@ namespace ComputeSharp.Shaders.Translation
         /// A <see langword="delegate"/> that loads all the captured members from a shader instance.
         /// </summary>
         /// <param name="shader">The shader instance to load the data from.</param>
-        /// <param name="r0">A reference to the buffer with all the captured <see cref="GraphicsResource2"/> instances.</param>
+        /// <param name="r0">A reference to the buffer with all the captured <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instances.</param>
         /// <param name="r1">A reference to the buffer to use to store all the captured value types.</param>
-        private delegate void DispatchDataLoader(in T shader, ref GraphicsResource2 r0, ref byte r1);
+        private delegate void DispatchDataLoader(in T shader, ref D3D12_GPU_DESCRIPTOR_HANDLE r0, ref byte r1);
 
         /// <summary>
         /// The number of captured graphics resources (buffers).
@@ -54,11 +56,11 @@ namespace ComputeSharp.Shaders.Translation
         public DispatchData2 GetDispatchData(in T shader, int x, int y, int z)
         {
             // Resources and variables buffers
-            GraphicsResource2[] resources = ArrayPool<GraphicsResource2>.Shared.Rent(this.totalResourceCount);
+            D3D12_GPU_DESCRIPTOR_HANDLE[] resources = ArrayPool<D3D12_GPU_DESCRIPTOR_HANDLE>.Shared.Rent(this.totalResourceCount);
             byte[] variables = ArrayPool<byte>.Shared.Rent(this.totalVariablesByteSize);
 
-            ref GraphicsResource2 r0 = ref MemoryMarshal.GetArrayDataReference(resources);
-            ref byte r1 = ref variables[0];
+            ref D3D12_GPU_DESCRIPTOR_HANDLE r0 = ref MemoryMarshal.GetArrayDataReference(resources);
+            ref byte r1 = ref MemoryMarshal.GetArrayDataReference(variables);
 
             // Set the x, y and z counters
             Unsafe.As<byte, int>(ref r1) = x;
@@ -87,8 +89,19 @@ namespace ComputeSharp.Shaders.Translation
 
                         if (totalResourceCount > 0)
                         {
-                            il.EmitAddOffset<GraphicsResource>(this.totalResourceCount);
+                            il.EmitAddOffset<D3D12_GPU_DESCRIPTOR_HANDLE>(this.totalResourceCount);
                         }
+
+                        il.Emit(OpCodes.Ldarg_0);
+                        il.EmitReadMember(member);
+
+                        // Access Buffer<T>.D3D12GpuDescriptorHandle
+                        FieldInfo gpuDescriptorInfo = member.MemberType.GetField(
+                            nameof(Buffer2<byte>.D3D12GpuDescriptorHandle),
+                            BindingFlags.NonPublic | BindingFlags.Instance)!;
+
+                        il.EmitReadMember(gpuDescriptorInfo);
+                        il.EmitStoreToAddress(member.MemberType);
 
                         this.totalResourceCount++;
                     }
