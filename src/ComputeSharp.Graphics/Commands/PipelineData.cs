@@ -41,7 +41,7 @@ namespace ComputeSharp.Graphics.Commands
         public ID3D12PipelineState* D3D12PipelineState => this.d3D12PipelineState;
 
         /// <inheritdoc/>
-        protected override void Dispose(bool disposing)
+        protected override void OnDispose()
         {
             this.d3D12RootSignature.Dispose();
             this.d3D12PipelineState.Dispose();

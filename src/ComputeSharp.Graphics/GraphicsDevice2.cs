@@ -195,7 +195,7 @@ namespace ComputeSharp.Graphics
         }
 
         /// <inheritdoc/>
-        protected override void Dispose(bool disposing)
+        protected override void OnDispose()
         {
             this.d3D12Device.Dispose();
             this.d3D12ComputeCommandQueue.Dispose();

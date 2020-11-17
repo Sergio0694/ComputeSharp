@@ -43,7 +43,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         }
 
         /// <inheritdoc/>
-        protected override void Dispose(bool disposing)
+        protected override void OnDispose()
         {
             D3D12Resource->Release();
         }

@@ -17,7 +17,7 @@ namespace ComputeSharp.Core.Interop
         /// </summary>
         ~NativeObject()
         {
-            CheckAndDispose(false);
+            CheckAndDispose();
         }
 
         /// <summary>
@@ -27,26 +27,25 @@ namespace ComputeSharp.Core.Interop
         {
             GC.SuppressFinalize(this);
 
-            CheckAndDispose(true);
+            CheckAndDispose();
         }
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        private void CheckAndDispose(bool disposing)
+        private void CheckAndDispose()
         {
             if (!this.isDisposed)
             {
                 this.isDisposed = true;
 
-                Dispose(disposing);
+                OnDispose();
             }
         }
 
         /// <summary>
         /// Releases unmanaged and (optionally) managed resources.
         /// </summary>
-        /// <param name="disposing">When set to <see langword="true"/>, indicates to dispose managed resources as well.</param>
-        protected abstract void Dispose(bool disposing);
+        protected abstract void OnDispose();
     }
 }
