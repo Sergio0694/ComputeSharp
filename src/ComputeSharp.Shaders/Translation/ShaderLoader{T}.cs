@@ -151,11 +151,7 @@ namespace ComputeSharp.Shaders.Translation
             if (shaderFields.Count == 0) throw new InvalidOperationException("Empty shader body");
 
             // Descriptor for the buffer for captured scalar/vector variables
-            D3D12_DESCRIPTOR_RANGE1.Init(
-                out D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1,
-                D3D12_DESCRIPTOR_RANGE_TYPE_CBV,
-                1,
-                this.constantBuffersCount++);
+            D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1 = new(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, this.constantBuffersCount++);
 
             this.d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
 
@@ -180,11 +176,7 @@ namespace ComputeSharp.Shaders.Translation
             // Constant buffer
             if (HlslKnownTypes.IsConstantBufferType(fieldType))
             {
-                D3D12_DESCRIPTOR_RANGE1.Init(
-                    out D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1,
-                    D3D12_DESCRIPTOR_RANGE_TYPE_CBV,
-                    1,
-                    this.constantBuffersCount++);
+                D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1 = new(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, this.constantBuffersCount++);
 
                 this.d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
 
@@ -197,11 +189,7 @@ namespace ComputeSharp.Shaders.Translation
             else if (HlslKnownTypes.IsReadOnlyBufferType(fieldType))
             {
                 // Root parameter for a readonly buffer
-                D3D12_DESCRIPTOR_RANGE1.Init(
-                    out D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1,
-                    D3D12_DESCRIPTOR_RANGE_TYPE_SRV,
-                    1,
-                    this.readOnlyBuffersCount++);
+                D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1 = new(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, this.readOnlyBuffersCount++);
 
                 this.d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
 
@@ -214,11 +202,7 @@ namespace ComputeSharp.Shaders.Translation
             else if (HlslKnownTypes.IsReadWriteBufferType(fieldType))
             {
                 // Root parameter for a read write buffer
-                D3D12_DESCRIPTOR_RANGE1.Init(
-                    out D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1,
-                    D3D12_DESCRIPTOR_RANGE_TYPE_UAV,
-                    1,
-                    this.readWriteBuffersCount++);
+                D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1 = new(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, this.readWriteBuffersCount++);
 
                 this.d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
 

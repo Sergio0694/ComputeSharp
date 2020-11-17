@@ -25,7 +25,7 @@ namespace ComputeSharp.Shaders.Translation.Interop
         /// <summary>
         /// Gets a raw pointer to the <see cref="IDxcBlob"/> instance in use.
         /// </summary>
-        public IDxcBlob* DxcBlob => this.dxcBlob;
+        public D3D12_SHADER_BYTECODE D3D12ShaderBytecode => new((ID3DBlob*)this.dxcBlob.Get());
 
         /// <inheritdoc/>
         protected override void OnDispose()
