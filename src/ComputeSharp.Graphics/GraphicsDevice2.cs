@@ -40,14 +40,14 @@ namespace ComputeSharp.Graphics
         private ComPtr<ID3D12Fence> d3D12CopyFence;
 
         /// <summary>
-        /// The <see cref="CommandAllocatorPool2"/> instance for compute operations.
+        /// The <see cref="ID3D12CommandAllocatorPool"/> instance for compute operations.
         /// </summary>
-        private readonly CommandAllocatorPool2 computeCommandAllocatorPool;
+        private readonly ID3D12CommandAllocatorPool computeCommandAllocatorPool;
 
         /// <summary>
-        /// Gets the <see cref="CommandAllocatorPool2"/> instance for copy operations.
+        /// Gets the <see cref="ID3D12CommandAllocatorPool"/> instance for copy operations.
         /// </summary>
-        private readonly CommandAllocatorPool2 copyCommandAllocatorPool;
+        private readonly ID3D12CommandAllocatorPool copyCommandAllocatorPool;
 
         /// <summary>
         /// The <see cref="DescriptorAllocator2"/> instance to use when allocating new buffers.
@@ -77,8 +77,8 @@ namespace ComputeSharp.Graphics
             this.d3D12ComputeFence = d3d12device.Get()->CreateFence();
             this.d3D12CopyFence = d3d12device.Get()->CreateFence();
 
-            this.computeCommandAllocatorPool = new CommandAllocatorPool2(D3D12_COMMAND_LIST_TYPE_COMPUTE);
-            this.copyCommandAllocatorPool = new CommandAllocatorPool2(D3D12_COMMAND_LIST_TYPE_COPY);
+            this.computeCommandAllocatorPool = new ID3D12CommandAllocatorPool(D3D12_COMMAND_LIST_TYPE_COMPUTE);
+            this.copyCommandAllocatorPool = new ID3D12CommandAllocatorPool(D3D12_COMMAND_LIST_TYPE_COPY);
             this.shaderResourceViewDescriptorAllocator = new DescriptorAllocator2(d3d12device);
 
             Name = new string((char*)dxgiDescription1->Description);
@@ -123,7 +123,7 @@ namespace ComputeSharp.Graphics
             this.shaderResourceViewDescriptorAllocator.Allocate(out d3d12CpuDescriptorHandle, out d3d12GpuDescriptorHandle);
         }
 
-        /// <inheritdoc cref="CommandAllocatorPool2.GetCommandAllocator"/>
+        /// <inheritdoc cref="ID3D12CommandAllocatorPool.GetCommandAllocator"/>
         /// <param name="d3d12CommandListType">The type of command allocator to rent.</param>
         internal ComPtr<ID3D12CommandAllocator> GetCommandAllocator(D3D12_COMMAND_LIST_TYPE d3d12CommandListType)
         {
@@ -152,7 +152,7 @@ namespace ComputeSharp.Graphics
         /// <param name="commandList">The input <see cref="CommandList2"/> to execute.</param>
         internal void ExecuteCommandList(ref CommandList2 commandList)
         {
-            ref readonly CommandAllocatorPool2 commandAllocatorPool = ref Unsafe.NullRef<CommandAllocatorPool2>();
+            ref readonly ID3D12CommandAllocatorPool commandAllocatorPool = ref Unsafe.NullRef<ID3D12CommandAllocatorPool>();
             ID3D12CommandQueue* d3D12CommandQueue;
             ID3D12Fence* d3D12Fence;
             ulong d3D12FenceValue;
@@ -175,9 +175,6 @@ namespace ComputeSharp.Graphics
                 default: throw null!;
             }
 
-            // Enqueue the command allocator pool so that it can be reused later
-            commandAllocatorPool.Enqueue(commandList.DetachD3D12CommandAllocator(), d3D12FenceValue);
-
             // Execute the command list and signal to the target fence
             d3D12CommandQueue->ExecuteCommandLists(1, commandList.GetD3D12CommandListAddressOf());
 
@@ -192,6 +189,9 @@ namespace ComputeSharp.Graphics
 
                 ThrowHelper.ThrowIfFailed(result);
             }
+
+            // Enqueue the command allocator pool so that it can be reused later
+            commandAllocatorPool.Enqueue(commandList.DetachD3D12CommandAllocator());
         }
 
         /// <inheritdoc/>
