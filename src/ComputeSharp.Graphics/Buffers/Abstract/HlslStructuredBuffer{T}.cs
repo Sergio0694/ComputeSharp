@@ -11,7 +11,8 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
     /// A <see langword="class"/> representing a typed structured buffer stored on GPU memory
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffer</typeparam>
-    public abstract class HlslStructuredBuffer<T> : HlslBuffer<T> where T : unmanaged
+    public abstract class HlslStructuredBuffer<T> : HlslBuffer<T>
+        where T : unmanaged
     {
         /// <summary>
         /// Creates a new <see cref="HlslStructuredBuffer{T}"/> instance with the specified parameters
