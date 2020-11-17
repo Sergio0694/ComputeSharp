@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Buffers.Enums;
+using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Helpers;
-using Vortice.Direct3D12;
-using CommandList = ComputeSharp.Graphics.Commands.CommandList;
+using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 
 namespace ComputeSharp.Graphics.Buffers.Abstract
 {
@@ -20,16 +20,19 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
         /// <param name="bufferType">The buffer type for the current buffer</param>
-        internal HlslStructuredBuffer(GraphicsDevice device, int size, BufferType bufferType) : base(device, size, size * Unsafe.SizeOf<T>(), bufferType) { }
+        internal HlslStructuredBuffer(GraphicsDevice device, int size, BufferType bufferType)
+            : base(device, size, size * Unsafe.SizeOf<T>(), bufferType)
+        {
+        }
 
         /// <inheritdoc/>
-        public override void GetData(Span<T> span, int offset, int count)
+        public override unsafe void GetData(Span<T> span, int offset, int count)
         {
             using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, count, count * ElementSizeInBytes, BufferType.ReadBack);
 
-            using (CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy))
+            using (CommandList copyCommandList = new CommandList(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY))
             {
-                copyCommandList.CopyBufferRegion(this, offset * ElementSizeInBytes, transferBuffer, 0, count * ElementSizeInBytes);
+                copyCommandList.CopyBufferRegion(D3D12Resource, offset * ElementSizeInBytes, transferBuffer.D3D12Resource, 0, count * ElementSizeInBytes);
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
 
@@ -39,7 +42,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         }
 
         /// <inheritdoc/>
-        public override void SetData(ReadOnlySpan<T> span, int offset, int count)
+        public override unsafe void SetData(ReadOnlySpan<T> span, int offset, int count)
         {
             using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, count, count * ElementSizeInBytes, BufferType.Transfer);
 
@@ -48,21 +51,21 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 MemoryHelper.Copy(span, resource.Pointer, 0, count);
             }
 
-            using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
+            using CommandList copyCommandList = new CommandList(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
-            copyCommandList.CopyBufferRegion(transferBuffer, 0, this, offset * ElementSizeInBytes, count * ElementSizeInBytes);
+            copyCommandList.CopyBufferRegion(transferBuffer.D3D12Resource, 0, D3D12Resource, offset * ElementSizeInBytes, count * ElementSizeInBytes);
             copyCommandList.ExecuteAndWaitForCompletion();
         }
 
         /// <inheritdoc/>
-        public override void SetData(HlslBuffer<T> buffer)
+        public override unsafe void SetData(HlslBuffer<T> buffer)
         {
             if (!buffer.IsPaddingPresent)
             {
                 // Directly copy the input buffer
-                using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
+                using CommandList copyCommandList = new CommandList(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
-                copyCommandList.CopyBufferRegion(buffer, 0, this, 0, SizeInBytes);
+                copyCommandList.CopyBufferRegion(buffer.D3D12Resource, 0, D3D12Resource, 0, SizeInBytes);
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
             else SetDataWithCpuBuffer(buffer);

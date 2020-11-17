@@ -9,13 +9,13 @@ namespace ComputeSharp.Shaders.Translation.Models
     /// A <see langword="struct"/> that contains info on a cached shader.
     /// </summary>
     /// <typeparam name="T">The type of compute shader in use.</typeparam>
-    internal readonly struct CachedShader2<T>
+    internal readonly struct CachedShader<T>
         where T : struct, IComputeShader
     {
         /// <summary>
-        /// The <see cref="ShaderLoader2{T}"/> instance with the shader metadata.
+        /// The <see cref="ShaderLoader{T}"/> instance with the shader metadata.
         /// </summary>
-        public readonly ShaderLoader2<T> Loader;
+        public readonly ShaderLoader<T> Loader;
 
         /// <summary>
         /// The compiled shader bytecode.
@@ -25,14 +25,14 @@ namespace ComputeSharp.Shaders.Translation.Models
         /// <summary>
         /// The map of cached <see cref="PipelineData"/> instances for each GPU in use.
         /// </summary>
-        public readonly ConditionalWeakTable<GraphicsDevice2, PipelineData> CachedPipelines;
+        public readonly ConditionalWeakTable<GraphicsDevice, PipelineData> CachedPipelines;
 
         /// <summary>
         /// Creates a new <see cref="CachedShader{T}"/> instance with the specified parameters.
         /// </summary>
         /// <param name="loader">The <see cref="ShaderLoader{T}"/> instance with the shader metadata.</param>
         /// <param name="bytecode">The compiled shader bytecode.</param>
-        public CachedShader2(ShaderLoader2<T> loader, IDxcBlobObject bytecode)
+        public CachedShader(ShaderLoader<T> loader, IDxcBlobObject bytecode)
         {
             Loader = loader;
             Bytecode = bytecode;

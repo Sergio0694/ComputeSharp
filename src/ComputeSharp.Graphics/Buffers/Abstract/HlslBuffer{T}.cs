@@ -18,7 +18,10 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="size">The number of items to store in the current buffer</param>
         /// <param name="sizeInBytes">The size in bytes for the current buffer</param>
         /// <param name="bufferType">The buffer type for the current buffer</param>
-        private protected HlslBuffer(GraphicsDevice device, int size, int sizeInBytes, BufferType bufferType) : base(device, size, sizeInBytes, bufferType) { }
+        private protected HlslBuffer(GraphicsDevice device, int size, int sizeInBytes, BufferType bufferType)
+            : base(device, size, sizeInBytes, bufferType)
+        {
+        }
 
         /// <summary>
         /// Reads the contents of the current <see cref="HlslBuffer{T}"/> instance and returns an array

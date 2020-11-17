@@ -1,116 +1,142 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-using ComputeSharp.Exceptions;
+using System.Diagnostics.Contracts;
+using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Buffers.Abstract;
-using ComputeSharp.Graphics.Commands.Abstract;
-using SharpGen.Runtime;
-using Vortice.Direct3D12;
+using ComputeSharp.Graphics.Extensions;
+using TerraFX.Interop;
+using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 
 namespace ComputeSharp.Graphics.Commands
 {
     /// <summary>
-    /// A <see langword="class"/> that represents a list of commands to issue to a GPU
+    /// A command list to set and execute operaations on the GPU.
     /// </summary>
-    internal sealed class CommandList : CommandController
+    internal unsafe ref struct CommandList
     {
-        /// <inheritdoc/>
-        public CommandList(GraphicsDevice device, CommandListType commandListType) : base(device, commandListType)
+        /// <summary>
+        /// The <see cref="GraphicsDevice"/> instance associated with the current command list.
+        /// </summary>
+        private readonly GraphicsDevice device;
+
+        /// <summary>
+        /// The command list type being used by the current instance.
+        /// </summary>
+        private readonly D3D12_COMMAND_LIST_TYPE d3d12CommandListType;
+
+        /// <summary>
+        /// The <see cref="ID3D12CommandAllocator"/> object in use by the current instance.
+        /// </summary>
+        private ComPtr<ID3D12CommandAllocator> d3D12CommandAllocator;
+
+        /// <summary>
+        /// The <see cref="ID3D12GraphicsCommandList"/> object in use by the current instance.
+        /// </summary>
+        private ComPtr<ID3D12GraphicsCommandList> d3D12GraphicsCommandList;
+
+        /// <summary>
+        /// Creates a new <see cref="CommandList"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="device">The target <see cref="GraphicsDevice"/> instance to use.</param>
+        /// <param name="d3d12CommandListType">The type of command list to create.</param>
+        public CommandList(GraphicsDevice device, D3D12_COMMAND_LIST_TYPE d3d12CommandListType)
         {
-            CommandAllocator = CommandListType switch
-            {
-                CommandListType.Compute => GraphicsDevice.ComputeAllocatorPool.GetCommandAllocator(),
-                CommandListType.Copy => GraphicsDevice.CopyAllocatorPool.GetCommandAllocator(),
-                _ => throw new NotSupportedException($"Unsupported command list type with value {CommandListType}")
-            };
-
-            Result result = GraphicsDevice.NativeDevice.CreateCommandList(0, commandListType, CommandAllocator, null, out ID3D12GraphicsCommandList? nativeCommandList);
-
-            if (result.Failure)
-            {
-                throw new COMException("Failed to create the commands list", result.Code);
-            }
-
-            NativeCommandList = nativeCommandList!;
+            this.device = device;
+            this.d3d12CommandListType = d3d12CommandListType;
+            this.d3D12CommandAllocator = device.GetCommandAllocator(d3d12CommandListType);
+            this.d3D12GraphicsCommandList = device.D3D12Device->CreateCommandList(d3d12CommandListType, this.d3D12CommandAllocator);
 
             // Set the heap descriptor if the command list is not for copy operations
-            if (CommandListType != CommandListType.Copy)
+            if (d3d12CommandListType is not D3D12_COMMAND_LIST_TYPE_COPY)
             {
-                NativeCommandList.SetDescriptorHeaps(1, new[] { GraphicsDevice.ShaderResourceViewAllocator.DescriptorHeap });
+                device.SetDescriptorHeapForCommandList(this.d3D12GraphicsCommandList);
             }
         }
 
+        /// <summary>
+        /// Gets the command list type being used by the current instance.
+        /// </summary>
+        public readonly D3D12_COMMAND_LIST_TYPE D3d12CommandListType => this.d3d12CommandListType;
 
         /// <summary>
-        /// Gets the <see cref="ID3D12CommandAllocator"/> object in use by the current instance
+        /// Detaches the <see cref="ID3D12CommandAllocator"/> object in use by the current instance.
         /// </summary>
-        public ID3D12CommandAllocator CommandAllocator { get; }
-
-        /// <summary>
-        /// Gets the <see cref="ID3D12GraphicsCommandList"/> object in use by the current instance
-        /// </summary>
-        public ID3D12GraphicsCommandList NativeCommandList { get; }
-
-        /// <summary>
-        /// Copies a memory region from one resource to another
-        /// </summary>
-        /// <param name="source">The source <see cref="GraphicsResource"/> to read from</param>
-        /// <param name="sourceOffset">The starting offset to read the source resource from</param>
-        /// <param name="destination">The destination <see cref="GraphicsResource"/> to write to</param>
-        /// <param name="destinationOffset">The starting offset to write the destination resource from</param>
-        /// <param name="numBytes">The total number of bytes to copy from one resource to another</param>
-        public void CopyBufferRegion(GraphicsResource source, long sourceOffset, GraphicsResource destination, long destinationOffset, long numBytes)
+        /// <returns>The <see cref="ID3D12CommandAllocator"/> object in use, with ownership.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ComPtr<ID3D12CommandAllocator> DetachD3D12CommandAllocator()
         {
-            NativeCommandList.CopyBufferRegion(destination.NativeResource, destinationOffset, source.NativeResource, sourceOffset, numBytes);
+            return this.d3D12CommandAllocator.Move();
         }
 
         /// <summary>
-        /// Binds an input <see cref="GraphicsResource"/> object to a specified root parameter
+        /// Gets a pointer to the <see cref="ID3D12CommandList"/> object in use by the current instance.
         /// </summary>
-        /// <param name="rootParameterIndex">The root parameter index to bind to the input resource</param>
-        /// <param name="resource">The input <see cref="GraphicsResource"/> instance to bind</param>
-        public void SetComputeRootDescriptorTable(int rootParameterIndex, GraphicsResource resource)
+        /// <returns>A double pointer to the current <see cref="ID3D12CommandList"/> object to execute.</returns>
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public readonly ID3D12CommandList** GetD3D12CommandListAddressOf()
         {
-            if (resource.NativeGpuDescriptorHandle == null) throw new InvalidOperationException("Invalid graphics resource GPU descriptor");
-            if (resource.GraphicsDevice != GraphicsDevice) throw new GraphicsDeviceMismatchException(GraphicsDevice, resource);
-
-            NativeCommandList.SetComputeRootDescriptorTable(rootParameterIndex, resource.NativeGpuDescriptorHandle.Value);
+            return this.d3D12GraphicsCommandList.Upcast<ID3D12GraphicsCommandList, ID3D12CommandList>().GetAddressOf();
         }
 
         /// <summary>
-        /// Sets a given <see cref="PipelineState"/> object ready to be executed
+        /// Copies a memory region from one resource to another.
         /// </summary>
-        /// <param name="pipelineState">The input <see cref="PipelineState"/> to setup</param>
-        public void SetPipelineState(PipelineState pipelineState)
+        /// <param name="d3D12ResourceSource">The source <see cref="ID3D12Resource"/> to read from.</param>
+        /// <param name="sourceOffset">The starting offset to read the source resource from.</param>
+        /// <param name="d3d12ResourceDestination">The destination <see cref="ID3D12Resource"/> to write to.</param>
+        /// <param name="destinationOffset">The starting offset to write the destination resource from.</param>
+        /// <param name="numBytes">The total number of bytes to copy from one resource to another.</param>
+        public readonly void CopyBufferRegion(ID3D12Resource* d3D12ResourceSource, int sourceOffset, ID3D12Resource* d3d12ResourceDestination, int destinationOffset, int numBytes)
         {
-            NativeCommandList.SetComputeRootSignature(pipelineState.RootSignature);
-            NativeCommandList.SetPipelineState(pipelineState.NativePipelineState);
+            this.d3D12GraphicsCommandList.Get()->CopyBufferRegion(d3d12ResourceDestination, (uint)destinationOffset, d3D12ResourceSource, (uint)sourceOffset, (uint)numBytes);
         }
 
         /// <summary>
-        /// Dispatches the pending shader using the specified thread group values
+        /// Binds an input <see cref="GraphicsResource"/> object to a specified root parameter.
         /// </summary>
-        /// <param name="threadGroupCountX">The number of thread groups to schedule for the X axis</param>
-        /// <param name="threadGroupCountY">The number of thread groups to schedule for the Y axis</param>
-        /// <param name="threadGroupCountZ">The number of thread groups to schedule for the Z axis</param>
-        public void Dispatch(int threadGroupCountX, int threadGroupCountY, int threadGroupCountZ)
+        /// <param name="rootParameterIndex">The root parameter index to bind to the input resource.</param>
+        /// <param name="resource">The input <see cref="GraphicsResource"/> instance to bind.</param>
+        public readonly void SetComputeRootDescriptorTable(int rootParameterIndex, D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle)
         {
-            NativeCommandList.Dispatch(threadGroupCountX, threadGroupCountY, threadGroupCountZ);
+            this.d3D12GraphicsCommandList.Get()->SetComputeRootDescriptorTable((uint)rootParameterIndex, d3D12GpuDescriptorHandle);
         }
 
         /// <summary>
-        /// Executes the commands in the current commands list, and waits for completion
+        /// Sets a given <see cref="PipelineData"/> object ready to be executed.
+        /// </summary>
+        /// <param name="pipelineState">The input <see cref="PipelineData"/> to setup.</param>
+        public readonly void SetPipelineData(PipelineData pipelineData)
+        {
+            this.d3D12GraphicsCommandList.Get()->SetComputeRootSignature(pipelineData.D3D12RootSignature);
+            this.d3D12GraphicsCommandList.Get()->SetPipelineState(pipelineData.D3D12PipelineState);
+        }
+
+        /// <summary>
+        /// Dispatches the pending shader using the specified thread group values.
+        /// </summary>
+        /// <param name="threadGroupCountX">The number of thread groups to schedule for the X axis.</param>
+        /// <param name="threadGroupCountY">The number of thread groups to schedule for the Y axis.</param>
+        /// <param name="threadGroupCountZ">The number of thread groups to schedule for the Z axis.</param>
+        public readonly void Dispatch(int threadGroupCountX, int threadGroupCountY, int threadGroupCountZ)
+        {
+            this.d3D12GraphicsCommandList.Get()->Dispatch((uint)threadGroupCountX, (uint)threadGroupCountY, (uint)threadGroupCountZ);
+        }
+
+        /// <summary>
+        /// Executes the commands in the current commands list, and waits for completion.
         /// </summary>
         public void ExecuteAndWaitForCompletion()
         {
-            NativeCommandList.Close();
+            this.d3D12GraphicsCommandList.Get()->Close();
 
-            GraphicsDevice.ExecuteCommandList(this);
+            this.device.ExecuteCommandList(ref this);
         }
 
-        /// <inheritdoc/>
-        public override void Dispose()
+        /// <inheritdoc cref="IDisposable.Dispose"/>
+        public void Dispose()
         {
-            NativeCommandList.Dispose();
+            this.d3D12CommandAllocator.Dispose();
+            this.d3D12GraphicsCommandList.Dispose();
         }
     }
 }

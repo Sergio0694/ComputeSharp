@@ -1,89 +1,85 @@
-﻿using System;
+﻿using ComputeSharp.Core.Interop;
+using ComputeSharp.Graphics.Extensions;
+using System;
 using System.Runtime.CompilerServices;
-using Vortice.Direct3D12;
+using TerraFX.Interop;
 
 namespace ComputeSharp.Graphics.Buffers.Abstract
 {
     /// <summary>
-    /// An abstract <see langword="class"/> that represents a graphics resource object
+    /// An abstract <see langword="class"/> that represents a graphics resource object.
     /// </summary>
-    public abstract class GraphicsResource : IDisposable
+    public abstract unsafe class GraphicsResource : NativeObject
     {
         /// <summary>
-        /// Creates a new <see cref="GraphicsResource"/> instance with the specified parameters
+        /// The <see cref="ID3D12Resource"/> instance currently mapped.
         /// </summary>
-        /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
-        protected GraphicsResource(GraphicsDevice device)
+        protected internal readonly ID3D12Resource* D3D12Resource;
+
+        /// <summary>
+        /// Creates a new <see cref="GraphicsResource"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
+        protected GraphicsResource(GraphicsDevice device, ID3D12Resource* d3d12resource)
         {
+            D3D12Resource = d3d12resource;
+
             GraphicsDevice = device;
         }
 
         /// <summary>
-        /// Gets the <see cref="GraphicsDevice"/> associated with the current instance
+        /// Gets the <see cref="GraphicsDevice"/> associated with the current instance.
         /// </summary>
         public GraphicsDevice GraphicsDevice { get; }
 
         /// <summary>
-        /// Gets the <see cref="ID3D12Resource"/> object currently mapped
+        /// Maps the current resource to a specified subresource.
         /// </summary>
-        protected internal ID3D12Resource? NativeResource { get; set; }
-
-        /// <summary>
-        /// Gets the <see cref="CpuDescriptorHandle"/> instance for the current resource
-        /// </summary>
-        protected internal CpuDescriptorHandle? NativeCpuDescriptorHandle { get; protected set; }
-
-        /// <summary>
-        /// Gets the <see cref="GpuDescriptorHandle"/> instance for the current resource
-        /// </summary>
-        protected internal GpuDescriptorHandle? NativeGpuDescriptorHandle { get; protected set; }
-
-        /// <summary>
-        /// Maps the current resource to a specified subresource
-        /// </summary>
-        /// <returns>A <see cref="MappedResource"/> instance representing the mapped resource</returns>
+        /// <returns>A <see cref="MappedResource"/> instance representing the mapped resource.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal MappedResource MapResource()
         {
-            var resource = NativeResource ?? throw new InvalidOperationException("Missing resource");
-
-            return new MappedResource(resource);
+            return new MappedResource(D3D12Resource);
         }
 
         /// <inheritdoc/>
-        public virtual void Dispose() => NativeResource?.Dispose();
+        protected override void OnDispose()
+        {
+            D3D12Resource->Release();
+        }
 
         /// <summary>
-        /// A type representing a mapped memory resource
+        /// A type representing a mapped memory resource.
         /// </summary>
         internal readonly ref struct MappedResource
         {
             /// <summary>
-            /// The target <see cref="ID3D12Resource"/> to map
+            /// The target <see cref="ID3D12Resource"/> to map.
             /// </summary>
-            private readonly ID3D12Resource Resource;
+            private readonly ID3D12Resource* d3D12Resource;
 
             /// <summary>
-            /// The pointer to the mapped resource
+            /// The pointer to the mapped resource.
             /// </summary>
             public readonly IntPtr Pointer;
 
             /// <summary>
-            /// Creates a new <see cref="MappedResource"/> instance for a given <see cref="ID3D12Resource"/> value
+            /// Creates a new <see cref="MappedResource"/> instance for a given <see cref="ID3D12Resource"/> value.
             /// </summary>
-            /// <param name="resource">The input <see cref="ID3D12Resource"/> instance to map</param>
+            /// <param name="resource">The input <see cref="ID3D12Resource"/> instance to map.</param>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public MappedResource(ID3D12Resource resource)
+            public MappedResource(ID3D12Resource* d3d12resource)
             {
-                Resource = resource;
-                Pointer = resource.Map(0);
+                d3D12Resource = d3d12resource;
+
+                Pointer = d3d12resource->Map();
             }
 
             /// <inheritdoc cref="IDisposable.Dispose"/>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Dispose()
             {
-                Resource.Unmap(0);
+                d3D12Resource->Unmap();
             }
         }
     }

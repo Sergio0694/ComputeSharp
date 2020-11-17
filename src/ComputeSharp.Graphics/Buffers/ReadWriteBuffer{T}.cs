@@ -9,14 +9,18 @@ namespace ComputeSharp
     /// A <see langword="class"/> representing a typed read write buffer stored on GPU memory
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffer</typeparam>
-    public sealed class ReadWriteBuffer<T> : HlslStructuredBuffer<T> where T : unmanaged
+    public sealed class ReadWriteBuffer<T> : HlslStructuredBuffer<T>
+        where T : unmanaged
     {
         /// <summary>
         /// Creates a new <see cref="ReadWriteBuffer{T}"/> instance with the specified parameters
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
-        internal ReadWriteBuffer(GraphicsDevice device, int size) : base(device, size, BufferType.ReadWrite) { }
+        internal ReadWriteBuffer(GraphicsDevice device, int size)
+            : base(device, size, BufferType.ReadWrite)
+        {
+        }
 
         /// <summary>
         /// Gets or sets a single <typeparamref name="T"/> value from the current read write buffer

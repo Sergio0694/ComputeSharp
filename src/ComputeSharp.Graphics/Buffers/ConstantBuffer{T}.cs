@@ -6,9 +6,9 @@ using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Enums;
+using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Helpers;
-using Vortice.Direct3D12;
-using CommandList = ComputeSharp.Graphics.Commands.CommandList;
+using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 
 namespace ComputeSharp
 {
@@ -16,14 +16,18 @@ namespace ComputeSharp
     /// A <see langword="class"/> representing a typed read write buffer stored on GPU memory
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffer</typeparam>
-    public sealed class ConstantBuffer<T> : HlslBuffer<T> where T : unmanaged
+    public sealed class ConstantBuffer<T> : HlslBuffer<T>
+        where T : unmanaged
     {
         /// <summary>
         /// Creates a new <see cref="ConstantBuffer{T}"/> instance with the specified parameters
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
-        internal ConstantBuffer(GraphicsDevice device, int size) : base(device, size, size * GetPaddedSize(), BufferType.Constant) { }
+        internal ConstantBuffer(GraphicsDevice device, int size)
+            : base(device, size, size * GetPaddedSize(), BufferType.Constant)
+        {
+        }
 
         /// <summary>
         /// Gets the right padded size for <typeparamref name="T"/> elements to store in the current instance
@@ -91,14 +95,14 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        public override void SetData(HlslBuffer<T> buffer)
+        public override unsafe void SetData(HlslBuffer<T> buffer)
         {
             if (buffer is ConstantBuffer<T>)
             {
                 // Directly copy the input buffer, if possible
-                using CommandList copyCommandList = new CommandList(GraphicsDevice, CommandListType.Copy);
+                using CommandList copyCommandList = new CommandList(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
-                copyCommandList.CopyBufferRegion(buffer, 0, this, 0, SizeInBytes);
+                copyCommandList.CopyBufferRegion(buffer.D3D12Resource, 0, D3D12Resource, 0, SizeInBytes);
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
             else SetDataWithCpuBuffer(buffer);
