@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
@@ -59,7 +60,9 @@ namespace ComputeSharp.Graphics.Helpers
 
             Guid dxgiFactory4Guid = FX.IID_IDXGIFactory4;
 
-            FX.CreateDXGIFactory2(0u, &dxgiFactory4Guid, dxgiFactory4.GetVoidAddressOf()).Assert();
+            EnableDebugMode();
+
+            FX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, &dxgiFactory4Guid, dxgiFactory4.GetVoidAddressOf()).Assert();
 
             uint i = 0;
 
@@ -92,6 +95,40 @@ namespace ComputeSharp.Graphics.Helpers
                 {
                     return true;
                 }
+            }
+        }
+
+        /// <summary>
+        /// The creation flags for <see cref="IDXGIFactory"/> instances.
+        /// </summary>
+        private const uint IDXGIFactoryCreationFlags =
+#if DEBUG
+            FX.DXGI_CREATE_FACTORY_DEBUG;
+#else
+            0;
+#endif
+
+        /// <summary>
+        /// Enables the debug layer for DirectX APIs.
+        /// </summary>
+        [Conditional("DEBUG")]
+        private static unsafe void EnableDebugMode()
+        {
+            using ComPtr<ID3D12Debug> d3D12Debug = default;
+            using ComPtr<ID3D12Debug1> d3D12Debug1 = default;
+
+            Guid d3D12DebugGuid = FX.IID_ID3D12Debug;
+
+            FX.D3D12GetDebugInterface(&d3D12DebugGuid, d3D12Debug.GetVoidAddressOf()).Assert();
+
+            d3D12Debug.Get()->EnableDebugLayer();
+
+            Guid d3D12Debug1Guid = FX.IID_ID3D12Debug1;
+
+            if (FX.SUCCEEDED(d3D12Debug.CopyTo(d3D12Debug1.GetAddressOf())))
+            {
+                d3D12Debug1.Get()->SetEnableGPUBasedValidation(FX.TRUE);
+                d3D12Debug1.Get()->SetEnableSynchronizedCommandQueueValidation(FX.TRUE);
             }
         }
     }
