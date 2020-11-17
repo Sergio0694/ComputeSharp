@@ -2,8 +2,6 @@
 using System;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_PIPELINE_STATE_FLAGS;
-using static TerraFX.Interop.D3D12_ROOT_PARAMETER_TYPE;
-using static TerraFX.Interop.D3D12_SHADER_VISIBILITY;
 using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Shaders.Extensions
@@ -35,11 +33,7 @@ namespace ComputeSharp.Shaders.Extensions
                 // Pack each descriptor range into a root parameter with that single range as content
                 for (int i = 0; i < d3D12DescriptorRanges1.Length; i++)
                 {
-                    D3D12_ROOT_PARAMETER1* d3D12RootParameter1 = d3D12RootParameters1 + i;
-                    d3D12RootParameter1->ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-                    d3D12RootParameter1->ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-
-                    D3D12_ROOT_DESCRIPTOR_TABLE1.Init(out d3D12RootParameter1->DescriptorTable, 1, d3D12DescriptorRange1 + i);
+                    D3D12_ROOT_PARAMETER1.InitAsDescriptorTable(out d3D12RootParameters1[i], 1, d3D12DescriptorRange1 + i);
                 }
 
                 // Root signature description wrapping the packed collection of root parameters
