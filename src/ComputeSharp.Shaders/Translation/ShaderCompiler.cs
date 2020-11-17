@@ -48,9 +48,9 @@ namespace ComputeSharp.Shaders.Translation
 
             dxcLibrary.Get()->CreateIncludeHandler(dxcIncludeHandler.GetAddressOf()).Assert();
 
-            DxcCompiler = dxcCompiler;
-            DxcLibrary = dxcLibrary;
-            DxcIncludeHandler = dxcIncludeHandler;
+            DxcCompiler = dxcCompiler.Move();
+            DxcLibrary = dxcLibrary.Move();
+            DxcIncludeHandler = dxcIncludeHandler.Move();
         }
 
         /// <summary>
