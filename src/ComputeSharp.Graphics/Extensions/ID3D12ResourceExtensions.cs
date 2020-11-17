@@ -19,9 +19,7 @@ namespace ComputeSharp.Graphics.Extensions
         {
             IntPtr ptr;
 
-            int result = d3d12resource.Map(0, null, (void**)&ptr);
-
-            ThrowHelper.ThrowIfFailed(result);
+            d3d12resource.Map(0, null, (void**)&ptr).Assert();
 
             return ptr;
         }

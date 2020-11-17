@@ -28,8 +28,6 @@ namespace ComputeSharp.Shaders.Extensions
             using ComPtr<ID3DBlob> d3D3BlobError = default;
             using ComPtr<ID3D12RootSignature> d3D12RootSignature = default;
 
-            int result;
-
             fixed (D3D12_DESCRIPTOR_RANGE1* d3D12DescriptorRange1 = d3D12DescriptorRanges1)
             {
                 D3D12_ROOT_PARAMETER1* d3D12RootParameters1 = stackalloc D3D12_ROOT_PARAMETER1[d3D12DescriptorRanges1.Length];
@@ -52,24 +50,20 @@ namespace ComputeSharp.Shaders.Extensions
 
                 // Serialize the root signature from the data just computed. When this is done
                 // we just work with the resulting blobs, so the input data can be unpinned.
-                result = FX.D3D12SerializeVersionedRootSignature(
+                FX.D3D12SerializeVersionedRootSignature(
                     &d3d12VersionedRootSignatureDescription,
                     d3D3Blob.GetAddressOf(),
-                    d3D3BlobError.GetAddressOf());
-
-                ThrowHelper.ThrowIfFailed(result, d3D3BlobError);
+                    d3D3BlobError.GetAddressOf()).Assert();
             }
 
             Guid d3D12RootSignatureGuid = FX.IID_ID3D12RootSignature;
 
-            result = d3d12device.CreateRootSignature(
+            d3d12device.CreateRootSignature(
                 0,
                 d3D3Blob.Get()->GetBufferPointer(),
                 d3D3Blob.Get()->GetBufferSize(),
                 &d3D12RootSignatureGuid,
-                d3D12RootSignature.GetVoidAddressOf());
-
-            ThrowHelper.ThrowIfFailed(result);
+                d3D12RootSignature.GetVoidAddressOf()).Assert();
 
             return d3D12RootSignature.Move();
         }
@@ -97,12 +91,10 @@ namespace ComputeSharp.Shaders.Extensions
             d3d12ComputePipelineStateDescription.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
             Guid d3d12ComputePipelineStateGuid = FX.IID_ID3D12PipelineState;
 
-            int result = d3d12device.CreateComputePipelineState(
+            d3d12device.CreateComputePipelineState(
                 &d3d12ComputePipelineStateDescription,
                 &d3d12ComputePipelineStateGuid,
-                d3D12PipelineState.GetVoidAddressOf());
-
-            ThrowHelper.ThrowIfFailed(result);
+                d3D12PipelineState.GetVoidAddressOf()).Assert();
 
             return d3D12PipelineState.Move();
         }

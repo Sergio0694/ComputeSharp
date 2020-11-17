@@ -178,16 +178,12 @@ namespace ComputeSharp.Graphics
             // Execute the command list and signal to the target fence
             d3D12CommandQueue->ExecuteCommandLists(1, commandList.GetD3D12CommandListAddressOf());
 
-            int result = d3D12CommandQueue->Signal(d3D12Fence, d3D12FenceValue);
-
-            ThrowHelper.ThrowIfFailed(result);
+            d3D12CommandQueue->Signal(d3D12Fence, d3D12FenceValue).Assert();
 
             // If the fence value hasn't been reached, wait until the operation completes
             if (d3D12FenceValue > d3D12Fence->GetCompletedValue())
             {
-                result = d3D12Fence->SetEventOnCompletion(d3D12FenceValue, default);
-
-                ThrowHelper.ThrowIfFailed(result);
+                d3D12Fence->SetEventOnCompletion(d3D12FenceValue, default).Assert();
             }
 
             // Enqueue the command allocator pool so that it can be reused later

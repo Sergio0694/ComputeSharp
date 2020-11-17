@@ -55,9 +55,7 @@ namespace ComputeSharp.Graphics.Commands
             {
                 if (this.d3d12CommandAllocatorQueue.TryDequeue(out *&d3D12CommandAllocator))
                 {
-                    int result = d3D12CommandAllocator.Get()->Reset();
-
-                    ThrowHelper.ThrowIfFailed(result);
+                    d3D12CommandAllocator.Get()->Reset().Assert();
 
                     return d3D12CommandAllocator.Move();
                 }

@@ -35,12 +35,10 @@ namespace ComputeSharp.Graphics.Extensions
             d3d12CommandQueueDesc.NodeMask = 0;
             Guid d3d12CommandQueueDescGuid = FX.IID_ID3D12CommandQueue;
 
-            int result = d3d12device.CreateCommandQueue(
+            d3d12device.CreateCommandQueue(
                 &d3d12CommandQueueDesc,
                 &d3d12CommandQueueDescGuid,
-                d3D12CommandQueue.GetVoidAddressOf());
-
-            ThrowHelper.ThrowIfFailed(result);
+                d3D12CommandQueue.GetVoidAddressOf()).Assert();
 
             return d3D12CommandQueue.Move();
         }
@@ -57,13 +55,11 @@ namespace ComputeSharp.Graphics.Extensions
 
             Guid d3D12FenceGuid = FX.IID_ID3D12Fence;
 
-            int result = d3d12device.CreateFence(
+            d3d12device.CreateFence(
                 0,
                 D3D12_FENCE_FLAG_NONE,
                 &d3D12FenceGuid,
-                d3d12Fence.GetVoidAddressOf());
-
-            ThrowHelper.ThrowIfFailed(result);
+                d3d12Fence.GetVoidAddressOf()).Assert();
 
             return d3d12Fence.Move();
         }
@@ -86,12 +82,10 @@ namespace ComputeSharp.Graphics.Extensions
             d3d12DescriptorHeapDesc.NodeMask = 0;
             Guid d3d12DescriptorHeapDescGuid = FX.IID_ID3D12DescriptorHeap;
 
-            int result = d3d12device.CreateDescriptorHeap(
+            d3d12device.CreateDescriptorHeap(
                 &d3d12DescriptorHeapDesc,
                 &d3d12DescriptorHeapDescGuid,
-                d3d12DescriptorHeap.GetVoidAddressOf());
-
-            ThrowHelper.ThrowIfFailed(result);
+                d3d12DescriptorHeap.GetVoidAddressOf()).Assert();
 
             return d3d12DescriptorHeap.Move();
         }
@@ -121,16 +115,14 @@ namespace ComputeSharp.Graphics.Extensions
             D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Buffer(width, d3D12ResourceFlags);
             Guid d3D12ResourceGuid = FX.IID_ID3D12Resource;
 
-            int result = d3d12device.CreateCommittedResource(
+            d3d12device.CreateCommittedResource(
                 &d3D12HeapProperties,
                 D3D12_HEAP_FLAGS.D3D12_HEAP_FLAG_NONE,
                 &d3D12ResourceDescription,
                 d3D12ResourceStates,
                 null,
                 &d3D12ResourceGuid,
-                d3D12Resource.GetVoidAddressOf());
-
-            ThrowHelper.ThrowIfFailed(result);
+                d3D12Resource.GetVoidAddressOf()).Assert();
 
             return d3D12Resource.Move();
         }
@@ -150,12 +142,10 @@ namespace ComputeSharp.Graphics.Extensions
 
             Guid d3D12CommandAllocatorGuid = FX.IID_ID3D12CommandAllocator;
 
-            int result = d3d12device.CreateCommandAllocator(
+            d3d12device.CreateCommandAllocator(
                 d3d12CommandListType,
                 &d3D12CommandAllocatorGuid,
-                d3D12CommandAllocator.GetVoidAddressOf());
-
-            ThrowHelper.ThrowIfFailed(result);
+                d3D12CommandAllocator.GetVoidAddressOf()).Assert();
 
             return d3D12CommandAllocator.Move();
         }
@@ -176,15 +166,13 @@ namespace ComputeSharp.Graphics.Extensions
 
             Guid d3D12GraphicsCommandListGuid = FX.IID_ID3D12GraphicsCommandList;
 
-            int result = d3d12device.CreateCommandList(
+            d3d12device.CreateCommandList(
                 0,
                 d3d12CommandListType,
                 d3D12CommandAllocator,
                 null,
                 &d3D12GraphicsCommandListGuid,
-                d3d12GraphicsCommandList.GetVoidAddressOf());
-
-            ThrowHelper.ThrowIfFailed(result);
+                d3d12GraphicsCommandList.GetVoidAddressOf()).Assert();
 
             return d3d12GraphicsCommandList.Move();
         }
@@ -202,9 +190,7 @@ namespace ComputeSharp.Graphics.Extensions
         {
             TFeature feature;
 
-            int result = d3d12device.CheckFeatureSupport(d3d12feature, &feature, (uint)sizeof(TFeature));
-
-            ThrowHelper.ThrowIfFailed(result);
+            d3d12device.CheckFeatureSupport(d3d12feature, &feature, (uint)sizeof(TFeature)).Assert();
 
             return feature;
         }

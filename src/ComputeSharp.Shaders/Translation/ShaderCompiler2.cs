@@ -43,17 +43,10 @@ namespace ComputeSharp.Shaders.Translation
             Guid dxcLibraryCLGuid = FX.CLSID_DxcLibrary;
             Guid dxcLibraryGuid = FX.IID_IDxcLibrary;
 
-            int result = FX.DxcCreateInstance(&dxcCompilerCLGuid, &dxcCompilerGuid, dxcCompiler.GetVoidAddressOf());
+            FX.DxcCreateInstance(&dxcCompilerCLGuid, &dxcCompilerGuid, dxcCompiler.GetVoidAddressOf()).Assert();
+            FX.DxcCreateInstance(&dxcLibraryCLGuid, &dxcLibraryGuid, dxcLibrary.GetVoidAddressOf()).Assert();
 
-            ThrowHelper.ThrowIfFailed(result);
-
-            result = FX.DxcCreateInstance(&dxcLibraryCLGuid, &dxcLibraryGuid, dxcLibrary.GetVoidAddressOf());
-
-            ThrowHelper.ThrowIfFailed(result);
-
-            result = dxcLibrary.Get()->CreateIncludeHandler(dxcIncludeHandler.GetAddressOf());
-
-            ThrowHelper.ThrowIfFailed(result);
+            dxcLibrary.Get()->CreateIncludeHandler(dxcIncludeHandler.GetAddressOf()).Assert();
 
             DxcCompiler = dxcCompiler;
             DxcLibrary = dxcLibrary;
@@ -72,14 +65,14 @@ namespace ComputeSharp.Shaders.Translation
             using ComPtr<IDxcOperationResult> dxcOperationResult = default;
             using ComPtr<IDxcBlob> dxcBlobBytecode = default;
 
-            int result;
-
             // Get the encoded blob from the source code
             fixed (char* p = source)
             {
-                result = DxcLibrary.Get()->CreateBlobWithEncodingOnHeapCopy(p, (uint)source.Length * 2, 1200, dxcBlobEncoding.GetAddressOf());
-
-                ThrowHelper.ThrowIfFailed(result);
+                DxcLibrary.Get()->CreateBlobWithEncodingOnHeapCopy(
+                    p,
+                    (uint)source.Length * 2,
+                    1200,
+                    dxcBlobEncoding.GetAddressOf()).Assert();
             }
 
             // Try to compile the new compute shader
@@ -89,7 +82,7 @@ namespace ComputeSharp.Shaders.Translation
             {
                 char nullTerminator = '\0';
 
-                result = DxcCompiler.Get()->Compile(
+                DxcCompiler.Get()->Compile(
                     dxcBlobEncoding.Upcast<IDxcBlobEncoding, IDxcBlob>().Get(),
                     (ushort*)&nullTerminator,
                     (ushort*)entryPoint,
@@ -99,23 +92,17 @@ namespace ComputeSharp.Shaders.Translation
                     null,
                     0,
                     DxcIncludeHandler.Get(),
-                    dxcOperationResult.GetAddressOf());
-
-                ThrowHelper.ThrowIfFailed(result);
+                    dxcOperationResult.GetAddressOf()).Assert();
             }
 
             int status;
 
-            result = dxcOperationResult.Get()->GetStatus(&status);
-
-            ThrowHelper.ThrowIfFailed(result);
+            dxcOperationResult.Get()->GetStatus(&status).Assert();
 
             // The compilation was successful, so we can extract the shader bytecode
             if (status == 0)
             {
-                result = dxcOperationResult.Get()->GetResult(dxcBlobBytecode.GetAddressOf());
-
-                ThrowHelper.ThrowIfFailed(result);
+                dxcOperationResult.Get()->GetResult(dxcBlobBytecode.GetAddressOf()).Assert();
 
                 return dxcBlobBytecode.Move();
             }
@@ -134,17 +121,13 @@ namespace ComputeSharp.Shaders.Translation
         {
             using ComPtr<IDxcBlobEncoding> dxcBlobEncodingError = default;
 
-            int result = dxcOperationResult.Get()->GetErrorBuffer(dxcBlobEncodingError.GetAddressOf());
-
-            ThrowHelper.ThrowIfFailed(result);
+            dxcOperationResult.Get()->GetErrorBuffer(dxcBlobEncodingError.GetAddressOf()).Assert();
 
             using ComPtr<IDxcBlobUtf16> dxcBlobUtf16Error = default;
 
-            result = DxcLibrary.Get()->GetBlobAsUtf16(
+            DxcLibrary.Get()->GetBlobAsUtf16(
                 dxcBlobEncodingError.Upcast<IDxcBlobEncoding, IDxcBlob>().Get(),
-                dxcBlobUtf16Error.Upcast<IDxcBlobUtf16, IDxcBlobEncoding>().GetAddressOf());
-
-            ThrowHelper.ThrowIfFailed(result);
+                dxcBlobUtf16Error.Upcast<IDxcBlobUtf16, IDxcBlobEncoding>().GetAddressOf()).Assert();
 
             string message = new string(
                 (char*)dxcBlobUtf16Error.Get()->GetStringPointer(),
