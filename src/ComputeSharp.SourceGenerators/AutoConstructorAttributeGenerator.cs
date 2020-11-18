@@ -29,7 +29,7 @@ namespace ComputeSharp.SourceGenerators
                 /// A shader that indicates that a target shader type should get an automatic constructor for all fields.
                 /// </summary>
                 [AttributeUsage(AttributeTargets.Struct, AllowMultiple = false)]
-                internal sealed class AutoConstructorAttribute : Attribute
+                public sealed class AutoConstructorAttribute : Attribute
                 {
                 }
             }";
