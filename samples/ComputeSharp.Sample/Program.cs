@@ -41,15 +41,10 @@ namespace ComputeSharp.Sample
         /// <summary>
         /// Kernel for <see cref="Main"/>
         /// </summary>
+        [AutoConstructor]
         private readonly struct MainKernel : IComputeShader
         {
             private readonly ReadWriteBuffer<float> buffer;
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public MainKernel(ReadWriteBuffer<float> buffer)
-            {
-                this.buffer = buffer;
-            }
 
             /// <inheritdoc/>
             public void Execute(ThreadIds ids)
