@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Helpers;
 
@@ -26,5 +28,16 @@ namespace ComputeSharp
         /// <exception cref="NotSupportedException">Thrown when a default device is not available.</exception>
         /// <remarks>Make sure to check <see cref="IsSupported"/> before accessing this property.</remarks>
         public static GraphicsDevice Default => DefaultFactory.Value;
+
+        /// <summary>
+        /// Executes a query on the currently available DX12.0 devices matching a given predicate.
+        /// </summary>
+        /// <param name="predicate">The predicate to use to select the devices to create.</param>
+        /// <returns>A sequence of <see cref="GraphicsDevice"/> instances matching <paramref name="predicate"/>.</returns>
+        [Pure]
+        public static IEnumerable<GraphicsDevice> QueryDevices(Predicate<GraphicsDeviceInfo> predicate)
+        {
+            return new DeviceHelper.DeviceQuery(predicate);
+        }
     }
 }

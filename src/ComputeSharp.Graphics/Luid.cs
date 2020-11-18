@@ -9,8 +9,12 @@ namespace ComputeSharp.Graphics
     /// </summary>
     public readonly struct Luid : IEquatable<Luid>
     {
+        #pragma warning disable CS0649
+
         private readonly uint lowPart;
         private readonly int highPart;
+
+        #pragma warning restore
 
         /// <inheritdoc/>
         [Pure]

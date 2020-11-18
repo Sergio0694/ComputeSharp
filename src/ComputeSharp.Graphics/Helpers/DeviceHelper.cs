@@ -10,7 +10,7 @@ namespace ComputeSharp.Graphics.Helpers
     /// <summary>
     /// A <see langword="class"/> with methods to inspect the available devices on the current machine.
     /// </summary>
-    internal static class DeviceHelper
+    internal static partial class DeviceHelper
     {
         /// <summary>
         /// Gets whether or not there is a default device available, without creating it.
