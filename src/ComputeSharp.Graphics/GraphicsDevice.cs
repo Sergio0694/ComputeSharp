@@ -136,7 +136,7 @@ namespace ComputeSharp.Graphics
             return d3d12CommandListType switch
             {
                 D3D12_COMMAND_LIST_TYPE_COMPUTE => this.computeCommandAllocatorPool.GetCommandAllocator(this.d3D12Device, this.d3D12ComputeFence),
-                D3D12_COMMAND_LIST_TYPE_COPY => this.computeCommandAllocatorPool.GetCommandAllocator(this.d3D12Device, this.d3D12CopyFence),
+                D3D12_COMMAND_LIST_TYPE_COPY => this.copyCommandAllocatorPool.GetCommandAllocator(this.d3D12Device, this.d3D12CopyFence),
                 _ => throw null!
             };
         }
