@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 
-namespace ComputeSharp
+namespace ComputeSharp.Graphics
 {
     /// <summary>
     /// A locally unique identifier for a graphics device.

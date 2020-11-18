@@ -67,8 +67,8 @@ namespace ComputeSharp.Graphics
         /// <summary>
         /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="ID3D12Device"/>.
         /// </summary>
-        /// <param name="device">The <see cref="ID3D12Device"/> to use for the new <see cref="GraphicsDevice"/> instance.</param>
-        /// <param name="description">The available info for the new <see cref="GraphicsDevice"/> instance.</param>
+        /// <param name="d3d12device">The <see cref="ID3D12Device"/> to use for the new <see cref="GraphicsDevice"/> instance.</param>
+        /// <param name="dxgiDescription1">The available info for the new <see cref="GraphicsDevice"/> instance.</param>
         internal GraphicsDevice(ComPtr<ID3D12Device> d3d12device, DXGI_ADAPTER_DESC1* dxgiDescription1)
         {
             this.d3D12Device = d3d12device;
