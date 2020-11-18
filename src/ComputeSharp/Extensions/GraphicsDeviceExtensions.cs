@@ -18,7 +18,7 @@ namespace ComputeSharp
         public static void For<T>(this GraphicsDevice device, int x, in T shader)
             where T : struct, IComputeShader
         {
-            ShaderRunner<T>.Run(device, x, 1, 1, shader);
+            ShaderRunner<T>.Run(device, x, 1, 1, in shader);
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace ComputeSharp
         public static void For<T>(this GraphicsDevice device, int x, int y, in T shader)
             where T : struct, IComputeShader
         {
-            ShaderRunner<T>.Run(device, x, y, 1, shader);
+            ShaderRunner<T>.Run(device, x, y, 1, in shader);
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace ComputeSharp
         public static void For<T>(this GraphicsDevice device, int x, int y, int z, in T shader)
             where T : struct, IComputeShader
         {
-            ShaderRunner<T>.Run(device, x, y, z, shader);
+            ShaderRunner<T>.Run(device, x, y, z, in shader);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace ComputeSharp
             in T shader)
             where T : struct, IComputeShader
         {
-            ShaderRunner<T>.Run(device, x, y, z, threadsX, threadsY, threadsZ, shader);
+            ShaderRunner<T>.Run(device, x, y, z, threadsX, threadsY, threadsZ, in shader);
         }
     }
 }

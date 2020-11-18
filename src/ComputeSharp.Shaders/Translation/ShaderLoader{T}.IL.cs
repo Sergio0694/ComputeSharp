@@ -68,7 +68,7 @@ namespace ComputeSharp.Shaders.Translation
             Unsafe.Add(ref Unsafe.As<byte, int>(ref r1), 2) = z;
 
             // Invoke the dynamic method to extract the captured data
-            this.dispatchDataLoader!(shader, ref r0, ref r1);
+            this.dispatchDataLoader!(in shader, ref r0, ref r1);
 
             return new DispatchData(resources, this.totalResourceCount, variables, this.totalVariablesByteSize);
         }

@@ -69,7 +69,7 @@ namespace ComputeSharp.Shaders
             else if (z == 1) threadsX = threadsY = 8;
             else threadsX = threadsY = threadsZ = 4;
 
-            Run(device, x, y, z, threadsX, threadsY, threadsZ, shader);
+            Run(device, x, y, z, threadsX, threadsY, threadsZ, in shader);
         }
 
         /// <summary>
@@ -85,12 +85,16 @@ namespace ComputeSharp.Shaders
         /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
         public static void Run(
             GraphicsDevice device,
-            int x, int y, int z,
-            int threadsX, int threadsY, int threadsZ,
+            int x,
+            int y,
+            int z,
+            int threadsX,
+            int threadsY,
+            int threadsZ,
             in T shader)
         {
             // Create the shader key
-            ShaderKey key = new(ShaderHashCodeProvider.GetHashCode(shader), threadsX, threadsY, threadsZ);
+            ShaderKey key = new(ShaderHashCodeProvider.GetHashCode(in shader), threadsX, threadsY, threadsZ);
             CachedShader<T> shaderData;
             PipelineData? pipelineData;
 
@@ -99,7 +103,7 @@ namespace ComputeSharp.Shaders
                 // Get or preload the shader
                 if (!ShadersCache.TryGetValue(key, out shaderData))
                 {
-                    LoadShader(threadsX, threadsY, threadsZ, shader, out shaderData);
+                    LoadShader(threadsX, threadsY, threadsZ, in shader, out shaderData);
 
                     // Cache for later use
                     ShadersCache.Add(key, shaderData);
@@ -118,7 +122,7 @@ namespace ComputeSharp.Shaders
             commandList.SetPipelineData(pipelineData);
 
             // Extract the dispatch data for the shader invocation
-            using DispatchData dispatchData = shaderData.Loader.GetDispatchData(shader, x, y, z);
+            using DispatchData dispatchData = shaderData.Loader.GetDispatchData(in shader, x, y, z);
 
             // Load the captured buffers
             ReadOnlySpan<D3D12_GPU_DESCRIPTOR_HANDLE> resources = dispatchData.Resources;
@@ -158,7 +162,7 @@ namespace ComputeSharp.Shaders
         private static void LoadShader(int threadsX, int threadsY, int threadsZ, in T shader, out CachedShader<T> shaderData)
         {
             // Load the input shader
-            ShaderLoader<T> shaderLoader = ShaderLoader<T>.Load(shader);
+            ShaderLoader<T> shaderLoader = ShaderLoader<T>.Load(in shader);
 
             // Render the loaded shader
             string shaderSource = ShaderRenderer.Instance.Render(new ShaderInfo

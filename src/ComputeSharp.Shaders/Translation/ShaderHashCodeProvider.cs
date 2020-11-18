@@ -65,7 +65,7 @@ namespace ComputeSharp.Shaders.Translation
 
             Hasher<T>? hasher = TypeInfo<T>.Hasher;
 
-            if (hasher != null) hash = hasher(hash, shader);
+            if (hasher != null) hash = hasher(hash, in shader);
 
             return hash;
         }
