@@ -68,7 +68,7 @@ namespace ComputeSharp
                     Unsafe.Add(ref spanRef, i) = Unsafe.As<byte, T>(ref targetRef);
                 }
             }
-            else MemoryHelper.Copy(resource.Pointer, offset, span, 0, count);
+            else MemoryHelper.Copy(resource.Pointer, offset, span, count);
         }
 
         /// <inheritdoc/>

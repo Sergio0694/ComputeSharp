@@ -61,7 +61,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             /// <summary>
             /// The pointer to the mapped resource.
             /// </summary>
-            public readonly IntPtr Pointer;
+            public readonly void* Pointer;
 
             /// <summary>
             /// Creates a new <see cref="MappedResource"/> instance for a given <see cref="ID3D12Resource"/> value.

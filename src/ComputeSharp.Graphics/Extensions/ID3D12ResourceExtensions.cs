@@ -15,13 +15,13 @@ namespace ComputeSharp.Graphics.Extensions
         /// <param name="d3d12resource">The target <see cref="ID3D12Resource"/> to map.</param>
         /// <returns>A pointer to the mapped area for <paramref name="d3d12resource"/>.</returns>
         /// <exception cref="Exception">Thrown when the mapping operation fails.</exception>
-        public static IntPtr Map(this ref ID3D12Resource d3d12resource)
+        public static void* Map(this ref ID3D12Resource d3d12resource)
         {
-            IntPtr ptr;
+            void* pointer;
 
-            d3d12resource.Map(0, null, (void**)&ptr).Assert();
+            d3d12resource.Map(0, null, &pointer).Assert();
 
-            return ptr;
+            return pointer;
         }
 
         /// <summary>

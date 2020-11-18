@@ -38,7 +38,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             using MappedResource resource = transferBuffer.MapResource();
 
-            MemoryHelper.Copy(resource.Pointer, 0, span, 0, count);
+            MemoryHelper.Copy(resource.Pointer, 0, span, count);
         }
 
         /// <inheritdoc/>
