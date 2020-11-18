@@ -42,7 +42,7 @@ namespace ComputeSharp.Sample
         /// Kernel for <see cref="Main"/>
         /// </summary>
         [AutoConstructor]
-        private readonly struct MainKernel : IComputeShader
+        private readonly partial struct MainKernel : IComputeShader
         {
             private readonly ReadWriteBuffer<float> buffer;
 
