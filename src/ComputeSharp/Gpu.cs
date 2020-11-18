@@ -30,6 +30,18 @@ namespace ComputeSharp
         public static GraphicsDevice Default => DefaultFactory.Value;
 
         /// <summary>
+        /// Enumerates all the currently available DX12.0 devices. Note that creating a device is a relatively
+        /// expensive operation, so consider using <see cref="QueryDevices"/> to be able to filter the available
+        /// devices before creating them, to reduce the system overhead and avoiding creating unnecessary devices.
+        /// </summary>
+        /// <returns>A sequence of <see cref="GraphicsDevice"/> instances.</returns>
+        [Pure]
+        public static IEnumerable<GraphicsDevice> EnumerateDevices()
+        {
+            return new DeviceHelper.DeviceQuery(static _ => true);
+        }
+
+        /// <summary>
         /// Executes a query on the currently available DX12.0 devices matching a given predicate.
         /// </summary>
         /// <param name="predicate">The predicate to use to select the devices to create.</param>
