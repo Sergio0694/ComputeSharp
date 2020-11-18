@@ -34,7 +34,7 @@ namespace ComputeSharp.SourceGenerators
                 }
             }";
 
-            // Add the GenerateConstructor attribute
+            // Add the [AutoConstructor] attribute
             context.AddSource("__ComputeSharp_AutoConstructorAttribute", SourceText.From(attributeSource, Encoding.UTF8));
 
             // Find all the [AutoConstructor] usages
