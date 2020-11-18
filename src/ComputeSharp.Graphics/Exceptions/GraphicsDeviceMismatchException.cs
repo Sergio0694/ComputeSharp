@@ -28,7 +28,7 @@ namespace ComputeSharp.Exceptions
             builder.AppendLine("Invalid pairing of graphics devices used to run a compute shader and allocate memory buffers.");
 
             // Check if the device is effectively the same but with two instances pointing to the same adapter
-            if (device.D3D12Device->GetAdapterLuid().Equals(resource.GraphicsDevice.D3D12Device->GetAdapterLuid()))
+            if (device.Luid == resource.GraphicsDevice.Luid)
             {
                 builder.AppendLine("The graphics devices used to allocate buffers and run the shader must be the same instance, not just be using the same physical device.");
                 builder.AppendLine("You can still run different shaders on different devices, but a shader run on one device must only use buffers allocated by the same device instance.");
@@ -36,8 +36,8 @@ namespace ComputeSharp.Exceptions
             else
             {
                 // Actually different devices
-                builder.AppendLine($"The target device to run the compute shader is \"{device.Name}\" (id: {device.D3D12Device->GetAdapterLuid()}).");
-                builder.AppendLine($"The buffer of type {resource.GetType().ToFriendlyString()} was allocated on device \"{resource.GraphicsDevice.Name}\" (id: {resource.GraphicsDevice.D3D12Device->GetAdapterLuid()}).");
+                builder.AppendLine($"The target device to run the compute shader is \"{device.Name}\" (id: {device.Luid}).");
+                builder.AppendLine($"The buffer of type {resource.GetType().ToFriendlyString()} was allocated on device \"{resource.GraphicsDevice.Name}\" (id: {resource.GraphicsDevice.Luid}).");
                 builder.AppendLine("Make sure to always allocate buffers on the same device used to actually run the code that accesses them.");
             }
             

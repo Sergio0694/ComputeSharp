@@ -81,6 +81,7 @@ namespace ComputeSharp.Graphics
             this.copyCommandAllocatorPool = new ID3D12CommandAllocatorPool(D3D12_COMMAND_LIST_TYPE_COPY);
             this.shaderResourceViewDescriptorAllocator = new DescriptorAllocator(d3d12device);
 
+            Luid = *(Luid*)&dxgiDescription1->AdapterLuid;
             Name = new string((char*)dxgiDescription1->Description);
             MemorySize = dxgiDescription1->DedicatedVideoMemory;
 
@@ -89,6 +90,11 @@ namespace ComputeSharp.Graphics
             ComputeUnits = d3D12Options1Data.TotalLaneCount;
             WavefrontSize = d3D12Options1Data.WaveLaneCountMin;
         }
+
+        /// <summary>
+        /// Gets the locally unique identifier for the current device.
+        /// </summary>
+        public Luid Luid { get; }
 
         /// <summary>
         /// Gets the name of the current <see cref="GraphicsDevice"/> instance.
