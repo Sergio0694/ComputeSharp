@@ -184,7 +184,7 @@ namespace ComputeSharp.Shaders.Translation
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
 
-                this.hlslBuffersInfo.Add(new ConstantBufferFieldInfo(fieldType, typeName, fieldName, (int)this.constantBuffersCount++));
+                this.hlslBuffersInfo.Add(new ConstantBufferFieldInfo(typeName, fieldName, (int)this.constantBuffersCount++));
             }
             else if (HlslKnownTypes.IsReadOnlyBufferType(fieldType))
             {
@@ -197,7 +197,7 @@ namespace ComputeSharp.Shaders.Translation
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
 
-                this.hlslBuffersInfo.Add(new ReadOnlyBufferFieldInfo(fieldType, typeName, fieldName, (int)this.readOnlyBuffersCount++));
+                this.hlslBuffersInfo.Add(new ReadOnlyBufferFieldInfo(typeName, fieldName, (int)this.readOnlyBuffersCount++));
             }
             else if (HlslKnownTypes.IsReadWriteBufferType(fieldType))
             {
@@ -210,7 +210,7 @@ namespace ComputeSharp.Shaders.Translation
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
 
-                this.hlslBuffersInfo.Add(new ReadWriteBufferFieldInfo(fieldType, typeName, fieldName, (int)this.readWriteBuffersCount++));
+                this.hlslBuffersInfo.Add(new ReadWriteBufferFieldInfo(typeName, fieldName, (int)this.readWriteBuffersCount++));
             }
             else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
             {
@@ -218,7 +218,7 @@ namespace ComputeSharp.Shaders.Translation
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
 
-                this.fieldsInfo.Add(new CapturedFieldInfo(fieldType, typeName, fieldName));
+                this.fieldsInfo.Add(new CapturedFieldInfo(typeName, fieldName));
             }
             else if (fieldType.IsDelegate() &&
                      memberInfo.GetValue(shader) is Delegate func &&
