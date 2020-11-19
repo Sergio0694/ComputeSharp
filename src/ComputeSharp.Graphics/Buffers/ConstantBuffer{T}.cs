@@ -6,7 +6,9 @@ using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Enums;
+using ComputeSharp.Graphics.Buffers.Interop;
 using ComputeSharp.Graphics.Commands;
+using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 
@@ -49,7 +51,7 @@ namespace ComputeSharp
         /// <inheritdoc/>
         public override unsafe void GetData(Span<T> span, int offset, int count)
         {
-            using MappedResource resource = MapResource();
+            using ID3D12ResourceMap resource = D3D12Resource->Map();
 
             if (IsPaddingPresent)
             {
@@ -72,7 +74,7 @@ namespace ComputeSharp
         /// <inheritdoc/>
         public override unsafe void SetData(ReadOnlySpan<T> span, int offset, int count)
         {
-            using MappedResource resource = MapResource();
+            using ID3D12ResourceMap resource = D3D12Resource->Map();
 
             if (IsPaddingPresent)
             {

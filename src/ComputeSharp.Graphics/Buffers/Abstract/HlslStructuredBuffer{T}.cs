@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Buffers.Enums;
+using ComputeSharp.Graphics.Buffers.Interop;
 using ComputeSharp.Graphics.Commands;
+using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 
@@ -36,7 +38,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
 
-            using MappedResource resource = transferBuffer.MapResource();
+            using ID3D12ResourceMap resource = transferBuffer.D3D12Resource->Map();
 
             MemoryHelper.Copy(resource.Pointer, 0, span, count);
         }
@@ -46,7 +48,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         {
             using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, count, count * ElementSizeInBytes, BufferType.Upload);
 
-            using (MappedResource resource = transferBuffer.MapResource())
+            using (ID3D12ResourceMap resource = transferBuffer.D3D12Resource->Map())
             {
                 MemoryHelper.Copy(span, resource.Pointer, 0, count);
             }
