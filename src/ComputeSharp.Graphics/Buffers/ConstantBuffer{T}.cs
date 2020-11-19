@@ -30,23 +30,21 @@ namespace ComputeSharp
         }
 
         /// <summary>
+        /// Gets a single <typeparamref name="T"/> value from the current constant buffer
+        /// </summary>
+        /// <param name="i">The index of the value to get</param>
+        /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else</remarks>
+        public T this[int i] => throw new InvalidExecutionContextException($"{nameof(ConstantBuffer<T>)}<T>[int]");
+
+        /// <summary>
         /// Gets the right padded size for <typeparamref name="T"/> elements to store in the current instance
         /// </summary>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static int GetPaddedSize()
         {
-            int size = Unsafe.SizeOf<T>();
-
-            return (size + 15) & ~15;
+            return (Unsafe.SizeOf<T>() + 15) & ~15;
         }
-
-        /// <summary>
-        /// Gets a single <typeparamref name="T"/> value from the current constant buffer
-        /// </summary>
-        /// <param name="i">The index of the value to get</param>
-        /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else</remarks>
-        public T this[int i] => throw new InvalidExecutionContextException($"{nameof(ConstantBuffer<T>)}<T>[int]");
 
         /// <inheritdoc/>
         public override unsafe void GetData(Span<T> span, int offset, int count)
@@ -56,7 +54,7 @@ namespace ComputeSharp
             if (IsPaddingPresent)
             {
                 ref T spanRef = ref MemoryMarshal.GetReference(span);
-                ref byte resourceRef = ref Unsafe.AsRef<byte>((void*)resource.Pointer);
+                ref byte resourceRef = ref Unsafe.AsRef<byte>(resource.Pointer);
 
                 // Move to the initial ref
                 resourceRef = ref Unsafe.Add(ref resourceRef, offset * GetPaddedSize());
@@ -79,7 +77,7 @@ namespace ComputeSharp
             if (IsPaddingPresent)
             {
                 ref T spanRef = ref MemoryMarshal.GetReference(span);
-                ref byte resourceRef = ref Unsafe.AsRef<byte>((void*)resource.Pointer);
+                ref byte resourceRef = ref Unsafe.AsRef<byte>(resource.Pointer);
 
                 // Move to the initial offset
                 resourceRef = ref Unsafe.Add(ref resourceRef, offset * GetPaddedSize());

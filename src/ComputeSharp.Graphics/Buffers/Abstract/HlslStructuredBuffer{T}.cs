@@ -44,7 +44,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <inheritdoc/>
         public override unsafe void SetData(ReadOnlySpan<T> span, int offset, int count)
         {
-            using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, count, count * ElementSizeInBytes, BufferType.Transfer);
+            using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, count, count * ElementSizeInBytes, BufferType.Upload);
 
             using (MappedResource resource = transferBuffer.MapResource())
             {
