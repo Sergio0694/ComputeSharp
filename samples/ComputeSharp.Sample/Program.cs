@@ -27,7 +27,7 @@ namespace ComputeSharp.Sample
             using ReadWriteBuffer<float> gpuBuffer = Gpu.Default.AllocateReadWriteBuffer(array);
 
             // Run the shader
-            Gpu.Default.For(100, new MainKernel(width, gpuBuffer));
+            Gpu.Default.For(100, new MainKernel(gpuBuffer));
 
             // Get the data back
             gpuBuffer.GetData(array);
@@ -43,22 +43,18 @@ namespace ComputeSharp.Sample
         /// </summary>
         private readonly struct MainKernel : IComputeShader
         {
-            private readonly int width;
-
             private readonly ReadWriteBuffer<float> buffer;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public MainKernel(int width, ReadWriteBuffer<float> buffer)
+            public MainKernel(ReadWriteBuffer<float> buffer)
             {
-                this.width = width;
                 this.buffer = buffer;
             }
 
             /// <inheritdoc/>
             public void Execute(ThreadIds ids)
             {
-                int offset = ids.X + ids.Y * width;
-                buffer[offset] *= 2;
+                buffer[ids.X] *= 2;
             }
         }
 
