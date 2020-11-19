@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics.Contracts;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_QUEUE_FLAGS;
+using static TerraFX.Interop.D3D12_COMMAND_QUEUE_PRIORITY;
 using static TerraFX.Interop.D3D12_CPU_PAGE_PROPERTY;
 using static TerraFX.Interop.D3D12_DESCRIPTOR_HEAP_FLAGS;
 using static TerraFX.Interop.D3D12_DESCRIPTOR_HEAP_TYPE;
@@ -30,7 +31,7 @@ namespace ComputeSharp.Graphics.Extensions
 
             D3D12_COMMAND_QUEUE_DESC d3d12CommandQueueDesc;
             d3d12CommandQueueDesc.Type = type;
-            d3d12CommandQueueDesc.Priority = 0;
+            d3d12CommandQueueDesc.Priority = (int)D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
             d3d12CommandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
             d3d12CommandQueueDesc.NodeMask = 0;
             Guid d3d12CommandQueueDescGuid = FX.IID_ID3D12CommandQueue;
