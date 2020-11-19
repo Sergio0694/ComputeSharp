@@ -95,7 +95,7 @@ namespace ComputeSharp.Graphics.Buffers
         /// <param name="bufferType">The buffer type currently in use.</param>
         /// <param name="sizeInBytes">The size in bytes of the current buffer.</param>
         /// <returns>An <see cref="ID3D12Resource"/> reference for the current buffer.</returns>
-        private static ID3D12Resource* CreateCommittedResource(ID3D12Device* d3D12Device, BufferType bufferType, int sizeInBytes)
+        private static ComPtr<ID3D12Resource> CreateCommittedResource(ID3D12Device* d3D12Device, BufferType bufferType, int sizeInBytes)
         {
             (D3D12_HEAP_TYPE d3D12HeapType,
              D3D12_RESOURCE_FLAGS d3D12ResourceFlags,

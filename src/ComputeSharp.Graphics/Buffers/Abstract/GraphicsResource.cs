@@ -14,15 +14,15 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <summary>
         /// The <see cref="ID3D12Resource"/> instance currently mapped.
         /// </summary>
-        protected internal readonly ID3D12Resource* D3D12Resource;
+        private ComPtr<ID3D12Resource> d3D12Resource;
 
         /// <summary>
         /// Creates a new <see cref="GraphicsResource"/> instance with the specified parameters.
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
-        protected GraphicsResource(GraphicsDevice device, ID3D12Resource* d3d12resource)
+        protected GraphicsResource(GraphicsDevice device, ComPtr<ID3D12Resource> d3d12resource)
         {
-            D3D12Resource = d3d12resource;
+            this.d3D12Resource = d3d12resource;
 
             GraphicsDevice = device;
         }
@@ -33,19 +33,24 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         public GraphicsDevice GraphicsDevice { get; }
 
         /// <summary>
+        /// Gets the <see cref="ID3D12Resource"/> instance currently mapped.
+        /// </summary>
+        internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
+
+        /// <summary>
         /// Maps the current resource to a specified subresource.
         /// </summary>
         /// <returns>A <see cref="MappedResource"/> instance representing the mapped resource.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal MappedResource MapResource()
         {
-            return new MappedResource(D3D12Resource);
+            return new MappedResource(d3D12Resource);
         }
 
         /// <inheritdoc/>
         protected override void OnDispose()
         {
-            D3D12Resource->Release();
+            d3D12Resource.Dispose();
         }
 
         /// <summary>
@@ -70,7 +75,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public MappedResource(ID3D12Resource* d3d12resource)
             {
-                d3D12Resource = d3d12resource;
+                this.d3D12Resource = d3d12resource;
 
                 Pointer = d3d12resource->Map();
             }
@@ -79,7 +84,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Dispose()
             {
-                d3D12Resource->Unmap();
+                this.d3D12Resource->Unmap();
             }
         }
     }
