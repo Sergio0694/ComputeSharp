@@ -9,4 +9,9 @@
     <ProjectReference Include="..\ComputeSharp.Shaders\ComputeSharp.Shaders.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="C:\Program Files (x86)\Windows Kits\10\Redist\D3D\x64\dxcompiler.dll" Visible="False" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="C:\Program Files (x86)\Windows Kits\10\Redist\D3D\x64\dxil.dll" Visible="False" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
