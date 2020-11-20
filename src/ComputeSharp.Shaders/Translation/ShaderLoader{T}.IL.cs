@@ -97,7 +97,7 @@ namespace ComputeSharp.Shaders.Translation
 
                         // Access Buffer<T>.D3D12GpuDescriptorHandle
                         FieldInfo gpuDescriptorInfo = member.MemberType.GetField(
-                            nameof(HlslBuffer<byte>.D3D12GpuDescriptorHandle),
+                            nameof(Buffer<byte>.D3D12GpuDescriptorHandle),
                             BindingFlags.NonPublic | BindingFlags.Instance)!;
 
                         il.EmitReadMember(gpuDescriptorInfo);

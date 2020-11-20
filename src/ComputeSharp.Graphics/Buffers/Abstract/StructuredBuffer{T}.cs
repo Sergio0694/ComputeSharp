@@ -14,16 +14,16 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
     /// A <see langword="class"/> representing a typed structured buffer stored on GPU memory
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffer</typeparam>
-    public abstract class HlslStructuredBuffer<T> : HlslBuffer<T>
+    public abstract class StructuredBuffer<T> : Buffer<T>
         where T : unmanaged
     {
         /// <summary>
-        /// Creates a new <see cref="HlslStructuredBuffer{T}"/> instance with the specified parameters
+        /// Creates a new <see cref="StructuredBuffer{T}"/> instance with the specified parameters
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="size">The number of items to store in the current buffer</param>
         /// <param name="bufferType">The buffer type for the current buffer</param>
-        internal HlslStructuredBuffer(GraphicsDevice device, int size, BufferType bufferType)
+        internal StructuredBuffer(GraphicsDevice device, int size, BufferType bufferType)
             : base(device, size, size * Unsafe.SizeOf<T>(), bufferType)
         {
         }
@@ -69,7 +69,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         }
 
         /// <inheritdoc/>
-        public override unsafe void SetData(HlslBuffer<T> buffer)
+        public override unsafe void SetData(Buffer<T> buffer)
         {
             if (!buffer.IsPaddingPresent)
             {

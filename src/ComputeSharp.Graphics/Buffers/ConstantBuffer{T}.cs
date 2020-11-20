@@ -18,7 +18,7 @@ namespace ComputeSharp
     /// A <see langword="class"/> representing a typed read write buffer stored on GPU memory
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffer</typeparam>
-    public sealed class ConstantBuffer<T> : HlslBuffer<T>
+    public sealed class ConstantBuffer<T> : Buffer<T>
         where T : unmanaged
     {
         /// <summary>
@@ -95,7 +95,7 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        public override unsafe void SetData(HlslBuffer<T> buffer)
+        public override unsafe void SetData(Buffer<T> buffer)
         {
             if (buffer is ConstantBuffer<T>)
             {

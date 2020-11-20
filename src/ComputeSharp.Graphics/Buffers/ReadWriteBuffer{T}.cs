@@ -9,7 +9,7 @@ namespace ComputeSharp
     /// A <see langword="class"/> representing a typed read write buffer stored on GPU memory
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffer</typeparam>
-    public sealed class ReadWriteBuffer<T> : HlslStructuredBuffer<T>
+    public sealed class ReadWriteBuffer<T> : StructuredBuffer<T>
         where T : unmanaged
     {
         /// <summary>

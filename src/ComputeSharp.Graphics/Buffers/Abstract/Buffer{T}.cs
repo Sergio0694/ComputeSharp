@@ -16,7 +16,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
     /// A <see langword="class"/> representing a typed buffer stored on GPU memory.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
-    public unsafe abstract class HlslBuffer<T> : NativeObject
+    public unsafe abstract class Buffer<T> : NativeObject
         where T : unmanaged
     {
         /// <summary>
@@ -50,18 +50,18 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         internal readonly int PaddedElementSizeInBytes;
 
         /// <summary>
-        /// The buffer type for the current <see cref="HlslBuffer{T}"/> instance.
+        /// The buffer type for the current <see cref="Buffer{T}"/> instance.
         /// </summary>
         internal readonly BufferType BufferType;
 
         /// <summary>
-        /// Creates a new <see cref="HlslBuffer{T}"/> instance with the specified parameters.
+        /// Creates a new <see cref="Buffer{T}"/> instance with the specified parameters.
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
         /// <param name="size">The number of items to store in the current buffer.</param>
         /// <param name="sizeInBytes">The size in bytes for the current buffer.</param>
         /// <param name="bufferType">The buffer type for the current buffer.</param>
-        internal HlslBuffer(GraphicsDevice device, int size, int sizeInBytes, BufferType bufferType)
+        internal Buffer(GraphicsDevice device, int size, int sizeInBytes, BufferType bufferType)
         {
             this.d3D12Resource = device.D3D12Device->CreateCommittedResource(bufferType, sizeInBytes);
 
@@ -104,14 +104,14 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
 
         /// <summary>
-        /// Reads the contents of the current <see cref="HlslBuffer{T}"/> instance and returns an array
+        /// Reads the contents of the current <see cref="Buffer{T}"/> instance and returns an array
         /// </summary>
         /// <returns>A <typeparamref name="T"/> array with the contents of the current buffer</returns>
         [Pure]
         public T[] GetData() => GetData(0, Size);
 
         /// <summary>
-        /// Reads the contents of the current <see cref="HlslBuffer{T}"/> instance in a given range and returns an array
+        /// Reads the contents of the current <see cref="Buffer{T}"/> instance in a given range and returns an array
         /// </summary>
         /// <param name="offset">The offset to start reading data from</param>
         /// <param name="count">The number of items to read</param>
@@ -126,13 +126,13 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         }
 
         /// <summary>
-        /// Reads the contents of the current <see cref="HlslBuffer{T}"/> instance and writes them into a target <see cref="Span{T}"/>
+        /// Reads the contents of the current <see cref="Buffer{T}"/> instance and writes them into a target <see cref="Span{T}"/>
         /// </summary>
         /// <param name="span">The input <see cref="Span{T}"/> to write data to</param>
         public void GetData(Span<T> span) => GetData(span, 0, Size);
 
         /// <summary>
-        /// Reads the contents of the specified range from the current <see cref="HlslBuffer{T}"/> instance and writes them into a target <see cref="Span{T}"/>
+        /// Reads the contents of the specified range from the current <see cref="Buffer{T}"/> instance and writes them into a target <see cref="Span{T}"/>
         /// </summary>
         /// <param name="span">The input <see cref="Span{T}"/> to write data to</param>
         /// <param name="offset">The offset to start reading data from</param>
@@ -140,13 +140,13 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         public abstract void GetData(Span<T> span, int offset, int count);
 
         /// <summary>
-        /// Writes the contents of a given <typeparamref name="T"/> array to the current <see cref="HlslBuffer{T}"/> instance
+        /// Writes the contents of a given <typeparamref name="T"/> array to the current <see cref="Buffer{T}"/> instance
         /// </summary>
         /// <param name="array">The input <typeparamref name="T"/> array to read data from</param>
         public void SetData(T[] array) => SetData(array.AsSpan());
 
         /// <summary>
-        /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="HlslBuffer{T}"/> instance
+        /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="Buffer{T}"/> instance
         /// </summary>
         /// <param name="array">The input <typeparamref name="T"/> array to read data from</param>
         /// <param name="offset">The offset to start writing data to</param>
@@ -154,13 +154,13 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         public void SetData(T[] array, int offset, int count) => SetData(array.AsSpan(), offset, count);
 
         /// <summary>
-        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to the current <see cref="HlslBuffer{T}"/> instance
+        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to the current <see cref="Buffer{T}"/> instance
         /// </summary>
         /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> to read data from</param>
         public void SetData(ReadOnlySpan<T> span) => SetData(span, 0, Size);
 
         /// <summary>
-        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to a specified area of the current <see cref="HlslBuffer{T}"/> instance
+        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to a specified area of the current <see cref="Buffer{T}"/> instance
         /// </summary>
         /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> to read data from</param>
         /// <param name="offset">The offset to start writing data to</param>
@@ -168,16 +168,16 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         public abstract void SetData(ReadOnlySpan<T> span, int offset, int count);
 
         /// <summary>
-        /// Writes the contents of a given <see cref="HlslBuffer{T}"/> to the current <see cref="HlslBuffer{T}"/> instance
+        /// Writes the contents of a given <see cref="Buffer{T}"/> to the current <see cref="Buffer{T}"/> instance
         /// </summary>
-        /// <param name="buffer">The input <see cref="HlslBuffer{T}"/> to read data from</param>
-        public abstract void SetData(HlslBuffer<T> buffer);
+        /// <param name="buffer">The input <see cref="Buffer{T}"/> to read data from</param>
+        public abstract void SetData(Buffer<T> buffer);
 
         /// <summary>
-        /// Writes the contents of a given <see cref="HlslBuffer{T}"/> to the current <see cref="HlslBuffer{T}"/> instance, using a temporary CPU buffer
+        /// Writes the contents of a given <see cref="Buffer{T}"/> to the current <see cref="Buffer{T}"/> instance, using a temporary CPU buffer
         /// </summary>
-        /// <param name="buffer">The input <see cref="HlslBuffer{T}"/> to read data from</param>
-        protected void SetDataWithCpuBuffer(HlslBuffer<T> buffer)
+        /// <param name="buffer">The input <see cref="Buffer{T}"/> to read data from</param>
+        protected void SetDataWithCpuBuffer(Buffer<T> buffer)
         {
             // Create a temporary array
             T[] array = ArrayPool<T>.Shared.Rent(buffer.Size);
