@@ -1,7 +1,9 @@
-﻿using ComputeSharp.Exceptions;
+﻿using System.Diagnostics;
+using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Enums;
+using ComputeSharp.Graphics.Buffers.Views;
 
 namespace ComputeSharp
 {
@@ -9,6 +11,8 @@ namespace ComputeSharp
     /// A <see langword="class"/> representing a typed readonly buffer stored on GPU memory
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffer</typeparam>
+    [DebuggerTypeProxy(typeof(BufferDebugView<>))]
+    [DebuggerDisplay("{ToString(),raw}")]
     public sealed class ReadOnlyBuffer<T> : StructuredBuffer<T>
         where T : unmanaged
     {
@@ -28,5 +32,11 @@ namespace ComputeSharp
         /// <param name="i">The index of the value to get</param>
         /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else</remarks>
         public T this[int i] => throw new InvalidExecutionContextException($"{nameof(ReadOnlyBuffer<T>)}<T>[int]");
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"ComputeSharp.ReadOnlyBuffer<{typeof(T)}>[{Size}]";
+        }
     }
 }

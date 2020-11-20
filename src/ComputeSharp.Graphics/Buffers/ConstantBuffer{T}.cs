@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -7,6 +8,7 @@ using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Graphics.Buffers.Enums;
 using ComputeSharp.Graphics.Buffers.Interop;
+using ComputeSharp.Graphics.Buffers.Views;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
@@ -18,6 +20,8 @@ namespace ComputeSharp
     /// A <see langword="class"/> representing a typed read write buffer stored on GPU memory
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffer</typeparam>
+    [DebuggerTypeProxy(typeof(BufferDebugView<>))]
+    [DebuggerDisplay("{ToString(),raw}")]
     public sealed class ConstantBuffer<T> : Buffer<T>
         where T : unmanaged
     {
@@ -106,6 +110,12 @@ namespace ComputeSharp
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
             else SetDataWithCpuBuffer(buffer);
+        }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"ComputeSharp.ConstantBuffer<{typeof(T)}>[{Size}]";
         }
     }
 }
