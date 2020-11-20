@@ -1,5 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Core.Interop;
 using ComputeSharp.Graphics.Buffers.Enums;
 using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop;
@@ -16,9 +16,14 @@ namespace ComputeSharp.Graphics.Buffers
     /// A <see langword="class"/> representing a typed buffer stored on GPU memory.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
-    public unsafe class Buffer<T> : GraphicsResource
+    public unsafe class Buffer<T> : NativeObject
         where T : unmanaged
     {
+        /// <summary>
+        /// The <see cref="ID3D12Resource"/> instance currently mapped.
+        /// </summary>
+        private ComPtr<ID3D12Resource> d3D12Resource;
+
         /// <summary>
         /// The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
         /// </summary>
@@ -57,13 +62,16 @@ namespace ComputeSharp.Graphics.Buffers
         /// <param name="sizeInBytes">The size in bytes for the current buffer</param>
         /// <param name="bufferType">The buffer type for the current buffer</param>
         internal Buffer(GraphicsDevice device, int size, int sizeInBytes, BufferType bufferType)
-            : base(device, CreateCommittedResource(device.D3D12Device, bufferType, sizeInBytes))
         {
+            this.d3D12Resource = CreateCommittedResource(device.D3D12Device, bufferType, sizeInBytes);
+
             Size = size;
             SizeInBytes = sizeInBytes;
             ElementSizeInBytes = Unsafe.SizeOf<T>();
             BufferType = bufferType;
             PaddedElementSizeInBytes = sizeInBytes / size;
+
+            GraphicsDevice = device;
 
             if (bufferType is BufferType.Constant or BufferType.ReadOnly or BufferType.ReadWrite)
             {
@@ -79,6 +87,11 @@ namespace ComputeSharp.Graphics.Buffers
         }
 
         /// <summary>
+        /// Gets the <see cref="GraphicsDevice"/> associated with the current instance.
+        /// </summary>
+        public GraphicsDevice GraphicsDevice { get; }
+
+        /// <summary>
         /// Gets the size of the current buffer, as in the number of <typeparamref name="T"/> values it contains
         /// </summary>
         public int Size { get; }
@@ -87,6 +100,11 @@ namespace ComputeSharp.Graphics.Buffers
         /// Gets whether or not there is some padding between elements in the current buffer
         /// </summary>
         internal bool IsPaddingPresent => PaddedElementSizeInBytes > ElementSizeInBytes;
+
+        /// <summary>
+        /// Gets the <see cref="ID3D12Resource"/> instance currently mapped.
+        /// </summary>
+        internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
 
         /// <summary>
         /// Creates a committed resource for a given buffer type.
@@ -151,6 +169,12 @@ namespace ComputeSharp.Graphics.Buffers
             d3D12UnorderedAccessViewDescription.Buffer.StructureByteStride = (uint)ElementSizeInBytes;
 
             GraphicsDevice.D3D12Device->CreateUnorderedAccessView(D3D12Resource, null, &d3D12UnorderedAccessViewDescription, D3D12CpuDescriptorHandle);
+        }
+
+        /// <inheritdoc/>
+        protected override void OnDispose()
+        {
+            this.d3D12Resource.Dispose();
         }
     }
 }

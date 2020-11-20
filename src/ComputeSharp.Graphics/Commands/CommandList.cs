@@ -92,10 +92,10 @@ namespace ComputeSharp.Graphics.Commands
         }
 
         /// <summary>
-        /// Binds an input <see cref="GraphicsResource"/> object to a specified root parameter.
+        /// Binds an input <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value to a specified root parameter.
         /// </summary>
         /// <param name="rootParameterIndex">The root parameter index to bind to the input resource.</param>
-        /// <param name="resource">The input <see cref="GraphicsResource"/> instance to bind.</param>
+        /// <param name="d3D12GpuDescriptorHandle">The input <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value to bind.</param>
         public readonly void SetComputeRootDescriptorTable(int rootParameterIndex, D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle)
         {
             this.d3D12GraphicsCommandList.Get()->SetComputeRootDescriptorTable((uint)rootParameterIndex, d3D12GpuDescriptorHandle);

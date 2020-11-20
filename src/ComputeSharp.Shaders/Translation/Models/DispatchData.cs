@@ -2,7 +2,6 @@
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.Graphics.Buffers.Abstract;
 using TerraFX.Interop;
 
 namespace ComputeSharp.Shaders.Translation.Models
@@ -18,7 +17,7 @@ namespace ComputeSharp.Shaders.Translation.Models
         private readonly D3D12_GPU_DESCRIPTOR_HANDLE[] resourcesArray;
 
         /// <summary>
-        /// The number of <see cref="GraphicsResource"/> instances in <see cref="resourcesArray"/>.
+        /// The number of <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> values in <see cref="resourcesArray"/>.
         /// </summary>
         private readonly int resourcesCount;
 
