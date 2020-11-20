@@ -17,7 +17,7 @@ namespace Windows.Foundation
         /// <remarks>The input <see cref="Size"/> is read in the following order: <see cref="Size.Width"/>, <see cref="Size.Height"/></remarks>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Vector2 ToVector2(this in Size value) => new Vector2((float)value.Width, (float)value.Height);
+        public static Vector2 ToVector2(this Size value) => new((float)value.Width, (float)value.Height);
 
         /// <summary>
         /// Converts a <see cref="Vector2"/> value to a <see cref="Size"/>
@@ -27,6 +27,6 @@ namespace Windows.Foundation
         /// <remarks>The input <see cref="Size"/> is assigned in the following order: <see cref="Size.Width"/>, <see cref="Size.Height"/></remarks>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Size ToPoint(this in Vector2 value) => new Size(value.X, value.Y);
+        public static Size ToPoint(this Vector2 value) => new(value.X, value.Y);
     }
 }
