@@ -3,9 +3,6 @@ using ComputeSharp.Core.Interop;
 using ComputeSharp.Graphics.Buffers.Enums;
 using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop;
-using static TerraFX.Interop.D3D12_HEAP_TYPE;
-using static TerraFX.Interop.D3D12_RESOURCE_FLAGS;
-using static TerraFX.Interop.D3D12_RESOURCE_STATES;
 using static TerraFX.Interop.D3D12_SRV_DIMENSION;
 using static TerraFX.Interop.D3D12_UAV_DIMENSION;
 using FX = TerraFX.Interop.Windows;
@@ -63,7 +60,7 @@ namespace ComputeSharp.Graphics.Buffers
         /// <param name="bufferType">The buffer type for the current buffer</param>
         internal Buffer(GraphicsDevice device, int size, int sizeInBytes, BufferType bufferType)
         {
-            this.d3D12Resource = CreateCommittedResource(device.D3D12Device, bufferType, sizeInBytes);
+            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(bufferType, sizeInBytes);
 
             Size = size;
             SizeInBytes = sizeInBytes;
@@ -105,30 +102,6 @@ namespace ComputeSharp.Graphics.Buffers
         /// Gets the <see cref="ID3D12Resource"/> instance currently mapped.
         /// </summary>
         internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
-
-        /// <summary>
-        /// Creates a committed resource for a given buffer type.
-        /// </summary>
-        /// <param name="d3D12Device">The <see cref="ID3D12Device"/> instance in use.</param>
-        /// <param name="bufferType">The buffer type currently in use.</param>
-        /// <param name="sizeInBytes">The size in bytes of the current buffer.</param>
-        /// <returns>An <see cref="ID3D12Resource"/> reference for the current buffer.</returns>
-        private static ComPtr<ID3D12Resource> CreateCommittedResource(ID3D12Device* d3D12Device, BufferType bufferType, int sizeInBytes)
-        {
-            (D3D12_HEAP_TYPE d3D12HeapType,
-             D3D12_RESOURCE_FLAGS d3D12ResourceFlags,
-             D3D12_RESOURCE_STATES d3D12ResourceStates) = bufferType switch
-            {
-                BufferType.Constant => (D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ),
-                BufferType.ReadOnly => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
-                BufferType.ReadWrite => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COMMON),
-                BufferType.ReadBack => (D3D12_HEAP_TYPE_READBACK, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COPY_DEST),
-                BufferType.Upload => (D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ),
-                _ => throw null!
-            };
-
-            return d3D12Device->CreateCommittedResource(d3D12HeapType, (uint)sizeInBytes, d3D12ResourceFlags, d3D12ResourceStates);
-        }
 
         /// <summary>
         /// Creates a view for a constant buffer.
