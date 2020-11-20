@@ -89,12 +89,12 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         public GraphicsDevice GraphicsDevice { get; }
 
         /// <summary>
-        /// Gets the size of the current buffer, as in the number of <typeparamref name="T"/> values it contains
+        /// Gets the size of the current buffer, as in the number of <typeparamref name="T"/> values it contains.
         /// </summary>
         public int Size { get; }
 
         /// <summary>
-        /// Gets whether or not there is some padding between elements in the current buffer
+        /// Gets whether or not there is some padding between elements in the current buffer.
         /// </summary>
         internal bool IsPaddingPresent => PaddedElementSizeInBytes > ElementSizeInBytes;
 
@@ -104,92 +104,96 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
 
         /// <summary>
-        /// Reads the contents of the current <see cref="Buffer{T}"/> instance and returns an array
+        /// Reads the contents of the current <see cref="Buffer{T}"/> instance and returns an array.
         /// </summary>
-        /// <returns>A <typeparamref name="T"/> array with the contents of the current buffer</returns>
+        /// <returns>A <typeparamref name="T"/> array with the contents of the current buffer.</returns>
         [Pure]
         public T[] GetData() => GetData(0, Size);
 
         /// <summary>
-        /// Reads the contents of the current <see cref="Buffer{T}"/> instance in a given range and returns an array
+        /// Reads the contents of the current <see cref="Buffer{T}"/> instance in a given range and returns an array.
         /// </summary>
-        /// <param name="offset">The offset to start reading data from</param>
-        /// <param name="count">The number of items to read</param>
-        /// <returns>A <typeparamref name="T"/> array with the contents of the specified range from the current buffer</returns>
+        /// <param name="offset">The offset to start reading data from.</param>
+        /// <param name="count">The number of items to read.</param>
+        /// <returns>A <typeparamref name="T"/> array with the contents of the specified range from the current buffer.</returns>
         [Pure]
         public T[] GetData(int offset, int count)
         {
             T[] data = new T[count];
+
             GetData(data, offset, count);
 
             return data;
         }
 
         /// <summary>
-        /// Reads the contents of the current <see cref="Buffer{T}"/> instance and writes them into a target <see cref="Span{T}"/>
+        /// Reads the contents of the current <see cref="Buffer{T}"/> instance and writes them into a target <see cref="Span{T}"/>.
         /// </summary>
-        /// <param name="span">The input <see cref="Span{T}"/> to write data to</param>
+        /// <param name="span">The input <see cref="Span{T}"/> to write data to.</param>
         public void GetData(Span<T> span) => GetData(span, 0, Size);
 
         /// <summary>
-        /// Reads the contents of the specified range from the current <see cref="Buffer{T}"/> instance and writes them into a target <see cref="Span{T}"/>
+        /// Reads the contents of the specified range from the current <see cref="Buffer{T}"/> instance and writes them into a target <see cref="Span{T}"/>.
         /// </summary>
-        /// <param name="span">The input <see cref="Span{T}"/> to write data to</param>
-        /// <param name="offset">The offset to start reading data from</param>
-        /// <param name="count">The number of items to read</param>
+        /// <param name="span">The input <see cref="Span{T}"/> to write data to.</param>
+        /// <param name="offset">The offset to start reading data from.</param>
+        /// <param name="count">The number of items to read.</param>
         public abstract void GetData(Span<T> span, int offset, int count);
 
         /// <summary>
-        /// Writes the contents of a given <typeparamref name="T"/> array to the current <see cref="Buffer{T}"/> instance
+        /// Writes the contents of a given <typeparamref name="T"/> array to the current <see cref="Buffer{T}"/> instance.
         /// </summary>
-        /// <param name="array">The input <typeparamref name="T"/> array to read data from</param>
+        /// <param name="array">The input <typeparamref name="T"/> array to read data from.</param>
         public void SetData(T[] array) => SetData(array.AsSpan());
 
         /// <summary>
-        /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="Buffer{T}"/> instance
+        /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="Buffer{T}"/> instance.
         /// </summary>
-        /// <param name="array">The input <typeparamref name="T"/> array to read data from</param>
-        /// <param name="offset">The offset to start writing data to</param>
-        /// <param name="count">The number of items to write</param>
+        /// <param name="array">The input <typeparamref name="T"/> array to read data from.</param>
+        /// <param name="offset">The offset to start writing data to.</param>
+        /// <param name="count">The number of items to write.</param>
         public void SetData(T[] array, int offset, int count) => SetData(array.AsSpan(), offset, count);
 
         /// <summary>
-        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to the current <see cref="Buffer{T}"/> instance
+        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to the current <see cref="Buffer{T}"/> instance.
         /// </summary>
-        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> to read data from</param>
+        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> to read data from.</param>
         public void SetData(ReadOnlySpan<T> span) => SetData(span, 0, Size);
 
         /// <summary>
-        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to a specified area of the current <see cref="Buffer{T}"/> instance
+        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to a specified area of the current <see cref="Buffer{T}"/> instance.
         /// </summary>
-        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> to read data from</param>
-        /// <param name="offset">The offset to start writing data to</param>
-        /// <param name="count">The number of items to write</param>
+        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> to read data from.</param>
+        /// <param name="offset">The offset to start writing data to.</param>
+        /// <param name="count">The number of items to write.</param>
         public abstract void SetData(ReadOnlySpan<T> span, int offset, int count);
 
         /// <summary>
-        /// Writes the contents of a given <see cref="Buffer{T}"/> to the current <see cref="Buffer{T}"/> instance
+        /// Writes the contents of a given <see cref="Buffer{T}"/> to the current <see cref="Buffer{T}"/> instance.
         /// </summary>
-        /// <param name="buffer">The input <see cref="Buffer{T}"/> to read data from</param>
+        /// <param name="buffer">The input <see cref="Buffer{T}"/> to read data from.</param>
         public abstract void SetData(Buffer<T> buffer);
 
         /// <summary>
-        /// Writes the contents of a given <see cref="Buffer{T}"/> to the current <see cref="Buffer{T}"/> instance, using a temporary CPU buffer
+        /// Writes the contents of a given <see cref="Buffer{T}"/> to the current <see cref="Buffer{T}"/> instance, using a temporary CPU buffer.
         /// </summary>
-        /// <param name="buffer">The input <see cref="Buffer{T}"/> to read data from</param>
+        /// <param name="buffer">The input <see cref="Buffer{T}"/> to read data from.</param>
         protected void SetDataWithCpuBuffer(Buffer<T> buffer)
         {
-            // Create a temporary array
             T[] array = ArrayPool<T>.Shared.Rent(buffer.Size);
-            Span<T> span = array.AsSpan(0, buffer.Size);
 
-            // Get the unpadded data from the read write buffer
-            buffer.GetData(span);
+            try
+            {
+                Span<T> span = array.AsSpan(0, buffer.Size);
 
-            // Set the data, adding the padding if needed
-            SetData(span);
+                buffer.GetData(span);
 
-            ArrayPool<T>.Shared.Return(array);
+                SetData(span);
+            }
+            finally
+            {
+                ArrayPool<T>.Shared.Return(array);
+            }
         }
 
         /// <summary>
