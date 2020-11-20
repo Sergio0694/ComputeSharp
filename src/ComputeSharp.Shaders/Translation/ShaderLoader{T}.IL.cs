@@ -1,11 +1,11 @@
-﻿using System;
-using System.Buffers;
+﻿using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ComputeSharp.Core.Helpers;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Translation.Models;
@@ -129,7 +129,7 @@ namespace ComputeSharp.Shaders.Translation
 
                         this.totalVariablesByteSize += size;
                     }
-                    else throw new InvalidOperationException($"Invalid captured member of type {member.MemberType}");
+                    else ThrowHelper.ThrowArgumentException("Invalid captured member type");
                 }
 
                 il.Emit(OpCodes.Ret);

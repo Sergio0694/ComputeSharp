@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using ComputeSharp.Core.Helpers;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Renderer.Models.Fields;
@@ -148,7 +149,10 @@ namespace ComputeSharp.Shaders.Translation
                 BindingFlags.Public |
                 BindingFlags.NonPublic).ToArray();
 
-            if (shaderFields.Count == 0) throw new InvalidOperationException("Empty shader body");
+            if (shaderFields.Count == 0)
+            {
+                ThrowHelper.ThrowInvalidOperationException("The shader body must contain at least one field");
+            }
 
             // Descriptor for the buffer for captured scalar/vector variables
             D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1 = new(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, this.constantBuffersCount++);
@@ -230,7 +234,7 @@ namespace ComputeSharp.Shaders.Translation
                 // Captured static delegates with a return type
                 LoadStaticMethodSource(shader, fieldName, func.Method);
             }
-            else throw new ArgumentException($"Invalid captured variable of type {fieldType} with name \"{memberInfo.Name}\"");
+            else ThrowHelper.ThrowArgumentException("Invalid captured variable");
         }
 
         /// <summary>

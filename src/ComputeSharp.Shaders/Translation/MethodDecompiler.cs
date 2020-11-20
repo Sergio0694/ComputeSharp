@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
+using ComputeSharp.Core.Helpers;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Translation.Enums;
 using ICSharpCode.Decompiler;
@@ -139,7 +140,7 @@ namespace ComputeSharp.Shaders.Translation
             {
                 MethodType.Execute => GetSyntaxTreeForExecuteMethod(methodInfo),
                 MethodType.Static => GetSyntaxTreeForStaticMethod(methodInfo),
-                _ => throw new ArgumentOutOfRangeException(nameof(methodType), $"Invalid method type: {methodType}")
+                _ => ThrowHelper.ThrowArgumentException<string>("Invalid method type")
             };
 
             // Load the type syntax tree

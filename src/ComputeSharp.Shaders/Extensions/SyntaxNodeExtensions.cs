@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using ComputeSharp;
+using ComputeSharp.Core.Helpers;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Translation.Models;
 
@@ -97,7 +98,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
                         string methodName = $"{methodInfo.DeclaringType!.Name}_{methodInfo.Name}";
                         method = (methodName, methodInfo);
                         return SyntaxFactory.IdentifierName(methodName).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
-                    default: throw new InvalidOperationException($"Invalid symbol kind: {memberInfos.First().GetType()}");
+                    default: ThrowHelper.ThrowArgumentException("Invalid symbol kind"); return null!;
                 }
 
                 // Handle the loaded info
@@ -148,7 +149,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
                             isReadonly = !propertyInfo.CanWrite;
                             memberInfo = propertyInfo;
                             break;
-                        default: throw new InvalidOperationException($"Invalid symbol kind: {memberSymbol.Kind}");
+                        default: ThrowHelper.ThrowArgumentException("Invalid symbol kind"); return null!;
                     }
 
                     // Handle the loaded info
@@ -197,7 +198,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
                     case MethodInfo methodInfo:
                         method = (name, methodInfo);
                         return SyntaxFactory.InvocationExpression(SyntaxFactory.ParseExpression(name), node.ArgumentList).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
-                    default: throw new InvalidOperationException($"Invalid symbol kind: {result.Value.MemberInfo.GetType()}");
+                    default: ThrowHelper.ThrowArgumentException("Invalid symbol kind"); return null!;
                 }
 
                 // Return the mapped expression
@@ -263,7 +264,7 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
                     Bool b when b => SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression, SyntaxFactory.Token(SyntaxKind.TrueKeyword)),
                     Bool b when !b => SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression, SyntaxFactory.Token(SyntaxKind.FalseKeyword)),
                     IFormattable scalar => SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.ParseToken(scalar.ToString(null, CultureInfo.InvariantCulture))),
-                    _ => throw new InvalidOperationException($"Invalid field of type {memberInfo.MemberType}")
+                    _ => ThrowHelper.ThrowArgumentException<LiteralExpressionSyntax>("Invalid field type")
                 };
                 return expression.WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
             }

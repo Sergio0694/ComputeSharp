@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Reflection;
+using ComputeSharp.Core.Helpers;
 
 namespace ComputeSharp.Shaders.Translation.Models
 {
@@ -39,7 +40,7 @@ namespace ComputeSharp.Shaders.Translation.Models
                 IsStatic = propertyInfo.GetMethod!.IsStatic;
                 MemberType = propertyInfo.PropertyType;
             }
-            else throw new InvalidOperationException("Field and property can't both be null at the same time");
+            else ThrowHelper.ThrowArgumentException("Field and property can't both be null at the same time");
         }
 
         /// <summary>
@@ -78,7 +79,7 @@ namespace ComputeSharp.Shaders.Translation.Models
             {
                 FieldInfo field => field.GetValue(instance)!,
                 PropertyInfo property => property.GetValue(instance)!,
-                _ => throw new InvalidOperationException("Field and property can't both be null at the same time")
+                _ => ThrowHelper.ThrowArgumentException<object>("Field and property can't both be null at the same time")
             };
         }
 

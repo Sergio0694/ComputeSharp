@@ -1,4 +1,5 @@
-﻿using ComputeSharp.Core.Interop;
+﻿using ComputeSharp.Core.Helpers;
+using ComputeSharp.Core.Interop;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
@@ -137,7 +138,7 @@ namespace ComputeSharp.Graphics
             {
                 D3D12_COMMAND_LIST_TYPE_COMPUTE => this.computeCommandAllocatorPool.GetCommandAllocator(this.d3D12Device, this.d3D12ComputeFence),
                 D3D12_COMMAND_LIST_TYPE_COPY => this.copyCommandAllocatorPool.GetCommandAllocator(this.d3D12Device, this.d3D12CopyFence),
-                _ => throw null!
+                _ => ThrowHelper.ThrowArgumentException<ComPtr<ID3D12CommandAllocator>>()
             };
         }
 
@@ -178,7 +179,7 @@ namespace ComputeSharp.Graphics
                     d3D12Fence = this.d3D12CopyFence;
                     d3D12FenceValue = this.nextD3D12CopyFenceValue++;
                     break;
-                default: throw null!;
+                default: ThrowHelper.ThrowArgumentException(); return;
             }
 
             // Execute the command list and signal to the target fence

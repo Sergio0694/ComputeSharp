@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ComputeSharp.Core.Helpers;
 
 namespace System.Reflection.Emit
 {
@@ -23,7 +24,7 @@ namespace System.Reflection.Emit
                 case PropertyInfo property when property.CanRead:
                     il.EmitCall(property.GetMethod!.IsStatic ? OpCodes.Call : OpCodes.Callvirt, property.GetMethod, null);
                     break;
-                default: throw new ArgumentException($"The input {member.GetType()} instance can't be read");
+                default: ThrowHelper.ThrowArgumentException("The input MemberInfo instance can't be read"); return;
             }
         }
 
@@ -58,7 +59,7 @@ namespace System.Reflection.Emit
                     6 => OpCodes.Ldc_I4_6,
                     7 => OpCodes.Ldc_I4_7,
                     8 => OpCodes.Ldc_I4_8,
-                    _ => throw new InvalidOperationException($"Invalid offset value [{offset}]")
+                    _ => ThrowHelper.ThrowArgumentException<OpCode>("Invalid offset value")
                 });
             }
             else if (offset <= 127) il.Emit(OpCodes.Ldc_I4_S, (byte)offset);

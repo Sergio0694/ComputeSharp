@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using ComputeSharp.Core.Helpers;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
 using HRESULT = System.Int32;
@@ -40,12 +41,7 @@ namespace ComputeSharp.Graphics.Helpers
                 return new GraphicsDevice(d3d12device.Move(), &dxgiDescription1);
             }
 
-            static GraphicsDevice Throw()
-            {
-                throw new NotSupportedException("There isn't a supported GPU device on the current machine");
-            }
-
-            return Throw();
+            return ThrowHelper.ThrowNotSupportedException<GraphicsDevice>("There isn't a supported GPU device on the current machine");
         }
 
         /// <summary>

@@ -14,6 +14,7 @@ using static TerraFX.Interop.D3D12_HEAP_TYPE;
 using static TerraFX.Interop.D3D12_RESOURCE_FLAGS;
 using static TerraFX.Interop.D3D12_RESOURCE_STATES;
 using FX = TerraFX.Interop.Windows;
+using ComputeSharp.Core.Helpers;
 
 namespace ComputeSharp.Graphics.Extensions
 {
@@ -116,7 +117,7 @@ namespace ComputeSharp.Graphics.Extensions
                  BufferType.ReadWrite => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COMMON),
                  BufferType.ReadBack => (D3D12_HEAP_TYPE_READBACK, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COPY_DEST),
                  BufferType.Upload => (D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ),
-                 _ => throw null!
+                 _ => ThrowHelper.ThrowArgumentException<(D3D12_HEAP_TYPE, D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
              };
 
             using ComPtr<ID3D12Resource> d3D12Resource = default;

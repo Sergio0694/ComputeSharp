@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using ComputeSharp.Core.Helpers;
 using HRESULT = System.Int32;
 
 namespace ComputeSharp.Graphics.Helpers
@@ -21,9 +22,7 @@ namespace ComputeSharp.Graphics.Helpers
         {
             if (result < 0)
             {
-                static void Throw(HRESULT result) => throw new Win32Exception(result);
-
-                Throw(result);
+                ThrowHelper.ThrowWin32Exception(result);
             }
         }
     }
