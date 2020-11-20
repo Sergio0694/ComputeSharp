@@ -50,9 +50,9 @@ namespace ComputeSharp.Graphics
         private readonly ID3D12CommandAllocatorPool copyCommandAllocatorPool;
 
         /// <summary>
-        /// The <see cref="DescriptorAllocator"/> instance to use when allocating new buffers.
+        /// The <see cref="ID3D12DescriptorHandleAllocator"/> instance to use when allocating new buffers.
         /// </summary>
-        private DescriptorAllocator shaderResourceViewDescriptorAllocator;
+        private ID3D12DescriptorHandleAllocator shaderResourceViewDescriptorAllocator;
 
         /// <summary>
         /// The next fence value for compute operations using <see cref="d3D12ComputeCommandQueue"/>.
@@ -79,7 +79,7 @@ namespace ComputeSharp.Graphics
 
             this.computeCommandAllocatorPool = new ID3D12CommandAllocatorPool(D3D12_COMMAND_LIST_TYPE_COMPUTE);
             this.copyCommandAllocatorPool = new ID3D12CommandAllocatorPool(D3D12_COMMAND_LIST_TYPE_COPY);
-            this.shaderResourceViewDescriptorAllocator = new DescriptorAllocator(d3d12device);
+            this.shaderResourceViewDescriptorAllocator = new ID3D12DescriptorHandleAllocator(d3d12device);
 
             Luid = *(Luid*)&dxgiDescription1->AdapterLuid;
             Name = new string((char*)dxgiDescription1->Description);
@@ -121,7 +121,7 @@ namespace ComputeSharp.Graphics
         /// </summary>
         internal ID3D12Device* D3D12Device => this.d3D12Device;
 
-        /// <inheritdoc cref="DescriptorAllocator.Allocate"/>
+        /// <inheritdoc cref="ID3D12DescriptorHandleAllocator.Allocate"/>
         internal void AllocateShaderResourceViewDescriptorHandles(
             out D3D12_CPU_DESCRIPTOR_HANDLE d3d12CpuDescriptorHandle,
             out D3D12_GPU_DESCRIPTOR_HANDLE d3d12GpuDescriptorHandle)

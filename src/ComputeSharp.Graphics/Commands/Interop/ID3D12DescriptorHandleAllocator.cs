@@ -8,7 +8,7 @@ namespace ComputeSharp.Graphics
     /// <summary>
     /// A type that provides logic to create resource descriptors for a <see cref="GraphicsDevice"/> instance.
     /// </summary>
-    internal unsafe struct DescriptorAllocator : IDisposable
+    internal unsafe struct ID3D12DescriptorHandleAllocator : IDisposable
     {
         /// <summary>
         /// The default number of available descriptors per heap.
@@ -16,7 +16,7 @@ namespace ComputeSharp.Graphics
         private const uint DescriptorsPerHeap = 4096;
 
         /// <summary>
-        /// The <see cref="ID3D12DescriptorHeap"/> in use for the current <see cref="DescriptorAllocator"/> instance.
+        /// The <see cref="ID3D12DescriptorHeap"/> in use for the current <see cref="ID3D12DescriptorHandleAllocator"/> instance.
         /// </summary>
         private ComPtr<ID3D12DescriptorHeap> d3D12DescriptorHeap;
 
@@ -31,12 +31,12 @@ namespace ComputeSharp.Graphics
         private readonly uint descriptorSize;
 
         /// <summary>
-        /// The current <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> for the <see cref="DescriptorAllocator"/> instance in use.
+        /// The current <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> for the <see cref="ID3D12DescriptorHandleAllocator"/> instance in use.
         /// </summary>
         private D3D12_CPU_DESCRIPTOR_HANDLE d3d12CpuDescriptorHandle;
 
         /// <summary>
-        /// The current <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> for the <see cref="DescriptorAllocator"/> instance in use.
+        /// The current <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> for the <see cref="ID3D12DescriptorHandleAllocator"/> instance in use.
         /// </summary>
         private D3D12_GPU_DESCRIPTOR_HANDLE d3d12GpuDescriptorHandle;
 
@@ -46,10 +46,10 @@ namespace ComputeSharp.Graphics
         private uint remainingHandles;
 
         /// <summary>
-        /// Creates a new <see cref="DescriptorAllocator"/> instance with the specified parameters.
+        /// Creates a new <see cref="ID3D12DescriptorHandleAllocator"/> instance with the specified parameters.
         /// </summary>
         /// <param name="device">The <see cref="ID3D12Device"/> instance to use</param>
-        public DescriptorAllocator(ID3D12Device* device)
+        public ID3D12DescriptorHandleAllocator(ID3D12Device* device)
         {
             this.d3D12DescriptorHeap = device->CreateDescriptorHeap(DescriptorsPerHeap);
             this.allocationLock = new object();
@@ -60,7 +60,7 @@ namespace ComputeSharp.Graphics
         }
 
         /// <summary>
-        /// Gets the <see cref="ID3D12DescriptorHeap"/> in use for the current <see cref="DescriptorAllocator"/> instance.
+        /// Gets the <see cref="ID3D12DescriptorHeap"/> in use for the current <see cref="ID3D12DescriptorHandleAllocator"/> instance.
         /// </summary>
         public ID3D12DescriptorHeap* D3D12DescriptorHeap => this.d3D12DescriptorHeap;
 
