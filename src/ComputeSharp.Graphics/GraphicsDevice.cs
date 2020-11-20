@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Core.Helpers;
 using ComputeSharp.Core.Interop;
@@ -13,6 +14,7 @@ namespace ComputeSharp.Graphics
     /// <summary>
     /// A <see langword="class"/> that represents a DX12.1-compatible GPU device that can be used to run compute shaders.
     /// </summary>
+    [DebuggerDisplay("{ToString(),raw}")]
     public sealed unsafe class GraphicsDevice : NativeObject
     {
         /// <summary>
@@ -208,6 +210,12 @@ namespace ComputeSharp.Graphics
             this.computeCommandAllocatorPool.Dispose();
             this.copyCommandAllocatorPool.Dispose();
             this.shaderResourceViewDescriptorAllocator.Dispose();
+        }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"[{Luid}] {Name}";
         }
     }
 }
