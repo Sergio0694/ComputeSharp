@@ -25,34 +25,14 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         private ComPtr<ID3D12Resource> d3D12Resource;
 
         /// <summary>
-        /// The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
-        /// </summary>
-        protected internal readonly D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandle;
-
-        /// <summary>
         /// The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
         /// </summary>
-        protected internal readonly D3D12_GPU_DESCRIPTOR_HANDLE D3D12GpuDescriptorHandle;
+        internal readonly D3D12_GPU_DESCRIPTOR_HANDLE D3D12GpuDescriptorHandle;
 
         /// <summary>
         /// The size in bytes of the current buffer.
         /// </summary>
         protected readonly int SizeInBytes;
-
-        /// <summary>
-        /// The size in bytes of each <typeparamref name="T"/> value contained in the buffer.
-        /// </summary>
-        protected readonly int ElementSizeInBytes;
-
-        /// <summary>
-        /// The size in bytes of the current buffer.
-        /// </summary>
-        internal readonly int PaddedElementSizeInBytes;
-
-        /// <summary>
-        /// The buffer type for the current <see cref="Buffer{T}"/> instance.
-        /// </summary>
-        internal readonly BufferType BufferType;
 
         /// <summary>
         /// Creates a new <see cref="Buffer{T}"/> instance with the specified parameters.
@@ -65,21 +45,17 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         {
             this.d3D12Resource = device.D3D12Device->CreateCommittedResource(bufferType, sizeInBytes);
 
-            Size = size;
             SizeInBytes = sizeInBytes;
-            ElementSizeInBytes = Unsafe.SizeOf<T>();
-            BufferType = bufferType;
-            PaddedElementSizeInBytes = sizeInBytes / size;
-
             GraphicsDevice = device;
+            Size = size;
 
-            GraphicsDevice.AllocateShaderResourceViewDescriptorHandles(out D3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
+            GraphicsDevice.AllocateShaderResourceViewDescriptorHandles(out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 
             switch (bufferType)
             {
-                case BufferType.Constant: CreateConstantBufferView(); break;
-                case BufferType.ReadOnly: CreateShaderResourceView(); break;
-                case BufferType.ReadWrite: CreateUnorderedAccessView(); break;
+                case BufferType.Constant: CreateConstantBufferView(d3D12CpuDescriptorHandle); break;
+                case BufferType.ReadOnly: CreateShaderResourceView(d3D12CpuDescriptorHandle); break;
+                case BufferType.ReadWrite: CreateUnorderedAccessView(d3D12CpuDescriptorHandle); break;
             }
         }
 
@@ -94,9 +70,22 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         public int Size { get; }
 
         /// <summary>
+        /// Gets the size in bytes of each <typeparamref name="T"/> value contained in the buffer.
+        /// </summary>
+        protected int ElementSizeInBytes
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => Unsafe.SizeOf<T>();
+        }
+
+        /// <summary>
         /// Gets whether or not there is some padding between elements in the current buffer.
         /// </summary>
-        internal bool IsPaddingPresent => PaddedElementSizeInBytes > ElementSizeInBytes;
+        internal bool IsPaddingPresent
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => SizeInBytes > Size * Unsafe.SizeOf<T>();
+        }
 
         /// <summary>
         /// Gets the <see cref="ID3D12Resource"/> instance currently mapped.
@@ -199,7 +188,8 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <summary>
         /// Creates a view for a constant buffer.
         /// </summary>
-        private void CreateConstantBufferView()
+        /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
+        private void CreateConstantBufferView(D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
         {
             uint constantBufferSize = (uint)((SizeInBytes + 255) & ~255);
 
@@ -207,13 +197,14 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             d3D12ConstantBufferViewDescription.BufferLocation = D3D12Resource->GetGPUVirtualAddress();
             d3D12ConstantBufferViewDescription.SizeInBytes = constantBufferSize;
 
-            GraphicsDevice.D3D12Device->CreateConstantBufferView(&d3D12ConstantBufferViewDescription, D3D12CpuDescriptorHandle);
+            GraphicsDevice.D3D12Device->CreateConstantBufferView(&d3D12ConstantBufferViewDescription, d3D12CpuDescriptorHandle);
         }
 
         /// <summary>
         /// Creates a view for a readonly buffer.
         /// </summary>
-        private void CreateShaderResourceView()
+        /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
+        private void CreateShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
         {
             D3D12_SHADER_RESOURCE_VIEW_DESC d3D12ShaderResourceViewDescription = default;
             d3D12ShaderResourceViewDescription.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
@@ -221,20 +212,21 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             d3D12ShaderResourceViewDescription.Buffer.NumElements = (uint)Size;
             d3D12ShaderResourceViewDescription.Buffer.StructureByteStride = (uint)ElementSizeInBytes;
 
-            GraphicsDevice.D3D12Device->CreateShaderResourceView(D3D12Resource, &d3D12ShaderResourceViewDescription, D3D12CpuDescriptorHandle);
+            GraphicsDevice.D3D12Device->CreateShaderResourceView(D3D12Resource, &d3D12ShaderResourceViewDescription, d3D12CpuDescriptorHandle);
         }
 
         /// <summary>
         /// Creates a view for a buffer than be both read and written to.
         /// </summary>
-        private void CreateUnorderedAccessView()
+        /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
+        private void CreateUnorderedAccessView(D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
         {
             D3D12_UNORDERED_ACCESS_VIEW_DESC d3D12UnorderedAccessViewDescription = default;
             d3D12UnorderedAccessViewDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
             d3D12UnorderedAccessViewDescription.Buffer.NumElements = (uint)Size;
             d3D12UnorderedAccessViewDescription.Buffer.StructureByteStride = (uint)ElementSizeInBytes;
 
-            GraphicsDevice.D3D12Device->CreateUnorderedAccessView(D3D12Resource, null, &d3D12UnorderedAccessViewDescription, D3D12CpuDescriptorHandle);
+            GraphicsDevice.D3D12Device->CreateUnorderedAccessView(D3D12Resource, null, &d3D12UnorderedAccessViewDescription, d3D12CpuDescriptorHandle);
         }
 
         /// <inheritdoc/>
