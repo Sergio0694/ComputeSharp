@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.Graphics.Buffers;
+using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Translation.Models;
 using TerraFX.Interop;
@@ -97,7 +97,7 @@ namespace ComputeSharp.Shaders.Translation
 
                         // Access Buffer<T>.D3D12GpuDescriptorHandle
                         FieldInfo gpuDescriptorInfo = member.MemberType.GetField(
-                            nameof(Buffer<byte>.D3D12GpuDescriptorHandle),
+                            nameof(HlslBuffer<byte>.D3D12GpuDescriptorHandle),
                             BindingFlags.NonPublic | BindingFlags.Instance)!;
 
                         il.EmitReadMember(gpuDescriptorInfo);
