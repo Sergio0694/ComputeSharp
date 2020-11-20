@@ -6,6 +6,7 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Core.Helpers;
+using ComputeSharp.Core.Interop;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Translation.Models;
@@ -78,6 +79,11 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         private void BuildDispatchDataLoader()
         {
+            // The delegate signature is <in T, ref D3D12_GPU_DESCRIPTOR_HANDLE, ref byte, void>.
+            //
+            // ldarg.0 = in T shader
+            // ldarg.1 = ref D3D12_GPU_DESCRIPTOR_HANDLE r0
+            // ldarg.1 = ref byte r1
             this.dispatchDataLoader = DynamicMethod<DispatchDataLoader>.New(il =>
             {
                 foreach (ReadableMember member in this.capturedMembers)
@@ -95,12 +101,16 @@ namespace ComputeSharp.Shaders.Translation
                         if (!member.IsStatic) il.Emit(OpCodes.Ldarg_0);
                         il.EmitReadMember(member);
 
-                        // Access Buffer<T>.D3D12GpuDescriptorHandle
-                        FieldInfo gpuDescriptorInfo = member.MemberType.GetField(
-                            nameof(Buffer<byte>.D3D12GpuDescriptorHandle),
-                            BindingFlags.NonPublic | BindingFlags.Instance)!;
+                        // Call NativeObject.ThrowIfDisposed()
+                        il.Emit(OpCodes.Dup);
+                        il.EmitCall(OpCodes.Callvirt, typeof(NativeObject).GetMethod(
+                            nameof(NativeObject.ThrowIfDisposed),
+                            BindingFlags.Instance | BindingFlags.NonPublic)!, null);
 
-                        il.EmitReadMember(gpuDescriptorInfo);
+                        // Access Buffer<T>.D3D12GpuDescriptorHandle
+                        il.EmitReadMember(member.MemberType.GetField(
+                            nameof(Buffer<byte>.D3D12GpuDescriptorHandle),
+                            BindingFlags.NonPublic | BindingFlags.Instance)!);
                         il.EmitStoreToAddress(typeof(D3D12_GPU_DESCRIPTOR_HANDLE));
 
                         this.totalResourceCount++;

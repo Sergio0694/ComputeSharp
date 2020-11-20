@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace ComputeSharp.Core.Interop
 {
@@ -47,5 +48,22 @@ namespace ComputeSharp.Core.Interop
         /// Releases unmanaged and (optionally) managed resources.
         /// </summary>
         protected abstract void OnDispose();
+
+        /// <summary>
+        /// Throws an <see cref="ObjectDisposedException"/> if the current instance has been disposed.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void ThrowIfDisposed()
+        {
+            if (this.isDisposed)
+            {
+                // We can't use ThrowHelper here as we only want to invoke ToString if we
+                // are about to throw an exception. The JIT will recognize this pattern
+                // as this method has a single basic block that always throws an exception.
+                void Throw() => throw new ObjectDisposedException(ToString());
+
+                Throw();
+            }
+        }
     }
 }
