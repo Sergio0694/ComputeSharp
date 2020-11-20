@@ -5,6 +5,7 @@ using ComputeSharp.Graphics.Buffers.Interop;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
+using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 
 namespace ComputeSharp.Graphics.Buffers.Abstract
@@ -30,15 +31,19 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <inheritdoc/>
         public override unsafe void GetData(Span<T> span, int offset, int count)
         {
-            using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, count, count * ElementSizeInBytes, BufferType.ReadBack);
+            int
+                byteOffset = offset * ElementSizeInBytes,
+                byteSize = count * ElementSizeInBytes;
+
+            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(BufferType.ReadBack, byteSize);
 
             using (CommandList copyCommandList = new CommandList(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY))
             {
-                copyCommandList.CopyBufferRegion(D3D12Resource, offset * ElementSizeInBytes, transferBuffer.D3D12Resource, 0, count * ElementSizeInBytes);
+                copyCommandList.CopyBufferRegion(D3D12Resource, byteOffset, d3D12Resource.Get(), 0, byteSize);
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
 
-            using ID3D12ResourceMap resource = transferBuffer.D3D12Resource->Map();
+            using ID3D12ResourceMap resource = d3D12Resource.Get()->Map();
 
             MemoryHelper.Copy(resource.Pointer, 0, span, count);
         }
@@ -46,16 +51,20 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <inheritdoc/>
         public override unsafe void SetData(ReadOnlySpan<T> span, int offset, int count)
         {
-            using Buffer<T> transferBuffer = new Buffer<T>(GraphicsDevice, count, count * ElementSizeInBytes, BufferType.Upload);
+            int
+                byteOffset = offset * ElementSizeInBytes,
+                byteSize = count * ElementSizeInBytes;
 
-            using (ID3D12ResourceMap resource = transferBuffer.D3D12Resource->Map())
+            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(BufferType.Upload, byteSize);
+
+            using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
             {
                 MemoryHelper.Copy(span, resource.Pointer, 0, count);
             }
 
             using CommandList copyCommandList = new CommandList(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
-            copyCommandList.CopyBufferRegion(transferBuffer.D3D12Resource, 0, D3D12Resource, offset * ElementSizeInBytes, count * ElementSizeInBytes);
+            copyCommandList.CopyBufferRegion(d3D12Resource.Get(), 0, D3D12Resource, byteOffset, byteSize);
             copyCommandList.ExecuteAndWaitForCompletion();
         }
 

@@ -52,12 +52,12 @@ namespace ComputeSharp.Graphics.Buffers
         internal readonly BufferType BufferType;
 
         /// <summary>
-        /// Creates a new <see cref="Buffer{T}"/> instance with the specified parameters
+        /// Creates a new <see cref="Buffer{T}"/> instance with the specified parameters.
         /// </summary>
-        /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
-        /// <param name="size">The number of items to store in the current buffer</param>
-        /// <param name="sizeInBytes">The size in bytes for the current buffer</param>
-        /// <param name="bufferType">The buffer type for the current buffer</param>
+        /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
+        /// <param name="size">The number of items to store in the current buffer.</param>
+        /// <param name="sizeInBytes">The size in bytes for the current buffer.</param>
+        /// <param name="bufferType">The buffer type for the current buffer.</param>
         internal Buffer(GraphicsDevice device, int size, int sizeInBytes, BufferType bufferType)
         {
             this.d3D12Resource = device.D3D12Device->CreateCommittedResource(bufferType, sizeInBytes);
@@ -70,16 +70,13 @@ namespace ComputeSharp.Graphics.Buffers
 
             GraphicsDevice = device;
 
-            if (bufferType is BufferType.Constant or BufferType.ReadOnly or BufferType.ReadWrite)
-            {
-                GraphicsDevice.AllocateShaderResourceViewDescriptorHandles(out D3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
+            GraphicsDevice.AllocateShaderResourceViewDescriptorHandles(out D3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 
-                switch (bufferType)
-                {
-                    case BufferType.Constant: CreateConstantBufferView(); break;
-                    case BufferType.ReadOnly: CreateShaderResourceView(); break;
-                    case BufferType.ReadWrite: CreateUnorderedAccessView(); break;
-                }
+            switch (bufferType)
+            {
+                case BufferType.Constant: CreateConstantBufferView(); break;
+                case BufferType.ReadOnly: CreateShaderResourceView(); break;
+                case BufferType.ReadWrite: CreateUnorderedAccessView(); break;
             }
         }
 
