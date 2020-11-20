@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using ComputeSharp.Core.Extensions;
+using ComputeSharp.Core.Helpers;
 using ComputeSharp.Graphics.Buffers.Enums;
-using ComputeSharp.Graphics.Helpers;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_QUEUE_FLAGS;
 using static TerraFX.Interop.D3D12_COMMAND_QUEUE_PRIORITY;
@@ -14,7 +15,6 @@ using static TerraFX.Interop.D3D12_HEAP_TYPE;
 using static TerraFX.Interop.D3D12_RESOURCE_FLAGS;
 using static TerraFX.Interop.D3D12_RESOURCE_STATES;
 using FX = TerraFX.Interop.Windows;
-using ComputeSharp.Core.Helpers;
 
 namespace ComputeSharp.Graphics.Extensions
 {

@@ -2,8 +2,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using ComputeSharp.Core.Extensions;
 using ComputeSharp.Exceptions;
-using ComputeSharp.Graphics.Helpers;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
 

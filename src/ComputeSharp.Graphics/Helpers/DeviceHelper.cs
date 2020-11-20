@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using ComputeSharp.Core.Extensions;
 using ComputeSharp.Core.Helpers;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;

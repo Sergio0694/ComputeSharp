@@ -1,5 +1,5 @@
-﻿using ComputeSharp.Graphics.Helpers;
-using System;
+﻿using System;
+using ComputeSharp.Core.Extensions;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_PIPELINE_STATE_FLAGS;
 using FX = TerraFX.Interop.Windows;

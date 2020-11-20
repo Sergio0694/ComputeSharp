@@ -1,7 +1,7 @@
-﻿using ComputeSharp.Graphics.Extensions;
-using ComputeSharp.Graphics.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using ComputeSharp.Core.Extensions;
+using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop;
 
 namespace ComputeSharp.Graphics.Commands

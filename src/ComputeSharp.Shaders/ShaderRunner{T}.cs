@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Shaders.Extensions;

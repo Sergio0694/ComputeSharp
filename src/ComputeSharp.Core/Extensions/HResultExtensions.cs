@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Helpers;
 using HRESULT = System.Int32;
 
-namespace ComputeSharp.Graphics.Helpers
+namespace ComputeSharp.Core.Extensions
 {
     /// <summary>
     /// Helper methods to efficiently throw exceptions.

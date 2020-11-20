@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using TerraFX.Interop;
 
-namespace ComputeSharp
+namespace ComputeSharp.Core.Extensions
 {
     /// <summary>
     /// Helper methods for working with the <see cref="ComPtr{T}"/> type.
