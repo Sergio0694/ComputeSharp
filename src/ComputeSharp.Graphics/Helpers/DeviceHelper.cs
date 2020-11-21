@@ -27,6 +27,21 @@ namespace ComputeSharp.Graphics.Helpers
         }
 
         /// <summary>
+        /// Gets the <see cref="Luid"/> of the default device.
+        /// </summary>
+        /// <returns>The <see cref="Luid"/> of the default device supporting at least DX12.0.</returns>
+        /// <remarks>This methods assumes that a default device is available.</remarks>
+        [Pure]
+        public static unsafe Luid GetDefaultDeviceLuid()
+        {
+            DXGI_ADAPTER_DESC1 dxgiDescription1;
+
+            _ = TryGetDefaultDevice(null, &dxgiDescription1);
+
+            return Luid.FromLUID(dxgiDescription1.AdapterLuid);
+        }
+
+        /// <summary>
         /// Gets the default <see cref="GraphicsDevice"/> instance.
         /// </summary>
         /// <returns>The default <see cref="GraphicsDevice"/> instance supporting at least DX12.0.</returns>

@@ -13,7 +13,7 @@ namespace ComputeSharp.Graphics
         /// <param name="description">The available info for the associate device.</param>
         internal unsafe GraphicsDeviceInfo(DXGI_ADAPTER_DESC1* dxgiDescription1)
         {
-            Luid = *(Luid*)&dxgiDescription1->AdapterLuid;
+            Luid = Luid.FromLUID(dxgiDescription1->AdapterLuid);
             Name = new string((char*)dxgiDescription1->Description);
             MemorySize = dxgiDescription1->DedicatedVideoMemory;
         }

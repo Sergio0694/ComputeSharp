@@ -203,6 +203,8 @@ namespace ComputeSharp.Graphics
         /// <inheritdoc/>
         protected override void OnDispose()
         {
+            if (DeviceHelper.GetDefaultDeviceLuid() == Luid) return;
+
             DeviceHelper.NotifyDisposedDevice(this);
 
             this.d3D12Device.Dispose();
