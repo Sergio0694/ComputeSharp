@@ -143,7 +143,7 @@ namespace ComputeSharp.Graphics.Helpers
                                 &d3d12DeviceGuid,
                                 d3d12device.GetVoidAddressOf()).Assert();
 
-                            this.graphicsDevice = new GraphicsDevice(d3d12device.Move(), &dxgiDescription1);
+                            this.graphicsDevice = GetOrCreateDevice(d3d12device.Move(), &dxgiDescription1);
 
                             return true;
                         }

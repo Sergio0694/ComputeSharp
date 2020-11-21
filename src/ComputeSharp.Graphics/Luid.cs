@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using TerraFX.Interop;
 
 namespace ComputeSharp.Graphics
 {
@@ -15,6 +16,18 @@ namespace ComputeSharp.Graphics
         private readonly int highPart;
 
         #pragma warning restore
+
+        /// <summary>
+        /// Creates a new <see cref="Luid"/> instance from a raw <see cref="LUID"/> value.
+        /// </summary>
+        /// <param name="luid">The input <see cref="LUID"/> value.</param>
+        /// <returns>A <see cref="Luid"/> instance with the same value.</returns>
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static unsafe Luid FromLUID(LUID luid)
+        {
+            return *(Luid*)&luid;
+        }
 
         /// <inheritdoc/>
         [Pure]

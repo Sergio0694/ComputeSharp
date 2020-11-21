@@ -5,6 +5,7 @@ using ComputeSharp.Core.Helpers;
 using ComputeSharp.Core.Interop;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
+using ComputeSharp.Graphics.Helpers;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 using static TerraFX.Interop.D3D12_FEATURE;
@@ -12,7 +13,7 @@ using static TerraFX.Interop.D3D12_FEATURE;
 namespace ComputeSharp.Graphics
 {
     /// <summary>
-    /// A <see langword="class"/> that represents a DX12.1-compatible GPU device that can be used to run compute shaders.
+    /// A <see langword="class"/> that represents a DX12-compatible GPU device that can be used to run compute shaders.
     /// </summary>
     [DebuggerDisplay("{ToString(),raw}")]
     public sealed unsafe class GraphicsDevice : NativeObject
@@ -84,7 +85,7 @@ namespace ComputeSharp.Graphics
             this.copyCommandAllocatorPool = new ID3D12CommandAllocatorPool(D3D12_COMMAND_LIST_TYPE_COPY);
             this.shaderResourceViewDescriptorAllocator = new ID3D12DescriptorHandleAllocator(d3d12device);
 
-            Luid = *(Luid*)&dxgiDescription1->AdapterLuid;
+            Luid = Luid.FromLUID(dxgiDescription1->AdapterLuid);
             Name = new string((char*)dxgiDescription1->Description);
             MemorySize = dxgiDescription1->DedicatedVideoMemory;
 
@@ -202,6 +203,8 @@ namespace ComputeSharp.Graphics
         /// <inheritdoc/>
         protected override void OnDispose()
         {
+            DeviceHelper.NotifyDisposedDevice(this);
+
             this.d3D12Device.Dispose();
             this.d3D12ComputeCommandQueue.Dispose();
             this.d3D12CopyCommandQueue.Dispose();

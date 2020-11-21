@@ -37,7 +37,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(BufferType.ReadBack, byteSize);
 
-            using (CommandList copyCommandList = new CommandList(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY))
+            using (CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY))
             {
                 copyCommandList.CopyBufferRegion(D3D12Resource, byteOffset, d3D12Resource.Get(), 0, byteSize);
                 copyCommandList.ExecuteAndWaitForCompletion();
@@ -62,7 +62,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 MemoryHelper.Copy(span, resource.Pointer, 0, count);
             }
 
-            using CommandList copyCommandList = new CommandList(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+            using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
             copyCommandList.CopyBufferRegion(d3D12Resource.Get(), 0, D3D12Resource, byteOffset, byteSize);
             copyCommandList.ExecuteAndWaitForCompletion();
@@ -74,7 +74,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             if (!buffer.IsPaddingPresent)
             {
                 // Directly copy the input buffer
-                using CommandList copyCommandList = new CommandList(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+                using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
                 copyCommandList.CopyBufferRegion(buffer.D3D12Resource, 0, D3D12Resource, 0, SizeInBytes);
                 copyCommandList.ExecuteAndWaitForCompletion();

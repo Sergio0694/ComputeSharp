@@ -39,7 +39,7 @@ namespace ComputeSharp.Graphics.Helpers
 
             if (TryGetDefaultDevice(d3d12device.GetAddressOf(), &dxgiDescription1))
             {
-                return new GraphicsDevice(d3d12device.Move(), &dxgiDescription1);
+                return GetOrCreateDevice(d3d12device.Move(), &dxgiDescription1);
             }
 
             return ThrowHelper.ThrowNotSupportedException<GraphicsDevice>("There isn't a supported GPU device on the current machine");
@@ -51,7 +51,7 @@ namespace ComputeSharp.Graphics.Helpers
         /// <param name="d3d12device">A pointer to the <see cref="ID3D12Device"/> object to create, or <see langword="null"/>.</param>
         /// <param name="dxgiDescription1">A pointer to the <see cref="DXGI_ADAPTER_DESC1"/> value for the device found.</param>
         /// <returns>Whether a default device was found with the requested feature level.</returns>
-        public static unsafe bool TryGetDefaultDevice(ID3D12Device** d3d12device, DXGI_ADAPTER_DESC1* dxgiDescription1)
+        private static unsafe bool TryGetDefaultDevice(ID3D12Device** d3d12device, DXGI_ADAPTER_DESC1* dxgiDescription1)
         {
             using ComPtr<IDXGIFactory4> dxgiFactory4 = default;
 
