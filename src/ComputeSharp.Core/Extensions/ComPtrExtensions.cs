@@ -10,20 +10,6 @@ namespace ComputeSharp.Core.Extensions
     public static class ComPtrExtensions
     {
         /// <summary>
-        /// Gets whether the current <see cref="ComPtr{T}"/> instance as is not <see langword="null"/>.
-        /// </summary>
-        /// <typeparam name="T">The type to wrap in the current <see cref="ComPtr{T}"/> instance.</typeparam>
-        /// <param name="ptr">The input <see cref="ComPtr{T}"/> instance to check.</param>
-        /// <returns>Whether or not <paramref name="ptr"/> is not <see langword="null"/>.</returns>
-        [Pure]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe bool Exists<T>(this ComPtr<T> ptr)
-            where T : unmanaged
-        {
-            return ptr.Get() != null;
-        }
-
-        /// <summary>
         /// Gets the address of the current <see cref="ComPtr{T}"/> instance as a raw <see langword="void"/> double pointer.
         /// </summary>
         /// <typeparam name="T">The type to wrap in the current <see cref="ComPtr{T}"/> instance.</typeparam>
