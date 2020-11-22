@@ -123,7 +123,7 @@ namespace ComputeSharp.Shaders
             commandList.SetPipelineData(pipelineData);
 
             // Extract the dispatch data for the shader invocation
-            using DispatchData dispatchData = shaderData.Loader.GetDispatchData(in shader, x, y, z);
+            using DispatchData dispatchData = shaderData.Loader.GetDispatchData(device, in shader, x, y, z);
 
             // Load the captured buffers
             ReadOnlySpan<D3D12_GPU_DESCRIPTOR_HANDLE> resources = dispatchData.Resources;

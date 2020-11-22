@@ -3,6 +3,7 @@ using System.Buffers;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Interop;
+using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Buffers.Enums;
 using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop;
@@ -233,6 +234,20 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         protected override void OnDispose()
         {
             this.d3D12Resource.Dispose();
+        }
+
+        /// <summary>
+        /// Throws a <see cref="GraphicsDeviceMismatchException"/> if the target device doesn't match the current one.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void ThrowIfDeviceMismatch(GraphicsDevice device)
+        {
+            if (GraphicsDevice != device)
+            {
+                void Throw() => throw GraphicsDeviceMismatchException.Create(this, device);
+
+                Throw();
+            }
         }
     }
 }
