@@ -109,7 +109,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         [Pure]
         public T[] GetData(int offset, int count)
         {
-            T[] data = new T[count];
+            T[] data = GC.AllocateUninitializedArray<T>(count);
 
             GetData(data, offset, count);
 
