@@ -73,17 +73,26 @@ namespace ComputeSharp.SourceGenerators
                 //     this.c = c;
                 //     ...
                 // }
-                //
-                // This will be placed inside the original namespace, and with all the
-                // necessary using directive at the top for the input parameters.
-                var source =
-                    CompilationUnit().AddMembers(
-                    NamespaceDeclaration(IdentifierName(namespaceName)).AddMembers(
+                var structDeclarationSyntax =
                     StructDeclaration(structName).WithModifiers(structModifiers).AddMembers(
                     ConstructorDeclaration(structName)
                     .AddModifiers(Token(SyntaxKind.PublicKeyword))
                     .AddParameterListParameters(fields.Select(field => Parameter(field.Identifier).WithType(field.Type)).ToArray())
-                    .AddBodyStatements(fields.Select(field => ParseStatement($"this.{field.Identifier} = {field.Identifier};")).ToArray()))))
+                    .AddBodyStatements(fields.Select(field => ParseStatement($"this.{field.Identifier} = {field.Identifier};")).ToArray()));
+
+                TypeDeclarationSyntax typeDeclarationSyntax = structDeclarationSyntax;
+
+                // Add all parent types in ascending order, if any
+                foreach (var parentType in structDeclaration.Ancestors().OfType<TypeDeclarationSyntax>())
+                {
+                    typeDeclarationSyntax = parentType.WithMembers(SingletonList<MemberDeclarationSyntax>(typeDeclarationSyntax));
+                }
+
+                // Create the compilation unit with the namespace and target member.
+                // From this, we can finally generate the source code to output.
+                var source =
+                    CompilationUnit().AddMembers(
+                    NamespaceDeclaration(IdentifierName(namespaceName)).AddMembers(typeDeclarationSyntax))
                     .NormalizeWhitespace()
                     .ToFullString();
 

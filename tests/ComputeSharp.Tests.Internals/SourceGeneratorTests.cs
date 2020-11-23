@@ -29,23 +29,35 @@ namespace ComputeSharp.Tests.Internals
 
             namespace MyFancyApp.Sample
             {
-                [AutoConstructor]
-                public readonly partial struct MyShader
+                public partial interface IFoo<T>
                 {
-                    private readonly Buffer<Vector4> A;
-                    private readonly float B;
+                    public partial class Foo
+                    {
+                        [AutoConstructor]
+                        public readonly partial struct MyShader
+                        {
+                            private readonly Buffer<Vector4> A;
+                            private readonly float B;
+                        }
+                    }
                 }
             }";
 
             string expected = @"
             namespace MyFancyApp.Sample
             {
-                public readonly partial struct MyShader
+                public partial interface IFoo<T>
                 {
-                    public MyShader(MyLibrary.Buffer<System.Numerics.Vector4> A, float B)
+                    public partial class Foo
                     {
-                        this.A = A;
-                        this.B = B;
+                        public readonly partial struct MyShader
+                        {
+                            public MyShader(MyLibrary.Buffer<System.Numerics.Vector4> A, float B)
+                            {
+                                this.A = A;
+                                this.B = B;
+                            }
+                        }
                     }
                 }
             }";
