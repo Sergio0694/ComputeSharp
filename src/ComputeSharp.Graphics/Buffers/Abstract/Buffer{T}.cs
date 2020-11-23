@@ -122,6 +122,20 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         }
 
         /// <summary>
+        /// Reads the contents of the current <see cref="Buffer{T}"/> instance and writes them into a target array.
+        /// </summary>
+        /// <param name="destination">The input array to write data to.</param>
+        public void GetData(T[] destination) => GetData(destination.AsSpan(), 0, Length);
+
+        /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="Buffer{T}"/> instance and writes them into a target array.
+        /// </summary>
+        /// <param name="destination">The input array to write data to.</param>
+        /// <param name="offset">The offset to start reading data from.</param>
+        /// <param name="count">The number of items to read.</param>
+        public void GetData(T[] destination, int offset, int count) => GetData(destination.AsSpan(), offset, count);
+
+        /// <summary>
         /// Reads the contents of the current <see cref="Buffer{T}"/> instance and writes them into a target <see cref="Span{T}"/>.
         /// </summary>
         /// <param name="destination">The input <see cref="Span{T}"/> to write data to.</param>
