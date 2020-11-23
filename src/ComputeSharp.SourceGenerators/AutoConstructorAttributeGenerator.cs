@@ -21,25 +21,6 @@ namespace ComputeSharp.SourceGenerators
         /// <inheritdoc/>
         public void Execute(GeneratorExecutionContext context)
         {
-            const string attributeText = @"
-            using System;
-
-            namespace ComputeSharp
-            {
-                /// <summary>
-                /// A shader that indicates that a target shader type should get an automatic constructor for all fields.
-                /// </summary>
-                [AttributeUsage(AttributeTargets.Struct, AllowMultiple = false)]
-                public sealed class AutoConstructorAttribute : Attribute
-                {
-                }
-            }";
-
-            var attributeSource = SourceText.From(ParseCompilationUnit(attributeText).NormalizeWhitespace().ToFullString(), Encoding.UTF8);
-
-            // Add the [AutoConstructor] attribute
-            context.AddSource("__ComputeSharp_AutoConstructorAttribute", attributeSource);
-
             // Find all the [AutoConstructor] usages
             ImmutableArray<AttributeSyntax> attributes = (
                 from tree in context.Compilation.SyntaxTrees
