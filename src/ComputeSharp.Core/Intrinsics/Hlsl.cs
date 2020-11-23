@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.Contracts;
 using System.Numerics;
-using ComputeSharp.Core.Attributes;
+using ComputeSharp.Core.Intrinsics.Attributes;
 using ComputeSharp.Exceptions;
 
 namespace ComputeSharp

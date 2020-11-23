@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
-using ComputeSharp.Core.Attributes;
+using ComputeSharp.Core.Intrinsics.Attributes;
 using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.Shaders.Mappings
