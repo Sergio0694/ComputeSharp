@@ -94,6 +94,8 @@ namespace ComputeSharp.Shaders
             int threadsZ,
             in T shader)
         {
+            device.ThrowIfDisposed();
+
             // Create the shader key
             ShaderKey key = new(ShaderHashCodeProvider.GetHashCode(in shader), threadsX, threadsY, threadsZ);
             CachedShader<T> shaderData;
