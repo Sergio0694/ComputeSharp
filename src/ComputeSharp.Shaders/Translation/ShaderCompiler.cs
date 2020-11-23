@@ -39,12 +39,10 @@ namespace ComputeSharp.Shaders.Translation
             using ComPtr<IDxcIncludeHandler> dxcIncludeHandler = default;
 
             Guid dxcCompilerCLGuid = FX.CLSID_DxcCompiler;
-            Guid dxcCompilerGuid = FX.IID_IDxcCompiler;
             Guid dxcLibraryCLGuid = FX.CLSID_DxcLibrary;
-            Guid dxcLibraryGuid = FX.IID_IDxcLibrary;
 
-            FX.DxcCreateInstance(&dxcCompilerCLGuid, &dxcCompilerGuid, dxcCompiler.GetVoidAddressOf()).Assert();
-            FX.DxcCreateInstance(&dxcLibraryCLGuid, &dxcLibraryGuid, dxcLibrary.GetVoidAddressOf()).Assert();
+            FX.DxcCreateInstance(&dxcCompilerCLGuid, FX.__uuidof<IDxcCompiler>(), dxcCompiler.GetVoidAddressOf()).Assert();
+            FX.DxcCreateInstance(&dxcLibraryCLGuid, FX.__uuidof<IDxcLibrary>(), dxcLibrary.GetVoidAddressOf()).Assert();
 
             dxcLibrary.Get()->CreateIncludeHandler(dxcIncludeHandler.GetAddressOf()).Assert();
 

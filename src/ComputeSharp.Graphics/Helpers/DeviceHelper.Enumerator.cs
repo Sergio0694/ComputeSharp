@@ -95,11 +95,9 @@ namespace ComputeSharp.Graphics.Helpers
                     {
                         this.isInitialized = true;
 
-                        Guid dxgiFactory4Guid = FX.IID_IDXGIFactory4;
-
                         fixed (IDXGIFactory4** dxgiFactory4 = this.dxgiFactory4)
                         {
-                            FX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, &dxgiFactory4Guid, (void**)dxgiFactory4).Assert();
+                            FX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, FX.__uuidof<IDXGIFactory4>(), (void**)dxgiFactory4).Assert();
                         }
                     }
 
@@ -124,12 +122,10 @@ namespace ComputeSharp.Graphics.Helpers
 
                         if (dxgiDescription1.DedicatedVideoMemory == 0) continue;
 
-                        Guid d3d12DeviceGuid = FX.IID_ID3D12Device;
-
                         HRESULT createDeviceResult = FX.D3D12CreateDevice(
                             dxgiAdapter1.Upcast<IDXGIAdapter1, IUnknown>().Get(),
                             D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_12_0,
-                            &d3d12DeviceGuid,
+                            FX.__uuidof<ID3D12Device>(),
                             null);
 
                         if (FX.SUCCEEDED(createDeviceResult) &&
@@ -140,7 +136,7 @@ namespace ComputeSharp.Graphics.Helpers
                             FX.D3D12CreateDevice(
                                 dxgiAdapter1.Upcast<IDXGIAdapter1, IUnknown>().Get(),
                                 D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_12_0,
-                                &d3d12DeviceGuid,
+                                FX.__uuidof<ID3D12Device>(),
                                 d3d12device.GetVoidAddressOf()).Assert();
 
                             this.graphicsDevice = GetOrCreateDevice(d3d12device.Move(), &dxgiDescription1);

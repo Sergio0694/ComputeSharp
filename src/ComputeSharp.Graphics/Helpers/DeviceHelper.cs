@@ -70,11 +70,9 @@ namespace ComputeSharp.Graphics.Helpers
         {
             using ComPtr<IDXGIFactory4> dxgiFactory4 = default;
 
-            Guid dxgiFactory4Guid = FX.IID_IDXGIFactory4;
-
             EnableDebugMode();
 
-            FX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, &dxgiFactory4Guid, dxgiFactory4.GetVoidAddressOf()).Assert();
+            FX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, FX.__uuidof<IDXGIFactory4>(), dxgiFactory4.GetVoidAddressOf()).Assert();
 
             uint i = 0;
 
@@ -95,12 +93,10 @@ namespace ComputeSharp.Graphics.Helpers
 
                 if (dxgiDescription1->DedicatedVideoMemory == 0) continue;
 
-                Guid d3d12DeviceGuid = FX.IID_ID3D12Device;
-
                 HRESULT createDeviceResult = FX.D3D12CreateDevice(
                     dxgiAdapter1.Upcast<IDXGIAdapter1, IUnknown>().Get(),
                     D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_12_0,
-                    &d3d12DeviceGuid,
+                    FX.__uuidof<ID3D12Device>(),
                     (void**)d3d12device);
 
                 if (FX.SUCCEEDED(createDeviceResult))
@@ -129,13 +125,9 @@ namespace ComputeSharp.Graphics.Helpers
             using ComPtr<ID3D12Debug> d3D12Debug = default;
             using ComPtr<ID3D12Debug1> d3D12Debug1 = default;
 
-            Guid d3D12DebugGuid = FX.IID_ID3D12Debug;
-
-            FX.D3D12GetDebugInterface(&d3D12DebugGuid, d3D12Debug.GetVoidAddressOf()).Assert();
+            FX.D3D12GetDebugInterface(FX.__uuidof<ID3D12Debug>(), d3D12Debug.GetVoidAddressOf()).Assert();
 
             d3D12Debug.Get()->EnableDebugLayer();
-
-            Guid d3D12Debug1Guid = FX.IID_ID3D12Debug1;
 
             if (FX.SUCCEEDED(d3D12Debug.CopyTo(d3D12Debug1.GetAddressOf())))
             {

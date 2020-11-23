@@ -50,13 +50,11 @@ namespace ComputeSharp.Shaders.Extensions
                     d3D3BlobError.GetAddressOf()).Assert();
             }
 
-            Guid d3D12RootSignatureGuid = FX.IID_ID3D12RootSignature;
-
             d3d12device.CreateRootSignature(
                 0,
                 d3D3Blob.Get()->GetBufferPointer(),
                 d3D3Blob.Get()->GetBufferSize(),
-                &d3D12RootSignatureGuid,
+                FX.__uuidof<ID3D12RootSignature>(),
                 d3D12RootSignature.GetVoidAddressOf()).Assert();
 
             return d3D12RootSignature.Move();
@@ -83,11 +81,10 @@ namespace ComputeSharp.Shaders.Extensions
             d3d12ComputePipelineStateDescription.NodeMask = 0;
             d3d12ComputePipelineStateDescription.CachedPSO = default;
             d3d12ComputePipelineStateDescription.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
-            Guid d3d12ComputePipelineStateGuid = FX.IID_ID3D12PipelineState;
 
             d3d12device.CreateComputePipelineState(
                 &d3d12ComputePipelineStateDescription,
-                &d3d12ComputePipelineStateGuid,
+                FX.__uuidof<ID3D12PipelineState>(),
                 d3D12PipelineState.GetVoidAddressOf()).Assert();
 
             return d3D12PipelineState.Move();

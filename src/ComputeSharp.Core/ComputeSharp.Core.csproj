@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit" Version="7.0.0-preview4" />
-    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.19041-beta1" />
+    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.19041-beta2-379749354" />
   </ItemGroup>
 
 </Project>

@@ -39,11 +39,10 @@ namespace ComputeSharp.Graphics.Extensions
             d3d12CommandQueueDesc.Priority = (int)D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
             d3d12CommandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
             d3d12CommandQueueDesc.NodeMask = 0;
-            Guid d3d12CommandQueueDescGuid = FX.IID_ID3D12CommandQueue;
 
             d3d12device.CreateCommandQueue(
                 &d3d12CommandQueueDesc,
-                &d3d12CommandQueueDescGuid,
+                FX.__uuidof<ID3D12CommandQueue>(),
                 d3D12CommandQueue.GetVoidAddressOf()).Assert();
 
             return d3D12CommandQueue.Move();
@@ -59,12 +58,10 @@ namespace ComputeSharp.Graphics.Extensions
         {
             using ComPtr<ID3D12Fence> d3d12Fence = default;
 
-            Guid d3D12FenceGuid = FX.IID_ID3D12Fence;
-
             d3d12device.CreateFence(
                 0,
                 D3D12_FENCE_FLAG_NONE,
-                &d3D12FenceGuid,
+                FX.__uuidof<ID3D12Fence>(),
                 d3d12Fence.GetVoidAddressOf()).Assert();
 
             return d3d12Fence.Move();
@@ -86,11 +83,10 @@ namespace ComputeSharp.Graphics.Extensions
             d3d12DescriptorHeapDesc.NumDescriptors = descriptorsCount;
             d3d12DescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
             d3d12DescriptorHeapDesc.NodeMask = 0;
-            Guid d3d12DescriptorHeapDescGuid = FX.IID_ID3D12DescriptorHeap;
 
             d3d12device.CreateDescriptorHeap(
                 &d3d12DescriptorHeapDesc,
-                &d3d12DescriptorHeapDescGuid,
+                FX.__uuidof< ID3D12DescriptorHeap>(),
                 d3d12DescriptorHeap.GetVoidAddressOf()).Assert();
 
             return d3d12DescriptorHeap.Move();
@@ -129,7 +125,6 @@ namespace ComputeSharp.Graphics.Extensions
             d3D12HeapProperties.CreationNodeMask = 1;
             d3D12HeapProperties.VisibleNodeMask = 1;
             D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Buffer(sizeInBytes, d3D12ResourceFlags);
-            Guid d3D12ResourceGuid = FX.IID_ID3D12Resource;
 
             d3D12Device.CreateCommittedResource(
                 &d3D12HeapProperties,
@@ -137,7 +132,7 @@ namespace ComputeSharp.Graphics.Extensions
                 &d3D12ResourceDescription,
                 d3D12ResourceStates,
                 null,
-                &d3D12ResourceGuid,
+                FX.__uuidof<ID3D12Resource>(),
                 d3D12Resource.GetVoidAddressOf()).Assert();
 
             return d3D12Resource.Move();
@@ -156,11 +151,9 @@ namespace ComputeSharp.Graphics.Extensions
         {
             using ComPtr<ID3D12CommandAllocator> d3D12CommandAllocator = default;
 
-            Guid d3D12CommandAllocatorGuid = FX.IID_ID3D12CommandAllocator;
-
             d3d12device.CreateCommandAllocator(
                 d3d12CommandListType,
-                &d3D12CommandAllocatorGuid,
+                FX.__uuidof<ID3D12CommandAllocator>(),
                 d3D12CommandAllocator.GetVoidAddressOf()).Assert();
 
             return d3D12CommandAllocator.Move();
@@ -180,14 +173,12 @@ namespace ComputeSharp.Graphics.Extensions
         {
             using ComPtr<ID3D12GraphicsCommandList> d3d12GraphicsCommandList = default;
 
-            Guid d3D12GraphicsCommandListGuid = FX.IID_ID3D12GraphicsCommandList;
-
             d3d12device.CreateCommandList(
                 0,
                 d3d12CommandListType,
                 d3D12CommandAllocator,
                 null,
-                &d3D12GraphicsCommandListGuid,
+                FX.__uuidof<ID3D12GraphicsCommandList>(),
                 d3d12GraphicsCommandList.GetVoidAddressOf()).Assert();
 
             return d3d12GraphicsCommandList.Move();
