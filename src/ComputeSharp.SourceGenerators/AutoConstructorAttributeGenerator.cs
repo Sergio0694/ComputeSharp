@@ -21,7 +21,7 @@ namespace ComputeSharp.SourceGenerators
         /// <inheritdoc/>
         public void Execute(GeneratorExecutionContext context)
         {
-            string attributeSource = @"
+            const string attributeText = @"
             using System;
 
             namespace ComputeSharp
@@ -35,8 +35,10 @@ namespace ComputeSharp.SourceGenerators
                 }
             }";
 
+            var attributeSource = SourceText.From(ParseCompilationUnit(attributeText).NormalizeWhitespace().ToFullString(), Encoding.UTF8);
+
             // Add the [AutoConstructor] attribute
-            context.AddSource("__ComputeSharp_AutoConstructorAttribute", SourceText.From(attributeSource, Encoding.UTF8));
+            context.AddSource("__ComputeSharp_AutoConstructorAttribute", attributeSource);
 
             // Find all the [AutoConstructor] usages
             ImmutableArray<AttributeSyntax> attributes = (
