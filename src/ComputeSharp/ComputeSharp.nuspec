@@ -16,10 +16,11 @@
     <tags>dotnet net netcore netstandard csharp library graphics shader hlsl compute gpu</tags>
     <repository type="git" url="https://github.com/Sergio0694/ComputeSharp.git" branch="master" />
     <dependencies>
-      <dependency id="TerraFX.Interop.Windows" version="10.0.19041-beta1" />
       <dependency id="ICSharpCode.Decompiler" version="5.0.2.5153" />
       <dependency id="Microsoft.CodeAnalysis.CSharp" version="3.7.0" />
+      <dependency id="Microsoft.Toolkit" Version="7.0.0-preview4" />
       <dependency id="Stubble.Core" version="1.9.3" />
+      <dependency id="TerraFX.Interop.Windows" version="10.0.19041-beta1" />
     </dependencies>
   </metadata>
 </package>

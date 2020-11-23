@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.Core.Helpers;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace System.Reflection.Emit
 {

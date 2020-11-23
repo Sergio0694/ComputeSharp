@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Reflection;
-using ComputeSharp.Core.Helpers;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace ComputeSharp.Shaders.Translation.Models
 {

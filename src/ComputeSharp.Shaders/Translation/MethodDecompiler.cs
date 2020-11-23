@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
-using ComputeSharp.Core.Helpers;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Translation.Enums;
 using ICSharpCode.Decompiler;
@@ -16,6 +15,7 @@ using ICSharpCode.Decompiler.Metadata;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace ComputeSharp.Shaders.Translation
 {

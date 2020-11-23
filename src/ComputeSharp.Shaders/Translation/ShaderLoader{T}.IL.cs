@@ -5,12 +5,12 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.Core.Helpers;
 using ComputeSharp.Core.Interop;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Translation.Models;
+using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 
 namespace ComputeSharp.Shaders.Translation

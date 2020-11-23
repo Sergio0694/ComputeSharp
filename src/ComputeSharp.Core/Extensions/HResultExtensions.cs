@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using ComputeSharp.Core.Helpers;
+using Microsoft.Toolkit.Diagnostics;
 using HRESULT = System.Int32;
 
 namespace ComputeSharp.Core.Extensions

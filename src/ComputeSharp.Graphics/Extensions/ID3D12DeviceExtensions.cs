@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using ComputeSharp.Core.Extensions;
-using ComputeSharp.Core.Helpers;
 using ComputeSharp.Graphics.Buffers.Enums;
+using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_QUEUE_FLAGS;
 using static TerraFX.Interop.D3D12_COMMAND_QUEUE_PRIORITY;

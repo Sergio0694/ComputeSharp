@@ -4,9 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using ComputeSharp;
-using ComputeSharp.Core.Helpers;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Translation.Models;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Microsoft.CodeAnalysis.CSharp.Syntax
 {

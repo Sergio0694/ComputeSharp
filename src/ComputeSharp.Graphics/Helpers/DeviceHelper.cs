@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using ComputeSharp.Core.Extensions;
-using ComputeSharp.Core.Helpers;
+using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
 using HRESULT = System.Int32;
