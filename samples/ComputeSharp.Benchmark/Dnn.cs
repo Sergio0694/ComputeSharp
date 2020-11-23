@@ -6,7 +6,7 @@ namespace ComputeSharp.Benchmark
     /// <summary>
     /// A <see langword="class"/> that contains primitives to run certain operations of a neural network
     /// </summary>
-    internal static class Dnn
+    internal static partial class Dnn
     {
         /// <summary>
         /// Executes the forward pass on a fully connected layer on the CPU
@@ -72,35 +72,16 @@ namespace ComputeSharp.Benchmark
         /// <summary>
         /// Kernel for <see cref="FullyConnectedForwardGpu"/>
         /// </summary>
-        private readonly struct FullyConnectedForwardKernel : IComputeShader
+        [AutoConstructor]
+        private readonly partial struct FullyConnectedForwardKernel : IComputeShader
         {
             private readonly int n;
             private readonly int m;
             private readonly int p;
-
             private readonly ReadOnlyBuffer<float> x;
             private readonly ReadOnlyBuffer<float> w;
             private readonly ReadOnlyBuffer<float> b;
             private readonly ReadWriteBuffer<float> y;
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public FullyConnectedForwardKernel(
-                int n,
-                int m,
-                int p,
-                ReadOnlyBuffer<float> x,
-                ReadOnlyBuffer<float> w,
-                ReadOnlyBuffer<float> b,
-                ReadWriteBuffer<float> y)
-            {
-                this.n = n;
-                this.m = m;
-                this.p = p;
-                this.x = x;
-                this.w = w;
-                this.b = b;
-                this.y = y;
-            }
 
             /// <inheritdoc/>
             public void Execute(ThreadIds ids)

@@ -8,11 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp.Shaders\ComputeSharp.Shaders.csproj" />
-    <ProjectReference
-      Include="..\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj"
-      OutputItemType="Analyzer"
-      ReferenceOutputAssembly="false"
-      PrivateAssets="contentfiles;build"/>
   </ItemGroup>
 
   <ItemGroup>

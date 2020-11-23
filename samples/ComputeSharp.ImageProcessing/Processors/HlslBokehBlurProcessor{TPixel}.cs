@@ -18,7 +18,7 @@ namespace ComputeSharp.BokehBlur.Processors
     /// </summary>
     /// <typeparam name="TPixel">The pixel format</typeparam>
     /// <remarks>This processor is based on the code from Mike Pound, see <a href="https://github.com/mikepound/convolve">github.com/mikepound/convolve</a></remarks>
-    public sealed class HlslBokehBlurProcessor<TPixel> : ImageProcessor<TPixel>
+    public sealed partial class HlslBokehBlurProcessor<TPixel> : ImageProcessor<TPixel>
         where TPixel : unmanaged, IPixel<TPixel>
     {
         /// <summary>
@@ -301,22 +301,23 @@ namespace ComputeSharp.BokehBlur.Processors
             int height = Source.Height;
             int width = Source.Width;
 
-            Gpu.Default.For(width, height, new VerticalConvolutionProcessor
-            {
-                width = width,
-                maxY = height - 1,
-                maxX = width - 1,
-                kernelLength = kernel.Length,
-                source = source,
-                target = target,
-                kernel = kernel
-            });
+            VerticalConvolutionProcessor shader = new(
+                width,
+                maxY: height - 1,
+                maxX: width - 1,
+                kernelLength: kernel.Size,
+                source,
+                target,
+                kernel);
+
+            Gpu.Default.For(width, height, in shader);
         }
 
         /// <summary>
         /// Kernel for <see cref="ApplyVerticalConvolution"/>
         /// </summary>
-        private struct VerticalConvolutionProcessor : IComputeShader
+        [AutoConstructor]
+        private partial struct VerticalConvolutionProcessor : IComputeShader
         {
             public int width;
             public int maxY;
@@ -371,24 +372,25 @@ namespace ComputeSharp.BokehBlur.Processors
             int height = Source.Height;
             int width = Source.Width;
 
-            Gpu.Default.For(width, height, new HorizontalConvolutionAndAccumulatePartialsProcessor
-            {
-                width = width,
-                maxY = height - 1,
-                maxX = width - 1,
-                kernelLength = kernel.Length,
-                z = z,
-                w = w,
-                source = source,
-                target = target,
-                kernel = kernel
-            });
+            HorizontalConvolutionAndAccumulatePartialsProcessor shader = new(
+                width,
+                maxY: height - 1,
+                maxX: width - 1,
+                kernelLength: kernel.Size,
+                z,
+                w,
+                source,
+                target,
+                kernel);
+
+            Gpu.Default.For(width, height, in shader);
         }
 
         /// <summary>
         /// Kernel for <see cref="ApplyHorizontalConvolutionAndAccumulatePartials"/>
         /// </summary>
-        private struct HorizontalConvolutionAndAccumulatePartialsProcessor : IComputeShader
+        [AutoConstructor]
+        private partial struct HorizontalConvolutionAndAccumulatePartialsProcessor : IComputeShader
         {
             public int width;
             public int maxY;
@@ -450,7 +452,8 @@ namespace ComputeSharp.BokehBlur.Processors
         /// <summary>
         /// The processor for <see cref="GetExposedVector4Buffer"/>
         /// </summary>
-        private readonly struct GetExposedVector4BufferProcessor : IRowOperation
+        [AutoConstructor]
+        private readonly partial struct GetExposedVector4BufferProcessor : IRowOperation
         {
             private readonly int width;
             private readonly float exp;
@@ -458,21 +461,6 @@ namespace ComputeSharp.BokehBlur.Processors
             private readonly Memory<TPixel> source;
             private readonly Memory<Vector4> target;
             private readonly Configuration configuration;
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public GetExposedVector4BufferProcessor(
-                int width,
-                float exp,
-                Memory<TPixel> source,
-                Memory<Vector4> target,
-                Configuration configuration)
-            {
-                this.width = width;
-                this.exp = exp;
-                this.source = source;
-                this.target = target;
-                this.configuration = configuration;
-            }
 
             /// <inheritdoc/>
             public void Invoke(int y)
@@ -514,7 +502,8 @@ namespace ComputeSharp.BokehBlur.Processors
         /// <summary>
         /// The processor for <see cref="ApplyInverseGammaExposure"/>
         /// </summary>
-        private readonly struct ApplyInverseGammaExposureProcessor : IRowOperation
+        [AutoConstructor]
+        private readonly partial struct ApplyInverseGammaExposureProcessor : IRowOperation
         {
             private readonly int width;
             private readonly float exp;
@@ -522,21 +511,6 @@ namespace ComputeSharp.BokehBlur.Processors
             private readonly Memory<Vector4> source;
             private readonly Memory<TPixel> target;
             private readonly Configuration configuration;
-
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public ApplyInverseGammaExposureProcessor(
-                int width,
-                float exp,
-                Memory<Vector4> source,
-                Memory<TPixel> target,
-                Configuration configuration)
-            {
-                this.width = width;
-                this.exp = exp;
-                this.source = source;
-                this.target = target;
-                this.configuration = configuration;
-            }
 
             /// <inheritdoc/>
             public void Invoke(int y)

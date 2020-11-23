@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace ComputeSharp.Sample
 {
-    class Program
+    partial class Program
     {
         static void Main()
         {
