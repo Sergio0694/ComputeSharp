@@ -31,7 +31,7 @@ namespace ComputeSharp
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
         /// <param name="length">The number of items to store in the current buffer</param>
         internal ConstantBuffer(GraphicsDevice device, int length)
-            : base(device, length, length * GetPaddedSize(), BufferType.Constant)
+            : base(device, length, (uint)GetPaddedSize(), BufferType.Constant)
         {
         }
 
@@ -106,7 +106,7 @@ namespace ComputeSharp
                 // Directly copy the input buffer, if possible
                 using CommandList copyCommandList = new CommandList(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
-                copyCommandList.CopyBufferRegion(buffer.D3D12Resource, 0, D3D12Resource, 0, SizeInBytes);
+                copyCommandList.CopyBufferRegion(buffer.D3D12Resource, 0, D3D12Resource, 0, (ulong)SizeInBytes);
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
             else SetDataWithCpuBuffer(buffer);

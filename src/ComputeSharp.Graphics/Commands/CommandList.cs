@@ -86,9 +86,9 @@ namespace ComputeSharp.Graphics.Commands
         /// <param name="d3d12ResourceDestination">The destination <see cref="ID3D12Resource"/> to write to.</param>
         /// <param name="destinationOffset">The starting offset to write the destination resource from.</param>
         /// <param name="numBytes">The total number of bytes to copy from one resource to another.</param>
-        public readonly void CopyBufferRegion(ID3D12Resource* d3D12ResourceSource, int sourceOffset, ID3D12Resource* d3d12ResourceDestination, int destinationOffset, int numBytes)
+        public readonly void CopyBufferRegion(ID3D12Resource* d3D12ResourceSource, ulong sourceOffset, ID3D12Resource* d3d12ResourceDestination, ulong destinationOffset, ulong numBytes)
         {
-            this.d3D12GraphicsCommandList.Get()->CopyBufferRegion(d3d12ResourceDestination, (uint)destinationOffset, d3D12ResourceSource, (uint)sourceOffset, (uint)numBytes);
+            this.d3D12GraphicsCommandList.Get()->CopyBufferRegion(d3d12ResourceDestination, destinationOffset, d3D12ResourceSource, sourceOffset, numBytes);
         }
 
         /// <summary>

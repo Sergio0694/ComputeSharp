@@ -6,6 +6,7 @@ using ComputeSharp.Core.Interop;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Buffers.Enums;
 using ComputeSharp.Graphics.Extensions;
+using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_SRV_DIMENSION;
 using static TerraFX.Interop.D3D12_UAV_DIMENSION;
@@ -31,24 +32,28 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         internal readonly D3D12_GPU_DESCRIPTOR_HANDLE D3D12GpuDescriptorHandle;
 
         /// <summary>
-        /// The size in bytes of the current buffer.
+        /// The size in bytes of the current buffer (this value is never negative).
         /// </summary>
-        protected readonly int SizeInBytes;
+        protected readonly nint SizeInBytes;
 
         /// <summary>
         /// Creates a new <see cref="Buffer{T}"/> instance with the specified parameters.
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
         /// <param name="length">The number of items to store in the current buffer.</param>
-        /// <param name="sizeInBytes">The size in bytes for the current buffer.</param>
+        /// <param name="elementSizeInBytes">The size in bytes of each buffer item (including padding, if any).</param>
         /// <param name="bufferType">The buffer type for the current buffer.</param>
-        internal Buffer(GraphicsDevice device, int length, int sizeInBytes, BufferType bufferType)
+        internal Buffer(GraphicsDevice device, int length, uint elementSizeInBytes, BufferType bufferType)
         {
-            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(bufferType, sizeInBytes);
+            device.ThrowIfDisposed();
 
-            SizeInBytes = sizeInBytes;
+            Guard.IsGreaterThanOrEqualTo(length, 0, nameof(length));
+
+            SizeInBytes = checked((nint)(length * elementSizeInBytes));
             GraphicsDevice = device;
             Length = length;
+
+            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(bufferType, (ulong)SizeInBytes);
 
             GraphicsDevice.AllocateShaderResourceViewDescriptorHandles(out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 
@@ -192,7 +197,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
         private void CreateConstantBufferView(D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
         {
-            uint constantBufferSize = (uint)((SizeInBytes + 255) & ~255);
+            uint constantBufferSize = checked((uint)((SizeInBytes + 255) & ~255));
 
             D3D12_CONSTANT_BUFFER_VIEW_DESC d3D12ConstantBufferViewDescription;
             d3D12ConstantBufferViewDescription.BufferLocation = D3D12Resource->GetGPUVirtualAddress();

@@ -106,7 +106,7 @@ namespace ComputeSharp.Graphics.Extensions
         public static ComPtr<ID3D12Resource> CreateCommittedResource(
             this ref ID3D12Device d3D12Device,
             BufferType bufferType,
-            int sizeInBytes)
+            ulong sizeInBytes)
         {
             (D3D12_HEAP_TYPE d3D12HeapType,
              D3D12_RESOURCE_FLAGS d3D12ResourceFlags,
@@ -128,7 +128,7 @@ namespace ComputeSharp.Graphics.Extensions
             d3D12HeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
             d3D12HeapProperties.CreationNodeMask = 1;
             d3D12HeapProperties.VisibleNodeMask = 1;
-            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Buffer((uint)sizeInBytes, d3D12ResourceFlags);
+            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Buffer(sizeInBytes, d3D12ResourceFlags);
             Guid d3D12ResourceGuid = FX.IID_ID3D12Resource;
 
             d3D12Device.CreateCommittedResource(
