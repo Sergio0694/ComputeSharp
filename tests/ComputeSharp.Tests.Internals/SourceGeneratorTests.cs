@@ -25,11 +25,16 @@ namespace ComputeSharp.Tests.Internals
                 public class Buffer<T>
                 {
                 }
+
+                public interface IFluff
+                {
+                }
             }
 
             namespace MyFancyApp.Sample
             {
-                public partial interface IFoo<T>
+                public partial interface IFoo<T> : IFluff
+                    where T : notnull, new()
                 {
                     public partial class Foo
                     {

@@ -87,7 +87,11 @@ namespace ComputeSharp.SourceGenerators
                 // Add all parent types in ascending order, if any
                 foreach (var parentType in structDeclaration.Ancestors().OfType<TypeDeclarationSyntax>())
                 {
-                    typeDeclarationSyntax = parentType.WithMembers(SingletonList<MemberDeclarationSyntax>(typeDeclarationSyntax));
+                    typeDeclarationSyntax = parentType
+                        .WithMembers(SingletonList<MemberDeclarationSyntax>(typeDeclarationSyntax))
+                        .WithConstraintClauses(List<TypeParameterConstraintClauseSyntax>())
+                        .WithBaseList(null)
+                        .WithoutTrivia();
                 }
 
                 // Create the compilation unit with the namespace and target member.
