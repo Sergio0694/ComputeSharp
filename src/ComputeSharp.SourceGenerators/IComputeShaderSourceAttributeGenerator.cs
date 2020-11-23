@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using ComputeSharp.SourceGenerators.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -34,10 +35,7 @@ namespace ComputeSharp.SourceGenerators
                 // Only process compute shader types
                 if (!structDeclarationSymbol.Interfaces.Any(interfaceSymbol => interfaceSymbol.Name == "IComputeShader")) continue;
 
-                var structFullName = structDeclarationSymbol.ToDisplayString(new SymbolDisplayFormat(
-                    SymbolDisplayGlobalNamespaceStyle.Omitted,
-                    SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
-                    SymbolDisplayGenericsOptions.IncludeTypeParameters));
+                var structFullName = structDeclarationSymbol.GetFullMetadataName();
 
                 // Find all declared methods in the type
                 ImmutableArray<MethodDeclarationSyntax> methodDeclarations = (
