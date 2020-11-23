@@ -27,7 +27,7 @@ namespace ComputeSharp.Tests.Internals
                 }
             }
 
-            namespace MyFancyApp
+            namespace MyFancyApp.Sample
             {
                 [AutoConstructor]
                 public readonly partial struct MyShader
@@ -38,7 +38,7 @@ namespace ComputeSharp.Tests.Internals
             }";
 
             string expected = @"
-            namespace MyFancyApp
+            namespace MyFancyApp.Sample
             {
                 public readonly partial struct MyShader
                 {

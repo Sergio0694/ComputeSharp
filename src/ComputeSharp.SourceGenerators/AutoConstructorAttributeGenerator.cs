@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static Microsoft.CodeAnalysis.SymbolDisplayTypeQualificationStyle;
 
 namespace ComputeSharp.SourceGenerators
 {
@@ -51,7 +52,7 @@ namespace ComputeSharp.SourceGenerators
                 INamedTypeSymbol structDeclarationSymbol = semanticModel.GetDeclaredSymbol(structDeclaration)!;
 
                 // Extract the info on the type to process
-                var namespaceName = structDeclarationSymbol.ContainingNamespace.Name;
+                var namespaceName = structDeclarationSymbol.ContainingNamespace.ToDisplayString(new(typeQualificationStyle: NameAndContainingTypesAndNamespaces));
                 var structName = structDeclaration.Identifier.Text;
                 var structModifiers = structDeclaration.Modifiers;
                 var fields = (
