@@ -20,9 +20,9 @@ namespace ComputeSharp
         /// Creates a new <see cref="ReadOnlyBuffer{T}"/> instance with the specified parameters
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
-        /// <param name="size">The number of items to store in the current buffer</param>
-        internal ReadOnlyBuffer(GraphicsDevice device, int size)
-            : base(device, size, BufferType.ReadOnly)
+        /// <param name="length">The number of items to store in the current buffer</param>
+        internal ReadOnlyBuffer(GraphicsDevice device, int length)
+            : base(device, length, BufferType.ReadOnly)
         {
         }
 
@@ -36,7 +36,7 @@ namespace ComputeSharp
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"ComputeSharp.ReadOnlyBuffer<{typeof(T)}>[{Size}]";
+            return $"ComputeSharp.ReadOnlyBuffer<{typeof(T)}>[{Length}]";
         }
     }
 }

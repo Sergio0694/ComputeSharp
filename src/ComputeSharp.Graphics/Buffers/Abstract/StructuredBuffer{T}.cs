@@ -21,10 +21,10 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// Creates a new <see cref="StructuredBuffer{T}"/> instance with the specified parameters
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
-        /// <param name="size">The number of items to store in the current buffer</param>
+        /// <param name="length">The number of items to store in the current buffer</param>
         /// <param name="bufferType">The buffer type for the current buffer</param>
-        internal StructuredBuffer(GraphicsDevice device, int size, BufferType bufferType)
-            : base(device, size, size * Unsafe.SizeOf<T>(), bufferType)
+        internal StructuredBuffer(GraphicsDevice device, int length, BufferType bufferType)
+            : base(device, length, length * Unsafe.SizeOf<T>(), bufferType)
         {
         }
 

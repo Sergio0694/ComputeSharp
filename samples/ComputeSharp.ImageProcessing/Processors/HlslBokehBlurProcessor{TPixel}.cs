@@ -262,8 +262,8 @@ namespace ComputeSharp.BokehBlur.Processors
                 using IMemoryOwner<Vector4> source4 = GetExposedVector4Buffer(memory);
 
                 using ReadOnlyBuffer<Vector4> sourceBuffer = Gpu.Default.AllocateReadOnlyBuffer(source4.Memory.Span);
-                using ReadWriteBuffer<Vector4> processingBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Size);
-                using ReadWriteBuffer<Vector4> firstPassBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Size * 2);
+                using ReadWriteBuffer<Vector4> processingBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Length);
+                using ReadWriteBuffer<Vector4> firstPassBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Length * 2);
                 using ReadOnlyBuffer<Vector2> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer<Vector2>(KernelSize);
 
                 ref Vector4 param0 = ref KernelParameters[0]; // Avoid bounds check to access the kernel parameters
@@ -306,7 +306,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 width = width,
                 maxY = height - 1,
                 maxX = width - 1,
-                kernelLength = kernel.Size,
+                kernelLength = kernel.Length,
                 source = source,
                 target = target,
                 kernel = kernel
@@ -376,7 +376,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 width = width,
                 maxY = height - 1,
                 maxX = width - 1,
-                kernelLength = kernel.Size,
+                kernelLength = kernel.Length,
                 z = z,
                 w = w,
                 source = source,

@@ -29,9 +29,9 @@ namespace ComputeSharp
         /// Creates a new <see cref="ConstantBuffer{T}"/> instance with the specified parameters
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
-        /// <param name="size">The number of items to store in the current buffer</param>
-        internal ConstantBuffer(GraphicsDevice device, int size)
-            : base(device, size, size * GetPaddedSize(), BufferType.Constant)
+        /// <param name="length">The number of items to store in the current buffer</param>
+        internal ConstantBuffer(GraphicsDevice device, int length)
+            : base(device, length, length * GetPaddedSize(), BufferType.Constant)
         {
         }
 
@@ -115,7 +115,7 @@ namespace ComputeSharp
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"ComputeSharp.ConstantBuffer<{typeof(T)}>[{Size}]";
+            return $"ComputeSharp.ConstantBuffer<{typeof(T)}>[{Length}]";
         }
     }
 }

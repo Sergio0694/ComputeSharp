@@ -39,16 +39,16 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// Creates a new <see cref="Buffer{T}"/> instance with the specified parameters.
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
-        /// <param name="size">The number of items to store in the current buffer.</param>
+        /// <param name="length">The number of items to store in the current buffer.</param>
         /// <param name="sizeInBytes">The size in bytes for the current buffer.</param>
         /// <param name="bufferType">The buffer type for the current buffer.</param>
-        internal Buffer(GraphicsDevice device, int size, int sizeInBytes, BufferType bufferType)
+        internal Buffer(GraphicsDevice device, int length, int sizeInBytes, BufferType bufferType)
         {
             this.d3D12Resource = device.D3D12Device->CreateCommittedResource(bufferType, sizeInBytes);
 
             SizeInBytes = sizeInBytes;
             GraphicsDevice = device;
-            Size = size;
+            Length = length;
 
             GraphicsDevice.AllocateShaderResourceViewDescriptorHandles(out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 
@@ -66,9 +66,9 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         public GraphicsDevice GraphicsDevice { get; }
 
         /// <summary>
-        /// Gets the size of the current buffer, as in the number of <typeparamref name="T"/> values it contains.
+        /// Gets the length of the current buffer.
         /// </summary>
-        public int Size { get; }
+        public int Length { get; }
 
         /// <summary>
         /// Gets the size in bytes of each <typeparamref name="T"/> value contained in the buffer.
@@ -85,7 +85,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         internal bool IsPaddingPresent
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => SizeInBytes > Size * Unsafe.SizeOf<T>();
+            get => SizeInBytes > Length * Unsafe.SizeOf<T>();
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// </summary>
         /// <returns>A <typeparamref name="T"/> array with the contents of the current buffer.</returns>
         [Pure]
-        public T[] GetData() => GetData(0, Size);
+        public T[] GetData() => GetData(0, Length);
 
         /// <summary>
         /// Reads the contents of the current <see cref="Buffer{T}"/> instance in a given range and returns an array.
@@ -120,7 +120,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// Reads the contents of the current <see cref="Buffer{T}"/> instance and writes them into a target <see cref="Span{T}"/>.
         /// </summary>
         /// <param name="span">The input <see cref="Span{T}"/> to write data to.</param>
-        public void GetData(Span<T> span) => GetData(span, 0, Size);
+        public void GetData(Span<T> span) => GetData(span, 0, Length);
 
         /// <summary>
         /// Reads the contents of the specified range from the current <see cref="Buffer{T}"/> instance and writes them into a target <see cref="Span{T}"/>.
@@ -148,7 +148,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to the current <see cref="Buffer{T}"/> instance.
         /// </summary>
         /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> to read data from.</param>
-        public void SetData(ReadOnlySpan<T> span) => SetData(span, 0, Size);
+        public void SetData(ReadOnlySpan<T> span) => SetData(span, 0, Length);
 
         /// <summary>
         /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to a specified area of the current <see cref="Buffer{T}"/> instance.
@@ -170,11 +170,11 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="buffer">The input <see cref="Buffer{T}"/> to read data from.</param>
         protected void SetDataWithCpuBuffer(Buffer<T> buffer)
         {
-            T[] array = ArrayPool<T>.Shared.Rent(buffer.Size);
+            T[] array = ArrayPool<T>.Shared.Rent(buffer.Length);
 
             try
             {
-                Span<T> span = array.AsSpan(0, buffer.Size);
+                Span<T> span = array.AsSpan(0, buffer.Length);
 
                 buffer.GetData(span);
 
@@ -210,7 +210,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             D3D12_SHADER_RESOURCE_VIEW_DESC d3D12ShaderResourceViewDescription = default;
             d3D12ShaderResourceViewDescription.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
             d3D12ShaderResourceViewDescription.Shader4ComponentMapping = FX.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-            d3D12ShaderResourceViewDescription.Buffer.NumElements = (uint)Size;
+            d3D12ShaderResourceViewDescription.Buffer.NumElements = (uint)Length;
             d3D12ShaderResourceViewDescription.Buffer.StructureByteStride = (uint)ElementSizeInBytes;
 
             GraphicsDevice.D3D12Device->CreateShaderResourceView(D3D12Resource, &d3D12ShaderResourceViewDescription, d3D12CpuDescriptorHandle);
@@ -224,7 +224,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         {
             D3D12_UNORDERED_ACCESS_VIEW_DESC d3D12UnorderedAccessViewDescription = default;
             d3D12UnorderedAccessViewDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
-            d3D12UnorderedAccessViewDescription.Buffer.NumElements = (uint)Size;
+            d3D12UnorderedAccessViewDescription.Buffer.NumElements = (uint)Length;
             d3D12UnorderedAccessViewDescription.Buffer.StructureByteStride = (uint)ElementSizeInBytes;
 
             GraphicsDevice.D3D12Device->CreateUnorderedAccessView(D3D12Resource, null, &d3D12UnorderedAccessViewDescription, d3D12CpuDescriptorHandle);

@@ -54,7 +54,7 @@ namespace ComputeSharp
         public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, Buffer<T> buffer)
             where T : unmanaged
         {
-            ConstantBuffer<T> constantBuffer = new(device, buffer.Size);
+            ConstantBuffer<T> constantBuffer = new(device, buffer.Length);
 
             constantBuffer.SetData(buffer);
 
@@ -66,13 +66,13 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
-        /// <param name="size">The size of the buffer to allocate.</param>
-        /// <returns>A zeroed <see cref="ReadOnlyBuffer{T}"/> instance of size <paramref name="size"/>.</returns>
+        /// <param name="length">The length of the buffer to allocate.</param>
+        /// <returns>A zeroed <see cref="ReadOnlyBuffer{T}"/> instance of size <paramref name="length"/>.</returns>
         [Pure]
-        public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, int size)
+        public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, int length)
             where T : unmanaged
         {
-            return new(device, size);
+            return new(device, length);
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace ComputeSharp
         public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, Buffer<T> buffer)
             where T : unmanaged
         {
-            ReadOnlyBuffer<T> readWriteBuffer = new(device, buffer.Size);
+            ReadOnlyBuffer<T> readWriteBuffer = new(device, buffer.Length);
 
             readWriteBuffer.SetData(buffer);
 
@@ -130,13 +130,13 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
-        /// <param name="size">The size of the buffer to allocate.</param>
-        /// <returns>A zeroed <see cref="ReadWriteBuffer{T}"/> instance of size <paramref name="size"/>.</returns>
+        /// <param name="length">The length of the buffer to allocate.</param>
+        /// <returns>A zeroed <see cref="ReadWriteBuffer{T}"/> instance of size <paramref name="length"/>.</returns>
         [Pure]
-        public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, int size)
+        public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, int length)
             where T : unmanaged
         {
-            return new(device, size);
+            return new(device, length);
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace ComputeSharp
         public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, Buffer<T> buffer)
             where T : unmanaged
         {
-            ReadWriteBuffer<T> readWriteBuffer = new(device, buffer.Size);
+            ReadWriteBuffer<T> readWriteBuffer = new(device, buffer.Length);
 
             readWriteBuffer.SetData(buffer);
 

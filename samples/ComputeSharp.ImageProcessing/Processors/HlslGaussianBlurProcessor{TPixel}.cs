@@ -97,7 +97,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 PixelOperations<TPixel>.Instance.ToVector4(Configuration, spanTPixel, spanVector4);
 
                 using ReadWriteBuffer<Vector4> sourceBuffer = Gpu.Default.AllocateReadWriteBuffer(spanVector4);
-                using ReadWriteBuffer<Vector4> firstPassBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Size);
+                using ReadWriteBuffer<Vector4> firstPassBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Length);
                 using ReadOnlyBuffer<float> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer(Kernel);
 
                 ApplyVerticalConvolution(sourceBuffer, firstPassBuffer, kernelBuffer);
@@ -129,7 +129,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 width = width,
                 maxY = height - 1,
                 maxX = width - 1,
-                kernelLength = kernel.Size,
+                kernelLength = kernel.Length,
                 source = source,
                 target = target,
                 kernel = kernel
@@ -191,7 +191,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 width = width,
                 maxY = height - 1,
                 maxX = width - 1,
-                kernelLength = kernel.Size,
+                kernelLength = kernel.Length,
                 source = source,
                 target = target,
                 kernel = kernel
