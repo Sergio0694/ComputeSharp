@@ -9,7 +9,7 @@ namespace ComputeSharp
     /// </summary>
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("This attribute is meant to be used from the source generator only", true)]
+    [Obsolete("This attribute is meant to be used from the source generator only")]
     public sealed class IComputeShaderSourceAttribute : Attribute
     {
         /// <summary>

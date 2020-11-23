@@ -65,6 +65,7 @@ namespace ComputeSharp.SourceGenerators
                                 AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(structFullName))),
                                 AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(methodDeclarationSymbol.Name))),
                                 AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(methodSource))))))
+                        .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                         .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
                         .NormalizeWhitespace()
                         .ToFullString();
