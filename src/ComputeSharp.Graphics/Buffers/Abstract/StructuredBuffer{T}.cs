@@ -5,6 +5,7 @@ using ComputeSharp.Graphics.Buffers.Interop;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
+using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 
@@ -31,6 +32,15 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <inheritdoc/>
         public override unsafe void GetData(Span<T> span, int offset, int count)
         {
+            GraphicsDevice.ThrowIfDisposed();
+
+            ThrowIfDisposed();
+
+            Guard.IsInRange(offset, 0, Length, nameof(offset));
+            Guard.IsInRange(count, 0, Length, nameof(count));
+            Guard.IsLessThanOrEqualTo((uint)offset + count, (uint)Length, nameof(count));
+            Guard.IsInRangeFor(count, span, nameof(count));
+
             nint
                 byteOffset = (nint)offset * ElementSizeInBytes,
                 byteSize = (nint)count * ElementSizeInBytes;
@@ -51,6 +61,15 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <inheritdoc/>
         public override unsafe void SetData(ReadOnlySpan<T> span, int offset, int count)
         {
+            GraphicsDevice.ThrowIfDisposed();
+
+            ThrowIfDisposed();
+
+            Guard.IsInRange(offset, 0, Length, nameof(offset));
+            Guard.IsInRange(count, 0, Length, nameof(count));
+            Guard.IsLessThanOrEqualTo((uint)offset + count, (uint)Length, nameof(count));
+            Guard.IsInRangeFor(count, span, nameof(count));
+
             nint
                 byteOffset = (nint)offset * ElementSizeInBytes,
                 byteSize = (nint)count * ElementSizeInBytes;
@@ -71,7 +90,14 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <inheritdoc/>
         public override unsafe void SetData(Buffer<T> buffer)
         {
-            if (!buffer.IsPaddingPresent)
+            GraphicsDevice.ThrowIfDisposed();
+            buffer.GraphicsDevice.ThrowIfDisposed();
+
+            ThrowIfDisposed();
+            buffer.ThrowIfDisposed();
+
+            if (!buffer.IsPaddingPresent &&
+                buffer.GraphicsDevice == GraphicsDevice)
             {
                 // Directly copy the input buffer
                 using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);

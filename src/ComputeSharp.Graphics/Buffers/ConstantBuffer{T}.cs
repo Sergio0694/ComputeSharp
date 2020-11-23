@@ -12,6 +12,7 @@ using ComputeSharp.Graphics.Buffers.Views;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
+using Microsoft.Toolkit.Diagnostics;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 
 namespace ComputeSharp
@@ -55,6 +56,15 @@ namespace ComputeSharp
         /// <inheritdoc/>
         public override unsafe void GetData(Span<T> span, int offset, int count)
         {
+            GraphicsDevice.ThrowIfDisposed();
+
+            ThrowIfDisposed();
+
+            Guard.IsInRange(offset, 0, Length, nameof(offset));
+            Guard.IsInRange(count, 0, Length, nameof(count));
+            Guard.IsLessThanOrEqualTo((uint)offset + count, (uint)Length, nameof(count));
+            Guard.IsInRangeFor(count, span, nameof(count));
+
             using ID3D12ResourceMap resource = D3D12Resource->Map();
 
             if (IsPaddingPresent)
@@ -78,6 +88,15 @@ namespace ComputeSharp
         /// <inheritdoc/>
         public override unsafe void SetData(ReadOnlySpan<T> span, int offset, int count)
         {
+            GraphicsDevice.ThrowIfDisposed();
+
+            ThrowIfDisposed();
+
+            Guard.IsInRange(offset, 0, Length, nameof(offset));
+            Guard.IsInRange(count, 0, Length, nameof(count));
+            Guard.IsLessThanOrEqualTo((uint)offset + count, (uint)Length, nameof(count));
+            Guard.IsInRangeFor(count, span, nameof(count));
+
             using ID3D12ResourceMap resource = D3D12Resource->Map();
 
             if (IsPaddingPresent)
@@ -101,7 +120,14 @@ namespace ComputeSharp
         /// <inheritdoc/>
         public override unsafe void SetData(Buffer<T> buffer)
         {
-            if (buffer is ConstantBuffer<T>)
+            GraphicsDevice.ThrowIfDisposed();
+            buffer.GraphicsDevice.ThrowIfDisposed();
+
+            ThrowIfDisposed();
+            buffer.ThrowIfDisposed();
+
+            if (buffer is ConstantBuffer<T> &&
+                buffer.GraphicsDevice == GraphicsDevice)
             {
                 // Directly copy the input buffer, if possible
                 using CommandList copyCommandList = new CommandList(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
