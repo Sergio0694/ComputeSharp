@@ -54,7 +54,7 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        public override unsafe void GetData(Span<T> span, int offset, int count)
+        public override unsafe void GetData(Span<T> destination, int offset, int count)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -63,13 +63,13 @@ namespace ComputeSharp
             Guard.IsInRange(offset, 0, Length, nameof(offset));
             Guard.IsInRange(count, 0, Length, nameof(count));
             Guard.IsLessThanOrEqualTo((uint)offset + count, (uint)Length, nameof(count));
-            Guard.IsInRangeFor(count, span, nameof(count));
+            Guard.IsInRangeFor(count, destination, nameof(count));
 
             using ID3D12ResourceMap resource = D3D12Resource->Map();
 
             if (IsPaddingPresent)
             {
-                ref T spanRef = ref MemoryMarshal.GetReference(span);
+                ref T spanRef = ref MemoryMarshal.GetReference(destination);
                 ref byte resourceRef = ref Unsafe.AsRef<byte>(resource.Pointer);
 
                 // Move to the initial ref
@@ -82,11 +82,11 @@ namespace ComputeSharp
                     Unsafe.Add(ref spanRef, i) = Unsafe.As<byte, T>(ref targetRef);
                 }
             }
-            else MemoryHelper.Copy(resource.Pointer, offset, span, count);
+            else MemoryHelper.Copy(resource.Pointer, offset, destination, count);
         }
 
         /// <inheritdoc/>
-        public override unsafe void SetData(ReadOnlySpan<T> span, int offset, int count)
+        public override unsafe void SetData(ReadOnlySpan<T> source, int offset, int count)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -95,13 +95,13 @@ namespace ComputeSharp
             Guard.IsInRange(offset, 0, Length, nameof(offset));
             Guard.IsInRange(count, 0, Length, nameof(count));
             Guard.IsLessThanOrEqualTo((uint)offset + count, (uint)Length, nameof(count));
-            Guard.IsInRangeFor(count, span, nameof(count));
+            Guard.IsInRangeFor(count, source, nameof(count));
 
             using ID3D12ResourceMap resource = D3D12Resource->Map();
 
             if (IsPaddingPresent)
             {
-                ref T spanRef = ref MemoryMarshal.GetReference(span);
+                ref T spanRef = ref MemoryMarshal.GetReference(source);
                 ref byte resourceRef = ref Unsafe.AsRef<byte>(resource.Pointer);
 
                 // Move to the initial offset
@@ -114,28 +114,28 @@ namespace ComputeSharp
                     Unsafe.As<byte, T>(ref targetRef) = Unsafe.Add(ref spanRef, i);
                 }
             }
-            else MemoryHelper.Copy(span, resource.Pointer, offset, count);
+            else MemoryHelper.Copy(source, resource.Pointer, offset, count);
         }
 
         /// <inheritdoc/>
-        public override unsafe void SetData(Buffer<T> buffer)
+        public override unsafe void SetData(Buffer<T> source)
         {
             GraphicsDevice.ThrowIfDisposed();
-            buffer.GraphicsDevice.ThrowIfDisposed();
+            source.GraphicsDevice.ThrowIfDisposed();
 
             ThrowIfDisposed();
-            buffer.ThrowIfDisposed();
+            source.ThrowIfDisposed();
 
-            if (buffer is ConstantBuffer<T> &&
-                buffer.GraphicsDevice == GraphicsDevice)
+            if (source is ConstantBuffer<T> &&
+                source.GraphicsDevice == GraphicsDevice)
             {
                 // Directly copy the input buffer, if possible
                 using CommandList copyCommandList = new CommandList(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
-                copyCommandList.CopyBufferRegion(buffer.D3D12Resource, 0, D3D12Resource, 0, (ulong)SizeInBytes);
+                copyCommandList.CopyBufferRegion(source.D3D12Resource, 0, D3D12Resource, 0, (ulong)SizeInBytes);
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
-            else SetDataWithCpuBuffer(buffer);
+            else SetDataWithCpuBuffer(source);
         }
 
         /// <inheritdoc/>

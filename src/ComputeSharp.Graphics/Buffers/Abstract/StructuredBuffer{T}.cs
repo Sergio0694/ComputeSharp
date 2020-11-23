@@ -30,7 +30,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         }
 
         /// <inheritdoc/>
-        public override unsafe void GetData(Span<T> span, int offset, int count)
+        public override unsafe void GetData(Span<T> destination, int offset, int count)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -39,7 +39,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             Guard.IsInRange(offset, 0, Length, nameof(offset));
             Guard.IsInRange(count, 0, Length, nameof(count));
             Guard.IsLessThanOrEqualTo((uint)offset + count, (uint)Length, nameof(count));
-            Guard.IsInRangeFor(count, span, nameof(count));
+            Guard.IsInRangeFor(count, destination, nameof(count));
 
             nint
                 byteOffset = (nint)offset * ElementSizeInBytes,
@@ -55,11 +55,11 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             using ID3D12ResourceMap resource = d3D12Resource.Get()->Map();
 
-            MemoryHelper.Copy(resource.Pointer, 0, span, count);
+            MemoryHelper.Copy(resource.Pointer, 0, destination, count);
         }
 
         /// <inheritdoc/>
-        public override unsafe void SetData(ReadOnlySpan<T> span, int offset, int count)
+        public override unsafe void SetData(ReadOnlySpan<T> source, int offset, int count)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -68,7 +68,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             Guard.IsInRange(offset, 0, Length, nameof(offset));
             Guard.IsInRange(count, 0, Length, nameof(count));
             Guard.IsLessThanOrEqualTo((uint)offset + count, (uint)Length, nameof(count));
-            Guard.IsInRangeFor(count, span, nameof(count));
+            Guard.IsInRangeFor(count, source, nameof(count));
 
             nint
                 byteOffset = (nint)offset * ElementSizeInBytes,
@@ -78,7 +78,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
             {
-                MemoryHelper.Copy(span, resource.Pointer, 0, count);
+                MemoryHelper.Copy(source, resource.Pointer, 0, count);
             }
 
             using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
@@ -88,24 +88,24 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         }
 
         /// <inheritdoc/>
-        public override unsafe void SetData(Buffer<T> buffer)
+        public override unsafe void SetData(Buffer<T> source)
         {
             GraphicsDevice.ThrowIfDisposed();
-            buffer.GraphicsDevice.ThrowIfDisposed();
+            source.GraphicsDevice.ThrowIfDisposed();
 
             ThrowIfDisposed();
-            buffer.ThrowIfDisposed();
+            source.ThrowIfDisposed();
 
-            if (!buffer.IsPaddingPresent &&
-                buffer.GraphicsDevice == GraphicsDevice)
+            if (!source.IsPaddingPresent &&
+                source.GraphicsDevice == GraphicsDevice)
             {
                 // Directly copy the input buffer
                 using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
-                copyCommandList.CopyBufferRegion(buffer.D3D12Resource, 0, D3D12Resource, 0, (ulong)SizeInBytes);
+                copyCommandList.CopyBufferRegion(source.D3D12Resource, 0, D3D12Resource, 0, (ulong)SizeInBytes);
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
-            else SetDataWithCpuBuffer(buffer);
+            else SetDataWithCpuBuffer(source);
         }
     }
 }
