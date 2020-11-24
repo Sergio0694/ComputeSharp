@@ -114,22 +114,13 @@ namespace ComputeSharp.Shaders.Translation
         /// <returns>This method always throws and never actually returs.</returns>
         [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private static ComPtr<IDxcBlob> ThrowHslsCompilationException(ComPtr<IDxcOperationResult> dxcOperationResult)
+        private static ComPtr<IDxcBlob> ThrowHslsCompilationException(IDxcOperationResult* dxcOperationResult)
         {
             using ComPtr<IDxcBlobEncoding> dxcBlobEncodingError = default;
 
-            dxcOperationResult.Get()->GetErrorBuffer(dxcBlobEncodingError.GetAddressOf()).Assert();
+            dxcOperationResult->GetErrorBuffer(dxcBlobEncodingError.GetAddressOf()).Assert();
 
-            using ComPtr<IDxcBlobUtf16> dxcBlobUtf16Error = default;
-
-            DxcLibrary.Get()->GetBlobAsUtf16(
-                dxcBlobEncodingError.Upcast<IDxcBlobEncoding, IDxcBlob>().Get(),
-                dxcBlobUtf16Error.Upcast<IDxcBlobUtf16, IDxcBlobEncoding>().GetAddressOf()).Assert();
-
-            string message = new string(
-                (char*)dxcBlobUtf16Error.Get()->GetStringPointer(),
-                0,
-                checked((int)dxcBlobUtf16Error.Get()->GetStringLength()));
+            string message = new((sbyte*)dxcBlobEncodingError.Get()->GetBufferPointer());
 
             throw new HlslCompilationException(message);
         }
