@@ -50,6 +50,17 @@ namespace ComputeSharp.SourceGenerators
                     // Rewrite the method syntax tree
                     var processedMethod = new ShaderSourceRewriter(semanticModel).Visit(methodDeclaration)!.WithoutTrivia();
 
+                    if (methodDeclarationSymbol.Name == "Execute" &&
+                        methodDeclarationSymbol.ReturnsVoid &&
+                        methodDeclarationSymbol.TypeParameters.Length == 0 &&
+                        methodDeclarationSymbol.Parameters.Length == 1 &&
+                        methodDeclarationSymbol.Parameters[0].Type.ToDisplayString() == "ComputeSharp.ThreadIds")
+                    {
+                        var parameterName = methodDeclarationSymbol.Parameters[0].Name;
+
+                        processedMethod = new ExecuteMethodRewriter(parameterName).Visit(processedMethod)!;
+                    }
+
                     // Produce the final method source
                     var processedMethodSource = processedMethod.NormalizeWhitespace().ToFullString();
 
@@ -171,6 +182,83 @@ namespace ComputeSharp.SourceGenerators
             public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
             {
                 return ((MethodDeclarationSyntax)base.VisitMethodDeclaration(node)!).WithBlockBody();
+            }
+        }
+
+        /// <summary>
+        /// A custom <see cref="CSharpSyntaxRewriter"/> type that does postprocessing fixups on the shader main method.
+        /// </summary>
+        private sealed class ExecuteMethodRewriter : CSharpSyntaxRewriter
+        {
+            /// <summary>
+            /// The identifier name for the input <see langword="uint3"/> parameter.
+            /// </summary>
+            private readonly string threadIdsIdentifier;
+
+            /// <summary>
+            /// Creates a new <see cref="ExecuteMethodRewriter"/> instance with the specified parameters.
+            /// </summary>
+            /// <param name="threadIdsIdentifier">The identifier name for the input <see langword="uint3"/> parameter.</param>
+            public ExecuteMethodRewriter(string threadIdsIdentifier)
+            {
+                this.threadIdsIdentifier = threadIdsIdentifier;
+            }
+
+            /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
+            public TNode? Visit<TNode>(TNode? node)
+                where TNode : SyntaxNode
+            {
+                return (TNode?)base.Visit(node);
+            }
+
+            /// <inheritdoc/>
+            public override SyntaxNode VisitParameter(ParameterSyntax node)
+            {
+                var updatedNode = (ParameterSyntax)base.VisitParameter(node)!;
+
+                return updatedNode.WithIdentifier(Identifier($"{updatedNode.Identifier.Text} : SV_DispatchThreadId"));
+            }
+
+            /// <inheritdoc/>
+            public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
+            {
+                var updatedNode = ((MethodDeclarationSyntax)base.VisitMethodDeclaration(node)!).WithModifiers(TokenList());
+
+                // When we're rewriting the main compute shader method, we need to insert a range
+                // check to ensure that invocation outside of the requested range are discarded.
+                // The following snippet creates this prologue before the user provided body:
+                //
+                // if (ids.X < __x &&
+                //     ids.Y < __y &&
+                //     ids.Z < __z)
+                // {
+                //     <body>
+                // }
+                var rangeCheckExpression =
+                    BinaryExpression(SyntaxKind.LogicalAndExpression,
+                        BinaryExpression(SyntaxKind.LogicalAndExpression,
+                            BinaryExpression(SyntaxKind.LessThanExpression,
+                                MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    IdentifierName(this.threadIdsIdentifier),
+                                    IdentifierName("X")),
+                                IdentifierName("__x")),
+                            BinaryExpression(SyntaxKind.LessThanExpression,
+                                MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    IdentifierName(this.threadIdsIdentifier),
+                                    IdentifierName("Y")),
+                                IdentifierName("__y"))),
+                        BinaryExpression(SyntaxKind.LessThanExpression,
+                            MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                IdentifierName(this.threadIdsIdentifier),
+                                IdentifierName("Z")),
+                            IdentifierName("__z")));
+
+                return updatedNode
+                    .WithIdentifier(Identifier("CSMain"))
+                    .WithBody(Block(IfStatement(rangeCheckExpression, updatedNode.Body!)));
             }
         }
     }
