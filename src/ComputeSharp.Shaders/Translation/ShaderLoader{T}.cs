@@ -4,22 +4,17 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
-using ComputeSharp.Graphics.Extensions;
+using ComputeSharp.Core.Helpers;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Renderer.Models.Fields;
 using ComputeSharp.Shaders.Renderer.Models.Fields.Abstract;
 using ComputeSharp.Shaders.Renderer.Models.Functions;
-using ComputeSharp.Shaders.Translation.Enums;
 using ComputeSharp.Shaders.Translation.Models;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_DESCRIPTOR_RANGE_TYPE;
-using ParameterInfo = ComputeSharp.Shaders.Renderer.Models.Functions.ParameterInfo;
 
-#pragma warning disable CS8618 // Non-nullable field is uninitialized
+#pragma warning disable CS0618, CS8618
 
 namespace ComputeSharp.Shaders.Translation
 {
@@ -93,7 +88,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// Gets the generated source code for the method in the current shader.
         /// </summary>
-        public string MethodBody { get; private set; }
+        public string EntryPoint { get; private set; }
 
         /// <summary>
         /// Gets the collection of <see cref="HlslBufferInfo"/> items for the shader fields.
@@ -232,7 +227,7 @@ namespace ComputeSharp.Shaders.Translation
                                                                 HlslKnownTypes.IsKnownVectorType(type)))
             {
                 // Captured static delegates with a return type
-                LoadStaticMethodSource(shader, fieldName, func.Method);
+                throw new NotImplementedException();
             }
             else ThrowHelper.ThrowArgumentException("Invalid captured variable");
         }
@@ -243,101 +238,11 @@ namespace ComputeSharp.Shaders.Translation
         /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader</param>
         private void LoadMethodSource(object shader)
         {
-            // Decompile the shader method
-            MethodInfo methodInfo = typeof(T).GetMethod(nameof(IComputeShader.Execute))!;
-            MethodDecompiler.Instance.GetSyntaxTree(methodInfo, MethodType.Execute, out MethodDeclarationSyntax root, out SemanticModel semanticModel);
-
-            // Rewrite the shader method (eg. to fix the type declarations)
-            ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel, typeof(T));
-            root = (MethodDeclarationSyntax)syntaxRewriter.Visit(root);
-
-            // Extract the implicit local functions
-            var locals = root.DescendantNodes().OfType<LocalFunctionStatementSyntax>().ToArray();
-            root = root.RemoveNodes(locals, SyntaxRemoveOptions.KeepNoTrivia)!;
-            foreach (var local in locals)
-            {
-                string alignedLocal = local.ToFullString().RemoveLeftPadding().Trim(' ', '\r', '\n');
-                alignedLocal = Regex.Replace(alignedLocal, @"(?<=\W)(\d+)[fFdD]", m => m.Groups[1].Value);
-                alignedLocal = HlslKnownKeywords.GetMappedText(alignedLocal);
-
-                this.localFunctionsInfo.Add(new LocalFunctionInfo(alignedLocal));
-            }
-
-            // Register the captured static members
-            foreach (var member in syntaxRewriter.StaticMembers)
-            {
-                LoadFieldInfo(shader, member.Value, member.Key);
-            }
-
-            // Register the captured static methods
-            foreach (var method in syntaxRewriter.StaticMethods)
-            {
-                LoadStaticMethodSource(shader, method.Key, method.Value);
-            }
-
-            // Get the thread ids identifier name and shader method body
-            ThreadsIdsVariableName = root.ParameterList.Parameters.First().Identifier.Text;
-            MethodBody = root.Body!.ToFullString();
-
-            // Additional preprocessing
-            MethodBody = Regex.Replace(MethodBody, @"(?<=\W)(\d+)[fFdD]", m => m.Groups[1].Value);
-            MethodBody = MethodBody.TrimEnd('\n', '\r', ' ');
-            MethodBody = HlslKnownKeywords.GetMappedText(MethodBody);
-        }
-
-        /// <summary>
-        /// Loads additional static methods used by the shader
-        /// </summary>
-        /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader</param>
-        /// <param name="name">The HLSL name of the new method to load</param>
-        /// <param name="methodInfo">The <see cref="MethodInfo"/> instance for the method to load</param>
-        private void LoadStaticMethodSource(object shader, string name, MethodInfo methodInfo)
-        {
-            // Decompile the target method
-            MethodDecompiler.Instance.GetSyntaxTree(methodInfo, MethodType.Static, out MethodDeclarationSyntax root, out SemanticModel semanticModel);
-
-            // Rewrite the method
-            ShaderSyntaxRewriter syntaxRewriter = new ShaderSyntaxRewriter(semanticModel, methodInfo.DeclaringType!);
-            root = (MethodDeclarationSyntax)syntaxRewriter.Visit(root);
-
-            // Register the captured static members
-            foreach (var member in syntaxRewriter.StaticMembers)
-            {
-                LoadFieldInfo(shader, member.Value, member.Key);
-            }
-
-            // Register the captured static methods
-            foreach (var method in syntaxRewriter.StaticMethods)
-            {
-                LoadStaticMethodSource(shader, method.Key, method.Value);
-            }
-
-            // Get the function parameters
-            IReadOnlyList<ParameterInfo> parameters = (
-                from parameter in root.ParameterList.Parameters.Select((p, i) => (Node: p, Index: i))
-                let modifiers = parameter.Node.Modifiers
-                let type = parameter.Node.Type!.ToFullString()
-                let parameterName = parameter.Node.Identifier.ToFullString()
-                let last = parameter.Index == root.ParameterList.Parameters.Count - 1
-                select new ParameterInfo(modifiers, type, parameterName, last)).ToArray();
-
-            // Get the function body
-            string body = root.Body!.ToFullString();
-            body = Regex.Replace(body, @"(?<=\W)(\d+)[fFdD]", m => m.Groups[1].Value);
-            body = body.TrimEnd('\n', '\r', ' ');
-            body = HlslKnownKeywords.GetMappedText(body);
-
-            // Get the final function info instance
-            FunctionInfo functionInfo = new FunctionInfo(
-                methodInfo.ReturnType,
-                $"{methodInfo.DeclaringType!.FullName}{Type.Delimiter}{methodInfo.Name}",
-                string.Join(", ", methodInfo.GetParameters().Select(p => $"{p.ParameterType.ToFriendlyString()} {p.Name}")),
-                root.ReturnType.ToString(),
-                name,
-                parameters,
-                body);
-
-            this.functionsInfo.Add(functionInfo);
+            EntryPoint = (
+                from attribute in typeof(T).Assembly.GetCustomAttributes<IComputeShaderSourceAttribute>()
+                where attribute.ShaderTypeName == typeof(T).FullName &&
+                      attribute.MethodName == nameof(IComputeShader.Execute)
+                select attribute.Source).First();
         }
     }
 }

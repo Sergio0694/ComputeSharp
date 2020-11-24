@@ -50,10 +50,4 @@ cbuffer _{{FieldName}} : register(b{{BufferIndex}})
 
 {{!Shader entry point}}
 [NumThreads({{NumThreadsX}}, {{NumThreadsY}}, {{NumThreadsZ}})]
-void CSMain(uint3 {{ThreadsIdsVariableName}} : SV_DispatchThreadId)
-{
-    if ({{ThreadsIdsVariableName}}.x < __x &&
-        {{ThreadsIdsVariableName}}.y < __y &&
-        {{ThreadsIdsVariableName}}.z < __z)
-{{&ShaderBody}}
-}
+{{&EntryPoint}}

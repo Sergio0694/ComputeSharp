@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ICSharpCode.Decompiler" Version="5.0.2.5153" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.7.0" />
     <PackageReference Include="Stubble.Core" Version="1.9.3" />
   </ItemGroup>

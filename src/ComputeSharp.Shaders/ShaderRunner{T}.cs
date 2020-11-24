@@ -176,7 +176,7 @@ namespace ComputeSharp.Shaders
                 NumThreadsY = threadsY,
                 NumThreadsZ = threadsZ,
                 ThreadsIdsVariableName = shaderLoader.ThreadsIdsVariableName,
-                ShaderBody = shaderLoader.MethodBody,
+                EntryPoint = shaderLoader.EntryPoint,
                 FunctionsList = shaderLoader.FunctionsInfo,
                 LocalFunctionsList = shaderLoader.LocalFunctionsInfo
             });
