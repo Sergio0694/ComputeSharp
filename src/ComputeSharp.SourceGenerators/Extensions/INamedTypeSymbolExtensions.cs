@@ -21,7 +21,7 @@ namespace ComputeSharp.SourceGenerators.Extensions
             {
                 return symbol switch
                 {
-                    INamespaceSymbol ns when ns.IsGlobalNamespace => builder.Insert(0, "global::"),
+                    INamespaceSymbol ns when ns.IsGlobalNamespace => builder,
                     INamespaceSymbol ns when ns.ContainingNamespace is { IsGlobalNamespace: false }
                         => BuildFrom(ns.ContainingNamespace, builder.Insert(0, $".{ns.MetadataName}")),
                     ITypeSymbol ts when ts.ContainingType is ISymbol pt => BuildFrom(pt, builder.Insert(0, $"+{ts.MetadataName}")),

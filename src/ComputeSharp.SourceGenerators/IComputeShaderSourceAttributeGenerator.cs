@@ -47,20 +47,11 @@ namespace ComputeSharp.SourceGenerators
                 {
                     IMethodSymbol methodDeclarationSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration)!;
 
-                    // Extract the source from either a block or an expression body
-                    var methodWithBlockBody = methodDeclaration.WithBody(
-                        (methodDeclaration.Body, methodDeclaration.ExpressionBody) switch
-                        {
-                            (BlockSyntax block, _) => block,
-                            (_, ArrowExpressionClauseSyntax arrow) => Block(ExpressionStatement(arrow.Expression)),
-                            _ => Block()
-                        });
-
                     // Rewrite the method syntax tree
-                    var processedMethod = new ShaderSourceRewriter(semanticModel)
-                        .Visit(methodWithBlockBody)
-                        .NormalizeWhitespace()
-                        .ToFullString();
+                    var processedMethod = new ShaderSourceRewriter(semanticModel).Visit(methodDeclaration)!.WithoutTrivia();
+
+                    // Produce the final method source
+                    var processedMethodSource = processedMethod.NormalizeWhitespace().ToFullString();
 
                     // Create the compilation unit with the source attribute
                     var source =
@@ -69,7 +60,7 @@ namespace ComputeSharp.SourceGenerators
                             Attribute(IdentifierName("ComputeSharp.IComputeShaderSource")).AddArgumentListArguments(
                                 AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(structFullName))),
                                 AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(methodDeclarationSymbol.Name))),
-                                AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(processedMethod))))))
+                                AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(processedMethodSource))))))
                         .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                         .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
                         .NormalizeWhitespace()
@@ -100,6 +91,13 @@ namespace ComputeSharp.SourceGenerators
             public ShaderSourceRewriter(SemanticModel semanticModel)
             {
                 this.semanticModel = semanticModel;
+            }
+
+            /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
+            public TNode? Visit<TNode>(TNode? node)
+                where TNode : SyntaxNode
+            {
+                return (TNode?)base.Visit(node);
             }
 
             /// <inheritdoc/>
@@ -167,6 +165,12 @@ namespace ComputeSharp.SourceGenerators
                 }
 
                 return node;
+            }
+
+            /// <inheritdoc/>
+            public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
+            {
+                return ((MethodDeclarationSyntax)base.VisitMethodDeclaration(node)!).WithBlockBody();
             }
         }
     }

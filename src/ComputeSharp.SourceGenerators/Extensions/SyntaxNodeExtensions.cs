@@ -11,6 +11,9 @@ namespace ComputeSharp.SourceGenerators.Extensions
     /// </summary>
     internal static class SyntaxNodeExtensions
     {
+        /// <summary>
+        /// A custom <see cref="SymbolDisplayFormat"/> instance with fully qualified style, without global::.
+        /// </summary>
         private static readonly SymbolDisplayFormat FullyQualifiedWithoutGlobalFormat = new(
                 globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
                 typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
@@ -59,6 +62,22 @@ namespace ComputeSharp.SourceGenerators.Extensions
             }
 
             return ParseTypeName(typeName);
+        }
+
+        /// <summary>
+        /// Returns a <see cref="MethodDeclarationSyntax"/> with a block body.
+        /// </summary>
+        /// <param name="node">The input <see cref="MethodDeclarationSyntax"/> node.</param>
+        /// <returns>A node like the one in input, but always with a block body.</returns>
+        [Pure]
+        public static MethodDeclarationSyntax WithBlockBody(this MethodDeclarationSyntax node)
+        {
+            return node.WithBody((node.Body, node.ExpressionBody) switch
+            {
+                (BlockSyntax block, _) => block,
+                (_, ArrowExpressionClauseSyntax arrow) => Block(ExpressionStatement(arrow.Expression)),
+                _ => Block()
+            });
         }
     }
 }
