@@ -183,6 +183,23 @@ namespace ComputeSharp.SourceGenerators
             {
                 return ((MethodDeclarationSyntax)base.VisitMethodDeclaration(node)!).WithBlockBody();
             }
+
+            /// <inheritdoc/>
+            public override SyntaxNode VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
+            {
+                var updatedNode = (MemberAccessExpressionSyntax)base.VisitMemberAccessExpression(node)!;
+
+                if (node.IsKind(SyntaxKind.SimpleMemberAccessExpression) &&
+                    this.semanticModel.GetSymbolInfo(node).Symbol is ISymbol nodeSymbol &&
+                    nodeSymbol.ContainingType.ToDisplayString() == "ComputeSharp.ThreadIds")
+                {
+                    // When accessing ThreadIds members, they are in lowercase in HLSL. This is
+                    // because the type is mapped to uint3, which has the xyz members.
+                    return updatedNode.WithName(IdentifierName(updatedNode.Name.ToString().ToLower()));
+                }
+
+                return updatedNode;
+            }
         }
 
         /// <summary>
@@ -241,19 +258,19 @@ namespace ComputeSharp.SourceGenerators
                                 MemberAccessExpression(
                                     SyntaxKind.SimpleMemberAccessExpression,
                                     IdentifierName(this.threadIdsIdentifier),
-                                    IdentifierName("X")),
+                                    IdentifierName("x")),
                                 IdentifierName("__x")),
                             BinaryExpression(SyntaxKind.LessThanExpression,
                                 MemberAccessExpression(
                                     SyntaxKind.SimpleMemberAccessExpression,
                                     IdentifierName(this.threadIdsIdentifier),
-                                    IdentifierName("Y")),
+                                    IdentifierName("y")),
                                 IdentifierName("__y"))),
                         BinaryExpression(SyntaxKind.LessThanExpression,
                             MemberAccessExpression(
                                 SyntaxKind.SimpleMemberAccessExpression,
                                 IdentifierName(this.threadIdsIdentifier),
-                                IdentifierName("Z")),
+                                IdentifierName("z")),
                             IdentifierName("__z")));
 
                 return updatedNode
