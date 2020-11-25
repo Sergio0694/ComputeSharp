@@ -25,7 +25,9 @@ namespace ComputeSharp.SourceGenerators
             ImmutableArray<AttributeSyntax> attributes = (
                 from tree in context.Compilation.SyntaxTrees
                 from attribute in tree.GetRoot().DescendantNodes().OfType<AttributeSyntax>()
-                where attribute.Name.ToString() == "AutoConstructor"
+                let symbol = context.Compilation.GetSemanticModel(attribute.SyntaxTree)
+                let typeInfo = symbol.GetTypeInfo(attribute)
+                where typeInfo.Type is { Name: nameof(AutoConstructorAttribute) }
                 select attribute).ToImmutableArray();
 
             foreach (AttributeSyntax attribute in attributes)
@@ -84,7 +86,7 @@ namespace ComputeSharp.SourceGenerators
                     .ToFullString();
 
                 // Add the partial type
-                context.AddSource($"__ComputeSharp_AutoConstructorAttribute_{structDeclarationSymbol.Name}", SourceText.From(source, Encoding.UTF8));
+                context.AddSource($"__ComputeSharp_{typeof(AutoConstructorAttribute).FullName}_{structDeclarationSymbol.Name}", SourceText.From(source, Encoding.UTF8));
             }
         }
     }

@@ -8,6 +8,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
+#pragma warning disable CS0618
+
 namespace ComputeSharp.SourceGenerators
 {
     [Generator]
@@ -33,7 +35,7 @@ namespace ComputeSharp.SourceGenerators
                 INamedTypeSymbol structDeclarationSymbol = semanticModel.GetDeclaredSymbol(structDeclaration)!;
 
                 // Only process compute shader types
-                if (!structDeclarationSymbol.Interfaces.Any(interfaceSymbol => interfaceSymbol.Name == "IComputeShader")) continue;
+                if (!structDeclarationSymbol.Interfaces.Any(interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) continue;
 
                 var structFullName = structDeclarationSymbol.GetFullMetadataName();
 
@@ -50,11 +52,12 @@ namespace ComputeSharp.SourceGenerators
                     // Rewrite the method syntax tree
                     var processedMethod = new ShaderSourceRewriter(semanticModel).Visit(methodDeclaration)!.WithoutTrivia();
 
-                    if (methodDeclarationSymbol.Name == "Execute" &&
+                    // If the method is the shader entry point, do additional processing
+                    if (methodDeclarationSymbol.Name == nameof(IComputeShader.Execute) &&
                         methodDeclarationSymbol.ReturnsVoid &&
                         methodDeclarationSymbol.TypeParameters.Length == 0 &&
                         methodDeclarationSymbol.Parameters.Length == 1 &&
-                        methodDeclarationSymbol.Parameters[0].Type.ToDisplayString() == "ComputeSharp.ThreadIds")
+                        methodDeclarationSymbol.Parameters[0].Type.ToDisplayString() == typeof(ThreadIds).FullName)
                     {
                         var parameterName = methodDeclarationSymbol.Parameters[0].Name;
 
@@ -68,7 +71,7 @@ namespace ComputeSharp.SourceGenerators
                     var source =
                         CompilationUnit().AddAttributeLists(
                         AttributeList(SingletonSeparatedList(
-                            Attribute(IdentifierName("ComputeSharp.IComputeShaderSource")).AddArgumentListArguments(
+                            Attribute(IdentifierName(typeof(IComputeShaderSourceAttribute).FullName)).AddArgumentListArguments(
                                 AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(structFullName))),
                                 AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(methodDeclarationSymbol.Name))),
                                 AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(processedMethodSource))))))
@@ -77,7 +80,7 @@ namespace ComputeSharp.SourceGenerators
                         .NormalizeWhitespace()
                         .ToFullString();
 
-                    var generatedFileName = $"__ComputeSharp_IComputeShaderSourceAttribute_{structDeclarationSymbol.Name}_{methodDeclarationSymbol.Name}";
+                    var generatedFileName = $"__ComputeSharp_{nameof(IComputeShaderSourceAttribute)}_{structDeclarationSymbol.Name}_{methodDeclarationSymbol.Name}";
 
                     // Add the method source attribute
                     context.AddSource(generatedFileName, SourceText.From(source, Encoding.UTF8));
@@ -191,7 +194,7 @@ namespace ComputeSharp.SourceGenerators
 
                 if (node.IsKind(SyntaxKind.SimpleMemberAccessExpression) &&
                     this.semanticModel.GetSymbolInfo(node).Symbol is ISymbol nodeSymbol &&
-                    nodeSymbol.ContainingType.ToDisplayString() == "ComputeSharp.ThreadIds")
+                    nodeSymbol.ContainingType.ToDisplayString() == typeof(ThreadIds).FullName)
                 {
                     // When accessing ThreadIds members, they are in lowercase in HLSL. This is
                     // because the type is mapped to uint3, which has the xyz members.
