@@ -165,5 +165,20 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
             return updatedNode;
         }
+
+        /// <inheritdoc/>
+        public override SyntaxToken VisitToken(SyntaxToken token)
+        {
+            SyntaxToken updatedToken = base.VisitToken(token);
+
+            // Replace all identifier tokens when needed, to avoid colliding with HLSL keywords
+            if (updatedToken.IsKind(SyntaxKind.IdentifierToken) &&
+                HlslKnownKeywords.TryGetMappedName(updatedToken.Text, out string? mapped))
+            {
+                return ParseToken(mapped!);
+            }
+
+            return updatedToken;
+        }
     }
 }

@@ -170,7 +170,7 @@ namespace ComputeSharp.Shaders.Translation
         private void LoadFieldInfo(object shader, ReadableMember memberInfo, string? name = null)
         {
             Type fieldType = memberInfo.MemberType;
-            string fieldName = HlslKnownKeywords.GetMappedName(name ?? memberInfo.Name);
+            string fieldName = name; // TODO: implement this for SG
 
             // Constant buffer
             if (HlslKnownTypes.IsConstantBufferType(fieldType))
