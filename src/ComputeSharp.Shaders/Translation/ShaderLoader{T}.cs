@@ -4,13 +4,13 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using ComputeSharp.Core.Helpers;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Renderer.Models.Fields;
 using ComputeSharp.Shaders.Renderer.Models.Fields.Abstract;
 using ComputeSharp.Shaders.Renderer.Models.Functions;
 using ComputeSharp.Shaders.Translation.Models;
 using Microsoft.CodeAnalysis;
+using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_DESCRIPTOR_RANGE_TYPE;
 
@@ -118,7 +118,7 @@ namespace ComputeSharp.Shaders.Translation
         [Pure]
         public static ShaderLoader<T> Load(in T shader)
         {
-            ShaderLoader<T> @this = new ShaderLoader<T>();
+            ShaderLoader<T> @this = new();
 
             // Reading members through reflection requires an object parameter,
             // so here we're just boxing the input shader once to avoid allocating
