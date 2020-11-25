@@ -54,21 +54,20 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        public override unsafe void GetData(Span<T> destination, int offset, int count)
+        public override unsafe void GetData(Span<T> destination, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
             ThrowIfDisposed();
 
             Guard.IsInRange(offset, 0, Length, nameof(offset));
-            Guard.IsInRange(count, 0, Length, nameof(count));
-            Guard.IsLessThanOrEqualTo((uint)offset + count, (uint)Length, nameof(count));
-            Guard.IsInRangeFor(count, destination, nameof(count));
+            Guard.IsLessThanOrEqualTo((uint)offset + destination.Length, (uint)Length, nameof(destination));
 
             using ID3D12ResourceMap resource = D3D12Resource->Map();
 
             if (IsPaddingPresent)
             {
+                int count = destination.Length;
                 ref T spanRef = ref MemoryMarshal.GetReference(destination);
                 ref byte resourceRef = ref Unsafe.AsRef<byte>(resource.Pointer);
 
@@ -82,25 +81,24 @@ namespace ComputeSharp
                     Unsafe.Add(ref spanRef, i) = Unsafe.As<byte, T>(ref targetRef);
                 }
             }
-            else MemoryHelper.Copy(resource.Pointer, offset, destination, count);
+            else MemoryHelper.Copy(resource.Pointer, offset, destination);
         }
 
         /// <inheritdoc/>
-        public override unsafe void SetData(ReadOnlySpan<T> source, int offset, int count)
+        public override unsafe void SetData(ReadOnlySpan<T> source, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
             ThrowIfDisposed();
 
             Guard.IsInRange(offset, 0, Length, nameof(offset));
-            Guard.IsInRange(count, 0, Length, nameof(count));
-            Guard.IsLessThanOrEqualTo((uint)offset + count, (uint)Length, nameof(count));
-            Guard.IsInRangeFor(count, source, nameof(count));
+            Guard.IsLessThanOrEqualTo((uint)offset + source.Length, (uint)Length, nameof(source));
 
             using ID3D12ResourceMap resource = D3D12Resource->Map();
 
             if (IsPaddingPresent)
             {
+                int count = source.Length;
                 ref T spanRef = ref MemoryMarshal.GetReference(source);
                 ref byte resourceRef = ref Unsafe.AsRef<byte>(resource.Pointer);
 
@@ -114,7 +112,7 @@ namespace ComputeSharp
                     Unsafe.As<byte, T>(ref targetRef) = Unsafe.Add(ref spanRef, i);
                 }
             }
-            else MemoryHelper.Copy(source, resource.Pointer, offset, count);
+            else MemoryHelper.Copy(source, resource.Pointer, offset);
         }
 
         /// <inheritdoc/>
