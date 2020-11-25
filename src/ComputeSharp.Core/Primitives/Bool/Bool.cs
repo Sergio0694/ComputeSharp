@@ -23,7 +23,7 @@ namespace ComputeSharp
         private Bool(bool value) => Value = value;
 
         /// <inheritdoc/>
-        public override bool Equals(object obj) => obj is Bool x && Value == x.Value;
+        public override bool Equals(object? obj) => obj is Bool x && Value == x.Value;
 
         /// <inheritdoc/>
         public override int GetHashCode() => Value.GetHashCode();
