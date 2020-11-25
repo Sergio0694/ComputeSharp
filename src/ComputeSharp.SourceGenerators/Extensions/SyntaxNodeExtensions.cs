@@ -22,14 +22,29 @@ namespace ComputeSharp.SourceGenerators.Extensions
         /// <summary>
         /// Checks a <see cref="SyntaxNode"/> value and replaces the value type to be HLSL compatible, if needed.
         /// </summary>
-        /// <typeparam name="TRoot">The type of the input <see cref="SyntaxNode"/> instance.</typeparam>
+        /// <typeparam name="TRoot">The type of the input <see cref="TypeSyntax"/> instance.</typeparam>
         /// <param name="node">The input <see cref="SyntaxNode"/> to check and modify if needed.</param>
-        /// <param name="targetType">The target <see cref="TypeSyntax"/> node to replace.</param>
-        /// <param name="sourceType">The source <see cref="TypeSyntax"/> to use to get type into from <paramref name="semanticModel"/>.</param>
+        /// <param name="sourceType">The source <see cref="SyntaxNode"/> to use to get type into from <paramref name="semanticModel"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance with info on the input tree.</param>
         /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
         [Pure]
-        public static TRoot ReplaceType<TRoot>(this TRoot node, TypeSyntax targetType, TypeSyntax sourceType, SemanticModel semanticModel)
+        public static TRoot ReplaceType<TRoot>(this TRoot node, SyntaxNode sourceType, SemanticModel semanticModel)
+            where TRoot : TypeSyntax
+        {
+            return node.ReplaceType(node, sourceType, semanticModel);
+        }
+
+        /// <summary>
+        /// Checks a <see cref="SyntaxNode"/> value and replaces the value type to be HLSL compatible, if needed.
+        /// </summary>
+        /// <typeparam name="TRoot">The type of the input <see cref="SyntaxNode"/> instance.</typeparam>
+        /// <param name="node">The input <see cref="SyntaxNode"/> to check and modify if needed.</param>
+        /// <param name="targetType">The target <see cref="TypeSyntax"/> node to replace.</param>
+        /// <param name="sourceType">The source <see cref="SyntaxNode"/> to use to get type into from <paramref name="semanticModel"/>.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/> instance with info on the input tree.</param>
+        /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
+        [Pure]
+        public static TRoot ReplaceType<TRoot>(this TRoot node, TypeSyntax targetType, SyntaxNode sourceType, SemanticModel semanticModel)
             where TRoot : SyntaxNode
         {
             if (semanticModel.GetTypeInfo(sourceType).Type is ITypeSymbol typeSymbol &&

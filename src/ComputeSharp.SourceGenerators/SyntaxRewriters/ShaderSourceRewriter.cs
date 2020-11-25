@@ -79,6 +79,22 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         }
 
         /// <inheritdoc/>
+        public override SyntaxNode VisitImplicitObjectCreationExpression(ImplicitObjectCreationExpressionSyntax node)
+        {
+            var updatedNode = (ImplicitObjectCreationExpressionSyntax)base.VisitImplicitObjectCreationExpression(node)!;
+
+            TypeSyntax explicitType = IdentifierName("").ReplaceType(node, this.semanticModel);
+
+            // Mutate the syntax like with explicit object creation expressions
+            if (updatedNode.ArgumentList!.Arguments.Count == 0)
+            {
+                return CastExpression(explicitType, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)));
+            }
+
+            return InvocationExpression(explicitType, updatedNode.ArgumentList);
+        }
+
+        /// <inheritdoc/>
         public override SyntaxNode VisitDefaultExpression(DefaultExpressionSyntax node)
         {
             var updatedNode = (DefaultExpressionSyntax)base.VisitDefaultExpression(node)!;
