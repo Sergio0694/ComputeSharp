@@ -123,7 +123,7 @@ namespace ComputeSharp.Graphics.Helpers
                         if (dxgiDescription1.DedicatedVideoMemory == 0) continue;
 
                         HRESULT createDeviceResult = FX.D3D12CreateDevice(
-                            dxgiAdapter1.Upcast<IDXGIAdapter1, IUnknown>().Get(),
+                            dxgiAdapter1.AsIUnknown().Get(),
                             D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_12_0,
                             FX.__uuidof<ID3D12Device>(),
                             null);
@@ -134,7 +134,7 @@ namespace ComputeSharp.Graphics.Helpers
                             using ComPtr<ID3D12Device> d3d12device = default;
 
                             FX.D3D12CreateDevice(
-                                dxgiAdapter1.Upcast<IDXGIAdapter1, IUnknown>().Get(),
+                                dxgiAdapter1.AsIUnknown().Get(),
                                 D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_12_0,
                                 FX.__uuidof<ID3D12Device>(),
                                 d3d12device.GetVoidAddressOf()).Assert();
