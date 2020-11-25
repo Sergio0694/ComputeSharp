@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Globalization;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.SourceGenerators.Extensions;
 using Microsoft.CodeAnalysis;
@@ -112,23 +113,35 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         public override SyntaxNode VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
         {
             var updatedNode = (MemberAccessExpressionSyntax)base.VisitMemberAccessExpression(node)!;
-
-            // If the current member access is a field or property access, check the lookup table
-            // to see if the member should be rewritten for HLSL compliance, and rewrite if needed.
+            
             if (node.IsKind(SyntaxKind.SimpleMemberAccessExpression) &&
-                this.semanticModel.GetOperation(node) is IMemberReferenceOperation operation &&
-                HlslKnownMembers.TryGetMappedName(operation.Member.ToDisplayString(), out string? mapping))
+                this.semanticModel.GetOperation(node) is IMemberReferenceOperation operation)
             {
-                // Static and instance members are handled differently, with static members being
-                // converted into a literal expression, and instance getting an updated identifier.
-                // For instance, consider these two cases:
-                //   - Vector3.One (static) => float3(1.0f, 1.0f, 1.0f)
-                //   - ThredIds.X (instance) => [arg].x
-                return operation.Member.IsStatic switch
+                // If the current member access is to a constant, hardcode the value in HLSL
+                if (operation.ConstantValue is { HasValue: true } and { Value: object value })
                 {
-                    true => ParseExpression(mapping!),
-                    false => updatedNode.WithName(IdentifierName(mapping!))
-                };
+                    return ParseExpression(value switch
+                    {
+                        IFormattable f => f.ToString(null, CultureInfo.InvariantCulture),
+                        _ => value.ToString()
+                    });
+                }
+
+                // If the current member access is a field or property access, check the lookup table
+                // to see if the member should be rewritten for HLSL compliance, and rewrite if needed.
+                if (HlslKnownMembers.TryGetMappedName(operation.Member.ToDisplayString(), out string? mapping))
+                {
+                    // Static and instance members are handled differently, with static members being
+                    // converted into a literal expression, and instance getting an updated identifier.
+                    // For instance, consider these two cases:
+                    //   - Vector3.One (static) => float3(1.0f, 1.0f, 1.0f)
+                    //   - ThredIds.X (instance) => [arg].x
+                    return operation.Member.IsStatic switch
+                    {
+                        true => ParseExpression(mapping!),
+                        false => updatedNode.WithName(IdentifierName(mapping!))
+                    };
+                }                
             }
 
             return updatedNode;
