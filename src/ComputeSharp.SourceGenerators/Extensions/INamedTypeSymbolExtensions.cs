@@ -10,6 +10,16 @@ namespace ComputeSharp.SourceGenerators.Extensions
     internal static class INamedTypeSymbolExtensions
     {
         /// <summary>
+        /// A custom <see cref="SymbolDisplayFormat"/> instance with fully qualified style, without global:: and parameters.
+        /// </summary>
+        private static readonly SymbolDisplayFormat FullyQualifiedWithoutGlobalAndParametersFormat = new(
+                SymbolDisplayGlobalNamespaceStyle.Omitted,
+                SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+                SymbolDisplayGenericsOptions.IncludeTypeParameters,
+                memberOptions: SymbolDisplayMemberOptions.IncludeContainingType,
+                parameterOptions: SymbolDisplayParameterOptions.None);
+
+        /// <summary>
         /// Gets the full metadata name for a given name symbol.
         /// </summary>
         /// <param name="namedTypeSymbol">The input <see cref="INamedTypeSymbol"/> instance.</param>
@@ -32,6 +42,11 @@ namespace ComputeSharp.SourceGenerators.Extensions
             }
 
             return BuildFrom(namedTypeSymbol, new StringBuilder(256)).ToString();
+        }
+
+        public static string GetFullMetadataName(this IMethodSymbol methodSymbol)
+        {
+            return methodSymbol.ToDisplayString(FullyQualifiedWithoutGlobalAndParametersFormat);
         }
     }
 }

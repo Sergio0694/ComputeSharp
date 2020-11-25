@@ -113,13 +113,6 @@ namespace Microsoft.CodeAnalysis.CSharp.Syntax
                 return node;
             }
 
-            // Process the input node if it's a known method invocation
-            if (HlslKnownMethods.TryGetMappedName(containingMemberSymbolInfo.Symbol!, memberSymbol, out string? mappedName))
-            {
-                string expression = memberSymbol.IsStatic ? mappedName : $"{node.Expression}{mappedName}";
-                return SyntaxFactory.IdentifierName(expression).WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
-            }
-
             // Handle static members as a special case
             if (memberSymbol.IsStatic && (
                 memberSymbol.Kind == SymbolKind.Field ||

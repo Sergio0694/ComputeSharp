@@ -133,5 +133,24 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
             return updatedNode;
         }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitInvocationExpression(InvocationExpressionSyntax node)
+        {
+            var updatedNode = (InvocationExpressionSyntax)base.VisitInvocationExpression(node)!;
+
+            // If the invocation consists of invoking a static method that has a direct
+            // mapping to HLSL, rewrite the expression in the current invocation node.
+            // For instance: Math.Abs(expr) => abs(expr).
+            if (this.semanticModel.GetOperation(node) is IInvocationOperation operation &&
+                operation.TargetMethod is IMethodSymbol method &&
+                method.IsStatic &&
+                HlslKnownMethods.TryGetMappedName(method.GetFullMetadataName(), out string? mapping))
+            {
+                return updatedNode.WithExpression(ParseExpression(mapping!));
+            }
+
+            return updatedNode;
+        }
     }
 }
