@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using ComputeSharp.Core.Intrinsics.Attributes;
 
@@ -12,122 +13,113 @@ namespace ComputeSharp.Shaders.Mappings
     /// </summary>
     internal static class HlslKnownMethods
     {
-        private static IReadOnlyDictionary<string, string>? _KnownMethods;
+        /// <summary>
+        /// The mapping of supported known methods to HLSL names.
+        /// </summary>
+        private static readonly IReadOnlyDictionary<string, string> KnownMethods = BuildKnownMethodsMap();
 
         /// <summary>
-        /// The mapping of supported known methods to HLSL methods
+        /// Builds the mapping of supported known methods to HLSL names.
         /// </summary>
-        private static IReadOnlyDictionary<string, string> KnownMethods
+        [Pure]
+        private static IReadOnlyDictionary<string, string> BuildKnownMethodsMap()
         {
-            get
+            Dictionary<string, string> knownMethods = new()
             {
-                if (_KnownMethods != null) return _KnownMethods;
+                [$"{typeof(Math).FullName}.{nameof(Math.Abs)}"] = "abs",
+                [$"{typeof(Math).FullName}.{nameof(Math.Max)}"] = "max",
+                [$"{typeof(Math).FullName}.{nameof(Math.Min)}"] = "min",
+                [$"{typeof(Math).FullName}.{nameof(Math.Pow)}"] = "pow",
+                [$"{typeof(Math).FullName}.{nameof(Math.Sin)}"] = "sin",
+                [$"{typeof(Math).FullName}.{nameof(Math.Sinh)}"] = "sinh",
+                [$"{typeof(Math).FullName}.{nameof(Math.Asin)}"] = "asin",
+                [$"{typeof(Math).FullName}.{nameof(Math.Cos)}"] = "cos",
+                [$"{typeof(Math).FullName}.{nameof(Math.Cosh)}"] = "cosh",
+                [$"{typeof(Math).FullName}.{nameof(Math.Acos)}"] = "acos",
+                [$"{typeof(Math).FullName}.{nameof(Math.Tan)}"] = "tan",
+                [$"{typeof(Math).FullName}.{nameof(Math.Tanh)}"] = "tanh",
+                [$"{typeof(Math).FullName}.{nameof(Math.Atan)}"] = "atan",
+                [$"{typeof(Math).FullName}.{nameof(Math.Atan2)}"] = "atan2",
+                [$"{typeof(Math).FullName}.{nameof(Math.Ceiling)}"] = "ceil",
+                [$"{typeof(Math).FullName}.{nameof(Math.Floor)}"] = "floor",
+                [$"{typeof(Math).FullName}.Clamp"] = "clamp",
+                [$"{typeof(Math).FullName}.{nameof(Math.Exp)}"] = "exp",
+                [$"{typeof(Math).FullName}.{nameof(Math.Log)}"] = "log",
+                [$"{typeof(Math).FullName}.{nameof(Math.Log10)}"] = "log10",
+                [$"{typeof(Math).FullName}.{nameof(Math.Round)}"] = "round",
+                [$"{typeof(Math).FullName}.{nameof(Math.Sqrt)}"] = "sqrt",
+                [$"{typeof(Math).FullName}.{nameof(Math.Sign)}"] = "sign",
+                [$"{typeof(Math).FullName}.{nameof(Math.Truncate)}"] = "trunc",
 
-                // Initialize the initial mappings
-                Dictionary<string, string> knownMethods = new Dictionary<string, string>
-                {
-                    // Math
-                    ["System.Math.Abs"] = "abs",
-                    ["System.Math.Max"] = "max",
-                    ["System.Math.Min"] = "min",
-                    ["System.Math.Pow"] = "pow",
-                    ["System.Math.Sin"] = "sin",
-                    ["System.Math.Sinh"] = "sinh",
-                    ["System.Math.Asin"] = "asin",
-                    ["System.Math.Cos"] = "cos",
-                    ["System.Math.Cosh"] = "cosh",
-                    ["System.Math.Acos"] = "acos",
-                    ["System.Math.Tan"] = "tan",
-                    ["System.Math.Tanh"] = "tanh",
-                    ["System.Math.Atan"] = "atan",
-                    ["System.Math.Atan2"] = "atan2",
-                    ["System.Math.Ceiling"] = "ceil",
-                    ["System.Math.Floor"] = "floor",
-                    ["System.Math.Clamp"] = "clamp",
-                    ["System.Math.Exp"] = "exp",
-                    ["System.Math.Log"] = "log",
-                    ["System.Math.Log10"] = "log10",
-                    ["System.Math.Round"] = "round",
-                    ["System.Math.Sqrt"] = "sqrt",
-                    ["System.Math.Sign"] = "sign",
-                    ["System.Math.Truncate"] = "trunc",
+                ["System.MathF.Abs"] = "abs",
+                ["System.MathF.Max"] = "max",
+                ["System.MathF.Min"] = "min",
+                ["System.MathF.Pow"] = "pow",
+                ["System.MathF.Sin"] = "sin",
+                ["System.MathF.Sinh"] = "sinh",
+                ["System.MathF.Asin"] = "asin",
+                ["System.MathF.Cos"] = "cos",
+                ["System.MathF.Cosh"] = "cosh",
+                ["System.MathF.Acos"] = "acos",
+                ["System.MathF.Tan"] = "tan",
+                ["System.MathF.Tanh"] = "tanh",
+                ["System.MathF.Atan"] = "atan",
+                ["System.MathF.Atan2"] = "atan2",
+                ["System.MathF.Ceiling"] = "ceil",
+                ["System.MathF.Floor"] = "floor",
+                ["System.MathF.Clamp"] = "clamp",
+                ["System.MathF.Exp"] = "exp",
+                ["System.MathF.Log"] = "log",
+                ["System.MathF.Log10"] = "log10",
+                ["System.MathF.Round"] = "round",
+                ["System.MathF.Sqrt"] = "sqrt",
+                ["System.MathF.Sign"] = "sign",
+                ["System.MathF.Truncate"] = "trunc",
 
-                    // MathF
-                    ["System.MathF.Abs"] = "abs",
-                    ["System.MathF.Max"] = "max",
-                    ["System.MathF.Min"] = "min",
-                    ["System.MathF.Pow"] = "pow",
-                    ["System.MathF.Sin"] = "sin",
-                    ["System.MathF.Sinh"] = "sinh",
-                    ["System.MathF.Asin"] = "asin",
-                    ["System.MathF.Cos"] = "cos",
-                    ["System.MathF.Cosh"] = "cosh",
-                    ["System.MathF.Acos"] = "acos",
-                    ["System.MathF.Tan"] = "tan",
-                    ["System.MathF.Tanh"] = "tanh",
-                    ["System.MathF.Atan"] = "atan",
-                    ["System.MathF.Atan2"] = "atan2",
-                    ["System.MathF.Ceiling"] = "ceil",
-                    ["System.MathF.Floor"] = "floor",
-                    ["System.MathF.Clamp"] = "clamp",
-                    ["System.MathF.Exp"] = "exp",
-                    ["System.MathF.Log"] = "log",
-                    ["System.MathF.Log10"] = "log10",
-                    ["System.MathF.Round"] = "round",
-                    ["System.MathF.Sqrt"] = "sqrt",
-                    ["System.MathF.Sign"] = "sign",
-                    ["System.MathF.Truncate"] = "trunc",
+                [$"{typeof(float).FullName}.IsFinite"] = "isfinite",
+                [$"{typeof(float).FullName}.{nameof(float.IsInfinity)}"] = "isinf",
+                [$"{typeof(float).FullName}.{nameof(float.IsNaN)}"] = "isnan",
 
-                    // Float
-                    ["System.Single.IsFinite"] = "isfinite",
-                    ["System.Single.IsInfinity"] = "isinf",
-                    ["System.Single.IsNaN"] = "isnan",
+                [$"{typeof(double).FullName}.IsFinite"] = "isfinite",
+                [$"{typeof(double).FullName}.{nameof(double.IsInfinity)}"] = "isinf",
+                [$"{typeof(double).FullName}.{nameof(double.IsNaN)}"] = "isnan",
 
-                    // Double
-                    ["System.Double.IsFinite"] = "isfinite",
-                    ["System.Double.IsInfinity"] = "isinf",
-                    ["System.Double.IsNaN"] = "isnan",
+                [$"{typeof(Vector2).FullName}.{nameof(Vector2.Dot)}"] = "dot",
+                [$"{typeof(Vector2).FullName}.{nameof(Vector2.Lerp)}"] = "lerp",
+                [$"{typeof(Vector2).FullName}.{nameof(Vector2.Transform)}"] = "mul",
+                [$"{typeof(Vector2).FullName}.{nameof(Vector2.TransformNormal)}"] = "mul",
+                [$"{typeof(Vector2).FullName}.{nameof(Vector2.Normalize)}"] = "normalize",
 
-                    // Vector2
-                    ["System.Numerics.Vector2.Dot"] = "dot",
-                    ["System.Numerics.Vector2.Lerp"] = "lerp",
-                    ["System.Numerics.Vector2.Transform"] = "mul",
-                    ["System.Numerics.Vector2.TransformNormal"] = "mul",
-                    ["System.Numerics.Vector2.Normalize"] = "normalize",
+                [$"{typeof(Vector3).FullName}.{nameof(Vector3.Cross)}"] = "cross",
+                [$"{typeof(Vector3).FullName}.{nameof(Vector3.Dot)}"] = "dot",
+                [$"{typeof(Vector3).FullName}.{nameof(Vector3.Lerp)}"] = "lerp",
+                [$"{typeof(Vector3).FullName}.{nameof(Vector3.Transform)}"] = "mul",
+                [$"{typeof(Vector3).FullName}.{nameof(Vector3.TransformNormal)}"] = "mul",
+                [$"{typeof(Vector3).FullName}.{nameof(Vector3.Normalize)}"] = "normalize",
 
-                    // Vector3
-                    ["System.Numerics.Vector3.Cross"] = "cross",
-                    ["System.Numerics.Vector3.Dot"] = "dot",
-                    ["System.Numerics.Vector3.Lerp"] = "lerp",
-                    ["System.Numerics.Vector3.Transform"] = "mul",
-                    ["System.Numerics.Vector3.TransformNormal"] = "mul",
-                    ["System.Numerics.Vector3.Normalize"] = "normalize",
+                [$"{typeof(Vector4).FullName}.{nameof(Vector4.Lerp)}"] = "lerp",
+                [$"{typeof(Vector4).FullName}.{nameof(Vector4.Transform)}"] = "mul",
+                [$"{typeof(Vector4).FullName}.{nameof(Vector4.Normalize)}"] = "normalize"
+            };
 
-                    // Vector4
-                    ["System.Numerics.Vector4.Lerp"] = "lerp",
-                    ["System.Numerics.Vector4.Transform"] = "mul",
-                    ["System.Numerics.Vector4.Normalize"] = "normalize"
-                };
+            // Programmatically load mappings from the Hlsl class as well
+            foreach (var method in
+                from method in typeof(Hlsl).GetMethods(BindingFlags.Public | BindingFlags.Static)
+                group method by method.Name
+                into groups
+                select (Name: groups.Key, MethodInfo: groups.First()))
+            {
+                // Check whether the current method should be translated with the original name
+                // or with the lowercase version. This is needed because all C# methods are exposed
+                // with the upper camel case format, while HLSL intrinsics use multiple different formats.
+                string hlslName = method.MethodInfo.GetCustomAttribute<PreserveMemberNameAttribute>() != null
+                    ? method.Name
+                    : method.Name.ToLowerInvariant();
 
-                // Programmatically load mappings from the Hlsl class as well
-                foreach (var method in
-                    from method in typeof(Hlsl).GetMethods(BindingFlags.Public | BindingFlags.Static)
-                    group method by method.Name
-                    into groups
-                    select (Name: groups.Key, MethodInfo: groups.First()))
-                {
-                    // Check whether the current method should be translated with the original name
-                    // or with the lowercase version. This is needed because all C# methods are exposed
-                    // with the upper camel case format, while HLSL intrinsics use multiple different formats.
-                    string hlslName = method.MethodInfo.GetCustomAttribute<PreserveMemberNameAttribute>() != null
-                        ? method.Name
-                        : method.Name.ToLowerInvariant();
-
-                    knownMethods.Add($"{typeof(Hlsl).FullName}{Type.Delimiter}{method.Name}", hlslName);
-                }
-
-                return _KnownMethods = knownMethods;
+                knownMethods.Add($"{typeof(Hlsl).FullName}{Type.Delimiter}{method.Name}", hlslName);
             }
+
+            return knownMethods;
         }
 
         /// <summary>
