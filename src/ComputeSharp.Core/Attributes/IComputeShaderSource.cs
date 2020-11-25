@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.Contracts;
+using System.Linq;
+using System.Reflection;
 
 namespace ComputeSharp
 {
@@ -18,26 +22,40 @@ namespace ComputeSharp
         /// <param name="shaderTypeName">The fully qualified name of the shader type.</param>
         /// <param name="methodName">The name of the current method.</param>
         /// <param name="source">The source code of the target method.</param>
-        public IComputeShaderSourceAttribute(string shaderTypeName, string methodName, string source)
+        public IComputeShaderSourceAttribute(string shaderTypeName, object[] args, object[] methods)
         {
             ShaderTypeName = shaderTypeName;
-            MethodName = methodName;
-            Source = source;
+            Fields = args.Cast<string[]>().ToDictionary(static arg => arg[0], static arg => arg[1]);
+            Methods = methods.Cast<string[]>().ToDictionary(static method => method[0], static method => method[1]);
         }
 
         /// <summary>
         /// Gets the fully qualified name of the shader type.
         /// </summary>
-        public string ShaderTypeName { get; }
+        internal string ShaderTypeName { get; }
 
         /// <summary>
-        /// Gets the name of the current method.
+        /// Gets the mapping of field names.
         /// </summary>
-        public string MethodName { get; }
+        internal IReadOnlyDictionary<string, string> Fields { get; }
 
         /// <summary>
-        /// Gets the source code of the target method.
+        /// Gets the mapping of methods and their source code.
         /// </summary>
-        public string Source { get; }
+        internal IReadOnlyDictionary<string, string> Methods { get; }
+
+        /// <summary>
+        /// Gets the associated <see cref="IComputeShaderSourceAttribute"/> instance for a specified type.
+        /// </summary>
+        /// <typeparam name="T">The shader type to get the attribute for.</typeparam>
+        /// <returns>The associated <see cref="IComputeShaderSourceAttribute"/> instance for type <typeparamref name="T"/>.</returns>
+        [Pure]
+        internal static IComputeShaderSourceAttribute GetForType<T>()
+        {
+            return (
+                from attribute in typeof(T).Assembly.GetCustomAttributes<IComputeShaderSourceAttribute>()
+                where attribute.ShaderTypeName == typeof(T).FullName
+                select attribute).Single();
+        }
     }
 }

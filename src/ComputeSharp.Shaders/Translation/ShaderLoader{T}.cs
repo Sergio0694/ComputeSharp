@@ -26,6 +26,11 @@ namespace ComputeSharp.Shaders.Translation
         where T : struct, IComputeShader
     {
         /// <summary>
+        /// The associated <see cref="IComputeShaderSourceAttribute"/> instance for the current shader type.
+        /// </summary>
+        private static IComputeShaderSourceAttribute Attribute = IComputeShaderSourceAttribute.GetForType<T>();
+
+        /// <summary>
         /// The number of constant buffers to define in the shader.
         /// </summary>
         private uint constantBuffersCount;
@@ -126,7 +131,7 @@ namespace ComputeSharp.Shaders.Translation
             object box = shader;
 
             @this.LoadFieldsInfo(box);
-            @this.LoadMethodSource(box);
+            @this.LoadMethodSource();
             @this.BuildDispatchDataLoader();
 
             return @this;
@@ -166,11 +171,10 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader</param>
         /// <param name="memberInfo">The target <see cref="ReadableMember"/> to load</param>
-        /// <param name="name">The optional explicit name to use for the field</param>
-        private void LoadFieldInfo(object shader, ReadableMember memberInfo, string? name = null)
+        private void LoadFieldInfo(object shader, ReadableMember memberInfo)
         {
             Type fieldType = memberInfo.MemberType;
-            string fieldName = name; // TODO: implement this for SG
+            string fieldName = Attribute.Fields[memberInfo.Name];
 
             // Constant buffer
             if (HlslKnownTypes.IsConstantBufferType(fieldType))
@@ -235,14 +239,9 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// Loads the entry method for the current shader being loaded
         /// </summary>
-        /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader</param>
-        private void LoadMethodSource(object shader)
+        private void LoadMethodSource()
         {
-            EntryPoint = (
-                from attribute in typeof(T).Assembly.GetCustomAttributes<IComputeShaderSourceAttribute>()
-                where attribute.ShaderTypeName == typeof(T).FullName &&
-                      attribute.MethodName == nameof(IComputeShader.Execute)
-                select attribute.Source).First();
+            EntryPoint = Attribute.Methods[nameof(IComputeShader.Execute)];
         }
     }
 }
