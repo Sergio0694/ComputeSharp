@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace ComputeSharp.SourceGenerators.Mappings
@@ -41,6 +42,18 @@ namespace ComputeSharp.SourceGenerators.Mappings
             ["ComputeSharp.ReadOnlyBuffer<T>"] = "StructuredBuffer",
             ["ComputeSharp.ReadWriteBuffer<T>"] = "RWStructuredBuffer"
         };
+
+        /// <summary>
+        /// Gets the known HLSL vector types available as mapped types.
+        /// </summary>
+        public static IReadOnlyCollection<Type> HlslMappedVectorTypes { get; } = new HashSet<Type>(new[]
+        {
+            typeof(Bool2), typeof(Bool3), typeof(Bool4),
+            typeof(Int2), typeof(Int3), typeof(Int4),
+            typeof(UInt2), typeof(UInt3), typeof(UInt4),
+            typeof(Float2), typeof(Float3), typeof(Float4),
+            typeof(Double2), typeof(Double3), typeof(Double4)
+        });
 
         /// <summary>
         /// Gets the mapped HLSL-compatible type name for the input type name.
