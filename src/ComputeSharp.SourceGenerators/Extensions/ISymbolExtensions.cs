@@ -5,9 +5,9 @@ using Microsoft.CodeAnalysis;
 namespace ComputeSharp.SourceGenerators.Extensions
 {
     /// <summary>
-    /// Extension methods for the <see cref="INamedTypeSymbol"/> type.
+    /// Extension methods for <see cref="ISymbol"/> types.
     /// </summary>
-    internal static class INamedTypeSymbolExtensions
+    internal static class ISymbolExtensions
     {
         /// <summary>
         /// A custom <see cref="SymbolDisplayFormat"/> instance with fully qualified style, without global:: and parameters.
@@ -20,12 +20,12 @@ namespace ComputeSharp.SourceGenerators.Extensions
                 parameterOptions: SymbolDisplayParameterOptions.None);
 
         /// <summary>
-        /// Gets the full metadata name for a given name symbol.
+        /// Gets the full metadata name for a given <see cref="INamedTypeSymbol"/> instance.
         /// </summary>
-        /// <param name="namedTypeSymbol">The input <see cref="INamedTypeSymbol"/> instance.</param>
-        /// <returns>The full metadata name for <paramref name="namedTypeSymbol"/>.</returns>
+        /// <param name="symbol">The input <see cref="INamedTypeSymbol"/> instance.</param>
+        /// <returns>The full metadata name for <paramref name="symbol"/>.</returns>
         [Pure]
-        public static string GetFullMetadataName(this INamedTypeSymbol namedTypeSymbol)
+        public static string GetFullMetadataName(this INamedTypeSymbol symbol)
         {
             static StringBuilder BuildFrom(ISymbol? symbol, StringBuilder builder)
             {
@@ -41,12 +41,18 @@ namespace ComputeSharp.SourceGenerators.Extensions
                 };
             }
 
-            return BuildFrom(namedTypeSymbol, new StringBuilder(256)).ToString();
+            return BuildFrom(symbol, new StringBuilder(256)).ToString();
         }
 
-        public static string GetFullMetadataName(this IMethodSymbol methodSymbol)
+        /// <summary>
+        /// Gets the full metadata name for a given <see cref="IMethodSymbol"/> instance.
+        /// </summary>
+        /// <param name="symbol">The input <see cref="IMethodSymbol"/> instance.</param>
+        /// <returns>The full metadata name for <paramref name="symbol"/>.</returns>
+        [Pure]
+        public static string GetFullMetadataName(this IMethodSymbol symbol)
         {
-            return methodSymbol.ToDisplayString(FullyQualifiedWithoutGlobalAndParametersFormat);
+            return symbol.ToDisplayString(FullyQualifiedWithoutGlobalAndParametersFormat);
         }
     }
 }
