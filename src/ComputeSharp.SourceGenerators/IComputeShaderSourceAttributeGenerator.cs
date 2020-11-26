@@ -117,9 +117,10 @@ namespace ComputeSharp.SourceGenerators
             foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
             {
                 IMethodSymbol methodDeclarationSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration)!;
+                ShaderSourceRewriter shaderSourceRewriter = new(semanticModel);
 
                 // Rewrite the method syntax tree
-                var processedMethod = new ShaderSourceRewriter(semanticModel).Visit(methodDeclaration)!.WithoutTrivia();
+                var processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();
 
                 // If the method is the shader entry point, do additional processing
                 if (methodDeclarationSymbol.Name == nameof(IComputeShader.Execute) &&
@@ -137,6 +138,12 @@ namespace ComputeSharp.SourceGenerators
                 var processedMethodSource = processedMethod.NormalizeWhitespace().ToFullString();
 
                 yield return (methodDeclarationSymbol.Name, processedMethodSource);
+
+                // Emit the extracted local functions
+                foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
+                {
+                    yield return (localFunction.Key, localFunction.Value.NormalizeWhitespace().ToFullString());
+                }
             }
         }
     }

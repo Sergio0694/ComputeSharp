@@ -104,5 +104,34 @@ namespace ComputeSharp.SourceGenerators.Extensions
 
             return node;
         }
+
+        /// <summary>
+        /// Returns a <see cref="LocalFunctionStatementSyntax"/> with a block body.
+        /// </summary>
+        /// <param name="node">The input <see cref="LocalFunctionStatementSyntax"/> node.</param>
+        /// <returns>A node like the one in input, but always with a block body.</returns>
+        /// <remarks>
+        /// This method is the same as <see cref="WithBlockBody(MethodDeclarationSyntax)"/>, but it is necessary to
+        /// duplicate the code because the two types don't have a common base type or interface that can be leveraged.
+        /// </remarks>
+        [Pure]
+        public static LocalFunctionStatementSyntax WithBlockBody(this LocalFunctionStatementSyntax node)
+        {
+            if (node.ExpressionBody is ArrowExpressionClauseSyntax arrow)
+            {
+                StatementSyntax statement = node.ReturnType switch
+                {
+                    PredefinedTypeSyntax pts when pts.Keyword.IsKind(SyntaxKind.VoidKeyword) => ExpressionStatement(arrow.Expression),
+                    _ => ReturnStatement(arrow.Expression)
+                };
+
+                return node
+                    .WithBody(Block(statement))
+                    .WithExpressionBody(null)
+                    .WithSemicolonToken(MissingToken(SyntaxKind.SemicolonToken));
+            }
+
+            return node;
+        }
     }
 }

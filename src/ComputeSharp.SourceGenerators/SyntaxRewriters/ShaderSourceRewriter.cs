@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.SourceGenerators.Extensions;
@@ -21,19 +22,36 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         private readonly SemanticModel semanticModel;
 
         /// <summary>
+        /// The collection of processed local functions in the current tree.
+        /// </summary>
+        private readonly Dictionary<string, LocalFunctionStatementSyntax> localFunctions;
+
+        /// <summary>
+        /// The current <see cref="MethodDeclarationSyntax"/> tree being visited.
+        /// </summary>
+        private MethodDeclarationSyntax? currentMethod;
+
+        /// <summary>
         /// Creates a new <see cref="ShaderSourceRewriter"/> instance with the specified parameters.
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the target syntax tree.</param>
         public ShaderSourceRewriter(SemanticModel semanticModel)
         {
             this.semanticModel = semanticModel;
+            this.localFunctions = new();
         }
 
+        /// <summary>
+        /// Gets the collection of processed local functions in the current tree.
+        /// </summary>
+        public IReadOnlyDictionary<string, LocalFunctionStatementSyntax> LocalFunctions => this.localFunctions;
+
         /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
-        public TNode? Visit<TNode>(TNode? node)
-            where TNode : SyntaxNode
+        public MethodDeclarationSyntax? Visit(MethodDeclarationSyntax? node)
         {
-            return (TNode?)base.Visit(node);
+            this.currentMethod = node;
+
+            return (MethodDeclarationSyntax?)base.Visit(node);
         }
 
         /// <inheritdoc/>
@@ -126,6 +144,23 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         }
 
         /// <inheritdoc/>
+        public override SyntaxNode? VisitLocalFunctionStatement(LocalFunctionStatementSyntax node)
+        {
+            var updatedNode =
+                ((LocalFunctionStatementSyntax)base.VisitLocalFunctionStatement(node)!)
+                .WithBlockBody()
+                .WithIdentifier(Identifier($"__{this.currentMethod!.Identifier.Text}__{node.Identifier.Text}"));
+
+            // HLSL doesn't support local functions, so we first process them as usual and then remove
+            // them from the current syntax tree completely. These will be added to the shader source
+            // as external static method with a special name to avoid conflicts with other methods.
+            // The name will simply be in the format: "__<MethodName>__<FunctionName>".
+            this.localFunctions.Add(updatedNode.Identifier.Text, updatedNode);
+
+            return null;
+        }
+
+        /// <inheritdoc/>
         public override SyntaxNode VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
         {
             var updatedNode = (MemberAccessExpressionSyntax)base.VisitMemberAccessExpression(node)!;
@@ -168,15 +203,26 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (InvocationExpressionSyntax)base.VisitInvocationExpression(node)!;
 
-            // If the invocation consists of invoking a static method that has a direct
-            // mapping to HLSL, rewrite the expression in the current invocation node.
-            // For instance: Math.Abs(expr) => abs(expr).
             if (this.semanticModel.GetOperation(node) is IInvocationOperation operation &&
                 operation.TargetMethod is IMethodSymbol method &&
-                method.IsStatic &&
-                HlslKnownMethods.TryGetMappedName(method.GetFullMetadataName(), out string? mapping))
+                method.IsStatic)
             {
-                return updatedNode.WithExpression(ParseExpression(mapping!));
+                // If the invocation consists of invoking a static method that has a direct
+                // mapping to HLSL, rewrite the expression in the current invocation node.
+                // For instance: Math.Abs(expr) => abs(expr).
+                if (HlslKnownMethods.TryGetMappedName(method.GetFullMetadataName(), out string? mapping))
+                {
+                    return updatedNode.WithExpression(ParseExpression(mapping!));
+                }
+
+                // Update the name if the target is a local function. The exact schema for the
+                // updated name is detailed in the override handling the local function statement.
+                if (method.MethodKind == MethodKind.LocalFunction)
+                {
+                    var functionIdentifier = $"__{this.currentMethod!.Identifier.Text}__{method.Name}";
+
+                    return updatedNode.WithExpression(ParseExpression(functionIdentifier));
+                }
             }
 
             return updatedNode;
