@@ -83,11 +83,13 @@ namespace ComputeSharp.Shaders.Translation
         private void BuildDispatchDataLoader()
         {
             // The delegate signature is <GraphicsDevice, in T, ref D3D12_GPU_DESCRIPTOR_HANDLE, ref byte, void>.
+            // Due to how DynamicMethod<T> is implemented (see notes in the XML docs for DynamicMethod<T>.New),
+            // all offsets for the input arguments are shifted by one. Because of this, we have the following:
             //
-            // ldarg.0 = GraphicsDevice
-            // ldarg.1 = in T shader
-            // ldarg.2 = ref D3D12_GPU_DESCRIPTOR_HANDLE r0
-            // ldarg.3 = ref byte r1
+            // ldarg.1 = GraphicsDevice
+            // ldarg.2 = in T shader
+            // ldarg.3 = ref D3D12_GPU_DESCRIPTOR_HANDLE r0
+            // ldarg.4 = ref byte r1
             this.dispatchDataLoader = DynamicMethod<DispatchDataLoader>.New(il =>
             {
                 foreach (ReadableMember member in this.capturedMembers)
@@ -95,14 +97,14 @@ namespace ComputeSharp.Shaders.Translation
                     if (HlslKnownTypes.IsKnownBufferType(member.MemberType))
                     {
                         // Load the offset address into the resource buffers
-                        il.Emit(OpCodes.Ldarg_2);
+                        il.Emit(OpCodes.Ldarg_3);
 
                         if (totalResourceCount > 0)
                         {
                             il.EmitAddOffset<D3D12_GPU_DESCRIPTOR_HANDLE>(this.totalResourceCount);
                         }
 
-                        if (!member.IsStatic) il.Emit(OpCodes.Ldarg_1);
+                        if (!member.IsStatic) il.Emit(OpCodes.Ldarg_2);
                         il.EmitReadMember(member);
 
                         // Call NativeObject.ThrowIfDisposed()
@@ -113,7 +115,7 @@ namespace ComputeSharp.Shaders.Translation
 
                         // Call Buffer<T>.ThrowIfDeviceMismatch(GraphicsDevice)
                         il.Emit(OpCodes.Dup);
-                        il.Emit(OpCodes.Ldarg_0);
+                        il.Emit(OpCodes.Ldarg_1);
                         il.EmitCall(OpCodes.Callvirt, member.MemberType.GetMethod(
                             nameof(Buffer<byte>.ThrowIfDeviceMismatch),
                             BindingFlags.Instance | BindingFlags.NonPublic)!, null);
@@ -140,10 +142,10 @@ namespace ComputeSharp.Shaders.Translation
                         }
 
                         // Load the target address into the variables buffer
-                        il.Emit(OpCodes.Ldarg_3);
+                        il.Emit(OpCodes.Ldarg_S, (byte)4);
                         il.EmitAddOffset(totalVariablesByteSize);
 
-                        if (!member.IsStatic) il.Emit(OpCodes.Ldarg_1);
+                        if (!member.IsStatic) il.Emit(OpCodes.Ldarg_2);
 
                         il.EmitReadMember(member);
                         il.EmitStoreToAddress(member.MemberType);

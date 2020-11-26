@@ -13,7 +13,7 @@ namespace ComputeSharp.Tests.Internals
         {
             Func<int, int> square = DynamicMethod<Func<int, int>>.New(il =>
             {
-                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Ldarg_1);
                 il.Emit(OpCodes.Dup);
                 il.Emit(OpCodes.Mul);
                 il.Emit(OpCodes.Ret);
@@ -31,7 +31,7 @@ namespace ComputeSharp.Tests.Internals
         {
             Square square = DynamicMethod<Square>.New(il =>
             {
-                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Ldarg_1);
                 il.Emit(OpCodes.Dup);
                 il.Emit(OpCodes.Mul);
                 il.Emit(OpCodes.Ret);

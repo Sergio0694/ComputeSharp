@@ -97,23 +97,23 @@ namespace ComputeSharp.Shaders.Translation
                 foreach (FieldInfo fieldInfo in fieldInfos)
                 {
                     // (hashcode << 5) + hashcode
-                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Ldarg_1);
                     il.Emit(OpCodes.Ldc_I4_5);
                     il.Emit(OpCodes.Shl);
-                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Ldarg_1);
                     il.Emit(OpCodes.Add);
 
                     // hashcode += shader.Function[#].Method.GetHashCode();
-                    il.Emit(OpCodes.Ldarg_1);
+                    il.Emit(OpCodes.Ldarg_2);
                     il.Emit(OpCodes.Ldfld, fieldInfo);
                     il.EmitCall(OpCodes.Callvirt, getMethodInfo, null);
                     il.EmitCall(OpCodes.Callvirt, getHashCodeInfo, null);
                     il.Emit(OpCodes.Add);
-                    il.Emit(OpCodes.Starg_S, (byte)0);
+                    il.Emit(OpCodes.Starg_S, (byte)1);
                 }
 
                 // Return the computed hash
-                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Ldarg_1);
                 il.Emit(OpCodes.Ret);
             });
         }
