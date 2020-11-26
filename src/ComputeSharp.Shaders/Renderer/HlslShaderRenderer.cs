@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Shaders.Renderer.Models;
@@ -104,6 +105,7 @@ namespace ComputeSharp.Shaders.Renderer
         /// <summary>
         /// A helper type that implements a pooled buffer writer for <see cref="char"/> values.
         /// </summary>
+        [DebuggerTypeProxy(typeof(DebugView))]
         public ref struct ArrayPoolStringBuilder
         {
             /// <summary>
@@ -238,6 +240,26 @@ namespace ComputeSharp.Shaders.Renderer
             public void Dispose()
             {
                 ArrayPool<char>.Shared.Return(this.array);
+            }
+
+            /// <summary>
+            /// A debug proxy used for displaying debug info.
+            /// </summary>
+            internal sealed class DebugView
+            {
+                /// <summary>
+                /// Initializes a new instance of the <see cref="DebugView{T}"/> class with the specified parameters.
+                /// </summary>
+                /// <param name="builder">The input <see cref="ArrayPoolStringBuilder"/> instance to display.</param>
+                public DebugView(ArrayPoolStringBuilder builder)
+                {
+                    Text = builder.WrittenSpan.ToString();
+                }
+
+                /// <summary>
+                /// Gets the text to display for the current instance.
+                /// </summary>
+                public string Text { get; }
             }
         }
     }
