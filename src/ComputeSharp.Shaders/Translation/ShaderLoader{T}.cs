@@ -25,7 +25,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// The associated <see cref="IComputeShaderSourceAttribute"/> instance for the current shader type.
         /// </summary>
-        private static IComputeShaderSourceAttribute Attribute = IComputeShaderSourceAttribute.GetForType<T>();
+        private static readonly IComputeShaderSourceAttribute Attribute = IComputeShaderSourceAttribute.GetForType<T>();
 
         /// <summary>
         /// The number of constant buffers to define in the shader.
@@ -238,7 +238,14 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         private void LoadMethodSource()
         {
-            EntryPoint = Attribute.Methods[nameof(IComputeShader.Execute)];
+            foreach (var method in Attribute.Methods)
+            {
+                switch (method.Key)
+                {
+                    case nameof(IComputeShader.Execute): EntryPoint = method.Value; break;
+                    default: this.localFunctionsInfo.Add(method.Value); break;
+                }
+            }
         }
     }
 }

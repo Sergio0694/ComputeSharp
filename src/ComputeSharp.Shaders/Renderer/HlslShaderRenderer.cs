@@ -88,6 +88,13 @@ namespace ComputeSharp.Shaders.Renderer
                 }
             }
 
+            // Local functions
+            foreach (var function in info.LocalFunctionsList)
+            {
+                builder.AppendLine();
+                builder.AppendLine(function);
+            }
+
             // Entry point
             builder.AppendLine();
             builder.Append("[NumThreads(");
