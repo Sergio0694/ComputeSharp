@@ -3,7 +3,9 @@
 
 ## Major update in the works! 🚀
 
-The currently available NuGet package refers to the `1.x` version of **ComputeSharp**, with the codebase from the `master` branch. I'm currently working on a new major update targeting .NET 5, featuring a completely rewritten backend using native DirectX bindings and the use of C# source generators to prepare the shader code. This will greatly improve the performance of the library (especially cold start performance, which is over **10x** faster already) and use much less memory at runtime. I also plan to introduce support for a number of new features, such as the ability to use custom struct types in shaders. The current status of this work can be seen from the development branches. Thank you for the support!
+The currently available NuGet package refers to the `1.x` version of **ComputeSharp**, with the codebase from the `master` branch. I'm currently working on a new major update targeting .NET 5, featuring a completely rewritten backend using native DirectX bindings and the use of C# source generators to prepare the shader code. This will greatly improve the performance of the library (especially cold start performance, which is over **10x** faster already) and use much less memory at runtime. I also plan to introduce support for a number of new features, such as the ability to use custom struct types in shaders. The current status of this work can be seen from the development branches.
+
+Thank you for the support!
 
 # What is it?
 
