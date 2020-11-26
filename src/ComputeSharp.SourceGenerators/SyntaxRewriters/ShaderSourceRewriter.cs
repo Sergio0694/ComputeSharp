@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.SourceGenerators.Extensions;
+using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

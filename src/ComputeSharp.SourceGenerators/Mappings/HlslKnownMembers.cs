@@ -4,9 +4,8 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
-using ComputeSharp.SourceGenerators.Mappings;
 
-namespace ComputeSharp.Shaders.Mappings
+namespace ComputeSharp.SourceGenerators.Mappings
 {
     /// <summary>
     /// A <see langword="class"/> that contains and maps known HLSL member names to common .NET members.

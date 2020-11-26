@@ -2,7 +2,7 @@
 using System.Diagnostics.Contracts;
 using System.Linq;
 
-namespace ComputeSharp.Shaders.Mappings
+namespace ComputeSharp.SourceGenerators.Mappings
 {
     /// <summary>
     /// A <see langword="class"/> that contains and maps known HLSL identifier names valid HLSL names.

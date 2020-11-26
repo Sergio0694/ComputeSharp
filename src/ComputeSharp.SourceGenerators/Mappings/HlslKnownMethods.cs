@@ -6,7 +6,7 @@ using System.Numerics;
 using System.Reflection;
 using ComputeSharp.Core.Intrinsics.Attributes;
 
-namespace ComputeSharp.Shaders.Mappings
+namespace ComputeSharp.SourceGenerators.Mappings
 {
     /// <summary>
     /// A <see langword="class"/> that contains and maps known HLSL method names to common .NET methods.
