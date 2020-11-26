@@ -7,9 +7,7 @@ using System.Runtime.InteropServices;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Renderer.Models.Fields;
 using ComputeSharp.Shaders.Renderer.Models.Fields.Abstract;
-using ComputeSharp.Shaders.Renderer.Models.Functions;
 using ComputeSharp.Shaders.Translation.Models;
-using Microsoft.CodeAnalysis;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_DESCRIPTOR_RANGE_TYPE;
@@ -63,12 +61,12 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// The <see cref="List{T}"/> with the <see cref="FunctionInfo"/> items for the shader functions.
         /// </summary>
-        private readonly List<FunctionInfo> functionsInfo = new();
+        private readonly List<object> functionsInfo = new();
 
         /// <summary>
         /// The <see cref="List{T}"/> with the <see cref="FunctionInfo"/> items for the shader local functions.
         /// </summary>
-        private readonly List<LocalFunctionInfo> localFunctionsInfo = new();
+        private readonly List<string> localFunctionsInfo = new();
 
         /// <summary>
         /// Creates a new <see cref="ShaderLoader{T}"/> instance.
@@ -108,12 +106,12 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// Gets the collection of <see cref="FunctionInfo"/> items for the shader.
         /// </summary>
-        public IReadOnlyList<FunctionInfo> FunctionsInfo => this.functionsInfo;
+        public IReadOnlyList<object> FunctionsInfo => this.functionsInfo;
 
         /// <summary>
         /// Gets the collection of <see cref="LocalFunctionInfo"/> items for the shader.
         /// </summary>
-        public IReadOnlyList<LocalFunctionInfo> LocalFunctionsInfo => this.localFunctionsInfo;
+        public IReadOnlyList<string> LocalFunctionsInfo => this.localFunctionsInfo;
 
         /// <summary>
         /// Loads and processes an input<typeparamref name="T"/> shadeer

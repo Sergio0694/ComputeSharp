@@ -168,7 +168,7 @@ namespace ComputeSharp.Shaders
             ShaderLoader<T> shaderLoader = ShaderLoader<T>.Load(in shader);
 
             // Render the loaded shader
-            string shaderSource = ShaderRenderer.Instance.Render(new ShaderInfo
+            using var shaderSource = HlslShaderRenderer.Render(new ShaderInfo
             {
                 BuffersList = shaderLoader.HslsBuffersInfo,
                 FieldsList = shaderLoader.FieldsInfo,
@@ -182,7 +182,7 @@ namespace ComputeSharp.Shaders
             });
 
             // Compile the loaded shader to HLSL bytecode
-            IDxcBlobObject shaderBytecode = new(ShaderCompiler.CompileShader(shaderSource));
+            IDxcBlobObject shaderBytecode = new(ShaderCompiler.CompileShader(shaderSource.WrittenSpan));
 
             // Get the cached shader data
             shaderData = new CachedShader<T>(shaderLoader, shaderBytecode);

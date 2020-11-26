@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using ComputeSharp.Shaders.Renderer.Models.Fields;
 using ComputeSharp.Shaders.Renderer.Models.Fields.Abstract;
-using ComputeSharp.Shaders.Renderer.Models.Functions;
 
 #pragma warning disable CS8618
 
@@ -50,11 +49,11 @@ namespace ComputeSharp.Shaders.Renderer.Models
         /// <summary>
         /// Gets or sets the list of static functions used by the shader.
         /// </summary>
-        public IReadOnlyList<FunctionInfo> FunctionsList { get; init; }
+        public IReadOnlyList<object> FunctionsList { get; init; } // TODO
 
         /// <summary>
-        /// Gets or sets the list of local (implicit) functions used by the shader.
+        /// Gets or sets the list of local functions used by the shader.
         /// </summary>
-        public IReadOnlyList<LocalFunctionInfo> LocalFunctionsList { get; init; }
+        public IReadOnlyList<string> LocalFunctionsList { get; init; }
     }
 }

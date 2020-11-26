@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.7.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ComputeSharp.Graphics\ComputeSharp.Graphics.csproj" />
   </ItemGroup>
 
