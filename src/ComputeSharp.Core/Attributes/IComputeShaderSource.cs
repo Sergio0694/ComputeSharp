@@ -8,7 +8,7 @@ using System.Reflection;
 namespace ComputeSharp
 {
     /// <summary>
-    /// A shader that indicates that a target shader type should get an automatic constructor for all fields.
+    /// An attribute that indicates that a target shader type should get an automatic constructor for all fields.
     /// This attribute is not meant to be directly used by applications using ComputeSharp.
     /// </summary>
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
