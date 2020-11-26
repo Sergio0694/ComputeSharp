@@ -3,7 +3,6 @@ using System.Buffers;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Shaders.Renderer.Models;
-using ComputeSharp.Shaders.Renderer.Models.Fields;
 
 namespace ComputeSharp.Shaders.Renderer
 {
@@ -55,7 +54,7 @@ namespace ComputeSharp.Shaders.Renderer
                 switch (buffer)
                 {
                     // Constant buffer go to cbuffer fields with a dummy local
-                    case ConstantBufferFieldInfo _:
+                    case HlslBufferInfo.Constant _:
                         builder.Append("cbuffer _");
                         builder.Append(buffer.FieldName);
                         builder.Append(" : register(b");
@@ -71,10 +70,10 @@ namespace ComputeSharp.Shaders.Renderer
                         break;
 
                     // Structured buffer have the same syntax but different id
-                    case ReadOnlyBufferFieldInfo _:
+                    case HlslBufferInfo.ReadOnly _:
                         char registerId = 't';
                         goto StructuredBuffer;
-                    case ReadWriteBufferFieldInfo _:
+                    case HlslBufferInfo.ReadWrite _:
                         registerId = 'u';
                         StructuredBuffer:
                         builder.Append(buffer.FieldType);

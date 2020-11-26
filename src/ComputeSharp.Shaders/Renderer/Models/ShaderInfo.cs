@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using ComputeSharp.Shaders.Renderer.Models.Fields;
-using ComputeSharp.Shaders.Renderer.Models.Fields.Abstract;
 
 #pragma warning disable CS8618
 
