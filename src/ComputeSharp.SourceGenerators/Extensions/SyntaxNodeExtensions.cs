@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.Contracts;
 using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
@@ -87,12 +88,21 @@ namespace ComputeSharp.SourceGenerators.Extensions
         [Pure]
         public static MethodDeclarationSyntax WithBlockBody(this MethodDeclarationSyntax node)
         {
-            return node.WithBody((node.Body, node.ExpressionBody) switch
+            if (node.ExpressionBody is ArrowExpressionClauseSyntax arrow)
             {
-                (BlockSyntax block, _) => block,
-                (_, ArrowExpressionClauseSyntax arrow) => Block(ExpressionStatement(arrow.Expression)),
-                _ => Block()
-            });
+                StatementSyntax statement = node.ReturnType switch
+                {
+                    PredefinedTypeSyntax pts when pts.Keyword.IsKind(SyntaxKind.VoidKeyword) => ExpressionStatement(arrow.Expression),
+                    _ => ReturnStatement(arrow.Expression)
+                };
+
+                return node
+                    .WithBody(Block(statement))
+                    .WithExpressionBody(null)
+                    .WithSemicolonToken(MissingToken(SyntaxKind.SemicolonToken));
+            }
+
+            return node;
         }
     }
 }
