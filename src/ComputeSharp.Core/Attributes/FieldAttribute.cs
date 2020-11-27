@@ -35,10 +35,5 @@ namespace ComputeSharp
         /// Gets the optional summary for the field to declare.
         /// </summary>
         public string? Summary { get; init; }
-
-        /// <summary>
-        /// Gets the optional remarks for the field to declare.
-        /// </summary>
-        public string? Remarks { get; init; }
     }
 }
