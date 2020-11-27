@@ -52,9 +52,17 @@ namespace ComputeSharp
         [Pure]
         internal static IComputeShaderSourceAttribute GetForType<T>()
         {
+            // Resolve the fully qualified name of the current type, without generic parameters.
+            // We can't use Type.FullName, as when T is a closed generic it includes the assembly too.
+            string fullname = typeof(T) switch
+            {
+                { IsGenericType: true } => typeof(T).GetGenericTypeDefinition().ToString().Split('[')[0],
+                _ => typeof(T).ToString()
+            };
+
             return (
                 from attribute in typeof(T).Assembly.GetCustomAttributes<IComputeShaderSourceAttribute>()
-                where attribute.ShaderTypeName == typeof(T).FullName
+                where attribute.ShaderTypeName == fullname
                 select attribute).Single();
         }
     }
