@@ -26,46 +26,39 @@ namespace ComputeSharp.SourceGenerators
         public void Execute(GeneratorExecutionContext context)
         {
             // Find all the [Field] usages
-            var attributes = new Queue<IGrouping<INamedTypeSymbol, AttributeData>>(
+            var attributes = new Queue<IGrouping<StructDeclarationSyntax, AttributeData>>(
                 from tree in context.Compilation.SyntaxTrees
                 from structDeclaration in tree.GetRoot().DescendantNodes().OfType<StructDeclarationSyntax>()
                 let semanticModel = context.Compilation.GetSemanticModel(structDeclaration.SyntaxTree)
                 let structSymbol = semanticModel.GetDeclaredSymbol(structDeclaration)
                 from attribute in structSymbol.GetAttributes()
                 where attribute.AttributeClass is { Name: nameof(FieldAttribute) }
-                group attribute by structSymbol into groups
+                group attribute by structDeclaration into groups
                 select groups);
 
-            foreach (IGrouping<INamedTypeSymbol, AttributeData> group in attributes)
+            foreach (IGrouping<StructDeclarationSyntax, AttributeData> group in attributes)
             {
-                StructDeclarationSyntax structDeclaration = null!;
-                SemanticModel semanticModel = null!;// context.Compilation.GetSemanticModel(structDeclaration.SyntaxTree);
-                INamedTypeSymbol structDeclarationSymbol = null!;// semanticModel.GetDeclaredSymbol(structDeclaration)!;
+                SemanticModel semanticModel = context.Compilation.GetSemanticModel(group.Key.SyntaxTree);
+                INamedTypeSymbol structDeclarationSymbol = semanticModel.GetDeclaredSymbol(group.Key)!;
 
-                _ = GetProcessedFields(group);
+                var generatedTypeInfo = GetProcessedFields(group);
 
                 // Extract the info on the type to process
                 var namespaceName = structDeclarationSymbol.ContainingNamespace.ToDisplayString(new(typeQualificationStyle: NameAndContainingTypesAndNamespaces));
-                var structName = structDeclaration.Identifier.Text;
-                var structModifiers = structDeclaration.Modifiers;
+                var structName = group.Key.Identifier.Text;
+                var structModifiers = group.Key.Modifiers;
 
-                // Create the constructor declaration for the type. This will
-                // produce a constructor with simple initialization of all variables:
-                //
-                // public MyType(Foo a, Bar b, Baz c, ...)
-                // {
-                //     this.a = a;
-                //     this.b = b;
-                //     this.c = c;
-                //     ...
-                // }
+                // Declare the partial type with the right layout attribute to track the size and
+                // the HLSL packing, and add the generated field declarations requested by the user.
                 var structDeclarationSyntax =
-                    StructDeclaration(structName).WithModifiers(structModifiers);
+                    StructDeclaration(structName).WithModifiers(structModifiers)
+                    .AddAttributeLists(AttributeList(SingletonSeparatedList(generatedTypeInfo.Layout)))
+                    .AddMembers(generatedTypeInfo.Fields.ToArray());
 
                 TypeDeclarationSyntax typeDeclarationSyntax = structDeclarationSyntax;
 
                 // Add all parent types in ascending order, if any
-                foreach (var parentType in structDeclaration.Ancestors().OfType<TypeDeclarationSyntax>())
+                foreach (var parentType in group.Key.Ancestors().OfType<TypeDeclarationSyntax>())
                 {
                     typeDeclarationSyntax = parentType
                         .WithMembers(SingletonList<MemberDeclarationSyntax>(typeDeclarationSyntax))
@@ -75,7 +68,6 @@ namespace ComputeSharp.SourceGenerators
                 }
 
                 // Create the compilation unit with the namespace and target member.
-                // From this, we can finally generate the source code to output.
                 var source =
                     CompilationUnit().AddMembers(
                     NamespaceDeclaration(IdentifierName(namespaceName)).AddMembers(typeDeclarationSyntax))
@@ -150,6 +142,9 @@ namespace ComputeSharp.SourceGenerators
                 fieldDeclarations.Add(fieldDeclaration);
             }
 
+            // Add the trailing padding, if needed
+            size += size % pack;
+
             // Get the attribute for the layout of the entire type
             var layoutAttribute =
                 Attribute(IdentifierName(typeof(StructLayoutAttribute).FullName)).AddArgumentListArguments(
@@ -157,9 +152,9 @@ namespace ComputeSharp.SourceGenerators
                         SyntaxKind.SimpleMemberAccessExpression,
                         IdentifierName(typeof(LayoutKind).FullName),
                         IdentifierName(nameof(LayoutKind.Explicit)))),
-                    AttributeArgument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(8)))
+                    AttributeArgument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(size)))
                     .WithNameEquals(NameEquals(IdentifierName(nameof(StructLayoutAttribute.Size)))),
-                    AttributeArgument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(16)))
+                    AttributeArgument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(pack)))
                     .WithNameEquals(NameEquals(IdentifierName(nameof(StructLayoutAttribute.Pack)))));
 
             return (layoutAttribute, fieldDeclarations);

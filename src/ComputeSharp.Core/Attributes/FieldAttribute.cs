@@ -7,7 +7,7 @@ namespace ComputeSharp
     /// This is necessary to be used instead of manually declare fields, so that the fields can be
     /// declared with the right offset into the type data, as HLSL requires precise alignment for values.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Struct, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Struct, AllowMultiple = true)]
     public sealed class FieldAttribute : Attribute
     {
         /// <summary>
