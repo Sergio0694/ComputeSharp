@@ -22,6 +22,11 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         private readonly SemanticModel semanticModel;
 
         /// <summary>
+        /// The set of discovered custom types.
+        /// </summary>
+        private readonly HashSet<INamedTypeSymbol> discoveredTypes;
+
+        /// <summary>
         /// The collection of processed local functions in the current tree.
         /// </summary>
         private readonly Dictionary<string, LocalFunctionStatementSyntax> localFunctions;
@@ -35,9 +40,11 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// Creates a new <see cref="ShaderSourceRewriter"/> instance with the specified parameters.
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the target syntax tree.</param>
-        public ShaderSourceRewriter(SemanticModel semanticModel)
+        /// <param name="discoveredTypes">The set of discovered custom types.</param>
+        public ShaderSourceRewriter(SemanticModel semanticModel, HashSet<INamedTypeSymbol> discoveredTypes)
         {
             this.semanticModel = semanticModel;
+            this.discoveredTypes = discoveredTypes;
             this.localFunctions = new();
         }
 
@@ -69,6 +76,8 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (CastExpressionSyntax)base.VisitCastExpression(node)!;
 
+            _ = this.discoveredTypes.Add((INamedTypeSymbol)this.semanticModel.GetTypeInfo(node.Type).Type!);
+
             return updatedNode.ReplaceType(updatedNode.Type, node.Type, this.semanticModel);
         }
 
@@ -77,6 +86,8 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = ((LocalDeclarationStatementSyntax)base.VisitLocalDeclarationStatement(node)!);
 
+            _ = this.discoveredTypes.Add((INamedTypeSymbol)this.semanticModel.GetTypeInfo(node.Declaration.Type).Type!);
+
             return updatedNode.ReplaceType(updatedNode.Declaration.Type, node.Declaration.Type, this.semanticModel);
         }
 
@@ -84,6 +95,8 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         public override SyntaxNode VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
         {
             var updatedNode = (ObjectCreationExpressionSyntax)base.VisitObjectCreationExpression(node)!;
+
+            _ = this.discoveredTypes.Add((INamedTypeSymbol)this.semanticModel.GetTypeInfo(node.Type).Type!);
 
             updatedNode = updatedNode.ReplaceType(updatedNode.Type, node.Type, this.semanticModel);
 
@@ -101,6 +114,8 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (ImplicitObjectCreationExpressionSyntax)base.VisitImplicitObjectCreationExpression(node)!;
 
+            _ = this.discoveredTypes.Add((INamedTypeSymbol)this.semanticModel.GetTypeInfo(node).Type!);
+
             TypeSyntax explicitType = IdentifierName("").ReplaceType(node, this.semanticModel);
 
             // Mutate the syntax like with explicit object creation expressions
@@ -116,6 +131,8 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         public override SyntaxNode VisitDefaultExpression(DefaultExpressionSyntax node)
         {
             var updatedNode = (DefaultExpressionSyntax)base.VisitDefaultExpression(node)!;
+
+            _ = this.discoveredTypes.Add((INamedTypeSymbol)this.semanticModel.GetTypeInfo(node.Type).Type!);
 
             updatedNode = updatedNode.ReplaceType(updatedNode.Type, node.Type, this.semanticModel);
 

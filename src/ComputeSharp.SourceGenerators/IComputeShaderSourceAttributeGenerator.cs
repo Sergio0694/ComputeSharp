@@ -39,7 +39,10 @@ namespace ComputeSharp.SourceGenerators
                 INamedTypeSymbol structDeclarationSymbol = semanticModel.GetDeclaredSymbol(structDeclaration)!;
 
                 // Only process compute shader types
-                if (!structDeclarationSymbol.Interfaces.Any(interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) continue;           
+                if (!structDeclarationSymbol.Interfaces.Any(interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) continue;
+
+                // The list to use to track all discovered custom types
+                HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
 
                 // Helper that converts a sequence of string pairs into a nested array expression.
                 // That is, this applies the following transformation:
@@ -63,8 +66,8 @@ namespace ComputeSharp.SourceGenerators
                     AttributeList(SingletonSeparatedList(
                         Attribute(IdentifierName(typeof(IComputeShaderSourceAttribute).FullName)).AddArgumentListArguments(
                             AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(structDeclarationSymbol.GetFullMetadataName()))),
-                            AttributeArgument(NestedPairsArrayExpression(GetProcessedMembers(structDeclarationSymbol))),
-                            AttributeArgument(NestedPairsArrayExpression(GetProcessedMethods(structDeclaration, semanticModel))))))
+                            AttributeArgument(NestedPairsArrayExpression(GetProcessedMembers(structDeclarationSymbol, discoveredTypes))),
+                            AttributeArgument(NestedPairsArrayExpression(GetProcessedMethods(structDeclaration, semanticModel, discoveredTypes))))))
                     .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                     .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
                     .NormalizeWhitespace()
@@ -81,17 +84,21 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <returns>A sequence of captured members in <paramref name="structDeclarationSymbol"/>.</returns>
         [Pure]
-        private static IEnumerable<(string Key, string Value)> GetProcessedMembers(INamedTypeSymbol structDeclarationSymbol)
+        private static IEnumerable<(string Key, string Value)> GetProcessedMembers(INamedTypeSymbol structDeclarationSymbol, HashSet<INamedTypeSymbol> types)
         {
-            foreach (string memberName in (
-                from member in structDeclarationSymbol.GetMembers()
-                where member.Kind == SymbolKind.Field ||
-                      member.Kind == SymbolKind.Property
-                select member.Name).Distinct())
+            foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
-                _ = HlslKnownKeywords.TryGetMappedName(memberName, out string? mapping);
+                _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
 
-                yield return (memberName, mapping ?? memberName);
+                // Yield back the current mapping for the name (if the name used a reserved keyword)
+                yield return (fieldSymbol.Name, mapping ?? fieldSymbol.Name);
+
+                // Track the type of items in the current buffer
+                if (fieldSymbol.Type is INamedTypeSymbol fieldType &&
+                    HlslKnownTypes.IsStructuredBufferType(fieldType.GetFullMetadataName()))
+                {
+                    _ = types.Add((INamedTypeSymbol)fieldType.TypeArguments[0]);
+                }
             }
         }
 
@@ -104,7 +111,8 @@ namespace ComputeSharp.SourceGenerators
         [Pure]
         private static IEnumerable<(string Key, string Value)> GetProcessedMethods(
             StructDeclarationSyntax structDeclaration,
-            SemanticModel semanticModel)
+            SemanticModel semanticModel,
+            HashSet<INamedTypeSymbol> types)
         {
             // Find all declared methods in the type
             ImmutableArray<MethodDeclarationSyntax> methodDeclarations = (
@@ -115,7 +123,7 @@ namespace ComputeSharp.SourceGenerators
             foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
             {
                 IMethodSymbol methodDeclarationSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration)!;
-                ShaderSourceRewriter shaderSourceRewriter = new(semanticModel);
+                ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, types);
 
                 // Rewrite the method syntax tree
                 var processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();

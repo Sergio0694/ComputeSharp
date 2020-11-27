@@ -37,10 +37,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
             [typeof(double).FullName] = "double",
             [typeof(Double2).FullName] = "double2",
             [typeof(Double3).FullName] = "double3",
-            [typeof(Double4).FullName] = "double4",
-            [typeof(ThreadIds).FullName] = "uint3",
-            ["ComputeSharp.ReadOnlyBuffer<T>"] = "StructuredBuffer",
-            ["ComputeSharp.ReadWriteBuffer<T>"] = "RWStructuredBuffer"
+            [typeof(Double4).FullName] = "double4"
         };
 
         /// <summary>
@@ -54,6 +51,18 @@ namespace ComputeSharp.SourceGenerators.Mappings
             typeof(Float2), typeof(Float3), typeof(Float4),
             typeof(Double2), typeof(Double3), typeof(Double4)
         });
+
+        /// <summary>
+        /// Checks whether or not a given type name matches a structured buffer type.
+        /// </summary>
+        /// <param name="typeName">The input type name to check.</param>
+        /// <returns>Whether or not <paramref name="typeName"/> represents a structured buffer type.</returns>
+        public static bool IsStructuredBufferType(string typeName)
+        {
+            return
+                typeName == "ComputeSharp.ReadOnlyBuffer`1" ||
+                typeName == "ComputeSharp.ReadWriteBuffer`1";
+        }
 
         /// <summary>
         /// Gets the mapped HLSL-compatible type name for the input type name.

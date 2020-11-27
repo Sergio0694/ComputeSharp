@@ -48,15 +48,17 @@ namespace ComputeSharp.SourceGenerators.Extensions
         public static TRoot ReplaceType<TRoot>(this TRoot node, TypeSyntax targetType, SyntaxNode sourceType, SemanticModel semanticModel)
             where TRoot : SyntaxNode
         {
-            if (semanticModel.GetTypeInfo(sourceType).Type is ITypeSymbol typeSymbol &&
-                HlslKnownTypes.TryGetMappedName(typeSymbol.ToDisplayString(FullyQualifiedWithoutGlobalFormat), out string? mappedName))
+            ITypeSymbol typeSymbol = semanticModel.GetTypeInfo(sourceType).Type!;
+            string typeName = typeSymbol.ToDisplayString(FullyQualifiedWithoutGlobalFormat);
+
+            if (HlslKnownTypes.TryGetMappedName(typeName, out string? mappedName))
             {
                 TypeSyntax newType = ParseTypeName(mappedName!);
 
                 return node.ReplaceNode(targetType, newType);
             }
 
-            return node;
+            return node.ReplaceNode(targetType, ParseTypeName(typeName.Replace(".", "::")));
         }
 
         /// <summary>
@@ -77,7 +79,7 @@ namespace ComputeSharp.SourceGenerators.Extensions
                 return ParseTypeName(mappedName!);
             }
 
-            return ParseTypeName(typeName);
+            return ParseTypeName(typeName.Replace(".", "::"));
         }
 
         /// <summary>
