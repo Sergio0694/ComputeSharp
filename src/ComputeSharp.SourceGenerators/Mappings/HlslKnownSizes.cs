@@ -10,9 +10,9 @@ namespace ComputeSharp.SourceGenerators.Mappings
     internal static class HlslKnownSizes
     {
         /// <summary>
-        /// The mapping of supported known sizes to HLSL type names.
+        /// Gets the mapping of supported known sizes to HLSL type names.
         /// </summary>
-        private static readonly IReadOnlyDictionary<string, (int, int)> KnownSizes = new Dictionary<string, (int, int)>
+        public static IReadOnlyDictionary<string, (int Size, int Pack)> KnownSizes { get; } = new Dictionary<string, (int, int)>
         {
             [typeof(bool).FullName] = (4, 4),
             [typeof(int).FullName] = (4, 4),
@@ -44,17 +44,5 @@ namespace ComputeSharp.SourceGenerators.Mappings
             [typeof(Double3).FullName] = (24, 8),
             [typeof(Double3).FullName] = (32, 8)
         };
-
-        /// <summary>
-        /// Tries to get the mapped HLSL size and packing for the input type name.
-        /// </summary>
-        /// <param name="name">The input fully qualified type name.</param>
-        /// <param name="mapped">The mapped name, if one is found.</param>
-        /// <returns>The HLSL size and packing that can be used in an HLSL shader.</returns>
-        [Pure]
-        public static bool TryGetMappedSize(string name, out (int Size, int Pack) mapped)
-        {
-            return KnownSizes.TryGetValue(name, out mapped);
-        }
     }
 }
