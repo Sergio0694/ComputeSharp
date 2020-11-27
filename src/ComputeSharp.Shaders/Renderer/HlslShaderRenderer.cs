@@ -42,7 +42,8 @@ namespace ComputeSharp.Shaders.Renderer
                 builder.Append("    ");
                 builder.Append(local.FieldType);
                 builder.Append(' ');
-                builder.AppendLine(local.FieldName);
+                builder.Append(local.FieldName);
+                builder.AppendLine(';');
             }
 
             builder.AppendLine('}');

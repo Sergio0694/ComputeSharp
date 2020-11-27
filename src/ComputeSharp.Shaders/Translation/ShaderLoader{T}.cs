@@ -197,7 +197,7 @@ namespace ComputeSharp.Shaders.Translation
 
                 string typeName = HlslKnownTypes.GetMappedName(fieldType);
 
-                this.hlslBuffersInfo.Add(new HlslBufferInfo.Constant(typeName, fieldName, (int)this.readOnlyBuffersCount++));
+                this.hlslBuffersInfo.Add(new HlslBufferInfo.ReadOnly(typeName, fieldName, (int)this.readOnlyBuffersCount++));
             }
             else if (HlslKnownTypes.IsReadWriteBufferType(fieldType))
             {
