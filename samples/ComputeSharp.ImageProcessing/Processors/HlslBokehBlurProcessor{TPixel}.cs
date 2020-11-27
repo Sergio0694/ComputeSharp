@@ -305,7 +305,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 width,
                 maxY: height - 1,
                 maxX: width - 1,
-                kernelLength: kernel.Size,
+                kernelLength: kernel.Length,
                 source,
                 target,
                 kernel);
@@ -376,7 +376,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 width,
                 maxY: height - 1,
                 maxX: width - 1,
-                kernelLength: kernel.Size,
+                kernelLength: kernel.Length,
                 z,
                 w,
                 source,
