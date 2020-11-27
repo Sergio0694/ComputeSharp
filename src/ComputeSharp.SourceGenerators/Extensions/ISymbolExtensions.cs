@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.Contracts;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.SourceGenerators.Extensions
@@ -53,6 +54,22 @@ namespace ComputeSharp.SourceGenerators.Extensions
         public static string GetFullMetadataName(this IMethodSymbol symbol)
         {
             return symbol.ToDisplayString(FullyQualifiedWithoutGlobalAndParametersFormat);
+        }
+
+        /// <summary>
+        /// Gets a valid filename for a target symbol and generator type.
+        /// </summary>
+        /// <typeparam name="TGenerator">The generator type processing the input symbol.</typeparam>
+        /// <param name="symbol">The symbol being processed.</param>
+        /// <returns>A filename in the form "[ComputeSharp]_[&lt;TGENERATOR&gt;]_[&lt;SYMBOL_FULLNAME&gt;]"</returns>
+        [Pure]
+        public static string GetGeneratedFileName<TGenerator>(this INamedTypeSymbol symbol)
+        {
+            string
+                metadataName = symbol.GetFullMetadataName(),
+                fixedName = metadataName.Replace('`', '-').Replace('+', '.');
+
+            return $"[{nameof(ComputeSharp)}]_[{typeof(TGenerator).Name}]_[{fixedName}]";
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using ComputeSharp.SourceGenerators.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -86,7 +87,7 @@ namespace ComputeSharp.SourceGenerators
                     .ToFullString();
 
                 // Add the partial type
-                context.AddSource($"__ComputeSharp_{typeof(AutoConstructorAttribute).FullName}_{structDeclarationSymbol.Name}", SourceText.From(source, Encoding.UTF8));
+                context.AddSource(structDeclarationSymbol.GetGeneratedFileName<AutoConstructorAttributeGenerator>(), SourceText.From(source, Encoding.UTF8));
             }
         }
     }

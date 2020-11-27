@@ -70,10 +70,8 @@ namespace ComputeSharp.SourceGenerators
                     .NormalizeWhitespace()
                     .ToFullString();
 
-                var generatedFileName = $"__ComputeSharp_{nameof(IComputeShaderSourceAttribute)}_{structDeclarationSymbol.Name}";
-
                 // Add the method source attribute
-                context.AddSource(generatedFileName, SourceText.From(source, Encoding.UTF8));
+                context.AddSource(structDeclarationSymbol.GetGeneratedFileName<IComputeShaderSourceAttributeGenerator>(), SourceText.From(source, Encoding.UTF8));
             }
         }
 

@@ -75,7 +75,7 @@ namespace ComputeSharp.SourceGenerators
                     .ToFullString();
 
                 // Add the partial type
-                context.AddSource($"__ComputeSharp_{typeof(FieldAttribute).FullName}_{structDeclarationSymbol.Name}", SourceText.From(source, Encoding.UTF8));
+                context.AddSource(structDeclarationSymbol.GetGeneratedFileName<FieldAttributeGenerator>(), SourceText.From(source, Encoding.UTF8));
             }
         }
 
