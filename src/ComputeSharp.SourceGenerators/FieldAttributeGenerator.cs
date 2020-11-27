@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using ComputeSharp.SourceGenerators.Extensions;
+using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -26,7 +26,7 @@ namespace ComputeSharp.SourceGenerators
         public void Execute(GeneratorExecutionContext context)
         {
             // Find all the [Field] usages
-            var attributes = (
+            var attributes = new Queue<IGrouping<INamedTypeSymbol, AttributeData>>(
                 from tree in context.Compilation.SyntaxTrees
                 from structDeclaration in tree.GetRoot().DescendantNodes().OfType<StructDeclarationSyntax>()
                 let semanticModel = context.Compilation.GetSemanticModel(structDeclaration.SyntaxTree)
@@ -34,7 +34,7 @@ namespace ComputeSharp.SourceGenerators
                 from attribute in structSymbol.GetAttributes()
                 where attribute.AttributeClass is { Name: nameof(FieldAttribute) }
                 group attribute by structSymbol into groups
-                select groups).ToImmutableArray();
+                select groups);
 
             foreach (IGrouping<INamedTypeSymbol, AttributeData> group in attributes)
             {
@@ -42,7 +42,7 @@ namespace ComputeSharp.SourceGenerators
                 SemanticModel semanticModel = null!;// context.Compilation.GetSemanticModel(structDeclaration.SyntaxTree);
                 INamedTypeSymbol structDeclarationSymbol = null!;// semanticModel.GetDeclaredSymbol(structDeclaration)!;
 
-                _ = GetFieldDeclarations(group).ToArray();
+                _ = GetProcessedFields(group);
 
                 // Extract the info on the type to process
                 var namespaceName = structDeclarationSymbol.ContainingNamespace.ToDisplayString(new(typeQualificationStyle: NameAndContainingTypesAndNamespaces));
@@ -87,13 +87,38 @@ namespace ComputeSharp.SourceGenerators
             }
         }
 
-        private static IEnumerable<FieldDeclarationSyntax> GetFieldDeclarations(IEnumerable<AttributeData> attributes)
+        /// <summary>
+        /// Gets a sequence of field declarations for a given type.
+        /// </summary>
+        /// <param name="attributes">The input sequence of <see cref="FieldAttribute"/> data instances.</param>
+        /// <returns>An attribute for the layout of the kind, and the sequence of field declarations.</returns>
+        private static (AttributeSyntax Layout, IEnumerable<FieldDeclarationSyntax> Fields) GetProcessedFields(IEnumerable<AttributeData> attributes)
         {
+            int size = 0, pack = 0;
+            List<FieldDeclarationSyntax> fieldDeclarations = new();
+
             foreach (var attribute in attributes)
             {
                 // Extract the field info
                 string fieldName = (string)attribute.ConstructorArguments[0].Value!;
                 INamedTypeSymbol fieldType = (INamedTypeSymbol)attribute.ConstructorArguments[1].Value!;
+
+                // Get the size and pack for the current field
+                if (!HlslKnownSizes.TryGetMappedSize(fieldType.GetFullMetadataName(), out var mapping))
+                {
+                    var structLayout = fieldType.GetAttributes().First(a => a.AttributeClass is { Name: nameof(StructLayoutAttribute) });
+
+                    _ = structLayout.TryGetNamedArgument(nameof(StructLayoutAttribute.Size), out mapping.Size);
+                    _ = structLayout.TryGetNamedArgument(nameof(StructLayoutAttribute.Pack), out mapping.Pack);
+                }
+
+                // Calculate the target offset
+                int
+                    adjustment = size % mapping.Pack,
+                    offset = size + adjustment;
+
+                size += adjustment + mapping.Size;
+                pack = Math.Max(pack, mapping.Pack);
 
                 // Create the field declaration
                 var fieldDeclaration =
@@ -102,11 +127,11 @@ namespace ComputeSharp.SourceGenerators
                     .AddVariables(VariableDeclarator(Identifier(fieldName))))
                     .AddAttributeLists(AttributeList(SingletonSeparatedList(
                         Attribute(IdentifierName(typeof(FieldOffsetAttribute).FullName)).AddArgumentListArguments(
-                            AttributeArgument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)))))))
+                            AttributeArgument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(offset)))))))
                     .AddModifiers(Token(SyntaxKind.PublicKeyword));
 
                 // Add the <summary> XML tag, if a summary is present
-                if (attribute.NamedArguments.FirstOrDefault(p => p.Key == nameof(FieldAttribute.Summary)).Value.Value is string summary)
+                if (attribute.TryGetNamedArgument(nameof(FieldAttribute.Summary), out string? summary))
                 {
                     fieldDeclaration =
                         fieldDeclaration.WithLeadingTrivia(
@@ -115,15 +140,29 @@ namespace ComputeSharp.SourceGenerators
                         List(new XmlNodeSyntax[]
                         {
                             XmlText().AddTextTokens(XmlTextLiteral(TriviaList(DocumentationCommentExterior("///")), " ", " ", TriviaList())),
-                            XmlExampleElement(SingletonList<XmlNodeSyntax>(XmlText().AddTextTokens(XmlTextLiteral("Foo bar baz"))))
+                            XmlExampleElement(SingletonList<XmlNodeSyntax>(XmlText().AddTextTokens(XmlTextLiteral(summary!))))
                             .WithStartTag(XmlElementStartTag(XmlName(Identifier("summary"))))
                             .WithEndTag(XmlElementEndTag(XmlName(Identifier("summary")))),
                             XmlText().AddTextTokens(XmlTextNewLine("\n", false))
                         })))));
                 }
 
-                yield return null!;
+                fieldDeclarations.Add(fieldDeclaration);
             }
+
+            // Get the attribute for the layout of the entire type
+            var layoutAttribute =
+                Attribute(IdentifierName(typeof(StructLayoutAttribute).FullName)).AddArgumentListArguments(
+                    AttributeArgument(MemberAccessExpression(
+                        SyntaxKind.SimpleMemberAccessExpression,
+                        IdentifierName(typeof(LayoutKind).FullName),
+                        IdentifierName(nameof(LayoutKind.Explicit)))),
+                    AttributeArgument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(8)))
+                    .WithNameEquals(NameEquals(IdentifierName(nameof(StructLayoutAttribute.Size)))),
+                    AttributeArgument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(16)))
+                    .WithNameEquals(NameEquals(IdentifierName(nameof(StructLayoutAttribute.Pack)))));
+
+            return (layoutAttribute, fieldDeclarations);
         }
     }
 }

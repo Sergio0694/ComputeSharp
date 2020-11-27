@@ -46,13 +46,13 @@ namespace ComputeSharp.SourceGenerators.Mappings
         };
 
         /// <summary>
-        /// Tries to get the mapped HLSL size and alignment for the input type name.
+        /// Tries to get the mapped HLSL size and packing for the input type name.
         /// </summary>
         /// <param name="name">The input fully qualified type name.</param>
         /// <param name="mapped">The mapped name, if one is found.</param>
-        /// <returns>The HLSL size and alignment that can be used in an HLSL shader.</returns>
+        /// <returns>The HLSL size and packing that can be used in an HLSL shader.</returns>
         [Pure]
-        public static bool TryGetMappedSize(string name, out (int Size, int Alignment) mapped)
+        public static bool TryGetMappedSize(string name, out (int Size, int Pack) mapped)
         {
             return KnownSizes.TryGetValue(name, out mapped);
         }
