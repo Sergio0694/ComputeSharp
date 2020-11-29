@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Shaders.Renderer.Models;
+using ComputeSharp.Shaders.Translation;
 
 namespace ComputeSharp.Shaders.Renderer
 {
@@ -15,10 +16,13 @@ namespace ComputeSharp.Shaders.Renderer
         /// <summary>
         /// Renders a new HLSL shader source with the given parameters
         /// </summary>
-        /// <param name="info">The input <see cref="ShaderInfo"/> instance with the shader information</param>
+        /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
+        /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
+        /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
+        /// <param name="info">The input <see cref="IShaderLoader"/> instance with the shader information</param>
         /// <returns>The source code for the new HLSL shader</returns>
         [Pure]
-        public static ArrayPoolStringBuilder Render(ShaderInfo info)
+        public static ArrayPoolStringBuilder Render(int threadsX, int threadsY, int threadsZ, IShaderLoader info)
         {
             var builder = ArrayPoolStringBuilder.Create();
 
@@ -44,7 +48,7 @@ namespace ComputeSharp.Shaders.Renderer
             builder.AppendLine("    uint __y;");
             builder.AppendLine("    uint __z;");
 
-            foreach (var local in info.FieldsList)
+            foreach (var local in info.FieldsInfo)
             {
                 builder.Append("    ");
                 builder.Append(local.FieldType);
@@ -56,7 +60,7 @@ namespace ComputeSharp.Shaders.Renderer
             builder.AppendLine('}');
 
             // Buffers
-            foreach (var buffer in info.BuffersList)
+            foreach (var buffer in info.HslsBuffersInfo)
             {
                 builder.AppendLine();
 
@@ -97,7 +101,7 @@ namespace ComputeSharp.Shaders.Renderer
             }
 
             // Local functions
-            foreach (var function in info.LocalFunctionsList)
+            foreach (var function in info.LocalFunctionsInfo)
             {
                 builder.AppendLine();
                 builder.AppendLine(function);
@@ -106,11 +110,11 @@ namespace ComputeSharp.Shaders.Renderer
             // Entry point
             builder.AppendLine();
             builder.Append("[NumThreads(");
-            builder.Append(info.NumThreadsX.ToString());
+            builder.Append(threadsX.ToString());
             builder.Append(", ");
-            builder.Append(info.NumThreadsY.ToString());
+            builder.Append(threadsY.ToString());
             builder.Append(", ");
-            builder.Append(info.NumThreadsZ.ToString());
+            builder.Append(threadsZ.ToString());
             builder.AppendLine(")]");
             builder.AppendLine(info.EntryPoint);
 

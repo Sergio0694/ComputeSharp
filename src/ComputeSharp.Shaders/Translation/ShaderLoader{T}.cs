@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Renderer.Models;
-using ComputeSharp.Shaders.Translation.Models;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_DESCRIPTOR_RANGE_TYPE;
@@ -19,7 +18,7 @@ namespace ComputeSharp.Shaders.Translation
     /// A <see langword="class"/> responsible for loading and processing shaders of a given type.
     /// </summary>
     /// <typeparam name="T">The type of compute shader currently in use.</typeparam>
-    internal sealed partial class ShaderLoader<T>
+    internal sealed partial class ShaderLoader<T> : IShaderLoader
         where T : struct, IComputeShader
     {
         /// <summary>
@@ -58,11 +57,6 @@ namespace ComputeSharp.Shaders.Translation
         private readonly List<CapturedFieldInfo> fieldsInfo = new();
 
         /// <summary>
-        /// The <see cref="List{T}"/> with the <see cref="FunctionInfo"/> items for the shader functions.
-        /// </summary>
-        private readonly List<object> functionsInfo = new();
-
-        /// <summary>
         /// The <see cref="List{T}"/> with the <see cref="FunctionInfo"/> items for the shader local functions.
         /// </summary>
         private readonly List<string> localFunctionsInfo = new();
@@ -82,39 +76,19 @@ namespace ComputeSharp.Shaders.Translation
             get => CollectionsMarshal.AsSpan(this.d3D12DescriptorRanges1);
         }
 
-        /// <summary>
-        /// Gets the name of the <see cref="ThreadIds"/> variable used as input for the shader method.
-        /// </summary>
-        public string ThreadsIdsVariableName { get; private set; }
-
-        /// <summary>
-        /// Gets the generated source code for the method in the current shader.
-        /// </summary>
+        /// <inheritdoc/>
         public string EntryPoint { get; private set; }
 
-        /// <summary>
-        /// Gets the collection of <see cref="HlslBufferInfo"/> items for the shader fields.
-        /// </summary>
+        /// <inheritdoc/>
         public IReadOnlyList<HlslBufferInfo> HslsBuffersInfo => this.hlslBuffersInfo;
 
-        /// <summary>
-        /// Gets the collection of <see cref="CapturedFieldInfo"/> items for the shader fields.
-        /// </summary>
+        /// <inheritdoc/>
         public IReadOnlyList<CapturedFieldInfo> FieldsInfo => this.fieldsInfo;
 
-        /// <summary>
-        /// Gets the collection of <see cref="FunctionInfo"/> items for the shader.
-        /// </summary>
-        public IReadOnlyList<object> FunctionsInfo => this.functionsInfo;
-
-        /// <summary>
-        /// Gets the collection of <see cref="LocalFunctionInfo"/> items for the shader.
-        /// </summary>
+        /// <inheritdoc/>
         public IReadOnlyCollection<string> LocalFunctionsInfo => this.localFunctionsInfo;
 
-        /// <summary>
-        /// Gets the collection of declared types for the shader.
-        /// </summary>
+        /// <inheritdoc/>
         public IReadOnlyCollection<string> DeclaredTypes { get; private set; }
 
         /// <summary>
