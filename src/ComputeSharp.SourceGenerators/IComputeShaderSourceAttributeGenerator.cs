@@ -195,7 +195,12 @@ namespace ComputeSharp.SourceGenerators
                             VariableDeclarator(Identifier(field.Name)))));
                 }
 
-                yield return structDeclaration.NormalizeWhitespace().ToFullString();
+                // Insert the trailing ; right after the closing bracket (after normalization)
+                yield return
+                    structDeclaration
+                    .NormalizeWhitespace()
+                    .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
+                    .ToFullString();
             }
         }
     }
