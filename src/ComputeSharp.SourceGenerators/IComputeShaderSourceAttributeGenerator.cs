@@ -44,20 +44,19 @@ namespace ComputeSharp.SourceGenerators
                 // The list to use to track all discovered custom types
                 HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
 
-                // Helper that converts a sequence of string pairs into a nested array expression.
+                // Helper that converts a sequence of string sequences into a nested array expression.
                 // That is, this applies the following transformation:
                 //   - { ("K1", "V1"), ("K2", "V2") } => new object[] { new[] { "K1", "V1" }, new[] { "K2", "V2" } }
-                static ArrayCreationExpressionSyntax NestedPairsArrayExpression(IEnumerable<(string Key, string Value)> pairs)
+                static ArrayCreationExpressionSyntax NestedArrayExpression(IEnumerable<IEnumerable<string>> groups)
                 {
                     return
                         ArrayCreationExpression(
                         ArrayType(PredefinedType(Token(SyntaxKind.ObjectKeyword)))
                         .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
                         .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
-                        .AddExpressions(pairs.Select(static pair =>
+                        .AddExpressions(groups.Select(static group =>
                             ImplicitArrayCreationExpression(InitializerExpression(SyntaxKind.ArrayInitializerExpression).AddExpressions(
-                                LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(pair.Key)),
-                                LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(pair.Value))))).ToArray()));
+                                group.Select(static item => LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(item))).ToArray()))).ToArray()));
                 }
 
                 // Helper that converts a sequence of strings into an array expression.
@@ -79,8 +78,8 @@ namespace ComputeSharp.SourceGenerators
                     AttributeList(SingletonSeparatedList(
                         Attribute(IdentifierName(typeof(IComputeShaderSourceAttribute).FullName)).AddArgumentListArguments(
                             AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(structDeclarationSymbol.GetFullMetadataName()))),
-                            AttributeArgument(NestedPairsArrayExpression(GetProcessedMembers(structDeclarationSymbol, discoveredTypes).ToArray())),
-                            AttributeArgument(NestedPairsArrayExpression(GetProcessedMethods(structDeclaration, semanticModel, discoveredTypes).ToArray())),
+                            AttributeArgument(NestedArrayExpression(GetProcessedMembers(structDeclarationSymbol, discoveredTypes).ToArray())),
+                            AttributeArgument(NestedArrayExpression(GetProcessedMethods(structDeclaration, semanticModel, discoveredTypes).ToArray())),
                             AttributeArgument(ArrayExpression(GetProcessedTypes(discoveredTypes))))))
                     .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                     .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
@@ -99,14 +98,14 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="types">The collection of currently discovered types.</param>
         /// <returns>A sequence of captured members in <paramref name="structDeclarationSymbol"/>.</returns>
         [Pure]
-        private static IEnumerable<(string Key, string Value)> GetProcessedMembers(INamedTypeSymbol structDeclarationSymbol, ICollection<INamedTypeSymbol> types)
+        private static IEnumerable<IEnumerable<string>> GetProcessedMembers(INamedTypeSymbol structDeclarationSymbol, ICollection<INamedTypeSymbol> types)
         {
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
                 _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
 
                 // Yield back the current mapping for the name (if the name used a reserved keyword)
-                yield return (fieldSymbol.Name, mapping ?? fieldSymbol.Name);
+                yield return new[] { fieldSymbol.Name, mapping ?? fieldSymbol.Name };
 
                 // Track the type of items in the current buffer
                 if (fieldSymbol.Type is INamedTypeSymbol fieldType &&
@@ -125,7 +124,7 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="types">The collection of currently discovered types.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>.</returns>
         [Pure]
-        private static IEnumerable<(string Key, string Value)> GetProcessedMethods(
+        private static IEnumerable<IEnumerable<string>> GetProcessedMethods(
             StructDeclarationSyntax structDeclaration,
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> types)
@@ -159,12 +158,12 @@ namespace ComputeSharp.SourceGenerators
                 // Produce the final method source
                 var processedMethodSource = processedMethod.NormalizeWhitespace().ToFullString();
 
-                yield return (methodDeclarationSymbol.Name, processedMethodSource);
+                yield return new[] { methodDeclarationSymbol.Name, processedMethodSource };
 
                 // Emit the extracted local functions
                 foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
                 {
-                    yield return (localFunction.Key, localFunction.Value.NormalizeWhitespace().ToFullString());
+                    yield return new[] { localFunction.Key, localFunction.Value.NormalizeWhitespace().ToFullString() };
                 }
             }
         }
