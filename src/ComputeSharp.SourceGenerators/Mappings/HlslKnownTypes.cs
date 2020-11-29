@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Numerics;
 using ComputeSharp.SourceGenerators.Extensions;
 using Microsoft.CodeAnalysis;
@@ -105,7 +106,61 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 ExploreTypes(type, customTypes);
             }
 
-            return customTypes;
+            return OrderByDependency(customTypes);
+        }
+
+        /// <summary>
+        /// Orders the input sequence of types so that they can be declared in HLSL successfully.
+        /// </summary>
+        /// <param name="types">The input collection of types to declare.</param>
+        /// <returns>The same list as input, but in a valid HLSL declaration order.</returns>
+        [Pure]
+        private static IEnumerable<INamedTypeSymbol> OrderByDependency(IEnumerable<INamedTypeSymbol> types)
+        {
+            Queue<(INamedTypeSymbol Type, HashSet<INamedTypeSymbol> Fields)> queue = new();
+
+            // Build a mapping of type dependencies for all the captured types. A type depends on another
+            // when the latter is a field in the first type. HLSL requires custom types to be declared in
+            // order of usage, so we need to ensure that types are declared in an order that guarantees
+            // that no type will be referenced before being defined. To do so, we can create a mapping of
+            // types and their dependencies, and iteratively remove items from the map when they have no
+            // dependencies left. When one type is processed and removed, it is also removed from the list
+            // of dependencies of all other remaining types in the map, until there is none left.
+            foreach (var type in types)
+            {
+                HashSet<INamedTypeSymbol> dependencies = new(SymbolEqualityComparer.Default);
+
+                // Only add other custom types as dependencies, and ignore HLSL types
+                foreach (var field in type.GetMembers().OfType<IFieldSymbol>())
+                {
+                    INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
+
+                    if (!KnownTypes.ContainsKey(fieldType.GetFullMetadataName()))
+                    {
+                        _ = dependencies.Add(fieldType);
+                    }
+                }
+
+                queue.Enqueue((type, dependencies));
+            }
+
+            while (queue.Count > 0)
+            {
+                var entry = queue.Dequeue();
+
+                // No dependencies left, we can declare this type
+                if (entry.Fields.Count == 0)
+                {
+                    // Remove the current type from dependencies of others
+                    foreach (var pair in queue)
+                    {
+                        _ = pair.Fields.Remove(entry.Type);
+                    }
+
+                    yield return entry.Type;
+                }
+                else queue.Enqueue(entry);
+            }
         }
     }
 }

@@ -176,7 +176,7 @@ namespace ComputeSharp.SourceGenerators
             foreach (var type in HlslKnownTypes.GetCustomTypes(types))
             {
                 var structType = type.GetFullMetadataName().Replace(".", "__");
-                var structDeclaration = StructDeclaration(structType).WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
+                var structDeclaration = StructDeclaration(structType);
 
                 // Declare the fields of the current type
                 foreach (var field in type.GetMembers().OfType<IFieldSymbol>())
