@@ -26,7 +26,7 @@ namespace ComputeSharp
         public IComputeShaderSourceAttribute(string shaderTypeName, object[] args, object[] methods, string[] types)
         {
             ShaderTypeName = shaderTypeName;
-            Fields = args.Cast<string[]>().ToDictionary(static arg => arg[0], static arg => arg[1]);
+            Fields = args.Cast<string[]>().ToDictionary(static arg => arg[0], static arg => (arg[1], arg[2]));
             Methods = methods.Cast<string[]>().ToDictionary(static method => method[0], static method => method[1]);
             Types = types;
         }
@@ -39,7 +39,7 @@ namespace ComputeSharp
         /// <summary>
         /// Gets the mapping of field names.
         /// </summary>
-        internal IReadOnlyDictionary<string, string> Fields { get; }
+        internal IReadOnlyDictionary<string, (string Name, string Type)> Fields { get; }
 
         /// <summary>
         /// Gets the mapping of methods and their source code.

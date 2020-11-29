@@ -102,16 +102,18 @@ namespace ComputeSharp.SourceGenerators
         {
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
+                INamedTypeSymbol typeSymbol = (INamedTypeSymbol)fieldSymbol.Type;
+                string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
+
                 _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
 
                 // Yield back the current mapping for the name (if the name used a reserved keyword)
-                yield return new[] { fieldSymbol.Name, mapping ?? fieldSymbol.Name };
+                yield return new[] { fieldSymbol.Name, mapping ?? fieldSymbol.Name, typeName };
 
                 // Track the type of items in the current buffer
-                if (fieldSymbol.Type is INamedTypeSymbol fieldType &&
-                    HlslKnownTypes.IsStructuredBufferType(fieldType.GetFullMetadataName()))
+                if (HlslKnownTypes.IsStructuredBufferType(typeSymbol.GetFullMetadataName()))
                 {
-                    types.Add((INamedTypeSymbol)fieldType.TypeArguments[0]);
+                    types.Add((INamedTypeSymbol)typeSymbol.TypeArguments[0]);
                 }
             }
         }

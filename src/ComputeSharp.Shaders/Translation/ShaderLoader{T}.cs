@@ -176,7 +176,7 @@ namespace ComputeSharp.Shaders.Translation
         private void LoadFieldInfo(object shader, ReadableMember memberInfo)
         {
             Type fieldType = memberInfo.MemberType;
-            string fieldName = Attribute.Fields[memberInfo.Name];
+            (string hlslName, string hlslType) = Attribute.Fields[memberInfo.Name];
 
             // Constant buffer
             if (HlslKnownTypes.IsConstantBufferType(fieldType))
@@ -184,12 +184,8 @@ namespace ComputeSharp.Shaders.Translation
                 D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1 = new(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, this.constantBuffersCount);
 
                 this.d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
-
                 this.capturedMembers.Add(memberInfo);
-
-                string typeName = HlslKnownTypes.GetMappedName(fieldType.GenericTypeArguments[0]);
-
-                this.hlslBuffersInfo.Add(new HlslBufferInfo.Constant(typeName, fieldName, (int)this.constantBuffersCount++));
+                this.hlslBuffersInfo.Add(new HlslBufferInfo.Constant(hlslType, hlslName, (int)this.constantBuffersCount++));
             }
             else if (HlslKnownTypes.IsReadOnlyBufferType(fieldType))
             {
@@ -197,12 +193,8 @@ namespace ComputeSharp.Shaders.Translation
                 D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1 = new(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, this.readOnlyBuffersCount);
 
                 this.d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
-
                 this.capturedMembers.Add(memberInfo);
-
-                string typeName = HlslKnownTypes.GetMappedName(fieldType);
-
-                this.hlslBuffersInfo.Add(new HlslBufferInfo.ReadOnly(typeName, fieldName, (int)this.readOnlyBuffersCount++));
+                this.hlslBuffersInfo.Add(new HlslBufferInfo.ReadOnly(hlslType, hlslName, (int)this.readOnlyBuffersCount++));
             }
             else if (HlslKnownTypes.IsReadWriteBufferType(fieldType))
             {
@@ -210,20 +202,13 @@ namespace ComputeSharp.Shaders.Translation
                 D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1 = new(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, this.readWriteBuffersCount);
 
                 this.d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
-
                 this.capturedMembers.Add(memberInfo);
-
-                string typeName = HlslKnownTypes.GetMappedName(fieldType);
-
-                this.hlslBuffersInfo.Add(new HlslBufferInfo.ReadWrite(typeName, fieldName, (int)this.readWriteBuffersCount++));
+                this.hlslBuffersInfo.Add(new HlslBufferInfo.ReadWrite(hlslType, hlslName, (int)this.readWriteBuffersCount++));
             }
             else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
             {
                 this.capturedMembers.Add(memberInfo);
-
-                string typeName = HlslKnownTypes.GetMappedName(fieldType);
-
-                this.fieldsInfo.Add(new CapturedFieldInfo(typeName, fieldName));
+                this.fieldsInfo.Add(new CapturedFieldInfo(hlslType, hlslName));
             }
             else if (fieldType.IsDelegate() &&
                      memberInfo.GetValue(shader) is Delegate func &&

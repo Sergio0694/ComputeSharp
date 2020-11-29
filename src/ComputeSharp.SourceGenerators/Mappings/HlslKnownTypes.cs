@@ -41,7 +41,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
             [typeof(Double2).FullName] = "double2",
             [typeof(Double3).FullName] = "double3",
             [typeof(Double4).FullName] = "double4",
-            [typeof(ThreadIds).FullName] = "uint3",
+            [typeof(ThreadIds).FullName] = "uint3"
         };
 
         /// <summary>
@@ -66,6 +66,38 @@ namespace ComputeSharp.SourceGenerators.Mappings
             return
                 typeName == "ComputeSharp.ReadOnlyBuffer`1" ||
                 typeName == "ComputeSharp.ReadWriteBuffer`1";
+        }
+
+        /// <summary>
+        /// Gets the mapped HLSL-compatible type name for the input type symbol.
+        /// </summary>
+        /// <param name="typeSymbol">The input type to map.</param>
+        /// <returns>The HLSL-compatible type name that can be used in an HLSL shader.</returns>
+        public static string GetMappedName(INamedTypeSymbol typeSymbol)
+        {
+            string typeName = typeSymbol.GetFullMetadataName();
+
+            // Special case for the structured buffer types
+            if (IsStructuredBufferType(typeName))
+            {
+                string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments[0]).GetFullMetadataName();
+
+                // If the current type is a custom type, format it as needed
+                if (!KnownTypes.TryGetValue(genericArgumentName, out string? mapped))
+                {
+                    mapped = genericArgumentName.Replace(".", "__");
+                }
+
+                // Construct the HLSL type name
+                return typeName switch
+                {
+                    "ComputeSharp.ReadOnlyBuffer`1" => $"StructuredBuffer<{mapped}>",
+                    "ComputeSharp.ReadWriteBuffer`1" => $"RWStructuredBuffer<{mapped}>",
+                    _ => throw new ArgumentException()
+                };
+            }
+
+            return KnownTypes[typeName];
         }
 
         /// <summary>
