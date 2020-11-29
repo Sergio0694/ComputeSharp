@@ -83,7 +83,7 @@ namespace System.Reflection.Emit
                 OpCode opcode = Marshal.SizeOf(type) switch
                 {
                     // Use the faster op codes for sizes <= 8
-                    1 when type == typeof(bool) || type == typeof(byte) || type == typeof(sbyte) => OpCodes.Stind_I1,
+                    1 when type == typeof(byte) || type == typeof(sbyte) => OpCodes.Stind_I1,
                     2 when type == typeof(short) || type == typeof(ushort) => OpCodes.Stind_I2,
                     4 when type == typeof(float) => OpCodes.Stind_R4,
                     4 when type == typeof(int) || type == typeof(uint) => OpCodes.Stind_I4,

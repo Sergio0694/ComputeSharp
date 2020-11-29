@@ -44,9 +44,9 @@ namespace ComputeSharp.Shaders.Translation
         private DispatchDataLoader? dispatchDataLoader;
 
         /// <summary>
-        /// The <see cref="List{T}"/> of <see cref="ReadableMember"/> instances mapping the captured variables in the current shader.
+        /// The <see cref="List{T}"/> of <see cref="FieldInfo"/> instances mapping the captured variables in the current shader.
         /// </summary>
-        private readonly List<ReadableMember> capturedMembers = new();
+        private readonly List<FieldInfo> capturedFields = new();
 
         /// <summary>
         /// Gets a new <see cref="DispatchData"/> instance with all the captured data for the current shader instance.
@@ -92,9 +92,9 @@ namespace ComputeSharp.Shaders.Translation
             // ldarg.4 = ref byte r1
             this.dispatchDataLoader = DynamicMethod<DispatchDataLoader>.New(il =>
             {
-                foreach (ReadableMember member in this.capturedMembers)
+                foreach (FieldInfo fieldInfo in this.capturedFields)
                 {
-                    if (HlslKnownTypes.IsKnownBufferType(member.MemberType))
+                    if (HlslKnownTypes.IsKnownBufferType(fieldInfo.FieldType))
                     {
                         // Load the offset address into the resource buffers
                         il.Emit(OpCodes.Ldarg_3);
@@ -104,8 +104,8 @@ namespace ComputeSharp.Shaders.Translation
                             il.EmitAddOffset<D3D12_GPU_DESCRIPTOR_HANDLE>(this.totalResourceCount);
                         }
 
-                        if (!member.IsStatic) il.Emit(OpCodes.Ldarg_2);
-                        il.EmitReadMember(member);
+                        il.Emit(OpCodes.Ldarg_2);
+                        il.EmitReadMember(fieldInfo);
 
                         // Call NativeObject.ThrowIfDisposed()
                         il.Emit(OpCodes.Dup);
@@ -116,25 +116,23 @@ namespace ComputeSharp.Shaders.Translation
                         // Call Buffer<T>.ThrowIfDeviceMismatch(GraphicsDevice)
                         il.Emit(OpCodes.Dup);
                         il.Emit(OpCodes.Ldarg_1);
-                        il.EmitCall(OpCodes.Callvirt, member.MemberType.GetMethod(
+                        il.EmitCall(OpCodes.Callvirt, fieldInfo.FieldType.GetMethod(
                             nameof(Buffer<byte>.ThrowIfDeviceMismatch),
                             BindingFlags.Instance | BindingFlags.NonPublic)!, null);
 
                         // Access Buffer<T>.D3D12GpuDescriptorHandle
-                        il.EmitReadMember(member.MemberType.GetField(
+                        il.EmitReadMember(fieldInfo.FieldType.GetField(
                             nameof(Buffer<byte>.D3D12GpuDescriptorHandle),
                             BindingFlags.Instance | BindingFlags.NonPublic)!);
                         il.EmitStoreToAddress(typeof(D3D12_GPU_DESCRIPTOR_HANDLE));
 
                         this.totalResourceCount++;
                     }
-                    else if (HlslKnownTypes.IsKnownScalarType(member.MemberType) ||
-                             HlslKnownTypes.IsKnownVectorType(member.MemberType))
+                    else if (HlslKnownTypes.IsKnownScalarType(fieldInfo.FieldType) ||
+                             HlslKnownTypes.IsKnownVectorType(fieldInfo.FieldType))
                     {
                         // Calculate the right offset with 16-bytes padding (HLSL constant buffer)
-                        int size = member.MemberType == typeof(bool)
-                            ? sizeof(uint)
-                            : Marshal.SizeOf(member.MemberType); // bool is 4 bytes in HLSL
+                        int size = Marshal.SizeOf(fieldInfo.FieldType);
 
                         if (this.totalVariablesByteSize % 16 > 16 - size)
                         {
@@ -145,10 +143,9 @@ namespace ComputeSharp.Shaders.Translation
                         il.Emit(OpCodes.Ldarg_S, (byte)4);
                         il.EmitAddOffset(totalVariablesByteSize);
 
-                        if (!member.IsStatic) il.Emit(OpCodes.Ldarg_2);
-
-                        il.EmitReadMember(member);
-                        il.EmitStoreToAddress(member.MemberType);
+                        il.Emit(OpCodes.Ldarg_2);
+                        il.EmitReadMember(fieldInfo);
+                        il.EmitStoreToAddress(fieldInfo.FieldType);
 
                         this.totalVariablesByteSize += size;
                     }

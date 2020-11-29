@@ -147,7 +147,6 @@ namespace ComputeSharp.Shaders.Translation
         {
             IReadOnlyList<FieldInfo> shaderFields = typeof(T).GetFields(
                 BindingFlags.Instance |
-                BindingFlags.Static |
                 BindingFlags.Public |
                 BindingFlags.NonPublic).ToArray();
 
@@ -172,11 +171,11 @@ namespace ComputeSharp.Shaders.Translation
         /// Loads a specified <see cref="ReadableMember"/> and adds it to the shader model
         /// </summary>
         /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader</param>
-        /// <param name="memberInfo">The target <see cref="ReadableMember"/> to load</param>
-        private void LoadFieldInfo(object shader, ReadableMember memberInfo)
+        /// <param name="memberInfo">The target <see cref="FieldInfo"/> to load</param>
+        private void LoadFieldInfo(object shader, FieldInfo fieldInfo)
         {
-            Type fieldType = memberInfo.MemberType;
-            (string hlslName, string hlslType) = Attribute.Fields[memberInfo.Name];
+            Type fieldType = fieldInfo.FieldType;
+            (string hlslName, string hlslType) = Attribute.Fields[fieldInfo.Name];
 
             // Constant buffer
             if (HlslKnownTypes.IsConstantBufferType(fieldType))
@@ -184,7 +183,7 @@ namespace ComputeSharp.Shaders.Translation
                 D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1 = new(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, this.constantBuffersCount);
 
                 this.d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
-                this.capturedMembers.Add(memberInfo);
+                this.capturedFields.Add(fieldInfo);
                 this.hlslBuffersInfo.Add(new HlslBufferInfo.Constant(hlslType, hlslName, (int)this.constantBuffersCount++));
             }
             else if (HlslKnownTypes.IsReadOnlyBufferType(fieldType))
@@ -193,7 +192,7 @@ namespace ComputeSharp.Shaders.Translation
                 D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1 = new(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, this.readOnlyBuffersCount);
 
                 this.d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
-                this.capturedMembers.Add(memberInfo);
+                this.capturedFields.Add(fieldInfo);
                 this.hlslBuffersInfo.Add(new HlslBufferInfo.ReadOnly(hlslType, hlslName, (int)this.readOnlyBuffersCount++));
             }
             else if (HlslKnownTypes.IsReadWriteBufferType(fieldType))
@@ -202,16 +201,16 @@ namespace ComputeSharp.Shaders.Translation
                 D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1 = new(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, this.readWriteBuffersCount);
 
                 this.d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
-                this.capturedMembers.Add(memberInfo);
+                this.capturedFields.Add(fieldInfo);
                 this.hlslBuffersInfo.Add(new HlslBufferInfo.ReadWrite(hlslType, hlslName, (int)this.readWriteBuffersCount++));
             }
             else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
             {
-                this.capturedMembers.Add(memberInfo);
+                this.capturedFields.Add(fieldInfo);
                 this.fieldsInfo.Add(new CapturedFieldInfo(hlslType, hlslName));
             }
             else if (fieldType.IsDelegate() &&
-                     memberInfo.GetValue(shader) is Delegate func &&
+                     fieldInfo.GetValue(shader) is Delegate func &&
                      (func.Method.IsStatic || func.Method.DeclaringType!.IsStatelessDelegateContainer()) &&
                      (HlslKnownTypes.IsKnownScalarType(func.Method.ReturnType) || HlslKnownTypes.IsKnownVectorType(func.Method.ReturnType)) &&
                      fieldType.GenericTypeArguments.All(type => HlslKnownTypes.IsKnownScalarType(type) ||
