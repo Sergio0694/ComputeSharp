@@ -47,11 +47,16 @@ namespace ComputeSharp.Shaders.Renderer.Models
         /// <summary>
         /// Gets or sets the list of static functions used by the shader.
         /// </summary>
-        public IReadOnlyList<object> FunctionsList { get; init; } // TODO
+        public IReadOnlyCollection<object> FunctionsList { get; init; } // TODO
 
         /// <summary>
         /// Gets or sets the list of local functions used by the shader.
         /// </summary>
-        public IReadOnlyList<string> LocalFunctionsList { get; init; }
+        public IReadOnlyCollection<string> LocalFunctionsList { get; init; }
+
+        /// <summary>
+        /// Gets or sets the list of dependent types for the shader.
+        /// </summary>
+        public IReadOnlyCollection<string> DeclaredTypes { get; init; }
     }
 }

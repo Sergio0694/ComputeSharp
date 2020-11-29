@@ -178,7 +178,8 @@ namespace ComputeSharp.Shaders
                 ThreadsIdsVariableName = shaderLoader.ThreadsIdsVariableName,
                 EntryPoint = shaderLoader.EntryPoint,
                 FunctionsList = shaderLoader.FunctionsInfo,
-                LocalFunctionsList = shaderLoader.LocalFunctionsInfo
+                LocalFunctionsList = shaderLoader.LocalFunctionsInfo,
+                DeclaredTypes = shaderLoader.DeclaredTypes
             });
 
             // Compile the loaded shader to HLSL bytecode

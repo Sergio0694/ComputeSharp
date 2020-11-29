@@ -110,7 +110,12 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// Gets the collection of <see cref="LocalFunctionInfo"/> items for the shader.
         /// </summary>
-        public IReadOnlyList<string> LocalFunctionsInfo => this.localFunctionsInfo;
+        public IReadOnlyCollection<string> LocalFunctionsInfo => this.localFunctionsInfo;
+
+        /// <summary>
+        /// Gets the collection of declared types for the shader.
+        /// </summary>
+        public IReadOnlyCollection<string> DeclaredTypes { get; private set; }
 
         /// <summary>
         /// Loads and processes an input<typeparamref name="T"/> shadeer
@@ -128,7 +133,7 @@ namespace ComputeSharp.Shaders.Translation
             object box = shader;
 
             @this.LoadFieldsInfo(box);
-            @this.LoadMethodSource();
+            @this.LoadMethodMetadata();
             @this.BuildDispatchDataLoader();
 
             return @this;
@@ -234,10 +239,11 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <summary>
-        /// Loads the entry method for the current shader being loaded
+        /// Loads the metadata info for the current shader.
         /// </summary>
-        private void LoadMethodSource()
+        private void LoadMethodMetadata()
         {
+            // Extract the method sources
             foreach (var method in Attribute.Methods)
             {
                 switch (method.Key)
@@ -246,6 +252,9 @@ namespace ComputeSharp.Shaders.Translation
                     default: this.localFunctionsInfo.Add(method.Value); break;
                 }
             }
+
+            // Extract the dependent types
+            DeclaredTypes = Attribute.Types;
         }
     }
 }

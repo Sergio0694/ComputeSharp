@@ -39,7 +39,7 @@ namespace ComputeSharp.SourceGenerators
                 INamedTypeSymbol structDeclarationSymbol = semanticModel.GetDeclaredSymbol(structDeclaration)!;
 
                 // Only process compute shader types
-                if (!structDeclarationSymbol.Interfaces.Any(interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) continue;
+                if (!structDeclarationSymbol.Interfaces.Any(static interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) continue;
 
                 // The list to use to track all discovered custom types
                 HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
@@ -54,10 +54,20 @@ namespace ComputeSharp.SourceGenerators
                         ArrayType(PredefinedType(Token(SyntaxKind.ObjectKeyword)))
                         .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
                         .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
-                        .AddExpressions(pairs.Select(pair =>
+                        .AddExpressions(pairs.Select(static pair =>
                             ImplicitArrayCreationExpression(InitializerExpression(SyntaxKind.ArrayInitializerExpression).AddExpressions(
                                 LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(pair.Key)),
                                 LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(pair.Value))))).ToArray()));
+                }
+
+                // Helper that converts a sequence of strings into an array expression.
+                // That is, this applies the following transformation:
+                //   - { "S1", "S2" } => new[] { "S1", "S2" }
+                static ImplicitArrayCreationExpressionSyntax ImplicitArrayExpression(IEnumerable<string> values)
+                {
+                    return
+                        ImplicitArrayCreationExpression(InitializerExpression(SyntaxKind.ArrayInitializerExpression).AddExpressions(
+                            values.Select(static value => LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(value))).ToArray()));
                 }
 
                 // Create the compilation unit with the source attribute
@@ -67,7 +77,8 @@ namespace ComputeSharp.SourceGenerators
                         Attribute(IdentifierName(typeof(IComputeShaderSourceAttribute).FullName)).AddArgumentListArguments(
                             AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(structDeclarationSymbol.GetFullMetadataName()))),
                             AttributeArgument(NestedPairsArrayExpression(GetProcessedMembers(structDeclarationSymbol, discoveredTypes).ToArray())),
-                            AttributeArgument(NestedPairsArrayExpression(GetProcessedMethods(structDeclaration, semanticModel, discoveredTypes).ToArray())))))
+                            AttributeArgument(NestedPairsArrayExpression(GetProcessedMethods(structDeclaration, semanticModel, discoveredTypes).ToArray())),
+                            AttributeArgument(ImplicitArrayExpression(GetProcessedTypes(discoveredTypes))))))
                     .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                     .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
                     .NormalizeWhitespace()
@@ -160,7 +171,7 @@ namespace ComputeSharp.SourceGenerators
         /// </summary>
         /// <param name="types">The sequence of discovered custom types.</param>
         /// <returns>A sequence of custom type definitions to add to the shader source.</returns>
-        public static IEnumerable<MemberDeclarationSyntax> GetProcessedTypes(IEnumerable<INamedTypeSymbol> types)
+        public static IEnumerable<string> GetProcessedTypes(IEnumerable<INamedTypeSymbol> types)
         {
             foreach (var type in HlslKnownTypes.GetCustomTypes(types))
             {
@@ -187,7 +198,7 @@ namespace ComputeSharp.SourceGenerators
                     currentNamespace = currentNamespace.ContainingNamespace;
                 }
 
-                yield return memberDeclaration;
+                yield return memberDeclaration.NormalizeWhitespace().ToFullString();
             }
         }
     }

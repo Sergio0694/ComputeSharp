@@ -20,13 +20,15 @@ namespace ComputeSharp
         /// Creates a new <see cref="IComputeShaderSourceAttribute"/> instance with the specified parameters.
         /// </summary>
         /// <param name="shaderTypeName">The fully qualified name of the shader type.</param>
-        /// <param name="methodName">The name of the current method.</param>
-        /// <param name="source">The source code of the target method.</param>
-        public IComputeShaderSourceAttribute(string shaderTypeName, object[] args, object[] methods)
+        /// <param name="args">The mapped collection of shader fields.</param>
+        /// <param name="methods">The mapped collection of shader methods.</param>
+        /// <param name="types">The collection of custom types.</param>
+        public IComputeShaderSourceAttribute(string shaderTypeName, object[] args, object[] methods, string[] types)
         {
             ShaderTypeName = shaderTypeName;
             Fields = args.Cast<string[]>().ToDictionary(static arg => arg[0], static arg => arg[1]);
             Methods = methods.Cast<string[]>().ToDictionary(static method => method[0], static method => method[1]);
+            Types = types;
         }
 
         /// <summary>
@@ -43,6 +45,11 @@ namespace ComputeSharp
         /// Gets the mapping of methods and their source code.
         /// </summary>
         internal IReadOnlyDictionary<string, string> Methods { get; }
+
+        /// <summary>
+        /// Gets the collection of processed custom types.
+        /// </summary>
+        internal IReadOnlyCollection<string> Types { get; }
 
         /// <summary>
         /// Gets the associated <see cref="IComputeShaderSourceAttribute"/> instance for a specified type.
