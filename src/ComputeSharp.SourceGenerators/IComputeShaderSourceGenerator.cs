@@ -17,7 +17,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace ComputeSharp.SourceGenerators
 {
     [Generator]
-    public class IComputeShaderSourceAttributeGenerator : ISourceGenerator
+    public class IComputeShaderSourceGenerator : ISourceGenerator
     {
         /// <inheritdoc/>
         public void Initialize(GeneratorInitializationContext context)
@@ -87,7 +87,7 @@ namespace ComputeSharp.SourceGenerators
                     .ToFullString();
 
                 // Add the method source attribute
-                context.AddSource(structDeclarationSymbol.GetGeneratedFileName<IComputeShaderSourceAttributeGenerator>(), SourceText.From(source, Encoding.UTF8));
+                context.AddSource(structDeclarationSymbol.GetGeneratedFileName<IComputeShaderSourceGenerator>(), SourceText.From(source, Encoding.UTF8));
             }
         }
 

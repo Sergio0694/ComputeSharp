@@ -12,7 +12,7 @@ using static Microsoft.CodeAnalysis.SymbolDisplayTypeQualificationStyle;
 namespace ComputeSharp.SourceGenerators
 {
     [Generator]
-    public class AutoConstructorAttributeGenerator : ISourceGenerator
+    public class AutoConstructorGenerator : ISourceGenerator
     {
         /// <inheritdoc/>
         public void Initialize(GeneratorInitializationContext context)
@@ -87,7 +87,7 @@ namespace ComputeSharp.SourceGenerators
                     .ToFullString();
 
                 // Add the partial type
-                context.AddSource(structDeclarationSymbol.GetGeneratedFileName<AutoConstructorAttributeGenerator>(), SourceText.From(source, Encoding.UTF8));
+                context.AddSource(structDeclarationSymbol.GetGeneratedFileName<AutoConstructorGenerator>(), SourceText.From(source, Encoding.UTF8));
             }
         }
     }
