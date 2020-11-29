@@ -62,12 +62,15 @@ namespace ComputeSharp.SourceGenerators
 
                 // Helper that converts a sequence of strings into an array expression.
                 // That is, this applies the following transformation:
-                //   - { "S1", "S2" } => new[] { "S1", "S2" }
-                static ImplicitArrayCreationExpressionSyntax ImplicitArrayExpression(IEnumerable<string> values)
+                //   - { "S1", "S2" } => new string[] { "S1", "S2" }
+                static ArrayCreationExpressionSyntax ArrayExpression(IEnumerable<string> values)
                 {
                     return
-                        ImplicitArrayCreationExpression(InitializerExpression(SyntaxKind.ArrayInitializerExpression).AddExpressions(
-                            values.Select(static value => LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(value))).ToArray()));
+                        ArrayCreationExpression(
+                        ArrayType(PredefinedType(Token(SyntaxKind.StringKeyword)))
+                        .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
+                        .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
+                        .AddExpressions(values.Select(static value => LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(value))).ToArray()));
                 }
 
                 // Create the compilation unit with the source attribute
@@ -78,7 +81,7 @@ namespace ComputeSharp.SourceGenerators
                             AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(structDeclarationSymbol.GetFullMetadataName()))),
                             AttributeArgument(NestedPairsArrayExpression(GetProcessedMembers(structDeclarationSymbol, discoveredTypes).ToArray())),
                             AttributeArgument(NestedPairsArrayExpression(GetProcessedMethods(structDeclaration, semanticModel, discoveredTypes).ToArray())),
-                            AttributeArgument(ImplicitArrayExpression(GetProcessedTypes(discoveredTypes))))))
+                            AttributeArgument(ArrayExpression(GetProcessedTypes(discoveredTypes))))))
                     .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                     .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
                     .NormalizeWhitespace()
