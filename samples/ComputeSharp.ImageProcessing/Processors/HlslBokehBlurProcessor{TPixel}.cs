@@ -6,6 +6,7 @@ using System.Diagnostics.Contracts;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ComputeSharp.ImageProcessing.Primitives;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
@@ -49,7 +50,7 @@ namespace ComputeSharp.BokehBlur.Processors
         /// <summary>
         /// The kernel components for the current instance
         /// </summary>
-        private readonly Vector2[][] Kernels;
+        private readonly Complex64[][] Kernels;
 
         /// <summary>
         /// The scaling factor for kernel values
@@ -59,7 +60,7 @@ namespace ComputeSharp.BokehBlur.Processors
         /// <summary>
         /// The mapping of initialized complex kernels and parameters, to speed up the initialization of new <see cref="HlslBokehBlurProcessor{TPixel}"/> instances
         /// </summary>
-        private static readonly ConcurrentDictionary<(int Radius, int ComponentsCount), (Vector4[] Parameters, float Scale, Vector2[][] Kernels)> Cache = new ConcurrentDictionary<(int, int), (Vector4[], float, Vector2[][])>();
+        private static readonly ConcurrentDictionary<(int Radius, int ComponentsCount), (Vector4[] Parameters, float Scale, Complex64[][] Kernels)> Cache = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HlslBokehBlurProcessor{TPixel}"/> class
@@ -168,9 +169,9 @@ namespace ComputeSharp.BokehBlur.Processors
         /// <summary>
         /// Creates the collection of complex 1D kernels with the specified parameters
         /// </summary>
-        private Vector2[][] CreateComplexKernels()
+        private Complex64[][] CreateComplexKernels()
         {
-            var kernels = new Vector2[KernelParameters.Length][];
+            var kernels = new Complex64[KernelParameters.Length][];
             ref Vector4 baseRef = ref MemoryMarshal.GetReference(KernelParameters.AsSpan());
             for (int i = 0; i < KernelParameters.Length; i++)
             {
@@ -186,10 +187,10 @@ namespace ComputeSharp.BokehBlur.Processors
         /// </summary>
         /// <param name="a">The exponential parameter for each complex component</param>
         /// <param name="b">The angle component for each complex component</param>
-        private Vector2[] CreateComplex1DKernel(float a, float b)
+        private Complex64[] CreateComplex1DKernel(float a, float b)
         {
-            var kernel = new Vector2[KernelSize];
-            ref Vector2 baseRef = ref MemoryMarshal.GetReference(kernel.AsSpan());
+            var kernel = new Complex64[KernelSize];
+            ref Complex64 baseRef = ref MemoryMarshal.GetReference(kernel.AsSpan());
             int r = Radius, n = -r;
 
             for (int i = 0; i < KernelSize; i++, n++)
@@ -199,7 +200,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 value *= value;
 
                 // Fill in the complex kernel values
-                Unsafe.Add(ref baseRef, i) = new Vector2(
+                Unsafe.Add(ref baseRef, i) = new Complex64(
                     MathF.Exp(-a * value) * MathF.Cos(b * value),
                     MathF.Exp(-a * value) * MathF.Sin(b * value));
             }
@@ -214,26 +215,26 @@ namespace ComputeSharp.BokehBlur.Processors
         {
             // Calculate the complex weighted sum
             float total = 0;
-            Span<Vector2[]> kernelsSpan = Kernels.AsSpan();
-            ref Vector2[] baseKernelsRef = ref MemoryMarshal.GetReference(kernelsSpan);
+            Span<Complex64[]> kernelsSpan = Kernels.AsSpan();
+            ref Complex64[] baseKernelsRef = ref MemoryMarshal.GetReference(kernelsSpan);
             ref Vector4 baseParamsRef = ref MemoryMarshal.GetReference(KernelParameters.AsSpan());
 
             for (int i = 0; i < KernelParameters.Length; i++)
             {
-                ref Vector2[] kernelRef = ref Unsafe.Add(ref baseKernelsRef, i);
+                ref Complex64[] kernelRef = ref Unsafe.Add(ref baseKernelsRef, i);
                 int length = kernelRef.Length;
-                ref Vector2 valueRef = ref kernelRef[0];
+                ref Complex64 valueRef = ref kernelRef[0];
                 ref Vector4 paramsRef = ref Unsafe.Add(ref baseParamsRef, i);
 
                 for (int j = 0; j < length; j++)
                 {
                     for (int k = 0; k < length; k++)
                     {
-                        ref Vector2 jRef = ref Unsafe.Add(ref valueRef, j);
-                        ref Vector2 kRef = ref Unsafe.Add(ref valueRef, k);
+                        ref Complex64 jRef = ref Unsafe.Add(ref valueRef, j);
+                        ref Complex64 kRef = ref Unsafe.Add(ref valueRef, k);
                         total +=
-                            paramsRef.Z * (jRef.X * kRef.X - jRef.Y * kRef.Y)
-                            + paramsRef.W * (jRef.X * kRef.Y + jRef.Y * kRef.X);
+                            paramsRef.Z * (jRef.Real * kRef.Real - jRef.Imaginary * kRef.Imaginary)
+                            + paramsRef.W * (jRef.Real * kRef.Imaginary + jRef.Imaginary * kRef.Real);
                     }
                 }
             }
@@ -242,9 +243,9 @@ namespace ComputeSharp.BokehBlur.Processors
             float scalar = 1f / MathF.Sqrt(total);
             for (int i = 0; i < kernelsSpan.Length; i++)
             {
-                ref Vector2[] kernelsRef = ref Unsafe.Add(ref baseKernelsRef, i);
+                ref Complex64[] kernelsRef = ref Unsafe.Add(ref baseKernelsRef, i);
                 int length = kernelsRef.Length;
-                ref Vector2 valueRef = ref kernelsRef[0];
+                ref Complex64 valueRef = ref kernelsRef[0];
 
                 for (int j = 0; j < length; j++)
                 {
@@ -263,8 +264,8 @@ namespace ComputeSharp.BokehBlur.Processors
 
                 using ReadOnlyBuffer<Vector4> sourceBuffer = Gpu.Default.AllocateReadOnlyBuffer(source4.Memory.Span);
                 using ReadWriteBuffer<Vector4> processingBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Length);
-                using ReadWriteBuffer<Vector4> firstPassBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Length * 2);
-                using ReadOnlyBuffer<Vector2> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer<Vector2>(KernelSize);
+                using ReadWriteBuffer<ComplexVector4> firstPassBuffer = Gpu.Default.AllocateReadWriteBuffer<ComplexVector4>(sourceBuffer.Length);
+                using ReadOnlyBuffer<Complex64> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer<Complex64>(KernelSize);
 
                 ref Vector4 param0 = ref KernelParameters[0]; // Avoid bounds check to access the kernel parameters
 
@@ -295,8 +296,8 @@ namespace ComputeSharp.BokehBlur.Processors
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ApplyVerticalConvolution(
             ReadOnlyBuffer<Vector4> source,
-            ReadWriteBuffer<Vector4> target,
-            ReadOnlyBuffer<Vector2> kernel)
+            ReadWriteBuffer<ComplexVector4> target,
+            ReadOnlyBuffer<Complex64> kernel)
         {
             int height = Source.Height;
             int width = Source.Width;
@@ -325,8 +326,8 @@ namespace ComputeSharp.BokehBlur.Processors
             public int kernelLength;
 
             public ReadOnlyBuffer<Vector4> source;
-            public ReadWriteBuffer<Vector4> target;
-            public ReadOnlyBuffer<Vector2> kernel;
+            public ReadWriteBuffer<ComplexVector4> target;
+            public ReadOnlyBuffer<Complex64> kernel;
 
             /// <inheritdoc/>
             public void Execute(ThreadIds ids)
@@ -341,15 +342,16 @@ namespace ComputeSharp.BokehBlur.Processors
                     int offsetY = Hlsl.Clamp(ids.Y + i - radiusY, 0, maxY);
                     int offsetX = Hlsl.Clamp(sourceOffsetColumnBase, 0, maxX);
                     Vector4 color = source[offsetY * width + offsetX];
-                    Vector2 factors = kernel[i];
+                    Complex64 factors = kernel[i];
 
-                    real += factors.X * color;
-                    imaginary += factors.Y * color;
+                    real += factors.Real * color;
+                    imaginary += factors.Imaginary * color;
                 }
 
-                int offsetXY = ids.Y * width * 2 + ids.X * 2;
-                target[offsetXY] = real;
-                target[offsetXY + 1] = imaginary;
+                int offsetXY = ids.Y * width + ids.X;
+
+                target[offsetXY].Real = real;
+                target[offsetXY].Imaginary = imaginary;
             }
         }
 
@@ -363,9 +365,9 @@ namespace ComputeSharp.BokehBlur.Processors
         /// <param name="w">The weight factor for the imaginary component of the complex pixel values</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ApplyHorizontalConvolutionAndAccumulatePartials(
-            ReadWriteBuffer<Vector4> source,
+            ReadWriteBuffer<ComplexVector4> source,
             ReadWriteBuffer<Vector4> target,
-            ReadOnlyBuffer<Vector2> kernel,
+            ReadOnlyBuffer<Complex64> kernel,
             float z,
             float w)
         {
@@ -399,9 +401,9 @@ namespace ComputeSharp.BokehBlur.Processors
             public float z;
             public float w;
 
-            public ReadWriteBuffer<Vector4> source;
+            public ReadWriteBuffer<ComplexVector4> source;
             public ReadWriteBuffer<Vector4> target;
-            public ReadOnlyBuffer<Vector2> kernel;
+            public ReadOnlyBuffer<Complex64> kernel;
 
             /// <inheritdoc/>
             public void Execute(ThreadIds ids)
@@ -415,13 +417,12 @@ namespace ComputeSharp.BokehBlur.Processors
                 for (int i = 0; i < kernelLength; i++)
                 {
                     int offsetX = Hlsl.Clamp(sourceOffsetColumnBase + i - radiusX, 0, maxX);
-                    var offsetXY = offsetY * width * 2 + offsetX * 2;
-                    Vector4 sourceReal = source[offsetXY];
-                    Vector4 sourceImaginary = source[offsetXY + 1];
-                    Vector2 factors = kernel[i];
+                    var offsetXY = offsetY * width + offsetX;
+                    ComplexVector4 source4 = source[offsetXY];
+                    Complex64 factors = kernel[i];
 
-                    real += factors.X * sourceReal - factors.Y * sourceImaginary;
-                    imaginary += factors.X * sourceImaginary + factors.Y * sourceReal;
+                    real += factors.Real * source4.Real - factors.Imaginary * source4.Imaginary;
+                    imaginary += factors.Real * source4.Imaginary + factors.Imaginary * source4.Real;
                 }
 
                 target[ids.Y * width + ids.X] += real * z + imaginary * w;
