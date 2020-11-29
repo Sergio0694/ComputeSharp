@@ -133,17 +133,17 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitLiteralExpression(LiteralExpressionSyntax node)
         {
-            node = ((LiteralExpressionSyntax)base.VisitLiteralExpression(node)!);
+            var updatedNode = ((LiteralExpressionSyntax)base.VisitLiteralExpression(node)!);
 
-            if (node.IsKind(SyntaxKind.DefaultLiteralExpression))
+            if (updatedNode.IsKind(SyntaxKind.DefaultLiteralExpression))
             {
-                TypeSyntax type = node.ReplaceAndTrackType(this.semanticModel, this.discoveredTypes);
+                TypeSyntax type = updatedNode.ReplaceAndTrackType(node, this.semanticModel, this.discoveredTypes);
 
                 // Same HLSL-style expression in the form (T)0
                 return CastExpression(type, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)));
             }
 
-            return node;
+            return updatedNode;
         }
 
         /// <inheritdoc/>
@@ -249,7 +249,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 return ParseToken(mapped!);
             }
 
-            return updatedToken;
+            return updatedToken.WithoutTrivia();
         }
     }
 }
