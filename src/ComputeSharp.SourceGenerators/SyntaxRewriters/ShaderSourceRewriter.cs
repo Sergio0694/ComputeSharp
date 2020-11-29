@@ -22,9 +22,9 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         private readonly SemanticModel semanticModel;
 
         /// <summary>
-        /// The set of discovered custom types.
+        /// The collection of discovered custom types.
         /// </summary>
-        private readonly HashSet<INamedTypeSymbol> discoveredTypes;
+        private readonly ICollection<INamedTypeSymbol> discoveredTypes;
 
         /// <summary>
         /// The collection of processed local functions in the current tree.
@@ -41,7 +41,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the target syntax tree.</param>
         /// <param name="discoveredTypes">The set of discovered custom types.</param>
-        public ShaderSourceRewriter(SemanticModel semanticModel, HashSet<INamedTypeSymbol> discoveredTypes)
+        public ShaderSourceRewriter(SemanticModel semanticModel, ICollection<INamedTypeSymbol> discoveredTypes)
         {
             this.semanticModel = semanticModel;
             this.discoveredTypes = discoveredTypes;
@@ -68,7 +68,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
             return updatedNode
                 .WithAttributeLists(default)
-                .ReplaceType(updatedNode.Type!, node.Type!, this.semanticModel);
+                .ReplaceAndTrackType(updatedNode.Type!, node.Type!, this.semanticModel, this.discoveredTypes);
         }
 
         /// <inheritdoc/>
@@ -76,9 +76,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (CastExpressionSyntax)base.VisitCastExpression(node)!;
 
-            _ = this.discoveredTypes.Add((INamedTypeSymbol)this.semanticModel.GetTypeInfo(node.Type).Type!);
-
-            return updatedNode.ReplaceType(updatedNode.Type, node.Type, this.semanticModel);
+            return updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, this.semanticModel, this.discoveredTypes);
         }
 
         /// <inheritdoc/>
@@ -86,9 +84,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = ((LocalDeclarationStatementSyntax)base.VisitLocalDeclarationStatement(node)!);
 
-            _ = this.discoveredTypes.Add((INamedTypeSymbol)this.semanticModel.GetTypeInfo(node.Declaration.Type).Type!);
-
-            return updatedNode.ReplaceType(updatedNode.Declaration.Type, node.Declaration.Type, this.semanticModel);
+            return updatedNode.ReplaceAndTrackType(updatedNode.Declaration.Type, node.Declaration.Type, this.semanticModel, this.discoveredTypes);
         }
 
         /// <inheritdoc/>
@@ -96,9 +92,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (ObjectCreationExpressionSyntax)base.VisitObjectCreationExpression(node)!;
 
-            _ = this.discoveredTypes.Add((INamedTypeSymbol)this.semanticModel.GetTypeInfo(node.Type).Type!);
-
-            updatedNode = updatedNode.ReplaceType(updatedNode.Type, node.Type, this.semanticModel);
+            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, this.semanticModel, this.discoveredTypes);
 
             // New objects use the default HLSL cast syntax, eg. (float4)0
             if (updatedNode.ArgumentList!.Arguments.Count == 0)
@@ -114,9 +108,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (ImplicitObjectCreationExpressionSyntax)base.VisitImplicitObjectCreationExpression(node)!;
 
-            _ = this.discoveredTypes.Add((INamedTypeSymbol)this.semanticModel.GetTypeInfo(node).Type!);
-
-            TypeSyntax explicitType = IdentifierName("").ReplaceType(node, this.semanticModel);
+            TypeSyntax explicitType = IdentifierName("").ReplaceAndTrackType(node, this.semanticModel, this.discoveredTypes);
 
             // Mutate the syntax like with explicit object creation expressions
             if (updatedNode.ArgumentList!.Arguments.Count == 0)
@@ -132,9 +124,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (DefaultExpressionSyntax)base.VisitDefaultExpression(node)!;
 
-            _ = this.discoveredTypes.Add((INamedTypeSymbol)this.semanticModel.GetTypeInfo(node.Type).Type!);
-
-            updatedNode = updatedNode.ReplaceType(updatedNode.Type, node.Type, this.semanticModel);
+            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, this.semanticModel, this.discoveredTypes);
 
             // A default expression becomes (T)0 in HLSL
             return CastExpression(updatedNode.Type, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)));
@@ -147,8 +137,10 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
             if (node.IsKind(SyntaxKind.DefaultLiteralExpression))
             {
+                TypeSyntax type = node.ReplaceAndTrackType(this.semanticModel, this.discoveredTypes);
+
                 // Same HLSL-style expression in the form (T)0
-                return CastExpression(node.ReplaceType(this.semanticModel), LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)));
+                return CastExpression(type, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)));
             }
 
             return node;

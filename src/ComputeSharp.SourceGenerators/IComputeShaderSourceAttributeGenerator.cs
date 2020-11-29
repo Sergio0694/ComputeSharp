@@ -66,8 +66,8 @@ namespace ComputeSharp.SourceGenerators
                     AttributeList(SingletonSeparatedList(
                         Attribute(IdentifierName(typeof(IComputeShaderSourceAttribute).FullName)).AddArgumentListArguments(
                             AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(structDeclarationSymbol.GetFullMetadataName()))),
-                            AttributeArgument(NestedPairsArrayExpression(GetProcessedMembers(structDeclarationSymbol, discoveredTypes))),
-                            AttributeArgument(NestedPairsArrayExpression(GetProcessedMethods(structDeclaration, semanticModel, discoveredTypes))))))
+                            AttributeArgument(NestedPairsArrayExpression(GetProcessedMembers(structDeclarationSymbol, discoveredTypes).ToArray())),
+                            AttributeArgument(NestedPairsArrayExpression(GetProcessedMethods(structDeclaration, semanticModel, discoveredTypes).ToArray())))))
                     .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                     .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
                     .NormalizeWhitespace()
@@ -82,9 +82,10 @@ namespace ComputeSharp.SourceGenerators
         /// Gets a sequence of captured members and their mapped names.
         /// </summary>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+        /// <param name="types">The collection of currently discovered types.</param>
         /// <returns>A sequence of captured members in <paramref name="structDeclarationSymbol"/>.</returns>
         [Pure]
-        private static IEnumerable<(string Key, string Value)> GetProcessedMembers(INamedTypeSymbol structDeclarationSymbol, HashSet<INamedTypeSymbol> types)
+        private static IEnumerable<(string Key, string Value)> GetProcessedMembers(INamedTypeSymbol structDeclarationSymbol, ICollection<INamedTypeSymbol> types)
         {
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
@@ -97,7 +98,7 @@ namespace ComputeSharp.SourceGenerators
                 if (fieldSymbol.Type is INamedTypeSymbol fieldType &&
                     HlslKnownTypes.IsStructuredBufferType(fieldType.GetFullMetadataName()))
                 {
-                    _ = types.Add((INamedTypeSymbol)fieldType.TypeArguments[0]);
+                    types.Add((INamedTypeSymbol)fieldType.TypeArguments[0]);
                 }
             }
         }
@@ -107,12 +108,13 @@ namespace ComputeSharp.SourceGenerators
         /// </summary>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> instance for the current type.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the type to process.</param>
+        /// <param name="types">The collection of currently discovered types.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>.</returns>
         [Pure]
         private static IEnumerable<(string Key, string Value)> GetProcessedMethods(
             StructDeclarationSyntax structDeclaration,
             SemanticModel semanticModel,
-            HashSet<INamedTypeSymbol> types)
+            ICollection<INamedTypeSymbol> types)
         {
             // Find all declared methods in the type
             ImmutableArray<MethodDeclarationSyntax> methodDeclarations = (
@@ -150,6 +152,42 @@ namespace ComputeSharp.SourceGenerators
                 {
                     yield return (localFunction.Key, localFunction.Value.NormalizeWhitespace().ToFullString());
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets the sequence of processed discovered custom types.
+        /// </summary>
+        /// <param name="types">The sequence of discovered custom types.</param>
+        /// <returns>A sequence of custom type definitions to add to the shader source.</returns>
+        public static IEnumerable<MemberDeclarationSyntax> GetProcessedTypes(IEnumerable<INamedTypeSymbol> types)
+        {
+            foreach (var type in HlslKnownTypes.GetCustomTypes(types))
+            {
+                var structDeclaration = StructDeclaration(type.Name).WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
+
+                // Declare the fields of the current type
+                foreach (var field in type.GetMembers().OfType<IFieldSymbol>())
+                {
+                    INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
+
+                    structDeclaration = structDeclaration.AddMembers(
+                        FieldDeclaration(VariableDeclaration(IdentifierName(
+                            fieldType.GetFullMetadataName())).AddVariables(
+                            VariableDeclarator(Identifier(field.Name)))));
+                }
+
+                MemberDeclarationSyntax memberDeclaration = structDeclaration;
+                INamespaceSymbol? currentNamespace = type.ContainingNamespace;
+
+                // Recursively declare the containing namespaces
+                while (currentNamespace is { IsGlobalNamespace: false })
+                {
+                    memberDeclaration = NamespaceDeclaration(IdentifierName(currentNamespace.Name)).AddMembers(memberDeclaration);
+                    currentNamespace = currentNamespace.ContainingNamespace;
+                }
+
+                yield return memberDeclaration;
             }
         }
     }

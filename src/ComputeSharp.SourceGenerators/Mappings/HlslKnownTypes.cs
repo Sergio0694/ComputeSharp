@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using ComputeSharp.SourceGenerators.Extensions;
+using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.SourceGenerators.Mappings
 {
@@ -37,7 +39,8 @@ namespace ComputeSharp.SourceGenerators.Mappings
             [typeof(double).FullName] = "double",
             [typeof(Double2).FullName] = "double2",
             [typeof(Double3).FullName] = "double3",
-            [typeof(Double4).FullName] = "double4"
+            [typeof(Double4).FullName] = "double4",
+            [typeof(ThreadIds).FullName] = "uint3",
         };
 
         /// <summary>
@@ -72,6 +75,37 @@ namespace ComputeSharp.SourceGenerators.Mappings
         public static bool TryGetMappedName(string originalName, out string? mappedName)
         {
             return KnownTypes.TryGetValue(originalName, out mappedName);
+        }
+
+        /// <summary>
+        /// Gets the sequence of unique custom types from a collection of discovered types.
+        /// </summary>
+        /// <param name="discoveredTypes">The input collection of discovered types.</param>
+        /// <returns>The list of unique custom types.</returns>
+        public static IEnumerable<INamedTypeSymbol> GetCustomTypes(IEnumerable<INamedTypeSymbol> discoveredTypes)
+        {
+            // Local function to recursively gather nested types
+            static void ExploreTypes(INamedTypeSymbol type, HashSet<INamedTypeSymbol> customTypes)
+            {
+                if (KnownTypes.ContainsKey(type.GetFullMetadataName())) return;
+
+                customTypes.Add(type);
+
+                foreach (var field in type.GetMembers().OfType<IFieldSymbol>())
+                {
+                    ExploreTypes((INamedTypeSymbol)field.Type, customTypes);
+                }
+            }
+
+            HashSet<INamedTypeSymbol> customTypes = new(SymbolEqualityComparer.Default);
+
+            // Explore all input types and their nested types
+            foreach (INamedTypeSymbol type in discoveredTypes)
+            {
+                ExploreTypes(type, customTypes);
+            }
+
+            return customTypes;
         }
     }
 }

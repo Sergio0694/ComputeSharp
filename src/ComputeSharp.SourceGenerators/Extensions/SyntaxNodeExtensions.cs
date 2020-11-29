@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -27,12 +28,13 @@ namespace ComputeSharp.SourceGenerators.Extensions
         /// <param name="node">The input <see cref="SyntaxNode"/> to check and modify if needed.</param>
         /// <param name="sourceType">The source <see cref="SyntaxNode"/> to use to get type into from <paramref name="semanticModel"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance with info on the input tree.</param>
+        /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
         [Pure]
-        public static TRoot ReplaceType<TRoot>(this TRoot node, SyntaxNode sourceType, SemanticModel semanticModel)
+        public static TRoot ReplaceAndTrackType<TRoot>(this TRoot node, SyntaxNode sourceType, SemanticModel semanticModel, ICollection<INamedTypeSymbol> discoveredTypes)
             where TRoot : TypeSyntax
         {
-            return node.ReplaceType(node, sourceType, semanticModel);
+            return node.ReplaceAndTrackType(node, sourceType, semanticModel, discoveredTypes);
         }
 
         /// <summary>
@@ -43,13 +45,16 @@ namespace ComputeSharp.SourceGenerators.Extensions
         /// <param name="targetType">The target <see cref="TypeSyntax"/> node to replace.</param>
         /// <param name="sourceType">The source <see cref="SyntaxNode"/> to use to get type into from <paramref name="semanticModel"/>.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance with info on the input tree.</param>
+        /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
         [Pure]
-        public static TRoot ReplaceType<TRoot>(this TRoot node, TypeSyntax targetType, SyntaxNode sourceType, SemanticModel semanticModel)
+        public static TRoot ReplaceAndTrackType<TRoot>(this TRoot node, TypeSyntax targetType, SyntaxNode sourceType, SemanticModel semanticModel, ICollection<INamedTypeSymbol> discoveredTypes)
             where TRoot : SyntaxNode
         {
             ITypeSymbol typeSymbol = semanticModel.GetTypeInfo(sourceType).Type!;
             string typeName = typeSymbol.ToDisplayString(FullyQualifiedWithoutGlobalFormat);
+
+            discoveredTypes.Add((INamedTypeSymbol)typeSymbol);
 
             if (HlslKnownTypes.TryGetMappedName(typeName, out string? mappedName))
             {
@@ -66,13 +71,16 @@ namespace ComputeSharp.SourceGenerators.Extensions
         /// </summary>
         /// <typeparam name="TRoot">The type of the input <see cref="SyntaxNode"/> instance.</typeparam>
         /// <param name="node">The input <see cref="SyntaxNode"/> to check and modify if needed.</param>
-        /// <param name="type">The <see cref="TypeSyntax"/> to use for the input node.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/> instance with info on the input tree.</param>
+        /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
         [Pure]
-        public static TypeSyntax ReplaceType(this LiteralExpressionSyntax node, SemanticModel semanticModel)
+        public static TypeSyntax ReplaceAndTrackType(this LiteralExpressionSyntax node, SemanticModel semanticModel, ICollection<INamedTypeSymbol> discoveredTypes)
         {
             ITypeSymbol typeSymbol = semanticModel.GetTypeInfo(node).Type!;
             string typeName = typeSymbol.ToDisplayString(FullyQualifiedWithoutGlobalFormat);
+
+            discoveredTypes.Add((INamedTypeSymbol)typeSymbol);
 
             if (HlslKnownTypes.TryGetMappedName(typeName, out string? mappedName))
             {
