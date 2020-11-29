@@ -63,7 +63,7 @@ namespace ComputeSharp.SourceGenerators.Extensions
                 return node.ReplaceNode(targetType, newType);
             }
 
-            return node.ReplaceNode(targetType, ParseTypeName(typeName.Replace(".", "::")));
+            return node.ReplaceNode(targetType, ParseTypeName(typeName.Replace(".", "__")));
         }
 
         /// <summary>
@@ -71,13 +71,14 @@ namespace ComputeSharp.SourceGenerators.Extensions
         /// </summary>
         /// <typeparam name="TRoot">The type of the input <see cref="SyntaxNode"/> instance.</typeparam>
         /// <param name="node">The input <see cref="SyntaxNode"/> to check and modify if needed.</param>
+        /// <param name="sourceNode">The original node in the input source tree.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance with info on the input tree.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
         [Pure]
-        public static TypeSyntax ReplaceAndTrackType(this LiteralExpressionSyntax node, SemanticModel semanticModel, ICollection<INamedTypeSymbol> discoveredTypes)
+        public static TypeSyntax ReplaceAndTrackType(this LiteralExpressionSyntax node, SyntaxNode sourceNode, SemanticModel semanticModel, ICollection<INamedTypeSymbol> discoveredTypes)
         {
-            ITypeSymbol typeSymbol = semanticModel.GetTypeInfo(node).Type!;
+            ITypeSymbol typeSymbol = semanticModel.GetTypeInfo(sourceNode).Type!;
             string typeName = typeSymbol.ToDisplayString(FullyQualifiedWithoutGlobalFormat);
 
             discoveredTypes.Add((INamedTypeSymbol)typeSymbol);
@@ -87,7 +88,7 @@ namespace ComputeSharp.SourceGenerators.Extensions
                 return ParseTypeName(mappedName!);
             }
 
-            return ParseTypeName(typeName.Replace(".", "::"));
+            return ParseTypeName(typeName.Replace(".", "__"));
         }
 
         /// <summary>

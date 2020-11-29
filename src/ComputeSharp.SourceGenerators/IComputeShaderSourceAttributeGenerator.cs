@@ -175,30 +175,27 @@ namespace ComputeSharp.SourceGenerators
         {
             foreach (var type in HlslKnownTypes.GetCustomTypes(types))
             {
-                var structDeclaration = StructDeclaration(type.Name).WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
+                var structType = type.GetFullMetadataName().Replace(".", "__");
+                var structDeclaration = StructDeclaration(structType).WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
 
                 // Declare the fields of the current type
                 foreach (var field in type.GetMembers().OfType<IFieldSymbol>())
                 {
                     INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
 
+                    // Convert the name to the fully qualified HLSL version
+                    if (!HlslKnownTypes.TryGetMappedName(fieldType.GetFullMetadataName(), out string? mapped))
+                    {
+                        mapped = fieldType.GetFullMetadataName().Replace(".", "__");
+                    }
+
                     structDeclaration = structDeclaration.AddMembers(
-                        FieldDeclaration(VariableDeclaration(IdentifierName(
-                            fieldType.GetFullMetadataName())).AddVariables(
+                        FieldDeclaration(VariableDeclaration(
+                            IdentifierName(mapped!)).AddVariables(
                             VariableDeclarator(Identifier(field.Name)))));
                 }
 
-                MemberDeclarationSyntax memberDeclaration = structDeclaration;
-                INamespaceSymbol? currentNamespace = type.ContainingNamespace;
-
-                // Recursively declare the containing namespaces
-                while (currentNamespace is { IsGlobalNamespace: false })
-                {
-                    memberDeclaration = NamespaceDeclaration(IdentifierName(currentNamespace.Name)).AddMembers(memberDeclaration);
-                    currentNamespace = currentNamespace.ContainingNamespace;
-                }
-
-                yield return memberDeclaration.NormalizeWhitespace().ToFullString();
+                yield return structDeclaration.NormalizeWhitespace().ToFullString();
             }
         }
     }

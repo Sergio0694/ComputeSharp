@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.Contracts;
 using System.Text;
-using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 
 namespace ComputeSharp.SourceGenerators.Extensions
