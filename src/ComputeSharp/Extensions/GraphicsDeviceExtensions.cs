@@ -16,6 +16,20 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
+        /// <param name="length">The length of the buffer to allocate.</param>
+        /// <returns>A zeroed <see cref="ConstantBuffer{T}"/> instance of size <paramref name="length"/>.</returns>
+        [Pure]
+        public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, int length)
+            where T : unmanaged
+        {
+            return new(device, length);
+        }
+
+        /// <summary>
+        /// Allocates a new constant buffer with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
         /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated buffer.</param>
         /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance with the contents of the input array.</returns>
         [Pure]
