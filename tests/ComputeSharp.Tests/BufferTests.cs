@@ -111,7 +111,7 @@ namespace ComputeSharp.Tests
             using ConstantBuffer<float> sourceBuffer = Gpu.Default.AllocateConstantBuffer(array);
 
             array.AsSpan(56, 100).Clear();
-            sourceBuffer.SetData(new float[100], 56, 100);
+            sourceBuffer.SetData(new float[100], 56);
 
             float[] sourceResult = sourceBuffer.GetData();
 
@@ -138,7 +138,7 @@ namespace ComputeSharp.Tests
             using ReadWriteBuffer<float> sourceBuffer = Gpu.Default.AllocateReadWriteBuffer(array);
 
             array.AsSpan(56, 100).Clear();
-            sourceBuffer.SetData(new float[100], 56, 100);
+            sourceBuffer.SetData(new float[100], 56);
 
             float[] sourceResult = sourceBuffer.GetData();
 
