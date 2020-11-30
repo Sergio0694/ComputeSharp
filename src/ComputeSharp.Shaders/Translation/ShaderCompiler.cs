@@ -75,7 +75,7 @@ namespace ComputeSharp.Shaders.Translation
 
             // Try to compile the new compute shader
             fixed (char* shaderName = "")
-            fixed (char* entryPoint = "CSMain")
+            fixed (char* entryPoint = nameof(IComputeShader.Execute))
             fixed (char* shaderProfile = "cs_6_1")
             fixed (char* optimization = "-O3")
             {

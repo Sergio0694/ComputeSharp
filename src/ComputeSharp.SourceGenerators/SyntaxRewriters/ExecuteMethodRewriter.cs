@@ -76,9 +76,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                             IdentifierName("z")),
                         IdentifierName("__z")));
 
-            return updatedNode
-                .WithIdentifier(Identifier("CSMain"))
-                .WithBody(Block(IfStatement(rangeCheckExpression, updatedNode.Body!)));
+            return updatedNode.WithBody(Block(IfStatement(rangeCheckExpression, updatedNode.Body!)));
         }
     }
 }
