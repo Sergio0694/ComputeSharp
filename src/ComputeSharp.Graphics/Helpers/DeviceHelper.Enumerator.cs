@@ -97,6 +97,8 @@ namespace ComputeSharp.Graphics.Helpers
 
                         fixed (IDXGIFactory4** dxgiFactory4 = this.dxgiFactory4)
                         {
+                            EnableDebugMode();
+
                             FX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, FX.__uuidof<IDXGIFactory4>(), (void**)dxgiFactory4).Assert();
                         }
                     }
