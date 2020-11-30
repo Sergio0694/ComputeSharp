@@ -75,6 +75,7 @@ namespace ComputeSharp.SourceGenerators
                         .WithMembers(SingletonList<MemberDeclarationSyntax>(typeDeclarationSyntax))
                         .WithConstraintClauses(List<TypeParameterConstraintClauseSyntax>())
                         .WithBaseList(null)
+                        .WithAttributeLists(List<AttributeListSyntax>())
                         .WithoutTrivia();
                 }
 

@@ -98,7 +98,7 @@ namespace ComputeSharp.Tests
         [DataRow(typeof(ReadWriteBuffer<>), 2048, 2048)]
         public void GetData_RangeToArray_Ok(Type bufferType, int offset, int count)
         {
-            float[] array = Enumerable.Range(0, 4096).Select(i => (float)i).ToArray();
+            float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
 
             using Buffer<float> buffer = Gpu.Default.AllocateBuffer(bufferType, array);
 
@@ -125,7 +125,7 @@ namespace ComputeSharp.Tests
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void GetData_RangeToArray_Fail(Type bufferType, int offset, int count)
         {
-            float[] array = Enumerable.Range(0, 4096).Select(i => (float)i).ToArray();
+            float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
 
             using Buffer<float> buffer = Gpu.Default.AllocateBuffer(bufferType, array);
 
@@ -147,7 +147,7 @@ namespace ComputeSharp.Tests
         [DataRow(typeof(ReadWriteBuffer<>), 127, 1024, 587)]
         public void GetData_RangeToVoid_Ok(Type bufferType, int destinationOffset, int bufferOffset, int count)
         {
-            float[] array = Enumerable.Range(0, 4096).Select(i => (float)i).ToArray();
+            float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
 
             using Buffer<float> buffer = Gpu.Default.AllocateBuffer(bufferType, array);
 
@@ -180,7 +180,7 @@ namespace ComputeSharp.Tests
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void GetData_RangeToVoid_Fail(Type bufferType, int destinationOffset, int bufferOffset, int count)
         {
-            float[] array = Enumerable.Range(0, 4096).Select(i => (float)i).ToArray();
+            float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
 
             using Buffer<float> buffer = Gpu.Default.AllocateBuffer(bufferType, array);
 
