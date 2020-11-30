@@ -114,6 +114,8 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         [Pure]
         public T[] GetData(int offset, int count)
         {
+            Guard.IsGreaterThanOrEqualTo(count, 0, nameof(count));
+
             T[] data = GC.AllocateUninitializedArray<T>(count);
 
             GetData(data.AsSpan(), offset);
