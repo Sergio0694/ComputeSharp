@@ -1,4 +1,5 @@
-﻿using ComputeSharp.Shaders.Translation;
+﻿using ComputeSharp.Exceptions;
+using ComputeSharp.Shaders.Translation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TerraFX.Interop;
 
@@ -9,43 +10,37 @@ namespace ComputeSharp.Tests.Internals
     public class ShaderCompilerTests
     {
         private const string ShaderSource = @"
-        /* ===============
-         * AUTO GENERATED
-         * ===============
-         * This shader was created by ComputeSharp.
-         * For info or issues: https://github.com/Sergio0694/ComputeSharp */
-
-        // Scalar/vector variables
         cbuffer _ : register(b0)
         {
-            uint __x__; // Target X iterations
-            uint __y__; // Target Y iterations
-            uint __z__; // Target Z iterations
-            int width;
+            uint __x;
+            uint __y;
+            uint __z;
         }
 
-        // ReadWriteBuffer<float> buffer ""buffer""
-        RWStructuredBuffer<float> buffer : register(u1);
+        RWStructuredBuffer<float> buffer : register(u0);
 
-        // Shader body
-        [Shader(""compute"")]
         [NumThreads(32, 1, 1)]
-        void CSMain(uint3 ids : SV_DispatchThreadId)
+        void Execute(uint3 ids : SV_DispatchThreadId)
         {
-            if (ids.x < __x__ &&
-                ids.y < __y__ &&
-                ids.z < __z__) // Automatic bounds check
+            if (ids.x < __x && ids.y < __y && ids.z < __z)
             {
-                int i = ids.x + ids.y * width;
-                buffer[i] *= 2;
+                buffer[ids.x] *= 2;
             }
-        }
-        ";
+        }";
 
         [TestMethod]
-        public void CompileTest()
+        public void CompileTest_Ok()
         {
             using ComPtr<IDxcBlob> dxcBlob = ShaderCompiler.CompileShader(ShaderSource);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(HlslCompilationException))]
+        public void CompileTest_Fail()
+        {
+            var faultyShader = ShaderSource.Replace("ids.x", "ids.X");
+
+            using ComPtr<IDxcBlob> dxcBlob = ShaderCompiler.CompileShader(faultyShader);
         }
     }
 }

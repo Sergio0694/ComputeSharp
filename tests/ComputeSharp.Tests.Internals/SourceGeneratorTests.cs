@@ -18,33 +18,11 @@ namespace ComputeSharp.Tests.Internals
         {
             string source = @"
             using System.Numerics;
-            using MyLibrary;
             using ComputeSharp;
 
             namespace ComputeSharp
             {
-                public readonly struct ThreadIds
-                {
-                    public int X => throw null;
-                    public int Y => throw null;
-                    public int Z => throw null;
-                }
-
-                public interface IComputeShader
-                {
-                    void Execute((int X, int Y, int Z) ids);
-                }
-            }
-
-            namespace MyLibrary
-            {
-                public class Buffer<T>
-                {
-                }
-
-                public interface IFluff
-                {
-                }
+                public class ReadWriteBuffer<T> { }
             }
 
             namespace MyFancyApp.Sample
@@ -55,50 +33,39 @@ namespace ComputeSharp.Tests.Internals
                     public partial class Foo
                     {
                         [AutoConstructor]
-                        public readonly partial struct MyShader : IComputeShader
+                        public readonly partial struct Test
                         {
-                            private readonly Buffer<Vector4> A;
-                            private readonly Vector4 B;
-
-                            /// <inheritdoc/>
-                            public void Execute(ThreadIds ids)
-                            {
-                                Vector4 foo = default;
-                                Vector4 bar = default(Vector4);
-                                Vector4 baz = B;
-                                A[ids.X] = (Vector4)foo + bar + baz;
-                            }
+                            private readonly float a;
+                            private readonly Vector2 b;
+                            public readonly ReadWriteBuffer<Vector4> c;
+                            public readonly ReadWriteBuffer<int> d;
                         }
                     }
                 }
             }";
 
-            string expectedForAutoConstructor = @"
+            string expected = @"
             namespace MyFancyApp.Sample
             {
                 public partial interface IFoo<T>
                 {
                     public partial class Foo
                     {
-                        public readonly partial struct MyShader
+                        public readonly partial struct Test
                         {
-                            public MyShader(MyLibrary.Buffer<System.Numerics.Vector4> A, System.Numerics.Vector4 B)
+                            public Test(float a, System.Numerics.Vector2 b, ComputeSharp.ReadWriteBuffer<System.Numerics.Vector4> c, ComputeSharp.ReadWriteBuffer<int> d)
                             {
-                                this.A = A;
-                                this.B = B;
+                                this.a = a;
+                                this.b = b;
+                                this.c = c;
+                                this.d = d;
                             }
                         }
                     }
                 }
             }";
 
-            VerifyGeneratedMethodLines<AutoConstructorAttributeGenerator>(source, 0, expectedForAutoConstructor);
-
-            string expectedForShaderSource = @"
-            #pragma warning disable
-            [assembly: ComputeSharp.IComputeShaderSource(""MyFancyApp.Sample.IFoo`1+Foo+MyShader"", ""Execute"", ""void CSMain(uint3 ids : SV_DispatchThreadId)\r\n{\r\n    if (ids.x < __x && ids.y < __y && ids.z < __z)\r\n    {\r\n        float4 foo = (float4)0;\r\n        float4 bar = (float4)0;\r\n        float4 baz = B;\r\n        A[ids.x] = (float4)foo + bar + baz;\r\n    }\r\n}"")]";
-
-            VerifyGeneratedMethodLines<IComputeShaderSourceAttributeGenerator>(source, 0, expectedForShaderSource);
+            VerifyGeneratedMethodLines<AutoConstructorGenerator>(source, 0, expected);
         }
 
         /// <summary>
