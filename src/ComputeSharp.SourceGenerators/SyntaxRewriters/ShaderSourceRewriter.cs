@@ -27,6 +27,11 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         private readonly ICollection<INamedTypeSymbol> discoveredTypes;
 
         /// <summary>
+        /// The collection of discovered static methods.
+        /// </summary>
+        private readonly IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods;
+
+        /// <summary>
         /// The collection of processed local functions in the current tree.
         /// </summary>
         private readonly Dictionary<string, LocalFunctionStatementSyntax> localFunctions;
@@ -41,10 +46,15 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the target syntax tree.</param>
         /// <param name="discoveredTypes">The set of discovered custom types.</param>
-        public ShaderSourceRewriter(SemanticModel semanticModel, ICollection<INamedTypeSymbol> discoveredTypes)
+        /// <param name="staticMethods">The set of discovered and processed static methods.</param>
+        public ShaderSourceRewriter(
+            SemanticModel semanticModel,
+            ICollection<INamedTypeSymbol> discoveredTypes,
+            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods)
         {
             this.semanticModel = semanticModel;
             this.discoveredTypes = discoveredTypes;
+            this.staticMethods = staticMethods;
             this.localFunctions = new();
         }
 
@@ -149,7 +159,10 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
-            return ((MethodDeclarationSyntax)base.VisitMethodDeclaration(node)!).WithBlockBody();
+            return
+                ((MethodDeclarationSyntax)base.VisitMethodDeclaration(node)!)
+                .WithBlockBody()
+                .WithoutAccessibilityModifiers();
         }
 
         /// <inheritdoc/>
@@ -232,6 +245,22 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
                     return updatedNode.WithExpression(ParseExpression(functionIdentifier));
                 }
+
+                // If the method is an external static method, import and rewrite it as well.
+                // This assumes that the target method is actually part of the same compilation.
+                var methodIdentifier = method.GetFullMetadataName().Replace(".", "__");
+
+                if (!this.staticMethods.ContainsKey(method))
+                {
+                    ShaderSourceRewriter shaderSourceRewriter = new(this.semanticModel, this.discoveredTypes, this.staticMethods);
+                    MethodDeclarationSyntax
+                        methodNode = (MethodDeclarationSyntax)method.DeclaringSyntaxReferences[0].GetSyntax(),
+                        processedMethod = shaderSourceRewriter.Visit(methodNode)!.NormalizeWhitespace().WithoutTrivia();
+
+                    this.staticMethods.Add(method, processedMethod.WithIdentifier(Identifier(methodIdentifier)));
+                }
+
+                return updatedNode.WithExpression(ParseExpression(methodIdentifier));
             }
 
             return updatedNode;

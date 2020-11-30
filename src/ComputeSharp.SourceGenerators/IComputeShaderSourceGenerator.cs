@@ -41,8 +41,9 @@ namespace ComputeSharp.SourceGenerators
                 // Only process compute shader types
                 if (!structDeclarationSymbol.Interfaces.Any(static interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) continue;
 
-                // The list to use to track all discovered custom types
+                // We need to sets to track all discovered custom types and static methods
                 HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
+                Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
 
                 // Helper that converts a sequence of string sequences into a nested array expression.
                 // That is, this applies the following transformation:
@@ -72,15 +73,23 @@ namespace ComputeSharp.SourceGenerators
                         .AddExpressions(values.Select(static value => LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(value))).ToArray()));
                 }
 
+                // Explore the syntax tree and extract the processed info
+                var processedMembers = GetProcessedMembers(structDeclarationSymbol, discoveredTypes).ToArray();
+                var processedMethods = GetProcessedMethods(structDeclaration, semanticModel, discoveredTypes, staticMethods).ToArray();
+                var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
+
+                // Merge the static methods as well
+                processedMethods = processedMethods.Concat(staticMethods.Select(foo => new[] { "", foo.Value.ToFullString() })).ToArray();
+
                 // Create the compilation unit with the source attribute
                 var source =
                     CompilationUnit().AddAttributeLists(
                     AttributeList(SingletonSeparatedList(
                         Attribute(IdentifierName(typeof(IComputeShaderSourceAttribute).FullName)).AddArgumentListArguments(
                             AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(structDeclarationSymbol.GetFullMetadataName()))),
-                            AttributeArgument(NestedArrayExpression(GetProcessedMembers(structDeclarationSymbol, discoveredTypes).ToArray())),
-                            AttributeArgument(NestedArrayExpression(GetProcessedMethods(structDeclaration, semanticModel, discoveredTypes).ToArray())),
-                            AttributeArgument(ArrayExpression(GetProcessedTypes(discoveredTypes))))))
+                            AttributeArgument(NestedArrayExpression(processedMembers)),
+                            AttributeArgument(NestedArrayExpression(processedMethods)),
+                            AttributeArgument(ArrayExpression(processedTypes)))))
                     .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                     .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
                     .NormalizeWhitespace()
@@ -123,13 +132,15 @@ namespace ComputeSharp.SourceGenerators
         /// </summary>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> instance for the current type.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the type to process.</param>
-        /// <param name="types">The collection of currently discovered types.</param>
+        /// <param name="discoveredTypes">The collection of currently discovered types.</param>
+        /// <param name="staticMethods">The set of discovered and processed static methods.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>.</returns>
         [Pure]
         private static IEnumerable<IEnumerable<string>> GetProcessedMethods(
             StructDeclarationSyntax structDeclaration,
             SemanticModel semanticModel,
-            ICollection<INamedTypeSymbol> types)
+            ICollection<INamedTypeSymbol> discoveredTypes,
+            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods)
         {
             // Find all declared methods in the type
             ImmutableArray<MethodDeclarationSyntax> methodDeclarations = (
@@ -140,7 +151,7 @@ namespace ComputeSharp.SourceGenerators
             foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
             {
                 IMethodSymbol methodDeclarationSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration)!;
-                ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, types);
+                ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, discoveredTypes, staticMethods);
 
                 // Rewrite the method syntax tree
                 var processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -143,6 +144,24 @@ namespace ComputeSharp.SourceGenerators.Extensions
             }
 
             return node;
+        }
+
+        /// <summary>
+        /// Returns a <see cref="MethodDeclarationSyntax"/> instance with no accessibility modifiers.
+        /// </summary>
+        /// <param name="node">The input <see cref="MethodDeclarationSyntax"/> node.</param>
+        /// <returns>A node just like <paramref name="node"/> but with no accessibility modifiers.</returns>
+        [Pure]
+        public static MethodDeclarationSyntax WithoutAccessibilityModifiers(this MethodDeclarationSyntax node)
+        {
+            return node.WithModifiers(TokenList(node.Modifiers.Where(static modifier => modifier.Kind() switch
+            {
+                SyntaxKind.PublicKeyword => false,
+                SyntaxKind.PrivateKeyword => false,
+                SyntaxKind.ProtectedKeyword => false,
+                SyntaxKind.InternalKeyword => false,
+                _ => true
+            }).ToArray()));
         }
     }
 }
