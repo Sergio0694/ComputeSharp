@@ -57,11 +57,6 @@ namespace ComputeSharp.Shaders.Translation
         private readonly List<CapturedFieldInfo> fieldsInfo = new();
 
         /// <summary>
-        /// The <see cref="List{T}"/> with the <see cref="FunctionInfo"/> items for the shader local functions.
-        /// </summary>
-        private readonly List<string> localFunctionsInfo = new();
-
-        /// <summary>
         /// Creates a new <see cref="ShaderLoader{T}"/> instance.
         /// </summary>
         private ShaderLoader()
@@ -86,7 +81,7 @@ namespace ComputeSharp.Shaders.Translation
         public IReadOnlyList<CapturedFieldInfo> FieldsInfo => this.fieldsInfo;
 
         /// <inheritdoc/>
-        public IReadOnlyCollection<string> LocalFunctionsInfo => this.localFunctionsInfo;
+        public IReadOnlyCollection<string> MethodsInfo { get; private set; }
 
         /// <inheritdoc/>
         public IReadOnlyCollection<string> DeclaredTypes { get; private set; }
@@ -201,18 +196,9 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         private void LoadMethodMetadata()
         {
-            // Extract the method sources
-            foreach (var method in Attribute.Methods)
-            {
-                switch (method.Key)
-                {
-                    case nameof(IComputeShader.Execute): EntryPoint = method.Value; break;
-                    default: this.localFunctionsInfo.Add(method.Value); break;
-                }
-            }
-
-            // Extract the dependent types
             DeclaredTypes = Attribute.Types;
+            EntryPoint = Attribute.ExecuteMethod;
+            MethodsInfo = Attribute.Methods;
         }
     }
 }

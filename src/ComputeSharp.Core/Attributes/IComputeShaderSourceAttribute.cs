@@ -20,15 +20,17 @@ namespace ComputeSharp
         /// Creates a new <see cref="IComputeShaderSourceAttribute"/> instance with the specified parameters.
         /// </summary>
         /// <param name="shaderTypeName">The fully qualified name of the shader type.</param>
-        /// <param name="args">The mapped collection of shader fields.</param>
-        /// <param name="methods">The mapped collection of shader methods.</param>
         /// <param name="types">The collection of custom types.</param>
-        public IComputeShaderSourceAttribute(string shaderTypeName, object[] args, object[] methods, string[] types)
+        /// <param name="args">The mapped collection of shader fields.</param>
+        /// <param name="executeMethod">The source code for the <see cref="IComputeShader.Execute"/> method.</param>
+        /// <param name="methods">The collection of processed methods.</param>
+        public IComputeShaderSourceAttribute(string shaderTypeName, string[] types, object[] args, string executeMethod, string[] methods)
         {
             ShaderTypeName = shaderTypeName;
-            Fields = args.Cast<string[]>().ToDictionary(static arg => arg[0], static arg => (arg[1], arg[2]));
-            Methods = methods.Cast<string[]>().ToDictionary(static method => method[0], static method => method[1]);
             Types = types;
+            Fields = args.Cast<string[]>().ToDictionary(static arg => arg[0], static arg => (arg[1], arg[2]));
+            ExecuteMethod = executeMethod;
+            Methods = methods;
         }
 
         /// <summary>
@@ -37,19 +39,24 @@ namespace ComputeSharp
         internal string ShaderTypeName { get; }
 
         /// <summary>
+        /// Gets the collection of processed custom types.
+        /// </summary>
+        internal IReadOnlyCollection<string> Types { get; }
+
+        /// <summary>
         /// Gets the mapping of field names.
         /// </summary>
         internal IReadOnlyDictionary<string, (string Name, string Type)> Fields { get; }
 
         /// <summary>
-        /// Gets the mapping of methods and their source code.
+        /// Gets the source code for the <see cref="IComputeShader.Execute"/> method.
         /// </summary>
-        internal IReadOnlyDictionary<string, string> Methods { get; }
+        internal string ExecuteMethod { get; }
 
         /// <summary>
-        /// Gets the collection of processed custom types.
+        /// Gets the collection of processed methods.
         /// </summary>
-        internal IReadOnlyCollection<string> Types { get; }
+        internal IReadOnlyCollection<string> Methods { get; }
 
         /// <summary>
         /// Gets the associated <see cref="IComputeShaderSourceAttribute"/> instance for a specified type.

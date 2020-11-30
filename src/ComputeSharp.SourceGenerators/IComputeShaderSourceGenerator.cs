@@ -75,11 +75,9 @@ namespace ComputeSharp.SourceGenerators
 
                 // Explore the syntax tree and extract the processed info
                 var processedMembers = GetProcessedMembers(structDeclarationSymbol, discoveredTypes).ToArray();
-                var processedMethods = GetProcessedMethods(structDeclaration, semanticModel, discoveredTypes, staticMethods).ToArray();
+                var (entryPoint, localFunctions) = GetProcessedMethods(structDeclaration, semanticModel, discoveredTypes, staticMethods);
                 var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
-
-                // Merge the static methods as well
-                processedMethods = processedMethods.Concat(staticMethods.Select(foo => new[] { "", foo.Value.ToFullString() })).ToArray();
+                var processedMethods = localFunctions.Concat(staticMethods.Values.Select(static method => method.ToFullString())).ToArray();
 
                 // Create the compilation unit with the source attribute
                 var source =
@@ -87,9 +85,10 @@ namespace ComputeSharp.SourceGenerators
                     AttributeList(SingletonSeparatedList(
                         Attribute(IdentifierName(typeof(IComputeShaderSourceAttribute).FullName)).AddArgumentListArguments(
                             AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(structDeclarationSymbol.GetFullMetadataName()))),
+                            AttributeArgument(ArrayExpression(processedTypes)),
                             AttributeArgument(NestedArrayExpression(processedMembers)),
-                            AttributeArgument(NestedArrayExpression(processedMethods)),
-                            AttributeArgument(ArrayExpression(processedTypes)))))
+                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(entryPoint))),
+                            AttributeArgument(ArrayExpression(processedMethods)))))
                     .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                     .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
                     .NormalizeWhitespace()
@@ -134,9 +133,9 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the type to process.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
-        /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>.</returns>
+        /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
         [Pure]
-        private static IEnumerable<IEnumerable<string>> GetProcessedMethods(
+        private static (string EntryPoint, IEnumerable<string> Methods) GetProcessedMethods(
             StructDeclarationSyntax structDeclaration,
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
@@ -147,6 +146,9 @@ namespace ComputeSharp.SourceGenerators
                 from syntaxNode in structDeclaration.DescendantNodes()
                 where syntaxNode.IsKind(SyntaxKind.MethodDeclaration)
                 select (MethodDeclarationSyntax)syntaxNode).ToImmutableArray();
+
+            string? entryPoint = null;
+            List<string> methods = new();
 
             foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
             {
@@ -166,19 +168,19 @@ namespace ComputeSharp.SourceGenerators
                     var parameterName = methodDeclarationSymbol.Parameters[0].Name;
 
                     processedMethod = new ExecuteMethodRewriter(parameterName).Visit(processedMethod)!;
+
+                    entryPoint = processedMethod.NormalizeWhitespace().ToFullString();
                 }
-
-                // Produce the final method source
-                var processedMethodSource = processedMethod.NormalizeWhitespace().ToFullString();
-
-                yield return new[] { methodDeclarationSymbol.Name, processedMethodSource };
+                else methods.Add(processedMethod.NormalizeWhitespace().ToFullString());
 
                 // Emit the extracted local functions
                 foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
                 {
-                    yield return new[] { localFunction.Key, localFunction.Value.NormalizeWhitespace().ToFullString() };
+                    methods.Add(localFunction.Value.NormalizeWhitespace().ToFullString());
                 }
             }
+
+            return (entryPoint!, methods);
         }
 
         /// <summary>

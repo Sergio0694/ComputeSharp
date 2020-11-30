@@ -24,9 +24,9 @@ namespace ComputeSharp.Shaders.Translation
         public IReadOnlyList<CapturedFieldInfo> FieldsInfo { get; }
 
         /// <summary>
-        /// Gets the collection of <see cref="LocalFunctionInfo"/> items for the shader.
+        /// Gets the collection of methods to be used in the shader.
         /// </summary>
-        public IReadOnlyCollection<string> LocalFunctionsInfo { get; }
+        public IReadOnlyCollection<string> MethodsInfo { get; }
 
         /// <summary>
         /// Gets the collection of declared types for the shader.

@@ -100,8 +100,8 @@ namespace ComputeSharp.Shaders.Renderer
                 }
             }
 
-            // Local functions
-            foreach (var function in info.LocalFunctionsInfo)
+            // Captured methods
+            foreach (var function in info.MethodsInfo)
             {
                 builder.AppendLine();
                 builder.AppendLine(function);
