@@ -9,7 +9,7 @@ namespace ComputeSharp
     /// <summary>
     /// A <see langword="class"/> that contains extension methods for the <see cref="GraphicsDevice"/> type, used to run compute shaders.
     /// </summary>
-    public static class GraphicsDevice2Extensions
+    public static class GraphicsDeviceExtensions
     {
         /// <summary>
         /// Allocates a new constant buffer with the specified parameters.
