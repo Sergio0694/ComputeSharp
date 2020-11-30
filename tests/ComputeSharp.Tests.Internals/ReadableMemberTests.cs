@@ -1,5 +1,4 @@
-﻿using ComputeSharp.Shaders.Translation.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Numerics;
 using System.Reflection;
 

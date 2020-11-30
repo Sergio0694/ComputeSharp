@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Numerics;
 
 namespace ComputeSharp.SourceGenerators.Mappings

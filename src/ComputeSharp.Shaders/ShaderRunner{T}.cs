@@ -7,7 +7,6 @@ using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Shaders.Extensions;
 using ComputeSharp.Shaders.Renderer;
-using ComputeSharp.Shaders.Renderer.Models;
 using ComputeSharp.Shaders.Translation;
 using ComputeSharp.Shaders.Translation.Interop;
 using ComputeSharp.Shaders.Translation.Models;
