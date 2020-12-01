@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using ComputeSharp.Shaders.Extensions;
 
 namespace ComputeSharp.Shaders.Translation
 {

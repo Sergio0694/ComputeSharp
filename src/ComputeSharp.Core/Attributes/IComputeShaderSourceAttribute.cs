@@ -8,9 +8,9 @@ using System.Reflection;
 namespace ComputeSharp
 {
     /// <summary>
-    /// An attribute that indicates that a target shader type should get an automatic constructor for all fields.
-    /// This attribute is not meant to be directly used by applications using ComputeSharp.
+    /// An attribute that contains info on a processed compute shader that can be executed.
     /// </summary>
+    /// <remarks>This attribute is not meant to be directly used by applications using ComputeSharp.</remarks>
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This attribute is meant to be used from the source generator only")]

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 
@@ -48,10 +49,18 @@ namespace ComputeSharp.SourceGenerators.Extensions
         /// Gets the full metadata name for a given <see cref="IMethodSymbol"/> instance.
         /// </summary>
         /// <param name="symbol">The input <see cref="IMethodSymbol"/> instance.</param>
+        /// <param name="includeParameters">Whether or not to also include parameter types.</param>
         /// <returns>The full metadata name for <paramref name="symbol"/>.</returns>
         [Pure]
-        public static string GetFullMetadataName(this IMethodSymbol symbol)
+        public static string GetFullMetadataName(this IMethodSymbol symbol, bool includeParameters = false)
         {
+            if (includeParameters)
+            {
+                var parameters = string.Join(", ", symbol.Parameters.Select(static p => ((INamedTypeSymbol)p.Type).GetFullMetadataName()));
+
+                return $"{symbol.ToDisplayString(FullyQualifiedWithoutGlobalAndParametersFormat)}({parameters})";
+            }
+
             return symbol.ToDisplayString(FullyQualifiedWithoutGlobalAndParametersFormat);
         }
 
@@ -66,6 +75,22 @@ namespace ComputeSharp.SourceGenerators.Extensions
         {
             string
                 metadataName = symbol.GetFullMetadataName(),
+                fixedName = metadataName.Replace('`', '-').Replace('+', '.');
+
+            return $"[{nameof(ComputeSharp)}]_[{typeof(TGenerator).Name}]_[{fixedName}]";
+        }
+
+        /// <summary>
+        /// Gets a valid filename for a target symbol and generator type.
+        /// </summary>
+        /// <typeparam name="TGenerator">The generator type processing the input symbol.</typeparam>
+        /// <param name="symbol">The symbol being processed.</param>
+        /// <returns>A filename in the form "[ComputeSharp]_[&lt;TGENERATOR&gt;]_[&lt;SYMBOL_FULLNAME&gt;]"</returns>
+        [Pure]
+        public static string GetGeneratedFileName<TGenerator>(this IMethodSymbol symbol)
+        {
+            string
+                metadataName = symbol.GetFullMetadataName(true),
                 fixedName = metadataName.Replace('`', '-').Replace('+', '.');
 
             return $"[{nameof(ComputeSharp)}]_[{typeof(TGenerator).Name}]_[{fixedName}]";

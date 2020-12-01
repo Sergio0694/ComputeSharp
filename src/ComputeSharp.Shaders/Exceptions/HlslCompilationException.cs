@@ -5,17 +5,24 @@ using System.Text;
 namespace ComputeSharp.Exceptions
 {
     /// <summary>
-    /// A custom <see cref="GraphicsDeviceMismatchException"/> that indicates when mismatched devices are being used
+    /// A custom <see cref="Exception"/> type that indicates when a shader compilation with the DXC compiler has failed.
     /// </summary>
     public sealed class HlslCompilationException : Exception
     {
         /// <summary>
-        /// Creates a new <see cref="GraphicsDeviceMismatchException"/> instance
+        /// Creates a new <see cref="HlslCompilationException"/> instance
         /// </summary>
-        /// <param name="error">The error message produced by the Dxc compiler</param>
-        internal HlslCompilationException(string error) : base(GetExceptionMessage(error)) { }
+        /// <param name="error">The error message produced by the DXC compiler</param>
+        internal HlslCompilationException(string error)
+            : base(GetExceptionMessage(error))
+        {
+        }
 
-        // Gets a proper exception message for a given compilation error
+        /// <summary>
+        /// Gets a formatted exception message for a given compilation error.
+        /// </summary>
+        /// <param name="error">The input compilatin error message from the DXC compiler.</param>
+        /// <returns>A formatted error message for a new <see cref="HlslCompilationException"/> instance.</returns>
         [Pure]
         private static string GetExceptionMessage(string error)
         {
