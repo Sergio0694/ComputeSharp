@@ -194,7 +194,7 @@ namespace ComputeSharp.Shaders.Translation
                 var methodSource = ShaderMethodSourceAttribute.GetForDelegate(func);
 
                 this.declaredTypes.AddRange(methodSource.Types);
-                this.methodsInfo.Add(methodSource.InvokeMethod.Replace("__<NAME>__", hlslName));
+                this.methodsInfo.Add(methodSource.GetMappedInvokeMethod(hlslName));
                 this.methodsInfo.AddRange(methodSource.Methods);
             }
             else ThrowHelper.ThrowArgumentException("Invalid captured variable");

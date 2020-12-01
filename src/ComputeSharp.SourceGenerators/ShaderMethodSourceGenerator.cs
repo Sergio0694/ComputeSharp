@@ -100,7 +100,7 @@ namespace ComputeSharp.SourceGenerators
             // Rewrite the method syntax tree
             var processedMethod = shaderSourceRewriter
                 .Visit(methodDeclaration)!
-                .WithIdentifier(Identifier("__<NAME>__"))
+                .WithIdentifier(Identifier(ShaderMethodSourceAttribute.InvokeMethodIdentifier))
                 .WithoutTrivia()
                 .NormalizeWhitespace()
                 .ToFullString();

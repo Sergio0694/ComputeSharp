@@ -20,6 +20,16 @@ namespace ComputeSharp
     public sealed class ShaderMethodSourceAttribute : Attribute
     {
         /// <summary>
+        /// The identifier for the invoke method, for late binding.
+        /// </summary>
+        internal const string InvokeMethodIdentifier = "__<NAME>__";
+
+        /// <summary>
+        /// The source code for the target entry point method.
+        /// </summary>
+        private readonly string invokeMethod;
+
+        /// <summary>
         /// Creates a new <see cref="ShaderMethodSourceAttribute"/> instance with the specified parameters.
         /// </summary>
         /// <param name="methodName">The fully qualified name of the current method.</param>
@@ -28,9 +38,10 @@ namespace ComputeSharp
         /// <param name="methods">The collection of processed methods.</param>
         public ShaderMethodSourceAttribute(string methodName, string[] types, string invokeMethod, string[] methods)
         {
+            this.invokeMethod = invokeMethod;
+
             MethodName = methodName;
             Types = types;
-            InvokeMethod = invokeMethod;
             Methods = methods;
         }
 
@@ -45,14 +56,20 @@ namespace ComputeSharp
         internal IReadOnlyCollection<string> Types { get; }
 
         /// <summary>
-        /// Gets the source code for the target entry point method.
-        /// </summary>
-        internal string InvokeMethod { get; }
-
-        /// <summary>
         /// Gets the collection of processed methods.
         /// </summary>
         internal IReadOnlyCollection<string> Methods { get; }
+
+        /// <summary>
+        /// Gets the mapped source code for the current method.
+        /// </summary>
+        /// <param name="name">The name to bind the method to.</param>
+        /// <returns>The mapped source code for the current mehtod.</returns>
+        [Pure]
+        internal string GetMappedInvokeMethod(string name)
+        {
+            return this.invokeMethod.Replace(InvokeMethodIdentifier, name);
+        }
 
         /// <summary>
         /// Gets the associated <see cref="ShaderMethodSourceAttribute"/> instance for a specified type.
