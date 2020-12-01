@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
@@ -76,9 +77,22 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (ParameterSyntax)base.VisitParameter(node)!;
 
+            // Convert the C# parameter modifiers to the HLSL equivalent
+            SyntaxToken modifier =
+                node.Modifiers
+                .Where(static m => m.Kind() is SyntaxKind.OutKeyword or SyntaxKind.RefKeyword or SyntaxKind.InKeyword)
+                .Select(static m => m.Kind() switch
+                {
+                    SyntaxKind.OutKeyword => m,
+                    SyntaxKind.InKeyword => m,
+                    SyntaxKind.RefKeyword => ParseToken("inout"),
+                    _ => Token(SyntaxKind.None)
+                }).FirstOrDefault();
+
             return updatedNode
                 .WithAttributeLists(default)
-                .ReplaceAndTrackType(updatedNode.Type!, node.Type!, this.semanticModel, this.discoveredTypes);
+                .ReplaceAndTrackType(updatedNode.Type!, node.Type!, this.semanticModel, this.discoveredTypes)
+                .WithModifiers(TokenList(modifier));
         }
 
         /// <inheritdoc/>
