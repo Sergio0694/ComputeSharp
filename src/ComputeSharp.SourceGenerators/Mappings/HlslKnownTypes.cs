@@ -73,8 +73,13 @@ namespace ComputeSharp.SourceGenerators.Mappings
         /// </summary>
         /// <param name="typeSymbol">The input type to map.</param>
         /// <returns>The HLSL-compatible type name that can be used in an HLSL shader.</returns>
+        [Pure]
         public static string GetMappedName(INamedTypeSymbol typeSymbol)
         {
+            // Delegate types just return an empty string, as they're not actually
+            // used in the generated shaders, but just mapped to a function at runtime.
+            if (typeSymbol.TypeKind == TypeKind.Delegate) return "";
+
             string typeName = typeSymbol.GetFullMetadataName();
 
             // Special case for the structured buffer types

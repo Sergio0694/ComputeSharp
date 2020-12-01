@@ -56,7 +56,7 @@ namespace ComputeSharp.SourceGenerators.Extensions
         {
             if (includeParameters)
             {
-                var parameters = $"{string.Join(", ", symbol.Parameters.Select(static p => ((INamedTypeSymbol)p.Type).GetFullMetadataName()))}";
+                var parameters = string.Join(", ", symbol.Parameters.Select(static p => ((INamedTypeSymbol)p.Type).GetFullMetadataName()));
 
                 return $"{symbol.ToDisplayString(FullyQualifiedWithoutGlobalAndParametersFormat)}({parameters})";
             }

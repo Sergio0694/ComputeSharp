@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
+using ComputeSharp.Core.Extensions;
 using Microsoft.Toolkit.Diagnostics;
 
 namespace ComputeSharp
@@ -23,11 +24,13 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="methodName">The fully qualified name of the current method.</param>
         /// <param name="types">The collection of custom types.</param>
+        /// <param name="invokeMethod">The source code for the target entry point method.</param>
         /// <param name="methods">The collection of processed methods.</param>
-        public ShaderMethodSourceAttribute(string methodName, string[] types, string[] methods)
+        public ShaderMethodSourceAttribute(string methodName, string[] types, string invokeMethod, string[] methods)
         {
             MethodName = methodName;
             Types = types;
+            InvokeMethod = invokeMethod;
             Methods = methods;
         }
 
@@ -40,6 +43,11 @@ namespace ComputeSharp
         /// Gets the collection of processed custom types.
         /// </summary>
         internal IReadOnlyCollection<string> Types { get; }
+
+        /// <summary>
+        /// Gets the source code for the target entry point method.
+        /// </summary>
+        internal string InvokeMethod { get; }
 
         /// <summary>
         /// Gets the collection of processed methods.
@@ -56,8 +64,7 @@ namespace ComputeSharp
         {
             Guard.IsTrue(function.Method.IsStatic, "Captured delegates need to wrap static methods");
 
-            Type declaringType = function.Method.DeclaringType;
-            string methodName = $"{declaringType.FullName}.{function.Method.Name}";
+            string methodName = function.Method.GetFullName();
 
             return (
                 from attribute in function.Method.DeclaringType.Assembly.GetCustomAttributes<ShaderMethodSourceAttribute>()

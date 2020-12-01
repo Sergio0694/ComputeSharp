@@ -57,6 +57,16 @@ namespace ComputeSharp.Shaders.Translation
         private readonly List<CapturedFieldInfo> fieldsInfo = new();
 
         /// <summary>
+        /// The <see cref="List{T}"/> with the collected methods for the shader.
+        /// </summary>
+        private readonly List<string> methodsInfo = new();
+
+        /// <summary>
+        /// The <see cref="List{T}"/> with the collected declared types for the shader.
+        /// </summary>
+        private readonly List<string> declaredTypes = new();
+
+        /// <summary>
         /// Creates a new <see cref="ShaderLoader{T}"/> instance.
         /// </summary>
         private ShaderLoader()
@@ -81,10 +91,10 @@ namespace ComputeSharp.Shaders.Translation
         public IReadOnlyList<CapturedFieldInfo> FieldsInfo => this.fieldsInfo;
 
         /// <inheritdoc/>
-        public IReadOnlyCollection<string> MethodsInfo { get; private set; }
+        public IReadOnlyCollection<string> MethodsInfo => this.methodsInfo;
 
         /// <inheritdoc/>
-        public IReadOnlyCollection<string> DeclaredTypes { get; private set; }
+        public IReadOnlyCollection<string> DeclaredTypes => this.declaredTypes;
 
         /// <summary>
         /// Loads and processes an input<typeparamref name="T"/> shadeer
@@ -181,7 +191,11 @@ namespace ComputeSharp.Shaders.Translation
             else if (fieldInfo.GetValue(shader) is Delegate { Method: { IsStatic: true } } func)
             {
                 // Captured static delegates with a return type
-                throw new NotImplementedException();
+                var methodSource = ShaderMethodSourceAttribute.GetForDelegate(func);
+
+                this.declaredTypes.AddRange(methodSource.Types);
+                this.methodsInfo.Add(methodSource.InvokeMethod.Replace("__<NAME>__", hlslName));
+                this.methodsInfo.AddRange(methodSource.Methods);
             }
             else ThrowHelper.ThrowArgumentException("Invalid captured variable");
         }
@@ -191,9 +205,10 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         private void LoadMethodMetadata()
         {
-            DeclaredTypes = Attribute.Types;
             EntryPoint = Attribute.ExecuteMethod;
-            MethodsInfo = Attribute.Methods;
+
+            this.methodsInfo.AddRange(Attribute.Methods);
+            this.declaredTypes.AddRange(Attribute.Types);
         }
     }
 }

@@ -45,7 +45,7 @@ namespace ComputeSharp.SourceGenerators
                 Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
 
                 // Explore the syntax tree and extract the processed info
-                var processedMethods = GetProcessedMethods(methodDeclaration, semanticModel, discoveredTypes, staticMethods).ToArray();
+                var (invokeMethod, processedMethods) = GetProcessedMethods(methodDeclaration, semanticModel, discoveredTypes, staticMethods);
                 var processedTypes = IComputeShaderSourceGenerator.GetProcessedTypes(discoveredTypes).ToArray();
 
                 // Helper that converts a sequence of strings into an array expression.
@@ -68,6 +68,7 @@ namespace ComputeSharp.SourceGenerators
                         Attribute(IdentifierName(typeof(ShaderMethodSourceAttribute).FullName)).AddArgumentListArguments(
                             AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(methodDeclarationSymbol.GetFullMetadataName(true)))),
                             AttributeArgument(ArrayExpression(processedTypes)),
+                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(invokeMethod))),
                             AttributeArgument(ArrayExpression(processedMethods)))))
                     .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                     .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
@@ -88,7 +89,7 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
         /// <returns>A sequence of processed methods in <paramref name="methodDeclaration"/>.</returns>
         [Pure]
-        private static IEnumerable<string> GetProcessedMethods(
+        private static (string InvokeMethod, IEnumerable<string> Methods) GetProcessedMethods(
             MethodDeclarationSyntax methodDeclaration,
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
@@ -97,15 +98,22 @@ namespace ComputeSharp.SourceGenerators
             ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, discoveredTypes, staticMethods);
 
             // Rewrite the method syntax tree
-            var processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();
+            var processedMethod = shaderSourceRewriter
+                .Visit(methodDeclaration)!
+                .WithIdentifier(Identifier("__<NAME>__"))
+                .WithoutTrivia()
+                .NormalizeWhitespace()
+                .ToFullString();
 
-            yield return processedMethod.NormalizeWhitespace().ToFullString();
+            List<string> methods = new(shaderSourceRewriter.LocalFunctions.Count);
 
             // Emit the extracted local functions
             foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
             {
-                yield return localFunction.Value.NormalizeWhitespace().ToFullString();
+                methods.Add(localFunction.Value.NormalizeWhitespace().ToFullString());
             }
+
+            return (processedMethod, methods);
         }
     }
 }
