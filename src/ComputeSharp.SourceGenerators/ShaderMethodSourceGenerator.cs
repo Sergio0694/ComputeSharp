@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using ComputeSharp.SourceGenerators.Extensions;
-using ComputeSharp.SourceGenerators.Mappings;
 using ComputeSharp.SourceGenerators.SyntaxRewriters;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -28,8 +26,6 @@ namespace ComputeSharp.SourceGenerators
         /// <inheritdoc/>
         public void Execute(GeneratorExecutionContext context)
         {
-            Debugger.Launch();
-
             // Find all the [ShaderMethod] usages and retrieve the target methods
             ImmutableArray<MethodDeclarationSyntax> methods = (
                 from tree in context.Compilation.SyntaxTrees
