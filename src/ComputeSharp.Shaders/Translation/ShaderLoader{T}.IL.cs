@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using ComputeSharp.Core.Interop;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Shaders.Extensions;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Translation.Models;
 using Microsoft.Toolkit.Diagnostics;

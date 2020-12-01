@@ -178,12 +178,7 @@ namespace ComputeSharp.Shaders.Translation
                 this.capturedFields.Add(fieldInfo);
                 this.fieldsInfo.Add(new CapturedFieldInfo(hlslType, hlslName));
             }
-            else if (fieldType.IsDelegate() &&
-                     fieldInfo.GetValue(shader) is Delegate func &&
-                     (func.Method.IsStatic || func.Method.DeclaringType!.IsStatelessDelegateContainer()) &&
-                     (HlslKnownTypes.IsKnownScalarType(func.Method.ReturnType) || HlslKnownTypes.IsKnownVectorType(func.Method.ReturnType)) &&
-                     fieldType.GenericTypeArguments.All(type => HlslKnownTypes.IsKnownScalarType(type) ||
-                                                                HlslKnownTypes.IsKnownVectorType(type)))
+            else if (fieldInfo.GetValue(shader) is Delegate { Method: { IsStatic: true } } func)
             {
                 // Captured static delegates with a return type
                 throw new NotImplementedException();

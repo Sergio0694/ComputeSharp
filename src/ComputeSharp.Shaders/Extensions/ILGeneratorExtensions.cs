@@ -1,8 +1,11 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Microsoft.Toolkit.Diagnostics;
 
-namespace System.Reflection.Emit
+namespace ComputeSharp.Shaders.Extensions
 {
     /// <summary>
     /// A <see langword="class"/> that provides extension methods for the <see langword="ILGenerator"/> type
