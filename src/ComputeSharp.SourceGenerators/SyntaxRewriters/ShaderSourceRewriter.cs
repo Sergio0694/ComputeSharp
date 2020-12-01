@@ -269,6 +269,15 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         }
 
         /// <inheritdoc/>
+        public override SyntaxNode? VisitArgument(ArgumentSyntax node)
+        {
+            var updatedNode = (ArgumentSyntax)base.VisitArgument(node)!;
+
+            // Strip the ref keywords from arguments
+            return updatedNode.WithRefKindKeyword(Token(SyntaxKind.None));
+        }
+
+        /// <inheritdoc/>
         public override SyntaxToken VisitToken(SyntaxToken token)
         {
             SyntaxToken updatedToken = base.VisitToken(token);
