@@ -19,6 +19,13 @@ namespace ComputeSharp.Core.Extensions
         {
             var parameters = string.Join(", ", method.GetParameters().Select(static p => p.ParameterType.FullName));
 
+            if (method.IsGenericMethod)
+            {
+                var arguments = string.Join(", ", method.GetGenericArguments().Select(static t => t.FullName));
+
+                return $"{method.DeclaringType!.FullName}.{method.Name}<{arguments}>({parameters})";
+            }
+
             return $"{method.DeclaringType!.FullName}.{method.Name}({parameters})";
         }
     }

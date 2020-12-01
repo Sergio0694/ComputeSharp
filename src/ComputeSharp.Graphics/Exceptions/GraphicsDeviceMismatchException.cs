@@ -36,7 +36,7 @@ namespace ComputeSharp.Exceptions
             builder.AppendLine("Invalid pairing of graphics devices used to run a compute shader and allocate memory buffers.");
             builder.AppendLine($"The target device to run the compute shader is \"{device}\".");
             builder.AppendLine($"The buffer of type {buffer.GetType()} was allocated on device \"{buffer.GraphicsDevice}\".");
-            builder.AppendLine("Make sure to always allocate buffers on the same device used to actually run the code that accesses them.");
+            builder.Append("Make sure to always allocate buffers on the same device used to actually run the code that accesses them.");
             builder.ToString();
 
             return new(builder.ToString());

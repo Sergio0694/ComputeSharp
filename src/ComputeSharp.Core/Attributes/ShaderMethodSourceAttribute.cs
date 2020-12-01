@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Reflection;
 using ComputeSharp.Core.Extensions;
+using ComputeSharp.Exceptions;
 using Microsoft.Toolkit.Diagnostics;
 
 namespace ComputeSharp
@@ -81,12 +81,18 @@ namespace ComputeSharp
         {
             Guard.IsTrue(function.Method.IsStatic, "Captured delegates need to wrap static methods");
 
+            var attributes = function.Method.DeclaringType.Assembly.GetCustomAttributes<ShaderMethodSourceAttribute>();
             string methodName = function.Method.GetFullName();
 
-            return (
-                from attribute in function.Method.DeclaringType.Assembly.GetCustomAttributes<ShaderMethodSourceAttribute>()
-                where attribute.MethodName == methodName
-                select attribute).Single();
+            foreach (var attribute in attributes)
+            {
+                if (attribute.MethodName.Equals(methodName))
+                {
+                    return attribute;
+                }
+            }
+
+            return MissingMethodSourceException.Throw(function);
         }
     }
 }
