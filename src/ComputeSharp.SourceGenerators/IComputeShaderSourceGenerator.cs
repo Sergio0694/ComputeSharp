@@ -192,7 +192,7 @@ namespace ComputeSharp.SourceGenerators
         /// </summary>
         /// <param name="types">The sequence of discovered custom types.</param>
         /// <returns>A sequence of custom type definitions to add to the shader source.</returns>
-        public static IEnumerable<string> GetProcessedTypes(IEnumerable<INamedTypeSymbol> types)
+        internal static IEnumerable<string> GetProcessedTypes(IEnumerable<INamedTypeSymbol> types)
         {
             foreach (var type in HlslKnownTypes.GetCustomTypes(types))
             {
