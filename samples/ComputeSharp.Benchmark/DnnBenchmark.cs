@@ -7,17 +7,17 @@ using BenchmarkDotNet.Attributes;
 namespace ComputeSharp.Benchmark
 {
     /// <summary>
-    /// A <see langword="class"/> that benchmarks the APIs in the <see cref="Dnn"/> class, on both CPU and GPU
+    /// A <see langword="class"/> that benchmarks the APIs in the <see cref="Dnn"/> class, on both CPU and GPU.
     /// </summary>
     public class DnnBenchmark : IDisposable
     {
         /// <summary>
-        /// The number of samples
+        /// The number of samples.
         /// </summary>
         private const int C = 128;
 
         /// <summary>
-        /// The nummber of rows in the <see cref="X"/> matrix
+        /// The nummber of rows in the <see cref="X"/> matrix.
         /// </summary>
         private const int N = 512;
 
@@ -27,57 +27,57 @@ namespace ComputeSharp.Benchmark
         private const int M = 512;
 
         /// <summary>
-        /// The number of columns in the <see cref="W"/> matrix
+        /// The number of columns in the <see cref="W"/> matrix.
         /// </summary>
         private const int P = 256;
 
         /// <summary>
-        /// The input tensor
+        /// The input tensor.
         /// </summary>
         private float[] X;
 
         /// <summary>
-        /// The weights tensor
+        /// The weights tensor.
         /// </summary>
         private float[] W;
 
         /// <summary>
-        /// The bias tensor
+        /// The bias tensor.
         /// </summary>
         private float[] B;
 
         /// <summary>
-        /// The result tensor
+        /// The result tensor.
         /// </summary>
         private float[] Y;
 
         /// <summary>
-        /// The input tensor
+        /// The input tensor.
         /// </summary>
         private ReadOnlyBuffer<float> BufferX;
 
         /// <summary>
-        /// The weights tensor
+        /// The weights tensor.
         /// </summary>
         private ReadOnlyBuffer<float> BufferW;
 
         /// <summary>
-        /// The bias tensor
+        /// The bias tensor.
         /// </summary>
         private ReadOnlyBuffer<float> BufferB;
 
         /// <summary>
-        /// The result tensor
+        /// The result tensor.
         /// </summary>
         private ReadWriteBuffer<float> BufferY;
 
         /// <summary>
-        /// A <see cref="System.Random"/> instance to initialize the tensors
+        /// A <see cref="System.Random"/> instance to initialize the tensors.
         /// </summary>
         private readonly Random Random = new Random();
 
         /// <summary>
-        /// Initial setup for a benchmarking session
+        /// Initial setup for a benchmarking session.
         /// </summary>
         [GlobalSetup]
         public void Setup()
@@ -94,7 +94,7 @@ namespace ComputeSharp.Benchmark
         }
 
         /// <summary>
-        /// Clears the memory from the current session
+        /// Clears the memory from the current session.
         /// </summary>
         [GlobalCleanup]
         public void Dispose()
@@ -111,9 +111,9 @@ namespace ComputeSharp.Benchmark
         }
 
         /// <summary>
-        /// Creates a new <see langword="float"/> array of the specified size
+        /// Creates a new <see langword="float"/> array of the specified size.
         /// </summary>
-        /// <param name="size">The size of the new random array to create</param>
+        /// <param name="size">The size of the new random array to create.</param>
         [Pure]
         private float[] CreateRandomArray(int size)
         {
@@ -128,19 +128,19 @@ namespace ComputeSharp.Benchmark
         }
 
         /// <summary>
-        /// Runs a fully connected forward operation on the CPU
+        /// Runs a fully connected forward operation on the CPU.
         /// </summary>
         [Benchmark(Baseline = true)]
         public void Cpu() => Dnn.FullyConnectedForwardCpu(C, N, M, P, X, W, B, Y);
 
         /// <summary>
-        /// Runs a fully connected forward operation on the GPU
+        /// Runs a fully connected forward operation on the GPU.
         /// </summary>
         [Benchmark]
         public void GpuWithNoTemporaryBuffers() => Dnn.FullyConnectedForwardGpu(C, N, M, P, BufferX, BufferW, BufferB, BufferY);
 
         /// <summary>
-        /// Runs a fully connected forward operation on the GPU, creating temporary GPU buffers to perform the operations
+        /// Runs a fully connected forward operation on the GPU, creating temporary GPU buffers to perform the operations.
         /// </summary>
         [Benchmark]
         public void GpuWithTemporaryBuffers()

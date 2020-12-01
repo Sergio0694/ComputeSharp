@@ -10,9 +10,9 @@ namespace ComputeSharp.Exceptions
     public sealed class HlslCompilationException : Exception
     {
         /// <summary>
-        /// Creates a new <see cref="HlslCompilationException"/> instance
+        /// Creates a new <see cref="HlslCompilationException"/> instance.
         /// </summary>
-        /// <param name="error">The error message produced by the DXC compiler</param>
+        /// <param name="error">The error message produced by the DXC compiler.</param>
         internal HlslCompilationException(string error)
             : base(GetExceptionMessage(error))
         {
@@ -28,7 +28,7 @@ namespace ComputeSharp.Exceptions
         {
             StringBuilder builder = new(512);
 
-            builder.AppendLine("The Dxc compiler encountered one or more errors while trying to compile the shader:");
+            builder.AppendLine("The DXC compiler encountered one or more errors while trying to compile the shader:");
             builder.AppendLine();
             builder.AppendLine(error.Trim());
             builder.AppendLine();

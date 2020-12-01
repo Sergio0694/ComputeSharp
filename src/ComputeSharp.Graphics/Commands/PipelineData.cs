@@ -19,11 +19,11 @@ namespace ComputeSharp.Graphics.Commands
         private ComPtr<ID3D12PipelineState> d3D12PipelineState;
 
         /// <summary>
-        /// Creates a new <see cref="PipelineState"/> instance with the specified parameters
+        /// Creates a new <see cref="PipelineState"/> instance with the specified parameters.
         /// </summary>
-        /// <param name="device">The <see cref="GraphicsDevice"/> to use</param>
-        /// <param name="rootSignature">The <see cref="ID3D12RootSignature"/> value for the current shader</param>
-        /// <param name="computeShader">The bytecode for the compute shader to run</param>
+        /// <param name="device">The <see cref="GraphicsDevice"/> to use.</param>
+        /// <param name="rootSignature">The <see cref="ID3D12RootSignature"/> value for the current shader.</param>
+        /// <param name="computeShader">The bytecode for the compute shader to run.</param>
         public PipelineData(ComPtr<ID3D12RootSignature> d3D12RootSignature, ComPtr<ID3D12PipelineState> d3D12PipelineState)
         {
             this.d3D12RootSignature = d3D12RootSignature;

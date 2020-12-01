@@ -12,18 +12,18 @@ using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 namespace ComputeSharp.Graphics.Buffers.Abstract
 {
     /// <summary>
-    /// A <see langword="class"/> representing a typed structured buffer stored on GPU memory
+    /// A <see langword="class"/> representing a typed structured buffer stored on GPU memory.
     /// </summary>
-    /// <typeparam name="T">The type of items stored on the buffer</typeparam>
+    /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
     public abstract class StructuredBuffer<T> : Buffer<T>
         where T : unmanaged
     {
         /// <summary>
-        /// Creates a new <see cref="StructuredBuffer{T}"/> instance with the specified parameters
+        /// Creates a new <see cref="StructuredBuffer{T}"/> instance with the specified parameters.
         /// </summary>
-        /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance</param>
-        /// <param name="length">The number of items to store in the current buffer</param>
-        /// <param name="bufferType">The buffer type for the current buffer</param>
+        /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
+        /// <param name="length">The number of items to store in the current buffer.</param>
+        /// <param name="bufferType">The buffer type for the current buffer.</param>
         internal StructuredBuffer(GraphicsDevice device, int length, BufferType bufferType)
             : base(device, length, (uint)Unsafe.SizeOf<T>(), bufferType)
         {

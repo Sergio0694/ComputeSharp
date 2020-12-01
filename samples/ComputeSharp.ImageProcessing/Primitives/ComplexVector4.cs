@@ -11,12 +11,12 @@ namespace SixLabors.ImageSharp
     internal struct ComplexVector4
     {
         /// <summary>
-        /// The real part of the complex vector
+        /// The real part of the complex vector.
         /// </summary>
         public Vector4 Real;
 
         /// <summary>
-        /// The imaginary part of the complex number
+        /// The imaginary part of the complex number.
         /// </summary>
         public Vector4 Imaginary;
     }

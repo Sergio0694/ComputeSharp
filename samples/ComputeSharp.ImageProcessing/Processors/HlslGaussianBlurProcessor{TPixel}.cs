@@ -17,17 +17,17 @@ namespace ComputeSharp.BokehBlur.Processors
         where TPixel : unmanaged, IPixel<TPixel>
     {
         /// <summary>
-        /// The 1D kernel to apply
+        /// The 1D kernel to apply.
         /// </summary>
         private readonly float[] Kernel;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HlslGaussianBlurProcessor"/> class
+        /// Initializes a new instance of the <see cref="HlslGaussianBlurProcessor"/> class.
         /// </summary>
-        /// <param name="definition">The <see cref="HlslGaussianBlurProcessor"/> defining the processor parameters</param>
-        /// <param name="configuration">The configuration which allows altering default behaviour or extending the library</param>
-        /// <param name="source">The source <see cref="Image{TPixel}"/> for the current processor instance</param>
-        /// <param name="sourceRectangle">The source area to process for the current processor instance</param>
+        /// <param name="definition">The <see cref="HlslGaussianBlurProcessor"/> defining the processor parameters.</param>
+        /// <param name="configuration">The configuration which allows altering default behaviour or extending the library.</param>
+        /// <param name="source">The source <see cref="Image{TPixel}"/> for the current processor instance.</param>
+        /// <param name="sourceRectangle">The source area to process for the current processor instance.</param>
         public HlslGaussianBlurProcessor(HlslGaussianBlurProcessor definition, Configuration configuration, Image<TPixel> source, Rectangle sourceRectangle)
             : base(configuration, source, sourceRectangle)
         {
@@ -36,7 +36,7 @@ namespace ComputeSharp.BokehBlur.Processors
         }
 
         /// <summary>
-        /// Creates a 1 dimensional Gaussian kernel using the Gaussian G(x) function
+        /// Creates a 1 dimensional Gaussian kernel using the Gaussian G(x) function.
         /// </summary>
         private static float[] CreateGaussianBlurKernel(int size, float weight)
         {
@@ -64,10 +64,10 @@ namespace ComputeSharp.BokehBlur.Processors
         }
 
         /// <summary>
-        /// Implementation of 1D Gaussian G(x) function
+        /// Implementation of 1D Gaussian G(x) function.
         /// </summary>
         /// <param name="x">The x provided to G(x)</param>
-        /// <param name="sigma">The spread of the blur</param>
+        /// <param name="sigma">The spread of the blur.</param>
         /// <returns>The Gaussian G(x)</returns>
         private static float Gaussian(float x, float sigma)
         {
@@ -110,11 +110,11 @@ namespace ComputeSharp.BokehBlur.Processors
         }
 
         /// <summary>
-        /// Performs a vertical 1D complex convolution with the specified parameters
+        /// Performs a vertical 1D complex convolution with the specified parameters.
         /// </summary>
-        /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from</param>
-        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to</param>
-        /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel</param>
+        /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from.</param>
+        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to.</param>
+        /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ApplyVerticalConvolution(
             ReadWriteBuffer<Vector4> source,
@@ -137,7 +137,7 @@ namespace ComputeSharp.BokehBlur.Processors
         }
 
         /// <summary>
-        /// Kernel for <see cref="ApplyVerticalConvolution"/>
+        /// Kernel for <see cref="ApplyVerticalConvolution"/>.
         /// </summary>
         private struct VerticalConvolutionProcessor : IComputeShader
         {
@@ -172,11 +172,11 @@ namespace ComputeSharp.BokehBlur.Processors
         }
 
         /// <summary>
-        /// Performs an horizontal 1D complex convolution with the specified parameters
+        /// Performs an horizontal 1D complex convolution with the specified parameters.
         /// </summary>
-        /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from</param>
-        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to</param>
-        /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel</param>
+        /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from.</param>
+        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to.</param>
+        /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ApplyHorizontalConvolution(
             ReadWriteBuffer<Vector4> source,
@@ -199,7 +199,7 @@ namespace ComputeSharp.BokehBlur.Processors
         }
 
         /// <summary>
-        /// Kernel for <see cref="ApplyHorizontalConvolution"/>
+        /// Kernel for <see cref="ApplyHorizontalConvolution"/>.
         /// </summary>
         private struct HorizontalConvolutionProcessor : IComputeShader
         {

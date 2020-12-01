@@ -20,7 +20,7 @@ namespace ComputeSharp.Graphics.Buffers.Views
         }
 
         /// <summary>
-        /// Gets the items to display for the current instance
+        /// Gets the items to display for the current instance.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Collapsed)]
         public T[]? Items { get; }

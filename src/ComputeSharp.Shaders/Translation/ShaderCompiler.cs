@@ -30,7 +30,7 @@ namespace ComputeSharp.Shaders.Translation
         private static readonly ComPtr<IDxcIncludeHandler> DxcIncludeHandler;
 
         /// <summary>
-        /// Initializes <see cref="DxcCompiler"/>, <see cref="DxcLibrary"/> and <see cref="DxcIncludeHandler"/>
+        /// Initializes <see cref="DxcCompiler"/>, <see cref="DxcLibrary"/> and <see cref="DxcIncludeHandler"/>.
         /// </summary>
         static ShaderCompiler()
         {

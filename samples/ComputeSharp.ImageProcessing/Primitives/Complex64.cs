@@ -14,12 +14,12 @@ namespace SixLabors.ImageSharp
     internal readonly struct Complex64
     {
         /// <summary>
-        /// The real part of the complex number
+        /// The real part of the complex number.
         /// </summary>
         public readonly float Real;
 
         /// <summary>
-        /// The imaginary part of the complex number
+        /// The imaginary part of the complex number.
         /// </summary>
         public readonly float Imaginary;
 
@@ -39,7 +39,7 @@ namespace SixLabors.ImageSharp
         /// </summary>
         /// <param name="value">The <see cref="Complex64"/> value to multiply.</param>
         /// <param name="scalar">The <see cref="float"/> scalar to use to multiply the <see cref="Complex64"/> value.</param>
-        /// <returns>The <see cref="Complex64"/> result</returns>
+        /// <returns>The <see cref="Complex64"/> result.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Complex64 operator *(Complex64 value, float scalar) => new Complex64(value.Real * scalar, value.Imaginary * scalar);
     }

@@ -14,30 +14,30 @@ using SixLabors.ImageSharp.Processing.Processors;
 namespace ComputeSharp.BokehBlur.Processors
 {
     /// <summary>
-    /// Applies bokeh blur processing to the image
+    /// Applies bokeh blur processing to the image.
     /// </summary>
-    /// <typeparam name="TPixel">The pixel format</typeparam>
-    /// <remarks>This processor is based on the code from Mike Pound, see <a href="https://github.com/mikepound/convolve">github.com/mikepound/convolve</a></remarks>
+    /// <typeparam name="TPixel">The pixel format.</typeparam>
+    /// <remarks>This processor is based on the code from Mike Pound, see <a href="https://github.com/mikepound/convolve">github.com/mikepound/convolve</a>.</remarks>
     public sealed partial class HlslBokehBlurProcessor<TPixel> : ImageProcessor<TPixel>
         where TPixel : unmanaged, IPixel<TPixel>
     {
         /// <summary>
-        /// The kernel radius
+        /// The kernel radius.
         /// </summary>
         private readonly int Radius;
 
         /// <summary>
-        /// The gamma highlight factor to use when applying the effect
+        /// The gamma highlight factor to use when applying the effect.
         /// </summary>
         private readonly float Gamma;
 
         /// <summary>
-        /// The maximum size of the kernel in either direction
+        /// The maximum size of the kernel in either direction.
         /// </summary>
         private readonly int KernelSize;
 
         /// <summary>
-        /// The number of components to use when applying the bokeh blur
+        /// The number of components to use when applying the bokeh blur.
         /// </summary>
         private readonly int ComponentsCount;
 
@@ -47,27 +47,27 @@ namespace ComputeSharp.BokehBlur.Processors
         private readonly Vector4[] KernelParameters;
 
         /// <summary>
-        /// The kernel components for the current instance
+        /// The kernel components for the current instance.
         /// </summary>
         private readonly Complex64[][] Kernels;
 
         /// <summary>
-        /// The scaling factor for kernel values
+        /// The scaling factor for kernel values.
         /// </summary>
         private readonly float KernelsScale;
 
         /// <summary>
-        /// The mapping of initialized complex kernels and parameters, to speed up the initialization of new <see cref="HlslBokehBlurProcessor{TPixel}"/> instances
+        /// The mapping of initialized complex kernels and parameters, to speed up the initialization of new <see cref="HlslBokehBlurProcessor{TPixel}"/> instances.
         /// </summary>
         private static readonly ConcurrentDictionary<(int Radius, int ComponentsCount), (Vector4[] Parameters, float Scale, Complex64[][] Kernels)> Cache = new();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HlslBokehBlurProcessor{TPixel}"/> class
+        /// Initializes a new instance of the <see cref="HlslBokehBlurProcessor{TPixel}"/> class.
         /// </summary>
-        /// <param name="definition">The <see cref="HlslBokehBlurProcessor"/> defining the processor parameters</param>
-        /// <param name="configuration">The configuration which allows altering default behaviour or extending the library</param>
-        /// <param name="source">The source <see cref="Image{TPixel}"/> instance to modify</param>
-        /// <param name="sourceRectangle">The source <see cref="Rectangle"/> that indicates the area to edit</param>
+        /// <param name="definition">The <see cref="HlslBokehBlurProcessor"/> defining the processor parameters.</param>
+        /// <param name="configuration">The configuration which allows altering default behaviour or extending the library.</param>
+        /// <param name="source">The source <see cref="Image{TPixel}"/> instance to modify.</param>
+        /// <param name="sourceRectangle">The source <see cref="Rectangle"/> that indicates the area to edit.</param>
         public HlslBokehBlurProcessor(HlslBokehBlurProcessor definition, Configuration configuration, Image<TPixel> source, Rectangle sourceRectangle)
             : base(configuration, source, sourceRectangle)
         {
@@ -97,12 +97,12 @@ namespace ComputeSharp.BokehBlur.Processors
         }
 
         /// <summary>
-        /// Gets the kernel scales to adjust the component values in each kernel
+        /// Gets the kernel scales to adjust the component values in each kernel.
         /// </summary>
         private static IReadOnlyList<float> KernelScales { get; } = new[] { 1.4f, 1.2f, 1.2f, 1.2f, 1.2f, 1.2f };
 
         /// <summary>
-        /// Gets the available bokeh blur kernel parameters
+        /// Gets the available bokeh blur kernel parameters.
         /// </summary>
         private static IReadOnlyList<Vector4[]> KernelComponents { get; } = new[]
         {
@@ -156,7 +156,7 @@ namespace ComputeSharp.BokehBlur.Processors
         };
 
         /// <summary>
-        /// Gets the kernel parameters and scaling factor for the current count value in the current instance
+        /// Gets the kernel parameters and scaling factor for the current count value in the current instance.
         /// </summary>
         private (Vector4[] Parameters, float Scale) GetParameters()
         {
@@ -166,7 +166,7 @@ namespace ComputeSharp.BokehBlur.Processors
         }
 
         /// <summary>
-        /// Creates the collection of complex 1D kernels with the specified parameters
+        /// Creates the collection of complex 1D kernels with the specified parameters.
         /// </summary>
         private Complex64[][] CreateComplexKernels()
         {
@@ -182,10 +182,10 @@ namespace ComputeSharp.BokehBlur.Processors
         }
 
         /// <summary>
-        /// Creates a complex 1D kernel with the specified parameters
+        /// Creates a complex 1D kernel with the specified parameters.
         /// </summary>
-        /// <param name="a">The exponential parameter for each complex component</param>
-        /// <param name="b">The angle component for each complex component</param>
+        /// <param name="a">The exponential parameter for each complex component.</param>
+        /// <param name="b">The angle component for each complex component.</param>
         private Complex64[] CreateComplex1DKernel(float a, float b)
         {
             var kernel = new Complex64[KernelSize];
@@ -208,7 +208,7 @@ namespace ComputeSharp.BokehBlur.Processors
         }
 
         /// <summary>
-        /// Normalizes the kernels with respect to A * real + B * imaginary
+        /// Normalizes the kernels with respect to A * real + B * imaginary.
         /// </summary>
         private void NormalizeKernels()
         {
@@ -287,11 +287,11 @@ namespace ComputeSharp.BokehBlur.Processors
         }
 
         /// <summary>
-        /// Performs a vertical 1D complex convolution with the specified parameters
+        /// Performs a vertical 1D complex convolution with the specified parameters.
         /// </summary>
-        /// <param name="source">The source <see cref="ReadOnlyBuffer{T}"/> to read data from</param>
-        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to</param>
-        /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel</param>
+        /// <param name="source">The source <see cref="ReadOnlyBuffer{T}"/> to read data from.</param>
+        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to.</param>
+        /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ApplyVerticalConvolution(
             ReadOnlyBuffer<Vector4> source,
@@ -314,7 +314,7 @@ namespace ComputeSharp.BokehBlur.Processors
         }
 
         /// <summary>
-        /// Kernel for <see cref="ApplyVerticalConvolution"/>
+        /// Kernel for <see cref="ApplyVerticalConvolution"/>.
         /// </summary>
         [AutoConstructor]
         private partial struct VerticalConvolutionProcessor : IComputeShader
@@ -355,13 +355,13 @@ namespace ComputeSharp.BokehBlur.Processors
         }
 
         /// <summary>
-        /// Performs an horizontal 1D complex convolution with the specified parameters
+        /// Performs an horizontal 1D complex convolution with the specified parameters.
         /// </summary>
-        /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from</param>
-        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to</param>
-        /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel</param>
-        /// <param name="z">The weight factor for the real component of the complex pixel values</param>
-        /// <param name="w">The weight factor for the imaginary component of the complex pixel values</param>
+        /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from.</param>
+        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to.</param>
+        /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel.</param>
+        /// <param name="z">The weight factor for the real component of the complex pixel values.</param>
+        /// <param name="w">The weight factor for the imaginary component of the complex pixel values.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ApplyHorizontalConvolutionAndAccumulatePartials(
             ReadWriteBuffer<ComplexVector4> source,
@@ -388,7 +388,7 @@ namespace ComputeSharp.BokehBlur.Processors
         }
 
         /// <summary>
-        /// Kernel for <see cref="ApplyHorizontalConvolutionAndAccumulatePartials"/>
+        /// Kernel for <see cref="ApplyHorizontalConvolutionAndAccumulatePartials"/>.
         /// </summary>
         [AutoConstructor]
         private partial struct HorizontalConvolutionAndAccumulatePartialsProcessor : IComputeShader
@@ -431,7 +431,7 @@ namespace ComputeSharp.BokehBlur.Processors
         /// <summary>
         /// Applies the gamma correction/highlight to the input pixel buffer and returns an <see cref="IMemoryOwner{T}"/> instance with <see cref="Vector4"/> values.
         /// </summary>
-        /// <param name="source">The source image</param>
+        /// <param name="source">The source image.</param>
         [Pure]
         private IMemoryOwner<Vector4> GetExposedVector4Buffer(Memory<TPixel> source)
         {
@@ -450,7 +450,7 @@ namespace ComputeSharp.BokehBlur.Processors
         }
 
         /// <summary>
-        /// The processor for <see cref="GetExposedVector4Buffer"/>
+        /// The processor for <see cref="GetExposedVector4Buffer"/>.
         /// </summary>
         [AutoConstructor]
         private readonly partial struct GetExposedVector4BufferProcessor : IRowOperation
@@ -482,10 +482,10 @@ namespace ComputeSharp.BokehBlur.Processors
         }
 
         /// <summary>
-        /// Applies the inverse gamma exposure pass to compute the final pixel values for a target image
+        /// Applies the inverse gamma exposure pass to compute the final pixel values for a target image.
         /// </summary>
-        /// <param name="source">The source <see cref="Vector4"/> buffer to read from</param>
-        /// <param name="target">The target image</param>
+        /// <param name="source">The source <see cref="Vector4"/> buffer to read from.</param>
+        /// <param name="target">The target image.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ApplyInverseGammaExposure(Memory<Vector4> source, Memory<TPixel> target)
         {
@@ -500,7 +500,7 @@ namespace ComputeSharp.BokehBlur.Processors
         }
 
         /// <summary>
-        /// The processor for <see cref="ApplyInverseGammaExposure"/>
+        /// The processor for <see cref="ApplyInverseGammaExposure"/>.
         /// </summary>
         [AutoConstructor]
         private readonly partial struct ApplyInverseGammaExposureProcessor : IRowOperation

@@ -14,13 +14,13 @@ namespace ComputeSharp.Shaders.Renderer
     internal static class HlslShaderRenderer
     {
         /// <summary>
-        /// Renders a new HLSL shader source with the given parameters
+        /// Renders a new HLSL shader source with the given parameters.
         /// </summary>
         /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
         /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
         /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
-        /// <param name="info">The input <see cref="IShaderLoader"/> instance with the shader information</param>
-        /// <returns>The source code for the new HLSL shader</returns>
+        /// <param name="info">The input <see cref="IShaderLoader"/> instance with the shader information.</param>
+        /// <returns>The source code for the new HLSL shader.</returns>
         [Pure]
         public static ArrayPoolStringBuilder Render(int threadsX, int threadsY, int threadsZ, IShaderLoader info)
         {

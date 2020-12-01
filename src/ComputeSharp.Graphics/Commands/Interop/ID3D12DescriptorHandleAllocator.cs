@@ -48,7 +48,7 @@ namespace ComputeSharp.Graphics
         /// <summary>
         /// Creates a new <see cref="ID3D12DescriptorHandleAllocator"/> instance with the specified parameters.
         /// </summary>
-        /// <param name="device">The <see cref="ID3D12Device"/> instance to use</param>
+        /// <param name="device">The <see cref="ID3D12Device"/> instance to use.</param>
         public ID3D12DescriptorHandleAllocator(ID3D12Device* device)
         {
             this.d3D12DescriptorHeap = device->CreateDescriptorHeap(DescriptorsPerHeap);
@@ -65,7 +65,7 @@ namespace ComputeSharp.Graphics
         public ID3D12DescriptorHeap* D3D12DescriptorHeap => this.d3D12DescriptorHeap;
 
         /// <summary>
-        /// Allocates a new CPU and GPU handle pair to use in a memory buffer
+        /// Allocates a new CPU and GPU handle pair to use in a memory buffer.
         /// </summary>
         /// <param name="d3d12CpuDescriptorHandle">The resulting <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value.</param>
         /// <param name="d3d12CpuDescriptorHandle">The resulting <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value.</param>

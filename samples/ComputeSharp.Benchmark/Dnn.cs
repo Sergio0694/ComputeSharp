@@ -4,21 +4,21 @@ using System.Threading.Tasks;
 namespace ComputeSharp.Benchmark
 {
     /// <summary>
-    /// A <see langword="class"/> that contains primitives to run certain operations of a neural network
+    /// A <see langword="class"/> that contains primitives to run certain operations of a neural network.
     /// </summary>
     internal static partial class Dnn
     {
         /// <summary>
-        /// Executes the forward pass on a fully connected layer on the CPU
+        /// Executes the forward pass on a fully connected layer on the CPU.
         /// </summary>
-        /// <param name="c">The number of samples in the input tensor</param>
-        /// <param name="n">The number of rows in the input matrix</param>
-        /// <param name="m">The number of columns in the input matrix</param>
-        /// <param name="p">The number of columns in the output matrix</param>
-        /// <param name="x">The input tensor</param>
-        /// <param name="w">The weights tensor</param>
-        /// <param name="b">The bias tensor</param>
-        /// <param name="y">The result tensor</param>
+        /// <param name="c">The number of samples in the input tensor.</param>
+        /// <param name="n">The number of rows in the input matrix.</param>
+        /// <param name="m">The number of columns in the input matrix.</param>
+        /// <param name="p">The number of columns in the output matrix.</param>
+        /// <param name="x">The input tensor.</param>
+        /// <param name="w">The weights tensor.</param>
+        /// <param name="b">The bias tensor.</param>
+        /// <param name="y">The result tensor.</param>
         public static void FullyConnectedForwardCpu(int c, int n, int m, int p, float[] x, float[] w, float[] b, float[] y)
         {
             void Kernel(int s)
@@ -51,16 +51,16 @@ namespace ComputeSharp.Benchmark
         }
 
         /// <summary>
-        /// Executes the forward pass on a fully connected layer on the GPU
+        /// Executes the forward pass on a fully connected layer on the GPU.
         /// </summary>
-        /// <param name="c">The number of samples in the input tensor</param>
-        /// <param name="n">The number of rows in the input matrix</param>
-        /// <param name="m">The number of columns in the input matrix</param>
-        /// <param name="p">The number of columns in the output matrix</param>
-        /// <param name="x">The input tensor</param>
-        /// <param name="w">The weights tensor</param>
-        /// <param name="b">The bias tensor</param>
-        /// <param name="y">The result tensor</param>
+        /// <param name="c">The number of samples in the input tensor.</param>
+        /// <param name="n">The number of rows in the input matrix.</param>
+        /// <param name="m">The number of columns in the input matrix.</param>
+        /// <param name="p">The number of columns in the output matrix.</param>
+        /// <param name="x">The input tensor.</param>
+        /// <param name="w">The weights tensor.</param>
+        /// <param name="b">The bias tensor.</param>
+        /// <param name="y">The result tensor.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void FullyConnectedForwardGpu(
             int c, int n, int m, int p,
@@ -70,7 +70,7 @@ namespace ComputeSharp.Benchmark
         }
 
         /// <summary>
-        /// Kernel for <see cref="FullyConnectedForwardGpu"/>
+        /// Kernel for <see cref="FullyConnectedForwardGpu"/>.
         /// </summary>
         [AutoConstructor]
         private readonly partial struct FullyConnectedForwardKernel : IComputeShader

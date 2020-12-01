@@ -97,10 +97,10 @@ namespace ComputeSharp.Shaders.Translation
         public IReadOnlyCollection<string> DeclaredTypes => this.declaredTypes;
 
         /// <summary>
-        /// Loads and processes an input<typeparamref name="T"/> shadeer
+        /// Loads and processes an input<typeparamref name="T"/> shadeer.
         /// </summary>
-        /// <param name="shader">The <typeparamref name="T"/> instance to use to build the shader</param>
-        /// <returns>A new <see cref="ShaderLoader"/> instance representing the input shader</returns>
+        /// <param name="shader">The <typeparamref name="T"/> instance to use to build the shader.</param>
+        /// <returns>A new <see cref="ShaderLoader"/> instance representing the input shader.</returns>
         [Pure]
         public static ShaderLoader<T> Load(in T shader)
         {
@@ -119,9 +119,9 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <summary>
-        /// Loads the fields info for the current shader being loaded
+        /// Loads the fields info for the current shader being loaded.
         /// </summary>
-        /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader</param>
+        /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader.</param>
         private void LoadFieldsInfo(object shader)
         {
             IReadOnlyList<FieldInfo> shaderFields = typeof(T).GetFields(
@@ -147,10 +147,10 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <summary>
-        /// Loads a specified <see cref="ReadableMember"/> and adds it to the shader model
+        /// Loads a specified <see cref="ReadableMember"/> and adds it to the shader model.
         /// </summary>
-        /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader</param>
-        /// <param name="memberInfo">The target <see cref="FieldInfo"/> to load</param>
+        /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader.</param>
+        /// <param name="memberInfo">The target <see cref="FieldInfo"/> to load.</param>
         private void LoadFieldInfo(object shader, FieldInfo fieldInfo)
         {
             Type fieldType = fieldInfo.FieldType;

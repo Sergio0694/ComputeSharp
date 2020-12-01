@@ -10,29 +10,29 @@ using ComputeSharp.Shaders.Extensions;
 namespace ComputeSharp.Shaders.Translation
 {
     /// <summary>
-    /// A <see langword="static"/> <see langword="class"/> that handles the cache system for the generated shaders
+    /// A <see langword="static"/> <see langword="class"/> that handles the cache system for the generated shaders.
     /// </summary>
     internal static class ShaderHashCodeProvider
     {
         /// <summary>
-        /// A type containing static info for a given shader type <typeparamref name="T"/>
+        /// A type containing static info for a given shader type <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="T">The type of compute shader currently in use</typeparam>
+        /// <typeparam name="T">The type of compute shader currently in use.</typeparam>
         private static class TypeInfo<T>
             where T : struct, IComputeShader
         {
             /// <summary>
-            /// The id of the compute shader type in use
+            /// The id of the compute shader type in use.
             /// </summary>
             public static readonly int Id;
 
             /// <summary>
-            /// The optional <see cref="Hasher{T}"/> instance, if needed
+            /// The optional <see cref="Hasher{T}"/> instance, if needed.
             /// </summary>
             public static readonly Hasher<T>? Hasher;
 
             /// <summary>
-            /// Initializes the static members of the <see cref="TypeInfo{T}"/> type
+            /// Initializes the static members of the <see cref="TypeInfo{T}"/> type.
             /// </summary>
             static TypeInfo()
             {
@@ -53,10 +53,10 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <summary>
-        /// Gets a unique hashcode for the input compute shader instance
+        /// Gets a unique hashcode for the input compute shader instance.
         /// </summary>
-        /// <typeparam name="T">The type of compute shader currently in use</typeparam>
-        /// <param name="shader">The input <typeparamref name="T"/> instance representing the shader to run</param>
+        /// <typeparam name="T">The type of compute shader currently in use.</typeparam>
+        /// <param name="shader">The input <typeparamref name="T"/> instance representing the shader to run.</param>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetHashCode<T>(in T shader)
@@ -72,20 +72,20 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <summary>
-        /// A <see langword="delegate"/> that represents an aggregate hash function for a given <typeparamref name="T"/> instance
+        /// A <see langword="delegate"/> that represents an aggregate hash function for a given <typeparamref name="T"/> instance.
         /// </summary>
-        /// <typeparam name="T">The type of compute shader currently in use</typeparam>
-        /// <param name="hash">The initial hash value</param>
-        /// <param name="shader">The compute shader instance to use to compute the final hash value</param>
-        /// <returns>The final hash value for the input closure</returns>
+        /// <typeparam name="T">The type of compute shader currently in use.</typeparam>
+        /// <param name="hash">The initial hash value.</param>
+        /// <param name="shader">The compute shader instance to use to compute the final hash value.</param>
+        /// <returns>The final hash value for the input closure.</returns>
         private delegate int Hasher<T>(int hash, in T shader)
             where T : struct, IComputeShader;
 
         /// <summary>
-        /// Builds a new <see cref="Hasher{T}"/> instance for the target <see cref="Type"/> and sequence of <see cref="FieldInfo"/> values
+        /// Builds a new <see cref="Hasher{T}"/> instance for the target <see cref="Type"/> and sequence of <see cref="FieldInfo"/> values.
         /// </summary>
-        /// <typeparam name="T">The type of compute shader currently in use</typeparam>
-        /// <param name="fieldInfos">The list of captured fields to inspect</param>
+        /// <typeparam name="T">The type of compute shader currently in use.</typeparam>
+        /// <param name="fieldInfos">The list of captured fields to inspect.</param>
         [Pure]
         private static Hasher<T> BuildDynamicHasher<T>(IReadOnlyCollection<FieldInfo> fieldInfos)
             where T : struct, IComputeShader

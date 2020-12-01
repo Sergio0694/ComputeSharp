@@ -39,7 +39,7 @@ namespace ComputeSharp.Sample
         }
 
         /// <summary>
-        /// Kernel for <see cref="Main"/>
+        /// Kernel for <see cref="Main"/>.
         /// </summary>
         [AutoConstructor]
         private readonly partial struct MainKernel : IComputeShader
@@ -54,11 +54,11 @@ namespace ComputeSharp.Sample
         }
 
         /// <summary>
-        /// Prints a matrix in a properly formatted way
+        /// Prints a matrix in a properly formatted way.
         /// </summary>
-        /// <param name="array">The input <see langword="float"/> array representing the matrix to print</param>
-        /// <param name="width">The width of the array to print</param>
-        /// <param name="height">The height of the array to print</param>
+        /// <param name="array">The input <see langword="float"/> array representing the matrix to print.</param>
+        /// <param name="width">The width of the array to print.</param>
+        /// <param name="height">The height of the array to print.</param>
         private static void PrintMatrix(float[] array, int width, int height)
         {
             int length = width * height;

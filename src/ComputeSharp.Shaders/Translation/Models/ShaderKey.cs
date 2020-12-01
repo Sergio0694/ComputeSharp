@@ -4,37 +4,37 @@ using System.Runtime.CompilerServices;
 namespace ComputeSharp.Shaders.Translation.Models
 {
     /// <summary>
-    /// A <see langword="struct"/> representing a key for a given shader
+    /// A <see langword="struct"/> representing a key for a given shader.
     /// </summary>
     internal readonly struct ShaderKey : IEquatable<ShaderKey>
     {
         /// <summary>
-        /// The hashcode of the current shader type
+        /// The hashcode of the current shader type.
         /// </summary>
         private readonly int Id;
 
         /// <summary>
-        /// The number of iterations to run on the X axis
+        /// The number of iterations to run on the X axis.
         /// </summary>
         private readonly int ThreadsX;
 
         /// <summary>
-        /// The number of iterations to run on the Y axis
+        /// The number of iterations to run on the Y axis.
         /// </summary>
         private readonly int ThreadsY;
 
         /// <summary>
-        /// The number of iterations to run on the Z axis
+        /// The number of iterations to run on the Z axis.
         /// </summary>
         private readonly int ThreadsZ;
 
         /// <summary>
-        /// Creates a new <see cref="ShaderKey"/> instance with the specified parameters
+        /// Creates a new <see cref="ShaderKey"/> instance with the specified parameters.
         /// </summary>
-        /// <param name="id">The hashcode of the current shader type</param>
-        /// <param name="threadsX">The number of iterations to run on the X axis</param>
-        /// <param name="threadsY">The number of iterations to run on the Y axis</param>
-        /// <param name="threadsZ">The number of iterations to run on the Z axis</param>
+        /// <param name="id">The hashcode of the current shader type.</param>
+        /// <param name="threadsX">The number of iterations to run on the X axis.</param>
+        /// <param name="threadsY">The number of iterations to run on the Y axis.</param>
+        /// <param name="threadsZ">The number of iterations to run on the Z axis.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ShaderKey(int id, int threadsX, int threadsY, int threadsZ)
         {

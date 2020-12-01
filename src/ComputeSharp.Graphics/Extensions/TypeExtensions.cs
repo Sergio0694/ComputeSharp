@@ -6,12 +6,12 @@ using System.Linq;
 namespace ComputeSharp.Graphics.Extensions
 {
     /// <summary>
-    /// A <see langword="class"/> that provides extension methods for the <see cref="Type"/> type
+    /// A <see langword="class"/> that provides extension methods for the <see cref="Type"/> type.
     /// </summary>
     internal static class TypeExtensions
     {
         /// <summary>
-        /// The mapping of supported known types to display string
+        /// The mapping of supported known types to display string.
         /// </summary>
         private static readonly IReadOnlyDictionary<Type, string> KnownTypes = new Dictionary<Type, string>
         {
@@ -23,9 +23,9 @@ namespace ComputeSharp.Graphics.Extensions
         };
 
         /// <summary>
-        /// Gets a friendly display <see langword="string"/> for the input type
+        /// Gets a friendly display <see langword="string"/> for the input type.
         /// </summary>
-        /// <param name="type">The input type to analyze</param>
+        /// <param name="type">The input type to analyze.</param>
         [Pure]
         public static string ToFriendlyString(this Type type)
         {

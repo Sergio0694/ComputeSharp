@@ -18,7 +18,7 @@ namespace System.Numerics
         public static Span<Float2> AsFloat2Span(this Vector2[] array) => Cast<Vector2, Float2>(array);
 
         /// <summary>
-        /// Converts a <see cref="Vector2"/> <see cref="ReadOnlySpan{T}"/> into a <see cref="ReadOnlySpan{T}"/> with items of type <see cref="Float2"/>
+        /// Converts a <see cref="Vector2"/> <see cref="ReadOnlySpan{T}"/> into a <see cref="ReadOnlySpan{T}"/> with items of type <see cref="Float2"/>.
         /// </summary>
         /// <param name="span">The input <see cref="Vector2"/> <see cref="ReadOnlySpan{T}"/>.</param>
         /// <returns>A <see cref="Span{T}"/> with items of type <see cref="Float2"/>, mapping the original <see cref="ReadOnlySpan{T}"/>.</returns>

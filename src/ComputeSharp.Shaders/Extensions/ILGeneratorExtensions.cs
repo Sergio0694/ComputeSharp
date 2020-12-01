@@ -8,15 +8,15 @@ using Microsoft.Toolkit.Diagnostics;
 namespace ComputeSharp.Shaders.Extensions
 {
     /// <summary>
-    /// A <see langword="class"/> that provides extension methods for the <see langword="ILGenerator"/> type
+    /// A <see langword="class"/> that provides extension methods for the <see langword="ILGenerator"/> type.
     /// </summary>
     internal static class ILGeneratorExtensions
     {
         /// <summary>
-        /// Puts the appropriate <see langword="ldsfld"/>, <see langword="ldfld"/>, <see langword="call"/> or <see langword="callvirt"/> instruction to read a member onte the stream of instructions
+        /// Puts the appropriate <see langword="ldsfld"/>, <see langword="ldfld"/>, <see langword="call"/> or <see langword="callvirt"/> instruction to read a member onte the stream of instructions.
         /// </summary>
-        /// <param name="il">The input <see cref="ILGenerator"/> instance to use to emit instructions</param>
-        /// <param name="member">The member to read</param>
+        /// <param name="il">The input <see cref="ILGenerator"/> instance to use to emit instructions.</param>
+        /// <param name="member">The member to read.</param>
         public static void EmitReadMember(this ILGenerator il, MemberInfo member)
         {
             switch (member)
@@ -32,18 +32,18 @@ namespace ComputeSharp.Shaders.Extensions
         }
 
         /// <summary>
-        /// Puts the appropriate <see langword="ldc.i4"/>, <see langword="conv.i"/> and <see langword="add"/> instructions to advance a reference onto the stream of instructions
+        /// Puts the appropriate <see langword="ldc.i4"/>, <see langword="conv.i"/> and <see langword="add"/> instructions to advance a reference onto the stream of instructions.
         /// </summary>
-        /// <typeparam name="T">The type of reference at the top of the stack</typeparam>
-        /// <param name="il">The input <see cref="ILGenerator"/> instance to use to emit instructions</param>
-        /// <param name="offset">The offset to use to advance the current reference on top of the execution stack</param>
+        /// <typeparam name="T">The type of reference at the top of the stack.</typeparam>
+        /// <param name="il">The input <see cref="ILGenerator"/> instance to use to emit instructions.</param>
+        /// <param name="offset">The offset to use to advance the current reference on top of the execution stack.</param>
         public static void EmitAddOffset<T>(this ILGenerator il, int offset) => il.EmitAddOffset(Unsafe.SizeOf<T>() * offset);
 
         /// <summary>
-        /// Puts the appropriate <see langword="ldc.i4"/>, <see langword="conv.i"/> and <see langword="add"/> instructions to advance a reference onto the stream of instructions
+        /// Puts the appropriate <see langword="ldc.i4"/>, <see langword="conv.i"/> and <see langword="add"/> instructions to advance a reference onto the stream of instructions.
         /// </summary>
-        /// <param name="il">The input <see cref="ILGenerator"/> instance to use to emit instructions</param>
-        /// <param name="offset">The offset in bytes to use to advance the current reference on top of the execution stack</param>
+        /// <param name="il">The input <see cref="ILGenerator"/> instance to use to emit instructions.</param>
+        /// <param name="offset">The offset in bytes to use to advance the current reference on top of the execution stack.</param>
         public static void EmitAddOffset(this ILGenerator il, int offset)
         {
             // Push the offset to the stack
@@ -74,10 +74,10 @@ namespace ComputeSharp.Shaders.Extensions
         }
 
         /// <summary>
-        /// Puts the appropriate <see langword="stind"/> or <see langword="stobj"/> instruction to write to a reference onto the stream of instructions
+        /// Puts the appropriate <see langword="stind"/> or <see langword="stobj"/> instruction to write to a reference onto the stream of instructions.
         /// </summary>
-        /// <param name="il">The input <see cref="ILGenerator"/> instance to use to emit instructions</param>
-        /// <param name="type">The type of value being written to the current reference on top of the execution stack</param>
+        /// <param name="il">The input <see cref="ILGenerator"/> instance to use to emit instructions.</param>
+        /// <param name="type">The type of value being written to the current reference on top of the execution stack.</param>
         public static void EmitStoreToAddress(this ILGenerator il, Type type)
         {
             if (type.IsValueType)
