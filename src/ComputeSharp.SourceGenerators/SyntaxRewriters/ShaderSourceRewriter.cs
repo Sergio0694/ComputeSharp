@@ -162,7 +162,8 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             return
                 ((MethodDeclarationSyntax)base.VisitMethodDeclaration(node)!)
                 .WithBlockBody()
-                .WithoutAccessibilityModifiers();
+                .WithoutAccessibilityModifiers()
+                .WithAttributeLists(List<AttributeListSyntax>());
         }
 
         /// <inheritdoc/>
@@ -171,6 +172,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             var updatedNode =
                 ((LocalFunctionStatementSyntax)base.VisitLocalFunctionStatement(node)!)
                 .WithBlockBody()
+                .WithAttributeLists(List<AttributeListSyntax>())
                 .WithIdentifier(Identifier($"__{this.currentMethod!.Identifier.Text}__{node.Identifier.Text}"));
 
             // HLSL doesn't support local functions, so we first process them as usual and then remove
