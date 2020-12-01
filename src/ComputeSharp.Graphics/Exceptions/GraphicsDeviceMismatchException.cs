@@ -7,7 +7,7 @@ using ComputeSharp.Graphics.Buffers.Abstract;
 namespace ComputeSharp.Exceptions
 {
     /// <summary>
-    /// A custom <see cref="Exception"/> that indicates when mismatched devices are being used.
+    /// A custom <see cref="InvalidOperationException"/> that indicates when mismatched devices are being used.
     /// </summary>
     public sealed class GraphicsDeviceMismatchException : InvalidOperationException
     {
@@ -28,7 +28,7 @@ namespace ComputeSharp.Exceptions
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance that was used.</param>
         /// <returns>A new <see cref="GraphicsDeviceMismatchException"/> instance with a formatted error message.</returns>
         [Pure]
-        public static GraphicsDeviceMismatchException Create<T>(Buffer<T> buffer, GraphicsDevice device)
+        private static GraphicsDeviceMismatchException Create<T>(Buffer<T> buffer, GraphicsDevice device)
             where T : unmanaged
         {
             StringBuilder builder = new(512);
@@ -40,6 +40,19 @@ namespace ComputeSharp.Exceptions
             builder.ToString();
 
             return new(builder.ToString());
+        }
+
+        /// <summary>
+        /// Throws a new <see cref="GraphicsDeviceMismatchException"/> instance from the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of values in the input buffer.</typeparam>
+        /// <param name="buffer">The input <see cref="Buffer{T}"/> that was used.</param>
+        /// <param name="device">The target <see cref="GraphicsDevice"/> instance that was used.</param>
+        [Pure]
+        internal static void Throw<T>(Buffer<T> buffer, GraphicsDevice device)
+            where T : unmanaged
+        {
+            throw Create(buffer, device);
         }
     }
 }

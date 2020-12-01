@@ -279,9 +279,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         {
             if (GraphicsDevice != device)
             {
-                void Throw() => throw GraphicsDeviceMismatchException.Create(this, device);
-
-                Throw();
+                GraphicsDeviceMismatchException.Throw(this, device);
             }
         }
     }
