@@ -111,6 +111,10 @@ namespace ComputeSharp.SourceGenerators
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
                 INamedTypeSymbol typeSymbol = (INamedTypeSymbol)fieldSymbol.Type;
+
+                // Delegate types are not included and are processed separately
+                if (typeSymbol.TypeKind == TypeKind.Delegate) continue;
+
                 string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
 
                 _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
