@@ -18,6 +18,11 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
     internal sealed class ShaderSourceRewriter : CSharpSyntaxRewriter
     {
         /// <summary>
+        /// The type symbol for the shader type.
+        /// </summary>
+        private readonly INamedTypeSymbol? shaderType;
+
+        /// <summary>
         /// The <see cref="SemanticModel"/> instance with semantic info on the target syntax tree.
         /// </summary>
         private readonly SemanticModel semanticModel;
@@ -41,6 +46,26 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// The current <see cref="MethodDeclarationSyntax"/> tree being visited.
         /// </summary>
         private MethodDeclarationSyntax? currentMethod;
+
+        /// <summary>
+        /// Creates a new <see cref="ShaderSourceRewriter"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="shaderType">The type symbol for the shader type.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the target syntax tree.</param>
+        /// <param name="discoveredTypes">The set of discovered custom types.</param>
+        /// <param name="staticMethods">The set of discovered and processed static methods.</param>
+        public ShaderSourceRewriter(
+            INamedTypeSymbol shaderType,
+            SemanticModel semanticModel,
+            ICollection<INamedTypeSymbol> discoveredTypes,
+            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods)
+        {
+            this.shaderType = shaderType;
+            this.semanticModel = semanticModel;
+            this.discoveredTypes = discoveredTypes;
+            this.staticMethods = staticMethods;
+            this.localFunctions = new();
+        }
 
         /// <summary>
         /// Creates a new <see cref="ShaderSourceRewriter"/> instance with the specified parameters.
@@ -264,19 +289,24 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
                 // If the method is an external static method, import and rewrite it as well.
                 // This assumes that the target method is actually part of the same compilation.
-                var methodIdentifier = method.GetFullMetadataName().Replace(".", "__");
-
-                if (!this.staticMethods.ContainsKey(method))
+                // We need to check the declaring type to avoid rewriting static methods in the shader
+                // type as well, as they will be processed by the generator in a different path.
+                if (!SymbolEqualityComparer.Default.Equals(this.shaderType, method.ContainingType))
                 {
-                    ShaderSourceRewriter shaderSourceRewriter = new(this.semanticModel, this.discoveredTypes, this.staticMethods);
-                    MethodDeclarationSyntax
-                        methodNode = (MethodDeclarationSyntax)method.DeclaringSyntaxReferences[0].GetSyntax(),
-                        processedMethod = shaderSourceRewriter.Visit(methodNode)!.NormalizeWhitespace().WithoutTrivia();
+                    var methodIdentifier = method.GetFullMetadataName().Replace(".", "__");
 
-                    this.staticMethods.Add(method, processedMethod.WithIdentifier(Identifier(methodIdentifier)));
+                    if (!this.staticMethods.ContainsKey(method))
+                    {
+                        ShaderSourceRewriter shaderSourceRewriter = new(this.semanticModel, this.discoveredTypes, this.staticMethods);
+                        MethodDeclarationSyntax
+                            methodNode = (MethodDeclarationSyntax)method.DeclaringSyntaxReferences[0].GetSyntax(),
+                            processedMethod = shaderSourceRewriter.Visit(methodNode)!.NormalizeWhitespace().WithoutTrivia();
+
+                        this.staticMethods.Add(method, processedMethod.WithIdentifier(Identifier(methodIdentifier)));
+                    }
+
+                    return updatedNode.WithExpression(ParseExpression(methodIdentifier));
                 }
-
-                return updatedNode.WithExpression(ParseExpression(methodIdentifier));
             }
 
             return updatedNode;

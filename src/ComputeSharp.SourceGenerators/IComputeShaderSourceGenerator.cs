@@ -75,7 +75,7 @@ namespace ComputeSharp.SourceGenerators
 
                 // Explore the syntax tree and extract the processed info
                 var processedMembers = GetProcessedMembers(structDeclarationSymbol, discoveredTypes).ToArray();
-                var (entryPoint, localFunctions) = GetProcessedMethods(structDeclaration, semanticModel, discoveredTypes, staticMethods);
+                var (entryPoint, localFunctions) = GetProcessedMethods(structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods);
                 var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
                 var processedMethods = localFunctions.Concat(staticMethods.Values.Select(static method => method.ToFullString())).ToArray();
 
@@ -130,6 +130,7 @@ namespace ComputeSharp.SourceGenerators
         /// <summary>
         /// Gets a sequence of processed methods declared within a given type.
         /// </summary>
+        /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> instance for the current type.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the type to process.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
@@ -138,6 +139,7 @@ namespace ComputeSharp.SourceGenerators
         [Pure]
         private static (string EntryPoint, IEnumerable<string> Methods) GetProcessedMethods(
             StructDeclarationSyntax structDeclaration,
+            INamedTypeSymbol structDeclarationSymbol,
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods)
@@ -154,7 +156,7 @@ namespace ComputeSharp.SourceGenerators
             foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
             {
                 IMethodSymbol methodDeclarationSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration)!;
-                ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, discoveredTypes, staticMethods);
+                ShaderSourceRewriter shaderSourceRewriter = new(structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods);
 
                 // Rewrite the method syntax tree
                 var processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();
