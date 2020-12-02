@@ -348,7 +348,21 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             var updatedNode = (ArgumentSyntax)base.VisitArgument(node)!;
 
             // Strip the ref keywords from arguments
-            return updatedNode.WithRefKindKeyword(Token(SyntaxKind.None));
+            updatedNode = updatedNode.WithRefKindKeyword(Token(SyntaxKind.None));
+
+            // Track and rewrite the discarded declaration
+            if (this.semanticModel.GetOperation(node.Expression) is IDiscardOperation operation)
+            {
+                TypeSyntax typeSyntax = operation.Type.TrackType(this.discoveredTypes);
+                string identifier = $"__implicit{this.implicitVariables.Count}";
+
+                // Add the variable to the list of implicit declarations
+                this.implicitVariables.Add(VariableDeclaration(typeSyntax).AddVariables(VariableDeclarator(identifier)));
+
+                return updatedNode.WithExpression(IdentifierName(identifier));
+            }
+
+            return updatedNode;
         }
 
         /// <inheritdoc/>

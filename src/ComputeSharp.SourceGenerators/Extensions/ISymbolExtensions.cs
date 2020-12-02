@@ -1,7 +1,11 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
+using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace ComputeSharp.SourceGenerators.Extensions
 {
@@ -94,6 +98,27 @@ namespace ComputeSharp.SourceGenerators.Extensions
                 fixedName = metadataName.Replace('`', '-').Replace('+', '.');
 
             return $"[{nameof(ComputeSharp)}]_[{typeof(TGenerator).Name}]_[{fixedName}]";
+        }
+
+        /// <summary>
+        /// Tracks an <see cref="ITypeSymbol"/> instance and returns an HLSL compatible <see cref="TypeSyntax"/> object.
+        /// </summary>
+        /// <param name="typeSymbol">The input <see cref="ITypeSymbol"/> instance to process.</param>
+        /// <param name="discoveredTypes">The collection of currently discovered types.</param>
+        /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
+        [Pure]
+        public static TypeSyntax TrackType(this ITypeSymbol typeSymbol, ICollection<INamedTypeSymbol> discoveredTypes)
+        {
+            string typeName = typeSymbol.ToDisplayString(SyntaxNodeExtensions.FullyQualifiedWithoutGlobalFormat);
+
+            discoveredTypes.Add((INamedTypeSymbol)typeSymbol);
+
+            if (HlslKnownTypes.TryGetMappedName(typeName, out string? mappedName))
+            {
+                return ParseTypeName(mappedName!);
+            }
+
+            return ParseTypeName(typeName.Replace(".", "__"));
         }
     }
 }

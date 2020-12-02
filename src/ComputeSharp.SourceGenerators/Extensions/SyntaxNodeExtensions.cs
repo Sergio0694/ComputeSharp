@@ -17,7 +17,7 @@ namespace ComputeSharp.SourceGenerators.Extensions
         /// <summary>
         /// A custom <see cref="SymbolDisplayFormat"/> instance with fully qualified style, without global::.
         /// </summary>
-        private static readonly SymbolDisplayFormat FullyQualifiedWithoutGlobalFormat = new(
+        internal static readonly SymbolDisplayFormat FullyQualifiedWithoutGlobalFormat = new(
                 globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
                 typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
                 genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
