@@ -110,14 +110,14 @@ namespace ComputeSharp.Graphics.Extensions
             (D3D12_HEAP_TYPE d3D12HeapType,
              D3D12_RESOURCE_FLAGS d3D12ResourceFlags,
              D3D12_RESOURCE_STATES d3D12ResourceStates) = resourceType switch
-             {
+            {
                  ResourceType.Constant => (D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ),
                  ResourceType.ReadOnly => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
                  ResourceType.ReadWrite => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COMMON),
                  ResourceType.ReadBack => (D3D12_HEAP_TYPE_READBACK, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COPY_DEST),
                  ResourceType.Upload => (D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ),
                  _ => ThrowHelper.ThrowArgumentException<(D3D12_HEAP_TYPE, D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
-             };
+            };
 
             using ComPtr<ID3D12Resource> d3D12Resource = default;
 
@@ -157,17 +157,21 @@ namespace ComputeSharp.Graphics.Extensions
             uint width,
             uint height)
         {
-            D3D12_RESOURCE_FLAGS d3D12ResourceFlags = resourceType switch
+            (D3D12_HEAP_TYPE d3D12HeapType,
+             D3D12_RESOURCE_FLAGS d3D12ResourceFlags,
+             D3D12_RESOURCE_STATES d3D12ResourceStates) = resourceType switch
             {
-                ResourceType.ReadOnly => D3D12_RESOURCE_FLAG_NONE,
-                ResourceType.ReadWrite => D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
-                _ => ThrowHelper.ThrowArgumentException<D3D12_RESOURCE_FLAGS>()
+                ResourceType.ReadOnly => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
+                ResourceType.ReadWrite => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COMMON),
+                ResourceType.ReadBack => (D3D12_HEAP_TYPE_READBACK, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COPY_DEST),
+                ResourceType.Upload => (D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ),
+                _ => ThrowHelper.ThrowArgumentException<(D3D12_HEAP_TYPE, D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
             };
 
             using ComPtr<ID3D12Resource> d3D12Resource = default;
 
             D3D12_HEAP_PROPERTIES d3D12HeapProperties;
-            d3D12HeapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+            d3D12HeapProperties.Type = d3D12HeapType;
             d3D12HeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
             d3D12HeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
             d3D12HeapProperties.CreationNodeMask = 1;
@@ -178,7 +182,7 @@ namespace ComputeSharp.Graphics.Extensions
                 &d3D12HeapProperties,
                 D3D12_HEAP_FLAG_NONE,
                 &d3D12ResourceDescription,
-                D3D12_RESOURCE_STATE_COMMON,
+                d3D12ResourceStates,
                 null,
                 FX.__uuidof<ID3D12Resource>(),
                 d3D12Resource.GetVoidAddressOf()).Assert();
