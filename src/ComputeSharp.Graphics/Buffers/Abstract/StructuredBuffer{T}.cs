@@ -23,9 +23,9 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
         /// <param name="length">The number of items to store in the current buffer.</param>
-        /// <param name="bufferType">The buffer type for the current buffer.</param>
-        private protected StructuredBuffer(GraphicsDevice device, int length, BufferType bufferType)
-            : base(device, length, (uint)Unsafe.SizeOf<T>(), bufferType)
+        /// <param name="resourceType">The buffer type for the current buffer.</param>
+        private protected StructuredBuffer(GraphicsDevice device, int length, ResourceType resourceType)
+            : base(device, length, (uint)Unsafe.SizeOf<T>(), resourceType)
         {
         }
 
@@ -43,7 +43,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 byteOffset = (nint)offset * ElementSizeInBytes,
                 byteSize = (nint)destination.Length * ElementSizeInBytes;
 
-            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(BufferType.ReadBack, (ulong)byteSize);
+            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, (ulong)byteSize);
 
             using (CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY))
             {
@@ -70,7 +70,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 byteOffset = (nint)offset * ElementSizeInBytes,
                 byteSize = (nint)source.Length * ElementSizeInBytes;
 
-            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(BufferType.Upload, (ulong)byteSize);
+            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, (ulong)byteSize);
 
             using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
             {

@@ -21,7 +21,7 @@ namespace ComputeSharp
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         internal ReadWriteTexture2D(GraphicsDevice device, int width, int height)
-            : base(device, width, height, TextureType.ReadWrite)
+            : base(device, width, height, ResourceType.ReadWrite)
         {
         }
 

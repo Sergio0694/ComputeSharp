@@ -34,8 +34,8 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="device">The <see cref="Graphics.GraphicsDevice"/> associated with the current instance.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="width">The width of the texture.</param>
-        /// <param name="textureType">The texture type for the current texture.</param>
-        private protected Texture2D(GraphicsDevice device, int width, int height, TextureType textureType)
+        /// <param name="resourceType">The resource type for the current texture.</param>
+        private protected Texture2D(GraphicsDevice device, int width, int height, ResourceType resourceType)
         {
             device.ThrowIfDisposed();
 
@@ -46,16 +46,16 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             Width = width;
             Height = height;
 
-            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(textureType, DXGIFormatHelper.GetForType<T>(), (uint)width, (uint)height);
+            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, DXGIFormatHelper.GetForType<T>(), (uint)width, (uint)height);
 
             device.AllocateShaderResourceViewDescriptorHandles(out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 
-            switch (textureType)
+            switch (resourceType)
             {
-                case TextureType.ReadOnly:
+                case ResourceType.ReadOnly:
                     device.D3D12Device->CreateShaderResourceView(this.d3D12Resource, DXGIFormatHelper.GetForType<T>(), d3D12CpuDescriptorHandle);
                     break;
-                case TextureType.ReadWrite:
+                case ResourceType.ReadWrite:
                     device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource, DXGIFormatHelper.GetForType<T>(), d3D12CpuDescriptorHandle);
                     break;
             }

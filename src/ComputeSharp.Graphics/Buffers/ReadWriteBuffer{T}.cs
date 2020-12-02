@@ -22,7 +22,7 @@ namespace ComputeSharp
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
         /// <param name="length">The number of items to store in the current buffer.</param>
         internal ReadWriteBuffer(GraphicsDevice device, int length)
-            : base(device, length, BufferType.ReadWrite)
+            : base(device, length, ResourceType.ReadWrite)
         {
         }
 

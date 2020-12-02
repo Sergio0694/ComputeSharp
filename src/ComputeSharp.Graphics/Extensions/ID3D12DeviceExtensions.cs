@@ -99,23 +99,23 @@ namespace ComputeSharp.Graphics.Extensions
         /// Creates a committed resource for a given buffer type.
         /// </summary>
         /// <param name="d3D12Device">The <see cref="ID3D12Device"/> instance in use.</param>
-        /// <param name="bufferType">The buffer type currently in use.</param>
+        /// <param name="resourceType">The resource type currently in use.</param>
         /// <param name="sizeInBytes">The size in bytes of the current buffer.</param>
         /// <returns>An <see cref="ID3D12Resource"/> reference for the current buffer.</returns>
         public static ComPtr<ID3D12Resource> CreateCommittedResource(
             this ref ID3D12Device d3D12Device,
-            BufferType bufferType,
+            ResourceType resourceType,
             ulong sizeInBytes)
         {
             (D3D12_HEAP_TYPE d3D12HeapType,
              D3D12_RESOURCE_FLAGS d3D12ResourceFlags,
-             D3D12_RESOURCE_STATES d3D12ResourceStates) = bufferType switch
+             D3D12_RESOURCE_STATES d3D12ResourceStates) = resourceType switch
              {
-                 BufferType.Constant => (D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ),
-                 BufferType.ReadOnly => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
-                 BufferType.ReadWrite => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COMMON),
-                 BufferType.ReadBack => (D3D12_HEAP_TYPE_READBACK, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COPY_DEST),
-                 BufferType.Upload => (D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ),
+                 ResourceType.Constant => (D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ),
+                 ResourceType.ReadOnly => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
+                 ResourceType.ReadWrite => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COMMON),
+                 ResourceType.ReadBack => (D3D12_HEAP_TYPE_READBACK, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COPY_DEST),
+                 ResourceType.Upload => (D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ),
                  _ => ThrowHelper.ThrowArgumentException<(D3D12_HEAP_TYPE, D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
              };
 
@@ -145,22 +145,22 @@ namespace ComputeSharp.Graphics.Extensions
         /// Creates a committed resource for a given 2D texture type.
         /// </summary>
         /// <param name="d3D12Device">The <see cref="ID3D12Device"/> instance in use.</param>
-        /// <param name="textureType">The texture type currently in use.</param>
+        /// <param name="resourceType">The resource type currently in use.</param>
         /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
         /// <param name="width">The width of the texture resource.</param>
         /// <param name="height">The height of the texture resource.</param>
         /// <returns>An <see cref="ID3D12Resource"/> reference for the current texture.</returns>
         public static ComPtr<ID3D12Resource> CreateCommittedResource(
             this ref ID3D12Device d3D12Device,
-            TextureType textureType,
+            ResourceType resourceType,
             DXGI_FORMAT dxgiFormat,
             uint width,
             uint height)
         {
-            D3D12_RESOURCE_FLAGS d3D12ResourceFlags = textureType switch
+            D3D12_RESOURCE_FLAGS d3D12ResourceFlags = resourceType switch
             {
-                TextureType.ReadOnly => D3D12_RESOURCE_FLAG_NONE,
-                TextureType.ReadWrite => D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
+                ResourceType.ReadOnly => D3D12_RESOURCE_FLAG_NONE,
+                ResourceType.ReadWrite => D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
                 _ => ThrowHelper.ThrowArgumentException<D3D12_RESOURCE_FLAGS>()
             };
 

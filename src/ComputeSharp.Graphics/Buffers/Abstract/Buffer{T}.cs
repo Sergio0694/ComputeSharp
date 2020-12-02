@@ -39,8 +39,8 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
         /// <param name="length">The number of items to store in the current buffer.</param>
         /// <param name="elementSizeInBytes">The size in bytes of each buffer item (including padding, if any).</param>
-        /// <param name="bufferType">The buffer type for the current buffer.</param>
-        private protected Buffer(GraphicsDevice device, int length, uint elementSizeInBytes, BufferType bufferType)
+        /// <param name="resourceType">The resource type for the current buffer.</param>
+        private protected Buffer(GraphicsDevice device, int length, uint elementSizeInBytes, ResourceType resourceType)
         {
             device.ThrowIfDisposed();
 
@@ -50,19 +50,19 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             GraphicsDevice = device;
             Length = length;
 
-            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(bufferType, (ulong)SizeInBytes);
+            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, (ulong)SizeInBytes);
 
             device.AllocateShaderResourceViewDescriptorHandles(out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 
-            switch (bufferType)
+            switch (resourceType)
             {
-                case BufferType.Constant:
+                case ResourceType.Constant:
                     device.D3D12Device->CreateConstantBufferView(this.d3D12Resource, SizeInBytes, d3D12CpuDescriptorHandle);
                     break;
-                case BufferType.ReadOnly:
+                case ResourceType.ReadOnly:
                     device.D3D12Device->CreateShaderResourceView(this.d3D12Resource, (uint)length, elementSizeInBytes, d3D12CpuDescriptorHandle);
                     break;
-                case BufferType.ReadWrite:
+                case ResourceType.ReadWrite:
                     device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource, (uint)length, elementSizeInBytes, d3D12CpuDescriptorHandle);
                     break;
             }
