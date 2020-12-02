@@ -8,9 +8,6 @@ using ComputeSharp.Graphics.Buffers.Enums;
 using ComputeSharp.Graphics.Extensions;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
-using static TerraFX.Interop.D3D12_SRV_DIMENSION;
-using static TerraFX.Interop.D3D12_UAV_DIMENSION;
-using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Graphics.Buffers.Abstract
 {
@@ -55,13 +52,19 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             this.d3D12Resource = device.D3D12Device->CreateCommittedResource(bufferType, (ulong)SizeInBytes);
 
-            GraphicsDevice.AllocateShaderResourceViewDescriptorHandles(out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
+            device.AllocateShaderResourceViewDescriptorHandles(out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 
             switch (bufferType)
             {
-                case BufferType.Constant: CreateConstantBufferView(d3D12CpuDescriptorHandle); break;
-                case BufferType.ReadOnly: CreateShaderResourceView(d3D12CpuDescriptorHandle); break;
-                case BufferType.ReadWrite: CreateUnorderedAccessView(d3D12CpuDescriptorHandle); break;
+                case BufferType.Constant:
+                    device.D3D12Device->CreateConstantBufferView(this.d3D12Resource, SizeInBytes, d3D12CpuDescriptorHandle);
+                    break;
+                case BufferType.ReadOnly:
+                    device.D3D12Device->CreateShaderResourceView(this.d3D12Resource, (uint)length, elementSizeInBytes, d3D12CpuDescriptorHandle);
+                    break;
+                case BufferType.ReadWrite:
+                    device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource, (uint)length, elementSizeInBytes, d3D12CpuDescriptorHandle);
+                    break;
             }
         }
 
@@ -219,50 +222,6 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             {
                 ArrayPool<T>.Shared.Return(array);
             }
-        }
-
-        /// <summary>
-        /// Creates a view for a constant buffer.
-        /// </summary>
-        /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
-        private void CreateConstantBufferView(D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
-        {
-            uint constantBufferSize = checked((uint)((SizeInBytes + 255) & ~255));
-
-            D3D12_CONSTANT_BUFFER_VIEW_DESC d3D12ConstantBufferViewDescription;
-            d3D12ConstantBufferViewDescription.BufferLocation = D3D12Resource->GetGPUVirtualAddress();
-            d3D12ConstantBufferViewDescription.SizeInBytes = constantBufferSize;
-
-            GraphicsDevice.D3D12Device->CreateConstantBufferView(&d3D12ConstantBufferViewDescription, d3D12CpuDescriptorHandle);
-        }
-
-        /// <summary>
-        /// Creates a view for a readonly buffer.
-        /// </summary>
-        /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
-        private void CreateShaderResourceView(D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
-        {
-            D3D12_SHADER_RESOURCE_VIEW_DESC d3D12ShaderResourceViewDescription = default;
-            d3D12ShaderResourceViewDescription.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-            d3D12ShaderResourceViewDescription.Shader4ComponentMapping = FX.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-            d3D12ShaderResourceViewDescription.Buffer.NumElements = (uint)Length;
-            d3D12ShaderResourceViewDescription.Buffer.StructureByteStride = (uint)ElementSizeInBytes;
-
-            GraphicsDevice.D3D12Device->CreateShaderResourceView(D3D12Resource, &d3D12ShaderResourceViewDescription, d3D12CpuDescriptorHandle);
-        }
-
-        /// <summary>
-        /// Creates a view for a buffer than be both read and written to.
-        /// </summary>
-        /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
-        private void CreateUnorderedAccessView(D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
-        {
-            D3D12_UNORDERED_ACCESS_VIEW_DESC d3D12UnorderedAccessViewDescription = default;
-            d3D12UnorderedAccessViewDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
-            d3D12UnorderedAccessViewDescription.Buffer.NumElements = (uint)Length;
-            d3D12UnorderedAccessViewDescription.Buffer.StructureByteStride = (uint)ElementSizeInBytes;
-
-            GraphicsDevice.D3D12Device->CreateUnorderedAccessView(D3D12Resource, null, &d3D12UnorderedAccessViewDescription, d3D12CpuDescriptorHandle);
         }
 
         /// <inheritdoc/>

@@ -14,6 +14,8 @@ using static TerraFX.Interop.D3D12_MEMORY_POOL;
 using static TerraFX.Interop.D3D12_HEAP_TYPE;
 using static TerraFX.Interop.D3D12_RESOURCE_FLAGS;
 using static TerraFX.Interop.D3D12_RESOURCE_STATES;
+using static TerraFX.Interop.D3D12_SRV_DIMENSION;
+using static TerraFX.Interop.D3D12_UAV_DIMENSION;
 using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Graphics.Extensions
@@ -136,6 +138,75 @@ namespace ComputeSharp.Graphics.Extensions
                 d3D12Resource.GetVoidAddressOf()).Assert();
 
             return d3D12Resource.Move();
+        }
+
+        /// <summary>
+        /// Creates a view for a constant buffer.
+        /// </summary>
+        /// <param name="d3d12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
+        /// <param name="d3d12resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
+        /// <param name="bufferSize">The size of the target resource.</param>
+        /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
+        public static void CreateConstantBufferView(
+            this ref ID3D12Device d3d12Device,
+            ID3D12Resource* d3d12resource,
+            nint bufferSize,
+            D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
+        {
+            uint constantBufferSize = checked((uint)((bufferSize + 255) & ~255));
+
+            D3D12_CONSTANT_BUFFER_VIEW_DESC d3D12ConstantBufferViewDescription;
+            d3D12ConstantBufferViewDescription.BufferLocation = d3d12resource->GetGPUVirtualAddress();
+            d3D12ConstantBufferViewDescription.SizeInBytes = constantBufferSize;
+
+            d3d12Device.CreateConstantBufferView(&d3D12ConstantBufferViewDescription, d3D12CpuDescriptorHandle);
+        }
+
+        /// <summary>
+        /// Creates a view for a readonly buffer.
+        /// </summary>
+        /// <param name="d3d12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
+        /// <param name="d3d12resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
+        /// <param name="bufferSize">The size of the target resource.</param>
+        /// <param name="elementSize">The size in byte of each item in the resource.</param>
+        /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
+        public static void CreateShaderResourceView(
+            this ref ID3D12Device d3d12Device,
+            ID3D12Resource* d3d12resource,
+            uint bufferSize,
+            uint elementSize,
+            D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
+        {
+            D3D12_SHADER_RESOURCE_VIEW_DESC d3D12ShaderResourceViewDescription = default;
+            d3D12ShaderResourceViewDescription.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+            d3D12ShaderResourceViewDescription.Shader4ComponentMapping = FX.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+            d3D12ShaderResourceViewDescription.Buffer.NumElements = bufferSize;
+            d3D12ShaderResourceViewDescription.Buffer.StructureByteStride = elementSize;
+
+            d3d12Device.CreateShaderResourceView(d3d12resource, &d3D12ShaderResourceViewDescription, d3D12CpuDescriptorHandle);
+        }
+
+        /// <summary>
+        /// Creates a view for a buffer than be both read and written to.
+        /// </summary>
+        /// <param name="d3d12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
+        /// <param name="d3d12resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
+        /// <param name="bufferSize">The size of the target resource.</param>
+        /// <param name="elementSize">The size in byte of each item in the resource.</param>
+        /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
+        public static void CreateUnorderedAccessView(
+            this ref ID3D12Device d3d12Device,
+            ID3D12Resource* d3d12resource,
+            uint bufferSize,
+            uint elementSize,
+            D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
+        {
+            D3D12_UNORDERED_ACCESS_VIEW_DESC d3D12UnorderedAccessViewDescription = default;
+            d3D12UnorderedAccessViewDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
+            d3D12UnorderedAccessViewDescription.Buffer.NumElements = bufferSize;
+            d3D12UnorderedAccessViewDescription.Buffer.StructureByteStride = elementSize;
+
+            d3d12Device.CreateUnorderedAccessView(d3d12resource, null, &d3D12UnorderedAccessViewDescription, d3D12CpuDescriptorHandle);
         }
 
         /// <summary>
