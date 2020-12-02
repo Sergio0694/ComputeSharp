@@ -43,6 +43,11 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         private readonly Dictionary<string, LocalFunctionStatementSyntax> localFunctions;
 
         /// <summary>
+        /// The list of implicit variables to declare at the start of the body.
+        /// </summary>
+        private readonly List<VariableDeclarationSyntax> implicitVariables;
+
+        /// <summary>
         /// The current <see cref="MethodDeclarationSyntax"/> tree being visited.
         /// </summary>
         private MethodDeclarationSyntax? currentMethod;
@@ -65,6 +70,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             this.discoveredTypes = discoveredTypes;
             this.staticMethods = staticMethods;
             this.localFunctions = new();
+            this.implicitVariables = new();
         }
 
         /// <summary>
@@ -81,6 +87,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             this.semanticModel = semanticModel;
             this.discoveredTypes = discoveredTypes;
             this.staticMethods = staticMethods;
+            this.implicitVariables = new();
             this.localFunctions = new();
         }
 
@@ -94,7 +101,17 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             this.currentMethod = node;
 
-            return (MethodDeclarationSyntax?)base.Visit(node);
+            var updatedNode = (MethodDeclarationSyntax?)base.Visit(node);
+
+            if (updatedNode is not null)
+            {
+                var implicitBlock = Block(this.implicitVariables.Select(static v => LocalDeclarationStatement(v)).ToArray());
+
+                // Add the tracked implicit declarations (at the start of the body)
+                updatedNode = updatedNode.WithBody(implicitBlock).AddBodyStatements(updatedNode.Body!.Statements.ToArray());
+            }
+
+            return updatedNode;
         }
 
         /// <inheritdoc/>
@@ -182,7 +199,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitLiteralExpression(LiteralExpressionSyntax node)
         {
-            var updatedNode = ((LiteralExpressionSyntax)base.VisitLiteralExpression(node)!);
+            var updatedNode = (LiteralExpressionSyntax)base.VisitLiteralExpression(node)!;
 
             if (updatedNode.IsKind(SyntaxKind.DefaultLiteralExpression))
             {
@@ -193,6 +210,19 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             }
 
             return updatedNode;
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitDeclarationExpression(DeclarationExpressionSyntax node)
+        {
+            var updatedNode = (DeclarationExpressionSyntax)base.VisitDeclarationExpression(node)!;
+
+            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, this.semanticModel, this.discoveredTypes);
+
+            // Add the variable to the list of implicit declarations
+            this.implicitVariables.Add(VariableDeclaration(updatedNode.Type).AddVariables(VariableDeclarator(updatedNode.Designation.ToString())));
+
+            return IdentifierName(updatedNode.Designation.ToString());
         }
 
         /// <inheritdoc/>
