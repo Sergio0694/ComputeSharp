@@ -106,7 +106,10 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// </summary>
         /// <returns>A <typeparamref name="T"/> array with the contents of the current buffer.</returns>
         [Pure]
-        public T[] GetData() => GetData(0, Length);
+        public T[] GetData()
+        {
+            return GetData(0, Length);
+        }
 
         /// <summary>
         /// Reads the contents of the current <see cref="Buffer{T}"/> instance in a given range and returns an array.
@@ -130,7 +133,10 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// Reads the contents of the current <see cref="Buffer{T}"/> instance and writes them into a target array.
         /// </summary>
         /// <param name="destination">The input array to write data to.</param>
-        public void GetData(T[] destination) => GetData(destination.AsSpan(), 0);
+        public void GetData(T[] destination)
+        {
+            GetData(destination.AsSpan(), 0);
+        }
 
         /// <summary>
         /// Reads the contents of the specified range from the current <see cref="Buffer{T}"/> instance and writes them into a target array.
@@ -151,7 +157,10 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// The input data will be read from the start of the buffer.
         /// </summary>
         /// <param name="destination">The input <see cref="Span{T}"/> to write data to.</param>
-        public void GetData(Span<T> destination) => GetData(destination, 0);
+        public void GetData(Span<T> destination)
+        {
+            GetData(destination, 0);
+        }
 
         /// <summary>
         /// Reads the contents of the specified range from the current <see cref="Buffer{T}"/> instance and writes them into a target <see cref="Span{T}"/>.
@@ -164,7 +173,10 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// Writes the contents of a given <typeparamref name="T"/> array to the current <see cref="Buffer{T}"/> instance.
         /// </summary>
         /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
-        public void SetData(T[] source) => SetData(source.AsSpan());
+        public void SetData(T[] source)
+        {
+            SetData(source.AsSpan());
+        }
 
         /// <summary>
         /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="Buffer{T}"/> instance.
@@ -185,7 +197,10 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// The input data will be written to the start of the buffer, and all input items will be copied.
         /// </summary>
         /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> to read data from.</param>
-        public void SetData(ReadOnlySpan<T> source) => SetData(source, 0);
+        public void SetData(ReadOnlySpan<T> source)
+        {
+            SetData(source, 0);
+        }
 
         /// <summary>
         /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to a specified area of the current <see cref="Buffer{T}"/> instance.

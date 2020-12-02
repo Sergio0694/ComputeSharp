@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Diagnostics.Contracts;
+using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Interop;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Buffers.Enums;
@@ -78,6 +80,246 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// Gets the <see cref="ID3D12Resource"/> instance currently mapped.
         /// </summary>
         internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
+
+        /// <summary>
+        /// Reads the contents of the current <see cref="Texture2D{T}"/> instance and returns an array.
+        /// </summary>
+        /// <returns>A <typeparamref name="T"/> array with the contents of the current buffer.</returns>
+        [Pure]
+        public T[,] GetData()
+        {
+            T[,] data = new T[Height, Width];
+
+            GetData(data);
+
+            return data;
+        }
+
+        /// <summary>
+        /// Reads the contents of the current <see cref="Texture2D{T}"/> instance and writes them into a target array.
+        /// </summary>
+        /// <param name="destination">The input array to write data to.</param>
+        public void GetData(T[,] destination)
+        {
+            fixed (T* p = destination)
+            {
+                GetData(new Span<T>(p, destination.Length));
+            }
+        }
+
+        /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target array.
+        /// </summary>
+        /// <param name="destination">The input array to write data to.</param>
+        public void GetData(T[] destination)
+        {
+            GetData(destination.AsSpan(), 0, 0, Width, Height);
+        }
+
+        /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target array.
+        /// </summary>
+        /// <param name="destination">The input array to write data to.</param>
+        /// <param name="x">The horizontal range of items to copy.</param>
+        /// <param name="y">The vertical range of items to copy.</param>
+        public void GetData(T[] destination, Range x, Range y)
+        {
+            GetData(destination.AsSpan(), x, y);
+        }
+
+        /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target array.
+        /// </summary>
+        /// <param name="destination">The input array to write data to.</param>
+        /// <param name="x">The horizontal offset in the source texture.</param>
+        /// <param name="y">The vertical offset in the source texture.</param>
+        /// <param name="width">The width of the memory area to copy.</param>
+        /// <param name="height">The height of the memory area to copy.</param>
+        public void GetData(T[] destination, int x, int y, int width, int height)
+        {
+            GetData(destination.AsSpan(), x, y, width, height);
+        }
+
+        /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target array.
+        /// </summary>
+        /// <param name="destination">The input array to write data to.</param>
+        /// <param name="offset">The starting offset within <paramref name="source"/> to write data to.</param>
+        public void GetData(T[] destination, int offset)
+        {
+            GetData(destination.AsSpan(offset), 0, 0, Width, Height);
+        }
+
+        /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target array.
+        /// </summary>
+        /// <param name="destination">The input array to write data to.</param>
+        /// <param name="offset">The starting offset within <paramref name="source"/> to write data to.</param>
+        /// <param name="x">The horizontal range of items to copy.</param>
+        /// <param name="y">The vertical range of items to copy.</param>
+        public void GetData(T[] destination, int offset, Range x, Range y)
+        {
+            GetData(destination.AsSpan(offset), x, y);
+        }
+
+        /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target array.
+        /// </summary>
+        /// <param name="destination">The input array to write data to.</param>
+        /// <param name="offset">The starting offset within <paramref name="source"/> to write data to.</param>
+        /// <param name="x">The horizontal offset in the source texture.</param>
+        /// <param name="y">The vertical offset in the source texture.</param>
+        /// <param name="width">The width of the memory area to copy.</param>
+        /// <param name="height">The height of the memory area to copy.</param>
+        public void GetData(T[] destination, int offset, int x, int y, int width, int height)
+        {
+            GetData(destination.AsSpan(offset), x, y, width, height);
+        }
+
+        /// <summary>
+        /// Reads the contents of the current <see cref="Texture2D{T}"/> instance and writes them into a target <see cref="Span{T}"/>.
+        /// The input data will be read from the start of the texture.
+        /// </summary>
+        /// <param name="destination">The input <see cref="Span{T}"/> to write data to.</param>
+        public void GetData(Span<T> destination)
+        {
+            GetData(destination, 0, 0, Width, Height);
+        }
+
+        /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target <see cref="Span{T}"/>.
+        /// </summary>
+        /// <param name="destination">The input <see cref="Span{T}"/> to write data to.</param>
+        /// <param name="x">The horizontal range of items to copy.</param>
+        /// <param name="y">The vertical range of items to copy.</param>
+        public void GetData(Span<T> destination, Range x, Range y)
+        {
+            var (offsetX, width) = x.GetOffsetAndLength(Width);
+            var (offsetY, height) = y.GetOffsetAndLength(Height);
+
+            GetData(destination, offsetX, offsetY, width, height);
+        }
+
+        /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target <see cref="Span{T}"/>.
+        /// </summary>
+        /// <param name="destination">The input <see cref="Span{T}"/> to write data to.</param>
+        /// <param name="x">The horizontal offset in the source texture.</param>
+        /// <param name="y">The vertical offset in the source texture.</param>
+        /// <param name="width">The width of the memory area to copy.</param>
+        /// <param name="height">The height of the memory area to copy.</param>
+        public void GetData(Span<T> destination, int x, int y, int width, int height)
+        {
+            // TODO
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <typeparamref name="T"/> array to the current <see cref="Texture2D{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
+        public void SetData(T[,] source)
+        {
+            fixed (T* p = source)
+            {
+                SetData(new Span<T>(p, source.Length));
+            }
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <typeparamref name="T"/> array to the current <see cref="Texture2D{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
+        public void SetData(T[] source)
+        {
+            SetData(source.AsSpan(), 0, 0, Width, Height);
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="Texture2D{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
+        /// <param name="x">The horizontal range of items to write.</param>
+        /// <param name="y">The vertical range of items to write.</param>
+        public void SetData(T[] source, Range x, Range y)
+        {
+            SetData(source.AsSpan(), x, y);
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="Texture2D{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
+        /// <param name="x">The horizontal offset in the destination texture.</param>
+        /// <param name="y">The vertical offset in the destination texture.</param>
+        /// <param name="width">The width of the memory area to write to.</param>
+        /// <param name="height">The height of the memory area to write to.</param>
+        public void SetData(T[] source, int x, int y, int width, int height)
+        {
+            SetData(source.AsSpan(), x, y, width, height);
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="Texture2D{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
+        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
+        /// <param name="x">The horizontal range of items to write.</param>
+        /// <param name="y">The vertical range of items to write.</param>
+        public void SetData(T[] source, int offset, Range x, Range y)
+        {
+            SetData(source.AsSpan(offset), x, y);
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="Texture2D{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
+        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
+        /// <param name="x">The horizontal offset in the destination texture.</param>
+        /// <param name="y">The vertical offset in the destination texture.</param>
+        /// <param name="width">The width of the memory area to write to.</param>
+        /// <param name="height">The height of the memory area to write to.</param>
+        public void SetData(T[] source, int offset, int x, int y, int width, int height)
+        {
+            SetData(source.AsSpan(offset), x, y, width, height);
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to the current <see cref="Texture2D{T}"/> instance.
+        /// The input data will be written to the start of the texture, and all input items will be copied.
+        /// </summary>
+        /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> to read data from.</param>
+        public void SetData(ReadOnlySpan<T> source)
+        {
+            SetData(source, 0, 0, Width, Height);
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to a specified area of the current <see cref="Texture2D{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> to read data from.</param>
+        /// <param name="x">The horizontal range of items to write.</param>
+        /// <param name="y">The vertical range of items to write.</param>
+        public void SetData(ReadOnlySpan<T> source, Range x, Range y)
+        {
+            var (offsetX, width) = x.GetOffsetAndLength(Width);
+            var (offsetY, height) = y.GetOffsetAndLength(Height);
+
+            SetData(source, offsetX, offsetY, width, height);
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to a specified area of the current <see cref="Texture2D{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> to read data from.</param>
+        /// <param name="x">The horizontal offset in the destination texture.</param>
+        /// <param name="y">The vertical offset in the destination texture.</param>
+        /// <param name="width">The width of the memory area to write to.</param>
+        /// <param name="height">The height of the memory area to write to.</param>
+        public void SetData(ReadOnlySpan<T> source, int x, int y, int width, int height)
+        {
+            // TODO
+        }
 
         /// <inheritdoc/>
         protected override void OnDispose()
