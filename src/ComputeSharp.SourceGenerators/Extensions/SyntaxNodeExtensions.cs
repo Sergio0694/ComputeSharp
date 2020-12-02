@@ -15,14 +15,6 @@ namespace ComputeSharp.SourceGenerators.Extensions
     internal static class SyntaxNodeExtensions
     {
         /// <summary>
-        /// A custom <see cref="SymbolDisplayFormat"/> instance with fully qualified style, without global::.
-        /// </summary>
-        internal static readonly SymbolDisplayFormat FullyQualifiedWithoutGlobalFormat = new(
-                globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
-                typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
-                genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
-
-        /// <summary>
         /// Checks a <see cref="SyntaxNode"/> value and replaces the value type to be HLSL compatible, if needed.
         /// </summary>
         /// <typeparam name="TRoot">The type of the input <see cref="TypeSyntax"/> instance.</typeparam>
@@ -53,7 +45,7 @@ namespace ComputeSharp.SourceGenerators.Extensions
             where TRoot : SyntaxNode
         {
             ITypeSymbol typeSymbol = semanticModel.GetTypeInfo(sourceType).Type!;
-            string typeName = typeSymbol.ToDisplayString(FullyQualifiedWithoutGlobalFormat);
+            string typeName = typeSymbol.ToDisplayString(ISymbolExtensions.FullyQualifiedWithoutGlobalFormat);
 
             discoveredTypes.Add((INamedTypeSymbol)typeSymbol);
 
@@ -80,7 +72,7 @@ namespace ComputeSharp.SourceGenerators.Extensions
         public static TypeSyntax ReplaceAndTrackType(this LiteralExpressionSyntax node, SyntaxNode sourceNode, SemanticModel semanticModel, ICollection<INamedTypeSymbol> discoveredTypes)
         {
             ITypeSymbol typeSymbol = semanticModel.GetTypeInfo(sourceNode).Type!;
-            string typeName = typeSymbol.ToDisplayString(FullyQualifiedWithoutGlobalFormat);
+            string typeName = typeSymbol.ToDisplayString(ISymbolExtensions.FullyQualifiedWithoutGlobalFormat);
 
             discoveredTypes.Add((INamedTypeSymbol)typeSymbol);
 

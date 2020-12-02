@@ -15,14 +15,20 @@ namespace ComputeSharp.SourceGenerators.Extensions
     internal static class ISymbolExtensions
     {
         /// <summary>
+        /// A custom <see cref="SymbolDisplayFormat"/> instance with fully qualified style, without global::.
+        /// </summary>
+        public static readonly SymbolDisplayFormat FullyQualifiedWithoutGlobalFormat = new(
+            globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
+            typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+            genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
+
+        /// <summary>
         /// A custom <see cref="SymbolDisplayFormat"/> instance with fully qualified style, without global:: and parameters.
         /// </summary>
-        private static readonly SymbolDisplayFormat FullyQualifiedWithoutGlobalAndParametersFormat = new(
-                SymbolDisplayGlobalNamespaceStyle.Omitted,
-                SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
-                SymbolDisplayGenericsOptions.IncludeTypeParameters,
-                memberOptions: SymbolDisplayMemberOptions.IncludeContainingType,
-                parameterOptions: SymbolDisplayParameterOptions.None);
+        private static readonly SymbolDisplayFormat FullyQualifiedWithoutGlobalAndParametersFormat =
+            FullyQualifiedWithoutGlobalFormat
+            .WithMemberOptions(SymbolDisplayMemberOptions.IncludeContainingType)
+            .WithParameterOptions(SymbolDisplayParameterOptions.None);
 
         /// <summary>
         /// Gets the full metadata name for a given <see cref="INamedTypeSymbol"/> instance.
@@ -109,7 +115,7 @@ namespace ComputeSharp.SourceGenerators.Extensions
         [Pure]
         public static TypeSyntax TrackType(this ITypeSymbol typeSymbol, ICollection<INamedTypeSymbol> discoveredTypes)
         {
-            string typeName = typeSymbol.ToDisplayString(SyntaxNodeExtensions.FullyQualifiedWithoutGlobalFormat);
+            string typeName = typeSymbol.ToDisplayString(FullyQualifiedWithoutGlobalFormat);
 
             discoveredTypes.Add((INamedTypeSymbol)typeSymbol);
 
