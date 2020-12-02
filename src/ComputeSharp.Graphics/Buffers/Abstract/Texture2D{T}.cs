@@ -4,10 +4,13 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Interop;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Buffers.Enums;
+using ComputeSharp.Graphics.Buffers.Interop;
+using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
+using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 
 namespace ComputeSharp.Graphics.Buffers.Abstract
 {
@@ -210,7 +213,33 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="height">The height of the memory area to copy.</param>
         public void GetData(Span<T> destination, int x, int y, int width, int height)
         {
-            // TODO
+            GraphicsDevice.ThrowIfDisposed();
+
+            ThrowIfDisposed();
+
+            Guard.IsInRange(x, 0, Width, nameof(x));
+            Guard.IsInRange(y, 0, Height, nameof(y));
+            Guard.IsBetweenOrEqualTo(width, 0, Width, nameof(width));
+            Guard.IsBetweenOrEqualTo(height, 0, Height, nameof(height));
+            Guard.IsLessThanOrEqualTo(x + width, Width, nameof(x));
+            Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
+            Guard.HasSizeGreaterThanOrEqualTo(destination, width * height, nameof(destination));
+
+            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(
+                ResourceType.ReadBack,
+                DXGIFormatHelper.GetForType<T>(),
+                (uint)width,
+                (uint)height);
+
+            using (CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY))
+            {
+                copyCommandList.CopyTextureRegion(D3D12Resource, x, y, width, height, d3D12Resource.Get(), 0u, 0u);
+                copyCommandList.ExecuteAndWaitForCompletion();
+            }
+
+            using ID3D12ResourceMap resource = d3D12Resource.Get()->Map();
+
+            MemoryHelper.Copy(resource.Pointer, 0, destination);
         }
 
         /// <summary>
@@ -318,7 +347,33 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="height">The height of the memory area to write to.</param>
         public void SetData(ReadOnlySpan<T> source, int x, int y, int width, int height)
         {
-            // TODO
+            GraphicsDevice.ThrowIfDisposed();
+
+            ThrowIfDisposed();
+
+            Guard.IsInRange(x, 0, Width, nameof(x));
+            Guard.IsInRange(y, 0, Height, nameof(y));
+            Guard.IsBetweenOrEqualTo(width, 0, Width, nameof(width));
+            Guard.IsBetweenOrEqualTo(height, 0, Height, nameof(height));
+            Guard.IsLessThanOrEqualTo(x + width, Width, nameof(x));
+            Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
+            Guard.HasSizeGreaterThanOrEqualTo(source, width * height, nameof(source));
+
+            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(
+                ResourceType.Upload,
+                DXGIFormatHelper.GetForType<T>(),
+                (uint)width,
+                (uint)height);
+
+            using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
+            {
+                MemoryHelper.Copy(source, resource.Pointer, 0);
+            }
+
+            using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+
+            copyCommandList.CopyTextureRegion(d3D12Resource.Get(), 0, 0, width, height, D3D12Resource, (uint)x, (uint)y);
+            copyCommandList.ExecuteAndWaitForCompletion();
         }
 
         /// <inheritdoc/>

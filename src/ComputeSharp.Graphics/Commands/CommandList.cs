@@ -92,6 +92,35 @@ namespace ComputeSharp.Graphics.Commands
         }
 
         /// <summary>
+        /// Copies a texture memory region from one resource to another.
+        /// </summary>
+        /// <param name="d3D12ResourceSource">The source <see cref="ID3D12Resource"/> to read from.</param>
+        /// <param name="sourceX">The horizontal offset within <paramref name="d3D12ResourceSource"/>.</param>
+        /// <param name="sourceY">The vertical offset within <paramref name="d3D12ResourceSource"/>.</param>
+        /// <param name="sourceWidth">The width of the memory region to copy.</param>
+        /// <param name="sourceHeight">The height of the memory region to copy.</param>
+        /// <param name="d3d12ResourceDestination">The destination <see cref="ID3D12Resource"/> to write to.</param>
+        /// <param name="destinationX">The horizontal offset within <paramref name="d3d12ResourceDestination"/>.</param>
+        /// <param name="destinationY">The vertical offset within <paramref name="d3d12ResourceDestination"/>.</param>
+        public readonly void CopyTextureRegion(
+            ID3D12Resource* d3D12ResourceSource,
+            int sourceX,
+            int sourceY,
+            int sourceWidth,
+            int sourceHeight,
+            ID3D12Resource* d3d12ResourceDestination,
+            uint destinationX,
+            uint destinationY)
+        {
+            D3D12_TEXTURE_COPY_LOCATION
+                d3D12TextureCopyLocationSource = new(d3D12ResourceSource),
+                d3D12TextureCopyLocationDestination = new(d3d12ResourceDestination);
+            D3D12_BOX d3D12Box = new(sourceX, sourceY, sourceX + sourceWidth, sourceY + sourceHeight);
+
+            this.d3D12GraphicsCommandList.Get()->CopyTextureRegion(&d3D12TextureCopyLocationDestination, destinationX, destinationY, 0, &d3D12TextureCopyLocationSource, &d3D12Box);
+        }
+
+        /// <summary>
         /// Binds an input <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value to a specified root parameter.
         /// </summary>
         /// <param name="rootParameterIndex">The root parameter index to bind to the input resource.</param>
