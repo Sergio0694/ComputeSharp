@@ -60,18 +60,16 @@ namespace ComputeSharp.SourceGenerators.Extensions
         }
 
         /// <summary>
-        /// Checks a <see cref="SyntaxNode"/> value and replaces the value type to be HLSL compatible, if needed.
+        /// Tracks the associated type for a <see cref="SyntaxNode"/> value and returns the HLSL compatible <see cref="TypeSyntax"/>.
         /// </summary>
-        /// <typeparam name="TRoot">The type of the input <see cref="SyntaxNode"/> instance.</typeparam>
-        /// <param name="node">The input <see cref="SyntaxNode"/> to check and modify if needed.</param>
-        /// <param name="sourceNode">The original node in the input source tree.</param>
+        /// <param name="node">The input <see cref="SyntaxNode"/> to check.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance with info on the input tree.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
         [Pure]
-        public static TypeSyntax ReplaceAndTrackType(this LiteralExpressionSyntax node, SyntaxNode sourceNode, SemanticModel semanticModel, ICollection<INamedTypeSymbol> discoveredTypes)
+        public static TypeSyntax TrackType(this SyntaxNode node, SemanticModel semanticModel, ICollection<INamedTypeSymbol> discoveredTypes)
         {
-            ITypeSymbol typeSymbol = semanticModel.GetTypeInfo(sourceNode).Type!;
+            ITypeSymbol typeSymbol = semanticModel.GetTypeInfo(node).Type!;
             string typeName = typeSymbol.ToDisplayString(ISymbolExtensions.FullyQualifiedWithoutGlobalFormat);
 
             discoveredTypes.Add((INamedTypeSymbol)typeSymbol);

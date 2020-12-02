@@ -203,7 +203,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
             if (updatedNode.IsKind(SyntaxKind.DefaultLiteralExpression))
             {
-                TypeSyntax type = updatedNode.ReplaceAndTrackType(node, this.semanticModel, this.discoveredTypes);
+                TypeSyntax type = node.TrackType(this.semanticModel, this.discoveredTypes);
 
                 // Same HLSL-style expression in the form (T)0
                 return CastExpression(type, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)));
