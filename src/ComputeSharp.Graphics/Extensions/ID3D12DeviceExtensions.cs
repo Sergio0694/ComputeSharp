@@ -147,15 +147,15 @@ namespace ComputeSharp.Graphics.Extensions
         /// <param name="d3D12Device">The <see cref="ID3D12Device"/> instance in use.</param>
         /// <param name="textureType">The texture type currently in use.</param>
         /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
-        /// <param name="height">The height of the texture resource.</param>
         /// <param name="width">The width of the texture resource.</param>
+        /// <param name="height">The height of the texture resource.</param>
         /// <returns>An <see cref="ID3D12Resource"/> reference for the current texture.</returns>
         public static ComPtr<ID3D12Resource> CreateCommittedResource(
             this ref ID3D12Device d3D12Device,
             TextureType textureType,
             DXGI_FORMAT dxgiFormat,
-            uint height,
-            uint width)
+            uint width,
+            uint height)
         {
             D3D12_RESOURCE_FLAGS d3D12ResourceFlags = textureType switch
             {

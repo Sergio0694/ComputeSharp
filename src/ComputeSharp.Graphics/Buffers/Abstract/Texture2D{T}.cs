@@ -27,22 +27,24 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         internal readonly D3D12_GPU_DESCRIPTOR_HANDLE D3D12GpuDescriptorHandle;
 
         /// <summary>
-        /// Creates a new <see cref="Buffer{T}"/> instance with the specified parameters.
+        /// Creates a new <see cref="Texture2D{T}"/> instance with the specified parameters.
         /// </summary>
-        /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
-        /// <param name="length">The number of items to store in the current buffer.</param>
-        /// <param name="elementSizeInBytes">The size in bytes of each buffer item (including padding, if any).</param>
-        /// <param name="bufferType">The buffer type for the current buffer.</param>
-        private protected Texture2D(GraphicsDevice device, int height, int width, TextureType textureType)
+        /// <param name="device">The <see cref="Graphics.GraphicsDevice"/> associated with the current instance.</param>
+        /// <param name="height">The height of the texture.</param>
+        /// <param name="width">The width of the texture.</param>
+        /// <param name="textureType">The texture type for the current texture.</param>
+        private protected Texture2D(GraphicsDevice device, int width, int height, TextureType textureType)
         {
             device.ThrowIfDisposed();
 
-            Guard.IsGreaterThanOrEqualTo(height, 0, nameof(height));
             Guard.IsGreaterThanOrEqualTo(width, 0, nameof(width));
+            Guard.IsGreaterThanOrEqualTo(height, 0, nameof(height));
 
             GraphicsDevice = device;
+            Width = width;
+            Height = height;
 
-            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(textureType, DXGIFormatHelper.GetForType<T>(), (uint)height, (uint)width);
+            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(textureType, DXGIFormatHelper.GetForType<T>(), (uint)width, (uint)height);
 
             device.AllocateShaderResourceViewDescriptorHandles(out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 
@@ -61,6 +63,16 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// Gets the <see cref="Graphics.GraphicsDevice"/> associated with the current instance.
         /// </summary>
         public GraphicsDevice GraphicsDevice { get; }
+
+        /// <summary>
+        /// Gets the width of the current texture.
+        /// </summary>
+        public int Width { get; }
+
+        /// <summary>
+        /// Gets the height of the current texture.
+        /// </summary>
+        public int Height { get; }
 
         /// <summary>
         /// Gets the <see cref="ID3D12Resource"/> instance currently mapped.
