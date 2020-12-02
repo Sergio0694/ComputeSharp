@@ -1,9 +1,9 @@
-﻿using static TerraFX.Interop.DXGI_FORMAT;
-using TerraFX.Interop;
-using ABI.System.Numerics;
-using Microsoft.Toolkit.Diagnostics;
-using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.Contracts;
+using System.Numerics;
 using System.Runtime.CompilerServices;
+using Microsoft.Toolkit.Diagnostics;
+using static TerraFX.Interop.DXGI_FORMAT;
+using TerraFX.Interop;
 
 namespace ComputeSharp.Graphics.Helpers
 {

@@ -24,7 +24,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
         /// <param name="length">The number of items to store in the current buffer.</param>
         /// <param name="bufferType">The buffer type for the current buffer.</param>
-        internal StructuredBuffer(GraphicsDevice device, int length, BufferType bufferType)
+        private protected StructuredBuffer(GraphicsDevice device, int length, BufferType bufferType)
             : base(device, length, (uint)Unsafe.SizeOf<T>(), bufferType)
         {
         }

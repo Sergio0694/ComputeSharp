@@ -40,7 +40,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="length">The number of items to store in the current buffer.</param>
         /// <param name="elementSizeInBytes">The size in bytes of each buffer item (including padding, if any).</param>
         /// <param name="bufferType">The buffer type for the current buffer.</param>
-        internal Buffer(GraphicsDevice device, int length, uint elementSizeInBytes, BufferType bufferType)
+        private protected Buffer(GraphicsDevice device, int length, uint elementSizeInBytes, BufferType bufferType)
         {
             device.ThrowIfDisposed();
 
@@ -69,7 +69,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         }
 
         /// <summary>
-        /// Gets the <see cref="GraphicsDevice"/> associated with the current instance.
+        /// Gets the <see cref="Graphics.GraphicsDevice"/> associated with the current instance.
         /// </summary>
         public GraphicsDevice GraphicsDevice { get; }
 
