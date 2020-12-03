@@ -50,8 +50,8 @@ namespace ComputeSharp.Shaders.Mappings
         /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a known buffer type.</returns>
         [Pure]
         public static bool IsKnownBufferType(Type type) => IsConstantBufferType(type) ||
-                                                           IsReadOnlyBufferType(type) ||
-                                                           IsReadWriteBufferType(type);
+                                                           IsReadOnlyResourceType(type) ||
+                                                           IsReadWriteResourceType(type);
 
         /// <summary>
         /// Checks whether or not the input type is a <see cref="ConstantBuffer{T}"/> value.
@@ -63,21 +63,37 @@ namespace ComputeSharp.Shaders.Mappings
                                                               type.GetGenericTypeDefinition() == typeof(ConstantBuffer<>);
 
         /// <summary>
-        /// Checks whether or not the input type is a <see cref="ReadOnlyBuffer{T}"/> value.
+        /// Checks whether or not the input type is a <see cref="ReadOnlyBuffer{T}"/> or <see cref="ReadOnlyTexture2D{T}"/> value.
         /// </summary>
         /// <param name="type">The input <see cref="Type"/> instance to check.</param>
-        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a <see cref="ReadOnlyBuffer{T}"/> instance.</returns>
+        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is a readonly resource type.</returns>
         [Pure]
-        public static bool IsReadOnlyBufferType(Type type) => type.IsGenericType &&
-                                                              type.GetGenericTypeDefinition() == typeof(ReadOnlyBuffer<>);
+        public static bool IsReadOnlyResourceType(Type type)
+        {
+            if (!type.IsGenericType) return false;
+
+            Type genericType = type.GetGenericTypeDefinition();
+
+            return
+                genericType == typeof(ReadOnlyBuffer<>) ||
+                genericType == typeof(ReadOnlyTexture2D<>);
+        }
 
         /// <summary>
-        /// Checks whether or not the input type is a <see cref="ReadWriteBuffer{T}"/> value.
+        /// Checks whether or not the input type is a <see cref="ReadWriteBuffer{T}"/> or <see cref="ReadWriteTexture2D{T}"/> value.
         /// </summary>
         /// <param name="type">The input <see cref="Type"/> instance to check.</param>
-        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a <see cref="ReadWriteBuffer{T}"/> instance.</returns>
+        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is a writeable resource type.</returns>
         [Pure]
-        public static bool IsReadWriteBufferType(Type type) => type.IsGenericType &&
-                                                               type.GetGenericTypeDefinition() == typeof(ReadWriteBuffer<>);
+        public static bool IsReadWriteResourceType(Type type)
+        {
+            if (!type.IsGenericType) return false;
+
+            Type genericType = type.GetGenericTypeDefinition();
+
+            return
+                genericType == typeof(ReadWriteBuffer<>) ||
+                genericType == typeof(ReadWriteTexture2D<>);
+        }
     }
 }

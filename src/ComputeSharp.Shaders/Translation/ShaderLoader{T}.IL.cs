@@ -114,14 +114,14 @@ namespace ComputeSharp.Shaders.Translation
                             nameof(NativeObject.ThrowIfDisposed),
                             BindingFlags.Instance | BindingFlags.NonPublic)!, null);
 
-                        // Call Buffer<T>.ThrowIfDeviceMismatch(GraphicsDevice)
+                        // Call ThrowIfDeviceMismatch(GraphicsDevice)
                         il.Emit(OpCodes.Dup);
                         il.Emit(OpCodes.Ldarg_1);
                         il.EmitCall(OpCodes.Callvirt, fieldInfo.FieldType.GetMethod(
                             nameof(Buffer<byte>.ThrowIfDeviceMismatch),
                             BindingFlags.Instance | BindingFlags.NonPublic)!, null);
 
-                        // Access Buffer<T>.D3D12GpuDescriptorHandle
+                        // Access D3D12GpuDescriptorHandle
                         il.EmitReadMember(fieldInfo.FieldType.GetField(
                             nameof(Buffer<byte>.D3D12GpuDescriptorHandle),
                             BindingFlags.Instance | BindingFlags.NonPublic)!);

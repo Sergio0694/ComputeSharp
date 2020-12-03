@@ -12,7 +12,7 @@ namespace ComputeSharp.Shaders.Renderer.Models
         /// <summary>
         /// Gets or sets the list of captured buffers being present in the current shader.
         /// </summary>
-        public IReadOnlyList<HlslBufferInfo> BuffersList { get; init; }
+        public IReadOnlyList<HlslResourceInfo> BuffersList { get; init; }
 
         /// <summary>
         /// Gets or sets the list of captured variables being present in the current shader.

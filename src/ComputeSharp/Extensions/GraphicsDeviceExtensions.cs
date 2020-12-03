@@ -231,7 +231,7 @@ namespace ComputeSharp
         public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, T[] array, int width, int height)
             where T : unmanaged
         {
-            return device.AllocateReadOnlyTexture2D(array, width, height);
+            return device.AllocateReadOnlyTexture2D<T>(array.AsSpan(), width, height);
         }
 
         /// <summary>
@@ -317,7 +317,7 @@ namespace ComputeSharp
         public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, T[] array, int width, int height)
             where T : unmanaged
         {
-            return device.AllocateReadWriteTexture2D(array, width, height);
+            return device.AllocateReadWriteTexture2D<T>(array.AsSpan(), width, height);
         }
 
         /// <summary>

@@ -57,15 +57,17 @@ namespace ComputeSharp.SourceGenerators.Mappings
         });
 
         /// <summary>
-        /// Checks whether or not a given type name matches a structured buffer type.
+        /// Checks whether or not a given type name matches a typed resource type.
         /// </summary>
         /// <param name="typeName">The input type name to check.</param>
-        /// <returns>Whether or not <paramref name="typeName"/> represents a structured buffer type.</returns>
-        public static bool IsStructuredBufferType(string typeName)
+        /// <returns>Whether or not <paramref name="typeName"/> represents a typed resource type.</returns>
+        public static bool IsTypedResourceType(string typeName)
         {
             return
                 typeName == "ComputeSharp.ReadOnlyBuffer`1" ||
-                typeName == "ComputeSharp.ReadWriteBuffer`1";
+                typeName == "ComputeSharp.ReadWriteBuffer`1" ||
+                typeName == "ComputeSharp.ReadOnlyTexture2D`1" ||
+                typeName == "ComputeSharp.ReadWriteTexture2D`1";
         }
 
         /// <summary>
@@ -83,7 +85,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
             string typeName = typeSymbol.GetFullMetadataName();
 
             // Special case for the structured buffer types
-            if (IsStructuredBufferType(typeName))
+            if (IsTypedResourceType(typeName))
             {
                 string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments[0]).GetFullMetadataName();
 
@@ -98,6 +100,8 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 {
                     "ComputeSharp.ReadOnlyBuffer`1" => $"StructuredBuffer<{mapped}>",
                     "ComputeSharp.ReadWriteBuffer`1" => $"RWStructuredBuffer<{mapped}>",
+                    "ComputeSharp.ReadOnlyTexture2D`1" => $"Texture2D<{mapped}>",
+                    "ComputeSharp.ReadWriteTexture2D`1" => $"RWTexture2D<{mapped}>",
                     _ => throw new ArgumentException()
                 };
             }
