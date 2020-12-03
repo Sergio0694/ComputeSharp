@@ -141,6 +141,22 @@ namespace ComputeSharp.Graphics.Commands
         }
 
         /// <summary>
+        /// Creates a resource barrier to transition a resource to a specific state.
+        /// </summary>
+        /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to change state for.</param>
+        /// <param name="d3D12ResourceStatesBefore">The starting <see cref="D3D12_RESOURCE_STATES"/> value for the transition.</param>
+        /// <param name="d3D12ResourceStatesAfter">The destnation <see cref="D3D12_RESOURCE_STATES"/> value for the transition.</param>
+        public readonly void ResourceBarrier(
+            ID3D12Resource* d3D12Resource,
+            D3D12_RESOURCE_STATES d3D12ResourceStatesBefore,
+            D3D12_RESOURCE_STATES d3D12ResourceStatesAfter)
+        {
+            D3D12_RESOURCE_BARRIER d3D12ResourceBarrier = D3D12_RESOURCE_BARRIER.InitTransition(d3D12Resource, d3D12ResourceStatesBefore, d3D12ResourceStatesAfter);
+
+            this.d3D12GraphicsCommandList.Get()->ResourceBarrier(1, &d3D12ResourceBarrier);
+        }
+
+        /// <summary>
         /// Binds an input <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value to a specified root parameter.
         /// </summary>
         /// <param name="rootParameterIndex">The root parameter index to bind to the input resource.</param>

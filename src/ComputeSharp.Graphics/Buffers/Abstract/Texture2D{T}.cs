@@ -11,6 +11,7 @@ using ComputeSharp.Graphics.Helpers;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
+using static TerraFX.Interop.D3D12_RESOURCE_STATES;
 
 namespace ComputeSharp.Graphics.Buffers.Abstract
 {
@@ -33,6 +34,11 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         internal readonly D3D12_GPU_DESCRIPTOR_HANDLE D3D12GpuDescriptorHandle;
 
         /// <summary>
+        /// The default <see cref="D3D12_RESOURCE_STATES"/> value for the current resource.
+        /// </summary>
+        private readonly D3D12_RESOURCE_STATES D3D12ResourceStates;
+
+        /// <summary>
         /// Creates a new <see cref="Texture2D{T}"/> instance with the specified parameters.
         /// </summary>
         /// <param name="device">The <see cref="Graphics.GraphicsDevice"/> associated with the current instance.</param>
@@ -50,7 +56,12 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             Width = width;
             Height = height;
 
-            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, DXGIFormatHelper.GetForType<T>(), (uint)width, (uint)height);
+            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(
+                resourceType,
+                DXGIFormatHelper.GetForType<T>(),
+                (uint)width,
+                (uint)height,
+                out D3D12ResourceStates);
 
             device.AllocateShaderResourceViewDescriptorHandles(out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 
@@ -230,9 +241,11 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, (ulong)byteSize);
 
-            using (CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY))
+            using (CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COMPUTE))
             {
+                copyCommandList.ResourceBarrier(D3D12Resource, D3D12ResourceStates, D3D12_RESOURCE_STATE_COPY_SOURCE);
                 copyCommandList.CopyTextureRegion(d3D12Resource.Get(), (uint)Unsafe.SizeOf<T>(), D3D12Resource, DXGIFormatHelper.GetForType<T>(), (uint)x, (uint)y, (uint)width, (uint)height);
+                copyCommandList.ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12ResourceStates);
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
 
@@ -367,9 +380,11 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 MemoryHelper.Copy(source, resource.Pointer, 0);
             }
 
-            using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+            using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COMPUTE);
 
+            copyCommandList.ResourceBarrier(D3D12Resource, D3D12ResourceStates, D3D12_RESOURCE_STATE_COPY_DEST);
             copyCommandList.CopyTextureRegion(D3D12Resource, DXGIFormatHelper.GetForType<T>(), (uint)x, (uint)y, d3D12Resource.Get(), (uint)width, (uint)height, (uint)Unsafe.SizeOf<T>());
+            copyCommandList.ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, D3D12ResourceStates);
             copyCommandList.ExecuteAndWaitForCompletion();
         }
 

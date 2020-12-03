@@ -149,29 +149,29 @@ namespace ComputeSharp.Graphics.Extensions
         /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
         /// <param name="width">The width of the texture resource.</param>
         /// <param name="height">The height of the texture resource.</param>
+        /// <param name="d3D12ResourceStates">The default <see cref="D3D12_RESOURCE_STATES"/> value for the resource.</param>
         /// <returns>An <see cref="ID3D12Resource"/> reference for the current texture.</returns>
         public static ComPtr<ID3D12Resource> CreateCommittedResource(
             this ref ID3D12Device d3D12Device,
             ResourceType resourceType,
             DXGI_FORMAT dxgiFormat,
             uint width,
-            uint height)
+            uint height,
+            out D3D12_RESOURCE_STATES d3D12ResourceStates)
         {
-            (D3D12_HEAP_TYPE d3D12HeapType,
-             D3D12_RESOURCE_FLAGS d3D12ResourceFlags,
-             D3D12_RESOURCE_STATES d3D12ResourceStates) = resourceType switch
+            D3D12_RESOURCE_FLAGS d3D12ResourceFlags;
+
+            (d3D12ResourceFlags, d3D12ResourceStates) = resourceType switch
             {
-                ResourceType.ReadOnly => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
-                ResourceType.ReadWrite => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COMMON),
-                ResourceType.ReadBack => (D3D12_HEAP_TYPE_READBACK, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COPY_DEST),
-                ResourceType.Upload => (D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ),
-                _ => ThrowHelper.ThrowArgumentException<(D3D12_HEAP_TYPE, D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
+                ResourceType.ReadOnly => (D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
+                ResourceType.ReadWrite => (D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_UNORDERED_ACCESS),
+                _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
             };
 
             using ComPtr<ID3D12Resource> d3D12Resource = default;
 
             D3D12_HEAP_PROPERTIES d3D12HeapProperties;
-            d3D12HeapProperties.Type = d3D12HeapType;
+            d3D12HeapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
             d3D12HeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
             d3D12HeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
             d3D12HeapProperties.CreationNodeMask = 1;
