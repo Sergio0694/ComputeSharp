@@ -96,7 +96,7 @@ namespace ComputeSharp.BokehBlur.Processors
 
                 PixelOperations<TPixel>.Instance.ToVector4(Configuration, spanTPixel, spanVector4);
 
-                using ReadWriteBuffer<Vector4> sourceBuffer = Gpu.Default.AllocateReadWriteBuffer(spanVector4);
+                using ReadWriteBuffer<Vector4> sourceBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(spanVector4);
                 using ReadWriteBuffer<Vector4> firstPassBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Length);
                 using ReadOnlyBuffer<float> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer(Kernel);
 

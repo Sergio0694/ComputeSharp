@@ -23,9 +23,9 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
         /// <param name="length">The number of items to store in the current buffer.</param>
-        /// <param name="bufferType">The buffer type for the current buffer.</param>
-        internal StructuredBuffer(GraphicsDevice device, int length, BufferType bufferType)
-            : base(device, length, (uint)Unsafe.SizeOf<T>(), bufferType)
+        /// <param name="resourceType">The buffer type for the current buffer.</param>
+        private protected StructuredBuffer(GraphicsDevice device, int length, ResourceType resourceType)
+            : base(device, length, (uint)Unsafe.SizeOf<T>(), resourceType)
         {
         }
 
@@ -43,11 +43,11 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 byteOffset = (nint)offset * ElementSizeInBytes,
                 byteSize = (nint)destination.Length * ElementSizeInBytes;
 
-            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(BufferType.ReadBack, (ulong)byteSize);
+            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, (ulong)byteSize);
 
             using (CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY))
             {
-                copyCommandList.CopyBufferRegion(D3D12Resource, (ulong)byteOffset, d3D12Resource.Get(), 0, (ulong)byteSize);
+                copyCommandList.CopyBufferRegion(d3D12Resource.Get(), 0, D3D12Resource, (ulong)byteOffset,(ulong)byteSize);
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
 
@@ -70,7 +70,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 byteOffset = (nint)offset * ElementSizeInBytes,
                 byteSize = (nint)source.Length * ElementSizeInBytes;
 
-            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(BufferType.Upload, (ulong)byteSize);
+            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, (ulong)byteSize);
 
             using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
             {
@@ -79,7 +79,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
-            copyCommandList.CopyBufferRegion(d3D12Resource.Get(), 0, D3D12Resource, (ulong)byteOffset, (ulong)byteSize);
+            copyCommandList.CopyBufferRegion(D3D12Resource, (ulong)byteOffset, d3D12Resource.Get(), 0,(ulong)byteSize);
             copyCommandList.ExecuteAndWaitForCompletion();
         }
 
@@ -98,7 +98,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 // Directly copy the input buffer
                 using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
-                copyCommandList.CopyBufferRegion(source.D3D12Resource, 0, D3D12Resource, 0, (ulong)SizeInBytes);
+                copyCommandList.CopyBufferRegion(D3D12Resource, 0, source.D3D12Resource, 0,(ulong)SizeInBytes);
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
             else SetDataWithCpuBuffer(source);

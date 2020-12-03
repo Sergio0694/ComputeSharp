@@ -11,9 +11,12 @@ using static TerraFX.Interop.D3D12_DESCRIPTOR_HEAP_FLAGS;
 using static TerraFX.Interop.D3D12_DESCRIPTOR_HEAP_TYPE;
 using static TerraFX.Interop.D3D12_FENCE_FLAGS;
 using static TerraFX.Interop.D3D12_MEMORY_POOL;
+using static TerraFX.Interop.D3D12_HEAP_FLAGS;
 using static TerraFX.Interop.D3D12_HEAP_TYPE;
 using static TerraFX.Interop.D3D12_RESOURCE_FLAGS;
 using static TerraFX.Interop.D3D12_RESOURCE_STATES;
+using static TerraFX.Interop.D3D12_SRV_DIMENSION;
+using static TerraFX.Interop.D3D12_UAV_DIMENSION;
 using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Graphics.Extensions
@@ -86,7 +89,7 @@ namespace ComputeSharp.Graphics.Extensions
 
             d3d12device.CreateDescriptorHeap(
                 &d3d12DescriptorHeapDesc,
-                FX.__uuidof< ID3D12DescriptorHeap>(),
+                FX.__uuidof<ID3D12DescriptorHeap>(),
                 d3d12DescriptorHeap.GetVoidAddressOf()).Assert();
 
             return d3d12DescriptorHeap.Move();
@@ -96,25 +99,25 @@ namespace ComputeSharp.Graphics.Extensions
         /// Creates a committed resource for a given buffer type.
         /// </summary>
         /// <param name="d3D12Device">The <see cref="ID3D12Device"/> instance in use.</param>
-        /// <param name="bufferType">The buffer type currently in use.</param>
+        /// <param name="resourceType">The resource type currently in use.</param>
         /// <param name="sizeInBytes">The size in bytes of the current buffer.</param>
         /// <returns>An <see cref="ID3D12Resource"/> reference for the current buffer.</returns>
         public static ComPtr<ID3D12Resource> CreateCommittedResource(
             this ref ID3D12Device d3D12Device,
-            BufferType bufferType,
+            ResourceType resourceType,
             ulong sizeInBytes)
         {
             (D3D12_HEAP_TYPE d3D12HeapType,
              D3D12_RESOURCE_FLAGS d3D12ResourceFlags,
-             D3D12_RESOURCE_STATES d3D12ResourceStates) = bufferType switch
-             {
-                 BufferType.Constant => (D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ),
-                 BufferType.ReadOnly => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
-                 BufferType.ReadWrite => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COMMON),
-                 BufferType.ReadBack => (D3D12_HEAP_TYPE_READBACK, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COPY_DEST),
-                 BufferType.Upload => (D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ),
+             D3D12_RESOURCE_STATES d3D12ResourceStates) = resourceType switch
+            {
+                 ResourceType.Constant => (D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ),
+                 ResourceType.ReadOnly => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
+                 ResourceType.ReadWrite => (D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_COMMON),
+                 ResourceType.ReadBack => (D3D12_HEAP_TYPE_READBACK, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COPY_DEST),
+                 ResourceType.Upload => (D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_GENERIC_READ),
                  _ => ThrowHelper.ThrowArgumentException<(D3D12_HEAP_TYPE, D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
-             };
+            };
 
             using ComPtr<ID3D12Resource> d3D12Resource = default;
 
@@ -128,7 +131,7 @@ namespace ComputeSharp.Graphics.Extensions
 
             d3D12Device.CreateCommittedResource(
                 &d3D12HeapProperties,
-                D3D12_HEAP_FLAGS.D3D12_HEAP_FLAG_NONE,
+                D3D12_HEAP_FLAG_NONE,
                 &d3D12ResourceDescription,
                 d3D12ResourceStates,
                 null,
@@ -136,6 +139,165 @@ namespace ComputeSharp.Graphics.Extensions
                 d3D12Resource.GetVoidAddressOf()).Assert();
 
             return d3D12Resource.Move();
+        }
+
+        /// <summary>
+        /// Creates a committed resource for a given 2D texture type.
+        /// </summary>
+        /// <param name="d3D12Device">The <see cref="ID3D12Device"/> instance in use.</param>
+        /// <param name="resourceType">The resource type currently in use.</param>
+        /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
+        /// <param name="width">The width of the texture resource.</param>
+        /// <param name="height">The height of the texture resource.</param>
+        /// <param name="d3D12ResourceStates">The default <see cref="D3D12_RESOURCE_STATES"/> value for the resource.</param>
+        /// <returns>An <see cref="ID3D12Resource"/> reference for the current texture.</returns>
+        public static ComPtr<ID3D12Resource> CreateCommittedResource(
+            this ref ID3D12Device d3D12Device,
+            ResourceType resourceType,
+            DXGI_FORMAT dxgiFormat,
+            uint width,
+            uint height,
+            out D3D12_RESOURCE_STATES d3D12ResourceStates)
+        {
+            D3D12_RESOURCE_FLAGS d3D12ResourceFlags;
+
+            (d3D12ResourceFlags, d3D12ResourceStates) = resourceType switch
+            {
+                ResourceType.ReadOnly => (D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
+                ResourceType.ReadWrite => (D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_UNORDERED_ACCESS),
+                _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
+            };
+
+            using ComPtr<ID3D12Resource> d3D12Resource = default;
+
+            D3D12_HEAP_PROPERTIES d3D12HeapProperties;
+            d3D12HeapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+            d3D12HeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+            d3D12HeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+            d3D12HeapProperties.CreationNodeMask = 1;
+            d3D12HeapProperties.VisibleNodeMask = 1;
+            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex2D(dxgiFormat, width, height, flags: d3D12ResourceFlags);
+
+            d3D12Device.CreateCommittedResource(
+                &d3D12HeapProperties,
+                D3D12_HEAP_FLAG_NONE,
+                &d3D12ResourceDescription,
+                d3D12ResourceStates,
+                null,
+                FX.__uuidof<ID3D12Resource>(),
+                d3D12Resource.GetVoidAddressOf()).Assert();
+
+            return d3D12Resource.Move();
+        }
+
+        /// <summary>
+        /// Creates a view for a constant buffer.
+        /// </summary>
+        /// <param name="d3d12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
+        /// <param name="d3d12resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
+        /// <param name="bufferSize">The size of the target resource.</param>
+        /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
+        public static void CreateConstantBufferView(
+            this ref ID3D12Device d3d12Device,
+            ID3D12Resource* d3d12resource,
+            nint bufferSize,
+            D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
+        {
+            uint constantBufferSize = checked((uint)((bufferSize + 255) & ~255));
+
+            D3D12_CONSTANT_BUFFER_VIEW_DESC d3D12ConstantBufferViewDescription;
+            d3D12ConstantBufferViewDescription.BufferLocation = d3d12resource->GetGPUVirtualAddress();
+            d3D12ConstantBufferViewDescription.SizeInBytes = constantBufferSize;
+
+            d3d12Device.CreateConstantBufferView(&d3D12ConstantBufferViewDescription, d3D12CpuDescriptorHandle);
+        }
+
+        /// <summary>
+        /// Creates a view for a readonly buffer.
+        /// </summary>
+        /// <param name="d3d12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
+        /// <param name="d3d12resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
+        /// <param name="bufferSize">The size of the target resource.</param>
+        /// <param name="elementSize">The size in byte of each item in the resource.</param>
+        /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
+        public static void CreateShaderResourceView(
+            this ref ID3D12Device d3d12Device,
+            ID3D12Resource* d3d12resource,
+            uint bufferSize,
+            uint elementSize,
+            D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
+        {
+            D3D12_SHADER_RESOURCE_VIEW_DESC d3D12ShaderResourceViewDescription = default;
+            d3D12ShaderResourceViewDescription.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+            d3D12ShaderResourceViewDescription.Shader4ComponentMapping = FX.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+            d3D12ShaderResourceViewDescription.Buffer.NumElements = bufferSize;
+            d3D12ShaderResourceViewDescription.Buffer.StructureByteStride = elementSize;
+
+            d3d12Device.CreateShaderResourceView(d3d12resource, &d3D12ShaderResourceViewDescription, d3D12CpuDescriptorHandle);
+        }
+
+        /// <summary>
+        /// Creates a view for a readonly texture.
+        /// </summary>
+        /// <param name="d3d12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
+        /// <param name="d3d12resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
+        /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
+        /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
+        public static void CreateShaderResourceView(
+            this ref ID3D12Device d3d12Device,
+            ID3D12Resource* d3d12resource,
+            DXGI_FORMAT dxgiFormat,
+            D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
+        {
+            D3D12_SHADER_RESOURCE_VIEW_DESC d3D12ShaderResourceViewDescription = default;
+            d3D12ShaderResourceViewDescription.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+            d3D12ShaderResourceViewDescription.Format = dxgiFormat;
+            d3D12ShaderResourceViewDescription.Shader4ComponentMapping = FX.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+
+            d3d12Device.CreateShaderResourceView(d3d12resource, &d3D12ShaderResourceViewDescription, d3D12CpuDescriptorHandle);
+        }
+
+        /// <summary>
+        /// Creates a view for a buffer that can be both read and written to.
+        /// </summary>
+        /// <param name="d3d12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
+        /// <param name="d3d12resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
+        /// <param name="bufferSize">The size of the target resource.</param>
+        /// <param name="elementSize">The size in byte of each item in the resource.</param>
+        /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
+        public static void CreateUnorderedAccessView(
+            this ref ID3D12Device d3d12Device,
+            ID3D12Resource* d3d12resource,
+            uint bufferSize,
+            uint elementSize,
+            D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
+        {
+            D3D12_UNORDERED_ACCESS_VIEW_DESC d3D12UnorderedAccessViewDescription = default;
+            d3D12UnorderedAccessViewDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
+            d3D12UnorderedAccessViewDescription.Buffer.NumElements = bufferSize;
+            d3D12UnorderedAccessViewDescription.Buffer.StructureByteStride = elementSize;
+
+            d3d12Device.CreateUnorderedAccessView(d3d12resource, null, &d3D12UnorderedAccessViewDescription, d3D12CpuDescriptorHandle);
+        }
+
+        /// <summary>
+        /// Creates a view for a texture that can be both read and written to.
+        /// </summary>
+        /// <param name="d3d12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
+        /// <param name="d3d12resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
+        /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
+        /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
+        public static void CreateUnorderedAccessView(
+            this ref ID3D12Device d3d12Device,
+            ID3D12Resource* d3d12resource,
+            DXGI_FORMAT dxgiFormat,
+            D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
+        {
+            D3D12_UNORDERED_ACCESS_VIEW_DESC d3D12UnorderedAccessViewDescription = default;
+            d3D12UnorderedAccessViewDescription.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
+            d3D12UnorderedAccessViewDescription.Format = dxgiFormat;
+
+            d3d12Device.CreateUnorderedAccessView(d3d12resource, null, &d3D12UnorderedAccessViewDescription, d3D12CpuDescriptorHandle);
         }
 
         /// <summary>

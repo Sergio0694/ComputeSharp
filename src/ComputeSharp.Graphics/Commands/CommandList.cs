@@ -81,14 +81,79 @@ namespace ComputeSharp.Graphics.Commands
         /// <summary>
         /// Copies a memory region from one resource to another.
         /// </summary>
-        /// <param name="d3D12ResourceSource">The source <see cref="ID3D12Resource"/> to read from.</param>
-        /// <param name="sourceOffset">The starting offset to read the source resource from.</param>
         /// <param name="d3d12ResourceDestination">The destination <see cref="ID3D12Resource"/> to write to.</param>
         /// <param name="destinationOffset">The starting offset to write the destination resource from.</param>
+        /// <param name="d3D12ResourceSource">The source <see cref="ID3D12Resource"/> to read from.</param>
+        /// <param name="sourceOffset">The starting offset to read the source resource from.</param>
         /// <param name="numBytes">The total number of bytes to copy from one resource to another.</param>
-        public readonly void CopyBufferRegion(ID3D12Resource* d3D12ResourceSource, ulong sourceOffset, ID3D12Resource* d3d12ResourceDestination, ulong destinationOffset, ulong numBytes)
+        public readonly void CopyBufferRegion(ID3D12Resource* d3d12ResourceDestination, ulong destinationOffset, ID3D12Resource* d3D12ResourceSource, ulong sourceOffset, ulong numBytes)
         {
             this.d3D12GraphicsCommandList.Get()->CopyBufferRegion(d3d12ResourceDestination, destinationOffset, d3D12ResourceSource, sourceOffset, numBytes);
+        }
+
+        /// <summary>
+        /// Copies a texture memory region from one resource (a buffer) to another (a texture).
+        /// </summary>
+        /// <param name="d3d12ResourceDestination">The destination <see cref="ID3D12Resource"/> (a texture) to write to.</param>
+        /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> parameter curreently in use by the texture.</param>
+        /// <param name="x">The horizontal offset in the destination texture.</param>
+        /// <param name="y">The vertical offset in the destination texture.</param>
+        /// <param name="d3D12ResourceSource">The source <see cref="ID3D12Resource"/> (a buffer) to read from.</param>
+        /// <param name="width">The width of the memory area to write to.</param>
+        /// <param name="height">The height of the memory area to write to.</param>
+        /// <param name="elementSizeInBytes">The size of each element to copy.</param>
+
+        public readonly void CopyTextureRegion(
+            ID3D12Resource* d3d12ResourceDestination,
+            DXGI_FORMAT dxgiFormat,
+            uint x,
+            uint y,
+            ID3D12Resource* d3D12ResourceSource,
+            uint width,
+            uint height,
+            uint elementSizeInBytes)
+        {
+            this.d3D12GraphicsCommandList.Get()->CopyTextureRegion(d3d12ResourceDestination, dxgiFormat, x, y, d3D12ResourceSource, width, height, elementSizeInBytes);
+        }
+
+        /// <summary>
+        /// Copies a texture memory region from one resource (a texture) to another (a buffer).
+        /// </summary>
+        /// <param name="d3d12ResourceDestination">The destination <see cref="ID3D12Resource"/> (a buffer) to write to.</param>
+        /// <param name="elementSizeInBytes">The size of each element to copy.</param>
+        /// <param name="d3D12ResourceSource">The source <see cref="ID3D12Resource"/> (a texture) to read from.</param>
+        /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> parameter curreently in use by the texture.</param>
+        /// <param name="x">The horizontal offset in the destination texture.</param>
+        /// <param name="y">The vertical offset in the destination texture.</param>
+        /// <param name="width">The width of the memory area to write to.</param>
+        /// <param name="height">The height of the memory area to write to.</param>
+        public readonly void CopyTextureRegion(
+            ID3D12Resource* d3d12ResourceDestination,
+            uint elementSizeInBytes,
+            ID3D12Resource* d3D12ResourceSource,
+            DXGI_FORMAT dxgiFormat,
+            uint x,
+            uint y,
+            uint width,
+            uint height)
+        {
+            this.d3D12GraphicsCommandList.Get()->CopyTextureRegion(d3d12ResourceDestination, elementSizeInBytes, d3D12ResourceSource, dxgiFormat, x, y, width, height);
+        }
+
+        /// <summary>
+        /// Creates a resource barrier to transition a resource to a specific state.
+        /// </summary>
+        /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to change state for.</param>
+        /// <param name="d3D12ResourceStatesBefore">The starting <see cref="D3D12_RESOURCE_STATES"/> value for the transition.</param>
+        /// <param name="d3D12ResourceStatesAfter">The destnation <see cref="D3D12_RESOURCE_STATES"/> value for the transition.</param>
+        public readonly void ResourceBarrier(
+            ID3D12Resource* d3D12Resource,
+            D3D12_RESOURCE_STATES d3D12ResourceStatesBefore,
+            D3D12_RESOURCE_STATES d3D12ResourceStatesAfter)
+        {
+            D3D12_RESOURCE_BARRIER d3D12ResourceBarrier = D3D12_RESOURCE_BARRIER.InitTransition(d3D12Resource, d3D12ResourceStatesBefore, d3D12ResourceStatesAfter);
+
+            this.d3D12GraphicsCommandList.Get()->ResourceBarrier(1, &d3D12ResourceBarrier);
         }
 
         /// <summary>

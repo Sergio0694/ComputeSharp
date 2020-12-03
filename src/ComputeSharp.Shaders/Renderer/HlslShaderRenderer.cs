@@ -60,14 +60,14 @@ namespace ComputeSharp.Shaders.Renderer
             builder.AppendLine('}');
 
             // Buffers
-            foreach (var buffer in info.HslsBuffersInfo)
+            foreach (var buffer in info.HlslResourceInfo)
             {
                 builder.AppendLine();
 
                 switch (buffer)
                 {
                     // Constant buffer go to cbuffer fields with a dummy local
-                    case HlslBufferInfo.Constant _:
+                    case HlslResourceInfo.Constant _:
                         builder.Append("cbuffer _");
                         builder.Append(buffer.FieldName);
                         builder.Append(" : register(b");
@@ -83,10 +83,10 @@ namespace ComputeSharp.Shaders.Renderer
                         break;
 
                     // Structured buffer have the same syntax but different id
-                    case HlslBufferInfo.ReadOnly _:
+                    case HlslResourceInfo.ReadOnly _:
                         char registerId = 't';
                         goto StructuredBuffer;
-                    case HlslBufferInfo.ReadWrite _:
+                    case HlslResourceInfo.ReadWrite _:
                         registerId = 'u';
                         StructuredBuffer:
                         builder.Append(buffer.FieldType);

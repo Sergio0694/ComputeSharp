@@ -14,9 +14,9 @@ namespace ComputeSharp.Shaders.Translation
         public string EntryPoint { get; }
 
         /// <summary>
-        /// Gets the collection of <see cref="HlslBufferInfo"/> items for the shader fields.
+        /// Gets the collection of <see cref="Renderer.Models.HlslResourceInfo"/> items for the shader fields.
         /// </summary>
-        public IReadOnlyList<HlslBufferInfo> HslsBuffersInfo { get; }
+        public IReadOnlyList<HlslResourceInfo> HlslResourceInfo { get; }
 
         /// <summary>
         /// Gets the collection of <see cref="CapturedFieldInfo"/> items for the shader fields.
