@@ -261,7 +261,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 // Preliminary gamma highlight pass
                 using IMemoryOwner<Vector4> source4 = GetExposedVector4Buffer(memory);
 
-                using ReadOnlyBuffer<Vector4> sourceBuffer = Gpu.Default.AllocateReadOnlyBuffer(source4.Memory.Span);
+                using ReadOnlyBuffer<Vector4> sourceBuffer = Gpu.Default.AllocateReadOnlyBuffer<Vector4>(source4.Memory.Span);
                 using ReadWriteBuffer<Vector4> processingBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Length);
                 using ReadWriteBuffer<ComplexVector4> firstPassBuffer = Gpu.Default.AllocateReadWriteBuffer<ComplexVector4>(sourceBuffer.Length);
                 using ReadOnlyBuffer<Complex64> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer<Complex64>(KernelSize);
