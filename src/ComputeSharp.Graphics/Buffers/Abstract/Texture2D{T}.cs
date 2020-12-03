@@ -231,7 +231,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             using (CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY))
             {
-                copyCommandList.CopyTextureToBufferRegion(D3D12Resource, (uint)x, (uint)y, (uint)width, (uint)height, (uint)Unsafe.SizeOf<T>(), d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>());
+                copyCommandList.CopyTextureRegion(d3D12Resource.Get(), (uint)Unsafe.SizeOf<T>(), D3D12Resource, DXGIFormatHelper.GetForType<T>(), (uint)x, (uint)y, (uint)width, (uint)height);
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
 
@@ -368,7 +368,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
-            copyCommandList.CopyBufferToTextureRegion(d3D12Resource.Get(), (uint)x, (uint)y, (uint)width, (uint)height, (uint)Unsafe.SizeOf<T>(), D3D12Resource, DXGIFormatHelper.GetForType<T>());
+            copyCommandList.CopyTextureRegion(D3D12Resource, DXGIFormatHelper.GetForType<T>(), (uint)x, (uint)y, d3D12Resource.Get(), (uint)width, (uint)height, (uint)Unsafe.SizeOf<T>());
             copyCommandList.ExecuteAndWaitForCompletion();
         }
 

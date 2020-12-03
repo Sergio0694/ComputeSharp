@@ -130,7 +130,7 @@ namespace ComputeSharp
                 // Directly copy the input buffer, if possible
                 using CommandList copyCommandList = new CommandList(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
-                copyCommandList.CopyBufferRegion(source.D3D12Resource, 0, D3D12Resource, 0, (ulong)SizeInBytes);
+                copyCommandList.CopyBufferRegion(D3D12Resource, 0, source.D3D12Resource, 0,(ulong)SizeInBytes);
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
             else SetDataWithCpuBuffer(source);
