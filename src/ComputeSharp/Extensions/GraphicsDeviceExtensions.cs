@@ -36,7 +36,7 @@ namespace ComputeSharp
         public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, T[] array)
             where T : unmanaged
         {
-            return device.AllocateConstantBuffer(array.AsSpan());
+            return device.AllocateConstantBuffer<T>(array.AsSpan());
         }
 
         /// <summary>
@@ -44,10 +44,10 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
-        /// <param name="span">The input <see cref="Span{T}"/> with the data to copy on the allocated buffer.</param>
-        /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance with the contents of the input <see cref="Span{T}"/>.</returns>
+        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated buffer.</param>
+        /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
-        public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, Span<T> span)
+        public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> span)
             where T : unmanaged
         {
             ConstantBuffer<T> buffer = new(device, span.Length);
@@ -100,7 +100,7 @@ namespace ComputeSharp
         public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, T[] array)
             where T : unmanaged
         {
-            return device.AllocateReadOnlyBuffer(array.AsSpan());
+            return device.AllocateReadOnlyBuffer<T>(array.AsSpan());
         }
 
         /// <summary>
@@ -108,10 +108,10 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
-        /// <param name="span">The input <see cref="Span{T}"/> with the data to copy on the allocated buffer.</param>
-        /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input <see cref="Span{T}"/>.</returns>
+        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated buffer.</param>
+        /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
-        public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, Span<T> span)
+        public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> span)
             where T : unmanaged
         {
             ReadOnlyBuffer<T> buffer = new(device, span.Length);
@@ -164,7 +164,7 @@ namespace ComputeSharp
         public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, T[] array)
             where T : unmanaged
         {
-            return device.AllocateReadWriteBuffer(array.AsSpan());
+            return device.AllocateReadWriteBuffer<T>(array.AsSpan());
         }
 
         /// <summary>
@@ -172,10 +172,10 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
-        /// <param name="span">The input <see cref="Span{T}"/> with the data to copy on the allocated buffer.</param>
-        /// <returns>A read write <see cref="ReadWriteBuffer{T}"/> instance with the contents of the input <see cref="Span{T}"/>.</returns>
+        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated buffer.</param>
+        /// <returns>A read write <see cref="ReadWriteBuffer{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
-        public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, Span<T> span)
+        public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> span)
             where T : unmanaged
         {
             ReadWriteBuffer<T> buffer = new(device, span.Length);
@@ -277,7 +277,7 @@ namespace ComputeSharp
         /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
-        /// <returns>A <see cref="ReadOnlyTexture2D{T}"/> instance with the contents of the input span.</returns>
+        /// <returns>A <see cref="ReadOnlyTexture2D{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
         public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, ReadOnlySpan<T> span, int width, int height)
             where T : unmanaged
@@ -363,7 +363,7 @@ namespace ComputeSharp
         /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
-        /// <returns>A <see cref="ReadWriteTexture2D{T}"/> instance with the contents of the input span.</returns>
+        /// <returns>A <see cref="ReadWriteTexture2D{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
         public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, ReadOnlySpan<T> span, int width, int height)
             where T : unmanaged
