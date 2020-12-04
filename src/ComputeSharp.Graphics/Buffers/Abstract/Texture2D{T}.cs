@@ -12,6 +12,7 @@ using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 using static TerraFX.Interop.D3D12_RESOURCE_STATES;
+using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Graphics.Buffers.Abstract
 {
@@ -237,9 +238,12 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
             Guard.HasSizeGreaterThanOrEqualTo(destination, width * height, nameof(destination));
 
-            nint byteSize = (nint)width * height * Unsafe.SizeOf<T>();
+            ulong
+                rowByteSize = (ulong)((nint)width * Unsafe.SizeOf<T>()),
+                rowPitchSize = (rowByteSize + FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1) & ~((ulong)(FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1)),
+                resourceByteSize = rowPitchSize * (uint)height;
 
-            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, (ulong)byteSize);
+            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, resourceByteSize);
 
             using (CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COMPUTE))
             {
@@ -251,7 +255,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             using ID3D12ResourceMap resource = d3D12Resource.Get()->Map();
 
-            MemoryHelper.Copy(resource.Pointer, 0, destination);
+            MemoryHelper.Copy(resource.Pointer, width, height, rowByteSize, rowPitchSize, destination);
         }
 
         /// <summary>
@@ -371,13 +375,16 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
             Guard.HasSizeGreaterThanOrEqualTo(source, width * height, nameof(source));
 
-            nint byteSize = (nint)width * height * Unsafe.SizeOf<T>();
+            ulong
+                rowByteSize = (ulong)((nint)width * Unsafe.SizeOf<T>()),
+                rowPitchSize = (rowByteSize + FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1) & ~((ulong)(FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1)),
+                resourceByteSize = rowPitchSize * (uint)height;
 
-            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, (ulong)byteSize);
+            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, resourceByteSize);
 
             using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
             {
-                MemoryHelper.Copy(source, resource.Pointer, 0);
+                MemoryHelper.Copy(source, resource.Pointer, width, height, rowByteSize, rowPitchSize);
             }
 
             using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COMPUTE);
