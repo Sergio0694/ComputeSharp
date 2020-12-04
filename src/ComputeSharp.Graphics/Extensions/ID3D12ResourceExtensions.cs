@@ -14,29 +14,29 @@ namespace ComputeSharp.Graphics.Extensions
         /// <summary>
         /// Maps the current resource to a specified subresource.
         /// </summary>
-        /// <param name="d3d12resource">The target <see cref="ID3D12Resource"/> to map.</param>
+        /// <param name="d3D12Resource">The target <see cref="ID3D12Resource"/> to map.</param>
         /// <returns>A <see cref="ID3D12ResourceMap"/> instance representing the mapped resource.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ID3D12ResourceMap Map(this ref ID3D12Resource d3d12resource)
+        public static ID3D12ResourceMap Map(this ref ID3D12Resource d3D12Resource)
         {
             void* pointer;
 
-            d3d12resource.Map(0, null, &pointer).Assert();
+            d3D12Resource.Map(0, null, &pointer).Assert();
 
-            return new((ID3D12Resource*)Unsafe.AsPointer(ref d3d12resource), pointer);
+            return new((ID3D12Resource*)Unsafe.AsPointer(ref d3D12Resource), pointer);
         }
 
         /// <summary>
         /// Maps a given <see cref="ID3D12Resource"/> memory area.
         /// </summary>
-        /// <param name="d3d12resource">The target <see cref="ID3D12Resource"/> to map.</param>
-        /// <returns>A pointer to the mapped area for <paramref name="d3d12resource"/>.</returns>
+        /// <param name="d3D12Resource">The target <see cref="ID3D12Resource"/> to map.</param>
+        /// <returns>A pointer to the mapped area for <paramref name="d3D12Resource"/>.</returns>
         /// <exception cref="Exception">Thrown when the mapping operation fails.</exception>
         /// <remarks>Only use this method to unmap resources that were mapped with <see cref="Map(ref ID3D12Resource)"/>.</remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Unmap(this ref ID3D12Resource d3d12resource)
+        public static void Unmap(this ref ID3D12Resource d3D12Resource)
         {
-            d3d12resource.Unmap(0, null);
+            d3D12Resource.Unmap(0, null);
         }
     }
 }

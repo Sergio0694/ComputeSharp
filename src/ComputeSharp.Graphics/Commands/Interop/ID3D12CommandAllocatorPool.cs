@@ -14,21 +14,21 @@ namespace ComputeSharp.Graphics.Commands
         /// <summary>
         /// The command list type being used by the current instance.
         /// </summary>
-        private readonly D3D12_COMMAND_LIST_TYPE d3d12CommandListType;
+        private readonly D3D12_COMMAND_LIST_TYPE d3D12CommandListType;
 
         /// <summary>
         /// The queue of currently pooled <see cref="ID3D12CommandAllocator"/> instances.
         /// </summary>
-        private readonly Queue<ComPtr<ID3D12CommandAllocator>> d3d12CommandAllocatorQueue;
+        private readonly Queue<ComPtr<ID3D12CommandAllocator>> d3D12CommandAllocatorQueue;
 
         /// <summary>
         /// Creates a new <see cref="ID3D12CommandAllocatorPool"/> instance with the specified values.
         /// </summary>
-        /// <param name="d3d12CommandListType">The command list type to use.</param>
-        public ID3D12CommandAllocatorPool(D3D12_COMMAND_LIST_TYPE d3d12CommandListType)
+        /// <param name="d3D12CommandListType">The command list type to use.</param>
+        public ID3D12CommandAllocatorPool(D3D12_COMMAND_LIST_TYPE d3D12CommandListType)
         {
-            this.d3d12CommandListType = d3d12CommandListType;
-            this.d3d12CommandAllocatorQueue = new();
+            this.d3D12CommandListType = d3D12CommandListType;
+            this.d3D12CommandAllocatorQueue = new();
         }
 
         /// <summary>
@@ -37,9 +37,9 @@ namespace ComputeSharp.Graphics.Commands
         /// <param name="d3D12CommandAllocator">The input <see cref="ID3D12CommandAllocator"/> to enqueue.</param>
         public void Enqueue(ComPtr<ID3D12CommandAllocator> d3D12CommandAllocator)
         {
-            lock (this.d3d12CommandAllocatorQueue)
+            lock (this.d3D12CommandAllocatorQueue)
             {
-                this.d3d12CommandAllocatorQueue.Enqueue(d3D12CommandAllocator);
+                this.d3D12CommandAllocatorQueue.Enqueue(d3D12CommandAllocator);
             }
         }
 
@@ -51,30 +51,30 @@ namespace ComputeSharp.Graphics.Commands
         {
             using ComPtr<ID3D12CommandAllocator> d3D12CommandAllocator = default;
 
-            lock (this.d3d12CommandAllocatorQueue)
+            lock (this.d3D12CommandAllocatorQueue)
             {
-                if (this.d3d12CommandAllocatorQueue.TryDequeue(out *&d3D12CommandAllocator))
+                if (this.d3D12CommandAllocatorQueue.TryDequeue(out *&d3D12CommandAllocator))
                 {
                     d3D12CommandAllocator.Get()->Reset().Assert();
 
                     return d3D12CommandAllocator.Move();
                 }
 
-                return d3D12Device->CreateCommandAllocator(this.d3d12CommandListType);
+                return d3D12Device->CreateCommandAllocator(this.d3D12CommandListType);
             }
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose()
         {
-            lock (this.d3d12CommandAllocatorQueue)
+            lock (this.d3D12CommandAllocatorQueue)
             {
-                foreach (ComPtr<ID3D12CommandAllocator> d3D12CommandAllocator in this.d3d12CommandAllocatorQueue)
+                foreach (ComPtr<ID3D12CommandAllocator> d3D12CommandAllocator in this.d3D12CommandAllocatorQueue)
                 {
                     d3D12CommandAllocator.Dispose();
                 }
 
-                this.d3d12CommandAllocatorQueue.Clear();
+                this.d3D12CommandAllocatorQueue.Clear();
             }
         }
     }

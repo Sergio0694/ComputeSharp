@@ -23,12 +23,12 @@ namespace ComputeSharp.Graphics.Buffers.Interop
         /// <summary>
         /// Creates a new <see cref="ID3D12ResourceMap"/> instance for a given <see cref="ID3D12Resource"/> value.
         /// </summary>
-        /// <param name="d3d12resource">The input <see cref="ID3D12Resource"/> instance to map.</param>
+        /// <param name="d3D12Resource">The input <see cref="ID3D12Resource"/> instance to map.</param>
         /// <param name="pointer">The pointer to the mapped resource.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ID3D12ResourceMap(ID3D12Resource* d3d12resource, void* pointer)
+        public ID3D12ResourceMap(ID3D12Resource* d3D12Resource, void* pointer)
         {
-            this.d3D12Resource = d3d12resource;
+            this.d3D12Resource = d3D12Resource;
 
             Pointer = pointer;
         }

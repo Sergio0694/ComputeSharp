@@ -14,12 +14,12 @@ namespace ComputeSharp.Shaders.Extensions
         /// <summary>
         /// Creates a new <see cref="ID3D12RootSignature"/> for a given device.
         /// </summary>
-        /// <param name="d3d12device">The target <see cref="ID3D12Device"/> to use to create the root signature.</param>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the root signature.</param>
         /// <param name="d3D12DescriptorRanges1">The input descriptor ranges for the signature to create.</param>
         /// <returns>A pointer to the newly allocated <see cref="ID3D12RootSignature"/> instance.</returns>
         /// <exception cref="Exception">Thrown when the creation of the root signature fails.</exception>
         public static ComPtr<ID3D12RootSignature> CreateRootSignature(
-            this ref ID3D12Device d3d12device,
+            this ref ID3D12Device d3D12Device,
             ReadOnlySpan<D3D12_DESCRIPTOR_RANGE1> d3D12DescriptorRanges1)
         {
             using ComPtr<ID3DBlob> d3D3Blob = default;
@@ -38,19 +38,19 @@ namespace ComputeSharp.Shaders.Extensions
 
                 // Root signature description wrapping the packed collection of root parameters
                 D3D12_VERSIONED_ROOT_SIGNATURE_DESC.Init_1_1(
-                    out D3D12_VERSIONED_ROOT_SIGNATURE_DESC d3d12VersionedRootSignatureDescription,
+                    out D3D12_VERSIONED_ROOT_SIGNATURE_DESC d3D12VersionedRootSignatureDescription,
                     (uint)d3D12DescriptorRanges1.Length,
                     d3D12RootParameters1);
 
                 // Serialize the root signature from the data just computed. When this is done
                 // we just work with the resulting blobs, so the input data can be unpinned.
                 FX.D3D12SerializeVersionedRootSignature(
-                    &d3d12VersionedRootSignatureDescription,
+                    &d3D12VersionedRootSignatureDescription,
                     d3D3Blob.GetAddressOf(),
                     d3D3BlobError.GetAddressOf()).Assert();
             }
 
-            d3d12device.CreateRootSignature(
+            d3D12Device.CreateRootSignature(
                 0,
                 d3D3Blob.Get()->GetBufferPointer(),
                 d3D3Blob.Get()->GetBufferSize(),
@@ -63,27 +63,27 @@ namespace ComputeSharp.Shaders.Extensions
         /// <summary>
         /// Creates a new <see cref="ID3D12PipelineState"/> for a given device.
         /// </summary>
-        /// <param name="d3d12device">The target <see cref="ID3D12Device"/> to use to create the pipeline state.</param>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the pipeline state.</param>
         /// <param name="d3D12RootSignature">The input root signature to use to create the pipeline state.</param>
-        /// <param name="d3d12ShaderBytecode">The shader bytecode to use for the pipeline state.</param>
+        /// <param name="d3D12ShaderBytecode">The shader bytecode to use for the pipeline state.</param>
         /// <returns>A pointer to the newly allocated <see cref="ID3D12PipelineState"/> instance.</returns>
         /// <exception cref="Exception">Thrown when the creation of the pipeline state fails.</exception>
         public static ComPtr<ID3D12PipelineState> CreateComputePipelineState(
-            this ref ID3D12Device d3d12device,
+            this ref ID3D12Device d3D12Device,
             ID3D12RootSignature* d3D12RootSignature,
-            D3D12_SHADER_BYTECODE d3d12ShaderBytecode)
+            D3D12_SHADER_BYTECODE d3D12ShaderBytecode)
         {
             using ComPtr<ID3D12PipelineState> d3D12PipelineState = default;
 
-            D3D12_COMPUTE_PIPELINE_STATE_DESC d3d12ComputePipelineStateDescription;
-            d3d12ComputePipelineStateDescription.pRootSignature = d3D12RootSignature;
-            d3d12ComputePipelineStateDescription.CS = d3d12ShaderBytecode;
-            d3d12ComputePipelineStateDescription.NodeMask = 0;
-            d3d12ComputePipelineStateDescription.CachedPSO = default;
-            d3d12ComputePipelineStateDescription.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+            D3D12_COMPUTE_PIPELINE_STATE_DESC d3D12ComputePipelineStateDescription;
+            d3D12ComputePipelineStateDescription.pRootSignature = d3D12RootSignature;
+            d3D12ComputePipelineStateDescription.CS = d3D12ShaderBytecode;
+            d3D12ComputePipelineStateDescription.NodeMask = 0;
+            d3D12ComputePipelineStateDescription.CachedPSO = default;
+            d3D12ComputePipelineStateDescription.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
 
-            d3d12device.CreateComputePipelineState(
-                &d3d12ComputePipelineStateDescription,
+            d3D12Device.CreateComputePipelineState(
+                &d3D12ComputePipelineStateDescription,
                 FX.__uuidof<ID3D12PipelineState>(),
                 d3D12PipelineState.GetVoidAddressOf()).Assert();
 

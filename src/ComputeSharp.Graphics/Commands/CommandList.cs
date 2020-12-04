@@ -21,7 +21,7 @@ namespace ComputeSharp.Graphics.Commands
         /// <summary>
         /// The command list type being used by the current instance.
         /// </summary>
-        private readonly D3D12_COMMAND_LIST_TYPE d3d12CommandListType;
+        private readonly D3D12_COMMAND_LIST_TYPE d3D12CommandListType;
 
         /// <summary>
         /// The <see cref="ID3D12CommandAllocator"/> object in use by the current instance.
@@ -37,16 +37,16 @@ namespace ComputeSharp.Graphics.Commands
         /// Creates a new <see cref="CommandList"/> instance with the specified parameters.
         /// </summary>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance to use.</param>
-        /// <param name="d3d12CommandListType">The type of command list to create.</param>
-        public CommandList(GraphicsDevice device, D3D12_COMMAND_LIST_TYPE d3d12CommandListType)
+        /// <param name="d3D12CommandListType">The type of command list to create.</param>
+        public CommandList(GraphicsDevice device, D3D12_COMMAND_LIST_TYPE d3D12CommandListType)
         {
             this.device = device;
-            this.d3d12CommandListType = d3d12CommandListType;
-            this.d3D12CommandAllocator = device.GetCommandAllocator(d3d12CommandListType);
-            this.d3D12GraphicsCommandList = device.D3D12Device->CreateCommandList(d3d12CommandListType, this.d3D12CommandAllocator);
+            this.d3D12CommandListType = d3D12CommandListType;
+            this.d3D12CommandAllocator = device.GetCommandAllocator(d3D12CommandListType);
+            this.d3D12GraphicsCommandList = device.D3D12Device->CreateCommandList(d3D12CommandListType, this.d3D12CommandAllocator);
 
             // Set the heap descriptor if the command list is not for copy operations
-            if (d3d12CommandListType is not D3D12_COMMAND_LIST_TYPE_COPY)
+            if (d3D12CommandListType is not D3D12_COMMAND_LIST_TYPE_COPY)
             {
                 device.SetDescriptorHeapForCommandList(this.d3D12GraphicsCommandList);
             }
@@ -55,7 +55,7 @@ namespace ComputeSharp.Graphics.Commands
         /// <summary>
         /// Gets the command list type being used by the current instance.
         /// </summary>
-        public readonly D3D12_COMMAND_LIST_TYPE D3d12CommandListType => this.d3d12CommandListType;
+        public readonly D3D12_COMMAND_LIST_TYPE D3d12CommandListType => this.d3D12CommandListType;
 
         /// <summary>
         /// Detaches the <see cref="ID3D12CommandAllocator"/> object in use by the current instance.
@@ -81,20 +81,20 @@ namespace ComputeSharp.Graphics.Commands
         /// <summary>
         /// Copies a memory region from one resource to another.
         /// </summary>
-        /// <param name="d3d12ResourceDestination">The destination <see cref="ID3D12Resource"/> to write to.</param>
+        /// <param name="d3D12ResourceDestination">The destination <see cref="ID3D12Resource"/> to write to.</param>
         /// <param name="destinationOffset">The starting offset to write the destination resource from.</param>
         /// <param name="d3D12ResourceSource">The source <see cref="ID3D12Resource"/> to read from.</param>
         /// <param name="sourceOffset">The starting offset to read the source resource from.</param>
         /// <param name="numBytes">The total number of bytes to copy from one resource to another.</param>
-        public readonly void CopyBufferRegion(ID3D12Resource* d3d12ResourceDestination, ulong destinationOffset, ID3D12Resource* d3D12ResourceSource, ulong sourceOffset, ulong numBytes)
+        public readonly void CopyBufferRegion(ID3D12Resource* d3D12ResourceDestination, ulong destinationOffset, ID3D12Resource* d3D12ResourceSource, ulong sourceOffset, ulong numBytes)
         {
-            this.d3D12GraphicsCommandList.Get()->CopyBufferRegion(d3d12ResourceDestination, destinationOffset, d3D12ResourceSource, sourceOffset, numBytes);
+            this.d3D12GraphicsCommandList.Get()->CopyBufferRegion(d3D12ResourceDestination, destinationOffset, d3D12ResourceSource, sourceOffset, numBytes);
         }
 
         /// <summary>
         /// Copies a texture memory region from one resource (a buffer) to another (a texture).
         /// </summary>
-        /// <param name="d3d12ResourceDestination">The destination <see cref="ID3D12Resource"/> (a texture) to write to.</param>
+        /// <param name="d3D12ResourceDestination">The destination <see cref="ID3D12Resource"/> (a texture) to write to.</param>
         /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> parameter curreently in use by the texture.</param>
         /// <param name="x">The horizontal offset in the destination texture.</param>
         /// <param name="y">The vertical offset in the destination texture.</param>
@@ -104,7 +104,7 @@ namespace ComputeSharp.Graphics.Commands
         /// <param name="elementSizeInBytes">The size of each element to copy.</param>
 
         public readonly void CopyTextureRegion(
-            ID3D12Resource* d3d12ResourceDestination,
+            ID3D12Resource* d3D12ResourceDestination,
             DXGI_FORMAT dxgiFormat,
             uint x,
             uint y,
@@ -113,13 +113,13 @@ namespace ComputeSharp.Graphics.Commands
             uint height,
             uint elementSizeInBytes)
         {
-            this.d3D12GraphicsCommandList.Get()->CopyTextureRegion(d3d12ResourceDestination, dxgiFormat, x, y, d3D12ResourceSource, width, height, elementSizeInBytes);
+            this.d3D12GraphicsCommandList.Get()->CopyTextureRegion(d3D12ResourceDestination, dxgiFormat, x, y, d3D12ResourceSource, width, height, elementSizeInBytes);
         }
 
         /// <summary>
         /// Copies a texture memory region from one resource (a texture) to another (a buffer).
         /// </summary>
-        /// <param name="d3d12ResourceDestination">The destination <see cref="ID3D12Resource"/> (a buffer) to write to.</param>
+        /// <param name="d3D12ResourceDestination">The destination <see cref="ID3D12Resource"/> (a buffer) to write to.</param>
         /// <param name="elementSizeInBytes">The size of each element to copy.</param>
         /// <param name="d3D12ResourceSource">The source <see cref="ID3D12Resource"/> (a texture) to read from.</param>
         /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> parameter curreently in use by the texture.</param>
@@ -128,7 +128,7 @@ namespace ComputeSharp.Graphics.Commands
         /// <param name="width">The width of the memory area to write to.</param>
         /// <param name="height">The height of the memory area to write to.</param>
         public readonly void CopyTextureRegion(
-            ID3D12Resource* d3d12ResourceDestination,
+            ID3D12Resource* d3D12ResourceDestination,
             uint elementSizeInBytes,
             ID3D12Resource* d3D12ResourceSource,
             DXGI_FORMAT dxgiFormat,
@@ -137,7 +137,7 @@ namespace ComputeSharp.Graphics.Commands
             uint width,
             uint height)
         {
-            this.d3D12GraphicsCommandList.Get()->CopyTextureRegion(d3d12ResourceDestination, elementSizeInBytes, d3D12ResourceSource, dxgiFormat, x, y, width, height);
+            this.d3D12GraphicsCommandList.Get()->CopyTextureRegion(d3D12ResourceDestination, elementSizeInBytes, d3D12ResourceSource, dxgiFormat, x, y, width, height);
         }
 
         /// <summary>

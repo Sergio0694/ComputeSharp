@@ -29,22 +29,22 @@ namespace ComputeSharp.Graphics.Extensions
         /// <summary>
         /// Creates a new <see cref="ID3D12CommandQueue"/> of the specified type, for a given device.
         /// </summary>
-        /// <param name="d3d12device">The target <see cref="ID3D12Device"/> to use to create the command queue.</param>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the command queue.</param>
         /// <param name="type">The type of command queue to create.</param>
         /// <returns>A pointer to the newly allocated <see cref="ID3D12CommandQueue"/> instance.</returns>
         /// <exception cref="Exception">Thrown when the creation of the command queue fails.</exception>
-        public static ComPtr<ID3D12CommandQueue> CreateCommandQueue(this ref ID3D12Device d3d12device, D3D12_COMMAND_LIST_TYPE type)
+        public static ComPtr<ID3D12CommandQueue> CreateCommandQueue(this ref ID3D12Device d3D12Device, D3D12_COMMAND_LIST_TYPE type)
         {
             using ComPtr<ID3D12CommandQueue> d3D12CommandQueue = default;
 
-            D3D12_COMMAND_QUEUE_DESC d3d12CommandQueueDesc;
-            d3d12CommandQueueDesc.Type = type;
-            d3d12CommandQueueDesc.Priority = (int)D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
-            d3d12CommandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-            d3d12CommandQueueDesc.NodeMask = 0;
+            D3D12_COMMAND_QUEUE_DESC d3D12CommandQueueDesc;
+            d3D12CommandQueueDesc.Type = type;
+            d3D12CommandQueueDesc.Priority = (int)D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
+            d3D12CommandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+            d3D12CommandQueueDesc.NodeMask = 0;
 
-            d3d12device.CreateCommandQueue(
-                &d3d12CommandQueueDesc,
+            d3D12Device.CreateCommandQueue(
+                &d3D12CommandQueueDesc,
                 FX.__uuidof<ID3D12CommandQueue>(),
                 d3D12CommandQueue.GetVoidAddressOf()).Assert();
 
@@ -54,45 +54,45 @@ namespace ComputeSharp.Graphics.Extensions
         /// <summary>
         /// Creates a new <see cref="ID3D12Fence"/> for a given device.
         /// </summary>
-        /// <param name="d3d12device">The target <see cref="ID3D12Device"/> to use to create the fence.</param>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the fence.</param>
         /// <returns>A pointer to the newly allocated <see cref="ID3D12Fence"/> instance.</returns>
         /// <exception cref="Exception">Thrown when the creation of the command queue fails.</exception>
-        public static ComPtr<ID3D12Fence> CreateFence(this ref ID3D12Device d3d12device)
+        public static ComPtr<ID3D12Fence> CreateFence(this ref ID3D12Device d3D12Device)
         {
-            using ComPtr<ID3D12Fence> d3d12Fence = default;
+            using ComPtr<ID3D12Fence> d3D12Fence = default;
 
-            d3d12device.CreateFence(
+            d3D12Device.CreateFence(
                 0,
                 D3D12_FENCE_FLAG_NONE,
                 FX.__uuidof<ID3D12Fence>(),
-                d3d12Fence.GetVoidAddressOf()).Assert();
+                d3D12Fence.GetVoidAddressOf()).Assert();
 
-            return d3d12Fence.Move();
+            return d3D12Fence.Move();
         }
 
         /// <summary>
         /// Creates a new <see cref="ID3D12DescriptorHeap"/> for a given device.
         /// </summary>
-        /// <param name="d3d12device">The target <see cref="ID3D12Device"/> to use to create the descriptor heap.</param>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the descriptor heap.</param>
         /// <param name="descriptorsCount">The number of descriptors to allocate.</param>
         /// <returns>A pointer to the newly allocated <see cref="ID3D12DescriptorHeap"/> instance.</returns>
         /// <exception cref="Exception">Thrown when the creation of the command queue fails.</exception>
-        public static ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(this ref ID3D12Device d3d12device, uint descriptorsCount)
+        public static ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(this ref ID3D12Device d3D12Device, uint descriptorsCount)
         {
-            using ComPtr<ID3D12DescriptorHeap> d3d12DescriptorHeap = default;
+            using ComPtr<ID3D12DescriptorHeap> d3D12DescriptorHeap = default;
 
-            D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc;
-            d3d12DescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-            d3d12DescriptorHeapDesc.NumDescriptors = descriptorsCount;
-            d3d12DescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-            d3d12DescriptorHeapDesc.NodeMask = 0;
+            D3D12_DESCRIPTOR_HEAP_DESC d3D12DescriptorHeapDesc;
+            d3D12DescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+            d3D12DescriptorHeapDesc.NumDescriptors = descriptorsCount;
+            d3D12DescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+            d3D12DescriptorHeapDesc.NodeMask = 0;
 
-            d3d12device.CreateDescriptorHeap(
-                &d3d12DescriptorHeapDesc,
+            d3D12Device.CreateDescriptorHeap(
+                &d3D12DescriptorHeapDesc,
                 FX.__uuidof<ID3D12DescriptorHeap>(),
-                d3d12DescriptorHeap.GetVoidAddressOf()).Assert();
+                d3D12DescriptorHeap.GetVoidAddressOf()).Assert();
 
-            return d3d12DescriptorHeap.Move();
+            return d3D12DescriptorHeap.Move();
         }
 
         /// <summary>
@@ -193,36 +193,36 @@ namespace ComputeSharp.Graphics.Extensions
         /// <summary>
         /// Creates a view for a constant buffer.
         /// </summary>
-        /// <param name="d3d12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
-        /// <param name="d3d12resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
+        /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
         /// <param name="bufferSize">The size of the target resource.</param>
         /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
         public static void CreateConstantBufferView(
-            this ref ID3D12Device d3d12Device,
-            ID3D12Resource* d3d12resource,
+            this ref ID3D12Device d3D12Device,
+            ID3D12Resource* d3D12Resource,
             nint bufferSize,
             D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
         {
             uint constantBufferSize = checked((uint)((bufferSize + 255) & ~255));
 
             D3D12_CONSTANT_BUFFER_VIEW_DESC d3D12ConstantBufferViewDescription;
-            d3D12ConstantBufferViewDescription.BufferLocation = d3d12resource->GetGPUVirtualAddress();
+            d3D12ConstantBufferViewDescription.BufferLocation = d3D12Resource->GetGPUVirtualAddress();
             d3D12ConstantBufferViewDescription.SizeInBytes = constantBufferSize;
 
-            d3d12Device.CreateConstantBufferView(&d3D12ConstantBufferViewDescription, d3D12CpuDescriptorHandle);
+            d3D12Device.CreateConstantBufferView(&d3D12ConstantBufferViewDescription, d3D12CpuDescriptorHandle);
         }
 
         /// <summary>
         /// Creates a view for a readonly buffer.
         /// </summary>
-        /// <param name="d3d12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
-        /// <param name="d3d12resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
+        /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
         /// <param name="bufferSize">The size of the target resource.</param>
         /// <param name="elementSize">The size in byte of each item in the resource.</param>
         /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
         public static void CreateShaderResourceView(
-            this ref ID3D12Device d3d12Device,
-            ID3D12Resource* d3d12resource,
+            this ref ID3D12Device d3D12Device,
+            ID3D12Resource* d3D12Resource,
             uint bufferSize,
             uint elementSize,
             D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
@@ -233,19 +233,19 @@ namespace ComputeSharp.Graphics.Extensions
             d3D12ShaderResourceViewDescription.Buffer.NumElements = bufferSize;
             d3D12ShaderResourceViewDescription.Buffer.StructureByteStride = elementSize;
 
-            d3d12Device.CreateShaderResourceView(d3d12resource, &d3D12ShaderResourceViewDescription, d3D12CpuDescriptorHandle);
+            d3D12Device.CreateShaderResourceView(d3D12Resource, &d3D12ShaderResourceViewDescription, d3D12CpuDescriptorHandle);
         }
 
         /// <summary>
         /// Creates a view for a readonly texture.
         /// </summary>
-        /// <param name="d3d12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
-        /// <param name="d3d12resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
+        /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
         /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
         /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
         public static void CreateShaderResourceView(
-            this ref ID3D12Device d3d12Device,
-            ID3D12Resource* d3d12resource,
+            this ref ID3D12Device d3D12Device,
+            ID3D12Resource* d3D12Resource,
             DXGI_FORMAT dxgiFormat,
             D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
         {
@@ -254,20 +254,20 @@ namespace ComputeSharp.Graphics.Extensions
             d3D12ShaderResourceViewDescription.Format = dxgiFormat;
             d3D12ShaderResourceViewDescription.Shader4ComponentMapping = FX.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
-            d3d12Device.CreateShaderResourceView(d3d12resource, &d3D12ShaderResourceViewDescription, d3D12CpuDescriptorHandle);
+            d3D12Device.CreateShaderResourceView(d3D12Resource, &d3D12ShaderResourceViewDescription, d3D12CpuDescriptorHandle);
         }
 
         /// <summary>
         /// Creates a view for a buffer that can be both read and written to.
         /// </summary>
-        /// <param name="d3d12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
-        /// <param name="d3d12resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
+        /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
         /// <param name="bufferSize">The size of the target resource.</param>
         /// <param name="elementSize">The size in byte of each item in the resource.</param>
         /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
         public static void CreateUnorderedAccessView(
-            this ref ID3D12Device d3d12Device,
-            ID3D12Resource* d3d12resource,
+            this ref ID3D12Device d3D12Device,
+            ID3D12Resource* d3D12Resource,
             uint bufferSize,
             uint elementSize,
             D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
@@ -277,19 +277,19 @@ namespace ComputeSharp.Graphics.Extensions
             d3D12UnorderedAccessViewDescription.Buffer.NumElements = bufferSize;
             d3D12UnorderedAccessViewDescription.Buffer.StructureByteStride = elementSize;
 
-            d3d12Device.CreateUnorderedAccessView(d3d12resource, null, &d3D12UnorderedAccessViewDescription, d3D12CpuDescriptorHandle);
+            d3D12Device.CreateUnorderedAccessView(d3D12Resource, null, &d3D12UnorderedAccessViewDescription, d3D12CpuDescriptorHandle);
         }
 
         /// <summary>
         /// Creates a view for a texture that can be both read and written to.
         /// </summary>
-        /// <param name="d3d12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
-        /// <param name="d3d12resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
+        /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
         /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
         /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
         public static void CreateUnorderedAccessView(
-            this ref ID3D12Device d3d12Device,
-            ID3D12Resource* d3d12resource,
+            this ref ID3D12Device d3D12Device,
+            ID3D12Resource* d3D12Resource,
             DXGI_FORMAT dxgiFormat,
             D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
         {
@@ -297,24 +297,24 @@ namespace ComputeSharp.Graphics.Extensions
             d3D12UnorderedAccessViewDescription.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
             d3D12UnorderedAccessViewDescription.Format = dxgiFormat;
 
-            d3d12Device.CreateUnorderedAccessView(d3d12resource, null, &d3D12UnorderedAccessViewDescription, d3D12CpuDescriptorHandle);
+            d3D12Device.CreateUnorderedAccessView(d3D12Resource, null, &d3D12UnorderedAccessViewDescription, d3D12CpuDescriptorHandle);
         }
 
         /// <summary>
         /// Creates a new <see cref="ID3D12CommandAllocator"/> for a given device.
         /// </summary>
-        /// <param name="d3d12device">The target <see cref="ID3D12Device"/> to use to create the command allocator.</param>
-        /// <param name="d3d12CommandListType">The type of command list allocator to create.</param>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the command allocator.</param>
+        /// <param name="d3D12CommandListType">The type of command list allocator to create.</param>
         /// <returns>A pointer to the newly allocated <see cref="ID3D12CommandAllocator"/> instance.</returns>
         /// <exception cref="Exception">Thrown when the creation of the command allocator fails.</exception>
         public static ComPtr<ID3D12CommandAllocator> CreateCommandAllocator(
-            this ref ID3D12Device d3d12device,
-            D3D12_COMMAND_LIST_TYPE d3d12CommandListType)
+            this ref ID3D12Device d3D12Device,
+            D3D12_COMMAND_LIST_TYPE d3D12CommandListType)
         {
             using ComPtr<ID3D12CommandAllocator> d3D12CommandAllocator = default;
 
-            d3d12device.CreateCommandAllocator(
-                d3d12CommandListType,
+            d3D12Device.CreateCommandAllocator(
+                d3D12CommandListType,
                 FX.__uuidof<ID3D12CommandAllocator>(),
                 d3D12CommandAllocator.GetVoidAddressOf()).Assert();
 
@@ -324,42 +324,42 @@ namespace ComputeSharp.Graphics.Extensions
         /// <summary>
         /// Creates a new <see cref="ID3D12GraphicsCommandList"/> for a given device.
         /// </summary>
-        /// <param name="d3d12device">The target <see cref="ID3D12Device"/> to use to create the command list.</param>
-        /// <param name="d3d12CommandListType">The type of command list to create.</param>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the command list.</param>
+        /// <param name="d3D12CommandListType">The type of command list to create.</param>
         /// <returns>A pointer to the newly allocated <see cref="ID3D12GraphicsCommandList"/> instance.</returns>
         /// <exception cref="Exception">Thrown when the creation of the command list fails.</exception>
         public static ComPtr<ID3D12GraphicsCommandList> CreateCommandList(
-            this ref ID3D12Device d3d12device,
-            D3D12_COMMAND_LIST_TYPE d3d12CommandListType,
+            this ref ID3D12Device d3D12Device,
+            D3D12_COMMAND_LIST_TYPE d3D12CommandListType,
             ID3D12CommandAllocator* d3D12CommandAllocator)
         {
-            using ComPtr<ID3D12GraphicsCommandList> d3d12GraphicsCommandList = default;
+            using ComPtr<ID3D12GraphicsCommandList> d3D12GraphicsCommandList = default;
 
-            d3d12device.CreateCommandList(
+            d3D12Device.CreateCommandList(
                 0,
-                d3d12CommandListType,
+                d3D12CommandListType,
                 d3D12CommandAllocator,
                 null,
                 FX.__uuidof<ID3D12GraphicsCommandList>(),
-                d3d12GraphicsCommandList.GetVoidAddressOf()).Assert();
+                d3D12GraphicsCommandList.GetVoidAddressOf()).Assert();
 
-            return d3d12GraphicsCommandList.Move();
+            return d3D12GraphicsCommandList.Move();
         }
 
         /// <summary>
         /// Checks the feature support of a given type for a given device.
         /// </summary>
         /// <typeparam name="TFeature">The type of feature support data to retrieve.</typeparam>
-        /// <param name="d3d12device">The target <see cref="ID3D12Device"/> to use to check features for.</param>
-        /// <param name="d3d12feature">The type of features to check.</param>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to check features for.</param>
+        /// <param name="d3D12Feature">The type of features to check.</param>
         /// <returns>A <see typeparamref="TFeature"/> value with the features data.</returns>
         [Pure]
-        public static unsafe TFeature CheckFeatureSupport<TFeature>(this ref ID3D12Device d3d12device, D3D12_FEATURE d3d12feature)
+        public static unsafe TFeature CheckFeatureSupport<TFeature>(this ref ID3D12Device d3D12Device, D3D12_FEATURE d3D12Feature)
             where TFeature : unmanaged
         {
             TFeature feature;
 
-            d3d12device.CheckFeatureSupport(d3d12feature, &feature, (uint)sizeof(TFeature)).Assert();
+            d3D12Device.CheckFeatureSupport(d3D12Feature, &feature, (uint)sizeof(TFeature)).Assert();
 
             return feature;
         }

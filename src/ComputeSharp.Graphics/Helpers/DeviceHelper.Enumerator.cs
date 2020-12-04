@@ -133,15 +133,15 @@ namespace ComputeSharp.Graphics.Helpers
                         if (FX.SUCCEEDED(createDeviceResult) &&
                             this.predicate(new GraphicsDeviceInfo(&dxgiDescription1)))
                         {
-                            using ComPtr<ID3D12Device> d3d12device = default;
+                            using ComPtr<ID3D12Device> d3D12Device = default;
 
                             FX.D3D12CreateDevice(
                                 dxgiAdapter1.AsIUnknown().Get(),
                                 D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_12_0,
                                 FX.__uuidof<ID3D12Device>(),
-                                d3d12device.GetVoidAddressOf()).Assert();
+                                d3D12Device.GetVoidAddressOf()).Assert();
 
-                            this.graphicsDevice = GetOrCreateDevice(d3d12device.Move(), &dxgiDescription1);
+                            this.graphicsDevice = GetOrCreateDevice(d3D12Device.Move(), &dxgiDescription1);
 
                             return true;
                         }

@@ -63,7 +63,7 @@ namespace ComputeSharp.Exceptions
         /// Throws a new <see cref="GraphicsDeviceMismatchException"/> instance from the specified parameters.
         /// </summary>
         /// <typeparam name="T">The type of values in the input buffer.</typeparam>
-        /// <param name="buffer">The input <see cref="Texture2D{T}"/> that was used.</param>
+        /// <param name="texture">The input <see cref="Texture2D{T}"/> that was used.</param>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance that was used.</param>
         [Pure]
         internal static void Throw<T>(Texture2D<T> texture, GraphicsDevice device)

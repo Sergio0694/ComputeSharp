@@ -33,12 +33,12 @@ namespace ComputeSharp.Graphics
         /// <summary>
         /// The current <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> for the <see cref="ID3D12DescriptorHandleAllocator"/> instance in use.
         /// </summary>
-        private D3D12_CPU_DESCRIPTOR_HANDLE d3d12CpuDescriptorHandle;
+        private D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle;
 
         /// <summary>
         /// The current <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> for the <see cref="ID3D12DescriptorHandleAllocator"/> instance in use.
         /// </summary>
-        private D3D12_GPU_DESCRIPTOR_HANDLE d3d12GpuDescriptorHandle;
+        private D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle;
 
         /// <summary>
         /// The number of remaining handles to allocate on the current heap.
@@ -54,8 +54,8 @@ namespace ComputeSharp.Graphics
             this.d3D12DescriptorHeap = device->CreateDescriptorHeap(DescriptorsPerHeap);
             this.allocationLock = new object();
             this.descriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-            this.d3d12CpuDescriptorHandle = this.d3D12DescriptorHeap.Get()->GetCPUDescriptorHandleForHeapStart();
-            this.d3d12GpuDescriptorHandle = this.d3D12DescriptorHeap.Get()->GetGPUDescriptorHandleForHeapStart();
+            this.d3D12CpuDescriptorHandle = this.d3D12DescriptorHeap.Get()->GetCPUDescriptorHandleForHeapStart();
+            this.d3D12GpuDescriptorHandle = this.d3D12DescriptorHeap.Get()->GetGPUDescriptorHandleForHeapStart();
             this.remainingHandles = this.d3D12DescriptorHeap.Get()->GetDesc().NumDescriptors;
         }
 
@@ -67,26 +67,26 @@ namespace ComputeSharp.Graphics
         /// <summary>
         /// Allocates a new CPU and GPU handle pair to use in a memory buffer.
         /// </summary>
-        /// <param name="d3d12CpuDescriptorHandle">The resulting <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value.</param>
-        /// <param name="d3d12CpuDescriptorHandle">The resulting <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value.</param>
+        /// <param name="d3D12CpuDescriptorHandle">The resulting <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value.</param>
+        /// <param name="d3D12CpuDescriptorHandle">The resulting <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value.</param>
         public void Allocate(
-            out D3D12_CPU_DESCRIPTOR_HANDLE d3d12CpuDescriptorHandle,
-            out D3D12_GPU_DESCRIPTOR_HANDLE d3d12GpuDescriptorHandle)
+            out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
+            out D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle)
         {
             lock (this.allocationLock)
             {
                 if (this.remainingHandles == 0)
                 {
-                    this.d3d12CpuDescriptorHandle = this.d3D12DescriptorHeap.Get()->GetCPUDescriptorHandleForHeapStart();
-                    this.d3d12GpuDescriptorHandle = this.d3D12DescriptorHeap.Get()->GetGPUDescriptorHandleForHeapStart();
+                    this.d3D12CpuDescriptorHandle = this.d3D12DescriptorHeap.Get()->GetCPUDescriptorHandleForHeapStart();
+                    this.d3D12GpuDescriptorHandle = this.d3D12DescriptorHeap.Get()->GetGPUDescriptorHandleForHeapStart();
                     this.remainingHandles = this.d3D12DescriptorHeap.Get()->GetDesc().NumDescriptors;
                 }
 
-                d3d12CpuDescriptorHandle = this.d3d12CpuDescriptorHandle;
-                d3d12GpuDescriptorHandle = this.d3d12GpuDescriptorHandle;
+                d3D12CpuDescriptorHandle = this.d3D12CpuDescriptorHandle;
+                d3D12GpuDescriptorHandle = this.d3D12GpuDescriptorHandle;
 
-                this.d3d12CpuDescriptorHandle.ptr += this.descriptorSize;
-                this.d3d12GpuDescriptorHandle.ptr += this.descriptorSize;
+                this.d3D12CpuDescriptorHandle.ptr += this.descriptorSize;
+                this.d3D12GpuDescriptorHandle.ptr += this.descriptorSize;
                 this.remainingHandles--;
             }
         }
