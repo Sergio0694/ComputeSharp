@@ -242,15 +242,17 @@ namespace ComputeSharp.Graphics.Extensions
         /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
         /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
         /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
+        /// <param name="d3D12SrvDimension">The <see cref="D3D12_SRV_DIMENSION"/> value for the view to create.</param>
         /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
         public static void CreateShaderResourceView(
             this ref ID3D12Device d3D12Device,
             ID3D12Resource* d3D12Resource,
             DXGI_FORMAT dxgiFormat,
+            D3D12_SRV_DIMENSION d3D12SrvDimension,
             D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
         {
             D3D12_SHADER_RESOURCE_VIEW_DESC d3D12ShaderResourceViewDescription = default;
-            d3D12ShaderResourceViewDescription.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+            d3D12ShaderResourceViewDescription.ViewDimension = d3D12SrvDimension;
             d3D12ShaderResourceViewDescription.Format = dxgiFormat;
             d3D12ShaderResourceViewDescription.Shader4ComponentMapping = FX.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
             d3D12ShaderResourceViewDescription.Texture2D.MipLevels = uint.MaxValue;
@@ -287,15 +289,17 @@ namespace ComputeSharp.Graphics.Extensions
         /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
         /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
         /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
+        /// <param name="d3D12UavDimension">The <see cref="D3D12_UAV_DIMENSION"/> value for the view to create.</param>
         /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
         public static void CreateUnorderedAccessView(
             this ref ID3D12Device d3D12Device,
             ID3D12Resource* d3D12Resource,
             DXGI_FORMAT dxgiFormat,
+            D3D12_UAV_DIMENSION d3D12UavDimension,
             D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
         {
             D3D12_UNORDERED_ACCESS_VIEW_DESC d3D12UnorderedAccessViewDescription = default;
-            d3D12UnorderedAccessViewDescription.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
+            d3D12UnorderedAccessViewDescription.ViewDimension = d3D12UavDimension;
             d3D12UnorderedAccessViewDescription.Format = dxgiFormat;
 
             d3D12Device.CreateUnorderedAccessView(d3D12Resource, null, &d3D12UnorderedAccessViewDescription, d3D12CpuDescriptorHandle);

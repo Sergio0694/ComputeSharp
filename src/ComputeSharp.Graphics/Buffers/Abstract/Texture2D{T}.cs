@@ -12,6 +12,8 @@ using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 using static TerraFX.Interop.D3D12_RESOURCE_STATES;
+using static TerraFX.Interop.D3D12_SRV_DIMENSION;
+using static TerraFX.Interop.D3D12_UAV_DIMENSION;
 using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Graphics.Buffers.Abstract
@@ -69,10 +71,10 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             switch (resourceType)
             {
                 case ResourceType.ReadOnly:
-                    device.D3D12Device->CreateShaderResourceView(this.d3D12Resource, DXGIFormatHelper.GetForType<T>(), d3D12CpuDescriptorHandle);
+                    device.D3D12Device->CreateShaderResourceView(this.d3D12Resource, DXGIFormatHelper.GetForType<T>(), D3D12_SRV_DIMENSION_TEXTURE2D, d3D12CpuDescriptorHandle);
                     break;
                 case ResourceType.ReadWrite:
-                    device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource, DXGIFormatHelper.GetForType<T>(), d3D12CpuDescriptorHandle);
+                    device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource, DXGIFormatHelper.GetForType<T>(), D3D12_UAV_DIMENSION_TEXTURE2D, d3D12CpuDescriptorHandle);
                     break;
             }
         }
