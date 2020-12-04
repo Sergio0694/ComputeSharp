@@ -248,7 +248,19 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             using (CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COMPUTE))
             {
                 copyCommandList.ResourceBarrier(D3D12Resource, D3D12ResourceState, D3D12_RESOURCE_STATE_COPY_SOURCE);
-                copyCommandList.CopyTextureRegion(d3D12Resource.Get(), (uint)Unsafe.SizeOf<T>(), D3D12Resource, DXGIFormatHelper.GetForType<T>(), (uint)x, (uint)y, (uint)width, (uint)height);
+
+                copyCommandList.CopyTextureRegion(
+                    d3D12Resource.Get(),
+                    (uint)Unsafe.SizeOf<T>(),
+                    D3D12Resource,
+                    DXGIFormatHelper.GetForType<T>(),
+                    (uint)x,
+                    (uint)y,
+                    0,
+                    (uint)width,
+                    (uint)height,
+                    1);
+
                 copyCommandList.ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12ResourceState);
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
@@ -390,7 +402,19 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COMPUTE);
 
             copyCommandList.ResourceBarrier(D3D12Resource, D3D12ResourceState, D3D12_RESOURCE_STATE_COPY_DEST);
-            copyCommandList.CopyTextureRegion(D3D12Resource, DXGIFormatHelper.GetForType<T>(), (uint)x, (uint)y, d3D12Resource.Get(), (uint)width, (uint)height, (uint)Unsafe.SizeOf<T>());
+
+            copyCommandList.CopyTextureRegion(
+                D3D12Resource,
+                DXGIFormatHelper.GetForType<T>(),
+                (uint)x,
+                (uint)y,
+                0,
+                (uint)width,
+                (uint)height,
+                1,
+                d3D12Resource.Get(),
+                (uint)Unsafe.SizeOf<T>());
+
             copyCommandList.ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, D3D12ResourceState);
             copyCommandList.ExecuteAndWaitForCompletion();
         }

@@ -98,9 +98,11 @@ namespace ComputeSharp.Graphics.Commands
         /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> parameter curreently in use by the texture.</param>
         /// <param name="x">The horizontal offset in the destination texture.</param>
         /// <param name="y">The vertical offset in the destination texture.</param>
-        /// <param name="d3D12ResourceSource">The source <see cref="ID3D12Resource"/> (a buffer) to read from.</param>
+        /// <param name="z">The depthwise offset in the destination texture.</param>
         /// <param name="width">The width of the memory area to write to.</param>
         /// <param name="height">The height of the memory area to write to.</param>
+        /// <param name="depth">The depth of the memory area to write to.</param>
+        /// <param name="d3D12ResourceSource">The source <see cref="ID3D12Resource"/> (a buffer) to read from.</param>
         /// <param name="elementSizeInBytes">The size of each element to copy.</param>
 
         public readonly void CopyTextureRegion(
@@ -108,12 +110,14 @@ namespace ComputeSharp.Graphics.Commands
             DXGI_FORMAT dxgiFormat,
             uint x,
             uint y,
-            ID3D12Resource* d3D12ResourceSource,
+            ushort z,
             uint width,
             uint height,
+            ushort depth,
+            ID3D12Resource* d3D12ResourceSource,
             uint elementSizeInBytes)
         {
-            this.d3D12GraphicsCommandList.Get()->CopyTextureRegion(d3D12ResourceDestination, dxgiFormat, x, y, d3D12ResourceSource, width, height, elementSizeInBytes);
+            this.d3D12GraphicsCommandList.Get()->CopyTextureRegion(d3D12ResourceDestination, dxgiFormat, x, y, z, width, height, depth, d3D12ResourceSource, elementSizeInBytes);
         }
 
         /// <summary>
@@ -134,10 +138,12 @@ namespace ComputeSharp.Graphics.Commands
             DXGI_FORMAT dxgiFormat,
             uint x,
             uint y,
+            ushort z,
             uint width,
-            uint height)
+            uint height,
+            ushort depth)
         {
-            this.d3D12GraphicsCommandList.Get()->CopyTextureRegion(d3D12ResourceDestination, elementSizeInBytes, d3D12ResourceSource, dxgiFormat, x, y, width, height);
+            this.d3D12GraphicsCommandList.Get()->CopyTextureRegion(d3D12ResourceDestination, elementSizeInBytes, d3D12ResourceSource, dxgiFormat, x, y, z, width, height, depth);
         }
 
         /// <summary>

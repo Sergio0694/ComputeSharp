@@ -16,9 +16,11 @@ namespace ComputeSharp.Graphics.Extensions
         /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> parameter curreently in use by the texture.</param>
         /// <param name="x">The horizontal offset in the destination texture.</param>
         /// <param name="y">The vertical offset in the destination texture.</param>
-        /// <param name="d3D12ResourceSource">The source <see cref="ID3D12Resource"/> (a buffer) to read from.</param>
+        /// <param name="z">The depthwise offset in the destination texture.</param>
         /// <param name="width">The width of the memory area to write to.</param>
         /// <param name="height">The height of the memory area to write to.</param>
+        /// <param name="depth">The depth of the memory area to write to.</param>
+        /// <param name="d3D12ResourceSource">The source <see cref="ID3D12Resource"/> (a buffer) to read from.</param>
         /// <param name="elementSizeInBytes">The size of each element to copy.</param>
 
         public static void CopyTextureRegion(
@@ -27,17 +29,19 @@ namespace ComputeSharp.Graphics.Extensions
             DXGI_FORMAT dxgiFormat,
             uint x,
             uint y,
-            ID3D12Resource* d3D12ResourceSource,
+            ushort z,
             uint width,
             uint height,
+            ushort depth,
+            ID3D12Resource* d3D12ResourceSource,
             uint elementSizeInBytes)
         {
             D3D12_SUBRESOURCE_FOOTPRINT d3D12SubresourceFootprint = new(
                 dxgiFormat,
                 width,
                 height,
-                1,
-                (elementSizeInBytes * width + FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1) & ~((uint)FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1));
+                depth,
+                (elementSizeInBytes * width * depth + FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1) & ~((uint)FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1));
             D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint;
             d3D12PlacedSubresourceFootprint.Offset = 0;
             d3D12PlacedSubresourceFootprint.Footprint = d3D12SubresourceFootprint;
@@ -45,7 +49,7 @@ namespace ComputeSharp.Graphics.Extensions
                 d3D12TextureCopyLocationDestination = new(d3D12ResourceDestination, 0),
                 d3D12TextureCopyLocationSource = new(d3D12ResourceSource, d3D12PlacedSubresourceFootprint);
 
-            d3D12GraphicsCommandList.CopyTextureRegion(&d3D12TextureCopyLocationDestination, x, y, 0, &d3D12TextureCopyLocationSource, null);
+            d3D12GraphicsCommandList.CopyTextureRegion(&d3D12TextureCopyLocationDestination, x, y, z, &d3D12TextureCopyLocationSource, null);
         }
 
         /// <summary>
@@ -56,10 +60,12 @@ namespace ComputeSharp.Graphics.Extensions
         /// <param name="elementSizeInBytes">The size of each element to copy.</param>
         /// <param name="d3D12ResourceSource">The source <see cref="ID3D12Resource"/> (a texture) to read from.</param>
         /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> parameter curreently in use by the texture.</param>
-        /// <param name="x">The horizontal offset in the destination texture.</param>
-        /// <param name="y">The vertical offset in the destination texture.</param>
-        /// <param name="width">The width of the memory area to write to.</param>
-        /// <param name="height">The height of the memory area to write to.</param>
+        /// <param name="x">The horizontal offset in the source texture.</param>
+        /// <param name="y">The vertical offset in the source texture.</param>
+        /// <param name="z">The depthwise offset in the source texture.</param>
+        /// <param name="width">The width of the memory area to read from.</param>
+        /// <param name="height">The height of the memory area to read from.</param>
+        /// <param name="depth">The depth of the memory area to read from.</param>
         public static void CopyTextureRegion(
             this ref ID3D12GraphicsCommandList d3D12GraphicsCommandList,
             ID3D12Resource* d3D12ResourceDestination,
@@ -68,22 +74,24 @@ namespace ComputeSharp.Graphics.Extensions
             DXGI_FORMAT dxgiFormat,
             uint x,
             uint y,
+            ushort z,
             uint width,
-            uint height)
+            uint height,
+            ushort depth)
         {
             D3D12_SUBRESOURCE_FOOTPRINT d3D12SubresourceFootprint = new(
                 dxgiFormat,
                 width,
                 height,
-                1,
-                (elementSizeInBytes * width + FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1) & ~((uint)FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1));
+                depth,
+                (elementSizeInBytes * width * depth + FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1) & ~((uint)FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1));
             D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint;
             d3D12PlacedSubresourceFootprint.Offset = 0;
             d3D12PlacedSubresourceFootprint.Footprint = d3D12SubresourceFootprint;
             D3D12_TEXTURE_COPY_LOCATION
                 d3D12TextureCopyLocationDestination = new(d3D12ResourceDestination, d3D12PlacedSubresourceFootprint),
                 d3D12TextureCopyLocationSource = new(d3D12ResourceSource, 0);
-            D3D12_BOX d3D12Box = new((int)x, (int)y, (int)(x + width), (int)(y + height));
+            D3D12_BOX d3D12Box = new((int)x, (int)y, z, (int)(x + width), (int)(y + height), z + depth);
 
             d3D12GraphicsCommandList.CopyTextureRegion(&d3D12TextureCopyLocationDestination, 0, 0, 0, &d3D12TextureCopyLocationSource, &d3D12Box);
         }
