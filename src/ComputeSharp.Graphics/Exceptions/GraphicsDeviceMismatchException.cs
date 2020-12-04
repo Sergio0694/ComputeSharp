@@ -71,5 +71,18 @@ namespace ComputeSharp.Exceptions
         {
             throw Create(texture, texture.GraphicsDevice, device);
         }
+
+        /// <summary>
+        /// Throws a new <see cref="GraphicsDeviceMismatchException"/> instance from the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of values in the input buffer.</typeparam>
+        /// <param name="texture">The input <see cref="Texture3D{T}"/> that was used.</param>
+        /// <param name="device">The target <see cref="GraphicsDevice"/> instance that was used.</param>
+        [Pure]
+        internal static void Throw<T>(Texture3D<T> texture, GraphicsDevice device)
+            where T : unmanaged
+        {
+            throw Create(texture, texture.GraphicsDevice, device);
+        }
     }
 }

@@ -191,6 +191,57 @@ namespace ComputeSharp.Graphics.Extensions
         }
 
         /// <summary>
+        /// Creates a committed resource for a given 3D texture type.
+        /// </summary>
+        /// <param name="d3D12Device">The <see cref="ID3D12Device"/> instance in use.</param>
+        /// <param name="resourceType">The resource type currently in use.</param>
+        /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
+        /// <param name="width">The width of the texture resource.</param>
+        /// <param name="height">The height of the texture resource.</param>
+        /// <param name="depth">The depth of the texture resource.</param>
+        /// <param name="d3D12ResourceStates">The default <see cref="D3D12_RESOURCE_STATES"/> value for the resource.</param>
+        /// <returns>An <see cref="ID3D12Resource"/> reference for the current texture.</returns>
+        public static ComPtr<ID3D12Resource> CreateCommittedResource(
+            this ref ID3D12Device d3D12Device,
+            ResourceType resourceType,
+            DXGI_FORMAT dxgiFormat,
+            uint width,
+            uint height,
+            ushort depth,
+            out D3D12_RESOURCE_STATES d3D12ResourceStates)
+        {
+            D3D12_RESOURCE_FLAGS d3D12ResourceFlags;
+
+            (d3D12ResourceFlags, d3D12ResourceStates) = resourceType switch
+            {
+                ResourceType.ReadOnly => (D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
+                ResourceType.ReadWrite => (D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_UNORDERED_ACCESS),
+                _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
+            };
+
+            using ComPtr<ID3D12Resource> d3D12Resource = default;
+
+            D3D12_HEAP_PROPERTIES d3D12HeapProperties;
+            d3D12HeapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+            d3D12HeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+            d3D12HeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+            d3D12HeapProperties.CreationNodeMask = 1;
+            d3D12HeapProperties.VisibleNodeMask = 1;
+            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(dxgiFormat, width, height, depth, flags: d3D12ResourceFlags);
+
+            d3D12Device.CreateCommittedResource(
+                &d3D12HeapProperties,
+                D3D12_HEAP_FLAG_NONE,
+                &d3D12ResourceDescription,
+                d3D12ResourceStates,
+                null,
+                FX.__uuidof<ID3D12Resource>(),
+                d3D12Resource.GetVoidAddressOf()).Assert();
+
+            return d3D12Resource.Move();
+        }
+
+        /// <summary>
         /// Creates a view for a constant buffer.
         /// </summary>
         /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
