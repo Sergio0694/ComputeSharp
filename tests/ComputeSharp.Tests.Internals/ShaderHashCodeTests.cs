@@ -25,7 +25,7 @@ namespace ComputeSharp.Tests.Internals
             float value = 10;
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
 
-            Shader1 shader1 = new Shader1 { A = value, B = buffer };
+            Shader1 shader1 = new() { A = value, B = buffer };
 
             int
                 hash1 = ShaderHashCodeProvider.GetHashCode(shader1),
@@ -33,7 +33,7 @@ namespace ComputeSharp.Tests.Internals
 
             Assert.IsTrue(hash1 == hash2);
 
-            Shader1 shader2 = new Shader1 { A = value, B = buffer };
+            Shader1 shader2 = new() { A = value, B = buffer };
 
             int hash3 = ShaderHashCodeProvider.GetHashCode(shader2);
 
@@ -55,11 +55,11 @@ namespace ComputeSharp.Tests.Internals
         [TestMethod]
         public void ShaderWithCapturedDelegates()
         {
-            Func<float, float> f = x => x * x;
+            Func<float, float> f = static x => x * x;
 
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
 
-            Shader2 shader1 = new Shader2 { A = 1, B = buffer, F = f };
+            Shader2 shader1 = new() { A = 1, B = buffer, F = f };
 
             int
                 hash1 = ShaderHashCodeProvider.GetHashCode(shader1),
@@ -67,9 +67,9 @@ namespace ComputeSharp.Tests.Internals
 
             Assert.IsTrue(hash1 == hash2);
 
-            f = x => x + 1;
+            f = static x => x + 1;
 
-            Shader2 shader2 = new Shader2 { A = 1, B = buffer, F = f };
+            Shader2 shader2 = new() { A = 1, B = buffer, F = f };
 
             int hash3 = ShaderHashCodeProvider.GetHashCode(shader2);
 

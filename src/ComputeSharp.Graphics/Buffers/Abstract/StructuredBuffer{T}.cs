@@ -87,8 +87,8 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         public override unsafe void SetData(Buffer<T> source)
         {
             GraphicsDevice.ThrowIfDisposed();
-            source.GraphicsDevice.ThrowIfDisposed();
 
+            ThrowIfDeviceMismatch(source.GraphicsDevice);
             ThrowIfDisposed();
             source.ThrowIfDisposed();
 
