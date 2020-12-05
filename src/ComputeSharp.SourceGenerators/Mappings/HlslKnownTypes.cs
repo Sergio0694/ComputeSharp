@@ -63,11 +63,17 @@ namespace ComputeSharp.SourceGenerators.Mappings
         /// <returns>Whether or not <paramref name="typeName"/> represents a typed resource type.</returns>
         public static bool IsTypedResourceType(string typeName)
         {
-            return
-                typeName == "ComputeSharp.ReadOnlyBuffer`1" ||
-                typeName == "ComputeSharp.ReadWriteBuffer`1" ||
-                typeName == "ComputeSharp.ReadOnlyTexture2D`1" ||
-                typeName == "ComputeSharp.ReadWriteTexture2D`1";
+            switch (typeName)
+            {
+                case "ComputeSharp.ReadOnlyBuffer`1":
+                case "ComputeSharp.ReadWriteBuffer`1":
+                case "ComputeSharp.ReadOnlyTexture2D`1":
+                case "ComputeSharp.ReadWriteTexture2D`1":
+                case "ComputeSharp.ReadOnlyTexture3D`1":
+                case "ComputeSharp.ReadWriteTexture3D`1":
+                    return true;
+                default: return false;
+            };
         }
 
         /// <summary>
@@ -102,6 +108,8 @@ namespace ComputeSharp.SourceGenerators.Mappings
                     "ComputeSharp.ReadWriteBuffer`1" => $"RWStructuredBuffer<{mapped}>",
                     "ComputeSharp.ReadOnlyTexture2D`1" => $"Texture2D<{mapped}>",
                     "ComputeSharp.ReadWriteTexture2D`1" => $"RWTexture2D<{mapped}>",
+                    "ComputeSharp.ReadOnlyTexture3D`1" => $"Texture3D<{mapped}>",
+                    "ComputeSharp.ReadWriteTexture3D`1" => $"RWTexture3D<{mapped}>",
                     _ => throw new ArgumentException()
                 };
             }
