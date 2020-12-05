@@ -7,14 +7,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests
 {
     [TestClass]
-    [TestCategory("Buffers")]
+    [TestCategory("Buffer")]
     public class BufferTests
     {
         [TestMethod]
         [DataRow(typeof(ConstantBuffer<>))]
         [DataRow(typeof(ReadOnlyBuffer<>))]
         [DataRow(typeof(ReadWriteBuffer<>))]
-        public void AllocateBuffer_Uninitialized(Type bufferType)
+        public void Allocate_Uninitialized_Ok(Type bufferType)
         {
             using Buffer<float> buffer = Gpu.Default.AllocateBuffer<float>(bufferType, 128);
 
@@ -24,10 +24,23 @@ namespace ComputeSharp.Tests
         }
 
         [TestMethod]
+        [DataRow(typeof(ConstantBuffer<>), -247824)]
+        [DataRow(typeof(ConstantBuffer<>), -1)]
+        [DataRow(typeof(ConstantBuffer<>), -247824)]
+        [DataRow(typeof(ConstantBuffer<>), -1)]
+        [DataRow(typeof(ConstantBuffer<>), -247824)]
+        [DataRow(typeof(ConstantBuffer<>), -1)]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void Allocate_Uninitialized_Fail(Type bufferType, int length)
+        {
+            using Buffer<float> buffer = Gpu.Default.AllocateBuffer<float>(bufferType, length);
+        }
+
+        [TestMethod]
         [DataRow(typeof(ConstantBuffer<>))]
         [DataRow(typeof(ReadOnlyBuffer<>))]
         [DataRow(typeof(ReadWriteBuffer<>))]
-        public void AllocateBuffer_FromArray(Type bufferType)
+        public void Allocate_FromArray(Type bufferType)
         {
             float[] data = Enumerable.Range(0, 128).Select(static i => (float)i).ToArray();
 
@@ -54,7 +67,7 @@ namespace ComputeSharp.Tests
         [DataRow(typeof(ReadWriteBuffer<>), typeof(ConstantBuffer<>))]
         [DataRow(typeof(ReadWriteBuffer<>), typeof(ReadOnlyBuffer<>))]
         [DataRow(typeof(ReadWriteBuffer<>), typeof(ReadWriteBuffer<>))]
-        public void AllocateBuffer_FromBuffer(Type sourceType, Type destinationType)
+        public void Allocate_FromBuffer(Type sourceType, Type destinationType)
         {
             float[] data = Enumerable.Range(0, 128).Select(static i => (float)i).ToArray();
 
