@@ -284,8 +284,8 @@ namespace ComputeSharp
         /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <returns>A read write <see cref="ReadOnlyTexture3D{T}"/> instance with the contents of the input array.</returns>
         /// <remarks>
-        /// The input 3D array needs to have each 2D plane stacked on the depth axis. That is, unlike .NET arrays
-        /// which are traditionally of size [H, W, D], the input one needs to have a layout of [D, H, W].
+        /// The source 3D array needs to have each 2D plane stacked on the depth axis.
+        /// That is, the expected layout of the input array has to be [depth, height, width].
         /// </remarks>
         [Pure]
         public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, T[,,] array)
@@ -528,8 +528,8 @@ namespace ComputeSharp
         /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <returns>A read write <see cref="ReadWriteTexture3D{T}"/> instance with the contents of the input array.</returns>
         /// <remarks>
-        /// The input 3D array needs to have each 2D plane stacked on the depth axis. That is, unlike .NET arrays
-        /// which are traditionally of size [H, W, D], the input one needs to have a layout of [D, H, W].
+        /// The source 3D array needs to have each 2D plane stacked on the depth axis.
+        /// That is, the expected layout of the input array has to be [depth, height, width].
         /// </remarks>
         [Pure]
         public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, T[,,] array)

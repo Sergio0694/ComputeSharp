@@ -131,8 +131,8 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// </summary>
         /// <param name="destination">The input array to write data to.</param>
         /// <remarks>
-        /// The input 3D array needs to have each 2D plane stacked on the depth axis. That is, unlike .NET arrays
-        /// which are traditionally of size [H, W, D], the input one needs to have a layout of [D, H, W].
+        /// The input 3D array needs to have each 2D plane stacked on the depth axis. That is, the expected
+        /// layout of the input array has to be [<see cref="Depth"/>, <see cref="Height"/>, <see cref="Width"/>].
         /// </remarks>
         public void GetData(T[,,] destination)
         {
@@ -286,8 +286,8 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// </summary>
         /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
         /// <remarks>
-        /// The input 3D array needs to have each 2D plane stacked on the depth axis. That is, unlike .NET arrays
-        /// which are traditionally of size [H, W, D], the input one needs to have a layout of [D, H, W].
+        /// The source 3D array needs to have each 2D plane stacked on the depth axis. That is, the expected
+        /// layout of the input array has to be [<see cref="Depth"/>, <see cref="Height"/>, <see cref="Width"/>].
         /// </remarks>
         public void SetData(T[,,] source)
         {
