@@ -41,7 +41,7 @@ namespace ComputeSharp.Graphics.Extensions
                 width,
                 height,
                 depth,
-                (elementSizeInBytes * width * depth + FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1) & ~((uint)FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1));
+                (elementSizeInBytes * width + FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1) & ~((uint)FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1));
             D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint;
             d3D12PlacedSubresourceFootprint.Offset = 0;
             d3D12PlacedSubresourceFootprint.Footprint = d3D12SubresourceFootprint;
@@ -84,7 +84,7 @@ namespace ComputeSharp.Graphics.Extensions
                 width,
                 height,
                 depth,
-                (elementSizeInBytes * width * depth + FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1) & ~((uint)FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1));
+                (elementSizeInBytes * width + FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1) & ~((uint)FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1));
             D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint;
             d3D12PlacedSubresourceFootprint.Offset = 0;
             d3D12PlacedSubresourceFootprint.Footprint = d3D12SubresourceFootprint;

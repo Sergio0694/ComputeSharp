@@ -42,8 +42,8 @@ namespace ComputeSharp.Graphics.Helpers
         /// <typeparam name="T">The type of values to read.</typeparam>
         /// <param name="source">The destination <see cref="Span{T}"/> to read from.</param>
         /// <param name="destination">The pointer that indicates the 2D memory area to write to.</param>
-        /// <param name="width">The width of the 2D memory area to read.</param>
-        /// <param name="height">The height of the 2D memory area to read.</param>
+        /// <param name="width">The width of the 2D memory area to write to.</param>
+        /// <param name="height">The height of the 2D memory area to write to.</param>
         /// <param name="widthInBytes">The width of the memory area in bytes.</param>
         /// <param name="pitchInBytes">The pitch (padded width) of the memory area in bytes.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -104,6 +104,98 @@ namespace ComputeSharp.Graphics.Helpers
                     Span<T> destinationRow = destination.Slice(i * width, width);
 
                     sourceRow.CopyTo(destinationRow);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copies the content of a <see cref="ReadOnlySpan{T}"/> to the 3D area pointed by an input pointer.
+        /// </summary>
+        /// <typeparam name="T">The type of values to read.</typeparam>
+        /// <param name="source">The destination <see cref="Span{T}"/> to read from.</param>
+        /// <param name="destination">The pointer that indicates the 3D memory area to write to.</param>
+        /// <param name="width">The width of the 3D memory area to write to.</param>
+        /// <param name="height">The height of the 3D memory area to write to.</param>
+        /// <param name="depth">The depth of the 3D memory area to write to.</param>
+        /// <param name="widthInBytes">The width of the memory area in bytes.</param>
+        /// <param name="pitchInBytes">The pitch (padded width) of the memory area in bytes.</param>
+        /// <param name="sliceInBytes">The size in bytes of each 2D slice within the target 3D memory area.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Copy<T>(
+            ReadOnlySpan<T> source,
+            void* destination,
+            int width,
+            int height,
+            int depth,
+            ulong widthInBytes,
+            ulong pitchInBytes,
+            ulong sliceInBytes)
+            where T : unmanaged
+        {
+            if (widthInBytes == pitchInBytes)
+            {
+                source.CopyTo(new Span<T>(destination, width * height * depth));
+            }
+            else
+            {
+                for (int z = 0; z < depth; z++)
+                {
+                    int sourceZOffset = width * height * z;
+                    ulong destinationZOffset = sliceInBytes * (uint)z;
+
+                    for (int i = 0; i < height; i++)
+                    {
+                        ReadOnlySpan<T> sourceRow = source.Slice(sourceZOffset + i * width, width);
+                        Span<T> destinationRow = new((byte*)destination + destinationZOffset + (uint)i * pitchInBytes, width);
+
+                        sourceRow.CopyTo(destinationRow);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copies a 3D memory area pointed by a pointer value to a target <see cref="Span{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of values to read.</typeparam>
+        /// <param name="source">The pointer that indicates the memory area to read from.</param>
+        /// <param name="width">The width of the 3D memory area to read.</param>
+        /// <param name="height">The height of the 3D memory area to read.</param>
+        /// <param name="depth">The depth of the 3D memory area to read.</param>
+        /// <param name="widthInBytes">The width of the memory area in bytes.</param>
+        /// <param name="pitchInBytes">The pitch (padded width) of the memory area in bytes.</param>
+        /// <param name="sliceInBytes">The size in bytes of each 2D slice within the source 3D memory area.</param>
+        /// <param name="destination">The destination <see cref="Span{T}"/> to write.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Copy<T>(
+            void* source,
+            int width,
+            int height,
+            int depth,
+            ulong widthInBytes,
+            ulong pitchInBytes,
+            ulong sliceInBytes,
+            Span<T> destination)
+            where T : unmanaged
+        {
+            if (widthInBytes == pitchInBytes)
+            {
+                new Span<T>(source, width * height * depth).CopyTo(destination);
+            }
+            else
+            {
+                for (int z = 0; z < depth; z++)
+                {
+                    ulong sourceZOffset = sliceInBytes * (uint)z;
+                    int destinationZOffset = width * height * z;
+
+                    for (int i = 0; i < height; i++)
+                    {
+                        ReadOnlySpan<T> sourceRow = new((byte*)source + sourceZOffset + (uint)i * pitchInBytes, width);
+                        Span<T> destinationRow = destination.Slice(destinationZOffset + i * width, width);
+
+                        sourceRow.CopyTo(destinationRow);
+                    }
                 }
             }
         }
