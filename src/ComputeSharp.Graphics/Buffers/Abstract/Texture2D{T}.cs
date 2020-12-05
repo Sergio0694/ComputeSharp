@@ -119,6 +119,9 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="destination">The input array to write data to.</param>
         public void GetData(T[,] destination)
         {
+            Guard.IsEqualTo(destination.GetLength(0), Height, nameof(destination));
+            Guard.IsEqualTo(destination.GetLength(1), Width, nameof(destination));
+
             fixed (T* p = destination)
             {
                 GetData(new Span<T>(p, destination.Length));
@@ -278,6 +281,9 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
         public void SetData(T[,] source)
         {
+            Guard.IsEqualTo(source.GetLength(0), Height, nameof(source));
+            Guard.IsEqualTo(source.GetLength(1), Width, nameof(source));
+
             fixed (T* p = source)
             {
                 SetData(new Span<T>(p, source.Length));

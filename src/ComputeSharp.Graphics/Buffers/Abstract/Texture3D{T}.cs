@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Interop;
 using ComputeSharp.Exceptions;
@@ -107,6 +108,109 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
 
         /// <summary>
+        /// Reads the contents of the current <see cref="Texture3D{T}"/> instance and returns an array.
+        /// </summary>
+        /// <returns>A <typeparamref name="T"/> array with the contents of the current buffer.</returns>
+        /// <remarks>
+        /// The returned array will be using the same memory layout as the texture, that is, each 2D plane
+        /// in the 3D volume represented by the texture is contiguous in memory, and planes are stacked in
+        /// the depth dimension. This means that the resulting 3D array will have a size of [D, H, W].
+        /// </remarks>
+        [Pure]
+        public T[,,] GetData()
+        {
+            T[,,] data = new T[Depth, Height, Width];
+
+            GetData(data);
+
+            return data;
+        }
+
+        /// <summary>
+        /// Reads the contents of the current <see cref="Texture3D{T}"/> instance and writes them into a target array.
+        /// </summary>
+        /// <param name="destination">The input array to write data to.</param>
+        /// <remarks>
+        /// The input 3D array needs to have each 2D plane stacked on the depth axis. That is, unlike .NET arrays
+        /// which are traditionally of size [H, W, D], the input one needs to have a layout of [D, H, W].
+        /// </remarks>
+        public void GetData(T[,,] destination)
+        {
+            Guard.IsEqualTo(destination.GetLength(0), Depth, nameof(destination));
+            Guard.IsEqualTo(destination.GetLength(1), Height, nameof(destination));
+            Guard.IsEqualTo(destination.GetLength(2), Width, nameof(destination));
+
+            fixed (T* p = destination)
+            {
+                GetData(new Span<T>(p, destination.Length));
+            }
+        }
+
+        /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="Texture3D{T}"/> instance and writes them into a target array.
+        /// </summary>
+        /// <param name="destination">The input array to write data to.</param>
+        /// <param name="offset">The starting offset within <paramref name="source"/> to write data to.</param>
+        public void GetData(T[] destination, int offset)
+        {
+            GetData(destination.AsSpan(offset), 0, 0, 0, Width, Height, Depth);
+        }
+
+        /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="Texture3D{T}"/> instance and writes them into a target array.
+        /// </summary>
+        /// <param name="destination">The input array to write data to.</param>
+        /// <param name="offset">The starting offset within <paramref name="source"/> to write data to.</param>
+        /// <param name="x">The horizontal range of items to copy.</param>
+        /// <param name="y">The vertical range of items to copy.</param>
+        /// <param name="z">The depthwise range of items to copy.</param>
+        public void GetData(T[] destination, int offset, Range x, Range y, Range z)
+        {
+            GetData(destination.AsSpan(offset), x, y, z);
+        }
+
+        /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="Texture3D{T}"/> instance and writes them into a target array.
+        /// </summary>
+        /// <param name="destination">The input array to write data to.</param>
+        /// <param name="offset">The starting offset within <paramref name="source"/> to write data to.</param>
+        /// <param name="x">The horizontal offset in the source texture.</param>
+        /// <param name="y">The vertical offset in the source texture.</param>
+        /// <param name="z">The depthwise offset in the source texture.</param>
+        /// <param name="width">The width of the memory area to copy.</param>
+        /// <param name="height">The height of the memory area to copy.</param>
+        /// <param name="depth">The depth of the memory area to copy.</param>
+        public void GetData(T[] destination, int offset, int x, int y, int z, int width, int height, int depth)
+        {
+            GetData(destination.AsSpan(offset), x, y, z, width, height, depth);
+        }
+
+        /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="Texture3D{T}"/> instance and writes them into a target <see cref="Span{T}"/>.
+        /// </summary>
+        /// <param name="destination">The input <see cref="Span{T}"/> to write data to.</param>
+        public void GetData(Span<T> destination)
+        {
+            GetData(destination, 0, 0, 0, Width, Height, Depth);
+        }
+
+        /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="Texture3D{T}"/> instance and writes them into a target <see cref="Span{T}"/>.
+        /// </summary>
+        /// <param name="destination">The input <see cref="Span{T}"/> to write data to.</param>
+        /// <param name="x">The horizontal range in the source texture.</param>
+        /// <param name="y">The vertical range in the source texture.</param>
+        /// <param name="z">The depthwise range in the source texture.</param>
+        public void GetData(Span<T> destination, Range x, Range y, Range z)
+        {
+            var (offsetX, width) = x.GetOffsetAndLength(Width);
+            var (offsetY, height) = y.GetOffsetAndLength(Height);
+            var (offsetZ, depth) = z.GetOffsetAndLength(Depth);
+
+            GetData(destination, offsetX, offsetY, offsetZ, width, height, depth);
+        }
+
+        /// <summary>
         /// Reads the contents of the specified range from the current <see cref="Texture3D{T}"/> instance and writes them into a target <see cref="Span{T}"/>.
         /// </summary>
         /// <param name="destination">The input <see cref="Span{T}"/> to write data to.</param>
@@ -178,7 +282,118 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         }
 
         /// <summary>
-        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to a specified area of the current <see cref="Texture2D{T}"/> instance.
+        /// Writes the contents of a given <typeparamref name="T"/> array to the current <see cref="Texture3D{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
+        /// <remarks>
+        /// The input 3D array needs to have each 2D plane stacked on the depth axis. That is, unlike .NET arrays
+        /// which are traditionally of size [H, W, D], the input one needs to have a layout of [D, H, W].
+        /// </remarks>
+        public void SetData(T[,,] source)
+        {
+            Guard.IsEqualTo(source.GetLength(0), Depth, nameof(source));
+            Guard.IsEqualTo(source.GetLength(1), Height, nameof(source));
+            Guard.IsEqualTo(source.GetLength(2), Width, nameof(source));
+
+            fixed (T* p = source)
+            {
+                SetData(new Span<T>(p, source.Length));
+            }
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <typeparamref name="T"/> array to the current <see cref="Texture3D{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
+        public void SetData(T[] source)
+        {
+            SetData(source.AsSpan(), 0, 0, 0, Width, Height, Depth);
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="Texture3D{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
+        /// <param name="x">The horizontal range of items to write.</param>
+        /// <param name="y">The vertical range of items to write.</param>
+        /// <param name="z">The depthwise range of items to write.</param>
+        public void SetData(T[] source, Range x, Range y, Range z)
+        {
+            SetData(source.AsSpan(), x, y, z);
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="Texture3D{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
+        /// <param name="x">The horizontal offset in the destination texture.</param>
+        /// <param name="y">The vertical offset in the destination texture.</param>
+        /// <param name="z">The depthwise offset in the destination texture.</param>
+        /// <param name="width">The width of the memory area to write to.</param>
+        /// <param name="height">The height of the memory area to write to.</param>
+        /// <param name="depth">The depth of the memory area to write to.</param>
+        public void SetData(T[] source, int x, int y, int z, int width, int height, int depth)
+        {
+            SetData(source.AsSpan(), x, y, z, width, height, depth);
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="Texture3D{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
+        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
+        /// <param name="x">The horizontal range of items to write.</param>
+        /// <param name="y">The vertical range of items to write.</param>
+        /// <param name="z">The depthwise range of items to write.</param>
+        public void SetData(T[] source, int offset, Range x, Range y, Range z)
+        {
+            SetData(source.AsSpan(offset), x, y, z);
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="Texture3D{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
+        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
+        /// <param name="x">The horizontal offset in the destination texture.</param>
+        /// <param name="y">The vertical offset in the destination texture.</param>
+        /// <param name="z">The depthwise offset in the destination texture.</param>
+        /// <param name="width">The width of the memory area to write to.</param>
+        /// <param name="height">The height of the memory area to write to.</param>
+        /// <param name="depth">The depth of the memory area to write to.</param>
+        public void SetData(T[] source, int offset, int x, int y, int z, int width, int height, int depth)
+        {
+            SetData(source.AsSpan(offset), x, y, z, width, height, depth);
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to the current <see cref="Texture3D{T}"/> instance.
+        /// The input data will be written to the start of the texture, and all input items will be copied.
+        /// </summary>
+        /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> to read data from.</param>
+        public void SetData(ReadOnlySpan<T> source)
+        {
+            SetData(source, 0, 0, 0, Width, Height, Depth);
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to a specified area of the current <see cref="Texture3D{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> to read data from.</param>
+        /// <param name="x">The horizontal range of items to write.</param>
+        /// <param name="y">The vertical range of items to write.</param>
+        /// <param name="z">The depthwise range of items to write.</param>
+        public void SetData(ReadOnlySpan<T> source, Range x, Range y, Range z)
+        {
+            var (offsetX, width) = x.GetOffsetAndLength(Width);
+            var (offsetY, height) = y.GetOffsetAndLength(Height);
+            var (offsetZ, depth) = z.GetOffsetAndLength(Depth);
+
+            SetData(source, offsetX, offsetY, offsetZ, width, height, depth);
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to a specified area of the current <see cref="Texture3D{T}"/> instance.
         /// </summary>
         /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> to read data from.</param>
         /// <param name="x">The horizontal offset in the destination texture.</param>
