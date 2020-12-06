@@ -9,192 +9,252 @@ namespace ComputeSharp.Graphics.Helpers
     internal static class MemoryHelper
     {
         /// <summary>
-        /// Copies the content of a <see cref="ReadOnlySpan{T}"/> to the area pointed by an input pointer.
+        /// Copies the content of a source memory area to a target one.
         /// </summary>
-        /// <typeparam name="T">The type of values in the input <see cref="ReadOnlySpan{T}"/>.</typeparam>
-        /// <param name="source">The source <see cref="ReadOnlySpan{T}"/> to read.</param>
+        /// <param name="source">The source memory area to read from.</param>
         /// <param name="destination">The pointer for the destination memory area.</param>
-        /// <param name="destinationOffset">The destination offset to start writing data to.</param>
+        /// <param name="offset">The destination offset to start writing data to.</param>
+        /// <param name="length">The number of items to copy.</param>
+        /// <param name="elementSizeInBytes">The size in bytes of each item to copy.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void Copy<T>(ReadOnlySpan<T> source, void* destination, int destinationOffset)
-            where T : unmanaged
+        public static unsafe void Copy(
+            void* source,
+            void* destination,
+            uint offset,
+            uint length,
+            uint elementSizeInBytes)
         {
-            source.CopyTo(new Span<T>((T*)destination + destinationOffset, source.Length));
+            Buffer.MemoryCopy(
+                source,
+                (byte*)destination + offset * elementSizeInBytes,
+                ulong.MaxValue,
+                elementSizeInBytes * length);
         }
 
         /// <summary>
-        /// Copies a memory area pointed by a pointer to a target <see cref="Span{T}"/>.
+        /// Copies the content of a source memory area to a target one, accounting for padding.
+        /// The destination memory area has padding for each element, while the source does not.
         /// </summary>
-        /// <typeparam name="T">The type of values to read.</typeparam>
-        /// <param name="source">The pointer that indicates the memory area to read from.</param>
-        /// <param name="sourceOffset">The source offset to start reading data from.</param>
-        /// <param name="destination">The destination <see cref="Span{T}"/> to write.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void Copy<T>(void* source, int sourceOffset, Span<T> destination)
+        /// <param name="source">The source memory area to read from.</param>
+        /// <param name="destination">The pointer for the destination memory area.</param>
+        /// <param name="offset">The destination offset to start writing data to.</param>
+        /// <param name="length">The number of items to copy.</param>
+        /// <param name="elementPitchInBytes">The padded size of each element.</param>
+        public static unsafe void Copy<T>(
+            void* source,
+            void* destination,
+            uint offset,
+            uint length,
+            uint elementPitchInBytes)
             where T : unmanaged
         {
-            new Span<T>((T*)source + sourceOffset, destination.Length).CopyTo(destination);
+            destination = (byte*)destination + offset * elementPitchInBytes;
+
+            for (int i = 0; i < length; i++)
+            {
+                *(T*)&((byte*)destination)[i * elementPitchInBytes] = ((T*)source)[i];
+            }
         }
 
         /// <summary>
-        /// Copies the content of a <see cref="ReadOnlySpan{T}"/> to the 2D area pointed by an input pointer.
+        /// Copies the content of a source memory area to a target one.
         /// </summary>
-        /// <typeparam name="T">The type of values to read.</typeparam>
-        /// <param name="source">The destination <see cref="Span{T}"/> to read from.</param>
+        /// <param name="source">The source memory area to read from.</param>
+        /// <param name="offset">The source offset to start reading data from.</param>
+        /// <param name="length">The number of items to copy.</param>
+        /// <param name="elementSizeInBytes">The size in bytes of each item to copy.</param>
+        /// <param name="destination">The pointer for the destination memory area.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Copy(
+            void* source,
+            uint offset,
+            uint length,
+            uint elementSizeInBytes,
+            void* destination)
+        {
+            Buffer.MemoryCopy(
+                (byte*)source + offset * elementSizeInBytes,
+                destination,
+                ulong.MaxValue,
+                elementSizeInBytes * length);
+        }
+
+        /// <summary>
+        /// Copies the content of a source memory area to a target one, accounting for padding.
+        /// The source memory area has padding for each element, while the destination does not.
+        /// </summary>
+        /// <param name="source">The source memory area to read from.</param>
+        /// <param name="offset">The source offset to start reading data from.</param>
+        /// <param name="length">The number of items to copy.</param>
+        /// <param name="elementPitchInBytes">The padded size of each element.</param>
+        /// <param name="destination">The pointer for the destination memory area.</param>
+        public static unsafe void Copy<T>(
+            void* source,
+            uint offset,
+            uint length,
+            uint elementPitchInBytes,
+            void* destination)
+            where T : unmanaged
+        {
+            source = (byte*)source + offset * elementPitchInBytes;
+
+            for (int i = 0; i < length; i++)
+            {
+                ((T*)destination)[i] = *(T*)&((byte*)source)[i * elementPitchInBytes];
+            }
+        }
+
+        /// <summary>
+        /// Copies the content of a source memory area to the 2D area pointed by an input pointer.
+        /// The destination memory area has padding in each row, while the source does not.
+        /// </summary>
+        /// <param name="source">The source pointer to read from.</param>
         /// <param name="destination">The pointer that indicates the 2D memory area to write to.</param>
-        /// <param name="width">The width of the 2D memory area to write to.</param>
         /// <param name="height">The height of the 2D memory area to write to.</param>
         /// <param name="widthInBytes">The width of the memory area in bytes.</param>
         /// <param name="pitchInBytes">The pitch (padded width) of the memory area in bytes.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void Copy<T>(
-            ReadOnlySpan<T> source,
+        public static unsafe void Copy(
+            void* source,
             void* destination,
-            int width,
-            int height,
+            uint height,
             ulong widthInBytes,
             ulong pitchInBytes)
-            where T : unmanaged
         {
             if (widthInBytes == pitchInBytes)
             {
-                source.CopyTo(new Span<T>(destination, width * height));
+                Buffer.MemoryCopy(source, destination, ulong.MaxValue, widthInBytes * height);
             }
             else
             {
                 for (int i = 0; i < height; i++)
                 {
-                    ReadOnlySpan<T> sourceRow = source.Slice(i * width, width);
-                    Span<T> destinationRow = new((byte*)destination + (uint)i * pitchInBytes, width);
-
-                    sourceRow.CopyTo(destinationRow);
+                    Buffer.MemoryCopy(
+                        (byte*)source + (uint)i * widthInBytes,
+                        (byte*)destination + (uint)i * pitchInBytes,
+                        ulong.MaxValue,
+                        widthInBytes);
                 }
             }
         }
 
         /// <summary>
-        /// Copies a 2D memory area pointed by a pointer value to a target <see cref="Span{T}"/>.
+        /// Copies a 2D memory area pointed by a pointer value to a target memory area.
+        /// The source memory area has padding in each row, while the target does not.
         /// </summary>
-        /// <typeparam name="T">The type of values to read.</typeparam>
         /// <param name="source">The pointer that indicates the memory area to read from.</param>
-        /// <param name="width">The width of the 2D memory area to read.</param>
         /// <param name="height">The height of the 2D memory area to read.</param>
         /// <param name="widthInBytes">The width of the memory area in bytes.</param>
         /// <param name="pitchInBytes">The pitch (padded width) of the memory area in bytes.</param>
-        /// <param name="destination">The destination <see cref="Span{T}"/> to write.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void Copy<T>(
+        /// <param name="destination">The destination pointer to write to.</param>
+        public static unsafe void Copy(
             void* source,
-            int width,
-            int height,
+            uint height,
             ulong widthInBytes,
             ulong pitchInBytes,
-            Span<T> destination)
-            where T : unmanaged
+            void* destination)
         {
             if (widthInBytes == pitchInBytes)
             {
-                new Span<T>(source, width * height).CopyTo(destination);
+                Buffer.MemoryCopy(source, destination, ulong.MaxValue, widthInBytes * height);
             }
             else
             {
                 for (int i = 0; i < height; i++)
                 {
-                    ReadOnlySpan<T> sourceRow = new((byte*)source + (uint)i * pitchInBytes, width);
-                    Span<T> destinationRow = destination.Slice(i * width, width);
-
-                    sourceRow.CopyTo(destinationRow);
+                    Buffer.MemoryCopy(
+                        (byte*)source + (uint)i * pitchInBytes,
+                        (byte*)destination + (uint)i * widthInBytes,
+                        ulong.MaxValue,
+                        widthInBytes);
                 }
             }
         }
 
         /// <summary>
-        /// Copies the content of a <see cref="ReadOnlySpan{T}"/> to the 3D area pointed by an input pointer.
+        /// Copies the content of a source memory area to the 3D area pointed by an input pointer.
+        /// The destination memory area has padding in each row, while the source does not.
         /// </summary>
         /// <typeparam name="T">The type of values to read.</typeparam>
-        /// <param name="source">The destination <see cref="Span{T}"/> to read from.</param>
+        /// <param name="source">The source memory area to read from.</param>
         /// <param name="destination">The pointer that indicates the 3D memory area to write to.</param>
-        /// <param name="width">The width of the 3D memory area to write to.</param>
         /// <param name="height">The height of the 3D memory area to write to.</param>
         /// <param name="depth">The depth of the 3D memory area to write to.</param>
         /// <param name="widthInBytes">The width of the memory area in bytes.</param>
         /// <param name="pitchInBytes">The pitch (padded width) of the memory area in bytes.</param>
         /// <param name="sliceInBytes">The size in bytes of each 2D slice within the target 3D memory area.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void Copy<T>(
-            ReadOnlySpan<T> source,
+        public static unsafe void Copy(
+            void* source,
             void* destination,
-            int width,
-            int height,
-            int depth,
+            uint height,
+            uint depth,
             ulong widthInBytes,
             ulong pitchInBytes,
             ulong sliceInBytes)
-            where T : unmanaged
         {
             if (widthInBytes == pitchInBytes)
             {
-                source.CopyTo(new Span<T>(destination, width * height * depth));
+                Buffer.MemoryCopy(source, destination, ulong.MaxValue, widthInBytes * height * depth);
             }
             else
             {
                 for (int z = 0; z < depth; z++)
                 {
-                    int sourceZOffset = width * height * z;
-                    ulong destinationZOffset = sliceInBytes * (uint)z;
+                    ulong
+                        sourceZOffset = (uint)z * widthInBytes * height,
+                        destinationZOffset = (uint)z * sliceInBytes;
 
                     for (int i = 0; i < height; i++)
                     {
-                        ReadOnlySpan<T> sourceRow = source.Slice(sourceZOffset + i * width, width);
-                        Span<T> destinationRow = new((byte*)destination + destinationZOffset + (uint)i * pitchInBytes, width);
-
-                        sourceRow.CopyTo(destinationRow);
+                        Buffer.MemoryCopy(
+                            (byte*)source + sourceZOffset + (uint)i * widthInBytes,
+                            (byte*)destination + destinationZOffset + (uint)i * pitchInBytes,
+                            ulong.MaxValue,
+                            widthInBytes);
                     }
                 }
             }
         }
 
         /// <summary>
-        /// Copies a 3D memory area pointed by a pointer value to a target <see cref="Span{T}"/>.
+        /// Copies a 3D memory area pointed by a pointer value to a target memory area.
+        /// The source memory area has padding in each row, while the target does not.
         /// </summary>
         /// <typeparam name="T">The type of values to read.</typeparam>
         /// <param name="source">The pointer that indicates the memory area to read from.</param>
-        /// <param name="width">The width of the 3D memory area to read.</param>
         /// <param name="height">The height of the 3D memory area to read.</param>
         /// <param name="depth">The depth of the 3D memory area to read.</param>
         /// <param name="widthInBytes">The width of the memory area in bytes.</param>
         /// <param name="pitchInBytes">The pitch (padded width) of the memory area in bytes.</param>
         /// <param name="sliceInBytes">The size in bytes of each 2D slice within the source 3D memory area.</param>
-        /// <param name="destination">The destination <see cref="Span{T}"/> to write.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void Copy<T>(
+        /// <param name="destination">The destination pointer to write.</param>
+        public static unsafe void Copy(
             void* source,
-            int width,
-            int height,
-            int depth,
+            uint height,
+            uint depth,
             ulong widthInBytes,
             ulong pitchInBytes,
             ulong sliceInBytes,
-            Span<T> destination)
-            where T : unmanaged
+            void* destination)
         {
             if (widthInBytes == pitchInBytes)
             {
-                new Span<T>(source, width * height * depth).CopyTo(destination);
+                Buffer.MemoryCopy(source, destination, ulong.MaxValue, widthInBytes * height * depth);
             }
             else
             {
                 for (int z = 0; z < depth; z++)
                 {
-                    ulong sourceZOffset = sliceInBytes * (uint)z;
-                    int destinationZOffset = width * height * z;
+                    ulong
+                        sourceZOffset = (uint)z * sliceInBytes,
+                        destinationZOffset = (uint)z * widthInBytes * height;
 
                     for (int i = 0; i < height; i++)
                     {
-                        ReadOnlySpan<T> sourceRow = new((byte*)source + sourceZOffset + (uint)i * pitchInBytes, width);
-                        Span<T> destinationRow = destination.Slice(destinationZOffset + i * width, width);
-
-                        sourceRow.CopyTo(destinationRow);
+                        Buffer.MemoryCopy(
+                            (byte*)source + sourceZOffset + (uint)i * pitchInBytes,
+                            (byte*)destination + destinationZOffset + (uint)i * widthInBytes,
+                            ulong.MaxValue,
+                            widthInBytes);
                     }
                 }
             }

@@ -52,8 +52,15 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             }
 
             using ID3D12ResourceMap resource = d3D12Resource.Get()->Map();
-
-            MemoryHelper.Copy(resource.Pointer, 0, destination);
+            fixed (void* destinationPointer = destination)
+            {
+                MemoryHelper.Copy(
+                    resource.Pointer,
+                    0u,
+                    (uint)destination.Length,
+                    (uint)sizeof(T),
+                    destinationPointer);
+            }
         }
 
         /// <inheritdoc/>
@@ -73,8 +80,14 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, (ulong)byteSize);
 
             using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
+            fixed (void* sourcePointer = source)
             {
-                MemoryHelper.Copy(source, resource.Pointer, 0);
+                MemoryHelper.Copy(
+                    sourcePointer,
+                    0u,
+                    (uint)source.Length,
+                    (uint)sizeof(T),
+                    resource.Pointer);
             }
 
             using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);

@@ -269,15 +269,17 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             using ID3D12ResourceMap resource = d3D12Resource.Get()->Map();
 
-            MemoryHelper.Copy(
-                resource.Pointer,
-                width,
-                height,
-                depth,
-                rowSizeInBytes,
-                d3D12PlacedSubresourceFootprint.Footprint.RowPitch,
-                d3D12PlacedSubresourceFootprint.Footprint.RowPitch * (uint)height,
-                destination);
+            fixed (void* destinationPointer = destination)
+            {
+                MemoryHelper.Copy(
+                    resource.Pointer,
+                    (uint)height,
+                    (uint)depth,
+                    rowSizeInBytes,
+                    d3D12PlacedSubresourceFootprint.Footprint.RowPitch,
+                    d3D12PlacedSubresourceFootprint.Footprint.RowPitch * (uint)height,
+                    destinationPointer);
+            }
         }
 
         /// <summary>
@@ -430,13 +432,13 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, totalSizeInBytes);
 
             using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
+            fixed (void* sourcePointer = source)
             {
                 MemoryHelper.Copy(
-                    source,
+                    sourcePointer,
                     resource.Pointer,
-                    width,
-                    height,
-                    depth,
+                    (uint)height,
+                    (uint)depth,
                     rowSizeInBytes, 
                     d3D12PlacedSubresourceFootprint.Footprint.RowPitch,
                     d3D12PlacedSubresourceFootprint.Footprint.RowPitch * (uint)height);
