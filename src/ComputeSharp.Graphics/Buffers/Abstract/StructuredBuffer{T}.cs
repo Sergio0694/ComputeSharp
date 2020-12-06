@@ -1,5 +1,4 @@
-﻿using System;
-using ComputeSharp.Graphics.Buffers.Enums;
+﻿using ComputeSharp.Graphics.Buffers.Enums;
 using ComputeSharp.Graphics.Buffers.Interop;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;

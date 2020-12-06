@@ -116,7 +116,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="width">The width of the memory area to copy.</param>
         /// <param name="height">The height of the memory area to copy.</param>
         /// <param name="depth">The depth of the memory area to copy.</param>
-        public void GetData(ref T destination, nint size, int x, int y, int z, int width, int height, int depth)
+        internal void GetData(ref T destination, nint size, int x, int y, int z, int width, int height, int depth)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -189,7 +189,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="width">The width of the memory area to write to.</param>
         /// <param name="height">The height of the memory area to write to.</param>
         /// <param name="depth">The depth of the memory area to write to.</param>
-        public void SetData(ref T source, nint size, int x, int y, int z, int width, int height, int depth)
+        internal void SetData(ref T source, nint size, int x, int y, int z, int width, int height, int depth)
         {
             GraphicsDevice.ThrowIfDisposed();
 

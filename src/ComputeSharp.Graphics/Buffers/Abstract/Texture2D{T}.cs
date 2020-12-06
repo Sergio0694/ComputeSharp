@@ -171,7 +171,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="y">The vertical offset in the destination texture.</param>
         /// <param name="width">The width of the memory area to write to.</param>
         /// <param name="height">The height of the memory area to write to.</param>
-        public void SetData(ref T source, nint size, int x, int y, int width, int height)
+        internal void SetData(ref T source, nint size, int x, int y, int width, int height)
         {
             GraphicsDevice.ThrowIfDisposed();
 
