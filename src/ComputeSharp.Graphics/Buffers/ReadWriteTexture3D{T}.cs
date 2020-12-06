@@ -11,7 +11,7 @@ namespace ComputeSharp
     /// A <see langword="class"/> representing a typed readonly 3D texture stored on GPU memory.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-    [DebuggerTypeProxy(typeof(BufferDebugView3D<>))]
+    [DebuggerTypeProxy(typeof(Texture3DDebugView<>))]
     [DebuggerDisplay("{ToString(),raw}")]
     public sealed class ReadWriteTexture3D<T> : Texture3D<T>
         where T : unmanaged

@@ -11,7 +11,7 @@ namespace ComputeSharp
     /// A <see langword="class"/> representing a typed readonly 2D texture stored on GPU memory.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-    [DebuggerTypeProxy(typeof(BufferDebugView2D<>))]
+    [DebuggerTypeProxy(typeof(Texture2DDebugView<>))]
     [DebuggerDisplay("{ToString(),raw}")]
     public sealed class ReadOnlyTexture2D<T> : Texture2D<T>
         where T : unmanaged

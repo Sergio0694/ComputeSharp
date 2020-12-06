@@ -7,14 +7,14 @@ namespace ComputeSharp.Graphics.Buffers.Views
     /// A debug proxy used to display items in a <see cref="Texture3D{T}"/> instance.
     /// </summary>
     /// <typeparam name="T">The type of items to display.</typeparam>
-    internal sealed class BufferDebugView3D<T>
+    internal sealed class Texture3DDebugView<T>
         where T : unmanaged
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BufferDebugView3D{T}"/> class with the specified parameters.
+        /// Initializes a new instance of the <see cref="Texture3DDebugView{T}"/> class with the specified parameters.
         /// </summary>
         /// <param name="texture">The input <see cref="Texture3D{T}"/> instance with the items to display.</param>
-        public BufferDebugView3D(Texture3D<T>? texture)
+        public Texture3DDebugView(Texture3D<T>? texture)
         {
             if (texture is not null)
             {
