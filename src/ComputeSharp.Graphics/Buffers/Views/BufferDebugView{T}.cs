@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using ComputeSharp.Graphics.Buffers.Abstract;
 
 namespace ComputeSharp.Graphics.Buffers.Views
@@ -22,7 +21,7 @@ namespace ComputeSharp.Graphics.Buffers.Views
             {
                 var items = GC.AllocateUninitializedArray<T>(buffer.Length);
 
-                buffer.GetData(ref MemoryMarshal.GetArrayDataReference(items), buffer.Length, 0);
+                buffer.GetData(ref items[0], buffer.Length, 0);
 
                 Items = items;
             }

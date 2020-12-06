@@ -16,7 +16,14 @@ namespace ComputeSharp.Graphics.Buffers.Views
         /// <param name="texture">The input <see cref="Texture2D{T}"/> instance with the items to display.</param>
         public BufferDebugView2D(Texture2D<T>? texture)
         {
-            Items = texture?.GetData();
+            if (texture is not null)
+            {
+                var items = new T[texture.Height, texture.Width];
+
+                texture.GetData(ref items[0, 0], items.Length, 0, 0, texture.Height, texture.Width);
+
+                Items = items;
+            }
         }
 
         /// <summary>
