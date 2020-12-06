@@ -2,6 +2,7 @@
 using System.Buffers;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using ComputeSharp.Core.Interop;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Buffers.Enums;
@@ -159,7 +160,18 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// </summary>
         /// <param name="destination">The input <see cref="Span{T}"/> to write data to.</param>
         /// <param name="offset">The offset to start reading data from.</param>
-        public abstract void GetData(Span<T> destination, int offset);
+        public void GetData(Span<T> destination, int offset)
+        {
+            GetData(ref MemoryMarshal.GetReference(destination), destination.Length, offset);
+        }
+
+        /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="Buffer{T}"/> instance and writes them into a target memory area.
+        /// </summary>
+        /// <param name="destination">The input memory area to write data to.</param>
+        /// <param name="size">The size of the memory area to write data to.</param>
+        /// <param name="offset">The offset to start reading data from.</param>
+        internal abstract void GetData(ref T destination, nint size, int offset);
 
         /// <summary>
         /// Writes the contents of a given <typeparamref name="T"/> array to the current <see cref="Buffer{T}"/> instance.
@@ -196,12 +208,21 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
         /// <summary>
         /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to a specified area of the current <see cref="Buffer{T}"/> instance.
-        /// The input data will be written into the buffer starting at the specified offset, and all input items will be copied.
         /// </summary>
         /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> to read data from.</param>
         /// <param name="offset">The offset to start writing data to.</param>
-        /// <param name="count">The number of items to write.</param>
-        public abstract void SetData(ReadOnlySpan<T> source, int offset);
+        public void SetData(ReadOnlySpan<T> source, int offset)
+        {
+            SetData(ref MemoryMarshal.GetReference(source), source.Length, offset);
+        }
+
+        /// <summary>
+        /// Writes the contents of a given memory area to a specified area of the current <see cref="Buffer{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input memory area to read data from.</param>
+        /// <param name="size">The size of the input memory area to read data from.</param>
+        /// <param name="offset">The offset to start writing data to.</param>
+        internal abstract void SetData(ref T source, nint size, int offset);
 
         /// <summary>
         /// Writes the contents of a given <see cref="Buffer{T}"/> to the current <see cref="Buffer{T}"/> instance.

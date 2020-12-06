@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using ComputeSharp.Core.Interop;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Buffers.Enums;
@@ -222,6 +223,22 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="depth">The depth of the memory area to copy.</param>
         public void GetData(Span<T> destination, int x, int y, int z, int width, int height, int depth)
         {
+            GetData(ref MemoryMarshal.GetReference(destination), destination.Length, x, y, z, width, height, depth);
+        }
+
+        /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="Texture3D{T}"/> instance and writes them into a target memory area.
+        /// </summary>
+        /// <param name="destination">The target memory area to write data to.</param>
+        /// <param name="size">The size of the memory area to write data to.</param>
+        /// <param name="x">The horizontal offset in the source texture.</param>
+        /// <param name="y">The vertical offset in the source texture.</param>
+        /// <param name="z">The depthwise offset in the source texture.</param>
+        /// <param name="width">The width of the memory area to copy.</param>
+        /// <param name="height">The height of the memory area to copy.</param>
+        /// <param name="depth">The depth of the memory area to copy.</param>
+        public void GetData(ref T destination, nint size, int x, int y, int z, int width, int height, int depth)
+        {
             GraphicsDevice.ThrowIfDisposed();
 
             ThrowIfDisposed();
@@ -235,7 +252,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             Guard.IsLessThanOrEqualTo(x + width, Width, nameof(x));
             Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
             Guard.IsLessThanOrEqualTo(z + depth, Depth, nameof(z));
-            Guard.HasSizeGreaterThanOrEqualTo(destination, width * height * depth, nameof(destination));
+            Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth, nameof(size));
 
             D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(DXGIFormatHelper.GetForType<T>(), (ulong)width, (uint)height, (ushort)depth);
 
@@ -269,7 +286,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             using ID3D12ResourceMap resource = d3D12Resource.Get()->Map();
 
-            fixed (void* destinationPointer = destination)
+            fixed (void* destinationPointer = &destination)
             {
                 MemoryHelper.Copy(
                     resource.Pointer,
@@ -405,6 +422,22 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="depth">The depth of the memory area to write to.</param>
         public void SetData(ReadOnlySpan<T> source, int x, int y, int z, int width, int height, int depth)
         {
+            SetData(ref MemoryMarshal.GetReference(source), source.Length, x, y, z, width, height, depth);
+        }
+
+        /// <summary>
+        /// Writes the contents of a given memory area to a specified area of the current <see cref="Texture3D{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input memory area to read data from.</param>
+        /// <param name="size">The size of the memory area to read data from.</param>
+        /// <param name="x">The horizontal offset in the destination texture.</param>
+        /// <param name="y">The vertical offset in the destination texture.</param>
+        /// <param name="z">The depthwise offseet in the destination texture.</param>
+        /// <param name="width">The width of the memory area to write to.</param>
+        /// <param name="height">The height of the memory area to write to.</param>
+        /// <param name="depth">The depth of the memory area to write to.</param>
+        public void SetData(ref T source, nint size, int x, int y, int z, int width, int height, int depth)
+        {
             GraphicsDevice.ThrowIfDisposed();
 
             ThrowIfDisposed();
@@ -418,7 +451,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             Guard.IsLessThanOrEqualTo(x + width, Width, nameof(x));
             Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
             Guard.IsLessThanOrEqualTo(z + depth, Depth, nameof(z));
-            Guard.HasSizeGreaterThanOrEqualTo(source, width * height * depth, nameof(source));
+            Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth, nameof(size));
 
             D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(DXGIFormatHelper.GetForType<T>(), (ulong)width, (uint)height, (ushort)depth);
 
@@ -432,14 +465,14 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, totalSizeInBytes);
 
             using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
-            fixed (void* sourcePointer = source)
+            fixed (void* sourcePointer = &source)
             {
                 MemoryHelper.Copy(
                     sourcePointer,
                     resource.Pointer,
                     (uint)height,
                     (uint)depth,
-                    rowSizeInBytes, 
+                    rowSizeInBytes,
                     d3D12PlacedSubresourceFootprint.Footprint.RowPitch,
                     d3D12PlacedSubresourceFootprint.Footprint.RowPitch * (uint)height);
             }

@@ -53,24 +53,24 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        public override unsafe void GetData(Span<T> destination, int offset)
+        internal override unsafe void GetData(ref T destination, nint size, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
             ThrowIfDisposed();
 
             Guard.IsInRange(offset, 0, Length, nameof(offset));
-            Guard.IsLessThanOrEqualTo((uint)offset + destination.Length, (uint)Length, nameof(destination));
+            Guard.IsLessThanOrEqualTo(offset + size, Length, nameof(size));
 
             using ID3D12ResourceMap resource = D3D12Resource->Map();
-            fixed (void* destinationPointer = destination)
+            fixed (void* destinationPointer = &destination)
             {
                 if (IsPaddingPresent)
                 {
                     MemoryHelper.Copy<T>(
                         resource.Pointer,
                         (uint)offset,
-                        (uint)destination.Length,
+                        (uint)size,
                         (uint)GetPaddedSize(),
                         destinationPointer);
                 }
@@ -79,7 +79,7 @@ namespace ComputeSharp
                     MemoryHelper.Copy(
                         resource.Pointer,
                         (uint)offset,
-                        (uint)destination.Length,
+                        (uint)size,
                         (uint)sizeof(T),
                         destinationPointer);
                 }
@@ -87,17 +87,17 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        public override unsafe void SetData(ReadOnlySpan<T> source, int offset)
+        internal override unsafe void SetData(ref T source, nint size, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
             ThrowIfDisposed();
 
             Guard.IsInRange(offset, 0, Length, nameof(offset));
-            Guard.IsLessThanOrEqualTo((uint)offset + source.Length, (uint)Length, nameof(source));
+            Guard.IsLessThanOrEqualTo(offset + size, Length, nameof(size));
 
             using ID3D12ResourceMap resource = D3D12Resource->Map();
-            fixed (void* sourcePointer = source)
+            fixed (void* sourcePointer = &source)
             {
                 if (IsPaddingPresent)
                 {
@@ -105,7 +105,7 @@ namespace ComputeSharp
                         sourcePointer,
                         resource.Pointer,
                         (uint)offset,
-                        (uint)source.Length,
+                        (uint)size,
                         (uint)GetPaddedSize());
                 }
                 else
@@ -113,7 +113,7 @@ namespace ComputeSharp
                     MemoryHelper.Copy(
                         sourcePointer,
                         (uint)offset,
-                        (uint)source.Length,
+                        (uint)size,
                         (uint)sizeof(T),
                         resource.Pointer);
                 }

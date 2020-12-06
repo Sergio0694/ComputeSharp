@@ -29,18 +29,18 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         }
 
         /// <inheritdoc/>
-        public override unsafe void GetData(Span<T> destination, int offset)
+        internal override unsafe void GetData(ref T destination, nint size, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
             ThrowIfDisposed();
 
             Guard.IsInRange(offset, 0, Length, nameof(offset));
-            Guard.IsLessThanOrEqualTo((uint)offset + destination.Length, (uint)Length, nameof(destination));
+            Guard.IsLessThanOrEqualTo(offset + size, Length, nameof(size));
 
             nint
                 byteOffset = (nint)offset * sizeof(T),
-                byteSize = (nint)destination.Length * sizeof(T);
+                byteSize = size * sizeof(T);
 
             using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, (ulong)byteSize);
 
@@ -51,40 +51,40 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             }
 
             using ID3D12ResourceMap resource = d3D12Resource.Get()->Map();
-            fixed (void* destinationPointer = destination)
+            fixed (void* destinationPointer = &destination)
             {
                 MemoryHelper.Copy(
                     resource.Pointer,
                     0u,
-                    (uint)destination.Length,
+                    (uint)size,
                     (uint)sizeof(T),
                     destinationPointer);
             }
         }
 
         /// <inheritdoc/>
-        public override unsafe void SetData(ReadOnlySpan<T> source, int offset)
+        internal override unsafe void SetData(ref T source, nint size, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
             ThrowIfDisposed();
 
             Guard.IsInRange(offset, 0, Length, nameof(offset));
-            Guard.IsLessThanOrEqualTo((uint)offset + source.Length, (uint)Length, nameof(source));
+            Guard.IsLessThanOrEqualTo(offset + size, Length, nameof(size));
 
             nint
                 byteOffset = (nint)offset * sizeof(T),
-                byteSize = (nint)source.Length * sizeof(T);
+                byteSize = size * sizeof(T);
 
             using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, (ulong)byteSize);
 
             using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
-            fixed (void* sourcePointer = source)
+            fixed (void* sourcePointer = &source)
             {
                 MemoryHelper.Copy(
                     sourcePointer,
                     0u,
-                    (uint)source.Length,
+                    (uint)size,
                     (uint)sizeof(T),
                     resource.Pointer);
             }
