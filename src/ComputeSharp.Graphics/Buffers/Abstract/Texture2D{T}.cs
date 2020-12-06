@@ -14,7 +14,6 @@ using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 using static TerraFX.Interop.D3D12_RESOURCE_STATES;
 using static TerraFX.Interop.D3D12_SRV_DIMENSION;
 using static TerraFX.Interop.D3D12_UAV_DIMENSION;
-using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Graphics.Buffers.Abstract
 {
@@ -243,12 +242,16 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
             Guard.HasSizeGreaterThanOrEqualTo(destination, width * height, nameof(destination));
 
-            ulong
-                rowByteSize = (ulong)((nint)width * Unsafe.SizeOf<T>()),
-                rowPitchSize = (rowByteSize + FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1) & ~((ulong)(FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1)),
-                resourceByteSize = rowPitchSize * (uint)height;
+            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex2D(DXGIFormatHelper.GetForType<T>(), (ulong)width, (uint)height);
 
-            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, resourceByteSize);
+            GraphicsDevice.D3D12Device->GetCopyableFootprint(
+                &d3D12ResourceDescription,
+                out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
+                out _,
+                out ulong rowSizeInBytes,
+                out ulong totalSizeInBytes);
+
+            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, totalSizeInBytes);
 
             using (CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COMPUTE))
             {
@@ -256,9 +259,8 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
                 copyCommandList.CopyTextureRegion(
                     d3D12Resource.Get(),
-                    (uint)Unsafe.SizeOf<T>(),
+                    &d3D12PlacedSubresourceFootprint,
                     D3D12Resource,
-                    DXGIFormatHelper.GetForType<T>(),
                     (uint)x,
                     (uint)y,
                     0,
@@ -272,7 +274,13 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             using ID3D12ResourceMap resource = d3D12Resource.Get()->Map();
 
-            MemoryHelper.Copy(resource.Pointer, width, height, rowByteSize, rowPitchSize, destination);
+            MemoryHelper.Copy(
+                resource.Pointer,
+                width,
+                height,
+                rowSizeInBytes,
+                d3D12PlacedSubresourceFootprint.Footprint.RowPitch,
+                destination);
         }
 
         /// <summary>
@@ -395,16 +403,26 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
             Guard.HasSizeGreaterThanOrEqualTo(source, width * height, nameof(source));
 
-            ulong
-                rowByteSize = (ulong)((nint)width * Unsafe.SizeOf<T>()),
-                rowPitchSize = (rowByteSize + FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1) & ~((ulong)(FX.D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1)),
-                resourceByteSize = rowPitchSize * (uint)height;
+            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex2D(DXGIFormatHelper.GetForType<T>(), (ulong)width, (uint)height);
 
-            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, resourceByteSize);
+            GraphicsDevice.D3D12Device->GetCopyableFootprint(
+                &d3D12ResourceDescription,
+                out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
+                out _,
+                out ulong rowSizeInBytes,
+                out ulong totalSizeInBytes);
+
+            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, totalSizeInBytes);
 
             using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
             {
-                MemoryHelper.Copy(source, resource.Pointer, width, height, rowByteSize, rowPitchSize);
+                MemoryHelper.Copy(
+                    source,
+                    resource.Pointer,
+                    width,
+                    height,
+                    rowSizeInBytes,
+                    d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
             }
 
             using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COMPUTE);
@@ -413,15 +431,11 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             copyCommandList.CopyTextureRegion(
                 D3D12Resource,
-                DXGIFormatHelper.GetForType<T>(),
                 (uint)x,
                 (uint)y,
                 0,
-                (uint)width,
-                (uint)height,
-                1,
                 d3D12Resource.Get(),
-                (uint)Unsafe.SizeOf<T>());
+                &d3D12PlacedSubresourceFootprint);
 
             copyCommandList.ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, D3D12ResourceState);
             copyCommandList.ExecuteAndWaitForCompletion();

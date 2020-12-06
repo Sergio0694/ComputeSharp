@@ -254,9 +254,8 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
                 copyCommandList.CopyTextureRegion(
                     d3D12Resource.Get(),
-                    (uint)Unsafe.SizeOf<T>(),
+                    &d3D12PlacedSubresourceFootprint,
                     D3D12Resource,
-                    DXGIFormatHelper.GetForType<T>(),
                     (uint)x,
                     (uint)y,
                     (ushort)z,
@@ -449,15 +448,11 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             copyCommandList.CopyTextureRegion(
                 D3D12Resource,
-                DXGIFormatHelper.GetForType<T>(),
                 (uint)x,
                 (uint)y,
                 (ushort)z,
-                (uint)width,
-                (uint)height,
-                (ushort)depth,
                 d3D12Resource.Get(),
-                (uint)Unsafe.SizeOf<T>());
+                &d3D12PlacedSubresourceFootprint);
 
             copyCommandList.ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, D3D12ResourceState);
             copyCommandList.ExecuteAndWaitForCompletion();
