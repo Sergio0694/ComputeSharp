@@ -352,6 +352,7 @@ namespace ComputeSharp.Graphics.Extensions
             D3D12_UNORDERED_ACCESS_VIEW_DESC d3D12UnorderedAccessViewDescription = default;
             d3D12UnorderedAccessViewDescription.ViewDimension = d3D12UavDimension;
             d3D12UnorderedAccessViewDescription.Format = dxgiFormat;
+            d3D12UnorderedAccessViewDescription.Texture3D.WSize = uint.MaxValue;
 
             d3D12Device.CreateUnorderedAccessView(d3D12Resource, null, &d3D12UnorderedAccessViewDescription, d3D12CpuDescriptorHandle);
         }
