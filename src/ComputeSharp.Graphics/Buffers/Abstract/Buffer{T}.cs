@@ -80,21 +80,12 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         public int Length { get; }
 
         /// <summary>
-        /// Gets the size in bytes of each <typeparamref name="T"/> value contained in the buffer.
-        /// </summary>
-        protected int ElementSizeInBytes
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => Unsafe.SizeOf<T>();
-        }
-
-        /// <summary>
         /// Gets whether or not there is some padding between elements in the current buffer.
         /// </summary>
         internal bool IsPaddingPresent
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => SizeInBytes > Length * Unsafe.SizeOf<T>();
+            get => SizeInBytes > (nint)Length * sizeof(T);
         }
 
         /// <summary>

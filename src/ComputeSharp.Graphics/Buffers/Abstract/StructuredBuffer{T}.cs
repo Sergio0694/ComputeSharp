@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Buffers.Enums;
 using ComputeSharp.Graphics.Buffers.Interop;
 using ComputeSharp.Graphics.Commands;
@@ -24,8 +23,8 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
         /// <param name="length">The number of items to store in the current buffer.</param>
         /// <param name="resourceType">The buffer type for the current buffer.</param>
-        private protected StructuredBuffer(GraphicsDevice device, int length, ResourceType resourceType)
-            : base(device, length, (uint)Unsafe.SizeOf<T>(), resourceType)
+        private protected unsafe StructuredBuffer(GraphicsDevice device, int length, ResourceType resourceType)
+            : base(device, length, (uint)sizeof(T), resourceType)
         {
         }
 
@@ -40,8 +39,8 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             Guard.IsLessThanOrEqualTo((uint)offset + destination.Length, (uint)Length, nameof(destination));
 
             nint
-                byteOffset = (nint)offset * ElementSizeInBytes,
-                byteSize = (nint)destination.Length * ElementSizeInBytes;
+                byteOffset = (nint)offset * sizeof(T),
+                byteSize = (nint)destination.Length * sizeof(T);
 
             using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, (ulong)byteSize);
 
@@ -74,8 +73,8 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             Guard.IsLessThanOrEqualTo((uint)offset + source.Length, (uint)Length, nameof(source));
 
             nint
-                byteOffset = (nint)offset * ElementSizeInBytes,
-                byteSize = (nint)source.Length * ElementSizeInBytes;
+                byteOffset = (nint)offset * sizeof(T),
+                byteSize = (nint)source.Length * sizeof(T);
 
             using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, (ulong)byteSize);
 

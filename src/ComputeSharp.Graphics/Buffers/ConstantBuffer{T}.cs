@@ -47,9 +47,9 @@ namespace ComputeSharp
         /// </summary>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static int GetPaddedSize()
+        private static unsafe int GetPaddedSize()
         {
-            return (Unsafe.SizeOf<T>() + 15) & ~15;
+            return (sizeof(T) + 15) & ~15;
         }
 
         /// <inheritdoc/>
