@@ -20,7 +20,7 @@ namespace ComputeSharp.Graphics.Buffers.Views
             {
                 var items = new T[texture.Height, texture.Width];
 
-                texture.GetData(ref items[0, 0], items.Length, 0, 0, texture.Height, texture.Width);
+                texture.GetData(ref items[0, 0], items.Length, 0, 0, texture.Width, texture.Height);
 
                 Items = items;
             }
