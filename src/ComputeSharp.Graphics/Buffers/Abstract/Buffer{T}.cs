@@ -45,7 +45,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         {
             device.ThrowIfDisposed();
 
-            Guard.IsGreaterThanOrEqualTo(length, 0, nameof(length));
+            Guard.IsGreaterThan(length, 0, nameof(length));
 
             SizeInBytes = checked((nint)(length * elementSizeInBytes));
             GraphicsDevice = device;

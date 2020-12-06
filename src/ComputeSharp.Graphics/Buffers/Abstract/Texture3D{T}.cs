@@ -52,9 +52,9 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         {
             device.ThrowIfDisposed();
 
-            Guard.IsGreaterThanOrEqualTo(width, 0, nameof(width));
-            Guard.IsGreaterThanOrEqualTo(height, 0, nameof(height));
-            Guard.IsBetweenOrEqualTo(depth, 0, ushort.MaxValue, nameof(depth));
+            Guard.IsGreaterThan(width, 0, nameof(width));
+            Guard.IsGreaterThan(height, 0, nameof(height));
+            Guard.IsBetweenOrEqualTo(depth, 1, ushort.MaxValue, nameof(depth));
 
             GraphicsDevice = device;
             Width = width;
@@ -229,9 +229,9 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             Guard.IsInRange(x, 0, Width, nameof(x));
             Guard.IsInRange(y, 0, Height, nameof(y));
             Guard.IsInRange(z, 0, Depth, nameof(z));
-            Guard.IsBetweenOrEqualTo(width, 0, Width, nameof(width));
-            Guard.IsBetweenOrEqualTo(height, 0, Height, nameof(height));
-            Guard.IsBetweenOrEqualTo(depth, 0, Depth, nameof(depth));
+            Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
+            Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
+            Guard.IsBetweenOrEqualTo(depth, 1, Depth, nameof(depth));
             Guard.IsLessThanOrEqualTo(x + width, Width, nameof(x));
             Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
             Guard.IsLessThanOrEqualTo(z + depth, Depth, nameof(z));
@@ -411,9 +411,9 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             Guard.IsInRange(x, 0, Width, nameof(x));
             Guard.IsInRange(y, 0, Height, nameof(y));
             Guard.IsInRange(z, 0, Depth, nameof(z));
-            Guard.IsBetweenOrEqualTo(width, 0, Width, nameof(width));
-            Guard.IsBetweenOrEqualTo(height, 0, Height, nameof(height));
-            Guard.IsBetweenOrEqualTo(depth, 0, Depth, nameof(depth));
+            Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
+            Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
+            Guard.IsBetweenOrEqualTo(depth, 1, Depth, nameof(depth));
             Guard.IsLessThanOrEqualTo(x + width, Width, nameof(x));
             Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
             Guard.IsLessThanOrEqualTo(z + depth, Depth, nameof(z));
