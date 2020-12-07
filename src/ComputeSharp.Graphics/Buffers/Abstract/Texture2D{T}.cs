@@ -12,6 +12,7 @@ using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 using static TerraFX.Interop.D3D12_RESOURCE_STATES;
 using static TerraFX.Interop.D3D12_SRV_DIMENSION;
 using static TerraFX.Interop.D3D12_UAV_DIMENSION;
+using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Graphics.Buffers.Abstract
 {
@@ -54,8 +55,8 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         {
             device.ThrowIfDisposed();
 
-            Guard.IsGreaterThan(width, 0, nameof(width));
-            Guard.IsGreaterThan(height, 0, nameof(height));
+            Guard.IsBetweenOrEqualTo(width, 1, FX.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION, nameof(width));
+            Guard.IsBetweenOrEqualTo(height, 1, FX.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION, nameof(height));
 
             GraphicsDevice = device;
             Width = width;

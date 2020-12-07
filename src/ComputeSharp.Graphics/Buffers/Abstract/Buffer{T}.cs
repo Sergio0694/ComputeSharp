@@ -7,6 +7,7 @@ using ComputeSharp.Graphics.Buffers.Enums;
 using ComputeSharp.Graphics.Extensions;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
+using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Graphics.Buffers.Abstract
 {
@@ -44,7 +45,15 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         {
             device.ThrowIfDisposed();
 
-            Guard.IsGreaterThan(length, 0, nameof(length));
+            if (resourceType == ResourceType.Constant)
+            {
+                Guard.IsBetweenOrEqualTo(length, 1, FX.D3D12_REQ_CONSTANT_BUFFER_ELEMENT_COUNT, nameof(length));
+            }
+            else
+            {
+                // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
+                Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / elementSizeInBytes) & ~255, nameof(length));
+            }
 
             SizeInBytes = checked((nint)(length * elementSizeInBytes));
             GraphicsDevice = device;
