@@ -24,22 +24,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Bool4"/> value with the <see cref="X"/> component set to <see langword="true"/>, and the others to <see langword="false"/>.
         /// </summary>
-        public static Bool4 TrueX => new Bool4(true, false, false, false);
+        public static Bool4 TrueX => new(true, false, false, false);
 
         /// <summary>
         /// Gets an <see cref="Bool4"/> value with the <see cref="Y"/> component set to <see langword="true"/>, and the others to <see langword="false"/>.
         /// </summary>
-        public static Bool4 TrueY => new Bool4(false, true, false, false);
+        public static Bool4 TrueY => new(false, true, false, false);
 
         /// <summary>
         /// Gets an <see cref="Bool4"/> value with the <see cref="Z"/> component set to <see langword="true"/>, and the others to <see langword="false"/>.
         /// </summary>
-        public static Bool4 TrueZ => new Bool4(false, false, true, false);
+        public static Bool4 TrueZ => new(false, false, true, false);
 
         /// <summary>
         /// Gets an <see cref="Bool4"/> value with the <see cref="W"/> component set to <see langword="true"/>, and the others to <see langword="false"/>.
         /// </summary>
-        public static Bool4 TrueW => new Bool4(false, false, false, true);
+        public static Bool4 TrueW => new(false, false, false, true);
 
         /// <summary>
         /// Creates a new <see cref="Bool4"/> instance with the specified parameters.
@@ -3994,6 +3994,6 @@ namespace ComputeSharp
         /// Creates a new <see cref="Bool4"/> value with the same value for all its components.
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="Bool4"/> instance.</param>
-        public static implicit operator Bool4(bool x) => new Bool4(x, x, x, x);
+        public static implicit operator Bool4(bool x) => new(x, x, x, x);
     }
 }

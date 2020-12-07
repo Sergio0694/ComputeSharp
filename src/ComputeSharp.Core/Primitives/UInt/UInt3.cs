@@ -24,17 +24,17 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="X"/> component set to 1, and the others to 0.
         /// </summary>
-        public static UInt3 UnitX => new UInt3(1, 0, 0);
+        public static UInt3 UnitX => new(1, 0, 0);
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="Y"/> component set to 1, and the others to 0.
         /// </summary>
-        public static UInt3 UnitY => new UInt3(0, 1, 0);
+        public static UInt3 UnitY => new(0, 1, 0);
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="Z"/> component set to 1, and the others to 0.
         /// </summary>
-        public static UInt3 UnitZ => new UInt3(0, 0, 1);
+        public static UInt3 UnitZ => new(0, 0, 1);
 
         /// <summary>
         /// Creates a new <see cref="UInt3"/> instance with the specified parameters.
@@ -242,32 +242,32 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="X"/> value for all components.
         /// </summary>
-        public UInt2 XXX => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(XXX)}");
+        public UInt3 XXX => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(XXX)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="X"/>, <see cref="X"/> and <see cref="Y"/> values.
         /// </summary>
-        public UInt2 XXY => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(XXY)}");
+        public UInt3 XXY => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(XXY)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="X"/>, <see cref="X"/> and <see cref="Z"/> values.
         /// </summary>
-        public UInt2 XXZ => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(XXZ)}");
+        public UInt3 XXZ => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(XXZ)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="X"/>, <see cref="Y"/> and <see cref="X"/> values.
         /// </summary>
-        public UInt2 XYX => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(XYX)}");
+        public UInt3 XYX => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(XYX)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="X"/>, <see cref="Y"/> and <see cref="Y"/> values.
         /// </summary>
-        public UInt2 XYY => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(XYY)}");
+        public UInt3 XYY => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(XYY)}");
 
         /// <summary>
         /// Gets or sets an <see cref="UInt3"/> value with the <see cref="X"/>, <see cref="Y"/> and <see cref="Z"/> values.
         /// </summary>
-        public UInt2 XYZ
+        public UInt3 XYZ
         {
             get => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(XYZ)}");
             set => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(XYZ)}");
@@ -276,12 +276,12 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="X"/>, <see cref="Z"/> and <see cref="X"/> values.
         /// </summary>
-        public UInt2 XZX => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(XZX)}");
+        public UInt3 XZX => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(XZX)}");
 
         /// <summary>
         /// Gets or sets an <see cref="UInt3"/> value with the <see cref="X"/>, <see cref="Z"/> and <see cref="Y"/> values.
         /// </summary>
-        public UInt2 XZY
+        public UInt3 XZY
         {
             get => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(XZY)}");
             set => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(XZY)}");
@@ -290,22 +290,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="X"/>, <see cref="Z"/> and <see cref="Z"/> values.
         /// </summary>
-        public UInt2 XZZ => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(XZZ)}");
+        public UInt3 XZZ => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(XZZ)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="Y"/>, <see cref="X"/> and <see cref="X"/> values.
         /// </summary>
-        public UInt2 YXX => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(YXX)}");
+        public UInt3 YXX => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(YXX)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="Y"/>, <see cref="X"/> and <see cref="Y"/> values.
         /// </summary>
-        public UInt2 YXY => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(YXY)}");
+        public UInt3 YXY => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(YXY)}");
 
         /// <summary>
         /// Gets or sets an <see cref="UInt3"/> value with the <see cref="Y"/>, <see cref="X"/> and <see cref="Z"/> values.
         /// </summary>
-        public UInt2 YXZ
+        public UInt3 YXZ
         {
             get => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(YXZ)}");
             set => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(YXZ)}");
@@ -314,22 +314,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="Y"/>, <see cref="Y"/> and <see cref="X"/> values.
         /// </summary>
-        public UInt2 YYX => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(YYX)}");
+        public UInt3 YYX => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(YYX)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="Y"/> value for all components.
         /// </summary>
-        public UInt2 YYY => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(YYY)}");
+        public UInt3 YYY => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(YYY)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="Y"/>, <see cref="Y"/> and <see cref="Z"/> values.
         /// </summary>
-        public UInt2 YYZ => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(YYZ)}");
+        public UInt3 YYZ => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(YYZ)}");
 
         /// <summary>
         /// Gets or sets an <see cref="UInt3"/> value with the <see cref="Y"/>, <see cref="Z"/> and <see cref="X"/> values.
         /// </summary>
-        public UInt2 YZX
+        public UInt3 YZX
         {
             get => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(YZX)}");
             set => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(YZX)}");
@@ -338,22 +338,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="Y"/>, <see cref="Z"/> and <see cref="Y"/> values.
         /// </summary>
-        public UInt2 YZY => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(YZY)}");
+        public UInt3 YZY => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(YZY)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="Y"/>, <see cref="Z"/> and <see cref="Z"/> values.
         /// </summary>
-        public UInt2 YZZ => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(YZZ)}");
+        public UInt3 YZZ => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(YZZ)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="Z"/>, <see cref="Z"/> and <see cref="Z"/> values.
         /// </summary>
-        public UInt2 ZXX => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(ZXX)}");
+        public UInt3 ZXX => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(ZXX)}");
 
         /// <summary>
         /// Gets or sets an <see cref="UInt3"/> value with the <see cref="Z"/>, <see cref="X"/> and <see cref="Y"/> values.
         /// </summary>
-        public UInt2 ZXY
+        public UInt3 ZXY
         {
             get => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(ZXY)}");
             set => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(ZXY)}");
@@ -362,12 +362,12 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="Z"/>, <see cref="X"/> and <see cref="Z"/> values.
         /// </summary>
-        public UInt2 ZXZ => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(ZXZ)}");
+        public UInt3 ZXZ => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(ZXZ)}");
 
         /// <summary>
         /// Gets or sets an <see cref="UInt3"/> value with the <see cref="Z"/>, <see cref="Y"/> and <see cref="X"/> values.
         /// </summary>
-        public UInt2 ZYX
+        public UInt3 ZYX
         {
             get => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(ZYX)}");
             set => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(ZYX)}");
@@ -376,57 +376,57 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="Z"/>, <see cref="Y"/> and <see cref="Y"/> values.
         /// </summary>
-        public UInt2 ZYY => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(ZYY)}");
+        public UInt3 ZYY => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(ZYY)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="Z"/>, <see cref="Y"/> and <see cref="Z"/> values.
         /// </summary>
-        public UInt2 ZYZ => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(ZYZ)}");
+        public UInt3 ZYZ => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(ZYZ)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="Z"/>, <see cref="Z"/> and <see cref="X"/> values.
         /// </summary>
-        public UInt2 ZZX => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(ZZX)}");
+        public UInt3 ZZX => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(ZZX)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="Z"/>, <see cref="Z"/> and <see cref="Y"/> values.
         /// </summary>
-        public UInt2 ZZY => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(ZZY)}");
+        public UInt3 ZZY => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(ZZY)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="Z"/> value for all components.
         /// </summary>
-        public UInt2 ZZZ => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(ZZZ)}");
+        public UInt3 ZZZ => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(ZZZ)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="R"/> value for all components.
         /// </summary>
-        public UInt2 RRR => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(RRR)}");
+        public UInt3 RRR => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(RRR)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="R"/>, <see cref="R"/> and <see cref="G"/> values.
         /// </summary>
-        public UInt2 RRG => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(RRG)}");
+        public UInt3 RRG => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(RRG)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="R"/>, <see cref="R"/> and <see cref="B"/> values.
         /// </summary>
-        public UInt2 RRB => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(RRB)}");
+        public UInt3 RRB => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(RRB)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="R"/>, <see cref="G"/> and <see cref="R"/> values.
         /// </summary>
-        public UInt2 RGR => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(RGR)}");
+        public UInt3 RGR => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(RGR)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="R"/>, <see cref="G"/> and <see cref="G"/> values.
         /// </summary>
-        public UInt2 RGG => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(RGG)}");
+        public UInt3 RGG => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(RGG)}");
 
         /// <summary>
         /// Gets or sets an <see cref="UInt3"/> value with the <see cref="R"/>, <see cref="G"/> and <see cref="B"/> values.
         /// </summary>
-        public UInt2 RGB
+        public UInt3 RGB
         {
             get => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(RGB)}");
             set => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(RGB)}");
@@ -435,12 +435,12 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="R"/>, <see cref="B"/> and <see cref="R"/> values.
         /// </summary>
-        public UInt2 RBR => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(RBR)}");
+        public UInt3 RBR => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(RBR)}");
 
         /// <summary>
         /// Gets or sets an <see cref="UInt3"/> value with the <see cref="R"/>, <see cref="B"/> and <see cref="G"/> values.
         /// </summary>
-        public UInt2 RBG
+        public UInt3 RBG
         {
             get => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(RBG)}");
             set => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(RBG)}");
@@ -449,22 +449,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="R"/>, <see cref="B"/> and <see cref="B"/> values.
         /// </summary>
-        public UInt2 RBB => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(RBB)}");
+        public UInt3 RBB => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(RBB)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="G"/>, <see cref="R"/> and <see cref="R"/> values.
         /// </summary>
-        public UInt2 GRR => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(GRR)}");
+        public UInt3 GRR => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(GRR)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="G"/>, <see cref="R"/> and <see cref="G"/> values.
         /// </summary>
-        public UInt2 GRG => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(GRG)}");
+        public UInt3 GRG => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(GRG)}");
 
         /// <summary>
         /// Gets or sets an <see cref="UInt3"/> value with the <see cref="G"/>, <see cref="R"/> and <see cref="B"/> values.
         /// </summary>
-        public UInt2 GRB
+        public UInt3 GRB
         {
             get => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(GRB)}");
             set => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(GRB)}");
@@ -473,22 +473,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="G"/>, <see cref="G"/> and <see cref="R"/> values.
         /// </summary>
-        public UInt2 GGR => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(GGR)}");
+        public UInt3 GGR => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(GGR)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="G"/> value for all components.
         /// </summary>
-        public UInt2 GGG => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(GGG)}");
+        public UInt3 GGG => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(GGG)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="G"/>, <see cref="G"/> and <see cref="B"/> values.
         /// </summary>
-        public UInt2 GGB => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(GGB)}");
+        public UInt3 GGB => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(GGB)}");
 
         /// <summary>
         /// Gets or sets an <see cref="UInt3"/> value with the <see cref="G"/>, <see cref="B"/> and <see cref="R"/> values.
         /// </summary>
-        public UInt2 GBR
+        public UInt3 GBR
         {
             get => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(GBR)}");
             set => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(GBR)}");
@@ -497,22 +497,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="G"/>, <see cref="B"/> and <see cref="G"/> values.
         /// </summary>
-        public UInt2 GBG => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(GBG)}");
+        public UInt3 GBG => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(GBG)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="G"/>, <see cref="B"/> and <see cref="B"/> values.
         /// </summary>
-        public UInt2 GBB => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(GBB)}");
+        public UInt3 GBB => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(GBB)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="B"/>, <see cref="B"/> and <see cref="B"/> values.
         /// </summary>
-        public UInt2 BRR => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(BRR)}");
+        public UInt3 BRR => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(BRR)}");
 
         /// <summary>
         /// Gets or sets an <see cref="UInt3"/> value with the <see cref="B"/>, <see cref="R"/> and <see cref="G"/> values.
         /// </summary>
-        public UInt2 BRG
+        public UInt3 BRG
         {
             get => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(BRG)}");
             set => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(BRG)}");
@@ -521,12 +521,12 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="B"/>, <see cref="R"/> and <see cref="B"/> values.
         /// </summary>
-        public UInt2 BRB => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(BRB)}");
+        public UInt3 BRB => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(BRB)}");
 
         /// <summary>
         /// Gets or sets an <see cref="UInt3"/> value with the <see cref="B"/>, <see cref="G"/> and <see cref="R"/> values.
         /// </summary>
-        public UInt2 BGR
+        public UInt3 BGR
         {
             get => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(BGR)}");
             set => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(BGR)}");
@@ -535,33 +535,33 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="B"/>, <see cref="G"/> and <see cref="G"/> values.
         /// </summary>
-        public UInt2 BGG => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(BGG)}");
+        public UInt3 BGG => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(BGG)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="B"/>, <see cref="G"/> and <see cref="B"/> values.
         /// </summary>
-        public UInt2 BGB => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(BGB)}");
+        public UInt3 BGB => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(BGB)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="B"/>, <see cref="B"/> and <see cref="R"/> values.
         /// </summary>
-        public UInt2 BBR => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(BBR)}");
+        public UInt3 BBR => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(BBR)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="B"/>, <see cref="B"/> and <see cref="G"/> values.
         /// </summary>
-        public UInt2 BBG => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(BBG)}");
+        public UInt3 BBG => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(BBG)}");
 
         /// <summary>
         /// Gets an <see cref="UInt3"/> value with the <see cref="B"/> value for all components.
         /// </summary>
-        public UInt2 BBB => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(BBB)}");
+        public UInt3 BBB => throw new InvalidExecutionContextException($"{nameof(UInt3)}.{nameof(BBB)}");
 
         /// <summary>
         /// Creates a new <see cref="UInt3"/> value with the same value for all its components.
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="UInt3"/> instance.</param>
-        public static implicit operator UInt3(uint x) => new UInt3(x, x, x);
+        public static implicit operator UInt3(uint x) => new(x, x, x);
 
         /// <summary>
         /// Sums two <see cref="UInt3"/> values.

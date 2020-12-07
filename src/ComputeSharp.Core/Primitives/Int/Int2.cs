@@ -24,12 +24,12 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Int2"/> value with the <see cref="X"/> component set to 1, and the others to 0.
         /// </summary>
-        public static Int2 UnitX => new Int2(1, 0);
+        public static Int2 UnitX => new(1, 0);
 
         /// <summary>
         /// Gets an <see cref="Int2"/> value with the <see cref="Y"/> component set to 1, and the others to 0.
         /// </summary>
-        public static Int2 UnitY => new Int2(0, 1);
+        public static Int2 UnitY => new(0, 1);
 
         /// <summary>
         /// Creates a new <see cref="Int2"/> instance with the specified parameters.
@@ -140,7 +140,7 @@ namespace ComputeSharp
         /// Creates a new <see cref="Int2"/> value with the same value for all its components.
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="Int2"/> instance.</param>
-        public static implicit operator Int2(int x) => new Int2(x, x);
+        public static implicit operator Int2(int x) => new(x, x);
 
         /// <summary>
         /// Sums two <see cref="Int2"/> values.

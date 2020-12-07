@@ -24,17 +24,17 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="X"/> component set to 1, and the others to 0.
         /// </summary>
-        public static Float3 UnitX => new Float3(1, 0, 0);
+        public static Float3 UnitX => new(1, 0, 0);
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="Y"/> component set to 1, and the others to 0.
         /// </summary>
-        public static Float3 UnitY => new Float3(0, 1, 0);
+        public static Float3 UnitY => new(0, 1, 0);
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="Z"/> component set to 1, and the others to 0.
         /// </summary>
-        public static Float3 UnitZ => new Float3(0, 0, 1);
+        public static Float3 UnitZ => new(0, 0, 1);
 
         /// <summary>
         /// Creates a new <see cref="Float3"/> instance with the specified parameters.
@@ -242,32 +242,32 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="X"/> value for all components.
         /// </summary>
-        public Float2 XXX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XXX)}");
+        public Float3 XXX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XXX)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="X"/>, <see cref="X"/> and <see cref="Y"/> values.
         /// </summary>
-        public Float2 XXY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XXY)}");
+        public Float3 XXY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XXY)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="X"/>, <see cref="X"/> and <see cref="Z"/> values.
         /// </summary>
-        public Float2 XXZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XXZ)}");
+        public Float3 XXZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XXZ)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="X"/>, <see cref="Y"/> and <see cref="X"/> values.
         /// </summary>
-        public Float2 XYX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XYX)}");
+        public Float3 XYX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XYX)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="X"/>, <see cref="Y"/> and <see cref="Y"/> values.
         /// </summary>
-        public Float2 XYY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XYY)}");
+        public Float3 XYY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XYY)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Float3"/> value with the <see cref="X"/>, <see cref="Y"/> and <see cref="Z"/> values.
         /// </summary>
-        public Float2 XYZ
+        public Float3 XYZ
         {
             get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XYZ)}");
             set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XYZ)}");
@@ -276,12 +276,12 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="X"/>, <see cref="Z"/> and <see cref="X"/> values.
         /// </summary>
-        public Float2 XZX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XZX)}");
+        public Float3 XZX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XZX)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Float3"/> value with the <see cref="X"/>, <see cref="Z"/> and <see cref="Y"/> values.
         /// </summary>
-        public Float2 XZY
+        public Float3 XZY
         {
             get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XZY)}");
             set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XZY)}");
@@ -290,22 +290,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="X"/>, <see cref="Z"/> and <see cref="Z"/> values.
         /// </summary>
-        public Float2 XZZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XZZ)}");
+        public Float3 XZZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XZZ)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="Y"/>, <see cref="X"/> and <see cref="X"/> values.
         /// </summary>
-        public Float2 YXX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YXX)}");
+        public Float3 YXX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YXX)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="Y"/>, <see cref="X"/> and <see cref="Y"/> values.
         /// </summary>
-        public Float2 YXY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YXY)}");
+        public Float3 YXY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YXY)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Float3"/> value with the <see cref="Y"/>, <see cref="X"/> and <see cref="Z"/> values.
         /// </summary>
-        public Float2 YXZ
+        public Float3 YXZ
         {
             get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YXZ)}");
             set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YXZ)}");
@@ -314,22 +314,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="Y"/>, <see cref="Y"/> and <see cref="X"/> values.
         /// </summary>
-        public Float2 YYX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YYX)}");
+        public Float3 YYX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YYX)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="Y"/> value for all components.
         /// </summary>
-        public Float2 YYY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YYY)}");
+        public Float3 YYY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YYY)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="Y"/>, <see cref="Y"/> and <see cref="Z"/> values.
         /// </summary>
-        public Float2 YYZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YYZ)}");
+        public Float3 YYZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YYZ)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Float3"/> value with the <see cref="Y"/>, <see cref="Z"/> and <see cref="X"/> values.
         /// </summary>
-        public Float2 YZX
+        public Float3 YZX
         {
             get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YZX)}");
             set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YZX)}");
@@ -338,22 +338,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="Y"/>, <see cref="Z"/> and <see cref="Y"/> values.
         /// </summary>
-        public Float2 YZY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YZY)}");
+        public Float3 YZY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YZY)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="Y"/>, <see cref="Z"/> and <see cref="Z"/> values.
         /// </summary>
-        public Float2 YZZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YZZ)}");
+        public Float3 YZZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YZZ)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="Z"/>, <see cref="Z"/> and <see cref="Z"/> values.
         /// </summary>
-        public Float2 ZXX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZXX)}");
+        public Float3 ZXX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZXX)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Float3"/> value with the <see cref="Z"/>, <see cref="X"/> and <see cref="Y"/> values.
         /// </summary>
-        public Float2 ZXY
+        public Float3 ZXY
         {
             get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZXY)}");
             set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZXY)}");
@@ -362,12 +362,12 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="Z"/>, <see cref="X"/> and <see cref="Z"/> values.
         /// </summary>
-        public Float2 ZXZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZXZ)}");
+        public Float3 ZXZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZXZ)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Float3"/> value with the <see cref="Z"/>, <see cref="Y"/> and <see cref="X"/> values.
         /// </summary>
-        public Float2 ZYX
+        public Float3 ZYX
         {
             get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZYX)}");
             set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZYX)}");
@@ -376,57 +376,57 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="Z"/>, <see cref="Y"/> and <see cref="Y"/> values.
         /// </summary>
-        public Float2 ZYY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZYY)}");
+        public Float3 ZYY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZYY)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="Z"/>, <see cref="Y"/> and <see cref="Z"/> values.
         /// </summary>
-        public Float2 ZYZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZYZ)}");
+        public Float3 ZYZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZYZ)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="Z"/>, <see cref="Z"/> and <see cref="X"/> values.
         /// </summary>
-        public Float2 ZZX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZZX)}");
+        public Float3 ZZX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZZX)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="Z"/>, <see cref="Z"/> and <see cref="Y"/> values.
         /// </summary>
-        public Float2 ZZY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZZY)}");
+        public Float3 ZZY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZZY)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="Z"/> value for all components.
         /// </summary>
-        public Float2 ZZZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZZZ)}");
+        public Float3 ZZZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZZZ)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="R"/> value for all components.
         /// </summary>
-        public Float2 RRR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RRR)}");
+        public Float3 RRR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RRR)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="R"/>, <see cref="R"/> and <see cref="G"/> values.
         /// </summary>
-        public Float2 RRG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RRG)}");
+        public Float3 RRG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RRG)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="R"/>, <see cref="R"/> and <see cref="B"/> values.
         /// </summary>
-        public Float2 RRB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RRB)}");
+        public Float3 RRB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RRB)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="R"/>, <see cref="G"/> and <see cref="R"/> values.
         /// </summary>
-        public Float2 RGR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RGR)}");
+        public Float3 RGR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RGR)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="R"/>, <see cref="G"/> and <see cref="G"/> values.
         /// </summary>
-        public Float2 RGG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RGG)}");
+        public Float3 RGG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RGG)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Float3"/> value with the <see cref="R"/>, <see cref="G"/> and <see cref="B"/> values.
         /// </summary>
-        public Float2 RGB
+        public Float3 RGB
         {
             get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RGB)}");
             set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RGB)}");
@@ -435,12 +435,12 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="R"/>, <see cref="B"/> and <see cref="R"/> values.
         /// </summary>
-        public Float2 RBR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RBR)}");
+        public Float3 RBR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RBR)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Float3"/> value with the <see cref="R"/>, <see cref="B"/> and <see cref="G"/> values.
         /// </summary>
-        public Float2 RBG
+        public Float3 RBG
         {
             get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RBG)}");
             set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RBG)}");
@@ -449,22 +449,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="R"/>, <see cref="B"/> and <see cref="B"/> values.
         /// </summary>
-        public Float2 RBB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RBB)}");
+        public Float3 RBB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RBB)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="G"/>, <see cref="R"/> and <see cref="R"/> values.
         /// </summary>
-        public Float2 GRR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GRR)}");
+        public Float3 GRR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GRR)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="G"/>, <see cref="R"/> and <see cref="G"/> values.
         /// </summary>
-        public Float2 GRG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GRG)}");
+        public Float3 GRG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GRG)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Float3"/> value with the <see cref="G"/>, <see cref="R"/> and <see cref="B"/> values.
         /// </summary>
-        public Float2 GRB
+        public Float3 GRB
         {
             get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GRB)}");
             set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GRB)}");
@@ -473,22 +473,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="G"/>, <see cref="G"/> and <see cref="R"/> values.
         /// </summary>
-        public Float2 GGR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GGR)}");
+        public Float3 GGR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GGR)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="G"/> value for all components.
         /// </summary>
-        public Float2 GGG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GGG)}");
+        public Float3 GGG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GGG)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="G"/>, <see cref="G"/> and <see cref="B"/> values.
         /// </summary>
-        public Float2 GGB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GGB)}");
+        public Float3 GGB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GGB)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Float3"/> value with the <see cref="G"/>, <see cref="B"/> and <see cref="R"/> values.
         /// </summary>
-        public Float2 GBR
+        public Float3 GBR
         {
             get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GBR)}");
             set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GBR)}");
@@ -497,22 +497,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="G"/>, <see cref="B"/> and <see cref="G"/> values.
         /// </summary>
-        public Float2 GBG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GBG)}");
+        public Float3 GBG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GBG)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="G"/>, <see cref="B"/> and <see cref="B"/> values.
         /// </summary>
-        public Float2 GBB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GBB)}");
+        public Float3 GBB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GBB)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="B"/>, <see cref="B"/> and <see cref="B"/> values.
         /// </summary>
-        public Float2 BRR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BRR)}");
+        public Float3 BRR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BRR)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Float3"/> value with the <see cref="B"/>, <see cref="R"/> and <see cref="G"/> values.
         /// </summary>
-        public Float2 BRG
+        public Float3 BRG
         {
             get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BRG)}");
             set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BRG)}");
@@ -521,12 +521,12 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="B"/>, <see cref="R"/> and <see cref="B"/> values.
         /// </summary>
-        public Float2 BRB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BRB)}");
+        public Float3 BRB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BRB)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Float3"/> value with the <see cref="B"/>, <see cref="G"/> and <see cref="R"/> values.
         /// </summary>
-        public Float2 BGR
+        public Float3 BGR
         {
             get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BGR)}");
             set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BGR)}");
@@ -535,33 +535,33 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="B"/>, <see cref="G"/> and <see cref="G"/> values.
         /// </summary>
-        public Float2 BGG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BGG)}");
+        public Float3 BGG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BGG)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="B"/>, <see cref="G"/> and <see cref="B"/> values.
         /// </summary>
-        public Float2 BGB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BGB)}");
+        public Float3 BGB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BGB)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="B"/>, <see cref="B"/> and <see cref="R"/> values.
         /// </summary>
-        public Float2 BBR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BBR)}");
+        public Float3 BBR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BBR)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="B"/>, <see cref="B"/> and <see cref="G"/> values.
         /// </summary>
-        public Float2 BBG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BBG)}");
+        public Float3 BBG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BBG)}");
 
         /// <summary>
         /// Gets an <see cref="Float3"/> value with the <see cref="B"/> value for all components.
         /// </summary>
-        public Float2 BBB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BBB)}");
+        public Float3 BBB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BBB)}");
 
         /// <summary>
         /// Creates a new <see cref="Float3"/> value with the same value for all its components.
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="Float3"/> instance.</param>
-        public static implicit operator Float3(float x) => new Float3(x, x, x);
+        public static implicit operator Float3(float x) => new(x, x, x);
 
         /// <summary>
         /// Sums two <see cref="Float3"/> values.

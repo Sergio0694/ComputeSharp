@@ -24,12 +24,12 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Float2"/> value with the <see cref="X"/> component set to 1, and the others to 0.
         /// </summary>
-        public static Float2 UnitX => new Float2(1, 0);
+        public static Float2 UnitX => new(1, 0);
 
         /// <summary>
         /// Gets an <see cref="Float2"/> value with the <see cref="Y"/> component set to 1, and the others to 0.
         /// </summary>
-        public static Float2 UnitY => new Float2(0, 1);
+        public static Float2 UnitY => new(0, 1);
 
         /// <summary>
         /// Creates a new <see cref="Float2"/> instance with the specified parameters.
@@ -140,7 +140,7 @@ namespace ComputeSharp
         /// Creates a new <see cref="Float2"/> value with the same value for all its components.
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="Float2"/> instance.</param>
-        public static implicit operator Float2(float x) => new Float2(x, x);
+        public static implicit operator Float2(float x) => new(x, x);
 
         /// <summary>
         /// Sums two <see cref="Float2"/> values.
