@@ -25,10 +25,6 @@ namespace ComputeSharp.SourceGenerators.Mappings
         {
             Dictionary<string, string> knownMembers = new()
             {
-                [$"{typeof(ThreadIds).FullName}.{nameof(ThreadIds.X)}"] = "x",
-                [$"{typeof(ThreadIds).FullName}.{nameof(ThreadIds.Y)}"] = "y",
-                [$"{typeof(ThreadIds).FullName}.{nameof(ThreadIds.Z)}"] = "z",
-
                 [$"{typeof(Vector2).FullName}.{nameof(Vector2.X)}"] = "x",
                 [$"{typeof(Vector2).FullName}.{nameof(Vector2.Y)}"] = "y",
                 [$"{typeof(Vector2).FullName}.{nameof(Vector2.Zero)}"] = "(float2)0",

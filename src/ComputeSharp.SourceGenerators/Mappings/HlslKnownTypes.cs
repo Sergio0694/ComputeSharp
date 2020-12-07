@@ -47,14 +47,15 @@ namespace ComputeSharp.SourceGenerators.Mappings
         /// <summary>
         /// Gets the known HLSL vector types available as mapped types.
         /// </summary>
-        public static IReadOnlyCollection<Type> HlslMappedVectorTypes { get; } = new HashSet<Type>(new[]
+        public static IReadOnlyCollection<Type> HlslMappedVectorTypes { get; } = new[]
         {
+            typeof(ThreadIds),
             typeof(Bool2), typeof(Bool3), typeof(Bool4),
             typeof(Int2), typeof(Int3), typeof(Int4),
             typeof(UInt2), typeof(UInt3), typeof(UInt4),
             typeof(Float2), typeof(Float3), typeof(Float4),
             typeof(Double2), typeof(Double3), typeof(Double4)
-        });
+        };
 
         /// <summary>
         /// Checks whether or not a given type name matches a typed resource type.
