@@ -62,6 +62,7 @@ namespace ComputeSharp
             Guard.IsLessThanOrEqualTo(offset + size, Length, nameof(size));
 
             using ID3D12ResourceMap resource = D3D12Resource->Map();
+
             fixed (void* destinationPointer = &destination)
             {
                 if (IsPaddingPresent)
@@ -96,6 +97,7 @@ namespace ComputeSharp
             Guard.IsLessThanOrEqualTo(offset + size, Length, nameof(size));
 
             using ID3D12ResourceMap resource = D3D12Resource->Map();
+
             fixed (void* sourcePointer = &source)
             {
                 if (IsPaddingPresent)

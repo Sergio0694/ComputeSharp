@@ -50,6 +50,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             }
 
             using ID3D12ResourceMap resource = d3D12Resource.Get()->Map();
+
             fixed (void* destinationPointer = &destination)
             {
                 MemoryHelper.Copy(
