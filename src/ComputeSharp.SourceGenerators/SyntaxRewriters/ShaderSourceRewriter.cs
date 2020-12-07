@@ -343,6 +343,22 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         }
 
         /// <inheritdoc/>
+        public override SyntaxNode? VisitElementAccessExpression(ElementAccessExpressionSyntax node)
+        {
+            var updatedNode = (ElementAccessExpressionSyntax)base.VisitElementAccessExpression(node)!;
+
+            if (this.semanticModel.GetOperation(node) is IPropertyReferenceOperation operation &&
+                HlslKnownMembers.TryGetMappedIndexerTypeName(operation.Property.GetFullMetadataName(), out string? mapping))
+            {
+                var index = InvocationExpression(IdentifierName(mapping!), ArgumentList(updatedNode.ArgumentList.Arguments));
+
+                return updatedNode.WithArgumentList(BracketedArgumentList(SingletonSeparatedList(Argument(index))));
+            }
+
+            return updatedNode;
+        }
+
+        /// <inheritdoc/>
         public override SyntaxNode? VisitArgument(ArgumentSyntax node)
         {
             var updatedNode = (ArgumentSyntax)base.VisitArgument(node)!;

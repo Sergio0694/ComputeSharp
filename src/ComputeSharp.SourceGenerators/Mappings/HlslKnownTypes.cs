@@ -41,7 +41,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
             [typeof(Double2).FullName] = "double2",
             [typeof(Double3).FullName] = "double3",
             [typeof(Double4).FullName] = "double4",
-            [typeof(ThreadIds).FullName] = "uint3"
+            [typeof(ThreadIds).FullName] = "int3"
         };
 
         /// <summary>
