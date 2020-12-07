@@ -55,7 +55,7 @@ namespace ComputeSharp.Graphics.Commands
         /// <summary>
         /// Gets the command list type being used by the current instance.
         /// </summary>
-        public readonly D3D12_COMMAND_LIST_TYPE D3d12CommandListType => this.d3D12CommandListType;
+        public readonly D3D12_COMMAND_LIST_TYPE D3D12CommandListType => this.d3D12CommandListType;
 
         /// <summary>
         /// Detaches the <see cref="ID3D12CommandAllocator"/> object in use by the current instance.

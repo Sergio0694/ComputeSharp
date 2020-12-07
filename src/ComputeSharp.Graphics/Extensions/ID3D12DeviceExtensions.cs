@@ -163,7 +163,7 @@ namespace ComputeSharp.Graphics.Extensions
 
             (d3D12ResourceFlags, d3D12ResourceStates) = resourceType switch
             {
-                ResourceType.ReadOnly => (D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
+                ResourceType.ReadOnly => (D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
                 ResourceType.ReadWrite => (D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_UNORDERED_ACCESS),
                 _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
             };
@@ -214,7 +214,7 @@ namespace ComputeSharp.Graphics.Extensions
 
             (d3D12ResourceFlags, d3D12ResourceStates) = resourceType switch
             {
-                ResourceType.ReadOnly => (D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
+                ResourceType.ReadOnly => (D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
                 ResourceType.ReadWrite => (D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_UNORDERED_ACCESS),
                 _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
             };

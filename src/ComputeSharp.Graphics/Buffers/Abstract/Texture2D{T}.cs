@@ -36,7 +36,12 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <summary>
         /// The default <see cref="D3D12_RESOURCE_STATES"/> value for the current resource.
         /// </summary>
-        private readonly D3D12_RESOURCE_STATES D3D12ResourceState;
+        private readonly D3D12_RESOURCE_STATES d3D12ResourceState;
+
+        /// <summary>
+        /// The <see cref="D3D12_COMMAND_LIST_TYPE"/> value to use for copy operations.
+        /// </summary>
+        private readonly D3D12_COMMAND_LIST_TYPE d3D12CommandListType;
 
         /// <summary>
         /// Creates a new <see cref="Texture2D{T}"/> instance with the specified parameters.
@@ -61,7 +66,11 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 DXGIFormatHelper.GetForType<T>(),
                 (uint)width,
                 (uint)height,
-                out D3D12ResourceState);
+                out this.d3D12ResourceState);
+
+            this.d3D12CommandListType = this.d3D12ResourceState == D3D12_RESOURCE_STATE_COMMON
+                ? D3D12_COMMAND_LIST_TYPE_COPY
+                : D3D12_COMMAND_LIST_TYPE_COMPUTE;
 
             device.AllocateShaderResourceViewDescriptorHandles(out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 
@@ -130,9 +139,12 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, totalSizeInBytes);
 
-            using (CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COMPUTE))
+            using (CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType))
             {
-                copyCommandList.ResourceBarrier(D3D12Resource, D3D12ResourceState, D3D12_RESOURCE_STATE_COPY_SOURCE);
+                if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
+                {
+                    copyCommandList.ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_SOURCE);
+                }
 
                 copyCommandList.CopyTextureRegion(
                     d3D12Resource.Get(),
@@ -145,7 +157,11 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                     (uint)height,
                     1);
 
-                copyCommandList.ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, D3D12ResourceState);
+                if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
+                {
+                    copyCommandList.ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, this.d3D12ResourceState);
+                }
+
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
 
@@ -207,9 +223,12 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                     d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
             }
 
-            using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COMPUTE);
+            using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
 
-            copyCommandList.ResourceBarrier(D3D12Resource, D3D12ResourceState, D3D12_RESOURCE_STATE_COPY_DEST);
+            if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
+            {
+                copyCommandList.ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_DEST);
+            }
 
             copyCommandList.CopyTextureRegion(
                 D3D12Resource,
@@ -219,7 +238,11 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 d3D12Resource.Get(),
                 &d3D12PlacedSubresourceFootprint);
 
-            copyCommandList.ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, D3D12ResourceState);
+            if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
+            {
+                copyCommandList.ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, this.d3D12ResourceState);
+            }
+
             copyCommandList.ExecuteAndWaitForCompletion();
         }
 
