@@ -10,7 +10,7 @@ namespace ComputeSharp.Tests
 {
     [TestClass]
     [TestCategory("Texture3D")]
-    public class Texture3DTests
+    public partial class Texture3DTests
     {
         [TestMethod]
         [DataRow(typeof(ReadOnlyTexture3D<>))]
@@ -170,6 +170,62 @@ namespace ComputeSharp.Tests
             float[] result = new float[array.Length];
 
             texture.GetData(result, x, y, z, width, height, depth);
+        }
+
+        [TestMethod]
+        public void Dispatch_ReadOnlyTexture3D()
+        {
+            int[] data = Enumerable.Range(0, 32 * 32 * 3).ToArray();
+
+            using ReadOnlyTexture3D<int> source = Gpu.Default.AllocateReadOnlyTexture3D(data, 32, 32, 3);
+            using ReadWriteBuffer<int> destination = Gpu.Default.AllocateReadWriteBuffer<int>(data.Length);
+
+            Gpu.Default.For(source.Width, source.Height, source.Depth, new ReadOnlyTexture3DKernel(source, destination));
+
+            int[] result = destination.GetData();
+
+            CollectionAssert.AreEqual(data, result);
+        }
+
+        [AutoConstructor]
+        private readonly partial struct ReadOnlyTexture3DKernel : IComputeShader
+        {
+            public readonly ReadOnlyTexture3D<int> source;
+            public readonly ReadWriteBuffer<int> destination;
+
+            public void Execute(ThreadIds ids)
+            {
+                destination[ids.Z * 32 * 32 + ids.Y * 32 + ids.X] = source[new((uint)ids.X, (uint)ids.Y, (uint)ids.Z)];
+            }
+        }
+
+        [TestMethod]
+        public void Dispatch_ReadWriteTexture2D()
+        {
+            int[] data = Enumerable.Range(0, 32 * 32 * 3).ToArray();
+
+            using ReadWriteTexture3D<int> source = Gpu.Default.AllocateReadWriteTexture3D(data, 32, 32, 3);
+            using ReadWriteTexture3D<int> destination = Gpu.Default.AllocateReadWriteTexture3D<int>(32, 32, 3);
+
+            Gpu.Default.For(source.Width, source.Height, source.Depth, new ReadWriteTexture3DKernel(source, destination));
+
+            int[] result = new int[data.Length];
+
+            destination.GetData(result);
+
+            CollectionAssert.AreEqual(data, result);
+        }
+
+        [AutoConstructor]
+        private readonly partial struct ReadWriteTexture3DKernel : IComputeShader
+        {
+            public readonly ReadWriteTexture3D<int> source;
+            public readonly ReadWriteTexture3D<int> destination;
+
+            public void Execute(ThreadIds ids)
+            {
+                destination[new((uint)ids.X, (uint)ids.Y, (uint)ids.Z)] = source[new((uint)ids.X, (uint)ids.Y, (uint)ids.Z)];
+            }
         }
     }
 }

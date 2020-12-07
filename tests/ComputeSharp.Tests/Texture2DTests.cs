@@ -9,7 +9,7 @@ namespace ComputeSharp.Tests
 {
     [TestClass]
     [TestCategory("Texture2D")]
-    public class Texture2DTests
+    public partial class Texture2DTests
     {
         [TestMethod]
         [DataRow(typeof(ReadOnlyTexture2D<>))]
@@ -136,6 +136,62 @@ namespace ComputeSharp.Tests
             float[] result = new float[4096];
 
             texture.GetData(result, x, y, width, height);
+        }
+
+        [TestMethod]
+        public void Dispatch_ReadOnlyTexture2D()
+        {
+            int[] data = Enumerable.Range(0, 32 * 32).ToArray();
+
+            using ReadOnlyTexture2D<int> source = Gpu.Default.AllocateReadOnlyTexture2D(data, 32, 32);
+            using ReadWriteBuffer<int> destination = Gpu.Default.AllocateReadWriteBuffer<int>(data.Length);
+
+            Gpu.Default.For(source.Width, source.Height, new ReadOnlyTexture2DKernel(source, destination));
+
+            int[] result = destination.GetData();
+
+            CollectionAssert.AreEqual(data, result);
+        }
+
+        [AutoConstructor]
+        private readonly partial struct ReadOnlyTexture2DKernel : IComputeShader
+        {
+            public readonly ReadOnlyTexture2D<int> source;
+            public readonly ReadWriteBuffer<int> destination;
+
+            public void Execute(ThreadIds ids)
+            {
+                destination[ids.Y * 32 + ids.X] = source[new((uint)ids.X, (uint)ids.Y)];
+            }
+        }
+
+        [TestMethod]
+        public void Dispatch_ReadWriteTexture2D()
+        {
+            int[] data = Enumerable.Range(0, 32 * 32).ToArray();
+
+            using ReadWriteTexture2D<int> source = Gpu.Default.AllocateReadWriteTexture2D(data, 32, 32);
+            using ReadWriteTexture2D<int> destination = Gpu.Default.AllocateReadWriteTexture2D<int>(32, 32);
+
+            Gpu.Default.For(source.Width, source.Height, new ReadWriteTexture2DKernel(source, destination));
+
+            int[] result = new int[data.Length];
+
+            destination.GetData(result);
+
+            CollectionAssert.AreEqual(data, result);
+        }
+
+        [AutoConstructor]
+        private readonly partial struct ReadWriteTexture2DKernel : IComputeShader
+        {
+            public readonly ReadWriteTexture2D<int> source;
+            public readonly ReadWriteTexture2D<int> destination;
+
+            public void Execute(ThreadIds ids)
+            {
+                destination[new((uint)ids.X, (uint)ids.Y)] = source[new((uint)ids.X, (uint)ids.Y)];
+            }
         }
     }
 }
