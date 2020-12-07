@@ -31,6 +31,15 @@ namespace ComputeSharp
         /// <summary>
         /// Gets a single <typeparamref name="T"/> value from the current readonly texture.
         /// </summary>
+        /// <param name="x">The horizontal offset of the value to get.</param>
+        /// <param name="y">The vertical offset of the value to get.</param>
+        /// <param name="y">The depthwise offset of the value to get.</param>
+        /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
+        public T this[int x, int y, int z] => throw new InvalidExecutionContextException($"{nameof(ReadOnlyTexture3D<T>)}<T>[int,int,int]");
+
+        /// <summary>
+        /// Gets a single <typeparamref name="T"/> value from the current readonly texture.
+        /// </summary>
         /// <param name="xyz">The coordinates of the value to get.</param>
         /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
         public T this[Int3 xyz] => throw new InvalidExecutionContextException($"{nameof(ReadOnlyTexture3D<T>)}<T>[Int3]");
