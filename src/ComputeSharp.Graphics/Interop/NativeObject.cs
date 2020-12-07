@@ -9,17 +9,17 @@ namespace ComputeSharp.Core.Interop
     public abstract class NativeObject : IDisposable
     {
         /// <summary>
-        /// Indicates whether or not the current instance has already been disposed.
-        /// </summary>
-        private bool isDisposed;
-
-        /// <summary>
         /// Releases unmanaged resources and performs other cleanup operations.
         /// </summary>
         ~NativeObject()
         {
             CheckAndDispose();
         }
+
+        /// <summary>
+        /// Gets whether or not the current instance has already been disposed.
+        /// </summary>
+        internal bool IsDisposed { get; private set; }
 
         /// <summary>
         /// Releases all the native resources for the current instance.
@@ -36,9 +36,9 @@ namespace ComputeSharp.Core.Interop
         /// </summary>
         private void CheckAndDispose()
         {
-            if (!this.isDisposed)
+            if (!IsDisposed)
             {
-                this.isDisposed = true;
+                IsDisposed = true;
 
                 OnDispose();
             }
@@ -55,7 +55,7 @@ namespace ComputeSharp.Core.Interop
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void ThrowIfDisposed()
         {
-            if (this.isDisposed)
+            if (IsDisposed)
             {
                 // We can't use ThrowHelper here as we only want to invoke ToString if we
                 // are about to throw an exception. The JIT will recognize this pattern

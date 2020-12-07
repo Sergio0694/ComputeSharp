@@ -24,6 +24,11 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         private ComPtr<ID3D12Resource> d3D12Resource;
 
         /// <summary>
+        /// The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
+        /// </summary>
+        internal readonly D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandle;
+
+        /// <summary>
         /// The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
         /// </summary>
         /// <remarks>This field is dynamically accessed when loading shader dispatch data.</remarks>
@@ -61,18 +66,18 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, (ulong)SizeInBytes);
 
-            device.AllocateShaderResourceViewDescriptorHandles(out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
+            device.RentShaderResourceViewDescriptorHandles(out D3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 
             switch (resourceType)
             {
                 case ResourceType.Constant:
-                    device.D3D12Device->CreateConstantBufferView(this.d3D12Resource, SizeInBytes, d3D12CpuDescriptorHandle);
+                    device.D3D12Device->CreateConstantBufferView(this.d3D12Resource, SizeInBytes, D3D12CpuDescriptorHandle);
                     break;
                 case ResourceType.ReadOnly:
-                    device.D3D12Device->CreateShaderResourceView(this.d3D12Resource, (uint)length, elementSizeInBytes, d3D12CpuDescriptorHandle);
+                    device.D3D12Device->CreateShaderResourceView(this.d3D12Resource, (uint)length, elementSizeInBytes, D3D12CpuDescriptorHandle);
                     break;
                 case ResourceType.ReadWrite:
-                    device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource, (uint)length, elementSizeInBytes, d3D12CpuDescriptorHandle);
+                    device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource, (uint)length, elementSizeInBytes, D3D12CpuDescriptorHandle);
                     break;
             }
         }
@@ -147,6 +152,11 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         protected override void OnDispose()
         {
             this.d3D12Resource.Dispose();
+
+            if (!GraphicsDevice.IsDisposed)
+            {
+                GraphicsDevice.ReturnShaderResourceViewDescriptorHandles(D3D12CpuDescriptorHandle, D3D12GpuDescriptorHandle);
+            }
         }
 
         /// <summary>

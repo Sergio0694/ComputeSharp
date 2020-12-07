@@ -29,6 +29,11 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         private ComPtr<ID3D12Resource> d3D12Resource;
 
         /// <summary>
+        /// The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
+        /// </summary>
+        internal readonly D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandle;
+
+        /// <summary>
         /// The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
         /// </summary>
         /// <remarks>This field is dynamically accessed when loading shader dispatch data.</remarks>
@@ -77,15 +82,15 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 ? D3D12_COMMAND_LIST_TYPE_COPY
                 : D3D12_COMMAND_LIST_TYPE_COMPUTE;
 
-            device.AllocateShaderResourceViewDescriptorHandles(out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
+            device.RentShaderResourceViewDescriptorHandles(out D3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 
             switch (resourceType)
             {
                 case ResourceType.ReadOnly:
-                    device.D3D12Device->CreateShaderResourceView(this.d3D12Resource, DXGIFormatHelper.GetForType<T>(), D3D12_SRV_DIMENSION_TEXTURE3D, d3D12CpuDescriptorHandle);
+                    device.D3D12Device->CreateShaderResourceView(this.d3D12Resource, DXGIFormatHelper.GetForType<T>(), D3D12_SRV_DIMENSION_TEXTURE3D, D3D12CpuDescriptorHandle);
                     break;
                 case ResourceType.ReadWrite:
-                    device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource, DXGIFormatHelper.GetForType<T>(), D3D12_UAV_DIMENSION_TEXTURE3D, d3D12CpuDescriptorHandle);
+                    device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource, DXGIFormatHelper.GetForType<T>(), D3D12_UAV_DIMENSION_TEXTURE3D, D3D12CpuDescriptorHandle);
                     break;
             }
         }
@@ -274,6 +279,11 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         protected override void OnDispose()
         {
             this.d3D12Resource.Dispose();
+
+            if (!GraphicsDevice.IsDisposed)
+            {
+                GraphicsDevice.ReturnShaderResourceViewDescriptorHandles(D3D12CpuDescriptorHandle, D3D12GpuDescriptorHandle);
+            }
         }
 
         /// <summary>
