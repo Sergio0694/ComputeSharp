@@ -1,8 +1,8 @@
-﻿using ComputeSharp.Core.Interop;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using ComputeSharp.Core.Extensions;
+using ComputeSharp.Graphics.Interop;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
 using HRESULT = System.Int32;

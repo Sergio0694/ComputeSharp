@@ -4,7 +4,7 @@ using System;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_DESCRIPTOR_HEAP_TYPE;
 
-namespace ComputeSharp.Graphics
+namespace ComputeSharp.Graphics.Commands.Interop
 {
     /// <summary>
     /// A type that provides logic to create resource descriptors for a <see cref="GraphicsDevice"/> instance.

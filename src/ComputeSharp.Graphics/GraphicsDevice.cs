@@ -1,10 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
-using ComputeSharp.Core.Interop;
 using ComputeSharp.Graphics.Commands;
+using ComputeSharp.Graphics.Commands.Interop;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
+using ComputeSharp.Graphics.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;

@@ -4,7 +4,7 @@ using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop;
 
-namespace ComputeSharp.Graphics.Commands
+namespace ComputeSharp.Graphics.Commands.Interop
 {
     /// <summary>
     /// A type that acts as a pool to get new <see cref="ID3D12CommandAllocator"/> instances wheen needed.
