@@ -7,16 +7,23 @@ namespace ComputeSharp.Graphics.Buffers.Views
     /// A debug proxy used to display items in a <see cref="Texture2D{T}"/> instance.
     /// </summary>
     /// <typeparam name="T">The type of items to display.</typeparam>
-    internal sealed class BufferDebugView2D<T>
+    internal sealed class Texture2DDebugView<T>
         where T : unmanaged
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BufferDebugView2D{T}"/> class with the specified parameters.
+        /// Initializes a new instance of the <see cref="Texture2DDebugView{T}"/> class with the specified parameters.
         /// </summary>
         /// <param name="texture">The input <see cref="Texture2D{T}"/> instance with the items to display.</param>
-        public BufferDebugView2D(Texture2D<T>? texture)
+        public Texture2DDebugView(Texture2D<T>? texture)
         {
-            Items = texture?.GetData();
+            if (texture is not null)
+            {
+                var items = new T[texture.Height, texture.Width];
+
+                texture.GetData(ref items[0, 0], items.Length, 0, 0, texture.Width, texture.Height);
+
+                Items = items;
+            }
         }
 
         /// <summary>

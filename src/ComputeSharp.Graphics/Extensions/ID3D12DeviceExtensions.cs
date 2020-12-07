@@ -163,7 +163,7 @@ namespace ComputeSharp.Graphics.Extensions
 
             (d3D12ResourceFlags, d3D12ResourceStates) = resourceType switch
             {
-                ResourceType.ReadOnly => (D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
+                ResourceType.ReadOnly => (D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
                 ResourceType.ReadWrite => (D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_UNORDERED_ACCESS),
                 _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
             };
@@ -177,6 +177,57 @@ namespace ComputeSharp.Graphics.Extensions
             d3D12HeapProperties.CreationNodeMask = 1;
             d3D12HeapProperties.VisibleNodeMask = 1;
             D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex2D(dxgiFormat, width, height, flags: d3D12ResourceFlags);
+
+            d3D12Device.CreateCommittedResource(
+                &d3D12HeapProperties,
+                D3D12_HEAP_FLAG_NONE,
+                &d3D12ResourceDescription,
+                d3D12ResourceStates,
+                null,
+                FX.__uuidof<ID3D12Resource>(),
+                d3D12Resource.GetVoidAddressOf()).Assert();
+
+            return d3D12Resource.Move();
+        }
+
+        /// <summary>
+        /// Creates a committed resource for a given 3D texture type.
+        /// </summary>
+        /// <param name="d3D12Device">The <see cref="ID3D12Device"/> instance in use.</param>
+        /// <param name="resourceType">The resource type currently in use.</param>
+        /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
+        /// <param name="width">The width of the texture resource.</param>
+        /// <param name="height">The height of the texture resource.</param>
+        /// <param name="depth">The depth of the texture resource.</param>
+        /// <param name="d3D12ResourceStates">The default <see cref="D3D12_RESOURCE_STATES"/> value for the resource.</param>
+        /// <returns>An <see cref="ID3D12Resource"/> reference for the current texture.</returns>
+        public static ComPtr<ID3D12Resource> CreateCommittedResource(
+            this ref ID3D12Device d3D12Device,
+            ResourceType resourceType,
+            DXGI_FORMAT dxgiFormat,
+            uint width,
+            uint height,
+            ushort depth,
+            out D3D12_RESOURCE_STATES d3D12ResourceStates)
+        {
+            D3D12_RESOURCE_FLAGS d3D12ResourceFlags;
+
+            (d3D12ResourceFlags, d3D12ResourceStates) = resourceType switch
+            {
+                ResourceType.ReadOnly => (D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COMMON),
+                ResourceType.ReadWrite => (D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_UNORDERED_ACCESS),
+                _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
+            };
+
+            using ComPtr<ID3D12Resource> d3D12Resource = default;
+
+            D3D12_HEAP_PROPERTIES d3D12HeapProperties;
+            d3D12HeapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+            d3D12HeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+            d3D12HeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+            d3D12HeapProperties.CreationNodeMask = 1;
+            d3D12HeapProperties.VisibleNodeMask = 1;
+            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(dxgiFormat, width, height, depth, flags: d3D12ResourceFlags);
 
             d3D12Device.CreateCommittedResource(
                 &d3D12HeapProperties,
@@ -242,15 +293,17 @@ namespace ComputeSharp.Graphics.Extensions
         /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
         /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
         /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
+        /// <param name="d3D12SrvDimension">The <see cref="D3D12_SRV_DIMENSION"/> value for the view to create.</param>
         /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
         public static void CreateShaderResourceView(
             this ref ID3D12Device d3D12Device,
             ID3D12Resource* d3D12Resource,
             DXGI_FORMAT dxgiFormat,
+            D3D12_SRV_DIMENSION d3D12SrvDimension,
             D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
         {
             D3D12_SHADER_RESOURCE_VIEW_DESC d3D12ShaderResourceViewDescription = default;
-            d3D12ShaderResourceViewDescription.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+            d3D12ShaderResourceViewDescription.ViewDimension = d3D12SrvDimension;
             d3D12ShaderResourceViewDescription.Format = dxgiFormat;
             d3D12ShaderResourceViewDescription.Shader4ComponentMapping = FX.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
             d3D12ShaderResourceViewDescription.Texture2D.MipLevels = uint.MaxValue;
@@ -287,16 +340,19 @@ namespace ComputeSharp.Graphics.Extensions
         /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
         /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
         /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
+        /// <param name="d3D12UavDimension">The <see cref="D3D12_UAV_DIMENSION"/> value for the view to create.</param>
         /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
         public static void CreateUnorderedAccessView(
             this ref ID3D12Device d3D12Device,
             ID3D12Resource* d3D12Resource,
             DXGI_FORMAT dxgiFormat,
+            D3D12_UAV_DIMENSION d3D12UavDimension,
             D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
         {
             D3D12_UNORDERED_ACCESS_VIEW_DESC d3D12UnorderedAccessViewDescription = default;
-            d3D12UnorderedAccessViewDescription.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
+            d3D12UnorderedAccessViewDescription.ViewDimension = d3D12UavDimension;
             d3D12UnorderedAccessViewDescription.Format = dxgiFormat;
+            d3D12UnorderedAccessViewDescription.Texture3D.WSize = uint.MaxValue;
 
             d3D12Device.CreateUnorderedAccessView(d3D12Resource, null, &d3D12UnorderedAccessViewDescription, d3D12CpuDescriptorHandle);
         }
@@ -345,6 +401,36 @@ namespace ComputeSharp.Graphics.Extensions
                 d3D12GraphicsCommandList.GetVoidAddressOf()).Assert();
 
             return d3D12GraphicsCommandList.Move();
+        }
+
+        /// <summary>
+        /// Gets the layout data for a target resource.
+        /// </summary>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to get the layout info.</param>
+        /// <param name="d3D12ResourceDesc">The <see cref="D3D12_RESOURCE_DESC"/> value for the target resource.</param>
+        /// <param name="d3D12PlacedSubresourceFootprint">The resulting layout info for the resource.</param>
+        /// <param name="numRows">The number of rows in the resource.</param>
+        /// <param name="rowSizeInBytes">The size in bytes of each row in the resource.</param>
+        /// <param name="totalSizeInBytes">The total number of bytes for the resource.</param>
+        public static void GetCopyableFootprint(
+            this ref ID3D12Device d3D12Device,
+            D3D12_RESOURCE_DESC* d3D12ResourceDesc,
+            out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
+            out uint numRows,
+            out ulong rowSizeInBytes,
+            out ulong totalSizeInBytes)
+        {
+            uint a;
+            ulong b, c;
+
+            fixed (D3D12_PLACED_SUBRESOURCE_FOOTPRINT* p = &d3D12PlacedSubresourceFootprint)
+            {
+                d3D12Device.GetCopyableFootprints(d3D12ResourceDesc, 0, 1, 0, p, &a, &b, &c);
+            }
+
+            numRows = a;
+            rowSizeInBytes = b;
+            totalSizeInBytes = c;
         }
 
         /// <summary>

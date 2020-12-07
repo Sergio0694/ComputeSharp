@@ -17,10 +17,10 @@ using FX = TerraFX.Interop.Windows;
 namespace ComputeSharp.Graphics.Buffers.Abstract
 {
     /// <summary>
-    /// A <see langword="class"/> representing a typed 2D texture stored on GPU memory.
+    /// A <see langword="class"/> representing a typed 3D texture stored on GPU memory.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-    public unsafe abstract class Texture2D<T> : NativeObject
+    public unsafe abstract class Texture3D<T> : NativeObject
         where T : unmanaged
     {
         /// <summary>
@@ -45,28 +45,32 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         private readonly D3D12_COMMAND_LIST_TYPE d3D12CommandListType;
 
         /// <summary>
-        /// Creates a new <see cref="Texture2D{T}"/> instance with the specified parameters.
+        /// Creates a new <see cref="Texture3D{T}"/> instance with the specified parameters.
         /// </summary>
         /// <param name="device">The <see cref="Graphics.GraphicsDevice"/> associated with the current instance.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="width">The width of the texture.</param>
+        /// <param name="depth">The depth of the texture.</param>
         /// <param name="resourceType">The resource type for the current texture.</param>
-        private protected Texture2D(GraphicsDevice device, int width, int height, ResourceType resourceType)
+        private protected Texture3D(GraphicsDevice device, int width, int height, int depth, ResourceType resourceType)
         {
             device.ThrowIfDisposed();
 
-            Guard.IsBetweenOrEqualTo(width, 1, FX.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION, nameof(width));
-            Guard.IsBetweenOrEqualTo(height, 1, FX.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION, nameof(height));
+            Guard.IsBetweenOrEqualTo(width, 1, FX.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(width));
+            Guard.IsBetweenOrEqualTo(height, 1, FX.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(height));
+            Guard.IsBetweenOrEqualTo(depth, 1, FX.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(depth));
 
             GraphicsDevice = device;
             Width = width;
             Height = height;
+            Depth = depth;
 
             this.d3D12Resource = device.D3D12Device->CreateCommittedResource(
                 resourceType,
                 DXGIFormatHelper.GetForType<T>(),
                 (uint)width,
                 (uint)height,
+                (ushort)depth,
                 out this.d3D12ResourceState);
 
             this.d3D12CommandListType = this.d3D12ResourceState == D3D12_RESOURCE_STATE_COMMON
@@ -78,10 +82,10 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             switch (resourceType)
             {
                 case ResourceType.ReadOnly:
-                    device.D3D12Device->CreateShaderResourceView(this.d3D12Resource, DXGIFormatHelper.GetForType<T>(), D3D12_SRV_DIMENSION_TEXTURE2D, d3D12CpuDescriptorHandle);
+                    device.D3D12Device->CreateShaderResourceView(this.d3D12Resource, DXGIFormatHelper.GetForType<T>(), D3D12_SRV_DIMENSION_TEXTURE3D, d3D12CpuDescriptorHandle);
                     break;
                 case ResourceType.ReadWrite:
-                    device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource, DXGIFormatHelper.GetForType<T>(), D3D12_UAV_DIMENSION_TEXTURE2D, d3D12CpuDescriptorHandle);
+                    device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource, DXGIFormatHelper.GetForType<T>(), D3D12_UAV_DIMENSION_TEXTURE3D, d3D12CpuDescriptorHandle);
                     break;
             }
         }
@@ -102,20 +106,27 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         public int Height { get; }
 
         /// <summary>
+        /// Gets the depth of the current texture.
+        /// </summary>
+        public int Depth { get; }
+
+        /// <summary>
         /// Gets the <see cref="ID3D12Resource"/> instance currently mapped.
         /// </summary>
         internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
 
         /// <summary>
-        /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target memory area.
+        /// Reads the contents of the specified range from the current <see cref="Texture3D{T}"/> instance and writes them into a target memory area.
         /// </summary>
         /// <param name="destination">The target memory area to write data to.</param>
-        /// <param name="size">The size of the target memory area to write data to.</param>
+        /// <param name="size">The size of the memory area to write data to.</param>
         /// <param name="x">The horizontal offset in the source texture.</param>
         /// <param name="y">The vertical offset in the source texture.</param>
+        /// <param name="z">The depthwise offset in the source texture.</param>
         /// <param name="width">The width of the memory area to copy.</param>
         /// <param name="height">The height of the memory area to copy.</param>
-        internal void GetData(ref T destination, nint size, int x, int y, int width, int height)
+        /// <param name="depth">The depth of the memory area to copy.</param>
+        internal void GetData(ref T destination, nint size, int x, int y, int z, int width, int height, int depth)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -123,13 +134,16 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             Guard.IsInRange(x, 0, Width, nameof(x));
             Guard.IsInRange(y, 0, Height, nameof(y));
+            Guard.IsInRange(z, 0, Depth, nameof(z));
             Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
             Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
+            Guard.IsBetweenOrEqualTo(depth, 1, Depth, nameof(depth));
             Guard.IsLessThanOrEqualTo(x + width, Width, nameof(x));
             Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
-            Guard.IsGreaterThanOrEqualTo(size, (nint)width * height, nameof(size));
+            Guard.IsLessThanOrEqualTo(z + depth, Depth, nameof(z));
+            Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth, nameof(size));
 
-            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex2D(DXGIFormatHelper.GetForType<T>(), (ulong)width, (uint)height);
+            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(DXGIFormatHelper.GetForType<T>(), (ulong)width, (uint)height, (ushort)depth);
 
             GraphicsDevice.D3D12Device->GetCopyableFootprint(
                 &d3D12ResourceDescription,
@@ -153,10 +167,10 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                     D3D12Resource,
                     (uint)x,
                     (uint)y,
-                    0,
+                    (ushort)z,
                     (uint)width,
                     (uint)height,
-                    1);
+                    (ushort)depth);
 
                 if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
                 {
@@ -173,22 +187,26 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 MemoryHelper.Copy(
                     resource.Pointer,
                     (uint)height,
+                    (uint)depth,
                     rowSizeInBytes,
                     d3D12PlacedSubresourceFootprint.Footprint.RowPitch,
+                    d3D12PlacedSubresourceFootprint.Footprint.RowPitch * (uint)height,
                     destinationPointer);
             }
         }
 
         /// <summary>
-        /// Writes the contents of a given memory area to a specified area of the current <see cref="Texture2D{T}"/> instance.
+        /// Writes the contents of a given memory area to a specified area of the current <see cref="Texture3D{T}"/> instance.
         /// </summary>
         /// <param name="source">The input memory area to read data from.</param>
         /// <param name="size">The size of the memory area to read data from.</param>
         /// <param name="x">The horizontal offset in the destination texture.</param>
         /// <param name="y">The vertical offset in the destination texture.</param>
+        /// <param name="z">The depthwise offseet in the destination texture.</param>
         /// <param name="width">The width of the memory area to write to.</param>
         /// <param name="height">The height of the memory area to write to.</param>
-        internal void SetData(ref T source, nint size, int x, int y, int width, int height)
+        /// <param name="depth">The depth of the memory area to write to.</param>
+        internal void SetData(ref T source, nint size, int x, int y, int z, int width, int height, int depth)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -196,13 +214,16 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             Guard.IsInRange(x, 0, Width, nameof(x));
             Guard.IsInRange(y, 0, Height, nameof(y));
+            Guard.IsInRange(z, 0, Depth, nameof(z));
             Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
             Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
+            Guard.IsBetweenOrEqualTo(depth, 1, Depth, nameof(depth));
             Guard.IsLessThanOrEqualTo(x + width, Width, nameof(x));
             Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
-            Guard.IsGreaterThanOrEqualTo(size, (nint)width * height, nameof(size));
+            Guard.IsLessThanOrEqualTo(z + depth, Depth, nameof(z));
+            Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth, nameof(size));
 
-            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex2D(DXGIFormatHelper.GetForType<T>(), (ulong)width, (uint)height);
+            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(DXGIFormatHelper.GetForType<T>(), (ulong)width, (uint)height, (ushort)depth);
 
             GraphicsDevice.D3D12Device->GetCopyableFootprint(
                 &d3D12ResourceDescription,
@@ -220,8 +241,10 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                     sourcePointer,
                     resource.Pointer,
                     (uint)height,
+                    (uint)depth,
                     rowSizeInBytes,
-                    d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
+                    d3D12PlacedSubresourceFootprint.Footprint.RowPitch,
+                    d3D12PlacedSubresourceFootprint.Footprint.RowPitch * (uint)height);
             }
 
             using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
@@ -235,7 +258,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 D3D12Resource,
                 (uint)x,
                 (uint)y,
-                0,
+                (ushort)z,
                 d3D12Resource.Get(),
                 &d3D12PlacedSubresourceFootprint);
 

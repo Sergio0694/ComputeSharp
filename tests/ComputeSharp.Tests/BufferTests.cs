@@ -7,14 +7,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests
 {
     [TestClass]
-    [TestCategory("Buffers")]
-    public class BufferTests
+    [TestCategory("Buffer")]
+    public partial class BufferTests
     {
         [TestMethod]
         [DataRow(typeof(ConstantBuffer<>))]
         [DataRow(typeof(ReadOnlyBuffer<>))]
         [DataRow(typeof(ReadWriteBuffer<>))]
-        public void AllocateBuffer_Uninitialized(Type bufferType)
+        public void Allocate_Uninitialized_Ok(Type bufferType)
         {
             using Buffer<float> buffer = Gpu.Default.AllocateBuffer<float>(bufferType, 128);
 
@@ -24,10 +24,23 @@ namespace ComputeSharp.Tests
         }
 
         [TestMethod]
+        [DataRow(typeof(ConstantBuffer<>), -247824)]
+        [DataRow(typeof(ConstantBuffer<>), -1)]
+        [DataRow(typeof(ConstantBuffer<>), -247824)]
+        [DataRow(typeof(ConstantBuffer<>), -1)]
+        [DataRow(typeof(ConstantBuffer<>), -247824)]
+        [DataRow(typeof(ConstantBuffer<>), -1)]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void Allocate_Uninitialized_Fail(Type bufferType, int length)
+        {
+            using Buffer<float> buffer = Gpu.Default.AllocateBuffer<float>(bufferType, length);
+        }
+
+        [TestMethod]
         [DataRow(typeof(ConstantBuffer<>))]
         [DataRow(typeof(ReadOnlyBuffer<>))]
         [DataRow(typeof(ReadWriteBuffer<>))]
-        public void AllocateBuffer_FromArray(Type bufferType)
+        public void Allocate_FromArray(Type bufferType)
         {
             float[] data = Enumerable.Range(0, 128).Select(static i => (float)i).ToArray();
 
@@ -54,7 +67,7 @@ namespace ComputeSharp.Tests
         [DataRow(typeof(ReadWriteBuffer<>), typeof(ConstantBuffer<>))]
         [DataRow(typeof(ReadWriteBuffer<>), typeof(ReadOnlyBuffer<>))]
         [DataRow(typeof(ReadWriteBuffer<>), typeof(ReadWriteBuffer<>))]
-        public void AllocateBuffer_FromBuffer(Type sourceType, Type destinationType)
+        public void Allocate_FromBuffer(Type sourceType, Type destinationType)
         {
             float[] data = Enumerable.Range(0, 128).Select(static i => (float)i).ToArray();
 
@@ -187,6 +200,87 @@ namespace ComputeSharp.Tests
             float[] result = new float[4096];
 
             buffer.GetData(result, destinationOffset, bufferOffset, count);
+        }
+
+        [TestMethod]
+        public void Dispatch_ConstantBuffer()
+        {
+            int[] data = Enumerable.Range(0, 1024).ToArray();
+
+            using ConstantBuffer<int> source = Gpu.Default.AllocateConstantBuffer(data);
+            using ReadWriteBuffer<int> destination = Gpu.Default.AllocateReadWriteBuffer<int>(data.Length);
+
+            Gpu.Default.For(source.Length, new ConstantBufferKernel(source, destination));
+
+            int[] result = destination.GetData();
+
+            CollectionAssert.AreEqual(data, result);
+        }
+
+        [AutoConstructor]
+        private readonly partial struct ConstantBufferKernel : IComputeShader
+        {
+            public readonly ConstantBuffer<int> source;
+            public readonly ReadWriteBuffer<int> destination;
+
+            public void Execute(ThreadIds ids)
+            {
+                destination[ids.X] = source[ids.X];
+            }
+        }
+
+        [TestMethod]
+        public void Dispatch_ReadOnlyBuffer()
+        {
+            int[] data = Enumerable.Range(0, 1024).ToArray();
+
+            using ReadOnlyBuffer<int> source = Gpu.Default.AllocateReadOnlyBuffer(data);
+            using ReadWriteBuffer<int> destination = Gpu.Default.AllocateReadWriteBuffer<int>(data.Length);
+
+            Gpu.Default.For(source.Length, new ReadOnlyBufferKernel(source, destination));
+
+            int[] result = destination.GetData();
+
+            CollectionAssert.AreEqual(data, result);
+        }
+
+        [AutoConstructor]
+        private readonly partial struct ReadOnlyBufferKernel : IComputeShader
+        {
+            public readonly ReadOnlyBuffer<int> source;
+            public readonly ReadWriteBuffer<int> destination;
+
+            public void Execute(ThreadIds ids)
+            {
+                destination[ids.X] = source[ids.X];
+            }
+        }
+
+        [TestMethod]
+        public void Dispatch_ReadWriteBuffer()
+        {
+            int[] data = Enumerable.Range(0, 1024).ToArray();
+
+            using ReadWriteBuffer<int> source = Gpu.Default.AllocateReadWriteBuffer(data);
+            using ReadWriteBuffer<int> destination = Gpu.Default.AllocateReadWriteBuffer<int>(data.Length);
+
+            Gpu.Default.For(source.Length, new ReadWriteBufferKernel(source, destination));
+
+            int[] result = destination.GetData();
+
+            CollectionAssert.AreEqual(data, result);
+        }
+
+        [AutoConstructor]
+        private readonly partial struct ReadWriteBufferKernel : IComputeShader
+        {
+            public readonly ReadWriteBuffer<int> source;
+            public readonly ReadWriteBuffer<int> destination;
+
+            public void Execute(ThreadIds ids)
+            {
+                destination[ids.X] = source[ids.X];
+            }
         }
     }
 }

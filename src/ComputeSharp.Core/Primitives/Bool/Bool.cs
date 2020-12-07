@@ -20,16 +20,28 @@ namespace ComputeSharp
         /// Creates a new <see cref="Bool"/> instance for a given <see cref="bool"/> value.
         /// </summary>
         /// <param name="value">.</param>
-        private Bool(bool value) => Value = value;
+        private Bool(bool value)
+        {
+            Value = value;
+        }
 
         /// <inheritdoc/>
-        public override bool Equals(object? obj) => obj is Bool x && Value == x.Value;
+        public override bool Equals(object? obj)
+        {
+            return obj is Bool x && Value == x.Value;
+        }
 
         /// <inheritdoc/>
-        public override int GetHashCode() => Value.GetHashCode();
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
 
         /// <inheritdoc/>
-        public override string ToString() => Value.ToString();
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
 
         /// <summary>
         /// Checks whether or not two <see cref="Bool"/> instances represent the same <see cref="bool"/> value.
@@ -49,7 +61,7 @@ namespace ComputeSharp
         /// Inverts the <see cref="bool"/> value represented by a given <see cref="Bool"/> instance.
         /// </summary>
         /// <param name="x">The input <see cref="Bool"/> instance.</param>
-        public static Bool operator !(Bool x) => new Bool(!x.Value);
+        public static Bool operator !(Bool x) => new(!x.Value);
 
         /// <summary>
         /// Converts a given <see cref="Bool"/> instance to its corresponding <see cref="bool"/> value.
@@ -61,6 +73,6 @@ namespace ComputeSharp
         /// Converts a <see cref="bool"/> value to a corresponding <see cref="Bool"/> instance.
         /// </summary>
         /// <param name="x">The input <see cref="bool"/> value.</param>
-        public static implicit operator Bool(bool x) => new Bool(x);
+        public static implicit operator Bool(bool x) => new(x);
     }
 }

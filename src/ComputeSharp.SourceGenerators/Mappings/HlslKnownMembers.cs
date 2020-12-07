@@ -13,6 +13,17 @@ namespace ComputeSharp.SourceGenerators.Mappings
     internal static class HlslKnownMembers
     {
         /// <summary>
+        /// The mapping of supported known indexers to HLSL vector type names.
+        /// </summary>
+        private static readonly IReadOnlyDictionary<string, string> KnownIndexers = new Dictionary<string, string>
+        {
+            [$"ComputeSharp.ReadOnlyTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
+            [$"ComputeSharp.ReadWriteTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
+            [$"ComputeSharp.ReadOnlyTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
+            [$"ComputeSharp.ReadWriteTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3"
+        };
+
+        /// <summary>
         /// The mapping of supported known members to HLSL names.
         /// </summary>
         private static readonly IReadOnlyDictionary<string, string> KnownMembers = BuildKnownMembersMap();
@@ -25,10 +36,6 @@ namespace ComputeSharp.SourceGenerators.Mappings
         {
             Dictionary<string, string> knownMembers = new()
             {
-                [$"{typeof(ThreadIds).FullName}.{nameof(ThreadIds.X)}"] = "x",
-                [$"{typeof(ThreadIds).FullName}.{nameof(ThreadIds.Y)}"] = "y",
-                [$"{typeof(ThreadIds).FullName}.{nameof(ThreadIds.Z)}"] = "z",
-
                 [$"{typeof(Vector2).FullName}.{nameof(Vector2.X)}"] = "x",
                 [$"{typeof(Vector2).FullName}.{nameof(Vector2.Y)}"] = "y",
                 [$"{typeof(Vector2).FullName}.{nameof(Vector2.Zero)}"] = "(float2)0",
@@ -165,6 +172,18 @@ namespace ComputeSharp.SourceGenerators.Mappings
         public static bool TryGetMappedName(string name, out string? mapped)
         {
             return KnownMembers.TryGetValue(name, out mapped);
+        }
+
+        /// <summary>
+        /// Tries to get the mapped HLSL-compatible indexer vector type name for the input indexer name.
+        /// </summary>
+        /// <param name="name">The input fully qualified indexer name.</param>
+        /// <param name="mapped">The mapped type name, if one is found.</param>
+        /// <returns>The HLSL-compatible type name that can be used in an HLSL shader for the given indexer.</returns>
+        [Pure]
+        public static bool TryGetMappedIndexerTypeName(string name, out string? mapped)
+        {
+            return KnownIndexers.TryGetValue(name, out mapped);
         }
     }
 }

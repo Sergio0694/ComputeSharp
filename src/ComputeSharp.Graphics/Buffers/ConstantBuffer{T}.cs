@@ -1,8 +1,6 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
@@ -48,71 +46,77 @@ namespace ComputeSharp
         /// </summary>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static int GetPaddedSize()
+        private static unsafe int GetPaddedSize()
         {
-            return (Unsafe.SizeOf<T>() + 15) & ~15;
+            return (sizeof(T) + 15) & ~15;
         }
 
         /// <inheritdoc/>
-        public override unsafe void GetData(Span<T> destination, int offset)
+        internal override unsafe void GetData(ref T destination, nint size, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
             ThrowIfDisposed();
 
             Guard.IsInRange(offset, 0, Length, nameof(offset));
-            Guard.IsLessThanOrEqualTo((uint)offset + destination.Length, (uint)Length, nameof(destination));
+            Guard.IsLessThanOrEqualTo(offset + size, Length, nameof(size));
 
             using ID3D12ResourceMap resource = D3D12Resource->Map();
-
-            if (IsPaddingPresent)
+            fixed (void* destinationPointer = &destination)
             {
-                int count = destination.Length;
-                ref T spanRef = ref MemoryMarshal.GetReference(destination);
-                ref byte resourceRef = ref Unsafe.AsRef<byte>(resource.Pointer);
-
-                // Move to the initial ref
-                resourceRef = ref Unsafe.Add(ref resourceRef, offset * GetPaddedSize());
-
-                for (var i = 0; i < count; i++)
+                if (IsPaddingPresent)
                 {
-                    ref byte targetRef = ref Unsafe.Add(ref resourceRef, i * GetPaddedSize());
-
-                    Unsafe.Add(ref spanRef, i) = Unsafe.As<byte, T>(ref targetRef);
+                    MemoryHelper.Copy<T>(
+                        resource.Pointer,
+                        (uint)offset,
+                        (uint)size,
+                        (uint)GetPaddedSize(),
+                        destinationPointer);
+                }
+                else
+                {
+                    MemoryHelper.Copy(
+                        resource.Pointer,
+                        (uint)offset,
+                        (uint)size,
+                        (uint)sizeof(T),
+                        destinationPointer);
                 }
             }
-            else MemoryHelper.Copy(resource.Pointer, offset, destination);
         }
 
         /// <inheritdoc/>
-        public override unsafe void SetData(ReadOnlySpan<T> source, int offset)
+        internal override unsafe void SetData(ref T source, nint size, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
             ThrowIfDisposed();
 
             Guard.IsInRange(offset, 0, Length, nameof(offset));
-            Guard.IsLessThanOrEqualTo((uint)offset + source.Length, (uint)Length, nameof(source));
+            Guard.IsLessThanOrEqualTo(offset + size, Length, nameof(size));
 
             using ID3D12ResourceMap resource = D3D12Resource->Map();
-
-            if (IsPaddingPresent)
+            fixed (void* sourcePointer = &source)
             {
-                int count = source.Length;
-                ref T spanRef = ref MemoryMarshal.GetReference(source);
-                ref byte resourceRef = ref Unsafe.AsRef<byte>(resource.Pointer);
-
-                // Move to the initial offset
-                resourceRef = ref Unsafe.Add(ref resourceRef, offset * GetPaddedSize());
-
-                for (var i = 0; i < count; i++)
+                if (IsPaddingPresent)
                 {
-                    ref byte targetRef = ref Unsafe.Add(ref resourceRef, i * GetPaddedSize());
-
-                    Unsafe.As<byte, T>(ref targetRef) = Unsafe.Add(ref spanRef, i);
+                    MemoryHelper.Copy<T>(
+                        sourcePointer,
+                        resource.Pointer,
+                        (uint)offset,
+                        (uint)size,
+                        (uint)GetPaddedSize());
+                }
+                else
+                {
+                    MemoryHelper.Copy(
+                        sourcePointer,
+                        (uint)offset,
+                        (uint)size,
+                        (uint)sizeof(T),
+                        resource.Pointer);
                 }
             }
-            else MemoryHelper.Copy(source, resource.Pointer, offset);
         }
 
         /// <inheritdoc/>
@@ -128,7 +132,7 @@ namespace ComputeSharp
                 source.GraphicsDevice == GraphicsDevice)
             {
                 // Directly copy the input buffer, if possible
-                using CommandList copyCommandList = new CommandList(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+                using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
                 copyCommandList.CopyBufferRegion(D3D12Resource, 0, source.D3D12Resource, 0,(ulong)SizeInBytes);
                 copyCommandList.ExecuteAndWaitForCompletion();

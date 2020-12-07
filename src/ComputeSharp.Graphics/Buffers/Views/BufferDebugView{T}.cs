@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using ComputeSharp.Graphics.Buffers.Abstract;
 
 namespace ComputeSharp.Graphics.Buffers.Views
@@ -16,7 +17,14 @@ namespace ComputeSharp.Graphics.Buffers.Views
         /// <param name="buffer">The input <see cref="Buffer{T}"/> instance with the items to display.</param>
         public BufferDebugView(Buffer<T>? buffer)
         {
-            Items = buffer?.GetData();
+            if (buffer is not null)
+            {
+                var items = GC.AllocateUninitializedArray<T>(buffer.Length);
+
+                buffer.GetData(ref items[0], buffer.Length, 0);
+
+                Items = items;
+            }
         }
 
         /// <summary>

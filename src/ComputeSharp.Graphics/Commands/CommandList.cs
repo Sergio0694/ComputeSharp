@@ -55,7 +55,7 @@ namespace ComputeSharp.Graphics.Commands
         /// <summary>
         /// Gets the command list type being used by the current instance.
         /// </summary>
-        public readonly D3D12_COMMAND_LIST_TYPE D3d12CommandListType => this.d3D12CommandListType;
+        public readonly D3D12_COMMAND_LIST_TYPE D3D12CommandListType => this.d3D12CommandListType;
 
         /// <summary>
         /// Detaches the <see cref="ID3D12CommandAllocator"/> object in use by the current instance.
@@ -95,49 +95,46 @@ namespace ComputeSharp.Graphics.Commands
         /// Copies a texture memory region from one resource (a buffer) to another (a texture).
         /// </summary>
         /// <param name="d3D12ResourceDestination">The destination <see cref="ID3D12Resource"/> (a texture) to write to.</param>
-        /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> parameter curreently in use by the texture.</param>
         /// <param name="x">The horizontal offset in the destination texture.</param>
         /// <param name="y">The vertical offset in the destination texture.</param>
+        /// <param name="z">The depthwise offset in the destination texture.</param>
         /// <param name="d3D12ResourceSource">The source <see cref="ID3D12Resource"/> (a buffer) to read from.</param>
-        /// <param name="width">The width of the memory area to write to.</param>
-        /// <param name="height">The height of the memory area to write to.</param>
-        /// <param name="elementSizeInBytes">The size of each element to copy.</param>
+        /// <param name="d3D12PlacedSubresourceFootprintSource">The <see cref="D3D12_PLACED_SUBRESOURCE_FOOTPRINT"/> value describing <paramref name="d3D12ResourceSource"/>.</param>
 
         public readonly void CopyTextureRegion(
             ID3D12Resource* d3D12ResourceDestination,
-            DXGI_FORMAT dxgiFormat,
             uint x,
             uint y,
+            ushort z,
             ID3D12Resource* d3D12ResourceSource,
-            uint width,
-            uint height,
-            uint elementSizeInBytes)
+            D3D12_PLACED_SUBRESOURCE_FOOTPRINT* d3D12PlacedSubresourceFootprintSource)
         {
-            this.d3D12GraphicsCommandList.Get()->CopyTextureRegion(d3D12ResourceDestination, dxgiFormat, x, y, d3D12ResourceSource, width, height, elementSizeInBytes);
+            this.d3D12GraphicsCommandList.Get()->CopyTextureRegion(d3D12ResourceDestination, x, y, z, d3D12ResourceSource, d3D12PlacedSubresourceFootprintSource);
         }
 
         /// <summary>
         /// Copies a texture memory region from one resource (a texture) to another (a buffer).
         /// </summary>
         /// <param name="d3D12ResourceDestination">The destination <see cref="ID3D12Resource"/> (a buffer) to write to.</param>
-        /// <param name="elementSizeInBytes">The size of each element to copy.</param>
+        /// <param name="d3D12PlacedSubresourceFootprintDestination">The <see cref="D3D12_PLACED_SUBRESOURCE_FOOTPRINT"/> value describing <paramref name="d3D12ResourceDestination"/>.</param>
         /// <param name="d3D12ResourceSource">The source <see cref="ID3D12Resource"/> (a texture) to read from.</param>
-        /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> parameter curreently in use by the texture.</param>
         /// <param name="x">The horizontal offset in the destination texture.</param>
         /// <param name="y">The vertical offset in the destination texture.</param>
-        /// <param name="width">The width of the memory area to write to.</param>
-        /// <param name="height">The height of the memory area to write to.</param>
+        /// <param name="width">The width of the memory area to read from.</param>
+        /// <param name="height">The height of the memory area to read from.</param>
+        /// <param name="depth">The depth of the memory area to read from.</param>
         public readonly void CopyTextureRegion(
             ID3D12Resource* d3D12ResourceDestination,
-            uint elementSizeInBytes,
+            D3D12_PLACED_SUBRESOURCE_FOOTPRINT* d3D12PlacedSubresourceFootprintDestination,
             ID3D12Resource* d3D12ResourceSource,
-            DXGI_FORMAT dxgiFormat,
             uint x,
             uint y,
+            ushort z,
             uint width,
-            uint height)
+            uint height,
+            ushort depth)
         {
-            this.d3D12GraphicsCommandList.Get()->CopyTextureRegion(d3D12ResourceDestination, elementSizeInBytes, d3D12ResourceSource, dxgiFormat, x, y, width, height);
+            this.d3D12GraphicsCommandList.Get()->CopyTextureRegion(d3D12ResourceDestination, d3D12PlacedSubresourceFootprintDestination, d3D12ResourceSource, x, y, z, width, height, depth);
         }
 
         /// <summary>

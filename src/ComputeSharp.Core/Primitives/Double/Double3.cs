@@ -24,17 +24,17 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="X"/> component set to 1, and the others to 0.
         /// </summary>
-        public static Double3 UnitX => new Double3(1, 0, 0);
+        public static Double3 UnitX => new(1, 0, 0);
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="Y"/> component set to 1, and the others to 0.
         /// </summary>
-        public static Double3 UnitY => new Double3(0, 1, 0);
+        public static Double3 UnitY => new(0, 1, 0);
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="Z"/> component set to 1, and the others to 0.
         /// </summary>
-        public static Double3 UnitZ => new Double3(0, 0, 1);
+        public static Double3 UnitZ => new(0, 0, 1);
 
         /// <summary>
         /// Creates a new <see cref="Double3"/> instance with the specified parameters.
@@ -242,32 +242,32 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="X"/> value for all components.
         /// </summary>
-        public Double2 XXX => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(XXX)}");
+        public Double3 XXX => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(XXX)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="X"/>, <see cref="X"/> and <see cref="Y"/> values.
         /// </summary>
-        public Double2 XXY => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(XXY)}");
+        public Double3 XXY => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(XXY)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="X"/>, <see cref="X"/> and <see cref="Z"/> values.
         /// </summary>
-        public Double2 XXZ => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(XXZ)}");
+        public Double3 XXZ => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(XXZ)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="X"/>, <see cref="Y"/> and <see cref="X"/> values.
         /// </summary>
-        public Double2 XYX => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(XYX)}");
+        public Double3 XYX => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(XYX)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="X"/>, <see cref="Y"/> and <see cref="Y"/> values.
         /// </summary>
-        public Double2 XYY => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(XYY)}");
+        public Double3 XYY => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(XYY)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Double3"/> value with the <see cref="X"/>, <see cref="Y"/> and <see cref="Z"/> values.
         /// </summary>
-        public Double2 XYZ
+        public Double3 XYZ
         {
             get => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(XYZ)}");
             set => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(XYZ)}");
@@ -276,12 +276,12 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="X"/>, <see cref="Z"/> and <see cref="X"/> values.
         /// </summary>
-        public Double2 XZX => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(XZX)}");
+        public Double3 XZX => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(XZX)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Double3"/> value with the <see cref="X"/>, <see cref="Z"/> and <see cref="Y"/> values.
         /// </summary>
-        public Double2 XZY
+        public Double3 XZY
         {
             get => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(XZY)}");
             set => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(XZY)}");
@@ -290,22 +290,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="X"/>, <see cref="Z"/> and <see cref="Z"/> values.
         /// </summary>
-        public Double2 XZZ => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(XZZ)}");
+        public Double3 XZZ => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(XZZ)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="Y"/>, <see cref="X"/> and <see cref="X"/> values.
         /// </summary>
-        public Double2 YXX => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(YXX)}");
+        public Double3 YXX => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(YXX)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="Y"/>, <see cref="X"/> and <see cref="Y"/> values.
         /// </summary>
-        public Double2 YXY => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(YXY)}");
+        public Double3 YXY => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(YXY)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Double3"/> value with the <see cref="Y"/>, <see cref="X"/> and <see cref="Z"/> values.
         /// </summary>
-        public Double2 YXZ
+        public Double3 YXZ
         {
             get => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(YXZ)}");
             set => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(YXZ)}");
@@ -314,22 +314,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="Y"/>, <see cref="Y"/> and <see cref="X"/> values.
         /// </summary>
-        public Double2 YYX => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(YYX)}");
+        public Double3 YYX => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(YYX)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="Y"/> value for all components.
         /// </summary>
-        public Double2 YYY => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(YYY)}");
+        public Double3 YYY => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(YYY)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="Y"/>, <see cref="Y"/> and <see cref="Z"/> values.
         /// </summary>
-        public Double2 YYZ => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(YYZ)}");
+        public Double3 YYZ => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(YYZ)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Double3"/> value with the <see cref="Y"/>, <see cref="Z"/> and <see cref="X"/> values.
         /// </summary>
-        public Double2 YZX
+        public Double3 YZX
         {
             get => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(YZX)}");
             set => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(YZX)}");
@@ -338,22 +338,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="Y"/>, <see cref="Z"/> and <see cref="Y"/> values.
         /// </summary>
-        public Double2 YZY => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(YZY)}");
+        public Double3 YZY => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(YZY)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="Y"/>, <see cref="Z"/> and <see cref="Z"/> values.
         /// </summary>
-        public Double2 YZZ => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(YZZ)}");
+        public Double3 YZZ => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(YZZ)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="Z"/>, <see cref="Z"/> and <see cref="Z"/> values.
         /// </summary>
-        public Double2 ZXX => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(ZXX)}");
+        public Double3 ZXX => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(ZXX)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Double3"/> value with the <see cref="Z"/>, <see cref="X"/> and <see cref="Y"/> values.
         /// </summary>
-        public Double2 ZXY
+        public Double3 ZXY
         {
             get => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(ZXY)}");
             set => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(ZXY)}");
@@ -362,12 +362,12 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="Z"/>, <see cref="X"/> and <see cref="Z"/> values.
         /// </summary>
-        public Double2 ZXZ => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(ZXZ)}");
+        public Double3 ZXZ => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(ZXZ)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Double3"/> value with the <see cref="Z"/>, <see cref="Y"/> and <see cref="X"/> values.
         /// </summary>
-        public Double2 ZYX
+        public Double3 ZYX
         {
             get => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(ZYX)}");
             set => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(ZYX)}");
@@ -376,57 +376,57 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="Z"/>, <see cref="Y"/> and <see cref="Y"/> values.
         /// </summary>
-        public Double2 ZYY => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(ZYY)}");
+        public Double3 ZYY => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(ZYY)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="Z"/>, <see cref="Y"/> and <see cref="Z"/> values.
         /// </summary>
-        public Double2 ZYZ => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(ZYZ)}");
+        public Double3 ZYZ => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(ZYZ)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="Z"/>, <see cref="Z"/> and <see cref="X"/> values.
         /// </summary>
-        public Double2 ZZX => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(ZZX)}");
+        public Double3 ZZX => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(ZZX)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="Z"/>, <see cref="Z"/> and <see cref="Y"/> values.
         /// </summary>
-        public Double2 ZZY => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(ZZY)}");
+        public Double3 ZZY => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(ZZY)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="Z"/> value for all components.
         /// </summary>
-        public Double2 ZZZ => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(ZZZ)}");
+        public Double3 ZZZ => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(ZZZ)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="R"/> value for all components.
         /// </summary>
-        public Double2 RRR => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(RRR)}");
+        public Double3 RRR => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(RRR)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="R"/>, <see cref="R"/> and <see cref="G"/> values.
         /// </summary>
-        public Double2 RRG => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(RRG)}");
+        public Double3 RRG => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(RRG)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="R"/>, <see cref="R"/> and <see cref="B"/> values.
         /// </summary>
-        public Double2 RRB => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(RRB)}");
+        public Double3 RRB => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(RRB)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="R"/>, <see cref="G"/> and <see cref="R"/> values.
         /// </summary>
-        public Double2 RGR => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(RGR)}");
+        public Double3 RGR => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(RGR)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="R"/>, <see cref="G"/> and <see cref="G"/> values.
         /// </summary>
-        public Double2 RGG => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(RGG)}");
+        public Double3 RGG => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(RGG)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Double3"/> value with the <see cref="R"/>, <see cref="G"/> and <see cref="B"/> values.
         /// </summary>
-        public Double2 RGB
+        public Double3 RGB
         {
             get => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(RGB)}");
             set => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(RGB)}");
@@ -435,12 +435,12 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="R"/>, <see cref="B"/> and <see cref="R"/> values.
         /// </summary>
-        public Double2 RBR => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(RBR)}");
+        public Double3 RBR => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(RBR)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Double3"/> value with the <see cref="R"/>, <see cref="B"/> and <see cref="G"/> values.
         /// </summary>
-        public Double2 RBG
+        public Double3 RBG
         {
             get => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(RBG)}");
             set => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(RBG)}");
@@ -449,22 +449,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="R"/>, <see cref="B"/> and <see cref="B"/> values.
         /// </summary>
-        public Double2 RBB => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(RBB)}");
+        public Double3 RBB => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(RBB)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="G"/>, <see cref="R"/> and <see cref="R"/> values.
         /// </summary>
-        public Double2 GRR => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(GRR)}");
+        public Double3 GRR => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(GRR)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="G"/>, <see cref="R"/> and <see cref="G"/> values.
         /// </summary>
-        public Double2 GRG => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(GRG)}");
+        public Double3 GRG => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(GRG)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Double3"/> value with the <see cref="G"/>, <see cref="R"/> and <see cref="B"/> values.
         /// </summary>
-        public Double2 GRB
+        public Double3 GRB
         {
             get => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(GRB)}");
             set => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(GRB)}");
@@ -473,22 +473,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="G"/>, <see cref="G"/> and <see cref="R"/> values.
         /// </summary>
-        public Double2 GGR => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(GGR)}");
+        public Double3 GGR => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(GGR)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="G"/> value for all components.
         /// </summary>
-        public Double2 GGG => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(GGG)}");
+        public Double3 GGG => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(GGG)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="G"/>, <see cref="G"/> and <see cref="B"/> values.
         /// </summary>
-        public Double2 GGB => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(GGB)}");
+        public Double3 GGB => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(GGB)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Double3"/> value with the <see cref="G"/>, <see cref="B"/> and <see cref="R"/> values.
         /// </summary>
-        public Double2 GBR
+        public Double3 GBR
         {
             get => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(GBR)}");
             set => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(GBR)}");
@@ -497,22 +497,22 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="G"/>, <see cref="B"/> and <see cref="G"/> values.
         /// </summary>
-        public Double2 GBG => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(GBG)}");
+        public Double3 GBG => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(GBG)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="G"/>, <see cref="B"/> and <see cref="B"/> values.
         /// </summary>
-        public Double2 GBB => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(GBB)}");
+        public Double3 GBB => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(GBB)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="B"/>, <see cref="B"/> and <see cref="B"/> values.
         /// </summary>
-        public Double2 BRR => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(BRR)}");
+        public Double3 BRR => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(BRR)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Double3"/> value with the <see cref="B"/>, <see cref="R"/> and <see cref="G"/> values.
         /// </summary>
-        public Double2 BRG
+        public Double3 BRG
         {
             get => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(BRG)}");
             set => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(BRG)}");
@@ -521,12 +521,12 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="B"/>, <see cref="R"/> and <see cref="B"/> values.
         /// </summary>
-        public Double2 BRB => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(BRB)}");
+        public Double3 BRB => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(BRB)}");
 
         /// <summary>
         /// Gets or sets an <see cref="Double3"/> value with the <see cref="B"/>, <see cref="G"/> and <see cref="R"/> values.
         /// </summary>
-        public Double2 BGR
+        public Double3 BGR
         {
             get => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(BGR)}");
             set => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(BGR)}");
@@ -535,33 +535,33 @@ namespace ComputeSharp
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="B"/>, <see cref="G"/> and <see cref="G"/> values.
         /// </summary>
-        public Double2 BGG => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(BGG)}");
+        public Double3 BGG => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(BGG)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="B"/>, <see cref="G"/> and <see cref="B"/> values.
         /// </summary>
-        public Double2 BGB => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(BGB)}");
+        public Double3 BGB => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(BGB)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="B"/>, <see cref="B"/> and <see cref="R"/> values.
         /// </summary>
-        public Double2 BBR => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(BBR)}");
+        public Double3 BBR => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(BBR)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="B"/>, <see cref="B"/> and <see cref="G"/> values.
         /// </summary>
-        public Double2 BBG => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(BBG)}");
+        public Double3 BBG => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(BBG)}");
 
         /// <summary>
         /// Gets an <see cref="Double3"/> value with the <see cref="B"/> value for all components.
         /// </summary>
-        public Double2 BBB => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(BBB)}");
+        public Double3 BBB => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(BBB)}");
 
         /// <summary>
         /// Creates a new <see cref="Double3"/> value with the same value for all its components.
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="Double3"/> instance.</param>
-        public static implicit operator Double3(double x) => new Double3(x, x, x);
+        public static implicit operator Double3(double x) => new(x, x, x);
 
         /// <summary>
         /// Sums two <see cref="Double3"/> values.

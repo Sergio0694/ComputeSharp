@@ -1,13 +1,13 @@
-﻿using System;
-using System.Buffers;
-using System.Diagnostics.Contracts;
+﻿using System.Buffers;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using ComputeSharp.Core.Interop;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Buffers.Enums;
 using ComputeSharp.Graphics.Extensions;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
+using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Graphics.Buffers.Abstract
 {
@@ -45,7 +45,15 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         {
             device.ThrowIfDisposed();
 
-            Guard.IsGreaterThanOrEqualTo(length, 0, nameof(length));
+            if (resourceType == ResourceType.Constant)
+            {
+                Guard.IsBetweenOrEqualTo(length, 1, FX.D3D12_REQ_CONSTANT_BUFFER_ELEMENT_COUNT, nameof(length));
+            }
+            else
+            {
+                // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
+                Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / elementSizeInBytes) & ~255, nameof(length));
+            }
 
             SizeInBytes = checked((nint)(length * elementSizeInBytes));
             GraphicsDevice = device;
@@ -80,21 +88,12 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         public int Length { get; }
 
         /// <summary>
-        /// Gets the size in bytes of each <typeparamref name="T"/> value contained in the buffer.
-        /// </summary>
-        protected int ElementSizeInBytes
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => Unsafe.SizeOf<T>();
-        }
-
-        /// <summary>
         /// Gets whether or not there is some padding between elements in the current buffer.
         /// </summary>
         internal bool IsPaddingPresent
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => SizeInBytes > Length * Unsafe.SizeOf<T>();
+            get => SizeInBytes > (nint)Length * sizeof(T);
         }
 
         /// <summary>
@@ -103,114 +102,20 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
 
         /// <summary>
-        /// Reads the contents of the current <see cref="Buffer{T}"/> instance and returns an array.
+        /// Reads the contents of the specified range from the current <see cref="Buffer{T}"/> instance and writes them into a target memory area.
         /// </summary>
-        /// <returns>A <typeparamref name="T"/> array with the contents of the current buffer.</returns>
-        [Pure]
-        public T[] GetData()
-        {
-            return GetData(0, Length);
-        }
-
-        /// <summary>
-        /// Reads the contents of the current <see cref="Buffer{T}"/> instance in a given range and returns an array.
-        /// </summary>
+        /// <param name="destination">The input memory area to write data to.</param>
+        /// <param name="size">The size of the memory area to write data to.</param>
         /// <param name="offset">The offset to start reading data from.</param>
-        /// <param name="count">The number of items to read.</param>
-        /// <returns>A <typeparamref name="T"/> array with the contents of the specified range from the current buffer.</returns>
-        [Pure]
-        public T[] GetData(int offset, int count)
-        {
-            Guard.IsGreaterThanOrEqualTo(count, 0, nameof(count));
-
-            T[] data = GC.AllocateUninitializedArray<T>(count);
-
-            GetData(data.AsSpan(), offset);
-
-            return data;
-        }
+        internal abstract void GetData(ref T destination, nint size, int offset);
 
         /// <summary>
-        /// Reads the contents of the current <see cref="Buffer{T}"/> instance and writes them into a target array.
+        /// Writes the contents of a given memory area to a specified area of the current <see cref="Buffer{T}"/> instance.
         /// </summary>
-        /// <param name="destination">The input array to write data to.</param>
-        public void GetData(T[] destination)
-        {
-            GetData(destination.AsSpan(), 0);
-        }
-
-        /// <summary>
-        /// Reads the contents of the specified range from the current <see cref="Buffer{T}"/> instance and writes them into a target array.
-        /// </summary>
-        /// <param name="destination">The input array to write data to.</param>
-        /// <param name="destinationOffset">The starting offset within <paramref name="source"/> to write data to.</param>
-        /// <param name="bufferOffset">The offset to start reading data from.</param>
-        /// <param name="count">The number of items to read.</param>
-        public void GetData(T[] destination, int destinationOffset, int bufferOffset, int count)
-        {
-            Span<T> span = destination.AsSpan(destinationOffset, count);
-
-            GetData(span, bufferOffset);
-        }
-
-        /// <summary>
-        /// Reads the contents of the current <see cref="Buffer{T}"/> instance and writes them into a target <see cref="Span{T}"/>.
-        /// The input data will be read from the start of the buffer.
-        /// </summary>
-        /// <param name="destination">The input <see cref="Span{T}"/> to write data to.</param>
-        public void GetData(Span<T> destination)
-        {
-            GetData(destination, 0);
-        }
-
-        /// <summary>
-        /// Reads the contents of the specified range from the current <see cref="Buffer{T}"/> instance and writes them into a target <see cref="Span{T}"/>.
-        /// </summary>
-        /// <param name="destination">The input <see cref="Span{T}"/> to write data to.</param>
-        /// <param name="offset">The offset to start reading data from.</param>
-        public abstract void GetData(Span<T> destination, int offset);
-
-        /// <summary>
-        /// Writes the contents of a given <typeparamref name="T"/> array to the current <see cref="Buffer{T}"/> instance.
-        /// </summary>
-        /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
-        public void SetData(T[] source)
-        {
-            SetData(source.AsSpan());
-        }
-
-        /// <summary>
-        /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="Buffer{T}"/> instance.
-        /// </summary>
-        /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
-        /// <param name="sourceOffset">The starting offset within <paramref name="source"/> to read data from.</param>
-        /// <param name="bufferOffset">The offset to start writing data to.</param>
-        /// <param name="count">The number of items to write.</param>
-        public void SetData(T[] source, int sourceOffset, int bufferOffset, int count)
-        {
-            ReadOnlySpan<T> span = source.AsSpan(sourceOffset, count);
-
-            SetData(span, bufferOffset);
-        }
-
-        /// <summary>
-        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to the current <see cref="Buffer{T}"/> instance.
-        /// The input data will be written to the start of the buffer, and all input items will be copied.
-        /// </summary>
-        /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> to read data from.</param>
-        public void SetData(ReadOnlySpan<T> source)
-        {
-            SetData(source, 0);
-        }
-
-        /// <summary>
-        /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to a specified area of the current <see cref="Buffer{T}"/> instance.
-        /// The input data will be written into the buffer starting at the specified offset, and all input items will be copied.
-        /// </summary>
-        /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> to read data from.</param>
+        /// <param name="source">The input memory area to read data from.</param>
+        /// <param name="size">The size of the input memory area to read data from.</param>
         /// <param name="offset">The offset to start writing data to.</param>
-        /// <param name="count">The number of items to write.</param>
-        public abstract void SetData(ReadOnlySpan<T> source, int offset);
+        internal abstract void SetData(ref T source, nint size, int offset);
 
         /// <summary>
         /// Writes the contents of a given <see cref="Buffer{T}"/> to the current <see cref="Buffer{T}"/> instance.
@@ -228,11 +133,9 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             try
             {
-                Span<T> span = array.AsSpan(0, source.Length);
+                source.GetData(ref MemoryMarshal.GetArrayDataReference(array), source.Length, 0);
 
-                source.GetData(span);
-
-                SetData(span);
+                SetData(ref MemoryMarshal.GetArrayDataReference(array), source.Length, 0);
             }
             finally
             {

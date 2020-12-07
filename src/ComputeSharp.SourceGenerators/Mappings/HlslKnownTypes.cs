@@ -41,20 +41,21 @@ namespace ComputeSharp.SourceGenerators.Mappings
             [typeof(Double2).FullName] = "double2",
             [typeof(Double3).FullName] = "double3",
             [typeof(Double4).FullName] = "double4",
-            [typeof(ThreadIds).FullName] = "uint3"
+            [typeof(ThreadIds).FullName] = "int3"
         };
 
         /// <summary>
         /// Gets the known HLSL vector types available as mapped types.
         /// </summary>
-        public static IReadOnlyCollection<Type> HlslMappedVectorTypes { get; } = new HashSet<Type>(new[]
+        public static IReadOnlyCollection<Type> HlslMappedVectorTypes { get; } = new[]
         {
+            typeof(ThreadIds),
             typeof(Bool2), typeof(Bool3), typeof(Bool4),
             typeof(Int2), typeof(Int3), typeof(Int4),
             typeof(UInt2), typeof(UInt3), typeof(UInt4),
             typeof(Float2), typeof(Float3), typeof(Float4),
             typeof(Double2), typeof(Double3), typeof(Double4)
-        });
+        };
 
         /// <summary>
         /// Checks whether or not a given type name matches a typed resource type.
@@ -63,11 +64,18 @@ namespace ComputeSharp.SourceGenerators.Mappings
         /// <returns>Whether or not <paramref name="typeName"/> represents a typed resource type.</returns>
         public static bool IsTypedResourceType(string typeName)
         {
-            return
-                typeName == "ComputeSharp.ReadOnlyBuffer`1" ||
-                typeName == "ComputeSharp.ReadWriteBuffer`1" ||
-                typeName == "ComputeSharp.ReadOnlyTexture2D`1" ||
-                typeName == "ComputeSharp.ReadWriteTexture2D`1";
+            switch (typeName)
+            {
+                case "ComputeSharp.ConstantBuffer`1":
+                case "ComputeSharp.ReadOnlyBuffer`1":
+                case "ComputeSharp.ReadWriteBuffer`1":
+                case "ComputeSharp.ReadOnlyTexture2D`1":
+                case "ComputeSharp.ReadWriteTexture2D`1":
+                case "ComputeSharp.ReadOnlyTexture3D`1":
+                case "ComputeSharp.ReadWriteTexture3D`1":
+                    return true;
+                default: return false;
+            };
         }
 
         /// <summary>
@@ -98,10 +106,13 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 // Construct the HLSL type name
                 return typeName switch
                 {
+                    "ComputeSharp.ConstantBuffer`1" => mapped,
                     "ComputeSharp.ReadOnlyBuffer`1" => $"StructuredBuffer<{mapped}>",
                     "ComputeSharp.ReadWriteBuffer`1" => $"RWStructuredBuffer<{mapped}>",
                     "ComputeSharp.ReadOnlyTexture2D`1" => $"Texture2D<{mapped}>",
                     "ComputeSharp.ReadWriteTexture2D`1" => $"RWTexture2D<{mapped}>",
+                    "ComputeSharp.ReadOnlyTexture3D`1" => $"Texture3D<{mapped}>",
+                    "ComputeSharp.ReadWriteTexture3D`1" => $"RWTexture3D<{mapped}>",
                     _ => throw new ArgumentException()
                 };
             }

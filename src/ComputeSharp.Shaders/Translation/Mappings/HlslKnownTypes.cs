@@ -63,7 +63,7 @@ namespace ComputeSharp.Shaders.Mappings
                                                               type.GetGenericTypeDefinition() == typeof(ConstantBuffer<>);
 
         /// <summary>
-        /// Checks whether or not the input type is a <see cref="ReadOnlyBuffer{T}"/> or <see cref="ReadOnlyTexture2D{T}"/> value.
+        /// Checks whether or not the input type is a known readonly resource type (buffer or texture).
         /// </summary>
         /// <param name="type">The input <see cref="Type"/> instance to check.</param>
         /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is a readonly resource type.</returns>
@@ -76,11 +76,12 @@ namespace ComputeSharp.Shaders.Mappings
 
             return
                 genericType == typeof(ReadOnlyBuffer<>) ||
-                genericType == typeof(ReadOnlyTexture2D<>);
+                genericType == typeof(ReadOnlyTexture2D<>) ||
+                genericType == typeof(ReadOnlyTexture3D<>);
         }
 
         /// <summary>
-        /// Checks whether or not the input type is a <see cref="ReadWriteBuffer{T}"/> or <see cref="ReadWriteTexture2D{T}"/> value.
+        /// Checks whether or not the input type is a known writeable resource type (buffer or texture).
         /// </summary>
         /// <param name="type">The input <see cref="Type"/> instance to check.</param>
         /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is a writeable resource type.</returns>
@@ -93,7 +94,8 @@ namespace ComputeSharp.Shaders.Mappings
 
             return
                 genericType == typeof(ReadWriteBuffer<>) ||
-                genericType == typeof(ReadWriteTexture2D<>);
+                genericType == typeof(ReadWriteTexture2D<>) ||
+                genericType == typeof(ReadWriteTexture3D<>);
         }
     }
 }

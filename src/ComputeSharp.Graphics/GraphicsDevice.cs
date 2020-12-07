@@ -168,7 +168,7 @@ namespace ComputeSharp.Graphics
             ulong d3D12FenceValue;
 
             // Get the target command queue, fence and pool for the list type
-            switch (commandList.D3d12CommandListType)
+            switch (commandList.D3D12CommandListType)
             {
                 case D3D12_COMMAND_LIST_TYPE_COMPUTE:
                     commandAllocatorPool = ref this.computeCommandAllocatorPool;

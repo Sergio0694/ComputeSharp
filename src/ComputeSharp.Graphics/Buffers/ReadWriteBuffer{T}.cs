@@ -27,7 +27,7 @@ namespace ComputeSharp
         }
 
         /// <summary>
-        /// Gets or sets a single <typeparamref name="T"/> value from the current read write buffer.
+        /// Gets or sets a single <typeparamref name="T"/> value from the current writeable buffer.
         /// </summary>
         /// <param name="i">The index of the value to get or set.</param>
         /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>

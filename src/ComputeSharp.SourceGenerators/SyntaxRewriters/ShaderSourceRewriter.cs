@@ -158,7 +158,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (ObjectCreationExpressionSyntax)base.VisitObjectCreationExpression(node)!;
 
-            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, this.semanticModel, this.discoveredTypes);
+            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node, this.semanticModel, this.discoveredTypes);
 
             // New objects use the default HLSL cast syntax, eg. (float4)0
             if (updatedNode.ArgumentList!.Arguments.Count == 0)
@@ -337,6 +337,22 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
                     return updatedNode.WithExpression(ParseExpression(methodIdentifier));
                 }
+            }
+
+            return updatedNode;
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitElementAccessExpression(ElementAccessExpressionSyntax node)
+        {
+            var updatedNode = (ElementAccessExpressionSyntax)base.VisitElementAccessExpression(node)!;
+
+            if (this.semanticModel.GetOperation(node) is IPropertyReferenceOperation operation &&
+                HlslKnownMembers.TryGetMappedIndexerTypeName(operation.Property.GetFullMetadataName(), out string? mapping))
+            {
+                var index = InvocationExpression(IdentifierName(mapping!), ArgumentList(updatedNode.ArgumentList.Arguments));
+
+                return updatedNode.WithArgumentList(BracketedArgumentList(SingletonSeparatedList(Argument(index))));
             }
 
             return updatedNode;

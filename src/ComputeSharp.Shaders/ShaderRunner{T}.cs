@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Commands;
@@ -136,8 +137,9 @@ namespace ComputeSharp.Shaders
 
             // Initialize the loop targets and the captured values
             ConstantBuffer<Int4> variablesBuffer = ShaderRunner.GetVariablesBuffer(device);
+            ReadOnlySpan<Int4> variables = dispatchData.Variables;
 
-            variablesBuffer.SetData(dispatchData.Variables);
+            variablesBuffer.SetData(ref MemoryMarshal.GetReference(variables), variables.Length, 0);
 
             commandList.SetComputeRootDescriptorTable(0, variablesBuffer.D3D12GpuDescriptorHandle);
 

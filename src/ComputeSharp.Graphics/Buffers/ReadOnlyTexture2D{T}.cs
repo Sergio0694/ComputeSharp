@@ -11,7 +11,7 @@ namespace ComputeSharp
     /// A <see langword="class"/> representing a typed readonly 2D texture stored on GPU memory.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-    [DebuggerTypeProxy(typeof(BufferDebugView2D<>))]
+    [DebuggerTypeProxy(typeof(Texture2DDebugView<>))]
     [DebuggerDisplay("{ToString(),raw}")]
     public sealed class ReadOnlyTexture2D<T> : Texture2D<T>
         where T : unmanaged
@@ -30,9 +30,17 @@ namespace ComputeSharp
         /// <summary>
         /// Gets a single <typeparamref name="T"/> value from the current readonly texture.
         /// </summary>
+        /// <param name="x">The horizontal offset of the value to get.</param>
+        /// <param name="y">The vertical offset of the value to get.</param>
+        /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
+        public T this[int x, int y] => throw new InvalidExecutionContextException($"{nameof(ReadOnlyTexture2D<T>)}<T>[int,int]");
+
+        /// <summary>
+        /// Gets a single <typeparamref name="T"/> value from the current readonly texture.
+        /// </summary>
         /// <param name="xy">The coordinates of the value to get.</param>
         /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
-        public T this[UInt2 xy] => throw new InvalidExecutionContextException($"{nameof(ReadOnlyTexture2D<T>)}<T>[UInt2]");
+        public T this[Int2 xy] => throw new InvalidExecutionContextException($"{nameof(ReadOnlyTexture2D<T>)}<T>[Int2]");
 
         /// <inheritdoc/>
         public override string ToString()
