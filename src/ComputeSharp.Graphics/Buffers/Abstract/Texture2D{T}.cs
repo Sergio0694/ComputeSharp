@@ -257,7 +257,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         {
             this.d3D12Resource.Dispose();
 
-            if (!GraphicsDevice.IsDisposed)
+            if (GraphicsDevice?.IsDisposed == false)
             {
                 GraphicsDevice.ReturnShaderResourceViewDescriptorHandles(D3D12CpuDescriptorHandle, D3D12GpuDescriptorHandle);
             }
