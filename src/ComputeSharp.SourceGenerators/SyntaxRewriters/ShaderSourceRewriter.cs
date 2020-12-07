@@ -208,6 +208,23 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 // Same HLSL-style expression in the form (T)0
                 return CastExpression(type, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)));
             }
+            else if (updatedNode.IsKind(SyntaxKind.NumericLiteralExpression) &&
+                     this.semanticModel.GetOperation(node) is ILiteralOperation operation &&
+                     operation.Type is INamedTypeSymbol type)
+            {
+                // If the expression is a literal floating point value, we need to ensure the proper suffixes are
+                // used in the HLSL representation. Floating point values accept either f or F, but they don't work
+                // when the literal doesn't contain a decimal point. Since 32 bit floating point values are the default
+                // in HLSL, we can remove the suffix entirely. As for 64 bit values, we simply use the 'L' suffix.
+                if (type.GetFullMetadataName().Equals(typeof(float).FullName))
+                {
+                    return updatedNode.WithToken(Literal(updatedNode.Token.ValueText, 0f));
+                }
+                else if (type.GetFullMetadataName().Equals(typeof(double).FullName))
+                {
+                    return updatedNode.WithToken(Literal($"{updatedNode.Token.ValueText}L", 0d));
+                }
+            }
 
             return updatedNode;
         }
