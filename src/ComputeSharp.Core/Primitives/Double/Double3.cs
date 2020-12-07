@@ -564,6 +564,24 @@ namespace ComputeSharp
         public static implicit operator Double3(double x) => new(x, x, x);
 
         /// <summary>
+        /// Casts a <see cref="Double3"/> value to a <see cref="Int3"/> one.
+        /// </summary>
+        /// <param name="xyz">The input <see cref="Double3"/> value to cast.</param>
+        public static explicit operator Int3(Double3 xyz) => throw new InvalidExecutionContextException($"{nameof(Double3)}.({nameof(Int3)})");
+
+        /// <summary>
+        /// Casts a <see cref="Double3"/> value to a <see cref="UInt3"/> one.
+        /// </summary>
+        /// <param name="xyz">The input <see cref="Double3"/> value to cast.</param>
+        public static explicit operator UInt3(Double3 xyz) => throw new InvalidExecutionContextException($"{nameof(Double3)}.({nameof(UInt3)})");
+
+        /// <summary>
+        /// Casts a <see cref="Double3"/> value to a <see cref="Float3"/> one.
+        /// </summary>
+        /// <param name="xyz">The input <see cref="Double3"/> value to cast.</param>
+        public static explicit operator Float3(Double3 xyz) => throw new InvalidExecutionContextException($"{nameof(Double3)}.({nameof(Float3)})");
+
+        /// <summary>
         /// Sums two <see cref="Double3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double3"/> value to sum.</param>
