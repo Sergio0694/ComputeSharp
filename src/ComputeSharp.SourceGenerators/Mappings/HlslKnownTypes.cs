@@ -65,6 +65,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
         {
             switch (typeName)
             {
+                case "ComputeSharp.ConstantBuffer`1":
                 case "ComputeSharp.ReadOnlyBuffer`1":
                 case "ComputeSharp.ReadWriteBuffer`1":
                 case "ComputeSharp.ReadOnlyTexture2D`1":
@@ -104,6 +105,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 // Construct the HLSL type name
                 return typeName switch
                 {
+                    "ComputeSharp.ConstantBuffer`1" => mapped,
                     "ComputeSharp.ReadOnlyBuffer`1" => $"StructuredBuffer<{mapped}>",
                     "ComputeSharp.ReadWriteBuffer`1" => $"RWStructuredBuffer<{mapped}>",
                     "ComputeSharp.ReadOnlyTexture2D`1" => $"Texture2D<{mapped}>",
