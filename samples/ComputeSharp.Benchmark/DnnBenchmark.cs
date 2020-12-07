@@ -3,12 +3,14 @@ using System.Buffers;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Engines;
 
 namespace ComputeSharp.Benchmark
 {
     /// <summary>
     /// A <see langword="class"/> that benchmarks the APIs in the <see cref="Dnn"/> class, on both CPU and GPU.
     /// </summary>
+    [SimpleJob(RunStrategy.Monitoring)]
     public class DnnBenchmark : IDisposable
     {
         /// <summary>
