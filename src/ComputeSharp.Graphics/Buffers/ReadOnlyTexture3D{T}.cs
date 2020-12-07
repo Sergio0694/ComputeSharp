@@ -33,7 +33,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="xyz">The coordinates of the value to get.</param>
         /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
-        public T this[UInt3 xyz] => throw new InvalidExecutionContextException($"{nameof(ReadOnlyTexture3D<T>)}<T>[UInt3]");
+        public T this[Int3 xyz] => throw new InvalidExecutionContextException($"{nameof(ReadOnlyTexture3D<T>)}<T>[Int3]");
 
         /// <inheritdoc/>
         public override string ToString()

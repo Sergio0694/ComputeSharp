@@ -195,7 +195,7 @@ namespace ComputeSharp.Tests
 
             public void Execute(ThreadIds ids)
             {
-                destination[ids.Z * 32 * 32 + ids.Y * 32 + ids.X] = source[new((uint)ids.X, (uint)ids.Y, (uint)ids.Z)];
+                destination[ids.Z * 32 * 32 + ids.Y * 32 + ids.X] = source[new(ids.X, ids.Y, ids.Z)];
             }
         }
 
@@ -224,7 +224,7 @@ namespace ComputeSharp.Tests
 
             public void Execute(ThreadIds ids)
             {
-                destination[new((uint)ids.X, (uint)ids.Y, (uint)ids.Z)] = source[new((uint)ids.X, (uint)ids.Y, (uint)ids.Z)];
+                destination[new(ids.X, ids.Y, ids.Z)] = source[new(ids.X, ids.Y, ids.Z)];
             }
         }
     }
