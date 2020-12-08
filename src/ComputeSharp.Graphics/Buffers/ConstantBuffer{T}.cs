@@ -12,6 +12,7 @@ using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using Microsoft.Toolkit.Diagnostics;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
+using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp
 {
@@ -24,6 +25,11 @@ namespace ComputeSharp
     public sealed class ConstantBuffer<T> : Buffer<T>
         where T : unmanaged
     {
+        /// <summary>
+        /// The alignment boundary for elements in a constant buffer.
+        /// </summary>
+        private const int ElementSizeAlignment = FX.D3D12_COMMONSHADER_CONSTANT_BUFFER_PARTIAL_UPDATE_EXTENTS_BYTE_ALIGNMENT;
+
         /// <summary>
         /// Creates a new <see cref="ConstantBuffer{T}"/> instance with the specified parameters.
         /// </summary>
@@ -48,7 +54,7 @@ namespace ComputeSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static unsafe int GetPaddedSize()
         {
-            return (sizeof(T) + 15) & ~15;
+            return AlignmentHelper.Pad(sizeof(T), ElementSizeAlignment);
         }
 
         /// <inheritdoc/>

@@ -7,12 +7,14 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Graphics.Interop;
 using ComputeSharp.Shaders.Extensions;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Translation.Models;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
+using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Shaders.Translation
 {
@@ -75,7 +77,7 @@ namespace ComputeSharp.Shaders.Translation
             // Invoke the dynamic method to extract the captured data
             this.dispatchDataLoader!(device, in shader, ref r0, ref r1);
 
-            return new DispatchData(resources, this.totalResourceCount, variables, this.totalVariablesByteSize);
+            return new(resources, this.totalResourceCount, variables, this.totalVariablesByteSize);
         }
 
         /// <summary>
@@ -133,12 +135,12 @@ namespace ComputeSharp.Shaders.Translation
                              HlslKnownTypes.IsKnownVectorType(fieldInfo.FieldType))
                     {
                         // Calculate the right offset with 16-bytes padding (HLSL constant buffer)
-                        int size = Marshal.SizeOf(fieldInfo.FieldType);
+                        int elementSizeInBytes = Marshal.SizeOf(fieldInfo.FieldType);
 
-                        if (this.totalVariablesByteSize % 16 > 16 - size)
-                        {
-                            this.totalVariablesByteSize += 16 - this.totalVariablesByteSize % 16;
-                        }
+                        this.totalVariablesByteSize = AlignmentHelper.AlignToBoundary(
+                            this.totalVariablesByteSize,
+                            elementSizeInBytes,
+                            FX.D3D12_COMMONSHADER_CONSTANT_BUFFER_PARTIAL_UPDATE_EXTENTS_BYTE_ALIGNMENT);
 
                         // Load the target address into the variables buffer
                         il.Emit(OpCodes.Ldarg_S, (byte)4);
@@ -148,7 +150,7 @@ namespace ComputeSharp.Shaders.Translation
                         il.EmitReadMember(fieldInfo);
                         il.EmitStoreToAddress(fieldInfo.FieldType);
 
-                        this.totalVariablesByteSize += size;
+                        this.totalVariablesByteSize += elementSizeInBytes;
                     }
                     else ThrowHelper.ThrowArgumentException("Invalid captured member type");
                 }
