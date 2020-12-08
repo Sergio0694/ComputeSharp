@@ -139,7 +139,6 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             GraphicsDevice.D3D12Device->GetCopyableFootprint(
                 &d3D12ResourceDescription,
                 out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
-                out _,
                 out ulong rowSizeInBytes,
                 out ulong totalSizeInBytes);
 
@@ -212,7 +211,6 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             GraphicsDevice.D3D12Device->GetCopyableFootprint(
                 &d3D12ResourceDescription,
                 out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
-                out _,
                 out ulong rowSizeInBytes,
                 out ulong totalSizeInBytes);
 

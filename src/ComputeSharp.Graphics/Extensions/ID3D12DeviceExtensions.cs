@@ -409,28 +409,26 @@ namespace ComputeSharp.Graphics.Extensions
         /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to get the layout info.</param>
         /// <param name="d3D12ResourceDesc">The <see cref="D3D12_RESOURCE_DESC"/> value for the target resource.</param>
         /// <param name="d3D12PlacedSubresourceFootprint">The resulting layout info for the resource.</param>
-        /// <param name="numRows">The number of rows in the resource.</param>
         /// <param name="rowSizeInBytes">The size in bytes of each row in the resource.</param>
         /// <param name="totalSizeInBytes">The total number of bytes for the resource.</param>
         public static void GetCopyableFootprint(
             this ref ID3D12Device d3D12Device,
             D3D12_RESOURCE_DESC* d3D12ResourceDesc,
             out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
-            out uint numRows,
             out ulong rowSizeInBytes,
             out ulong totalSizeInBytes)
         {
-            uint a;
-            ulong b, c;
+            ulong a, b;
 
             fixed (D3D12_PLACED_SUBRESOURCE_FOOTPRINT* p = &d3D12PlacedSubresourceFootprint)
             {
-                d3D12Device.GetCopyableFootprints(d3D12ResourceDesc, 0, 1, 0, p, &a, &b, &c);
+                uint _;
+
+                d3D12Device.GetCopyableFootprints(d3D12ResourceDesc, 0, 1, 0, p, &_, &a, &b);
             }
 
-            numRows = a;
-            rowSizeInBytes = b;
-            totalSizeInBytes = c;
+            rowSizeInBytes = a;
+            totalSizeInBytes = b;
         }
 
         /// <summary>
