@@ -210,9 +210,12 @@ namespace ComputeSharp.Graphics
         }
 
         /// <inheritdoc/>
-        protected override void OnDispose()
+        protected override bool OnDispose()
         {
-            if (DeviceHelper.GetDefaultDeviceLuid() == Luid) return;
+            if (DeviceHelper.GetDefaultDeviceLuid() == Luid)
+            {
+                return false;
+            }
 
             DeviceHelper.NotifyDisposedDevice(this);
 
@@ -224,6 +227,8 @@ namespace ComputeSharp.Graphics
             this.computeCommandAllocatorPool.Dispose();
             this.copyCommandAllocatorPool.Dispose();
             this.shaderResourceViewDescriptorAllocator.Dispose();
+
+            return true;
         }
 
         /// <inheritdoc/>

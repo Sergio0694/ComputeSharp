@@ -26,6 +26,16 @@ namespace ComputeSharp.Tests
         }
 
         [TestMethod]
+        public void DisposeDefault()
+        {
+            using var before = Gpu.Default.AllocateReadOnlyBuffer<float>(128);
+
+            Gpu.Default.Dispose();
+
+            using var after = Gpu.Default.AllocateReadOnlyBuffer<float>(128);
+        }
+
+        [TestMethod]
         public void EnumerateDevices()
         {
             int i = 0;

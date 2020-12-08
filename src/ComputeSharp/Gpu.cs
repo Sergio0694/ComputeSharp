@@ -24,6 +24,8 @@ namespace ComputeSharp
 
         /// <summary>
         /// Gets the default <see cref="GraphicsDevice"/> instance for the current machine.
+        /// This instance cannot be manually disposed - attempting to do so is safe and it will
+        /// not cause an exception, but it will simply do nothing and not dispose the device.
         /// </summary>
         /// <exception cref="NotSupportedException">Thrown when a default device is not available.</exception>
         /// <remarks>Make sure to check <see cref="IsSupported"/> before accessing this property.</remarks>

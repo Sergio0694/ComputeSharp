@@ -13,7 +13,7 @@ namespace ComputeSharp.Graphics.Interop
         /// </summary>
         ~NativeObject()
         {
-            CheckAndDispose();
+            _ = CheckAndDispose();
         }
 
         /// <summary>
@@ -26,28 +26,33 @@ namespace ComputeSharp.Graphics.Interop
         /// </summary>
         public void Dispose()
         {
-            GC.SuppressFinalize(this);
-
-            CheckAndDispose();
+            if (CheckAndDispose())
+            {
+                GC.SuppressFinalize(this);
+            }
         }
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        private void CheckAndDispose()
+        private bool CheckAndDispose()
         {
             if (!IsDisposed)
             {
-                IsDisposed = true;
-
-                OnDispose();
+                return IsDisposed = OnDispose();
             }
+
+            return true;
         }
 
         /// <summary>
         /// Releases unmanaged and (optionally) managed resources.
         /// </summary>
-        protected abstract void OnDispose();
+        /// <returns>
+        /// Whether or not the dispose has actually been executed. This is done in order to allow derived types to
+        /// optionally cancel a dispose operation, by not releasing resources and returning <see langword="false"/>.
+        /// </returns>
+        protected abstract bool OnDispose();
 
         /// <summary>
         /// Throws an <see cref="ObjectDisposedException"/> if the current instance has been disposed.

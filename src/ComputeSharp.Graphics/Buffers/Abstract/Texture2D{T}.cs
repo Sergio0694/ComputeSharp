@@ -253,7 +253,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         }
 
         /// <inheritdoc/>
-        protected override void OnDispose()
+        protected override bool OnDispose()
         {
             this.d3D12Resource.Dispose();
 
@@ -261,6 +261,8 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             {
                 GraphicsDevice.ReturnShaderResourceViewDescriptorHandles(D3D12CpuDescriptorHandle, D3D12GpuDescriptorHandle);
             }
+
+            return true;
         }
 
         /// <summary>

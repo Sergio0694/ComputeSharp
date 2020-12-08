@@ -155,9 +155,11 @@ namespace ComputeSharp.Graphics.Helpers
                 }
 
                 /// <inheritdoc/>
-                protected override void OnDispose()
+                protected override bool OnDispose()
                 {
                     this.dxgiFactory4.Dispose();
+
+                    return true;
                 }
             }
         }
