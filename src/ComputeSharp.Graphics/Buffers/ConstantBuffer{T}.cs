@@ -28,7 +28,7 @@ namespace ComputeSharp
         /// <summary>
         /// The alignment boundary for elements in a constant buffer.
         /// </summary>
-        private const int ElementSizeAlignment = FX.D3D12_COMMONSHADER_CONSTANT_BUFFER_PARTIAL_UPDATE_EXTENTS_BYTE_ALIGNMENT;
+        private const int ElementAlignment = FX.D3D12_COMMONSHADER_CONSTANT_BUFFER_PARTIAL_UPDATE_EXTENTS_BYTE_ALIGNMENT;
 
         /// <summary>
         /// Creates a new <see cref="ConstantBuffer{T}"/> instance with the specified parameters.
@@ -54,7 +54,7 @@ namespace ComputeSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static unsafe int GetPaddedSize()
         {
-            return AlignmentHelper.Pad(sizeof(T), ElementSizeAlignment);
+            return AlignmentHelper.Pad(sizeof(T), ElementAlignment);
         }
 
         /// <inheritdoc/>
