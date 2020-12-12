@@ -7,14 +7,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <!--
-      This is needed so that the packaging for the source generator is correct
-      We want to have the package references of this project be private when packing the SG
-      (The nugetizer infrastructure recognizes that and packages the dependencies directly alongside the main binary)
-      And public dependencies when building for the main project
-      Right now this is conditioned on the target framework, so this property is primarily for readability
-      This may change in the future
-    -->
+
+    <!--This is needed so that the packaging for the source generator is correct. We want to have the package references
+        of this project be private when packing the source generator (the nugetizer infrastructure recognizes that and
+        packages the dependencies directly alongside the main binary), and public dependencies when building for the main
+        project. Right now this is conditioned on the target framework, so this property is primarily for readability.-->
     <BuildingForSourceGenerator>false</BuildingForSourceGenerator>
     <BuildingForSourceGenerator Condition="'$(TargetFramework)' == 'netstandard2.0'">true</BuildingForSourceGenerator>
 
@@ -24,6 +21,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit" Version="7.0.0-preview4" />
 
+    <!--Hide the package references when this assembly is being built for the source generator-->
     <PackageReference Condition="'$(BuildingForSourceGenerator)' == 'true'" Update="@(PackageReference)" PrivateAssets="all" />
   </ItemGroup>
 
