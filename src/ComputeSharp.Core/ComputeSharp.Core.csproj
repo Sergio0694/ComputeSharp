@@ -15,7 +15,7 @@
       Right now this is conditioned on the target framework, so this property is primarily for readability
       This may change in the future
     -->
-    <BuildingForSourceGenerator Condition="'$(TargetFramework)' == 'netstandard2.0'">false</BuildingForSourceGenerator>
+    <BuildingForSourceGenerator>false</BuildingForSourceGenerator>
     <BuildingForSourceGenerator Condition="'$(TargetFramework)' == 'netstandard2.0'">true</BuildingForSourceGenerator>
 
     <PackSymbols Condition="'$(BuildingForSourceGenerator)' == true">false</PackSymbols>
