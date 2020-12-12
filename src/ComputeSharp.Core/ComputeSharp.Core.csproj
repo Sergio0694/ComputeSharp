@@ -4,11 +4,27 @@
     <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	<LangVersion>9.0</LangVersion>
-	<Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!--
+      This is needed so that the packaging for the source generator is correct
+      We want to have the package references of this project be private when packing the SG
+      (The nugetizer infrastructure recognizes that and packages the dependencies directly alongside the main binary)
+      And public dependencies when building for the main project
+      Right now this is conditioned on the target framework, so this property is primarily for readability
+      This may change in the future
+    -->
+    <BuildingForSourceGenerator Condition="'$(TargetFramework)' == 'netstandard2.0'">false</BuildingForSourceGenerator>
+    <BuildingForSourceGenerator Condition="'$(TargetFramework)' == 'netstandard2.0'">true</BuildingForSourceGenerator>
+
+    <PackSymbols Condition="'$(BuildingForSourceGenerator)' == true">false</PackSymbols>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit" Version="7.0.0-preview4" />
+
+    <PackageReference Condition="'$(BuildingForSourceGenerator)' == 'true'" Update="@(PackageReference)" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

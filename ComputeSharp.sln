@@ -28,11 +28,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_SolutionItems", "_SolutionItems", "{1A9C4108-F61A-4ABE-B5CF-F524521EAE2D}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		global.json = global.json
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.SourceGenerators", "src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj", "{EB52CB67-4162-4722-874B-44EA8DA5450E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.SourceGenerators", "src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj", "{EB52CB67-4162-4722-874B-44EA8DA5450E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

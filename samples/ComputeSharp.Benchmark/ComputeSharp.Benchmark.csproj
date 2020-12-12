@@ -7,15 +7,15 @@
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.12.1.1473" />
+
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ComputeSharp\ComputeSharp.csproj" />
-	<ProjectReference
-      Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj"
-      OutputItemType="Analyzer"
-      ReferenceOutputAssembly="false"
-      PrivateAssets="contentfiles;build"/>
+    <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false"
+                      PrivateAssets="contentfiles;build" />
   </ItemGroup>
 
 </Project>
