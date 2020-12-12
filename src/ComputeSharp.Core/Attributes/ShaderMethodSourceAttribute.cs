@@ -81,7 +81,7 @@ namespace ComputeSharp
         {
             Guard.IsTrue(function.Method.IsStatic, "Captured delegates need to wrap static methods");
 
-            var attributes = function.Method.DeclaringType.Assembly.GetCustomAttributes<ShaderMethodSourceAttribute>();
+            var attributes = function.Method.DeclaringType!.Assembly.GetCustomAttributes<ShaderMethodSourceAttribute>();
             string methodName = function.Method.GetFullName();
 
             foreach (var attribute in attributes)
