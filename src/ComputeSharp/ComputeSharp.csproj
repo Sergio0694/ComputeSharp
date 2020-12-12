@@ -15,11 +15,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="C:\Program Files (x86)\Windows Kits\10\Redist\D3D\x64\dxcompiler.dll"
+    <None Include="Libraries\dxcompiler.dll"
+          Link="dxcompiler.dll"
           Visible="False"
           CopyToOutputDirectory="PreserveNewest"
           PackFolder="runtimes\win-x64\native" />
-    <None Include="C:\Program Files (x86)\Windows Kits\10\Redist\D3D\x64\dxil.dll"
+    <None Include="Libraries\dxil.dll"
+          Link="dxil.dll"
           Visible="False"
           CopyToOutputDirectory="PreserveNewest"
           PackFolder="runtimes\win-x64\native" />
