@@ -1,0 +1,40 @@
+<Project>
+  <Target Name="GetRuntimeDependenciesForAnalyzer"
+          DependsOnTargets="ComputeResolvedFilesToPublishList"
+          Outputs="@(ResolvedAssemblyToPublish)">
+    <ItemGroup>
+      <ResolvedAssemblyToPublish Include="@(ResolvedFileToPublish->'%(FullPath)')"
+                                 Condition="'%(Extension)' == '.dll' AND '%(FileName)' != $(MSBuildProjectName)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ComputeAnalyzerProjectReferences"
+          AfterTargets="AfterResolveReferences">
+    <ItemGroup>
+      <AnalyzerProjectReference Include="@(_MSBuildProjectReferenceExistent)"
+                                Condition="'%(_MSBuildProjectReferenceExistent.OutputItemType)' == 'Analyzer'" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="PassAnalyzerDependenciesToCompiler"
+          Condition="'@(AnalyzerProjectReference)' != ''"
+          AfterTargets="ComputeAnalyzerProjectReferences"
+          BeforeTargets="CoreCompile">
+    <MSBuild
+        Projects="@(AnalyzerProjectReference)"
+        Targets="GetRuntimeDependenciesForAnalyzer"
+        RemoveProperties="%(AnalyzerProjectReference.GlobalPropertiesToRemove)">
+
+      <Output TaskParameter="TargetOutputs" ItemName="AnalyzerDependency"/>
+    </MSBuild>
+
+    <Message Text="Analyzer project references for $(MSBuildProjectName):" Importance="High" />
+    <Message Text="    %(AnalyzerProjectReference.FileName)" Importance="High" />
+    <Message Text="Resolved analyzer dependencies:" Importance="High" />
+    <Message Text="    %(AnalyzerDependency.FileName)" Importance="High" />
+
+    <ItemGroup>
+      <Analyzer Include="@(AnalyzerDependency)" />
+    </ItemGroup>
+  </Target>
+</Project>
