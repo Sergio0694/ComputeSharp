@@ -4,7 +4,7 @@
           Outputs="@(ResolvedAssemblyToPublish)">
     <ItemGroup>
       <ResolvedAssemblyToPublish Include="@(ResolvedFileToPublish->'%(FullPath)')"
-                                 Condition="'%(Extension)' == '.dll' AND '%(FileName)' != $(MSBuildProjectName)" />
+                                 Condition="'%(Extension)' == '.dll' AND '%(FileName)' != '$(MSBuildProjectName)'" />
     </ItemGroup>
   </Target>
 
