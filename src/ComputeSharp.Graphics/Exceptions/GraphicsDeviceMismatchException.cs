@@ -52,7 +52,6 @@ namespace ComputeSharp.Exceptions
         /// <typeparam name="T">The type of values in the input buffer.</typeparam>
         /// <param name="buffer">The input <see cref="Buffer{T}"/> that was used.</param>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance that was used.</param>
-        [Pure]
         internal static void Throw<T>(Buffer<T> buffer, GraphicsDevice device)
             where T : unmanaged
         {
@@ -65,7 +64,6 @@ namespace ComputeSharp.Exceptions
         /// <typeparam name="T">The type of values in the input buffer.</typeparam>
         /// <param name="texture">The input <see cref="Texture2D{T}"/> that was used.</param>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance that was used.</param>
-        [Pure]
         internal static void Throw<T>(Texture2D<T> texture, GraphicsDevice device)
             where T : unmanaged
         {
@@ -78,7 +76,6 @@ namespace ComputeSharp.Exceptions
         /// <typeparam name="T">The type of values in the input buffer.</typeparam>
         /// <param name="texture">The input <see cref="Texture3D{T}"/> that was used.</param>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance that was used.</param>
-        [Pure]
         internal static void Throw<T>(Texture3D<T> texture, GraphicsDevice device)
             where T : unmanaged
         {
