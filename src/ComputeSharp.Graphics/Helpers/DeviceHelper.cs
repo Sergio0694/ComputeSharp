@@ -95,7 +95,7 @@ namespace ComputeSharp.Graphics.Helpers
 
                 HRESULT createDeviceResult = FX.D3D12CreateDevice(
                     dxgiAdapter1.AsIUnknown().Get(),
-                    D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_12_0,
+                    D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_11_0,
                     FX.__uuidof<ID3D12Device>(),
                     (void**)d3D12Device);
 
