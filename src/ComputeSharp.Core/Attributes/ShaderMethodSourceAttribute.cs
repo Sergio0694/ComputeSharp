@@ -5,7 +5,6 @@ using System.Diagnostics.Contracts;
 using System.Reflection;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Exceptions;
-using Microsoft.Toolkit.Diagnostics;
 
 namespace ComputeSharp
 {
@@ -79,7 +78,10 @@ namespace ComputeSharp
         [Pure]
         internal static ShaderMethodSourceAttribute GetForDelegate(Delegate function)
         {
-            Guard.IsTrue(function.Method.IsStatic, "Captured delegates need to wrap static methods");
+            if (!function.Method.IsStatic)
+            {
+                ThrowArgumentExceptionForNonStaticShader();
+            }
 
             var attributes = function.Method.DeclaringType!.Assembly.GetCustomAttributes<ShaderMethodSourceAttribute>();
             string methodName = function.Method.GetFullName();
@@ -93,6 +95,14 @@ namespace ComputeSharp
             }
 
             return MissingMethodSourceException.Throw(function);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> when a given <see cref="Delegate"/> is not static.
+        /// </summary>
+        private static void ThrowArgumentExceptionForNonStaticShader()
+        {
+            throw new ArgumentException("Captured delegates in a shader need to wrap a static method.", "function");
         }
     }
 }
