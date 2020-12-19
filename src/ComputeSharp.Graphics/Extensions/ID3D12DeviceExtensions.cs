@@ -9,6 +9,7 @@ using static TerraFX.Interop.D3D12_COMMAND_QUEUE_PRIORITY;
 using static TerraFX.Interop.D3D12_CPU_PAGE_PROPERTY;
 using static TerraFX.Interop.D3D12_DESCRIPTOR_HEAP_FLAGS;
 using static TerraFX.Interop.D3D12_DESCRIPTOR_HEAP_TYPE;
+using static TerraFX.Interop.D3D12_FEATURE;
 using static TerraFX.Interop.D3D12_FENCE_FLAGS;
 using static TerraFX.Interop.D3D12_MEMORY_POOL;
 using static TerraFX.Interop.D3D12_HEAP_FLAGS;
@@ -447,6 +448,24 @@ namespace ComputeSharp.Graphics.Extensions
             d3D12Device.CheckFeatureSupport(d3D12Feature, &feature, (uint)sizeof(TFeature)).Assert();
 
             return feature;
+        }
+
+        /// <summary>
+        /// Checks whether or not a given DXGI format is supported for the specified resource type.
+        /// </summary>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to check features for.</param>
+        /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> type to check support for.</param>
+        /// <param name="d3D12FormatSupport1">The resource type to check support for.</param>
+        /// <returns>Whether or not the input device supports the requested format for the specified resource type.</returns>
+        [Pure]
+        public static unsafe bool IsDxgiFormatSupported(this ref ID3D12Device d3D12Device, DXGI_FORMAT dxgiFormat, D3D12_FORMAT_SUPPORT1 d3D12FormatSupport1)
+        {
+            D3D12_FEATURE_DATA_FORMAT_SUPPORT d3D12FeatureDataFormatSupport = default;
+            d3D12FeatureDataFormatSupport.Format = dxgiFormat;
+
+            d3D12Device.CheckFeatureSupport(D3D12_FEATURE_FORMAT_SUPPORT, &d3D12FeatureDataFormatSupport, (uint)sizeof(D3D12_FEATURE_DATA_FORMAT_SUPPORT)).Assert();
+
+            return (d3D12FeatureDataFormatSupport.Support1 & d3D12FormatSupport1) != 0;
         }
     }
 }
