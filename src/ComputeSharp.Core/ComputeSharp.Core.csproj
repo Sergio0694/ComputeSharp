@@ -3,26 +3,11 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	<LangVersion>9.0</LangVersion>
-  </PropertyGroup>
-
-  <PropertyGroup>
-
-    <!--This is needed so that the packaging for the source generator is correct. We want to have the package references
-        of this project be private when packing the source generator (the nugetizer infrastructure recognizes that and
-        packages the dependencies directly alongside the main binary), and public dependencies when packing the main project.
-        Notably, when building the source generator for sample projects via ProjectReferences, we do not want the packages to be private.-->
-    <BuildingPackageForSourceGenerator>false</BuildingPackageForSourceGenerator>
-    <BuildingPackageForSourceGenerator Condition="'$(TargetFramework)' == 'netstandard2.0' AND '$(BuildingPackage)' == 'true'">true</BuildingPackageForSourceGenerator>
-
-    <PackSymbols Condition="'$(BuildingPackageForSourceGenerator)' == 'true'">false</PackSymbols>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
-
-    <!--Hide the package references when this assembly is being packed with the source generator-->
-    <PackageReference Condition="'$(BuildingPackageForSourceGenerator)' == 'true'" Update="@(PackageReference)" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>
