@@ -4,7 +4,6 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using ComputeSharp.SourceGenerators.Extensions;
-using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -40,6 +39,8 @@ namespace ComputeSharp.SourceGenerators
 
                 TypeSyntax shaderType = ParseTypeName(structDeclarationSymbol.ToDisplayString());
                 BlockSyntax block = Block(GetDelegateHashCodeStatements(structDeclarationSymbol));
+
+                if (block.Statements.Count == 1) continue;
 
                 // Create a static method to create the combined hashcode for a given shader type.
                 // This code takes a block syntax and produces a compilation unit as follows:
@@ -106,15 +107,11 @@ namespace ComputeSharp.SourceGenerators
 
                 if (typeSymbol.TypeKind != TypeKind.Delegate) continue;
 
-                _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
-
-                string fieldName = mapping ?? fieldSymbol.Name;
-
                 // hash += hash << 5;
                 yield return ExpressionStatement(ParseExpression($"hash += hash << 5"));
 
                 // hash += shader.Field[#i].Method.GetHashCode();
-                yield return ExpressionStatement(ParseExpression($"hash += shader.{fieldName}.Method.GetHashCode()"));
+                yield return ExpressionStatement(ParseExpression($"hash += shader.{fieldSymbol.Name}.Method.GetHashCode()"));
             }
 
             yield return ReturnStatement(IdentifierName("hash"));
