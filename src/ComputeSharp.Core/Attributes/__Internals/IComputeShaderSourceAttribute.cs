@@ -13,7 +13,7 @@ namespace ComputeSharp.__Internals
     /// <remarks>This attribute is not meant to be directly used by applications using ComputeSharp.</remarks>
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("This attribute is meant to be used from the source generator only")]
+    [Obsolete("This attribute is not intended to be used directly by user code")]
     public sealed class IComputeShaderSourceAttribute : Attribute
     {
         /// <summary>

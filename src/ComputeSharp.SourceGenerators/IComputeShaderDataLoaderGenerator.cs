@@ -53,7 +53,7 @@ namespace ComputeSharp.SourceGenerators
                 //     internal static partial class DispatchDataLoader
                 //     {
                 //         [System.ComponentModel.EditorBrowsable(EditorBrowsableState.Never)]
-                //         [System.Obsolete("This method is intended for internal usage only")]
+                //         [System.Obsolete("This method is not intended to be called directly by user code")]
                 //         public static int LoadDispatchData(GraphicsDevice device, in ShaderType shader, ref ulong r0, ref byte r1)
                 //         {
                 //             ...
@@ -80,7 +80,7 @@ namespace ComputeSharp.SourceGenerators
                             Attribute(IdentifierName("Obsolete")).AddArgumentListArguments(
                             AttributeArgument(LiteralExpression(
                                 SyntaxKind.StringLiteralExpression,
-                                Literal("This method is intended for internal usage only"))))))).AddModifiers(
+                                Literal("This method is not intended to be called directly by user code"))))))).AddModifiers(
                         Token(SyntaxKind.PublicKeyword),
                         Token(SyntaxKind.StaticKeyword)).AddParameterListParameters(
                         Parameter(Identifier("device")).WithType(IdentifierName("ComputeSharp.Graphics.GraphicsDevice")),

@@ -11,7 +11,7 @@ namespace ComputeSharp.__Internals
     /// A helper class with some proxy methods to expose to generated code in external projects.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("This type is meant to be used from the source generator only")]
+    [Obsolete("This type is not intended to be used directly by user code")]
     public static class GraphicsResourceHelper
     {
         /// <summary>
@@ -19,6 +19,8 @@ namespace ComputeSharp.__Internals
         /// </summary>
         /// <param name="buffer">The input <see cref="Buffer{T}"/> instance to check.</param>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("This method is not intended to be called directly by user code")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong ValidateAndGetGpuDescriptorHandle<T>(Buffer<T> buffer, GraphicsDevice device)
             where T : unmanaged
@@ -34,6 +36,8 @@ namespace ComputeSharp.__Internals
         /// </summary>
         /// <param name="buffer">The input <see cref="Texture2D{T}"/> instance to check.</param>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("This method is not intended to be called directly by user code")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong ValidateAndGetGpuDescriptorHandle<T>(Texture2D<T> buffer, GraphicsDevice device)
             where T : unmanaged
@@ -49,6 +53,8 @@ namespace ComputeSharp.__Internals
         /// </summary>
         /// <param name="buffer">The input <see cref="Texture3D{T}"/> instance to check.</param>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("This method is not intended to be called directly by user code")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong ValidateAndGetGpuDescriptorHandle<T>(Texture3D<T> buffer, GraphicsDevice device)
             where T : unmanaged

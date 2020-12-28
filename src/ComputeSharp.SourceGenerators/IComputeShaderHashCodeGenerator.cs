@@ -53,7 +53,7 @@ namespace ComputeSharp.SourceGenerators
                 //     internal static partial class HashCodeProvider
                 //     {
                 //         [System.ComponentModel.EditorBrowsable(EditorBrowsableState.Never)]
-                //         [System.Obsolete("This method is intended for internal usage only")]
+                //         [System.Obsolete("This method is not intended to be called directly by user code")]
                 //         public static int CombineHashCode(int hash, in ShaderType shader)
                 //         {
                 //             return ...;
@@ -79,7 +79,7 @@ namespace ComputeSharp.SourceGenerators
                             Attribute(IdentifierName("Obsolete")).AddArgumentListArguments(
                             AttributeArgument(LiteralExpression(
                                 SyntaxKind.StringLiteralExpression,
-                                Literal("This method is intended for internal usage only"))))))).AddModifiers(
+                                Literal("This method is not intended to be called directly by user code"))))))).AddModifiers(
                         Token(SyntaxKind.PublicKeyword),
                         Token(SyntaxKind.StaticKeyword)).AddParameterListParameters(
                         Parameter(Identifier("hash")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
