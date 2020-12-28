@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Mappings;
@@ -39,8 +40,34 @@ namespace ComputeSharp.SourceGenerators
                 if (!structDeclarationSymbol.Interfaces.Any(static interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) continue;
 
                 TypeSyntax shaderType = ParseTypeName(structDeclarationSymbol.ToDisplayString());
-
                 BlockSyntax block = Block();
+                int
+                    resourceOffset = 0,
+                    rawDataOffset = 0;
+
+                foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
+                {
+                    INamedTypeSymbol typeSymbol = (INamedTypeSymbol)fieldSymbol.Type;
+                    string typeName = typeSymbol.GetFullMetadataName();
+
+                    if (HlslKnownTypes.IsTypedResourceType(typeName))
+                    {
+                        block = block.AddStatements(ExpressionStatement(
+                            AssignmentExpression(
+                                SyntaxKind.SimpleAssignmentExpression,
+                                ParseExpression($"Unsafe.Add(ref r0, {resourceOffset++})"),
+                                ParseExpression($"GraphicsResourceHelper.ValidateAndGetGpuDescriptorHandle(shader.{fieldSymbol.Name}, device)"))));
+                    }
+                    else if (HlslKnownTypes.IsScalarOrVectorType(typeName))
+                    {
+                        var info = HlslKnownSizes.GetTypeInfo(typeName);
+
+                        block = block.AddStatements(ExpressionStatement(
+                            ParseExpression($"Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, {rawDataOffset}), shader.{fieldSymbol.Name})")));
+
+                        rawDataOffset += info.Size;
+                    }
+                }
 
                 // Create a static method to create the combined hashcode for a given shader type.
                 // This code takes a block syntax and produces a compilation unit as follows:
@@ -63,7 +90,8 @@ namespace ComputeSharp.SourceGenerators
                 var source =
                     CompilationUnit().AddUsings(
                     UsingDirective(IdentifierName("System")),
-                    UsingDirective(IdentifierName("System.ComponentModel"))).AddMembers(
+                    UsingDirective(IdentifierName("System.ComponentModel")),
+                    UsingDirective(IdentifierName("System.Runtime.CompilerServices"))).AddMembers(
                     NamespaceDeclaration(IdentifierName("ComputeSharp.__Internals")).AddMembers(
                     ClassDeclaration("DispatchDataLoader").AddModifiers(
                         Token(SyntaxKind.InternalKeyword),

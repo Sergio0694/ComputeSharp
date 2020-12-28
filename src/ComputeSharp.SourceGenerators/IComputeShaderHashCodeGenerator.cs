@@ -39,7 +39,6 @@ namespace ComputeSharp.SourceGenerators
                 if (!structDeclarationSymbol.Interfaces.Any(static interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) continue;
 
                 TypeSyntax shaderType = ParseTypeName(structDeclarationSymbol.ToDisplayString());
-
                 BlockSyntax block = Block();
 
                 // Process all the captured delegate types
