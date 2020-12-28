@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
+using ComputeSharp.Core.Helpers;
 using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
@@ -42,7 +43,7 @@ namespace ComputeSharp.SourceGenerators
                 BlockSyntax block = Block();
                 int
                     resourceOffset = 0,
-                    rawDataOffset = 0;
+                    rawDataOffset = sizeof(int) * 3;
 
                 foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
                 {
@@ -61,6 +62,15 @@ namespace ComputeSharp.SourceGenerators
                     {
                         var info = HlslKnownSizes.GetTypeInfo(typeName);
 
+                        // Calculate the right offset with 16-bytes padding (HLSL constant buffer).
+                        // Since we're in a constant buffer, we need to both pad the starting offset
+                        // to be aligned to the packing size of the type, and also to align the initial
+                        // offset to ensure that values do not cross 16 bytes boundaries either.
+                        rawDataOffset = AlignmentHelper.AlignToBoundary(
+                            AlignmentHelper.Pad(rawDataOffset, info.Pack),
+                            info.Size,
+                            16);
+
                         block = block.AddStatements(ExpressionStatement(
                             ParseExpression($"Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, {rawDataOffset}), shader.{fieldSymbol.Name})")));
 
@@ -68,7 +78,13 @@ namespace ComputeSharp.SourceGenerators
                     }
                 }
 
-                block = block.AddStatements(ReturnStatement(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(1024))));
+                // After all the captured fields have been processed, ansure the reported byte size for
+                // the local variables is padded to the standard alignment for constant buffers. This is
+                // necessary to enable loading all the dispatch data after reinterpreting it to a sequence
+                // of values of size 16 bytes (in particular, Int4 is used), without reading out of bounds.
+                rawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
+
+                block = block.AddStatements(ReturnStatement(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(rawDataOffset))));
 
                 // Create a static method to create the combined hashcode for a given shader type.
                 // This code takes a block syntax and produces a compilation unit as follows:

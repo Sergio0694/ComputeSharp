@@ -21,6 +21,7 @@
     <Compile Include="..\ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" Link="Core\Exceptions\InvalidExecutionContextException.cs" />
     <Compile Include="..\ComputeSharp.Core\Exceptions\MissingMethodSourceException.cs" Link="Core\Exceptions\MissingMethodSourceException.cs" />
     <Compile Include="..\ComputeSharp.Core\Extensions\MethodInfoExtensions.cs" Link="Core\Extensions\MethodInfoExtensions.cs" />
+    <Compile Include="..\ComputeSharp.Core\Helpers\AlignmentHelper.cs" Link="Core\Helpers\AlignmentHelper.cs" />
     <Compile Include="..\ComputeSharp.Core\Interfaces\IComputeShader.cs" Link="Core\Interfaces\IComputeShader.cs" />
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Attributes\PreserveMemberNameAttribute.cs" Link="Core\Intrinsics\Attributes\PreserveMemberNameAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Intrinsics\Hlsl.cs" Link="Core\Intrinsics\Hlsl.cs" />
