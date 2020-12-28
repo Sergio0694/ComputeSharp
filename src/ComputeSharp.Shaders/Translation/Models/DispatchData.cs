@@ -12,9 +12,9 @@ namespace ComputeSharp.Shaders.Translation.Models
     internal readonly ref struct DispatchData
     {
         /// <summary>
-        /// The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> array with the captured buffers.
+        /// The <see cref="ulong"/> array (actually <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> values) with the captured buffers.
         /// </summary>
-        private readonly D3D12_GPU_DESCRIPTOR_HANDLE[] resourcesArray;
+        private readonly ulong[] resourcesArray;
 
         /// <summary>
         /// The number of <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> values in <see cref="resourcesArray"/>.
@@ -34,11 +34,11 @@ namespace ComputeSharp.Shaders.Translation.Models
         /// <summary>
         /// Creates a new <see cref="DispatchData"/> instance with the specified parameters.
         /// </summary>
-        /// <param name="resourcesArray">The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> array with the captured buffers.</param>
+        /// <param name="resourcesArray">The <see cref="ulong"/> array with the captured buffers.</param>
         /// <param name="resourcesCount">The number of <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instances in <see cref="resourcesArray"/>.</param>
         /// <param name="variablesArray">The <see cref="byte"/> array with all the captured variables, with proper padding.</param>
         /// <param name="variablesByteSize">The actual size in bytes to use from <see cref="variablesArray"/>.</param>
-        public DispatchData(D3D12_GPU_DESCRIPTOR_HANDLE[] resourcesArray, int resourcesCount, byte[] variablesArray, int variablesByteSize)
+        public DispatchData(ulong[] resourcesArray, int resourcesCount, byte[] variablesArray, int variablesByteSize)
         {
             this.resourcesArray = resourcesArray;
             this.variablesArray = variablesArray;
@@ -54,9 +54,10 @@ namespace ComputeSharp.Shaders.Translation.Models
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                ref D3D12_GPU_DESCRIPTOR_HANDLE r0 = ref MemoryMarshal.GetArrayDataReference(this.resourcesArray);
+                ref ulong r0 = ref MemoryMarshal.GetArrayDataReference(this.resourcesArray);
+                ref D3D12_GPU_DESCRIPTOR_HANDLE r1 = ref Unsafe.As<ulong, D3D12_GPU_DESCRIPTOR_HANDLE>(ref r0);
 
-                return MemoryMarshal.CreateReadOnlySpan(ref r0, this.resourcesCount);
+                return MemoryMarshal.CreateReadOnlySpan(ref r1, this.resourcesCount);
             }
         }
 
@@ -79,7 +80,7 @@ namespace ComputeSharp.Shaders.Translation.Models
         /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose()
         {
-            ArrayPool<D3D12_GPU_DESCRIPTOR_HANDLE>.Shared.Return(this.resourcesArray);
+            ArrayPool<ulong>.Shared.Return(this.resourcesArray);
             ArrayPool<byte>.Shared.Return(this.variablesArray);
         }
     }

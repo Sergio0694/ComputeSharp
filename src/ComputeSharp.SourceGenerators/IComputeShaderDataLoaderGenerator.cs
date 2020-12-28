@@ -2,7 +2,6 @@
 using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Mappings;
@@ -69,6 +68,8 @@ namespace ComputeSharp.SourceGenerators
                     }
                 }
 
+                block = block.AddStatements(ReturnStatement(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(1024))));
+
                 // Create a static method to create the combined hashcode for a given shader type.
                 // This code takes a block syntax and produces a compilation unit as follows:
                 //
@@ -81,7 +82,7 @@ namespace ComputeSharp.SourceGenerators
                 //     {
                 //         [System.ComponentModel.EditorBrowsable(EditorBrowsableState.Never)]
                 //         [System.Obsolete("This method is intended for internal usage only")]
-                //         public static void LoadDispatchData(GraphicsDevice device, in ShaderType shader, ref ulong r0, ref byte r1)
+                //         public static int LoadDispatchData(GraphicsDevice device, in ShaderType shader, ref ulong r0, ref byte r1)
                 //         {
                 //             ...
                 //         }
@@ -98,7 +99,7 @@ namespace ComputeSharp.SourceGenerators
                         Token(SyntaxKind.StaticKeyword),
                         Token(SyntaxKind.PartialKeyword)).AddMembers(
                     MethodDeclaration(
-                        PredefinedType(Token(SyntaxKind.VoidKeyword)),
+                        PredefinedType(Token(SyntaxKind.IntKeyword)),
                         Identifier("LoadDispatchData")).AddAttributeLists(
                         AttributeList(SingletonSeparatedList(
                             Attribute(IdentifierName("EditorBrowsable")).AddArgumentListArguments(

@@ -114,7 +114,7 @@ namespace ComputeSharp.Shaders.Translation
 
             @this.LoadFieldsInfo(box);
             @this.LoadMethodMetadata();
-            @this.BuildDispatchDataLoader();
+            @this.InitializeDispatchDataLoader();
 
             return @this;
         }
@@ -164,6 +164,7 @@ namespace ComputeSharp.Shaders.Translation
                 this.d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
                 this.capturedFields.Add(fieldInfo);
                 this.hlslResourceInfo.Add(new HlslResourceInfo.Constant(hlslType, hlslName, (int)this.constantBuffersCount++));
+                this.totalResourceCount++;
             }
             else if (HlslKnownTypes.IsReadOnlyResourceType(fieldType))
             {
@@ -172,6 +173,7 @@ namespace ComputeSharp.Shaders.Translation
                 this.d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
                 this.capturedFields.Add(fieldInfo);
                 this.hlslResourceInfo.Add(new HlslResourceInfo.ReadOnly(hlslType, hlslName, (int)this.readOnlyBuffersCount++));
+                this.totalResourceCount++;
             }
             else if (HlslKnownTypes.IsReadWriteResourceType(fieldType))
             {
@@ -180,6 +182,7 @@ namespace ComputeSharp.Shaders.Translation
                 this.d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
                 this.capturedFields.Add(fieldInfo);
                 this.hlslResourceInfo.Add(new HlslResourceInfo.ReadWrite(hlslType, hlslName, (int)this.readWriteBuffersCount++));
+                this.totalResourceCount++;
             }
             else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
             {

@@ -44,7 +44,7 @@ namespace ComputeSharp.Sample
         [AutoConstructor]
         internal readonly partial struct MainKernel : IComputeShader
         {
-            private readonly ReadWriteBuffer<float> buffer;
+            public readonly ReadWriteBuffer<float> buffer;
 
             /// <inheritdoc/>
             public void Execute(ThreadIds ids)

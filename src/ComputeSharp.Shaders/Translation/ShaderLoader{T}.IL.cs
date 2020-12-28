@@ -1,20 +1,13 @@
-﻿using System.Buffers;
+﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Reflection;
-using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Graphics;
-using ComputeSharp.Graphics.Buffers.Abstract;
-using ComputeSharp.Graphics.Helpers;
-using ComputeSharp.Graphics.Interop;
-using ComputeSharp.Shaders.Extensions;
-using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Translation.Models;
-using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
-using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Shaders.Translation
 {
@@ -26,20 +19,18 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
         /// <param name="shader">The shader instance to load the data from.</param>
-        /// <param name="r0">A reference to the buffer with all the captured <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instances.</param>
+        /// <param name="r0">
+        /// A reference to the buffer with all the captured <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instances.
+        /// This is just represented as a <see cref="ulong"/> reference, to avoid exposing the type publicly.
+        /// </param>
         /// <param name="r1">A reference to the buffer to use to store all the captured value types.</param>
-        private delegate void DispatchDataLoader(GraphicsDevice device, in T shader, ref D3D12_GPU_DESCRIPTOR_HANDLE r0, ref byte r1);
+        /// <returns>The returned value indicates the total number of written bytes into <paramref name="r1"/>.</returns>
+        private delegate int DispatchDataLoader(GraphicsDevice device, in T shader, ref ulong r0, ref byte r1);
 
         /// <summary>
         /// The number of captured graphics resources (buffers).
         /// </summary>
         private int totalResourceCount;
-
-        /// <summary>
-        /// The size in bytes of the buffer with the captured variables.
-        /// </summary>
-        /// <remarks>Initially set to 3 <see cref="int"/> values for X, Y and Z threads counts.</remarks>
-        private int totalVariablesByteSize = 3 * sizeof(int);
 
         /// <summary>
         /// The cached <see cref="DispatchDataLoader"/> instance to load dispatch data before execution.
@@ -63,10 +54,10 @@ namespace ComputeSharp.Shaders.Translation
         public DispatchData GetDispatchData(GraphicsDevice device, in T shader, int x, int y, int z)
         {
             // Resources and variables buffers
-            D3D12_GPU_DESCRIPTOR_HANDLE[] resources = ArrayPool<D3D12_GPU_DESCRIPTOR_HANDLE>.Shared.Rent(this.totalResourceCount);
-            byte[] variables = ArrayPool<byte>.Shared.Rent(this.totalVariablesByteSize);
+            ulong[] resources = ArrayPool<ulong>.Shared.Rent(this.totalResourceCount);
+            byte[] variables = ArrayPool<byte>.Shared.Rent(4096);
 
-            ref D3D12_GPU_DESCRIPTOR_HANDLE r0 = ref MemoryMarshal.GetArrayDataReference(resources);
+            ref ulong r0 = ref MemoryMarshal.GetArrayDataReference(resources);
             ref byte r1 = ref MemoryMarshal.GetArrayDataReference(variables);
 
             // Set the x, y and z counters
@@ -75,96 +66,22 @@ namespace ComputeSharp.Shaders.Translation
             Unsafe.Add(ref Unsafe.As<byte, int>(ref r1), 2) = z;
 
             // Invoke the dynamic method to extract the captured data
-            this.dispatchDataLoader!(device, in shader, ref r0, ref r1);
+            int totalVariablesByteSize = this.dispatchDataLoader!(device, in shader, ref r0, ref r1);
 
-            return new(resources, this.totalResourceCount, variables, this.totalVariablesByteSize);
+            return new(resources, this.totalResourceCount, variables, totalVariablesByteSize);
         }
 
         /// <summary>
-        /// Builds a new <see cref="DispatchDataLoader"/> instance that loads the dispatch data for the current shader type.
+        /// Initializes the <see cref="DispatchDataLoader"/> instance that loads the dispatch data for the current shader type.
         /// </summary>
-        private void BuildDispatchDataLoader()
+        private void InitializeDispatchDataLoader()
         {
-            // The delegate signature is <GraphicsDevice, in T, ref D3D12_GPU_DESCRIPTOR_HANDLE, ref byte, void>.
-            // Due to how DynamicMethod<T> is implemented (see notes in the XML docs for DynamicMethod<T>.New),
-            // all offsets for the input arguments are shifted by one. Because of this, we have the following:
-            //
-            // ldarg.1 = GraphicsDevice
-            // ldarg.2 = in T shader
-            // ldarg.3 = ref D3D12_GPU_DESCRIPTOR_HANDLE r0
-            // ldarg.4 = ref byte r1
-            this.dispatchDataLoader = DynamicMethod<DispatchDataLoader>.New(il =>
-            {
-                foreach (FieldInfo fieldInfo in this.capturedFields)
-                {
-                    if (HlslKnownTypes.IsKnownBufferType(fieldInfo.FieldType))
-                    {
-                        // Load the offset address into the resource buffers
-                        il.Emit(OpCodes.Ldarg_3);
+            // Get the generated data loader
+            Type[] argumentTypes = new[] { typeof(GraphicsDevice), typeof(T).MakeByRefType(), typeof(ulong).MakeByRefType(), typeof(byte).MakeByRefType() };
+            Type type = typeof(T).Assembly.GetType("ComputeSharp.__Internals.DispatchDataLoader")!;
+            MethodInfo method = type.GetMethod("LoadDispatchData", argumentTypes)!;
 
-                        if (totalResourceCount > 0)
-                        {
-                            il.EmitAddOffset<D3D12_GPU_DESCRIPTOR_HANDLE>(this.totalResourceCount);
-                        }
-
-                        il.Emit(OpCodes.Ldarg_2);
-                        il.EmitReadMember(fieldInfo);
-
-                        // Call NativeObject.ThrowIfDisposed()
-                        il.Emit(OpCodes.Dup);
-                        il.EmitCall(OpCodes.Callvirt, typeof(NativeObject).GetMethod(
-                            nameof(NativeObject.ThrowIfDisposed),
-                            BindingFlags.Instance | BindingFlags.NonPublic)!, null);
-
-                        // Call ThrowIfDeviceMismatch(GraphicsDevice)
-                        il.Emit(OpCodes.Dup);
-                        il.Emit(OpCodes.Ldarg_1);
-                        il.EmitCall(OpCodes.Callvirt, fieldInfo.FieldType.GetMethod(
-                            nameof(Buffer<byte>.ThrowIfDeviceMismatch),
-                            BindingFlags.Instance | BindingFlags.NonPublic)!, null);
-
-                        // Access D3D12GpuDescriptorHandle
-                        il.EmitReadMember(fieldInfo.FieldType.GetField(
-                            nameof(Buffer<byte>.D3D12GpuDescriptorHandle),
-                            BindingFlags.Instance | BindingFlags.NonPublic)!);
-                        il.EmitStoreToAddress(typeof(D3D12_GPU_DESCRIPTOR_HANDLE));
-
-                        this.totalResourceCount++;
-                    }
-                    else if (HlslKnownTypes.IsKnownScalarType(fieldInfo.FieldType) ||
-                             HlslKnownTypes.IsKnownVectorType(fieldInfo.FieldType))
-                    {
-                        // Calculate the right offset with 16-bytes padding (HLSL constant buffer)
-                        int elementSizeInBytes = Marshal.SizeOf(fieldInfo.FieldType);
-
-                        this.totalVariablesByteSize = AlignmentHelper.AlignToBoundary(
-                            this.totalVariablesByteSize,
-                            elementSizeInBytes,
-                            FX.D3D12_COMMONSHADER_CONSTANT_BUFFER_PARTIAL_UPDATE_EXTENTS_BYTE_ALIGNMENT);
-
-                        // Load the target address into the variables buffer
-                        il.Emit(OpCodes.Ldarg_S, (byte)4);
-                        il.EmitAddOffset(totalVariablesByteSize);
-
-                        il.Emit(OpCodes.Ldarg_2);
-                        il.EmitReadMember(fieldInfo);
-                        il.EmitStoreToAddress(fieldInfo.FieldType);
-
-                        this.totalVariablesByteSize += elementSizeInBytes;
-                    }
-                    else ThrowHelper.ThrowArgumentException("Invalid captured member type");
-                }
-
-                il.Emit(OpCodes.Ret);
-            });
-
-            // After all the captured fields have been processed, ansure the reported byte size for
-            // the local variables is padded to the standard alignment for constant buffers. This is
-            // necessary to enable loading all the dispatch data after reinterpreting it to a sequence
-            // of values of size 16 bytes (in particular, Int4 is used), without reading out of bounds.
-            this.totalVariablesByteSize = AlignmentHelper.Pad(
-                this.totalVariablesByteSize,
-                FX.D3D12_COMMONSHADER_CONSTANT_BUFFER_PARTIAL_UPDATE_EXTENTS_BYTE_ALIGNMENT);
+            this.dispatchDataLoader = method.CreateDelegate<DispatchDataLoader>();
         }
     }
 }
