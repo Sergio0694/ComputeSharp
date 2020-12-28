@@ -40,51 +40,7 @@ namespace ComputeSharp.SourceGenerators
                 if (!structDeclarationSymbol.Interfaces.Any(static interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) continue;
 
                 TypeSyntax shaderType = ParseTypeName(structDeclarationSymbol.ToDisplayString());
-                BlockSyntax block = Block();
-                int
-                    resourceOffset = 0,
-                    rawDataOffset = sizeof(int) * 3;
-
-                foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
-                {
-                    INamedTypeSymbol typeSymbol = (INamedTypeSymbol)fieldSymbol.Type;
-                    string typeName = typeSymbol.GetFullMetadataName();
-
-                    if (HlslKnownTypes.IsTypedResourceType(typeName))
-                    {
-                        block = block.AddStatements(ExpressionStatement(
-                            AssignmentExpression(
-                                SyntaxKind.SimpleAssignmentExpression,
-                                ParseExpression($"Unsafe.Add(ref r0, {resourceOffset++})"),
-                                ParseExpression($"GraphicsResourceHelper.ValidateAndGetGpuDescriptorHandle(shader.{fieldSymbol.Name}, device)"))));
-                    }
-                    else if (HlslKnownTypes.IsScalarOrVectorType(typeName))
-                    {
-                        var info = HlslKnownSizes.GetTypeInfo(typeName);
-
-                        // Calculate the right offset with 16-bytes padding (HLSL constant buffer).
-                        // Since we're in a constant buffer, we need to both pad the starting offset
-                        // to be aligned to the packing size of the type, and also to align the initial
-                        // offset to ensure that values do not cross 16 bytes boundaries either.
-                        rawDataOffset = AlignmentHelper.AlignToBoundary(
-                            AlignmentHelper.Pad(rawDataOffset, info.Pack),
-                            info.Size,
-                            16);
-
-                        block = block.AddStatements(ExpressionStatement(
-                            ParseExpression($"Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, {rawDataOffset}), shader.{fieldSymbol.Name})")));
-
-                        rawDataOffset += info.Size;
-                    }
-                }
-
-                // After all the captured fields have been processed, ansure the reported byte size for
-                // the local variables is padded to the standard alignment for constant buffers. This is
-                // necessary to enable loading all the dispatch data after reinterpreting it to a sequence
-                // of values of size 16 bytes (in particular, Int4 is used), without reading out of bounds.
-                rawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
-
-                block = block.AddStatements(ReturnStatement(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(rawDataOffset))));
+                BlockSyntax block = Block(GetDispatchDataLoadingStatements(structDeclarationSymbol));
 
                 // Create a static method to create the combined hashcode for a given shader type.
                 // This code takes a block syntax and produces a compilation unit as follows:
@@ -141,23 +97,57 @@ namespace ComputeSharp.SourceGenerators
         }
 
         /// <summary>
-        /// Gets a sequence of captured delegate fields to process.
+        /// Gets a sequence of statements to load the dispatch data for a given shader
         /// </summary>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-        /// <returns>A sequence of captured delegate members in <paramref name="structDeclarationSymbol"/>.</returns>
+        /// <returns>The sequence of <see cref="StatementSyntax"/> instances to load shader dispatch data.</returns>
         [Pure]
-        private static IEnumerable<string> GetDelegateMemberNames(INamedTypeSymbol structDeclarationSymbol)
+        private static IEnumerable<StatementSyntax> GetDispatchDataLoadingStatements(INamedTypeSymbol structDeclarationSymbol)
         {
+            int
+                resourceOffset = 0,
+                rawDataOffset = sizeof(int) * 3;
+
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
                 INamedTypeSymbol typeSymbol = (INamedTypeSymbol)fieldSymbol.Type;
+                string typeName = typeSymbol.GetFullMetadataName();
 
-                if (typeSymbol.TypeKind != TypeKind.Delegate) continue;
+                if (HlslKnownTypes.IsTypedResourceType(typeName))
+                {
+                    yield return ExpressionStatement(
+                        AssignmentExpression(
+                            SyntaxKind.SimpleAssignmentExpression,
+                            ParseExpression($"Unsafe.Add(ref r0, {resourceOffset++})"),
+                            ParseExpression($"GraphicsResourceHelper.ValidateAndGetGpuDescriptorHandle(shader.{fieldSymbol.Name}, device)")));
+                }
+                else if (HlslKnownTypes.IsScalarOrVectorType(typeName))
+                {
+                    var (fieldSize, fieldPack) = HlslKnownSizes.GetTypeInfo(typeName);
 
-                _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
+                    // Calculate the right offset with 16-bytes padding (HLSL constant buffer).
+                    // Since we're in a constant buffer, we need to both pad the starting offset
+                    // to be aligned to the packing size of the type, and also to align the initial
+                    // offset to ensure that values do not cross 16 bytes boundaries either.
+                    rawDataOffset = AlignmentHelper.AlignToBoundary(
+                        AlignmentHelper.Pad(rawDataOffset, fieldPack),
+                        fieldSize,
+                        16);
 
-                yield return mapping ?? fieldSymbol.Name;
+                    yield return ExpressionStatement(
+                        ParseExpression($"Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, {rawDataOffset}), shader.{fieldSymbol.Name})"));
+
+                    rawDataOffset += fieldSize;
+                }
             }
+
+            // After all the captured fields have been processed, ansure the reported byte size for
+            // the local variables is padded to the standard alignment for constant buffers. This is
+            // necessary to enable loading all the dispatch data after reinterpreting it to a sequence
+            // of values of size 16 bytes (in particular, Int4 is used), without reading out of bounds.
+            rawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
+
+            yield return ReturnStatement(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(rawDataOffset)));
         }
     }
 }

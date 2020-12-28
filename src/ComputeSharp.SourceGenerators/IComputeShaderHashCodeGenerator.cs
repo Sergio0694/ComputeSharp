@@ -39,40 +39,7 @@ namespace ComputeSharp.SourceGenerators
                 if (!structDeclarationSymbol.Interfaces.Any(static interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) continue;
 
                 TypeSyntax shaderType = ParseTypeName(structDeclarationSymbol.ToDisplayString());
-                BlockSyntax block = Block();
-
-                // Process all the captured delegate types
-                foreach (var fieldName in GetDelegateMemberNames(structDeclarationSymbol))
-                {
-                    // hash += hash << 5;
-                    block = block.AddStatements(ExpressionStatement(
-                        AssignmentExpression(
-                            SyntaxKind.AddAssignmentExpression,
-                            IdentifierName("hash"),
-                            BinaryExpression(SyntaxKind.LeftShiftExpression,
-                                IdentifierName("hash"),
-                                LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(5))))));
-
-                    // hash += shader.Field[#i].Method.GetHashCode();
-                    block = block.AddStatements(ExpressionStatement(
-                        AssignmentExpression(
-                            SyntaxKind.AddAssignmentExpression,
-                            IdentifierName("hash"),
-                            InvocationExpression(
-                                MemberAccessExpression(
-                                    SyntaxKind.SimpleMemberAccessExpression,
-                                    MemberAccessExpression(
-                                        SyntaxKind.SimpleMemberAccessExpression,
-                                        MemberAccessExpression(
-                                            SyntaxKind.SimpleMemberAccessExpression,
-                                            IdentifierName("shader"),
-                                            IdentifierName(fieldName)),
-                                        IdentifierName("Method")),
-                                    IdentifierName("GetHashCode"))))));
-                }
-
-                // return hash;
-                block = block.AddStatements(ReturnStatement(IdentifierName("hash")));
+                BlockSyntax block = Block(GetDelegateHashCodeStatements(structDeclarationSymbol));
 
                 // Create a static method to create the combined hashcode for a given shader type.
                 // This code takes a block syntax and produces a compilation unit as follows:
@@ -126,12 +93,12 @@ namespace ComputeSharp.SourceGenerators
         }
 
         /// <summary>
-        /// Gets a sequence of captured delegate fields to process.
+        /// Gets a sequence of statements to process the hashcode of the captured delegates.
         /// </summary>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-        /// <returns>A sequence of captured delegate members in <paramref name="structDeclarationSymbol"/>.</returns>
+        /// <returns>The sequence of <see cref="StatementSyntax"/> instances to hash the captured delegates.</returns>
         [Pure]
-        private static IEnumerable<string> GetDelegateMemberNames(INamedTypeSymbol structDeclarationSymbol)
+        private static IEnumerable<StatementSyntax> GetDelegateHashCodeStatements(INamedTypeSymbol structDeclarationSymbol)
         {
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
@@ -141,8 +108,16 @@ namespace ComputeSharp.SourceGenerators
 
                 _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
 
-                yield return mapping ?? fieldSymbol.Name;
+                string fieldName = mapping ?? fieldSymbol.Name;
+
+                // hash += hash << 5;
+                yield return ExpressionStatement(ParseExpression($"hash += hash << 5"));
+
+                // hash += shader.Field[#i].Method.GetHashCode();
+                yield return ExpressionStatement(ParseExpression($"hash += shader.{fieldName}.Method.GetHashCode()"));
             }
+
+            yield return ReturnStatement(IdentifierName("hash"));
         }
     }
 }
