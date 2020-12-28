@@ -5,7 +5,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 
-namespace ComputeSharp
+namespace ComputeSharp.__Internals
 {
     /// <summary>
     /// An attribute that contains info on a processed compute shader that can be executed.

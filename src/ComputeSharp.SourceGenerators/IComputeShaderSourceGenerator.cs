@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
+using ComputeSharp.__Internals;
 using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Mappings;
 using ComputeSharp.SourceGenerators.SyntaxRewriters;
@@ -81,7 +82,8 @@ namespace ComputeSharp.SourceGenerators
 
                 // Create the compilation unit with the source attribute
                 var source =
-                    CompilationUnit().AddAttributeLists(
+                    CompilationUnit().AddUsings(
+                    UsingDirective(IdentifierName("ComputeSharp.__Internals"))).AddAttributeLists(
                     AttributeList(SingletonSeparatedList(
                         Attribute(IdentifierName(typeof(IComputeShaderSourceAttribute).FullName)).AddArgumentListArguments(
                             AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(structDeclarationSymbol.GetFullMetadataName()))),

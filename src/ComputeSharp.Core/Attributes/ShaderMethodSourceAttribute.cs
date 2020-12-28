@@ -6,7 +6,7 @@ using System.Reflection;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Exceptions;
 
-namespace ComputeSharp
+namespace ComputeSharp.__Internals
 {
     /// <summary>
     /// An attribute that contains info on a processed shader method that can be executed within a shader.
