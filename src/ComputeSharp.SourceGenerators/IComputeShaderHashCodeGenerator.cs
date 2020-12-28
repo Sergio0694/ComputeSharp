@@ -1,7 +1,10 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using ComputeSharp.SourceGenerators.Extensions;
+using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -36,7 +39,41 @@ namespace ComputeSharp.SourceGenerators
                 if (!structDeclarationSymbol.Interfaces.Any(static interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) continue;
 
                 TypeSyntax shaderType = ParseTypeName(structDeclarationSymbol.ToDisplayString());
-                BlockSyntax block = Block(ReturnStatement(LiteralExpression(SyntaxKind.NumericLiteralExpression, ParseToken("0"))));
+
+                BlockSyntax block = Block();
+
+                // Process all the captured delegate types
+                foreach (var fieldName in GetDelegateMemberNames(structDeclarationSymbol))
+                {
+                    // hash += hash << 5;
+                    block = block.AddStatements(ExpressionStatement(
+                        AssignmentExpression(
+                            SyntaxKind.AddAssignmentExpression,
+                            IdentifierName("hash"),
+                            BinaryExpression(SyntaxKind.LeftShiftExpression,
+                                IdentifierName("hash"),
+                                LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(5))))));
+
+                    // hash += shader.Field[#i].Method.GetHashCode();
+                    block = block.AddStatements(ExpressionStatement(
+                        AssignmentExpression(
+                            SyntaxKind.AddAssignmentExpression,
+                            IdentifierName("hash"),
+                            InvocationExpression(
+                                MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName("shader"),
+                                            IdentifierName(fieldName)),
+                                        IdentifierName("Method")),
+                                    IdentifierName("GetHashCode"))))));
+                }
+
+                // return hash;
+                block = block.AddStatements(ReturnStatement(IdentifierName("hash")));
 
                 // Create a static method to create the combined hashcode for a given shader type.
                 // This code takes a block syntax and produces a compilation unit as follows:
@@ -86,6 +123,26 @@ namespace ComputeSharp.SourceGenerators
 
                 // Add the method source attribute
                 context.AddSource(structDeclarationSymbol.GetGeneratedFileName<IComputeShaderHashCodeGenerator>(), SourceText.From(source, Encoding.UTF8));
+            }
+        }
+
+        /// <summary>
+        /// Gets a sequence of captured delegate fields to process.
+        /// </summary>
+        /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+        /// <returns>A sequence of captured delegate members in <paramref name="structDeclarationSymbol"/>.</returns>
+        [Pure]
+        private static IEnumerable<string> GetDelegateMemberNames(INamedTypeSymbol structDeclarationSymbol)
+        {
+            foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
+            {
+                INamedTypeSymbol typeSymbol = (INamedTypeSymbol)fieldSymbol.Type;
+
+                if (typeSymbol.TypeKind != TypeKind.Delegate) continue;
+
+                _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
+
+                yield return mapping ?? fieldSymbol.Name;
             }
         }
     }
