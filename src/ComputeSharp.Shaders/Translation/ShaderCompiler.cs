@@ -62,13 +62,23 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         private static void InitializeDxcLibrariesLoading()
         {
-            FX.ResolveLibrary += ResolveLibrary;
+            string
+                dxcompilerPath = Path.GetFullPath(@$"runtimes\win-x64\native\dxcompiler.dll"),
+                dxilPath = Path.GetFullPath(@$"runtimes\win-x64\native\dxil.dll");
 
-            fixed (char* p = @"runtimes\win-x64\native")
+            if (File.Exists(dxcompilerPath))
             {
-                int result = FX.SetDllDirectoryW((ushort*)p);
+                FX.ResolveLibrary += ResolveLibrary;
+            }
 
-                if (result == 0) ThrowHelper.ThrowWin32Exception();
+            if (File.Exists(dxilPath))
+            {
+                fixed (char* p = @"runtimes\win-x64\native")
+                {
+                    int result = FX.SetDllDirectoryW((ushort*)p);
+
+                    if (result == 0) ThrowHelper.ThrowWin32Exception();
+                }
             }
         }
 
