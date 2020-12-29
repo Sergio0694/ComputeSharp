@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using ComputeSharp.__Internals;
 using ComputeSharp.Shaders.Mappings;
 using ComputeSharp.Shaders.Renderer.Models;
@@ -43,9 +42,9 @@ namespace ComputeSharp.Shaders.Translation
         private uint readWriteBuffersCount;
 
         /// <summary>
-        /// The <see cref="List{T}"/> of <see cref="D3D12_DESCRIPTOR_RANGE1"/> items that are required to load the captured values.
+        /// The array of <see cref="D3D12_DESCRIPTOR_RANGE1"/> items that are required to load the captured values.
         /// </summary>
-        private readonly List<D3D12_DESCRIPTOR_RANGE1> d3D12DescriptorRanges1 = new();
+        private D3D12_DESCRIPTOR_RANGE1[] d3D12DescriptorRanges1;
 
         /// <summary>
         /// The <see cref="List{T}"/> with the <see cref="Renderer.Models.HlslResourceInfo"/> items for the shader fields.
@@ -79,7 +78,7 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         public ReadOnlySpan<D3D12_DESCRIPTOR_RANGE1> D3D12DescriptorRanges1
         {
-            get => CollectionsMarshal.AsSpan(this.d3D12DescriptorRanges1);
+            get => this.d3D12DescriptorRanges1;
         }
 
         /// <inheritdoc/>
@@ -107,12 +106,10 @@ namespace ComputeSharp.Shaders.Translation
         {
             ShaderLoader<T> @this = new();
 
-            // Reading members through reflection requires an object parameter,
-            // so here we're just boxing the input shader once to avoid allocating
-            // it multiple times in the managed heap while processing the shader.
-            object box = shader;
+            // Reading members through reflection requires an object parameter, so here we're just boxing
+            // the input shader once to avoid allocating it multiple times while processing the shader.
+            @this.d3D12DescriptorRanges1 = @this.LoadFieldsInfo(shader);
 
-            @this.LoadFieldsInfo(box);
             @this.LoadMethodMetadata();
             @this.InitializeDispatchDataLoader();
 
@@ -123,7 +120,8 @@ namespace ComputeSharp.Shaders.Translation
         /// Loads the fields info for the current shader being loaded.
         /// </summary>
         /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader.</param>
-        private void LoadFieldsInfo(object shader)
+        /// <returns>The array of <see cref="D3D12_DESCRIPTOR_RANGE1"/> items that are required to load the captured values.</returns>
+        private D3D12_DESCRIPTOR_RANGE1[] LoadFieldsInfo(object shader)
         {
             IReadOnlyList<FieldInfo> shaderFields = typeof(T).GetFields(
                 BindingFlags.Instance |
@@ -135,51 +133,53 @@ namespace ComputeSharp.Shaders.Translation
                 ThrowHelper.ThrowInvalidOperationException("The shader body must contain at least one field");
             }
 
+            List<D3D12_DESCRIPTOR_RANGE1> d3D12DescriptorRanges1 = new();
+
             // Descriptor for the buffer for captured scalar/vector variables
             D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1 = new(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, this.constantBuffersCount++);
 
-            this.d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
+            d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
 
             // Inspect the captured fields
             foreach (FieldInfo fieldInfo in shaderFields)
             {
-                LoadFieldInfo(shader, fieldInfo);
+                LoadFieldInfo(shader, fieldInfo, d3D12DescriptorRanges1);
             }
+
+            return d3D12DescriptorRanges1.ToArray();
         }
 
         /// <summary>
         /// Loads a specified <see cref="ReadableMember"/> and adds it to the shader model.
         /// </summary>
         /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader.</param>
-        /// <param name="memberInfo">The target <see cref="FieldInfo"/> to load.</param>
-        private void LoadFieldInfo(object shader, FieldInfo fieldInfo)
+        /// <param name="fieldInfo">The target <see cref="FieldInfo"/> to load.</param>
+        /// <param name="d3D12DescriptorRanges1">The list of discovered <see cref="D3D12_DESCRIPTOR_RANGE1"/> values.</param>
+        private void LoadFieldInfo(object shader, FieldInfo fieldInfo, List<D3D12_DESCRIPTOR_RANGE1> d3D12DescriptorRanges1)
         {
             Type fieldType = fieldInfo.FieldType;
             (string hlslName, string hlslType) = Attribute.Fields[fieldInfo.Name];
 
             if (HlslKnownTypes.IsConstantBufferType(fieldType))
             {
-                D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1 = new(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, this.constantBuffersCount);
+                d3D12DescriptorRanges1.Add(new D3D12_DESCRIPTOR_RANGE1(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, this.constantBuffersCount));
 
-                this.d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
                 this.capturedFields.Add(fieldInfo);
                 this.hlslResourceInfo.Add(new HlslResourceInfo.Constant(hlslType, hlslName, (int)this.constantBuffersCount++));
                 this.totalResourceCount++;
             }
             else if (HlslKnownTypes.IsReadOnlyResourceType(fieldType))
             {
-                D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1 = new(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, this.readOnlyBuffersCount);
+                d3D12DescriptorRanges1.Add(new D3D12_DESCRIPTOR_RANGE1(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, this.readOnlyBuffersCount));
 
-                this.d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
                 this.capturedFields.Add(fieldInfo);
                 this.hlslResourceInfo.Add(new HlslResourceInfo.ReadOnly(hlslType, hlslName, (int)this.readOnlyBuffersCount++));
                 this.totalResourceCount++;
             }
             else if (HlslKnownTypes.IsReadWriteResourceType(fieldType))
             {
-                D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1 = new(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, this.readWriteBuffersCount);
+                d3D12DescriptorRanges1.Add(new D3D12_DESCRIPTOR_RANGE1(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, this.readWriteBuffersCount));
 
-                this.d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
                 this.capturedFields.Add(fieldInfo);
                 this.hlslResourceInfo.Add(new HlslResourceInfo.ReadWrite(hlslType, hlslName, (int)this.readWriteBuffersCount++));
                 this.totalResourceCount++;

@@ -163,11 +163,11 @@ namespace ComputeSharp.Shaders.Renderer
             /// Appends the input sequence of characters to the current buffer.
             /// </summary>
             /// <param name="value">The input characters to write.</param>
-            public void Append(ReadOnlySpan<char> value)
+            public void Append(string value)
             {
                 EnsureCapacity(value.Length);
 
-                value.CopyTo(this.array.AsSpan(this.index));
+                value.AsSpan().CopyTo(this.array.AsSpan(this.index));
 
                 this.index += value.Length;
             }
@@ -186,11 +186,11 @@ namespace ComputeSharp.Shaders.Renderer
             /// Appends the input sequence of characters to the current buffer, with a trailing new line.
             /// </summary>
             /// <param name="value">The input characters to write.</param>
-            public void AppendLine(ReadOnlySpan<char> value)
+            public void AppendLine(string value)
             {
                 EnsureCapacity(value.Length + 1);
 
-                value.CopyTo(this.array.AsSpan(this.index));
+                value.AsSpan().CopyTo(this.array.AsSpan(this.index));
 
                 this.index += value.Length;
 
