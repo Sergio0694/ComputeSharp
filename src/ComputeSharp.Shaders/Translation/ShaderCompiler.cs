@@ -62,39 +62,49 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         private static void InitializeDxcLibrariesLoading()
         {
-            string
-                dxcompilerPath = Path.GetFullPath(@$"runtimes\win-x64\native\dxcompiler.dll"),
-                dxilPath = Path.GetFullPath(@$"runtimes\win-x64\native\dxil.dll");
+            // We are probing for a "dotnet run" scenario
+            string nugetNativeLibsPath = Path.Combine(AppContext.BaseDirectory, @$"runtimes\win-x64\native");
+            bool probeNuGetDirectory = Directory.Exists(nugetNativeLibsPath);
 
-            if (File.Exists(dxcompilerPath))
-            {
-                FX.ResolveLibrary += ResolveLibrary;
-            }
-
-            if (File.Exists(dxilPath))
-            {
-                fixed (char* p = @"runtimes\win-x64\native")
-                {
-                    int result = FX.SetDllDirectoryW((ushort*)p);
-
-                    if (result == 0) ThrowHelper.ThrowWin32Exception();
-                }
-            }
+            // We fail to load "dxil.dll" when doing "dotnet bin\Debug\net5.0\MyApp.dll"
+            FX.ResolveLibrary += (n, a, s) => ResolveLibrary(n, a, s, probeNuGetDirectory);
         }
 
         /// <summary>
         /// A custom resolver to override the default library resolution behavior for the DXC and DXIL libraries.
+        /// Meant to enable "dotnet run"-like scenarios for projects without RIDs by loading native dependencies from where the SDK puts them.
         /// </summary>
         /// <inheritdoc cref="DllImportResolver"/>
-        private static IntPtr ResolveLibrary(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
+        private static IntPtr ResolveLibrary(string libraryName, Assembly assembly, DllImportSearchPath? searchPath, bool probeNuGetDirectory)
         {
             if (libraryName != "dxcompiler") return IntPtr.Zero;
 
-            string libraryPath = Path.GetFullPath(@$"runtimes\win-x64\native\{libraryName}.dll");
-
-            if (NativeLibrary.TryLoad(libraryPath, out IntPtr handle))
+            if (probeNuGetDirectory)
             {
-                return handle;
+                string dxcompilerPath = Path.Combine(AppContext.BaseDirectory, @$"runtimes\win-x64\native\dxcompiler.dll");
+                string dxilPath = Path.Combine(AppContext.BaseDirectory, @$"runtimes\win-x64\native\dxil.dll");
+
+                // We are loading the dependency of dxcompiler.dll, dxil.dll, first, so that it is automatically picked up
+                // from memory by dxcompiler.dll on it being loaded
+                // This is necessary because .NET does not currently provide great facilities for loading
+                // native dependencies of native dependencies
+                if (NativeLibrary.TryLoad(dxilPath, out _) && NativeLibrary.TryLoad(dxcompilerPath, out IntPtr handle))
+                {
+                    return handle;
+                }
+            }
+            else
+            {
+                // It may come as a surprise we need this, but apparently we do
+                // The suspicion is that's because Windows doesn't know anything about .NET's
+                // "App directory" concept, only "Process directory", and when we invoke "dotnet bin\Managed.dll"
+                // Neither our current directory ("bin"), nor our "Process directory" ("C:\Program Files\dotnet") contain the native dependency
+                // Which means LoadLibraryEx fails to load it
+                if (NativeLibrary.TryLoad("dxil", assembly, searchPath, out _) &&
+                    NativeLibrary.TryLoad("dxcompiler", assembly, searchPath, out IntPtr handle))
+                {
+                    return handle;
+                }
             }
 
             return IntPtr.Zero;
