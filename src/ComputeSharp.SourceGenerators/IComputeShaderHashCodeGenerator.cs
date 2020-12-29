@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -28,6 +29,19 @@ namespace ComputeSharp.SourceGenerators
                 from tree in context.Compilation.SyntaxTrees
                 from structDeclaration in tree.GetRoot().DescendantNodes().OfType<StructDeclarationSyntax>()
                 select structDeclaration).ToImmutableArray();
+
+            // Type attributes
+            AttributeListSyntax[] attributes = new[]
+            {
+                AttributeList(SingletonSeparatedList(
+                    Attribute(IdentifierName("EditorBrowsable")).AddArgumentListArguments(
+                    AttributeArgument(ParseExpression("EditorBrowsableState.Never"))))),
+                AttributeList(SingletonSeparatedList(
+                    Attribute(IdentifierName("Obsolete")).AddArgumentListArguments(
+                    AttributeArgument(LiteralExpression(
+                        SyntaxKind.StringLiteralExpression,
+                        Literal("This type is not intended to be used directly by user code"))))))
+            };
 
             foreach (StructDeclarationSyntax structDeclaration in structDeclarations)
             {
@@ -68,7 +82,7 @@ namespace ComputeSharp.SourceGenerators
                     ClassDeclaration("HashCodeProvider").AddModifiers(
                         Token(SyntaxKind.InternalKeyword),
                         Token(SyntaxKind.StaticKeyword),
-                        Token(SyntaxKind.PartialKeyword)).AddMembers(
+                        Token(SyntaxKind.PartialKeyword)).AddAttributeLists(attributes).AddMembers(
                     MethodDeclaration(
                         PredefinedType(Token(SyntaxKind.IntKeyword)),
                         Identifier("CombineHash")).AddAttributeLists(
@@ -87,6 +101,9 @@ namespace ComputeSharp.SourceGenerators
                         .WithBody(block))))
                     .NormalizeWhitespace()
                     .ToFullString();
+
+                // Clear the attribute list to avoid duplicates
+                attributes = Array.Empty<AttributeListSyntax>();
 
                 // Add the method source attribute
                 context.AddSource(structDeclarationSymbol.GetGeneratedFileName<IComputeShaderHashCodeGenerator>(), SourceText.From(source, Encoding.UTF8));
