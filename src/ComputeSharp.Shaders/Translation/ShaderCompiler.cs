@@ -39,6 +39,11 @@ namespace ComputeSharp.Shaders.Translation
         {
             FX.ResolveLibrary += ResolveLibrary;
 
+            fixed (char* p = @"runtimes\win-x64\native")
+            {
+                FX.SetDllDirectoryW((ushort*)p).Assert();
+            }
+
             using ComPtr<IDxcCompiler> dxcCompiler = default;
             using ComPtr<IDxcLibrary> dxcLibrary = default;
             using ComPtr<IDxcIncludeHandler> dxcIncludeHandler = default;
@@ -62,7 +67,7 @@ namespace ComputeSharp.Shaders.Translation
         /// <inheritdoc cref="DllImportResolver"/>
         private static IntPtr ResolveLibrary(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
         {
-            if (libraryName != "dxcompiler" && libraryName != "dxil") return IntPtr.Zero;
+            if (libraryName != "dxcompiler") return IntPtr.Zero;
 
             string libraryPath = Path.GetFullPath(@$"runtimes\win-x64\native\{libraryName}.dll");
 
