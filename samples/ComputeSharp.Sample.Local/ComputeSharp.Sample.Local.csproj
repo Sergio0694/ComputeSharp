@@ -7,7 +7,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ComputeSharp\ComputeSharp.csproj" />
-    <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="contentfiles;build" />
+    <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false"
+                      PrivateAssets="contentfiles;build" />
   </ItemGroup>
 
   <Import Project="..\ComputeSharp.Sample.Shared\ComputeSharp.Sample.Shared.projitems" Label="Shared" />
