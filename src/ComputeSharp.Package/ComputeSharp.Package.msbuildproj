@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.Build.NoTargets/2.0.1" DefaultTargets="Pack">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>ComputeSharp</PackageId>
+    <Description>A .NET 5 library to run C# code in parallel on the GPU through DX12 and dynamically generated HLSL compute shaders</Description>
+    <PackageReleaseNotes>New interlocked intrinsics APIs, performance and memory optimizations</PackageReleaseNotes>
+    <PackageVersion>2.0.0</PackageVersion>
+    <RepositoryUrl>https://github.com/Sergio0694/ComputeSharp.git</RepositoryUrl>
+    <ProjectUrl>https://github.com/Sergio0694/ComputeSharp</ProjectUrl>
+    <Authors>Sergio Pedri</Authors>
+    <Owners>Sergio Pedri</Owners>    
+    <Copyright>Copyright (c) 2020 Sergio Pedri</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageIconUrl>https://i.imgur.com/ntvmD6P.png</PackageIconUrl>
+    <PackageTags>dotnet net netcore netstandard csharp library graphics shader hlsl compute gpu</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />
+    <ProjectReference Include="..\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" />
+  </ItemGroup>
+</Project>

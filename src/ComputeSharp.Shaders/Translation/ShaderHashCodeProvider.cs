@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
-using ComputeSharp.Shaders.Extensions;
 
 namespace ComputeSharp.Shaders.Translation
 {
@@ -38,16 +34,11 @@ namespace ComputeSharp.Shaders.Translation
             {
                 Id = HashCode.Combine(typeof(T));
 
-                // Get the valid delegates for delegate checking
-                FieldInfo[] delegateFieldInfos = (
-                    from fieldInfo in typeof(T).GetFields()
-                    where fieldInfo.FieldType.IsDelegate()
-                    select fieldInfo).ToArray();
-
-                // If at least one delegate is present, build the hasher method
-                if (delegateFieldInfos.Length > 0)
+                // Get the generated hasher, if one if present
+                if (typeof(T).Assembly.GetType("ComputeSharp.__Internals.HashCodeProvider") is Type type &&
+                    type.GetMethod("CombineHash", new[] { typeof(int), typeof(T).MakeByRefType() }) is MethodInfo method)
                 {
-                    Hasher = BuildDynamicHasher<T>(delegateFieldInfos);
+                    Hasher = method.CreateDelegate<Hasher<T>>();
                 }
             }
         }
@@ -80,43 +71,5 @@ namespace ComputeSharp.Shaders.Translation
         /// <returns>The final hash value for the input closure.</returns>
         private delegate int Hasher<T>(int hash, in T shader)
             where T : struct, IComputeShader;
-
-        /// <summary>
-        /// Builds a new <see cref="Hasher{T}"/> instance for the target <see cref="Type"/> and sequence of <see cref="FieldInfo"/> values.
-        /// </summary>
-        /// <typeparam name="T">The type of compute shader currently in use.</typeparam>
-        /// <param name="fieldInfos">The list of captured fields to inspect.</param>
-        [Pure]
-        private static Hasher<T> BuildDynamicHasher<T>(IReadOnlyCollection<FieldInfo> fieldInfos)
-            where T : struct, IComputeShader
-        {
-            return DynamicMethod<Hasher<T>>.New(il =>
-            {
-                MethodInfo
-                    getMethodInfo = typeof(Delegate).GetProperty(nameof(Delegate.Method))!.GetMethod!,
-                    getHashCodeInfo = typeof(object).GetMethod(nameof(object.GetHashCode))!;
-                foreach (FieldInfo fieldInfo in fieldInfos)
-                {
-                    // (hashcode << 5) + hashcode
-                    il.Emit(OpCodes.Ldarg_1);
-                    il.Emit(OpCodes.Ldc_I4_5);
-                    il.Emit(OpCodes.Shl);
-                    il.Emit(OpCodes.Ldarg_1);
-                    il.Emit(OpCodes.Add);
-
-                    // hashcode += shader.Function[#].Method.GetHashCode();
-                    il.Emit(OpCodes.Ldarg_2);
-                    il.Emit(OpCodes.Ldfld, fieldInfo);
-                    il.EmitCall(OpCodes.Callvirt, getMethodInfo, null);
-                    il.EmitCall(OpCodes.Callvirt, getHashCodeInfo, null);
-                    il.Emit(OpCodes.Add);
-                    il.Emit(OpCodes.Starg_S, (byte)1);
-                }
-
-                // Return the computed hash
-                il.Emit(OpCodes.Ldarg_1);
-                il.Emit(OpCodes.Ret);
-            });
-        }
     }
 }

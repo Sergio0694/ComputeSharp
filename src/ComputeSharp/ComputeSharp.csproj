@@ -2,9 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>preview</LangVersion>
-    <Nullable>enable</Nullable>
-	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>9.0</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,8 +11,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="C:\Program Files (x86)\Windows Kits\10\Redist\D3D\x64\dxcompiler.dll" Visible="False" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="C:\Program Files (x86)\Windows Kits\10\Redist\D3D\x64\dxil.dll" Visible="False" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Libraries\dxcompiler.dll"
+          Link="dxcompiler.dll"
+          Visible="False"
+          CopyToOutputDirectory="PreserveNewest"
+          PackFolder="runtimes\win-x64\native" />
+    <None Include="Libraries\dxil.dll"
+          Link="dxil.dll"
+          Visible="False"
+          CopyToOutputDirectory="PreserveNewest"
+          PackFolder="runtimes\win-x64\native" />
   </ItemGroup>
 
 </Project>

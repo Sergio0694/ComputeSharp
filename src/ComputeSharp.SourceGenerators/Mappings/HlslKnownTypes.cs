@@ -79,6 +79,18 @@ namespace ComputeSharp.SourceGenerators.Mappings
         }
 
         /// <summary>
+        /// Checks whether or not a given type name matches a typed resource type.
+        /// </summary>
+        /// <param name="typeName">The input type name to check.</param>
+        /// <returns>Whether or not <paramref name="typeName"/> represents a typed resource type.</returns>
+        public static bool IsScalarOrVectorType(string typeName)
+        {
+            return
+                KnownTypes.ContainsKey(typeName) &&
+                typeName != typeof(ThreadIds).FullName;
+        }
+
+        /// <summary>
         /// Gets the mapped HLSL-compatible type name for the input type symbol.
         /// </summary>
         /// <param name="typeSymbol">The input type to map.</param>

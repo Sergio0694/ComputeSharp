@@ -301,7 +301,7 @@ namespace ComputeSharp.BokehBlur.Processors
             int height = Source.Height;
             int width = Source.Width;
 
-            VerticalConvolutionProcessor shader = new(
+            HlslBokehBlurProcessor.VerticalConvolutionProcessor shader = new(
                 width,
                 maxY: height - 1,
                 maxX: width - 1,
@@ -311,47 +311,6 @@ namespace ComputeSharp.BokehBlur.Processors
                 kernel);
 
             Gpu.Default.For(width, height, in shader);
-        }
-
-        /// <summary>
-        /// Kernel for <see cref="ApplyVerticalConvolution"/>.
-        /// </summary>
-        [AutoConstructor]
-        private partial struct VerticalConvolutionProcessor : IComputeShader
-        {
-            public int width;
-            public int maxY;
-            public int maxX;
-            public int kernelLength;
-
-            public ReadOnlyBuffer<Vector4> source;
-            public ReadWriteBuffer<ComplexVector4> target;
-            public ReadOnlyBuffer<Complex64> kernel;
-
-            /// <inheritdoc/>
-            public void Execute(ThreadIds ids)
-            {
-                Vector4 real = Vector4.Zero;
-                Vector4 imaginary = Vector4.Zero;
-                int radiusY = kernelLength >> 1;
-                int sourceOffsetColumnBase = ids.X;
-
-                for (int i = 0; i < kernelLength; i++)
-                {
-                    int offsetY = Hlsl.Clamp(ids.Y + i - radiusY, 0, maxY);
-                    int offsetX = Hlsl.Clamp(sourceOffsetColumnBase, 0, maxX);
-                    Vector4 color = source[offsetY * width + offsetX];
-                    Complex64 factors = kernel[i];
-
-                    real += factors.Real * color;
-                    imaginary += factors.Imaginary * color;
-                }
-
-                int offsetXY = ids.Y * width + ids.X;
-
-                target[offsetXY].Real = real;
-                target[offsetXY].Imaginary = imaginary;
-            }
         }
 
         /// <summary>
@@ -373,7 +332,7 @@ namespace ComputeSharp.BokehBlur.Processors
             int height = Source.Height;
             int width = Source.Width;
 
-            HorizontalConvolutionAndAccumulatePartialsProcessor shader = new(
+            HlslBokehBlurProcessor.HorizontalConvolutionAndAccumulatePartialsProcessor shader = new(
                 width,
                 maxY: height - 1,
                 maxX: width - 1,
@@ -385,47 +344,6 @@ namespace ComputeSharp.BokehBlur.Processors
                 kernel);
 
             Gpu.Default.For(width, height, in shader);
-        }
-
-        /// <summary>
-        /// Kernel for <see cref="ApplyHorizontalConvolutionAndAccumulatePartials"/>.
-        /// </summary>
-        [AutoConstructor]
-        private partial struct HorizontalConvolutionAndAccumulatePartialsProcessor : IComputeShader
-        {
-            public int width;
-            public int maxY;
-            public int maxX;
-            public int kernelLength;
-            public float z;
-            public float w;
-
-            public ReadWriteBuffer<ComplexVector4> source;
-            public ReadWriteBuffer<Vector4> target;
-            public ReadOnlyBuffer<Complex64> kernel;
-
-            /// <inheritdoc/>
-            public void Execute(ThreadIds ids)
-            {
-                Vector4 real = Vector4.Zero;
-                Vector4 imaginary = Vector4.Zero;
-                int radiusX = kernelLength >> 1;
-                int sourceOffsetColumnBase = ids.X;
-                int offsetY = Hlsl.Clamp(ids.Y, 0, maxY);
-
-                for (int i = 0; i < kernelLength; i++)
-                {
-                    int offsetX = Hlsl.Clamp(sourceOffsetColumnBase + i - radiusX, 0, maxX);
-                    var offsetXY = offsetY * width + offsetX;
-                    ComplexVector4 source4 = source[offsetXY];
-                    Complex64 factors = kernel[i];
-
-                    real += factors.Real * source4.Real - factors.Imaginary * source4.Imaginary;
-                    imaginary += factors.Real * source4.Imaginary + factors.Imaginary * source4.Real;
-                }
-
-                target[ids.Y * width + ids.X] += real * z + imaginary * w;
-            }
         }
 
         /// <summary>

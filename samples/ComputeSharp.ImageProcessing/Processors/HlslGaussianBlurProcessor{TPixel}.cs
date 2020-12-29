@@ -13,7 +13,7 @@ namespace ComputeSharp.BokehBlur.Processors
     /// Applies Gaussian blur processing to an image.
     /// </summary>
     /// <typeparam name="TPixel">The pixel format.</typeparam>
-    internal class HlslGaussianBlurProcessor<TPixel> : ImageProcessor<TPixel>
+    internal sealed class HlslGaussianBlurProcessor<TPixel> : ImageProcessor<TPixel>
         where TPixel : unmanaged, IPixel<TPixel>
     {
         /// <summary>
@@ -124,51 +124,16 @@ namespace ComputeSharp.BokehBlur.Processors
             int height = Source.Height;
             int width = Source.Width;
 
-            Gpu.Default.For(width, height, new VerticalConvolutionProcessor
-            {
-                width = width,
-                maxY = height - 1,
-                maxX = width - 1,
-                kernelLength = kernel.Length,
-                source = source,
-                target = target,
-                kernel = kernel
-            });
-        }
+            HlslGaussianBlurProcessor.VerticalConvolutionProcessor shader = new(
+                width,
+                maxY: height - 1,
+                maxX: width - 1,
+                kernel.Length,
+                source,
+                target,
+                kernel);
 
-        /// <summary>
-        /// Kernel for <see cref="ApplyVerticalConvolution"/>.
-        /// </summary>
-        private struct VerticalConvolutionProcessor : IComputeShader
-        {
-            public int width;
-            public int maxY;
-            public int maxX;
-            public int kernelLength;
-
-            public ReadWriteBuffer<Vector4> source;
-            public ReadWriteBuffer<Vector4> target;
-            public ReadOnlyBuffer<float> kernel;
-
-            /// <inheritdoc/>
-            public void Execute(ThreadIds ids)
-            {
-                Vector4 result = Vector4.Zero;
-                int radiusY = kernelLength >> 1;
-                int sourceOffsetColumnBase = ids.X;
-
-                for (int i = 0; i < kernelLength; i++)
-                {
-                    int offsetY = Hlsl.Clamp(ids.Y + i - radiusY, 0, maxY);
-                    int offsetX = Hlsl.Clamp(sourceOffsetColumnBase, 0, maxX);
-                    Vector4 color = source[offsetY * width + offsetX];
-
-                    result += kernel[i] * color;
-                }
-
-                int offsetXY = ids.Y * width + ids.X;
-                target[offsetXY] = result;
-            }
+            Gpu.Default.For(width, height, in shader);
         }
 
         /// <summary>
@@ -186,53 +151,16 @@ namespace ComputeSharp.BokehBlur.Processors
             int height = Source.Height;
             int width = Source.Width;
 
-            Gpu.Default.For(width, height, new HorizontalConvolutionProcessor
-            {
-                width = width,
-                maxY = height - 1,
-                maxX = width - 1,
-                kernelLength = kernel.Length,
-                source = source,
-                target = target,
-                kernel = kernel
-            });
-        }
+            HlslGaussianBlurProcessor.HorizontalConvolutionProcessor shader = new(
+                width,
+                maxY: height - 1,
+                maxX: width - 1,
+                kernel.Length,
+                source,
+                target,
+                kernel);
 
-        /// <summary>
-        /// Kernel for <see cref="ApplyHorizontalConvolution"/>.
-        /// </summary>
-        private struct HorizontalConvolutionProcessor : IComputeShader
-        {
-            public int width;
-            public int maxY;
-            public int maxX;
-            public int kernelLength;
-
-            public ReadWriteBuffer<Vector4> source;
-            public ReadWriteBuffer<Vector4> target;
-            public ReadOnlyBuffer<float> kernel;
-
-            /// <inheritdoc/>
-            public void Execute(ThreadIds ids)
-            {
-                Vector4 result = Vector4.Zero;
-                int radiusX = kernelLength >> 1;
-                int sourceOffsetColumnBase = ids.X;
-                int offsetY = Hlsl.Clamp(ids.Y, 0, maxY);
-                int offsetXY;
-
-                for (int i = 0; i < kernelLength; i++)
-                {
-                    int offsetX = Hlsl.Clamp(sourceOffsetColumnBase + i - radiusX, 0, maxX);
-                    offsetXY = offsetY * width + offsetX;
-                    Vector4 color = source[offsetXY];
-
-                    result += kernel[i] * color;
-                }
-
-                offsetXY = ids.Y * width + ids.X;
-                target[offsetXY] = result;
-            }
+            Gpu.Default.For(width, height, in shader);
         }
     }
 }

@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="TerraFX.Interop.Windows" Version="10.0.19041-beta2-379749354" />
+	<PackageReference Include="Microsoft.Toolkit" Version="7.0.0-preview4" />
+	<PackageReference Include="TerraFX.Interop.Windows" Version="10.0.19041-beta2-449553204" />
   </ItemGroup>
 
   <ItemGroup>
