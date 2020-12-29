@@ -1,5 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#if NETSTANDARD2_0
+
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -22,36 +23,6 @@ namespace ComputeSharp
             public static T[] AllocateUninitializedArray<T>(int length, bool pinned = false)
             {
                 return new T[length];
-            }
-        }
-
-        namespace Collections.Generic
-        {
-            /// <summary>
-            /// Extensions for the <see cref="Queue{T}"/> type.
-            /// </summary>
-            internal static class QueueExtensions
-            {
-                /// <summary>
-                /// Removes the object at the beginning of the <see cref="Queue{T}"/> instance and copies it to the result parameter.
-                /// </summary>
-                /// <typeparam name="T">The type of values in the input <see cref="Queue{T}"/>.</typeparam>
-                /// <param name="queue">The input <see cref="Queue{T}"/>.</param>
-                /// <param name="result">The removed object.</param>
-                /// <returns>Whether or not the object was successfully removed.</returns>
-                public static bool TryDequeue<T>(this Queue<T> queue, out T? result)
-                {
-                    if (queue.Count > 0)
-                    {
-                        result = queue.Dequeue();
-
-                        return true;
-                    }
-
-                    result = default;
-
-                    return false;
-                }
             }
         }
 
@@ -120,3 +91,35 @@ namespace ComputeSharp
         }
     }
 }
+
+namespace System.Collections.Generic
+{
+    /// <summary>
+    /// Extensions for the <see cref="Queue{T}"/> type.
+    /// </summary>
+    internal static class QueueExtensions
+    {
+        /// <summary>
+        /// Removes the object at the beginning of the <see cref="Queue{T}"/> instance and copies it to the result parameter.
+        /// </summary>
+        /// <typeparam name="T">The type of values in the input <see cref="Queue{T}"/>.</typeparam>
+        /// <param name="queue">The input <see cref="Queue{T}"/>.</param>
+        /// <param name="result">The removed object.</param>
+        /// <returns>Whether or not the object was successfully removed.</returns>
+        public static bool TryDequeue<T>(this Queue<T> queue, out T? result)
+        {
+            if (queue.Count > 0)
+            {
+                result = queue.Dequeue();
+
+                return true;
+            }
+
+            result = default;
+
+            return false;
+        }
+    }
+}
+
+#endif
