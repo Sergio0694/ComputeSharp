@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Exceptions;
+using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
 
@@ -37,12 +38,7 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         static ShaderCompiler()
         {
-            FX.ResolveLibrary += ResolveLibrary;
-
-            fixed (char* p = @"runtimes\win-x64\native")
-            {
-                FX.SetDllDirectoryW((ushort*)p).Assert();
-            }
+            InitializeDxcLibrariesLoading();
 
             using ComPtr<IDxcCompiler> dxcCompiler = default;
             using ComPtr<IDxcLibrary> dxcLibrary = default;
@@ -59,6 +55,21 @@ namespace ComputeSharp.Shaders.Translation
             DxcCompiler = dxcCompiler.Move();
             DxcLibrary = dxcLibrary.Move();
             DxcIncludeHandler = dxcIncludeHandler.Move();
+        }
+
+        /// <summary>
+        /// Initializes the DLL resolvers for the dxcompiler.dll and dxil.dll libraries.
+        /// </summary>
+        private static void InitializeDxcLibrariesLoading()
+        {
+            FX.ResolveLibrary += ResolveLibrary;
+
+            fixed (char* p = @"runtimes\win-x64\native")
+            {
+                int result = FX.SetDllDirectoryW((ushort*)p);
+
+                if (result == 0) ThrowHelper.ThrowWin32Exception();
+            }
         }
 
         /// <summary>
