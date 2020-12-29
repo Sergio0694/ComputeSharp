@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Numerics;
 
 namespace ComputeSharp.SourceGenerators.Mappings
@@ -9,9 +10,9 @@ namespace ComputeSharp.SourceGenerators.Mappings
     internal static class HlslKnownSizes
     {
         /// <summary>
-        /// Gets the mapping of supported known sizes to HLSL type names.
+        /// The mapping of supported known sizes to HLSL type names.
         /// </summary>
-        public static IReadOnlyDictionary<string, (int Size, int Pack)> KnownSizes { get; } = new Dictionary<string, (int, int)>
+        private static IReadOnlyDictionary<string, (int, int)> KnownSizes = new Dictionary<string, (int, int)>
         {
             [typeof(bool).FullName] = (4, 4),
             [typeof(int).FullName] = (4, 4),
@@ -43,5 +44,16 @@ namespace ComputeSharp.SourceGenerators.Mappings
             [typeof(Double3).FullName] = (24, 8),
             [typeof(Double3).FullName] = (32, 8)
         };
+
+        /// <summary>
+        /// Gets the size and alignment info for a specified primitive type.
+        /// </summary>
+        /// <param name="typeName">The type name to get info for.</param>
+        /// <returns>The size and and alignment for the input type.</returns>
+        [Pure]
+        public static (int Size, int Pack) GetTypeInfo(string typeName)
+        {
+            return KnownSizes[typeName];
+        }
     }
 }

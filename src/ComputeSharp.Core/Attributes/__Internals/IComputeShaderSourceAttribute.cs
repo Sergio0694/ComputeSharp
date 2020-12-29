@@ -5,7 +5,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 
-namespace ComputeSharp
+namespace ComputeSharp.__Internals
 {
     /// <summary>
     /// An attribute that contains info on a processed compute shader that can be executed.
@@ -13,7 +13,7 @@ namespace ComputeSharp
     /// <remarks>This attribute is not meant to be directly used by applications using ComputeSharp.</remarks>
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("This attribute is meant to be used from the source generator only")]
+    [Obsolete("This attribute is not intended to be used directly by user code")]
     public sealed class IComputeShaderSourceAttribute : Attribute
     {
         /// <summary>

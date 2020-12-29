@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 
-namespace ComputeSharp.Graphics.Helpers
+namespace ComputeSharp.Core.Helpers
 {
     /// <summary>
     /// A <see langword="class"/> with helper methods to work with alignment and padding.

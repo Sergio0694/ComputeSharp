@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Text;
+using ComputeSharp.__Internals;
 using ComputeSharp.Core.Extensions;
 
 #pragma warning disable CS0618
