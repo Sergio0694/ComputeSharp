@@ -1,6 +1,10 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using ComputeSharp.Graphics.Buffers.Abstract;
+#if NET5_0
+using GC = System.GC;
+#else
+using GC = ComputeSharp.System.GC;
+#endif
 
 namespace ComputeSharp.Graphics.Buffers.Views
 {

@@ -1,6 +1,5 @@
 ﻿using System.Buffers;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Buffers.Enums;
 using ComputeSharp.Graphics.Extensions;
@@ -8,6 +7,11 @@ using ComputeSharp.Graphics.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
+#if NET5_0
+using MemoryMarshal = System.Runtime.InteropServices.MemoryMarshal;
+#else
+using MemoryMarshal = ComputeSharp.System.Runtime.InteropServices.MemoryMarshal;
+#endif
 
 namespace ComputeSharp.Graphics.Buffers.Abstract
 {
@@ -138,9 +142,11 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
 
             try
             {
-                source.GetData(ref MemoryMarshal.GetArrayDataReference(array), source.Length, 0);
+                ref T r0 = ref MemoryMarshal.GetArrayDataReference(array);
 
-                SetData(ref MemoryMarshal.GetArrayDataReference(array), source.Length, 0);
+                source.GetData(ref r0, source.Length, 0);
+
+                SetData(ref r0, source.Length, 0);
             }
             finally
             {

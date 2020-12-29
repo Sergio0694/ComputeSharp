@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
+#if NETSTANDARD2_0
+using ComputeSharp.System.Collections.Generic;
+#endif
 using TerraFX.Interop;
 
 namespace ComputeSharp.Graphics.Commands.Interop

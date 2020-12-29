@@ -1,8 +1,11 @@
-﻿using ComputeSharp.Graphics.Extensions;
+﻿using System;
+using ComputeSharp.Graphics.Extensions;
 using Microsoft.Toolkit.Diagnostics;
-using System;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_DESCRIPTOR_HEAP_TYPE;
+#if NETSTANDARD2_0
+using GC = ComputeSharp.System.GC;
+#endif
 
 namespace ComputeSharp.Graphics.Commands.Interop
 {
