@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
+using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Exceptions;
 using TerraFX.Interop;
@@ -34,6 +37,8 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         static ShaderCompiler()
         {
+            FX.ResolveLibrary += ResolveLibrary;
+
             using ComPtr<IDxcCompiler> dxcCompiler = default;
             using ComPtr<IDxcLibrary> dxcLibrary = default;
             using ComPtr<IDxcIncludeHandler> dxcIncludeHandler = default;
@@ -49,6 +54,24 @@ namespace ComputeSharp.Shaders.Translation
             DxcCompiler = dxcCompiler.Move();
             DxcLibrary = dxcLibrary.Move();
             DxcIncludeHandler = dxcIncludeHandler.Move();
+        }
+
+        /// <summary>
+        /// A custom resolver to override the default library resolution behavior for the DXC and DXIL libraries.
+        /// </summary>
+        /// <inheritdoc cref="DllImportResolver"/>
+        private static IntPtr ResolveLibrary(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
+        {
+            if (libraryName != "dxcompiler" && libraryName != "dxil") return IntPtr.Zero;
+
+            string libraryPath = Path.GetFullPath(@$"runtimes\win-x64\native\{libraryName}.dll");
+
+            if (NativeLibrary.TryLoad(libraryPath, out IntPtr handle))
+            {
+                return handle;
+            }
+
+            return IntPtr.Zero;
         }
 
         /// <summary>
