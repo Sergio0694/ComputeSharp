@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Commands;
@@ -10,6 +11,7 @@ using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 using static TerraFX.Interop.D3D12_FEATURE;
+using static TerraFX.Interop.D3D12_FORMAT_SUPPORT1;
 
 namespace ComputeSharp.Graphics
 {
@@ -125,6 +127,36 @@ namespace ComputeSharp.Graphics
         /// Gets the underlying <see cref="ID3D12Device"/> wrapped by the current instance.
         /// </summary>
         internal ID3D12Device* D3D12Device => this.d3D12Device;
+
+        /// <summary>
+        /// Checks whether the current device supports the creation of <see cref="Buffers.Abstract.Texture2D{T}"/>
+        /// resources for a specified type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of values to check support for.</typeparam>
+        /// <returns>Whether <see cref="Buffers.Abstract.Texture2D{T}"/> instances can be created by the current device.</returns>
+        [Pure]
+        public bool IsTexture2DSupportedForType<T>()
+            where T : unmanaged
+        {
+            ThrowIfDisposed();
+
+            return this.d3D12Device.Get()->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE2D);
+        }
+
+        /// <summary>
+        /// Checks whether the current device supports the creation of <see cref="Buffers.Abstract.Texture3D{T}"/>
+        /// resources for a specified type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of values to check support for.</typeparam>
+        /// <returns>Whether <see cref="Buffers.Abstract.Texture3D{T}"/> instances can be created by the current device.</returns>
+        [Pure]
+        public bool IsTexture3DSupportedForType<T>()
+            where T : unmanaged
+        {
+            ThrowIfDisposed();
+
+            return this.d3D12Device.Get()->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE3D);
+        }
 
         /// <inheritdoc cref="ID3D12DescriptorHandleAllocator.Allocate"/>
         internal void RentShaderResourceViewDescriptorHandles(
