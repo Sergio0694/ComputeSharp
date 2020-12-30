@@ -81,7 +81,7 @@ namespace ComputeSharp.Shaders.Translation
             fixed (char* optimization = "-O3")
             {
                 DxcCompiler.Get()->Compile(
-                    dxcBlobEncoding.Upcast<IDxcBlobEncoding, IDxcBlob>().Get(),
+                    (IDxcBlob*)dxcBlobEncoding.Get(),
                     (ushort*)shaderName,
                     (ushort*)entryPoint,
                     (ushort*)shaderProfile,

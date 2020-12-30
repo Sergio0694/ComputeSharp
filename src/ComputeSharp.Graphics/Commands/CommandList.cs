@@ -75,7 +75,7 @@ namespace ComputeSharp.Graphics.Commands
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly ID3D12CommandList** GetD3D12CommandListAddressOf()
         {
-            return this.d3D12GraphicsCommandList.Upcast<ID3D12GraphicsCommandList, ID3D12CommandList>().GetAddressOf();
+            return (ID3D12CommandList**)this.d3D12GraphicsCommandList.GetAddressOf();
         }
 
         /// <summary>
