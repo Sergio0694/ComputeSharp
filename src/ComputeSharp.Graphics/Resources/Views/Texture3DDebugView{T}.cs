@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
-using ComputeSharp.Graphics.Buffers.Abstract;
 
-namespace ComputeSharp.Graphics.Buffers.Views
+namespace ComputeSharp.Resources.Views
 {
     /// <summary>
     /// A debug proxy used to display items in a <see cref="Texture3D{T}"/> instance.

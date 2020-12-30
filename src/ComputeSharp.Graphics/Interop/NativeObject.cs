@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace ComputeSharp.Graphics.Interop
+namespace ComputeSharp.Interop
 {
     /// <summary>
     /// Base class for a <see cref="IDisposable"/> class.

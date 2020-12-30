@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop;
 
-namespace ComputeSharp.Graphics.Buffers.Interop
+namespace ComputeSharp.Graphics.Resources.Interop
 {
     /// <summary>
     /// A type representing a mapped memory resource.

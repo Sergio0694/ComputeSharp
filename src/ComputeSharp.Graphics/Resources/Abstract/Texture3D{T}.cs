@@ -1,11 +1,11 @@
 ﻿using System.Runtime.CompilerServices;
 using ComputeSharp.Exceptions;
-using ComputeSharp.Graphics.Buffers.Enums;
-using ComputeSharp.Graphics.Buffers.Interop;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
-using ComputeSharp.Graphics.Interop;
+using ComputeSharp.Graphics.Resources.Enums;
+using ComputeSharp.Graphics.Resources.Interop;
+using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
@@ -15,7 +15,7 @@ using static TerraFX.Interop.D3D12_SRV_DIMENSION;
 using static TerraFX.Interop.D3D12_UAV_DIMENSION;
 using FX = TerraFX.Interop.Windows;
 
-namespace ComputeSharp.Graphics.Buffers.Abstract
+namespace ComputeSharp.Resources
 {
     /// <summary>
     /// A <see langword="class"/> representing a typed 3D texture stored on GPU memory.

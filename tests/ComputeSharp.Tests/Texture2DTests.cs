@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Resources;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.Toolkit.HighPerformance.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

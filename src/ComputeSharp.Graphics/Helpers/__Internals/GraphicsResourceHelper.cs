@@ -1,8 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using ComputeSharp.Graphics;
-using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Resources;
 using TerraFX.Interop;
 
 namespace ComputeSharp.__Internals

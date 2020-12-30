@@ -6,7 +6,7 @@ using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Commands.Interop;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
-using ComputeSharp.Graphics.Interop;
+using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
@@ -14,7 +14,7 @@ using static TerraFX.Interop.D3D12_FEATURE;
 using static TerraFX.Interop.D3D12_FORMAT_SUPPORT1;
 using static TerraFX.Interop.DXGI_ADAPTER_FLAG;
 
-namespace ComputeSharp.Graphics
+namespace ComputeSharp
 {
     /// <summary>
     /// A <see langword="class"/> that represents a DX12-compatible GPU device that can be used to run compute shaders.

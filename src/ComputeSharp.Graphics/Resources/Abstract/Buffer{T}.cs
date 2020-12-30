@@ -1,9 +1,9 @@
 ﻿using System.Buffers;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Exceptions;
-using ComputeSharp.Graphics.Buffers.Enums;
 using ComputeSharp.Graphics.Extensions;
-using ComputeSharp.Graphics.Interop;
+using ComputeSharp.Graphics.Resources.Enums;
+using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
@@ -13,7 +13,7 @@ using MemoryMarshal = System.Runtime.InteropServices.MemoryMarshal;
 using MemoryMarshal = ComputeSharp.System.Runtime.InteropServices.MemoryMarshal;
 #endif
 
-namespace ComputeSharp.Graphics.Buffers.Abstract
+namespace ComputeSharp.Resources
 {
     /// <summary>
     /// A <see langword="class"/> representing a typed buffer stored on GPU memory.

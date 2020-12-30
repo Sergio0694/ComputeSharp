@@ -97,7 +97,7 @@ namespace ComputeSharp.SourceGenerators
                                 Literal("This method is not intended to be called directly by user code"))))))).AddModifiers(
                         Token(SyntaxKind.PublicKeyword),
                         Token(SyntaxKind.StaticKeyword)).AddParameterListParameters(
-                        Parameter(Identifier("device")).WithType(IdentifierName("ComputeSharp.Graphics.GraphicsDevice")),
+                        Parameter(Identifier("device")).WithType(IdentifierName("ComputeSharp.GraphicsDevice")),
                         Parameter(Identifier("shader")).WithModifiers(TokenList(Token(SyntaxKind.InKeyword))).WithType(shaderType),
                         Parameter(Identifier("r0")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(PredefinedType(Token(SyntaxKind.ULongKeyword))),
                         Parameter(Identifier("r1")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(PredefinedType(Token(SyntaxKind.ByteKeyword))))

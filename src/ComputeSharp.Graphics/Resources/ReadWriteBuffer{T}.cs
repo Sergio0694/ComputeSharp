@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics;
 using ComputeSharp.Exceptions;
-using ComputeSharp.Graphics;
-using ComputeSharp.Graphics.Buffers.Abstract;
-using ComputeSharp.Graphics.Buffers.Enums;
-using ComputeSharp.Graphics.Buffers.Views;
+using ComputeSharp.Graphics.Resources.Enums;
+using ComputeSharp.Resources;
+using ComputeSharp.Resources.Views;
 
 namespace ComputeSharp
 {

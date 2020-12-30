@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
-using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Resources;
 using Microsoft.Toolkit.Diagnostics;
 #if NET5_0
 using GC = System.GC;

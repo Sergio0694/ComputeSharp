@@ -1,13 +1,13 @@
-﻿using ComputeSharp.Graphics.Buffers.Enums;
-using ComputeSharp.Graphics.Buffers.Interop;
-using ComputeSharp.Graphics.Commands;
+﻿using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
+using ComputeSharp.Graphics.Resources.Enums;
+using ComputeSharp.Graphics.Resources.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 
-namespace ComputeSharp.Graphics.Buffers.Abstract
+namespace ComputeSharp.Resources
 {
     /// <summary>
     /// A <see langword="class"/> representing a typed structured buffer stored on GPU memory.

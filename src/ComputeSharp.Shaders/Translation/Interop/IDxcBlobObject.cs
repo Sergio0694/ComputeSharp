@@ -1,4 +1,4 @@
-﻿using ComputeSharp.Graphics.Interop;
+﻿using ComputeSharp.Interop;
 using TerraFX.Interop;
 
 namespace ComputeSharp.Shaders.Translation.Interop
