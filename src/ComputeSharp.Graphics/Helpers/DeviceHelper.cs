@@ -23,7 +23,7 @@ namespace ComputeSharp.Graphics.Helpers
         {
             DXGI_ADAPTER_DESC1 dxgiDescription1;
 
-            return TryGetDefaultDevice(null, &dxgiDescription1);
+            return TryGetDefaultDevice(null, &dxgiDescription1) || TryGetWarpDevice(null, &dxgiDescription1);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace ComputeSharp.Graphics.Helpers
         {
             DXGI_ADAPTER_DESC1 dxgiDescription1;
 
-            _ = TryGetDefaultDevice(null, &dxgiDescription1);
+            _ = TryGetDefaultDevice(null, &dxgiDescription1) || TryGetWarpDevice(null, &dxgiDescription1);
 
             return Luid.FromLUID(dxgiDescription1.AdapterLuid);
         }
@@ -52,31 +52,13 @@ namespace ComputeSharp.Graphics.Helpers
 
             DXGI_ADAPTER_DESC1 dxgiDescription1;
 
-            if (TryGetDefaultDevice(d3D12Device.GetAddressOf(), &dxgiDescription1))
+            if (TryGetDefaultDevice(d3D12Device.GetAddressOf(), &dxgiDescription1) ||
+                TryGetWarpDevice(d3D12Device.GetAddressOf(), &dxgiDescription1))
             {
                 return GetOrCreateDevice(d3D12Device.Move(), &dxgiDescription1);
             }
 
             return ThrowHelper.ThrowNotSupportedException<GraphicsDevice>("There isn't a supported GPU device on the current machine");
-        }
-
-        /// <summary>
-        /// Gets the warp <see cref="GraphicsDevice"/> instance.
-        /// </summary>
-        /// <returns>The default <see cref="GraphicsDevice"/> instance supporting at least DX12.0.</returns>
-        /// <exception cref="NotSupportedException">Thrown when a default device is not available.</exception>
-        public static unsafe GraphicsDevice GetWarpDevice()
-        {
-            using ComPtr<ID3D12Device> d3D12Device = default;
-
-            DXGI_ADAPTER_DESC1 dxgiDescription1;
-
-            if (TryGetWarpDevice(d3D12Device.GetAddressOf(), &dxgiDescription1))
-            {
-                return GetOrCreateDevice(d3D12Device.Move(), &dxgiDescription1);
-            }
-
-            return ThrowHelper.ThrowNotSupportedException<GraphicsDevice>("There isn't a supported device on the current machine");
         }
 
         /// <summary>

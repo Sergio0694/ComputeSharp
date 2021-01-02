@@ -73,26 +73,6 @@ namespace ComputeSharp.Benchmark
         private ReadWriteBuffer<float> BufferY;
 
         /// <summary>
-        /// The input tensor (CPU).
-        /// </summary>
-        private ReadOnlyBuffer<float> FallbackBufferX;
-
-        /// <summary>
-        /// The weights tensor (CPU).
-        /// </summary>
-        private ReadOnlyBuffer<float> FallbackBufferW;
-
-        /// <summary>
-        /// The bias tensor (CPU).
-        /// </summary>
-        private ReadOnlyBuffer<float> FallbackBufferB;
-
-        /// <summary>
-        /// The result tensor (CPU).
-        /// </summary>
-        private ReadWriteBuffer<float> FallbackBufferY;
-
-        /// <summary>
         /// A <see cref="System.Random"/> instance to initialize the tensors.
         /// </summary>
         private readonly Random Random = new Random();
@@ -125,11 +105,6 @@ namespace ComputeSharp.Benchmark
             BufferW = Gpu.Default.AllocateReadOnlyBuffer(W);
             BufferB = Gpu.Default.AllocateReadOnlyBuffer(B);
             BufferY = Gpu.Default.AllocateReadWriteBuffer(Y);
-
-            FallbackBufferX = Gpu.Fallback.AllocateReadOnlyBuffer(X);
-            FallbackBufferW = Gpu.Fallback.AllocateReadOnlyBuffer(W);
-            FallbackBufferB = Gpu.Fallback.AllocateReadOnlyBuffer(B);
-            FallbackBufferY = Gpu.Fallback.AllocateReadWriteBuffer(Y);
         }
 
         /// <summary>
@@ -147,11 +122,6 @@ namespace ComputeSharp.Benchmark
             BufferW.Dispose();
             BufferB.Dispose();
             BufferY.Dispose();
-
-            FallbackBufferX.Dispose();
-            FallbackBufferW.Dispose();
-            FallbackBufferB.Dispose();
-            FallbackBufferY.Dispose();
         }
 
         /// <summary>
@@ -178,28 +148,6 @@ namespace ComputeSharp.Benchmark
             using ReadWriteBuffer<float> y = Gpu.Default.AllocateReadWriteBuffer(Y);
 
             Dnn.FullyConnectedForwardGpu(Gpu.Default, C, N, M, P, x, w, b, y);
-
-            y.GetData(Y);
-        }
-
-        /// <summary>
-        /// Runs a fully connected forward operation on the fallback device.
-        /// </summary>
-        [Benchmark]
-        public void FallbackWithNoTemporaryBuffers() => Dnn.FullyConnectedForwardGpu(Gpu.Fallback, C, N, M, P, FallbackBufferX, FallbackBufferW, FallbackBufferB, FallbackBufferY);
-
-        /// <summary>
-        /// Runs a fully connected forward operation on the fallback device, creating temporary buffers to perform the operations.
-        /// </summary>
-        [Benchmark]
-        public void FallbackWithTemporaryBuffers()
-        {
-            using ReadOnlyBuffer<float> x = Gpu.Fallback.AllocateReadOnlyBuffer(X);
-            using ReadOnlyBuffer<float> w = Gpu.Fallback.AllocateReadOnlyBuffer(W);
-            using ReadOnlyBuffer<float> b = Gpu.Fallback.AllocateReadOnlyBuffer(B);
-            using ReadWriteBuffer<float> y = Gpu.Fallback.AllocateReadWriteBuffer(Y);
-
-            Dnn.FullyConnectedForwardGpu(Gpu.Fallback, C, N, M, P, x, w, b, y);
 
             y.GetData(Y);
         }
