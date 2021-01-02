@@ -69,6 +69,11 @@ namespace ComputeSharp.Graphics.Helpers
                 private uint index;
 
                 /// <summary>
+                /// Indicates whether or not the enumerator has completed the enumeration of all possible devices.
+                /// </summary>
+                private bool isCompleted;
+
+                /// <summary>
                 /// The current <see cref="GraphicsDevice"/> instance to return.
                 /// </summary>
                 private GraphicsDevice? graphicsDevice;
@@ -103,47 +108,80 @@ namespace ComputeSharp.Graphics.Helpers
                         }
                     }
 
+                    if (this.isCompleted) return false;
+
                     while (true)
                     {
                         using ComPtr<IDXGIAdapter1> dxgiAdapter1 = default;
 
-                        HRESULT enumAdapters1Result = dxgiFactory4.Get()->EnumAdapters1(this.index, dxgiAdapter1.GetAddressOf());
+                        HRESULT enumAdapters1Result = this.dxgiFactory4.Get()->EnumAdapters1(this.index, dxgiAdapter1.GetAddressOf());
 
                         if (enumAdapters1Result == FX.DXGI_ERROR_NOT_FOUND)
                         {
-                            return false;
-                        }
+                            this.dxgiFactory4.Get()->EnumWarpAdapter(FX.__uuidof<IDXGIAdapter1>(), dxgiAdapter1.GetVoidAddressOf()).Assert();
 
-                        enumAdapters1Result.Assert();
+                            DXGI_ADAPTER_DESC1 dxgiDescription1;
 
-                        this.index++;
+                            dxgiAdapter1.Get()->GetDesc1(&dxgiDescription1).Assert();
 
-                        DXGI_ADAPTER_DESC1 dxgiDescription1;
-
-                        dxgiAdapter1.Get()->GetDesc1(&dxgiDescription1).Assert();
-
-                        if (dxgiDescription1.DedicatedVideoMemory == 0) continue;
-
-                        HRESULT createDeviceResult = FX.D3D12CreateDevice(
-                            dxgiAdapter1.AsIUnknown().Get(),
-                            D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_11_0,
-                            FX.__uuidof<ID3D12Device>(),
-                            null);
-
-                        if (FX.SUCCEEDED(createDeviceResult) &&
-                            this.predicate(new GraphicsDeviceInfo(&dxgiDescription1)))
-                        {
-                            using ComPtr<ID3D12Device> d3D12Device = default;
-
-                            FX.D3D12CreateDevice(
+                            HRESULT createDeviceResult = FX.D3D12CreateDevice(
                                 dxgiAdapter1.AsIUnknown().Get(),
                                 D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_11_0,
                                 FX.__uuidof<ID3D12Device>(),
-                                d3D12Device.GetVoidAddressOf()).Assert();
+                                null);
 
-                            this.graphicsDevice = GetOrCreateDevice(d3D12Device.Move(), &dxgiDescription1);
+                            if (FX.SUCCEEDED(createDeviceResult) &&
+                                this.predicate(new GraphicsDeviceInfo(&dxgiDescription1)))
+                            {
+                                using ComPtr<ID3D12Device> d3D12Device = default;
 
-                            return true;
+                                FX.D3D12CreateDevice(
+                                    dxgiAdapter1.AsIUnknown().Get(),
+                                    D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_11_0,
+                                    FX.__uuidof<ID3D12Device>(),
+                                    d3D12Device.GetVoidAddressOf()).Assert();
+
+                                this.graphicsDevice = GetOrCreateDevice(d3D12Device.Move(), &dxgiDescription1);
+                                this.isCompleted = true;
+
+                                return true;
+                            }
+
+                            return false;
+                        }
+                        else
+                        {
+                            enumAdapters1Result.Assert();
+
+                            this.index++;
+
+                            DXGI_ADAPTER_DESC1 dxgiDescription1;
+
+                            dxgiAdapter1.Get()->GetDesc1(&dxgiDescription1).Assert();
+
+                            if (dxgiDescription1.DedicatedVideoMemory == 0) continue;
+
+                            HRESULT createDeviceResult = FX.D3D12CreateDevice(
+                                dxgiAdapter1.AsIUnknown().Get(),
+                                D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_11_0,
+                                FX.__uuidof<ID3D12Device>(),
+                                null);
+
+                            if (FX.SUCCEEDED(createDeviceResult) &&
+                                this.predicate(new GraphicsDeviceInfo(&dxgiDescription1)))
+                            {
+                                using ComPtr<ID3D12Device> d3D12Device = default;
+
+                                FX.D3D12CreateDevice(
+                                    dxgiAdapter1.AsIUnknown().Get(),
+                                    D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_11_0,
+                                    FX.__uuidof<ID3D12Device>(),
+                                    d3D12Device.GetVoidAddressOf()).Assert();
+
+                                this.graphicsDevice = GetOrCreateDevice(d3D12Device.Move(), &dxgiDescription1);
+
+                                return true;
+                            }
                         }
                     }
                 }

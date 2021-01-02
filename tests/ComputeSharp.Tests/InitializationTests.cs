@@ -20,7 +20,16 @@ namespace ComputeSharp.Tests
         {
             Assert.IsTrue(Gpu.Default.Luid != default);
             Assert.IsTrue(Gpu.Default.Name is { Length: > 0 });
-            Assert.IsTrue(Gpu.Default.MemorySize != 0);
+
+            if (Gpu.Default.IsHardwareAccelerated)
+            {
+                Assert.IsTrue(Gpu.Default.DedicatedMemorySize != 0);
+            }
+            else
+            {
+                Assert.IsTrue(Gpu.Default.SharedMemorySize != 0);
+            }
+
             Assert.IsTrue(Gpu.Default.ComputeUnits != 0);
             Assert.IsTrue(Gpu.Default.WavefrontSize != 0);
         }

@@ -123,15 +123,8 @@ namespace ComputeSharp.Graphics.Helpers
 
             using ComPtr<IDXGIAdapter1> dxgiAdapter1 = default;
 
-            HRESULT enumWarpAdapterResult = dxgiFactory4.Get()->EnumWarpAdapter(FX.__uuidof<IDXGIAdapter1>(), dxgiAdapter1.GetVoidAddressOf());
-
-            if (enumWarpAdapterResult == FX.DXGI_ERROR_NOT_FOUND)
-            {
-                return false;
-            }
-
-            enumWarpAdapterResult.Assert();
-
+            dxgiFactory4.Get()->EnumWarpAdapter(FX.__uuidof<IDXGIAdapter1>(), dxgiAdapter1.GetVoidAddressOf()).Assert();
+            
             dxgiAdapter1.Get()->GetDesc1(dxgiDescription1).Assert();
 
             HRESULT createDeviceResult = FX.D3D12CreateDevice(
