@@ -74,7 +74,7 @@ namespace ComputeSharp.Tests
         }
 
         [AutoConstructor]
-        private readonly partial struct SampleShader : IComputeShader
+        internal readonly partial struct SampleShader : IComputeShader
         {
             public readonly ReadWriteBuffer<int> buffer;
 

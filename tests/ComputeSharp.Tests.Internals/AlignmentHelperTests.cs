@@ -1,4 +1,4 @@
-﻿using ComputeSharp.Graphics.Helpers;
+﻿using ComputeSharp.Core.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests.Internals
