@@ -12,6 +12,7 @@ using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 using static TerraFX.Interop.D3D12_FEATURE;
 using static TerraFX.Interop.D3D12_FORMAT_SUPPORT1;
+using static TerraFX.Interop.DXGI_ADAPTER_FLAG;
 
 namespace ComputeSharp.Graphics
 {
@@ -90,7 +91,9 @@ namespace ComputeSharp.Graphics
 
             Luid = Luid.FromLUID(dxgiDescription1->AdapterLuid);
             Name = new string((char*)dxgiDescription1->Description);
-            MemorySize = dxgiDescription1->DedicatedVideoMemory;
+            DedicatedMemorySize = dxgiDescription1->DedicatedVideoMemory;
+            SharedMemorySize = dxgiDescription1->SharedSystemMemory;
+            IsHardwareAccelerated = (dxgiDescription1->Flags & (uint)DXGI_ADAPTER_FLAG_SOFTWARE) == 0;
 
             var d3D12Options1Data = d3D12Device.Get()->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS1>(D3D12_FEATURE_D3D12_OPTIONS1);
 
@@ -109,9 +112,20 @@ namespace ComputeSharp.Graphics
         public string Name { get; }
 
         /// <summary>
-        /// Gets the size of the dedicated video memory for the current <see cref="GraphicsDevice"/> instance.
+        /// Gets the size of the dedicated memory for the current device.
         /// </summary>
-        public nuint MemorySize { get; }
+        public nuint DedicatedMemorySize { get; }
+
+        /// <summary>
+        /// Gets the size of the shared system memory for the current device.
+        /// </summary>
+        public nuint SharedMemorySize { get; }
+
+        /// <summary>
+        /// Gets whether or not the current device is hardware accelerated.
+        /// This value is <see langword="false"/> for software fallback devices.
+        /// </summary>
+        public bool IsHardwareAccelerated { get; }
 
         /// <summary>
         /// Gets the number of total lanes on the current device (eg. CUDA cores on an nVidia GPU).

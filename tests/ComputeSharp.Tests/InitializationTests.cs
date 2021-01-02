@@ -59,7 +59,7 @@ namespace ComputeSharp.Tests
         {
             int i = 0;
 
-            foreach (GraphicsDevice device in Gpu.QueryDevices(info => info.MemorySize >= 1024))
+            foreach (GraphicsDevice device in Gpu.QueryDevices(info => info.DedicatedMemorySize >= 1024))
             {
                 if (i++ == 0) Assert.AreSame(Gpu.Default, device);
 
