@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Buffers;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Engines;
@@ -54,24 +53,44 @@ namespace ComputeSharp.Benchmark
         private float[] Y;
 
         /// <summary>
-        /// The input tensor.
+        /// The input tensor (GPU).
         /// </summary>
         private ReadOnlyBuffer<float> BufferX;
 
         /// <summary>
-        /// The weights tensor.
+        /// The weights tensor (GPU).
         /// </summary>
         private ReadOnlyBuffer<float> BufferW;
 
         /// <summary>
-        /// The bias tensor.
+        /// The bias tensor (GPU).
         /// </summary>
         private ReadOnlyBuffer<float> BufferB;
 
         /// <summary>
-        /// The result tensor.
+        /// The result tensor (GPU).
         /// </summary>
         private ReadWriteBuffer<float> BufferY;
+
+        /// <summary>
+        /// The input tensor (CPU).
+        /// </summary>
+        private ReadOnlyBuffer<float> FallbackBufferX;
+
+        /// <summary>
+        /// The weights tensor (CPU).
+        /// </summary>
+        private ReadOnlyBuffer<float> FallbackBufferW;
+
+        /// <summary>
+        /// The bias tensor (CPU).
+        /// </summary>
+        private ReadOnlyBuffer<float> FallbackBufferB;
+
+        /// <summary>
+        /// The result tensor (CPU).
+        /// </summary>
+        private ReadWriteBuffer<float> FallbackBufferY;
 
         /// <summary>
         /// A <see cref="System.Random"/> instance to initialize the tensors.
@@ -84,6 +103,19 @@ namespace ComputeSharp.Benchmark
         [GlobalSetup]
         public void Setup()
         {
+            // Creates a new random normalized float[] array of a given size
+            float[] CreateRandomArray(int size)
+            {
+                float[] array = ArrayPool<float>.Shared.Rent(size);
+                ref float r = ref array[0];
+                for (int i = 0; i < size; i++)
+                {
+                    Unsafe.Add(ref r, i) = (float)Random.NextDouble();
+                }
+
+                return array;
+            }
+
             X = CreateRandomArray(C * N * M);
             W = CreateRandomArray(M * P);
             B = CreateRandomArray(P);
@@ -93,6 +125,11 @@ namespace ComputeSharp.Benchmark
             BufferW = Gpu.Default.AllocateReadOnlyBuffer(W);
             BufferB = Gpu.Default.AllocateReadOnlyBuffer(B);
             BufferY = Gpu.Default.AllocateReadWriteBuffer(Y);
+
+            FallbackBufferX = Gpu.Fallback.AllocateReadOnlyBuffer(X);
+            FallbackBufferW = Gpu.Fallback.AllocateReadOnlyBuffer(W);
+            FallbackBufferB = Gpu.Fallback.AllocateReadOnlyBuffer(B);
+            FallbackBufferY = Gpu.Fallback.AllocateReadWriteBuffer(Y);
         }
 
         /// <summary>
@@ -110,23 +147,11 @@ namespace ComputeSharp.Benchmark
             BufferW.Dispose();
             BufferB.Dispose();
             BufferY.Dispose();
-        }
 
-        /// <summary>
-        /// Creates a new <see langword="float"/> array of the specified size.
-        /// </summary>
-        /// <param name="size">The size of the new random array to create.</param>
-        [Pure]
-        private float[] CreateRandomArray(int size)
-        {
-            float[] array = ArrayPool<float>.Shared.Rent(size);
-            ref float r = ref array[0];
-            for (int i = 0; i < size; i++)
-            {
-                Unsafe.Add(ref r, i) = (float)Random.NextDouble();
-            }
-
-            return array;
+            FallbackBufferX.Dispose();
+            FallbackBufferW.Dispose();
+            FallbackBufferB.Dispose();
+            FallbackBufferY.Dispose();
         }
 
         /// <summary>
@@ -139,7 +164,7 @@ namespace ComputeSharp.Benchmark
         /// Runs a fully connected forward operation on the GPU.
         /// </summary>
         [Benchmark]
-        public void GpuWithNoTemporaryBuffers() => Dnn.FullyConnectedForwardGpu(C, N, M, P, BufferX, BufferW, BufferB, BufferY);
+        public void GpuWithNoTemporaryBuffers() => Dnn.FullyConnectedForwardGpu(Gpu.Default, C, N, M, P, BufferX, BufferW, BufferB, BufferY);
 
         /// <summary>
         /// Runs a fully connected forward operation on the GPU, creating temporary GPU buffers to perform the operations.
@@ -152,7 +177,29 @@ namespace ComputeSharp.Benchmark
             using ReadOnlyBuffer<float> b = Gpu.Default.AllocateReadOnlyBuffer(B);
             using ReadWriteBuffer<float> y = Gpu.Default.AllocateReadWriteBuffer(Y);
 
-            Dnn.FullyConnectedForwardGpu(C, N, M, P, x, w, b, y);
+            Dnn.FullyConnectedForwardGpu(Gpu.Default, C, N, M, P, x, w, b, y);
+
+            y.GetData(Y);
+        }
+
+        /// <summary>
+        /// Runs a fully connected forward operation on the fallback device.
+        /// </summary>
+        [Benchmark]
+        public void FallbackWithNoTemporaryBuffers() => Dnn.FullyConnectedForwardGpu(Gpu.Fallback, C, N, M, P, FallbackBufferX, FallbackBufferW, FallbackBufferB, FallbackBufferY);
+
+        /// <summary>
+        /// Runs a fully connected forward operation on the fallback device, creating temporary buffers to perform the operations.
+        /// </summary>
+        [Benchmark]
+        public void FallbackWithTemporaryBuffers()
+        {
+            using ReadOnlyBuffer<float> x = Gpu.Fallback.AllocateReadOnlyBuffer(X);
+            using ReadOnlyBuffer<float> w = Gpu.Fallback.AllocateReadOnlyBuffer(W);
+            using ReadOnlyBuffer<float> b = Gpu.Fallback.AllocateReadOnlyBuffer(B);
+            using ReadWriteBuffer<float> y = Gpu.Fallback.AllocateReadWriteBuffer(Y);
+
+            Dnn.FullyConnectedForwardGpu(Gpu.Fallback, C, N, M, P, x, w, b, y);
 
             y.GetData(Y);
         }
