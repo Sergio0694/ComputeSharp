@@ -17,6 +17,11 @@ namespace ComputeSharp
         private static readonly Lazy<GraphicsDevice> DefaultFactory = new(DeviceHelper.GetDefaultDevice);
 
         /// <summary>
+        /// The <see cref="Lazy{T}"/> instance used to produce the warp device for <see cref="Fallback"/>.
+        /// </summary>
+        private static readonly Lazy<GraphicsDevice> WarpFactory = new(DeviceHelper.GetWarpDevice);
+
+        /// <summary>
         /// Gets whether or not the <see cref="Gpu"/> APIs can be used on the
         /// current machine (ie. if there is at least a supported GPU device).
         /// </summary>
@@ -30,6 +35,15 @@ namespace ComputeSharp
         /// <exception cref="NotSupportedException">Thrown when a default device is not available.</exception>
         /// <remarks>Make sure to check <see cref="IsSupported"/> before accessing this property.</remarks>
         public static GraphicsDevice Default => DefaultFactory.Value;
+
+        /// <summary>
+        /// Gets the fallback <see cref="GraphicsDevice"/> instance for the current machine.
+        /// This is a software version of a device that can be used when no supported GPU is available.
+        /// This instance cannot be manually disposed - attempting to do so is safe and it will
+        /// not cause an exception, but it will simply do nothing and not dispose the device.
+        /// </summary>
+        /// <exception cref="NotSupportedException">Thrown when a fallback device is not available.</exception>
+        public static GraphicsDevice Fallback => WarpFactory.Value;
 
         /// <summary>
         /// Enumerates all the currently available DX12.0 devices. Note that creating a device is a relatively
