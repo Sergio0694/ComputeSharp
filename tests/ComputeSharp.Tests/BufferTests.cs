@@ -218,7 +218,7 @@ namespace ComputeSharp.Tests
         }
 
         [AutoConstructor]
-        private readonly partial struct ConstantBufferKernel : IComputeShader
+        internal readonly partial struct ConstantBufferKernel : IComputeShader
         {
             public readonly ConstantBuffer<int> source;
             public readonly ReadWriteBuffer<int> destination;
@@ -245,7 +245,7 @@ namespace ComputeSharp.Tests
         }
 
         [AutoConstructor]
-        private readonly partial struct ReadOnlyBufferKernel : IComputeShader
+        internal readonly partial struct ReadOnlyBufferKernel : IComputeShader
         {
             public readonly ReadOnlyBuffer<int> source;
             public readonly ReadWriteBuffer<int> destination;
@@ -272,7 +272,7 @@ namespace ComputeSharp.Tests
         }
 
         [AutoConstructor]
-        private readonly partial struct ReadWriteBufferKernel : IComputeShader
+        internal readonly partial struct ReadWriteBufferKernel : IComputeShader
         {
             public readonly ReadWriteBuffer<int> source;
             public readonly ReadWriteBuffer<int> destination;

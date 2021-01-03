@@ -64,7 +64,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
             GraphicsDevice = device;
             Length = length;
 
-            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, (ulong)SizeInBytes);
+            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, (ulong)SizeInBytes, device.IsCacheCoherentUMA);
 
             device.RentShaderResourceViewDescriptorHandles(out D3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 

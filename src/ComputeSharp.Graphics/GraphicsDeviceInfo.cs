@@ -1,4 +1,5 @@
 ﻿using TerraFX.Interop;
+using static TerraFX.Interop.DXGI_ADAPTER_FLAG;
 
 namespace ComputeSharp.Graphics
 {
@@ -15,7 +16,9 @@ namespace ComputeSharp.Graphics
         {
             Luid = Luid.FromLUID(dxgiDescription1->AdapterLuid);
             Name = new string((char*)dxgiDescription1->Description);
-            MemorySize = dxgiDescription1->DedicatedVideoMemory;
+            DedicatedMemorySize = dxgiDescription1->DedicatedVideoMemory;
+            SharedMemorySize = dxgiDescription1->SharedSystemMemory;
+            IsHardwareAccelerated = (dxgiDescription1->Flags & (uint)DXGI_ADAPTER_FLAG_SOFTWARE) == 0;
         }
 
         /// <summary>
@@ -29,8 +32,19 @@ namespace ComputeSharp.Graphics
         public string Name { get; }
 
         /// <summary>
-        /// Gets the size of the dedicated video memory for the associated device.
+        /// Gets the size of the dedicated memory for the associated device.
         /// </summary>
-        public nuint MemorySize { get; }
+        public nuint DedicatedMemorySize { get; }
+
+        /// <summary>
+        /// Gets the size of the shared system memory for the associated device.
+        /// </summary>
+        public nuint SharedMemorySize { get; }
+
+        /// <summary>
+        /// Gets whether or not the associated device is hardware accelerated.
+        /// This value is <see langword="false"/> for software fallback devices.
+        /// </summary>
+        public bool IsHardwareAccelerated { get; }
     }
 }

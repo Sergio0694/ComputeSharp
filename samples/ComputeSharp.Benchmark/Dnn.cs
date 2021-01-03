@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using ComputeSharp.Graphics;
 
 namespace ComputeSharp.Benchmark
 {
@@ -53,6 +54,7 @@ namespace ComputeSharp.Benchmark
         /// <summary>
         /// Executes the forward pass on a fully connected layer on the GPU.
         /// </summary>
+        /// <param name="device">The device to run the computation on.</param>
         /// <param name="c">The number of samples in the input tensor.</param>
         /// <param name="n">The number of rows in the input matrix.</param>
         /// <param name="m">The number of columns in the input matrix.</param>
@@ -63,10 +65,17 @@ namespace ComputeSharp.Benchmark
         /// <param name="y">The result tensor.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void FullyConnectedForwardGpu(
-            int c, int n, int m, int p,
-            ReadOnlyBuffer<float> x, ReadOnlyBuffer<float> w, ReadOnlyBuffer<float> b, ReadWriteBuffer<float> y)
+            GraphicsDevice device,
+            int c,
+            int n,
+            int m,
+            int p,
+            ReadOnlyBuffer<float> x,
+            ReadOnlyBuffer<float> w,
+            ReadOnlyBuffer<float> b,
+            ReadWriteBuffer<float> y)
         {
-            Gpu.Default.For(c, n, p, new FullyConnectedForwardKernel(n, m, p, x, w, b, y));
+            device.For(c, n, p, new FullyConnectedForwardKernel(n, m, p, x, w, b, y));
         }
 
         /// <summary>

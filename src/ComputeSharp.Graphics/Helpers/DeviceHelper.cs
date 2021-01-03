@@ -23,7 +23,7 @@ namespace ComputeSharp.Graphics.Helpers
         {
             DXGI_ADAPTER_DESC1 dxgiDescription1;
 
-            return TryGetDefaultDevice(null, &dxgiDescription1);
+            return TryGetDefaultDevice(null, &dxgiDescription1) || TryGetWarpDevice(null, &dxgiDescription1);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace ComputeSharp.Graphics.Helpers
         {
             DXGI_ADAPTER_DESC1 dxgiDescription1;
 
-            _ = TryGetDefaultDevice(null, &dxgiDescription1);
+            _ = TryGetDefaultDevice(null, &dxgiDescription1) || TryGetWarpDevice(null, &dxgiDescription1);
 
             return Luid.FromLUID(dxgiDescription1.AdapterLuid);
         }
@@ -52,7 +52,8 @@ namespace ComputeSharp.Graphics.Helpers
 
             DXGI_ADAPTER_DESC1 dxgiDescription1;
 
-            if (TryGetDefaultDevice(d3D12Device.GetAddressOf(), &dxgiDescription1))
+            if (TryGetDefaultDevice(d3D12Device.GetAddressOf(), &dxgiDescription1) ||
+                TryGetWarpDevice(d3D12Device.GetAddressOf(), &dxgiDescription1))
             {
                 return GetOrCreateDevice(d3D12Device.Move(), &dxgiDescription1);
             }
@@ -104,6 +105,35 @@ namespace ComputeSharp.Graphics.Helpers
                     return true;
                 }
             }
+        }
+
+        /// <summary>
+        /// Tries to check or create a warp <see cref="ID3D12Device"/> object.
+        /// </summary>
+        /// <param name="d3D12Device">A pointer to the <see cref="ID3D12Device"/> object to create, or <see langword="null"/>.</param>
+        /// <param name="dxgiDescription1">A pointer to the <see cref="DXGI_ADAPTER_DESC1"/> value for the device found.</param>
+        /// <returns>Whether a warp device was created successfully.</returns>
+        private static unsafe bool TryGetWarpDevice(ID3D12Device** d3D12Device, DXGI_ADAPTER_DESC1* dxgiDescription1)
+        {
+            using ComPtr<IDXGIFactory4> dxgiFactory4 = default;
+
+            EnableDebugMode();
+
+            FX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, FX.__uuidof<IDXGIFactory4>(), dxgiFactory4.GetVoidAddressOf()).Assert();
+
+            using ComPtr<IDXGIAdapter1> dxgiAdapter1 = default;
+
+            dxgiFactory4.Get()->EnumWarpAdapter(FX.__uuidof<IDXGIAdapter1>(), dxgiAdapter1.GetVoidAddressOf()).Assert();
+            
+            dxgiAdapter1.Get()->GetDesc1(dxgiDescription1).Assert();
+
+            HRESULT createDeviceResult = FX.D3D12CreateDevice(
+                dxgiAdapter1.AsIUnknown().Get(),
+                D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_11_0,
+                FX.__uuidof<ID3D12Device>(),
+                (void**)d3D12Device);
+
+            return FX.SUCCEEDED(createDeviceResult);
         }
 
         /// <summary>

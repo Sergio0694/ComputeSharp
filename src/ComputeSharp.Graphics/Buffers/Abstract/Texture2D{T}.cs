@@ -78,6 +78,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 DXGIFormatHelper.GetForType<T>(),
                 (uint)width,
                 (uint)height,
+                device.IsCacheCoherentUMA,
                 out this.d3D12ResourceState);
 
             this.d3D12CommandListType = this.d3D12ResourceState == D3D12_RESOURCE_STATE_COMMON
@@ -148,7 +149,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 out ulong rowSizeInBytes,
                 out ulong totalSizeInBytes);
 
-            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, totalSizeInBytes);
+            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, totalSizeInBytes, GraphicsDevice.IsCacheCoherentUMA);
 
             using (CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType))
             {
@@ -220,7 +221,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
                 out ulong rowSizeInBytes,
                 out ulong totalSizeInBytes);
 
-            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, totalSizeInBytes);
+            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, totalSizeInBytes, GraphicsDevice.IsCacheCoherentUMA);
 
             using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
             fixed (void* sourcePointer = &source)

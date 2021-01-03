@@ -154,7 +154,7 @@ namespace ComputeSharp.Tests
         }
 
         [AutoConstructor]
-        private readonly partial struct ReadOnlyTexture2DKernel : IComputeShader
+        internal readonly partial struct ReadOnlyTexture2DKernel : IComputeShader
         {
             public readonly ReadOnlyTexture2D<int> source;
             public readonly ReadWriteBuffer<int> destination;
@@ -183,7 +183,7 @@ namespace ComputeSharp.Tests
         }
 
         [AutoConstructor]
-        private readonly partial struct ReadWriteTexture2DKernel : IComputeShader
+        internal readonly partial struct ReadWriteTexture2DKernel : IComputeShader
         {
             public readonly ReadWriteTexture2D<int> source;
             public readonly ReadWriteTexture2D<int> destination;
