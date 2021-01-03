@@ -112,7 +112,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="destination">The input memory area to write data to.</param>
         /// <param name="size">The size of the memory area to write data to.</param>
         /// <param name="offset">The offset to start reading data from.</param>
-        internal abstract void GetData(ref T destination, nint size, int offset);
+        internal abstract void GetData(ref T destination, int size, int offset);
 
         /// <summary>
         /// Writes the contents of a given memory area to a specified area of the current <see cref="Buffer{T}"/> instance.
@@ -120,7 +120,7 @@ namespace ComputeSharp.Graphics.Buffers.Abstract
         /// <param name="source">The input memory area to read data from.</param>
         /// <param name="size">The size of the input memory area to read data from.</param>
         /// <param name="offset">The offset to start writing data to.</param>
-        internal abstract void SetData(ref T source, nint size, int offset);
+        internal abstract void SetData(ref T source, int size, int offset);
 
         /// <summary>
         /// Writes the contents of a given <see cref="Buffer{T}"/> to the current <see cref="Buffer{T}"/> instance.

@@ -59,7 +59,7 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        internal override unsafe void GetData(ref T destination, nint size, int offset)
+        internal override unsafe void GetData(ref T destination, int size, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -94,7 +94,7 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        internal override unsafe void SetData(ref T source, nint size, int offset)
+        internal override unsafe void SetData(ref T source, int size, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
