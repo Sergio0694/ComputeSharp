@@ -99,6 +99,10 @@ namespace ComputeSharp.Graphics
 
             ComputeUnits = d3D12Options1Data.TotalLaneCount;
             WavefrontSize = d3D12Options1Data.WaveLaneCountMin;
+
+            var d3D12Architecture1Data = d3D12Device.Get()->CheckFeatureSupport<D3D12_FEATURE_DATA_ARCHITECTURE1>(D3D12_FEATURE_ARCHITECTURE1);
+
+            IsCacheCoherentUMA = d3D12Architecture1Data.CacheCoherentUMA != 0;
         }
 
         /// <summary>
@@ -141,6 +145,11 @@ namespace ComputeSharp.Graphics
         /// Gets the underlying <see cref="ID3D12Device"/> wrapped by the current instance.
         /// </summary>
         internal ID3D12Device* D3D12Device => this.d3D12Device;
+
+        /// <summary>
+        /// Gets whether or not the current device has a cache coherent UMA architecture.
+        /// </summary>
+        internal bool IsCacheCoherentUMA { get; }
 
         /// <summary>
         /// Checks whether the current device supports the creation of <see cref="Buffers.Abstract.Texture2D{T}"/>
