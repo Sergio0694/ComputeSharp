@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using ComputeSharp.__Internals;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
 using ComputeSharp.Shaders;
+
+#pragma warning disable CS0618
 
 namespace ComputeSharp
 {
@@ -463,6 +466,28 @@ namespace ComputeSharp
             where T : unmanaged
         {
             ReadWriteTexture2D<T> texture = new(device, width, height);
+
+            texture.SetData(span);
+
+            return texture;
+        }
+
+        /// <summary>
+        /// Allocates a new writeable 2D texture with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
+        /// <param name="width">The width of the texture.</param>
+        /// <param name="height">The height of the texture.</param>
+        /// <returns>A <see cref="ReadWriteTexture2D{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
+        [Pure]
+        public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> span, int width, int height)
+            where T : unmanaged, IUnorm<TPixel>
+            where TPixel : unmanaged
+        {
+            ReadWriteTexture2D<T, TPixel> texture = new(device, width, height);
 
             texture.SetData(span);
 

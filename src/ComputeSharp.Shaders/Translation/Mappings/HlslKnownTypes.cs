@@ -95,6 +95,7 @@ namespace ComputeSharp.Shaders.Mappings
             return
                 genericType == typeof(ReadWriteBuffer<>) ||
                 genericType == typeof(ReadWriteTexture2D<>) ||
+                genericType == typeof(ReadWriteTexture2D<,>) ||
                 genericType == typeof(ReadWriteTexture3D<>);
         }
     }

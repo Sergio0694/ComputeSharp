@@ -2,8 +2,8 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using Microsoft.Toolkit.Diagnostics;
-using static TerraFX.Interop.DXGI_FORMAT;
 using TerraFX.Interop;
+using static TerraFX.Interop.DXGI_FORMAT;
 
 namespace ComputeSharp.Graphics.Helpers
 {
@@ -38,6 +38,7 @@ namespace ComputeSharp.Graphics.Helpers
             else if (typeof(T) == typeof(Vector2)) return DXGI_FORMAT_R32G32_FLOAT;
             else if (typeof(T) == typeof(Vector3)) return DXGI_FORMAT_R32G32B32_FLOAT;
             else if (typeof(T) == typeof(Vector4)) return DXGI_FORMAT_R32G32B32A32_FLOAT;
+            else if (typeof(T) == typeof(Bgra32)) return DXGI_FORMAT_B8G8R8A8_UNORM;
             else return ThrowHelper.ThrowArgumentException<DXGI_FORMAT>("Invalid texture type");
         }
     }
