@@ -39,6 +39,8 @@ namespace ComputeSharp.Graphics.Helpers
             else if (typeof(T) == typeof(Vector3)) return DXGI_FORMAT_R32G32B32_FLOAT;
             else if (typeof(T) == typeof(Vector4)) return DXGI_FORMAT_R32G32B32A32_FLOAT;
             else if (typeof(T) == typeof(Bgra32)) return DXGI_FORMAT_B8G8R8A8_UNORM;
+            else if (typeof(T) == typeof(Rgba32)) return DXGI_FORMAT_R8G8B8A8_UNORM;
+            else if (typeof(T) == typeof(Rgba64)) return DXGI_FORMAT_R16G16B16A16_UNORM;
             else return ThrowHelper.ThrowArgumentException<DXGI_FORMAT>("Invalid texture type");
         }
     }
