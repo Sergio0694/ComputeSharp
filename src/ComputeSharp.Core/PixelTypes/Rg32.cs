@@ -39,7 +39,7 @@ namespace ComputeSharp
         }
 
         /// <summary>
-        /// Gets or sets the packed representation of the Rg32 struct.
+        /// Gets or sets the packed representation of the <see cref="Rg32"/> struct.
         /// </summary>
         public uint PackedValue
         {

@@ -39,7 +39,7 @@ namespace ComputeSharp
         }
 
         /// <summary>
-        /// Gets or sets the packed representation of the Rg16 struct.
+        /// Gets or sets the packed representation of the <see cref="Rg16"/> struct.
         /// </summary>
         public ushort PackedValue
         {

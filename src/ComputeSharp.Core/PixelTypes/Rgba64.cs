@@ -71,7 +71,7 @@ namespace ComputeSharp
         }
 
         /// <summary>
-        /// Gets or sets the packed representation of the Rgba64 struct.
+        /// Gets or sets the packed representation of the <see cref="Rgba64"/> struct.
         /// </summary>
         public ulong PackedValue
         {
