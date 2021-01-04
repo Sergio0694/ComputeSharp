@@ -3,9 +3,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 using Rectangle = System.Drawing.Rectangle;
 
 namespace ComputeSharp.ShareX
@@ -93,30 +90,23 @@ namespace ComputeSharp.ShareX
             BitmapData
                 sourceData = source.LockBits(bounds, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb),
                 resultData = result.LockBits(bounds, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-            Span<Rgba32>
-                sourceSpan = new((Rgba32*)sourceData.Scan0.ToPointer(), bounds.Width * bounds.Height),
-                resultSpan = new((Rgba32*)resultData.Scan0.ToPointer(), sourceSpan.Length);
-            Span<Vector4> vector4Span = new((void*)Marshal.AllocHGlobal(sizeof(Vector4) * sourceSpan.Length), sourceSpan.Length);
+            Span<Bgra32>
+                sourceSpan = new((Bgra32*)sourceData.Scan0.ToPointer(), bounds.Width * bounds.Height),
+                resultSpan = new((Bgra32*)resultData.Scan0.ToPointer(), sourceSpan.Length);
 
             try
             {
-                PixelOperations<Rgba32>.Instance.ToVector4(Configuration.Default, sourceSpan, vector4Span);
-
-                using ReadWriteBuffer<Vector4> leftBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(vector4Span);
-                using ReadWriteBuffer<Vector4> rightBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceSpan.Length);
+                using ReadWriteTexture2D<Bgra32, Vector4> leftBuffer = Gpu.Default.AllocateReadWriteTexture2D<Bgra32, Vector4>(sourceSpan, source.Width, source.Height);
+                using ReadWriteTexture2D<Vector4> rightBuffer = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
                 using ReadOnlyBuffer<float> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer(this.kernel);
 
                 ApplyVerticalConvolution(leftBuffer, rightBuffer, kernelBuffer, source.Height, source.Width);
                 ApplyHorizontalConvolution(rightBuffer, leftBuffer, kernelBuffer, source.Height, source.Width);
 
-                leftBuffer.GetData(vector4Span);
-
-                PixelOperations<Rgba32>.Instance.FromVector4Destructive(Configuration.Default, vector4Span, resultSpan);
+                leftBuffer.GetData(resultSpan);
             }
             finally
             {
-                Marshal.FreeHGlobal((IntPtr)Unsafe.AsPointer(ref vector4Span.GetPinnableReference()));
-
                 source.UnlockBits(sourceData);
                 result.UnlockBits(resultData);
             }
@@ -127,21 +117,20 @@ namespace ComputeSharp.ShareX
         /// <summary>
         /// Performs a vertical 1D complex convolution with the specified parameters.
         /// </summary>
-        /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from.</param>
-        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to.</param>
+        /// <param name="source">The source <see cref="ReadWriteTexture2D{T,TPixel}"/> to read data from.</param>
+        /// <param name="target">The target <see cref="ReadWriteTexture2D{T}"/> to write the results to.</param>
         /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel.</param>
         /// <param name="height">The height of the image to process.</param>
         /// <param name="width">The width of the image to process.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ApplyVerticalConvolution(
-            ReadWriteBuffer<Vector4> source,
-            ReadWriteBuffer<Vector4> target,
+            ReadWriteTexture2D<Bgra32, Vector4> source,
+            ReadWriteTexture2D<Vector4> target,
             ReadOnlyBuffer<float> kernel,
             int height,
             int width)
         {
             VerticalConvolutionProcessor shader = new(
-                width,
                 maxY: height - 1,
                 maxX: width - 1,
                 kernel.Length,
@@ -158,13 +147,12 @@ namespace ComputeSharp.ShareX
         [AutoConstructor]
         internal readonly partial struct VerticalConvolutionProcessor : IComputeShader
         {
-            public readonly int width;
             public readonly int maxY;
             public readonly int maxX;
             public readonly int kernelLength;
 
-            public readonly ReadWriteBuffer<Vector4> source;
-            public readonly ReadWriteBuffer<Vector4> target;
+            public readonly ReadWriteTexture2D<Bgra32, Vector4> source;
+            public readonly ReadWriteTexture2D<Vector4> target;
             public readonly ReadOnlyBuffer<float> kernel;
 
             /// <inheritdoc/>
@@ -178,34 +166,32 @@ namespace ComputeSharp.ShareX
                 {
                     int offsetY = Hlsl.Clamp(ids.Y + i - radiusY, 0, maxY);
                     int offsetX = Hlsl.Clamp(sourceOffsetColumnBase, 0, maxX);
-                    Vector4 color = source[offsetY * width + offsetX];
+                    Vector4 color = source[offsetX, offsetY];
 
                     result += kernel[i] * color;
                 }
 
-                int offsetXY = ids.Y * width + ids.X;
-                target[offsetXY] = result;
+                target[ids.XY] = result;
             }
         }
 
         /// <summary>
         /// Performs an horizontal 1D complex convolution with the specified parameters.
         /// </summary>
-        /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from.</param>
-        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to.</param>
+        /// <param name="source">The source <see cref="ReadWriteTexture2D{T}"/> to read data from.</param>
+        /// <param name="target">The target <see cref="ReadWriteTexture2D{T,TPixel}"/> to write the results to.</param>
         /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel.</param>
         /// <param name="height">The height of the image to process.</param>
         /// <param name="width">The width of the image to process.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ApplyHorizontalConvolution(
-            ReadWriteBuffer<Vector4> source,
-            ReadWriteBuffer<Vector4> target,
+            ReadWriteTexture2D<Vector4> source,
+            ReadWriteTexture2D<Bgra32, Vector4> target,
             ReadOnlyBuffer<float> kernel,
             int height,
             int width)
         {
             HorizontalConvolutionProcessor shader = new(
-                width,
                 maxY: height - 1,
                 maxX: width - 1,
                 kernel.Length,
@@ -222,13 +208,12 @@ namespace ComputeSharp.ShareX
         [AutoConstructor]
         internal readonly partial struct HorizontalConvolutionProcessor : IComputeShader
         {
-            public readonly int width;
             public readonly int maxY;
             public readonly int maxX;
             public readonly int kernelLength;
 
-            public readonly ReadWriteBuffer<Vector4> source;
-            public readonly ReadWriteBuffer<Vector4> target;
+            public readonly ReadWriteTexture2D<Vector4> source;
+            public readonly ReadWriteTexture2D<Bgra32, Vector4> target;
             public readonly ReadOnlyBuffer<float> kernel;
 
             /// <inheritdoc/>
@@ -238,19 +223,16 @@ namespace ComputeSharp.ShareX
                 int radiusX = kernelLength >> 1;
                 int sourceOffsetColumnBase = ids.X;
                 int offsetY = Hlsl.Clamp(ids.Y, 0, maxY);
-                int offsetXY;
 
                 for (int i = 0; i < kernelLength; i++)
                 {
                     int offsetX = Hlsl.Clamp(sourceOffsetColumnBase + i - radiusX, 0, maxX);
-                    offsetXY = offsetY * width + offsetX;
-                    Vector4 color = source[offsetXY];
+                    Vector4 color = source[offsetX, offsetY];
 
                     result += kernel[i] * color;
                 }
 
-                offsetXY = ids.Y * width + ids.X;
-                target[offsetXY] = result;
+                target[ids.XY] = result;
             }
         }
     }

@@ -18,7 +18,7 @@ namespace ComputeSharp.ShareX
 
             Console.WriteLine(">> Blurring on CPU");
 
-            using Bitmap resultBitmapCpu = ConvolutionMatrixManager.GaussianBlur(60, 60, 10).Apply(sourceBitmap);
+            using Bitmap resultBitmapCpu = ConvolutionMatrixManager.GaussianBlur(61, 61, 10).Apply(sourceBitmap);
 
             string resultPathCpu = Path.Combine(
                 Path.GetRelativePath(Path.GetDirectoryName(path)!, @"..\..\..\"),
@@ -30,7 +30,7 @@ namespace ComputeSharp.ShareX
 
             Console.WriteLine(">> Blurring on GPU");
 
-            using Bitmap resultBitmapGpu = HlslConvolutionManager.Create(60, 10).Apply(sourceBitmap);
+            using Bitmap resultBitmapGpu = HlslConvolutionManager.Create(61, 10).Apply(sourceBitmap);
 
             string resultPathGpu = Path.Combine(
                 Path.GetRelativePath(Path.GetDirectoryName(path)!, @"..\..\..\"),
