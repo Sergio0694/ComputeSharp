@@ -218,11 +218,15 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 // in HLSL, we can remove the suffix entirely. As for 64 bit values, we simply use the 'L' suffix.
                 if (type.GetFullMetadataName().Equals(typeof(float).FullName))
                 {
-                    return updatedNode.WithToken(Literal(updatedNode.Token.ValueText, 0f));
+                    string literal = updatedNode.Token.ValueText;
+
+                    if (!literal.Contains('.')) literal += ".0";
+
+                    return updatedNode.WithToken(Literal(literal, 0f));
                 }
                 else if (type.GetFullMetadataName().Equals(typeof(double).FullName))
                 {
-                    return updatedNode.WithToken(Literal($"{updatedNode.Token.ValueText}L", 0d));
+                    return updatedNode.WithToken(Literal(updatedNode.Token.ValueText + "L", 0d));
                 }
             }
 
