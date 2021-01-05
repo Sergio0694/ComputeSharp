@@ -5,6 +5,7 @@ using ComputeSharp.BokehBlur.Processors;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors;
+using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
 namespace ComputeSharp.ImageProcessing
 {
@@ -14,7 +15,7 @@ namespace ComputeSharp.ImageProcessing
         {
             Console.WriteLine(">> Loading image");
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "city.jpg");
-            using Image image = Image.Load(path);
+            using Image<ImageSharpRgba32> image = Image.Load<ImageSharpRgba32>(path);
 
             // Apply a series of processors and save the results
             foreach (var effect in new (string Name, IImageProcessor Processor)[]

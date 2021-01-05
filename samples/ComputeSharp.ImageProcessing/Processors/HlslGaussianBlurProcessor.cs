@@ -60,13 +60,12 @@ namespace ComputeSharp.BokehBlur.Processors
         [AutoConstructor]
         internal readonly partial struct VerticalConvolutionProcessor : IComputeShader
         {
-            public readonly int width;
             public readonly int maxY;
             public readonly int maxX;
             public readonly int kernelLength;
 
-            public readonly ReadWriteBuffer<Vector4> source;
-            public readonly ReadWriteBuffer<Vector4> target;
+            public readonly ReadWriteTexture2D<Rgba32, Vector4> source;
+            public readonly ReadWriteTexture2D<Vector4> target;
             public readonly ReadOnlyBuffer<float> kernel;
 
             /// <inheritdoc/>
@@ -80,13 +79,12 @@ namespace ComputeSharp.BokehBlur.Processors
                 {
                     int offsetY = Hlsl.Clamp(ids.Y + i - radiusY, 0, maxY);
                     int offsetX = Hlsl.Clamp(sourceOffsetColumnBase, 0, maxX);
-                    Vector4 color = source[offsetY * width + offsetX];
+                    Vector4 color = source[offsetX, offsetY];
 
                     result += kernel[i] * color;
                 }
 
-                int offsetXY = ids.Y * width + ids.X;
-                target[offsetXY] = result;
+                target[ids.XY] = result;
             }
         }
 
@@ -96,13 +94,12 @@ namespace ComputeSharp.BokehBlur.Processors
         [AutoConstructor]
         internal readonly partial struct HorizontalConvolutionProcessor : IComputeShader
         {
-            public readonly int width;
             public readonly int maxY;
             public readonly int maxX;
             public readonly int kernelLength;
 
-            public readonly ReadWriteBuffer<Vector4> source;
-            public readonly ReadWriteBuffer<Vector4> target;
+            public readonly ReadWriteTexture2D<Vector4> source;
+            public readonly ReadWriteTexture2D<Rgba32, Vector4> target;
             public readonly ReadOnlyBuffer<float> kernel;
 
             /// <inheritdoc/>
@@ -117,14 +114,12 @@ namespace ComputeSharp.BokehBlur.Processors
                 for (int i = 0; i < kernelLength; i++)
                 {
                     int offsetX = Hlsl.Clamp(sourceOffsetColumnBase + i - radiusX, 0, maxX);
-                    offsetXY = offsetY * width + offsetX;
-                    Vector4 color = source[offsetXY];
+                    Vector4 color = source[offsetX, offsetY];
 
                     result += kernel[i] * color;
                 }
 
-                offsetXY = ids.Y * width + ids.X;
-                target[offsetXY] = result;
+                target[ids.XY] = result;
             }
         }
     }

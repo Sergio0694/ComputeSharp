@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Buffers;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using Microsoft.Toolkit.Diagnostics;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing.Processors;
+using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
 namespace ComputeSharp.BokehBlur.Processors
 {
@@ -86,46 +87,41 @@ namespace ComputeSharp.BokehBlur.Processors
         /// <inheritdoc/>
         protected override void OnFrameApply(ImageFrame<TPixel> source)
         {
-            foreach (Memory<TPixel> memory in source.GetPixelMemoryGroup())
+            ImageFrame<ImageSharpRgba32> frame = (ImageFrame<ImageSharpRgba32>)(object)source;
+
+            if (!frame.TryGetSinglePixelSpan(out Span<ImageSharpRgba32> pixelSpan))
             {
-                Span<TPixel> spanTPixel = memory.Span;
-
-                using IMemoryOwner<Vector4> group4 = Configuration.MemoryAllocator.Allocate<Vector4>(spanTPixel.Length);
-
-                Span<Vector4> spanVector4 = group4.Memory.Span;
-
-                PixelOperations<TPixel>.Instance.ToVector4(Configuration, spanTPixel, spanVector4);
-
-                using ReadWriteBuffer<Vector4> sourceBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(spanVector4);
-                using ReadWriteBuffer<Vector4> firstPassBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Length);
-                using ReadOnlyBuffer<float> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer(Kernel);
-
-                ApplyVerticalConvolution(sourceBuffer, firstPassBuffer, kernelBuffer);
-                ApplyHorizontalConvolution(firstPassBuffer, sourceBuffer, kernelBuffer);
-
-                sourceBuffer.GetData(spanVector4);
-
-                PixelOperations<TPixel>.Instance.FromVector4Destructive(Configuration, spanVector4, spanTPixel);
+                ThrowHelper.ThrowInvalidOperationException("Cannot process image frames wrapping discontiguous memory");
             }
+
+            Span<Rgba32> span = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(pixelSpan);
+
+            using ReadWriteTexture2D<Rgba32, Vector4> sourceTexture = Gpu.Default.AllocateReadWriteTexture2D<Rgba32, Vector4>(span, frame.Width, frame.Height);
+            using ReadWriteTexture2D<Vector4> firstPassTexture = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(frame.Width, frame.Height);
+            using ReadOnlyBuffer<float> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer(Kernel);
+
+            ApplyVerticalConvolution(sourceTexture, firstPassTexture, kernelBuffer);
+            ApplyHorizontalConvolution(firstPassTexture, sourceTexture, kernelBuffer);
+
+            sourceTexture.GetData(span);
         }
 
         /// <summary>
         /// Performs a vertical 1D complex convolution with the specified parameters.
         /// </summary>
-        /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from.</param>
-        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to.</param>
+        /// <param name="source">The source <see cref="ReadWriteTexture2D{T, TPixel}"/> to read data from.</param>
+        /// <param name="target">The target <see cref="ReadWriteTexture2D{T}"/> to write the results to.</param>
         /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ApplyVerticalConvolution(
-            ReadWriteBuffer<Vector4> source,
-            ReadWriteBuffer<Vector4> target,
+            ReadWriteTexture2D<Rgba32, Vector4> source,
+            ReadWriteTexture2D<Vector4> target,
             ReadOnlyBuffer<float> kernel)
         {
             int height = Source.Height;
             int width = Source.Width;
 
             HlslGaussianBlurProcessor.VerticalConvolutionProcessor shader = new(
-                width,
                 maxY: height - 1,
                 maxX: width - 1,
                 kernel.Length,
@@ -139,20 +135,19 @@ namespace ComputeSharp.BokehBlur.Processors
         /// <summary>
         /// Performs an horizontal 1D complex convolution with the specified parameters.
         /// </summary>
-        /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from.</param>
-        /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to.</param>
+        /// <param name="source">The source <see cref="ReadWriteTexture2D{T}"/> to read data from.</param>
+        /// <param name="target">The target <see cref="ReadWriteTexture2D{T, TPixel}"/> to write the results to.</param>
         /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ApplyHorizontalConvolution(
-            ReadWriteBuffer<Vector4> source,
-            ReadWriteBuffer<Vector4> target,
+            ReadWriteTexture2D<Vector4> source,
+            ReadWriteTexture2D<Rgba32, Vector4> target,
             ReadOnlyBuffer<float> kernel)
         {
             int height = Source.Height;
             int width = Source.Width;
 
             HlslGaussianBlurProcessor.HorizontalConvolutionProcessor shader = new(
-                width,
                 maxY: height - 1,
                 maxX: width - 1,
                 kernel.Length,
