@@ -6,6 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Texture2DTests.Pixels.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Texture2DTests.Pixels.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.0.0-preview4" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
@@ -18,6 +26,25 @@
                       OutputItemType="Analyzer"
                       ReferenceOutputAssembly="false"
                       PrivateAssets="contentfiles;build"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Texture2DTests.Pixels.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Texture2DTests.Pixels.g.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Texture2DTests.Pixels.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Texture2DTests.Pixels.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>
