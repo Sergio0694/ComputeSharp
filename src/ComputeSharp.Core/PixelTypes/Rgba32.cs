@@ -17,7 +17,7 @@ namespace ComputeSharp
     /// </summary>
     /// <remarks>This struct is fully mutable.</remarks>
     [StructLayout(LayoutKind.Sequential)]
-    public struct Rgba32 : IEquatable<Rgba32>, IUnorm<Vector4>, IUnorm<Float4>, IUnorm<Double4>
+    public struct Rgba32 : IEquatable<Rgba32>, IUnorm<Vector4>, IUnorm<Float4>
     {
         /// <summary>
         /// The red component.

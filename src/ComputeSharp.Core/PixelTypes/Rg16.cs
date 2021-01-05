@@ -15,7 +15,7 @@ namespace ComputeSharp
     /// </para>
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct Rg16 : IEquatable<Rg16>, IUnorm<Vector2>, IUnorm<Float2>, IUnorm<Double2>
+    public struct Rg16 : IEquatable<Rg16>, IUnorm<Vector2>, IUnorm<Float2>
     {
         /// <summary>
         /// The red component.

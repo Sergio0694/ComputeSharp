@@ -7,13 +7,13 @@
 <#
 var typesMap = new Dictionary<string, string[]>
 {
-    ["Bgra32"] = new[] { "Vector4", "Float4", "Double4" },
-    ["R16"] = new[] { "float", "double" },
-    ["R8"] = new[] { "float", "double" },
-    ["Rg16"] = new[] { "Vector2", "Float2", "Double2" },
-    ["Rg32"] = new[] { "Vector2", "Float2", "Double2" },
-    ["Rgba32"] = new[] { "Vector4", "Float4", "Double4" },
-    ["Rgba64"] = new[] { "Vector4", "Float4", "Double4" }
+    ["Bgra32"] = new[] { "Vector4", "Float4" },
+    ["R16"] = new[] { "float" },
+    ["R8"] = new[] { "float" },
+    ["Rg16"] = new[] { "Vector2", "Float2" },
+    ["Rg32"] = new[] { "Vector2", "Float2" },
+    ["Rgba32"] = new[] { "Vector4", "Float4" },
+    ["Rgba64"] = new[] { "Vector4", "Float4" }
 };
 
 IEnumerable<(string T, string TPixel)> EnumerateTypes()

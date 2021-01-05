@@ -18,7 +18,7 @@ namespace ComputeSharp
     /// </summary>
     /// <remarks>This struct is fully mutable.</remarks>
     [StructLayout(LayoutKind.Sequential)]
-    public struct Bgra32 : IEquatable<Bgra32>, IUnorm<Vector4>, IUnorm<Float4>, IUnorm<Double4>
+    public struct Bgra32 : IEquatable<Bgra32>, IUnorm<Vector4>, IUnorm<Float4>
     {
         /// <summary>
         /// The blue component.
