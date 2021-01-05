@@ -7,7 +7,7 @@ using BenchmarkDotNet.Engines;
 namespace ComputeSharp.Benchmark.Blas
 {
     /// <summary>
-    /// A <see langword="class"/> that benchmarks the APIs in the <see cref="Dnn"/> class, on both CPU and GPU.
+    /// A <see langword="class"/> that benchmarks the APIs in the <see cref="BlasHelpers"/> class, on both CPU and GPU.
     /// </summary>
     [SimpleJob(RunStrategy.Monitoring)]
     public class BlasBenchmark : IDisposable
@@ -105,11 +105,13 @@ namespace ComputeSharp.Benchmark.Blas
             BufferW = Gpu.Default.AllocateReadOnlyBuffer(W);
             BufferB = Gpu.Default.AllocateReadOnlyBuffer(B);
             BufferY = Gpu.Default.AllocateReadWriteBuffer(Y);
+
+            Cpu();
+            GpuWithNoTemporaryBuffers();
+            GpuWithTemporaryBuffers();
         }
 
-        /// <summary>
-        /// Clears the memory from the current session.
-        /// </summary>
+        /// <inheritdoc/>
         [GlobalCleanup]
         public void Dispose()
         {
