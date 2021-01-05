@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Buffers;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Microsoft.Toolkit.Diagnostics;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Advanced;
-using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing.Processors;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
@@ -252,35 +250,39 @@ namespace ComputeSharp.BokehBlur.Processors
             /// <inheritdoc/>
             protected override void OnFrameApply(ImageFrame<ImageSharpRgba32> source)
             {
-                foreach (Memory<ImageSharpRgba32> memory in source.GetPixelMemoryGroup())
+                if (!source.TryGetSinglePixelSpan(out Span<ImageSharpRgba32> pixelSpan))
                 {
-                    // Preliminary gamma highlight pass
-                    using IMemoryOwner<Vector4> source4 = GetExposedVector4Buffer(memory);
-
-                    using ReadOnlyTexture2D<Vector4> sourceTexture = Gpu.Default.AllocateReadOnlyTexture2D<Vector4>(source4.Memory.Span, source.Width, source.Height);
-                    using ReadWriteTexture2D<Vector4> processingTexture = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
-                    using ReadWriteTexture2D<Vector4> realTexture = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
-                    using ReadWriteTexture2D<Vector4> imaginaryTexture = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
-                    using ReadOnlyBuffer<Complex64> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer<Complex64>(KernelSize);
-
-                    ref Vector4 param0 = ref KernelParameters[0]; // Avoid bounds check to access the kernel parameters
-
-                    // Perform two 1D convolutions for each component in the current instance
-                    for (int j = 0; j < Kernels.Length; j++)
-                    {
-                        kernelBuffer.SetData(Kernels[j]);
-                        Vector4 parameters = Unsafe.Add(ref param0, j);
-
-                        ApplyVerticalConvolution(sourceTexture, realTexture, imaginaryTexture, kernelBuffer);
-                        ApplyHorizontalConvolutionAndAccumulatePartials(realTexture, imaginaryTexture, processingTexture, kernelBuffer, parameters.Z, parameters.W);
-                    }
-
-                    // Apply the inverse gamma exposure pass
-                    processingTexture.GetData(source4.Memory.Span);
-
-                    // Write the final pixel data
-                    ApplyInverseGammaExposure(source4.Memory, memory);
+                    ThrowHelper.ThrowInvalidOperationException("Cannot process image frames wrapping discontiguous memory");
                 }
+
+                Span<Rgba32> span = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(pixelSpan);
+
+                using ReadWriteTexture2D<Rgba32, Vector4> sourceTexture = Gpu.Default.AllocateReadWriteTexture2D<Rgba32, Vector4>(span, source.Width, source.Height);
+                using ReadWriteTexture2D<Vector4> processingTexture = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
+                using ReadWriteTexture2D<Vector4> realTexture = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
+                using ReadWriteTexture2D<Vector4> imaginaryTexture = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
+                using ReadOnlyBuffer<Complex64> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer<Complex64>(KernelSize);
+
+                // Preliminary gamma highlight pass
+                ApplyGammaHighlight(sourceTexture);
+
+                ref Vector4 param0 = ref MemoryMarshal.GetArrayDataReference(KernelParameters);
+
+                // Perform two 1D convolutions for each component in the current instance
+                for (int j = 0; j < Kernels.Length; j++)
+                {
+                    kernelBuffer.SetData(Kernels[j]);
+                    Vector4 parameters = Unsafe.Add(ref param0, j);
+
+                    ApplyVerticalConvolution(sourceTexture, realTexture, imaginaryTexture, kernelBuffer);
+                    ApplyHorizontalConvolutionAndAccumulatePartials(realTexture, imaginaryTexture, processingTexture, kernelBuffer, parameters.Z, parameters.W);
+                }
+
+                // Apply the inverse gamma exposure pass
+                ApplyInverseGammaExposure(processingTexture, sourceTexture);
+
+                // Write the final pixel data
+                sourceTexture.GetData(span);
             }
 
             /// <summary>
@@ -292,7 +294,7 @@ namespace ComputeSharp.BokehBlur.Processors
             /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel.</param>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void ApplyVerticalConvolution(
-                ReadOnlyTexture2D<Vector4> source,
+                ReadWriteTexture2D<Rgba32, Vector4> source,
                 ReadWriteTexture2D<Vector4> reals,
                 ReadWriteTexture2D<Vector4> imaginaries,
                 ReadOnlyBuffer<Complex64> kernel)
@@ -322,7 +324,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 public int maxX;
                 public int kernelLength;
 
-                public ReadOnlyTexture2D<Vector4> source;
+                public ReadWriteTexture2D<Rgba32, Vector4> source;
                 public ReadWriteTexture2D<Vector4> reals;
                 public ReadWriteTexture2D<Vector4> imaginaries;
                 public ReadOnlyBuffer<Complex64> kernel;
@@ -427,112 +429,75 @@ namespace ComputeSharp.BokehBlur.Processors
             }
 
             /// <summary>
-            /// Applies the gamma correction/highlight to the input pixel buffer and returns an <see cref="IMemoryOwner{T}"/> instance with <see cref="Vector4"/> values.
+            /// Applies the gamma highlight pass to compute the final pixel values for a target image.
             /// </summary>
-            /// <param name="source">The source image.</param>
+            /// <param name="source">The source <see cref="ReadWriteTexture2D{T}"/> instance to modify.</param>
             [Pure]
-            private IMemoryOwner<Vector4> GetExposedVector4Buffer(Memory<ImageSharpRgba32> source)
+            private void ApplyGammaHighlight(ReadWriteTexture2D<Rgba32, Vector4> source)
             {
-                IMemoryOwner<Vector4> target = Configuration.MemoryAllocator.Allocate<Vector4>(source.Length);
-
-                int width = Source.Width;
-                int height = source.Length / width;
-
-                ParallelRowIterator.IterateRows(
-                    Configuration,
-                    new Rectangle(0, 0, width, height),
-                    new GetExposedVector4BufferProcessor(width, source, target.Memory, Configuration));
-
-                return target;
+                Gpu.Default.For(source.Height, new GammaHighlightProcessor(source.Width, source));
             }
 
             /// <summary>
-            /// The processor for <see cref="GetExposedVector4Buffer"/>.
+            /// Kernel for the gamma highlight pass.
             /// </summary>
             [AutoConstructor]
-            private readonly partial struct GetExposedVector4BufferProcessor : IRowOperation
+            internal readonly partial struct GammaHighlightProcessor : IComputeShader
             {
-                private readonly int width;
+                public readonly int width;
 
-                private readonly Memory<ImageSharpRgba32> source;
-                private readonly Memory<Vector4> target;
-                private readonly Configuration configuration;
+                public readonly ReadWriteTexture2D<Rgba32, Vector4> source;
 
                 /// <inheritdoc/>
-                public void Invoke(int y)
+                public void Execute(ThreadIds ids)
                 {
-                    int offset = y * width;
-
-                    Span<ImageSharpRgba32> rowTPixel = source.Span.Slice(offset, width);
-                    Span<Vector4> rowVector4 = target.Span.Slice(offset, width);
-
-                    PixelOperations<ImageSharpRgba32>.Instance.ToVector4(configuration, rowTPixel, rowVector4);
-
-                    foreach (ref Vector4 v in rowVector4)
+                    for (int i = 0; i < width; i++)
                     {
-                        Vector4 pixel = v;
-                        float alpha = pixel.W;
+                        Float4 v = source[i, ids.X];
 
-                        pixel = pixel * pixel * pixel;
-                        pixel.W = alpha;
+                        v.XYZ = v.XYZ * v.XYZ * v.XYZ;
 
-                        v = pixel;
+                        source[i, ids.X] = v;
                     }
                 }
             }
 
             /// <summary>
-            /// Applies the inverse gamma exposure pass to compute the final pixel values for a target image.
+            /// Applies the inverse gamma highlight pass to compute the final pixel values for a target image.
             /// </summary>
-            /// <param name="source">The source <see cref="Vector4"/> buffer to read from.</param>
-            /// <param name="target">The target image.</param>
+            /// <param name="source">The source <see cref="ReadWriteTexture2D{T}"/> instance to read from.</param>
+            /// <param name="target">The target <see cref="ReadWriteTexture2D{T, TPixel}"/> instance to write to.</param>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void ApplyInverseGammaExposure(Memory<Vector4> source, Memory<ImageSharpRgba32> target)
+            private void ApplyInverseGammaExposure(
+                ReadWriteTexture2D<Vector4> source,
+                ReadWriteTexture2D<Rgba32, Vector4> target)
             {
-                int width = Source.Width;
-                int height = source.Length / width;
-
-                ParallelRowIterator.IterateRows(
-                    Configuration,
-                    new Rectangle(0, 0, width, height),
-                    new ApplyInverseGammaExposureProcessor(width, source, target, Configuration));
+                Gpu.Default.For(source.Height, new InverseGammaHighlightProcessor(source.Width, source, target));
             }
 
             /// <summary>
-            /// The processor for <see cref="ApplyInverseGammaExposure"/>.
+            /// Kernel for the inverse gamma highlight pass.
             /// </summary>
             [AutoConstructor]
-            private readonly partial struct ApplyInverseGammaExposureProcessor : IRowOperation
+            internal readonly partial struct InverseGammaHighlightProcessor : IComputeShader
             {
-                private readonly int width;
+                public readonly int width;
 
-                private readonly Memory<Vector4> source;
-                private readonly Memory<ImageSharpRgba32> target;
-                private readonly Configuration configuration;
+                public readonly ReadWriteTexture2D<Vector4> source;
+                public readonly ReadWriteTexture2D<Rgba32, Vector4> target;
 
                 /// <inheritdoc/>
-                public void Invoke(int y)
+                public void Execute(ThreadIds ids)
                 {
-                    int offset = y * width;
-
-                    Span<Vector4> rowVector4 = source.Span.Slice(offset, width);
-                    Span<ImageSharpRgba32> rowTPixel = target.Span.Slice(offset, width);
-
-                    Vector4 low = Vector4.Zero;
-                    var high = new Vector4(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
-
-                    foreach (ref Vector4 v in rowVector4)
+                    for (int i = 0; i < width; i++)
                     {
-                        var clamp = Vector4.Clamp(v, low, high);
+                        Float4 v = source[i, ids.X];
 
-                        clamp.X = MathF.Pow(clamp.X, 1 / 3f);
-                        clamp.Y = MathF.Pow(clamp.Y, 1 / 3f);
-                        clamp.Z = MathF.Pow(clamp.Z, 1 / 3f);
+                        v.XYZ = Hlsl.Clamp(v.XYZ, 0, float.MaxValue);
+                        v.XYZ = Hlsl.Pow(v.XYZ, 0.333333343f);
 
-                        v = clamp;
+                        target[i, ids.X] = v;
                     }
-
-                    PixelOperations<ImageSharpRgba32>.Instance.FromVector4Destructive(configuration, rowVector4, rowTPixel);
                 }
             }
         }
