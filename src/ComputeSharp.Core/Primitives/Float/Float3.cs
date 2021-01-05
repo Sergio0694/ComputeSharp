@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
 
@@ -562,6 +563,18 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="Float3"/> instance.</param>
         public static implicit operator Float3(float x) => new(x, x, x);
+
+        /// <summary>
+        /// Casts a <see cref="Float3"/> value to a <see cref="Vector3"/> one.
+        /// </summary>
+        /// <param name="xy">The input <see cref="Float3"/> value to cast.</param>
+        public static unsafe implicit operator Vector3(Float3 xyz) => *(Vector3*)&xyz;
+
+        /// <summary>
+        /// Casts a <see cref="Vector3"/> value to a <see cref="Float3"/> one.
+        /// </summary>
+        /// <param name="xy">The input <see cref="Vector3"/> value to cast.</param>
+        public static unsafe implicit operator Float3(Vector3 xyz) => *(Float3*)&xyz;
 
         /// <summary>
         /// Casts a <see cref="Float3"/> value to a <see cref="Double3"/> one.

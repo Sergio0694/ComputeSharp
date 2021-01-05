@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
@@ -12,7 +13,7 @@
 
   <!--The source generator cannot contain package references or project references, so instead we're just
       manually linking the source files from ComputeSharp.Core in here. We only need them to extract metadata
-	  and to match members based on full name, so the types being in the generator assembly are not an issue.-->
+      and to match members based on full name, so the types being in the generator assembly are not an issue.-->
   <ItemGroup>
     <Compile Include="..\ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" Link="Core\Attributes\AutoConstructorAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Attributes\ShaderMethodAttribute.cs" Link="Core\Attributes\ShaderMethodAttribute.cs" />
