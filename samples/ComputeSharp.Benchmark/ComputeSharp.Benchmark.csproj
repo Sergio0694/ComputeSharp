@@ -19,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.12.1.1473" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.1" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.12.1.1475" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3-alpha.0.24" />
   </ItemGroup>
 
   <ItemGroup>

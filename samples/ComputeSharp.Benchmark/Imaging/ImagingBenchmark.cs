@@ -65,7 +65,7 @@ namespace ComputeSharp.Benchmark.Imaging
         [BenchmarkCategory("BOKEH")]
         public void Bokeh_Gpu()
         {
-            this.image.Mutate(c => c.ApplyProcessor(new HlslBokehBlurProcessor(80, 2, 3)));
+            this.image.Mutate(c => c.ApplyProcessor(new HlslBokehBlurProcessor(80, 2)));
         }
 
         /// <summary>

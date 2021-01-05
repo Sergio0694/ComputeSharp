@@ -20,7 +20,7 @@ namespace ComputeSharp.ImageProcessing
             // Apply a series of processors and save the results
             foreach (var effect in new (string Name, IImageProcessor Processor)[]
             {
-                ("bokeh", new HlslBokehBlurProcessor(80, 2, 3)),
+                ("bokeh", new HlslBokehBlurProcessor(80, 2)),
                 ("gaussian", new HlslGaussianBlurProcessor(80))
             })
             {

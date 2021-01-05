@@ -1,7 +1,9 @@
-﻿using System.Numerics;
+﻿using System.Runtime.CompilerServices;
+using Microsoft.Toolkit.Diagnostics;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing.Processors;
+using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
 namespace ComputeSharp.BokehBlur.Processors
 {
@@ -51,76 +53,14 @@ namespace ComputeSharp.BokehBlur.Processors
         public IImageProcessor<TPixel> CreatePixelSpecificProcessor<TPixel>(Configuration configuration, Image<TPixel> source, Rectangle sourceRectangle)
             where TPixel : unmanaged, IPixel<TPixel>
         {
-            return new HlslGaussianBlurProcessor<TPixel>(this, configuration, source, sourceRectangle);
-        }
-
-        /// <summary>
-        /// Kernel for the vertical convolution pass.
-        /// </summary>
-        [AutoConstructor]
-        internal readonly partial struct VerticalConvolutionProcessor : IComputeShader
-        {
-            public readonly int maxY;
-            public readonly int maxX;
-            public readonly int kernelLength;
-
-            public readonly ReadWriteTexture2D<Rgba32, Vector4> source;
-            public readonly ReadWriteTexture2D<Vector4> target;
-            public readonly ReadOnlyBuffer<float> kernel;
-
-            /// <inheritdoc/>
-            public void Execute(ThreadIds ids)
+            if (typeof(TPixel) != typeof(ImageSharpRgba32))
             {
-                Vector4 result = Vector4.Zero;
-                int radiusY = kernelLength >> 1;
-                int sourceOffsetColumnBase = ids.X;
-
-                for (int i = 0; i < kernelLength; i++)
-                {
-                    int offsetY = Hlsl.Clamp(ids.Y + i - radiusY, 0, maxY);
-                    int offsetX = Hlsl.Clamp(sourceOffsetColumnBase, 0, maxX);
-                    Vector4 color = source[offsetX, offsetY];
-
-                    result += kernel[i] * color;
-                }
-
-                target[ids.XY] = result;
+                ThrowHelper.ThrowInvalidOperationException("This processor only supports the RGBA32 pixel format");
             }
-        }
 
-        /// <summary>
-        /// Kernel for the horizontal convolution pass.
-        /// </summary>
-        [AutoConstructor]
-        internal readonly partial struct HorizontalConvolutionProcessor : IComputeShader
-        {
-            public readonly int maxY;
-            public readonly int maxX;
-            public readonly int kernelLength;
+            var processor = new Implementation(this, configuration, Unsafe.As<Image<ImageSharpRgba32>>(source), sourceRectangle);
 
-            public readonly ReadWriteTexture2D<Vector4> source;
-            public readonly ReadWriteTexture2D<Rgba32, Vector4> target;
-            public readonly ReadOnlyBuffer<float> kernel;
-
-            /// <inheritdoc/>
-            public void Execute(ThreadIds ids)
-            {
-                Vector4 result = Vector4.Zero;
-                int radiusX = kernelLength >> 1;
-                int sourceOffsetColumnBase = ids.X;
-                int offsetY = Hlsl.Clamp(ids.Y, 0, maxY);
-                int offsetXY;
-
-                for (int i = 0; i < kernelLength; i++)
-                {
-                    int offsetX = Hlsl.Clamp(sourceOffsetColumnBase + i - radiusX, 0, maxX);
-                    Vector4 color = source[offsetX, offsetY];
-
-                    result += kernel[i] * color;
-                }
-
-                target[ids.XY] = result;
-            }
+            return Unsafe.As<IImageProcessor<TPixel>>(processor);
         }
     }
 }
