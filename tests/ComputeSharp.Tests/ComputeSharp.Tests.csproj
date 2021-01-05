@@ -6,14 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Texture2DTests.Pixels.g.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Texture2DTests.Pixels.tt</DependentUpon>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.0.0-preview4" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
@@ -33,6 +25,10 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Texture2DTests.Pixels.g.cs</LastGenOutput>
     </None>
+    <None Update="Texture3DTests.Pixels.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Texture3DTests.Pixels.g.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -44,6 +40,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Texture2DTests.Pixels.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Texture3DTests.Pixels.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Texture3DTests.Pixels.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 
