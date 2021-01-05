@@ -73,7 +73,7 @@ namespace ComputeSharp
         public static bool operator !=(Rg16 left, Rg16 right) => !left.Equals(right);
 
         /// <inheritdoc/>
-        public override readonly bool Equals(object obj) => obj is Rg16 rgba32 && Equals(rgba32);
+        public override readonly bool Equals(object? obj) => obj is Rg16 rgba32 && Equals(rgba32);
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
