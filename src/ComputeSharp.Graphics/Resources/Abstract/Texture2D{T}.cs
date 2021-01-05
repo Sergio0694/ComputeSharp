@@ -53,7 +53,7 @@ namespace ComputeSharp.Resources
         /// <summary>
         /// Creates a new <see cref="Texture2D{T}"/> instance with the specified parameters.
         /// </summary>
-        /// <param name="device">The <see cref="Graphics.GraphicsDevice"/> associated with the current instance.</param>
+        /// <param name="device">The <see cref="ComputeSharp.GraphicsDevice"/> associated with the current instance.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="resourceType">The resource type for the current texture.</param>
@@ -99,7 +99,7 @@ namespace ComputeSharp.Resources
         }
 
         /// <summary>
-        /// Gets the <see cref="Graphics.GraphicsDevice"/> associated with the current instance.
+        /// Gets the <see cref="ComputeSharp.GraphicsDevice"/> associated with the current instance.
         /// </summary>
         public GraphicsDevice GraphicsDevice { get; }
 

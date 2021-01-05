@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using ComputeSharp.Core.Extensions;
+using ComputeSharp.Graphics.Resources.Enums;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_QUEUE_FLAGS;
@@ -18,7 +19,6 @@ using static TerraFX.Interop.D3D12_RESOURCE_STATES;
 using static TerraFX.Interop.D3D12_SRV_DIMENSION;
 using static TerraFX.Interop.D3D12_UAV_DIMENSION;
 using FX = TerraFX.Interop.Windows;
-using ComputeSharp.Graphics.Resources.Enums;
 
 namespace ComputeSharp.Graphics.Extensions
 {

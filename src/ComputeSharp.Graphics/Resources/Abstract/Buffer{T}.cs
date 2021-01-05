@@ -87,7 +87,7 @@ namespace ComputeSharp.Resources
         }
 
         /// <summary>
-        /// Gets the <see cref="Graphics.GraphicsDevice"/> associated with the current instance.
+        /// Gets the <see cref="ComputeSharp.GraphicsDevice"/> associated with the current instance.
         /// </summary>
         public GraphicsDevice GraphicsDevice { get; }
 
