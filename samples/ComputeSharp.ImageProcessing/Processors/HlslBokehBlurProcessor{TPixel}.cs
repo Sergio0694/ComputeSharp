@@ -257,9 +257,10 @@ namespace ComputeSharp.BokehBlur.Processors
                     // Preliminary gamma highlight pass
                     using IMemoryOwner<Vector4> source4 = GetExposedVector4Buffer(memory);
 
-                    using ReadOnlyBuffer<Vector4> sourceBuffer = Gpu.Default.AllocateReadOnlyBuffer<Vector4>(source4.Memory.Span);
-                    using ReadWriteBuffer<Vector4> processingBuffer = Gpu.Default.AllocateReadWriteBuffer<Vector4>(sourceBuffer.Length);
-                    using ReadWriteBuffer<ComplexVector4> firstPassBuffer = Gpu.Default.AllocateReadWriteBuffer<ComplexVector4>(sourceBuffer.Length);
+                    using ReadOnlyTexture2D<Vector4> sourceTexture = Gpu.Default.AllocateReadOnlyTexture2D<Vector4>(source4.Memory.Span, source.Width, source.Height);
+                    using ReadWriteTexture2D<Vector4> processingTexture = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
+                    using ReadWriteTexture2D<Vector4> realTexture = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
+                    using ReadWriteTexture2D<Vector4> imaginaryTexture = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
                     using ReadOnlyBuffer<Complex64> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer<Complex64>(KernelSize);
 
                     ref Vector4 param0 = ref KernelParameters[0]; // Avoid bounds check to access the kernel parameters
@@ -270,12 +271,12 @@ namespace ComputeSharp.BokehBlur.Processors
                         kernelBuffer.SetData(Kernels[j]);
                         Vector4 parameters = Unsafe.Add(ref param0, j);
 
-                        ApplyVerticalConvolution(sourceBuffer, firstPassBuffer, kernelBuffer);
-                        ApplyHorizontalConvolutionAndAccumulatePartials(firstPassBuffer, processingBuffer, kernelBuffer, parameters.Z, parameters.W);
+                        ApplyVerticalConvolution(sourceTexture, realTexture, imaginaryTexture, kernelBuffer);
+                        ApplyHorizontalConvolutionAndAccumulatePartials(realTexture, imaginaryTexture, processingTexture, kernelBuffer, parameters.Z, parameters.W);
                     }
 
                     // Apply the inverse gamma exposure pass
-                    processingBuffer.GetData(source4.Memory.Span);
+                    processingTexture.GetData(source4.Memory.Span);
 
                     // Write the final pixel data
                     ApplyInverseGammaExposure(source4.Memory, memory);
@@ -285,42 +286,84 @@ namespace ComputeSharp.BokehBlur.Processors
             /// <summary>
             /// Performs a vertical 1D complex convolution with the specified parameters.
             /// </summary>
-            /// <param name="source">The source <see cref="ReadOnlyBuffer{T}"/> to read data from.</param>
-            /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to.</param>
+            /// <param name="source">The source <see cref="ReadOnlyTexture2D{T}"/> to read data from.</param>
+            /// <param name="reals">The target <see cref="ReadWriteTexture2D{T}"/> to write the real results to.</param>
+            /// <param name="imaginaries">The target <see cref="ReadWriteTexture2D{T}"/> to write the imaginary results to.</param>
             /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel.</param>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void ApplyVerticalConvolution(
-                ReadOnlyBuffer<Vector4> source,
-                ReadWriteBuffer<ComplexVector4> target,
+                ReadOnlyTexture2D<Vector4> source,
+                ReadWriteTexture2D<Vector4> reals,
+                ReadWriteTexture2D<Vector4> imaginaries,
                 ReadOnlyBuffer<Complex64> kernel)
             {
                 int height = Source.Height;
                 int width = Source.Width;
 
                 VerticalConvolutionProcessor shader = new(
-                    width,
                     maxY: height - 1,
                     maxX: width - 1,
                     kernelLength: kernel.Length,
                     source,
-                    target,
+                    reals,
+                    imaginaries,
                     kernel);
 
                 Gpu.Default.For(width, height, in shader);
             }
 
             /// <summary>
+            /// Kernel for the vertical convolution pass.
+            /// </summary>
+            [AutoConstructor]
+            internal partial struct VerticalConvolutionProcessor : IComputeShader
+            {
+                public int maxY;
+                public int maxX;
+                public int kernelLength;
+
+                public ReadOnlyTexture2D<Vector4> source;
+                public ReadWriteTexture2D<Vector4> reals;
+                public ReadWriteTexture2D<Vector4> imaginaries;
+                public ReadOnlyBuffer<Complex64> kernel;
+
+                /// <inheritdoc/>
+                public void Execute(ThreadIds ids)
+                {
+                    Vector4 real = Vector4.Zero;
+                    Vector4 imaginary = Vector4.Zero;
+                    int radiusY = kernelLength >> 1;
+                    int sourceOffsetColumnBase = ids.X;
+
+                    for (int i = 0; i < kernelLength; i++)
+                    {
+                        int offsetY = Hlsl.Clamp(ids.Y + i - radiusY, 0, maxY);
+                        int offsetX = Hlsl.Clamp(sourceOffsetColumnBase, 0, maxX);
+                        Vector4 color = source[offsetX, offsetY];
+                        Complex64 factors = kernel[i];
+
+                        real += factors.Real * color;
+                        imaginary += factors.Imaginary * color;
+                    }
+
+                    reals[ids.XY] = real;
+                    imaginaries[ids.XY] = imaginary;
+                }
+            }
+
+            /// <summary>
             /// Performs an horizontal 1D complex convolution with the specified parameters.
             /// </summary>
-            /// <param name="source">The source <see cref="ReadWriteBuffer{T}"/> to read data from.</param>
-            /// <param name="target">The target <see cref="ReadWriteBuffer{T}"/> to write the results to.</param>
+            /// <param name="reals">The source <see cref="ReadWriteTexture2D{T}"/> to read the real results from.</param>
+            /// <param name="imaginaries">The source <see cref="ReadWriteTexture2D{T}"/> to read the imaginary results from.</param>
             /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel.</param>
             /// <param name="z">The weight factor for the real component of the complex pixel values.</param>
             /// <param name="w">The weight factor for the imaginary component of the complex pixel values.</param>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void ApplyHorizontalConvolutionAndAccumulatePartials(
-                ReadWriteBuffer<ComplexVector4> source,
-                ReadWriteBuffer<Vector4> target,
+                ReadWriteTexture2D<Vector4> reals,
+                ReadWriteTexture2D<Vector4> imaginaries,
+                ReadWriteTexture2D<Vector4> target,
                 ReadOnlyBuffer<Complex64> kernel,
                 float z,
                 float w)
@@ -329,17 +372,58 @@ namespace ComputeSharp.BokehBlur.Processors
                 int width = Source.Width;
 
                 HorizontalConvolutionAndAccumulatePartialsProcessor shader = new(
-                    width,
                     maxY: height - 1,
                     maxX: width - 1,
                     kernelLength: kernel.Length,
                     z,
                     w,
-                    source,
+                    reals,
+                    imaginaries,
                     target,
                     kernel);
 
                 Gpu.Default.For(width, height, in shader);
+            }
+
+            /// <summary>
+            /// Kernel for the horizontal convolution pass.
+            /// </summary>
+            [AutoConstructor]
+            internal partial struct HorizontalConvolutionAndAccumulatePartialsProcessor : IComputeShader
+            {
+                public int maxY;
+                public int maxX;
+                public int kernelLength;
+                public float z;
+                public float w;
+
+                public ReadWriteTexture2D<Vector4> reals;
+                public ReadWriteTexture2D<Vector4> imaginaries;
+                public ReadWriteTexture2D<Vector4> target;
+                public ReadOnlyBuffer<Complex64> kernel;
+
+                /// <inheritdoc/>
+                public void Execute(ThreadIds ids)
+                {
+                    Vector4 real = Vector4.Zero;
+                    Vector4 imaginary = Vector4.Zero;
+                    int radiusX = kernelLength >> 1;
+                    int sourceOffsetColumnBase = ids.X;
+                    int offsetY = Hlsl.Clamp(ids.Y, 0, maxY);
+
+                    for (int i = 0; i < kernelLength; i++)
+                    {
+                        int offsetX = Hlsl.Clamp(sourceOffsetColumnBase + i - radiusX, 0, maxX);
+                        Vector4 sourceReal = reals[offsetX, offsetY];
+                        Vector4 sourceImaginary = imaginaries[offsetX, offsetY];
+                        Complex64 factors = kernel[i];
+
+                        real += factors.Real * sourceReal - factors.Imaginary * sourceImaginary;
+                        imaginary += factors.Real * sourceImaginary + factors.Imaginary * sourceReal;
+                    }
+
+                    target[ids.XY] += real * z + imaginary * w;
+                }
             }
 
             /// <summary>
