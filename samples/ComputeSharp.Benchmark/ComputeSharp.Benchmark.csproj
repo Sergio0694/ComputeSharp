@@ -6,7 +6,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.12.1.1473" />
+    <Compile Include="..\ComputeSharp.ImageProcessing\Primitives\Complex64.cs" Link="Imaging\Primitives\Complex64.cs" />
+    <Compile Include="..\ComputeSharp.ImageProcessing\Processors\HlslBokehBlurProcessor.cs" Link="Imaging\Processors\HlslBokehBlurProcessor.cs" />
+    <Compile Include="..\ComputeSharp.ImageProcessing\Processors\HlslBokehBlurProcessor{TPixel}.cs" Link="Imaging\Processors\HlslBokehBlurProcessor{TPixel}.cs" />
+    <Compile Include="..\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor.cs" />
+    <Compile Include="..\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor{TPixel}.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor{TPixel}.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\ComputeSharp.ImageProcessing\city.jpg" Link="Imaging\city.jpg" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.12.1.1475" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3-alpha.0.24" />
   </ItemGroup>
 
   <ItemGroup>

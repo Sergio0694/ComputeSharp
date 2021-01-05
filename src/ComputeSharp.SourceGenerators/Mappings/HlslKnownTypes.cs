@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Numerics;
 using ComputeSharp.SourceGenerators.Extensions;
 using Microsoft.CodeAnalysis;
@@ -70,9 +71,13 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 case "ComputeSharp.ReadOnlyBuffer`1":
                 case "ComputeSharp.ReadWriteBuffer`1":
                 case "ComputeSharp.ReadOnlyTexture2D`1":
+                case "ComputeSharp.ReadOnlyTexture2D`2":
                 case "ComputeSharp.ReadWriteTexture2D`1":
+                case "ComputeSharp.ReadWriteTexture2D`2":
                 case "ComputeSharp.ReadOnlyTexture3D`1":
+                case "ComputeSharp.ReadOnlyTexture3D`2":
                 case "ComputeSharp.ReadWriteTexture3D`1":
+                case "ComputeSharp.ReadWriteTexture3D`2":
                     return true;
                 default: return false;
             };
@@ -107,7 +112,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
             // Special case for the structured buffer types
             if (IsTypedResourceType(typeName))
             {
-                string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments[0]).GetFullMetadataName();
+                string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments.Last()).GetFullMetadataName();
 
                 // If the current type is a custom type, format it as needed
                 if (!KnownTypes.TryGetValue(genericArgumentName, out string? mapped))
@@ -122,9 +127,13 @@ namespace ComputeSharp.SourceGenerators.Mappings
                     "ComputeSharp.ReadOnlyBuffer`1" => $"StructuredBuffer<{mapped}>",
                     "ComputeSharp.ReadWriteBuffer`1" => $"RWStructuredBuffer<{mapped}>",
                     "ComputeSharp.ReadOnlyTexture2D`1" => $"Texture2D<{mapped}>",
+                    "ComputeSharp.ReadOnlyTexture2D`2" => $"Texture2D<unorm {mapped}>",
                     "ComputeSharp.ReadWriteTexture2D`1" => $"RWTexture2D<{mapped}>",
+                    "ComputeSharp.ReadWriteTexture2D`2" => $"RWTexture2D<unorm {mapped}>",
                     "ComputeSharp.ReadOnlyTexture3D`1" => $"Texture3D<{mapped}>",
+                    "ComputeSharp.ReadOnlyTexture3D`2" => $"Texture3D<unorm {mapped}>",
                     "ComputeSharp.ReadWriteTexture3D`1" => $"RWTexture3D<{mapped}>",
+                    "ComputeSharp.ReadWriteTexture3D`2" => $"RWTexture3D<unorm {mapped}>",
                     _ => throw new ArgumentException()
                 };
             }

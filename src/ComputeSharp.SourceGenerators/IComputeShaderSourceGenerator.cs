@@ -122,7 +122,8 @@ namespace ComputeSharp.SourceGenerators
                 yield return new[] { fieldSymbol.Name, mapping ?? fieldSymbol.Name, typeName };
 
                 // Track the type of items in the current buffer
-                if (HlslKnownTypes.IsTypedResourceType(typeSymbol.GetFullMetadataName()))
+                if (HlslKnownTypes.IsTypedResourceType(typeSymbol.GetFullMetadataName()) &&
+                    typeSymbol.TypeArguments.Length == 1)
                 {
                     types.Add((INamedTypeSymbol)typeSymbol.TypeArguments[0]);
                 }

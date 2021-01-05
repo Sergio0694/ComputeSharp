@@ -20,4 +20,32 @@
                       PrivateAssets="contentfiles;build"/>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Texture2DTests.Pixels.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Texture2DTests.Pixels.g.cs</LastGenOutput>
+    </None>
+    <None Update="Texture3DTests.Pixels.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Texture3DTests.Pixels.g.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Texture2DTests.Pixels.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Texture2DTests.Pixels.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Texture3DTests.Pixels.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Texture3DTests.Pixels.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

@@ -2,12 +2,12 @@
 using System.Threading.Tasks;
 using ComputeSharp.Graphics;
 
-namespace ComputeSharp.Benchmark
+namespace ComputeSharp.Benchmark.Blas
 {
     /// <summary>
     /// A <see langword="class"/> that contains primitives to run certain operations of a neural network.
     /// </summary>
-    internal static partial class Dnn
+    internal static partial class BlasHelpers
     {
         /// <summary>
         /// Executes the forward pass on a fully connected layer on the CPU.

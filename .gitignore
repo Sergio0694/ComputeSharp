@@ -329,6 +329,5 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 
-# Sample bokeh blur image
-**/*_bokeh.jpg
-**/*_gaussian.jpg
+# Sample images
+**/city_*.jpg

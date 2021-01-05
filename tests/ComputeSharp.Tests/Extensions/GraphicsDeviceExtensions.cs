@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using ComputeSharp.__Internals;
 using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Buffers.Abstract;
+
+#pragma warning disable CS0618
 
 namespace ComputeSharp.Tests.Extensions
 {
@@ -53,6 +56,29 @@ namespace ComputeSharp.Tests.Extensions
         }
 
         /// <summary>
+        /// Allocates a new <see cref="Texture2D{T}"/> instance of the specified type.
+        /// </summary>
+        /// <typeparam name="T">The type of items in the texture.</typeparam>
+        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+        /// <param name="device">The target <see cref="GraphicsDevice"/> instance to allocate the texture for.</param>
+        /// <param name="type">The type of texture to allocate.</param>
+        /// <param name="width">The width of the texture to create.</param>
+        /// <param name="height">The height of the texture to create.</param>
+        /// <returns>A <see cref="Texture2D{T}"/> instance of the requested size.</returns>
+        [Pure]
+        public static Texture2D<T> AllocateTexture2D<T, TPixel>(this GraphicsDevice device, Type type, int width, int height)
+            where T : unmanaged, IUnorm<TPixel>
+            where TPixel : unmanaged
+        {
+            return type switch
+            {
+                _ when type == typeof(ReadOnlyTexture2D<,>) => device.AllocateReadOnlyTexture2D<T, TPixel>(width, height),
+                _ when type == typeof(ReadWriteTexture2D<,>) => device.AllocateReadWriteTexture2D<T, TPixel>(width, height),
+                _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
+            };
+        }
+
+        /// <summary>
         /// Allocates a new <see cref="Texture3D{T}"/> instance of the specified type.
         /// </summary>
         /// <typeparam name="T">The type of items in the texture.</typeparam>
@@ -70,6 +96,30 @@ namespace ComputeSharp.Tests.Extensions
             {
                 _ when type == typeof(ReadOnlyTexture3D<>) => device.AllocateReadOnlyTexture3D<T>(width, height, depth),
                 _ when type == typeof(ReadWriteTexture3D<>) => device.AllocateReadWriteTexture3D<T>(width, height, depth),
+                _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
+            };
+        }
+
+        /// <summary>
+        /// Allocates a new <see cref="Texture3D{T}"/> instance of the specified type.
+        /// </summary>
+        /// <typeparam name="T">The type of items in the texture.</typeparam>
+        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+        /// <param name="device">The target <see cref="GraphicsDevice"/> instance to allocate the texture for.</param>
+        /// <param name="type">The type of texture to allocate.</param>
+        /// <param name="width">The width of the texture to create.</param>
+        /// <param name="height">The height of the texture to create.</param>
+        /// <param name="depth">The depth of the texture to create.</param>
+        /// <returns>A <see cref="Texture3D{T}"/> instance of the requested size.</returns>
+        [Pure]
+        public static Texture3D<T> AllocateTexture3D<T, TPixel>(this GraphicsDevice device, Type type, int width, int height, int depth)
+            where T : unmanaged, IUnorm<TPixel>
+            where TPixel : unmanaged
+        {
+            return type switch
+            {
+                _ when type == typeof(ReadOnlyTexture3D<,>) => device.AllocateReadOnlyTexture3D<T, TPixel>(width, height, depth),
+                _ when type == typeof(ReadWriteTexture3D<,>) => device.AllocateReadWriteTexture3D<T, TPixel>(width, height, depth),
                 _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
             };
         }

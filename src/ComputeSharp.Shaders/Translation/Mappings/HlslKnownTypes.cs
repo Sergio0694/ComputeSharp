@@ -77,7 +77,9 @@ namespace ComputeSharp.Shaders.Mappings
             return
                 genericType == typeof(ReadOnlyBuffer<>) ||
                 genericType == typeof(ReadOnlyTexture2D<>) ||
-                genericType == typeof(ReadOnlyTexture3D<>);
+                genericType == typeof(ReadOnlyTexture2D<,>) ||
+                genericType == typeof(ReadOnlyTexture3D<>) ||
+                genericType == typeof(ReadOnlyTexture3D<,>);
         }
 
         /// <summary>
@@ -95,7 +97,9 @@ namespace ComputeSharp.Shaders.Mappings
             return
                 genericType == typeof(ReadWriteBuffer<>) ||
                 genericType == typeof(ReadWriteTexture2D<>) ||
-                genericType == typeof(ReadWriteTexture3D<>);
+                genericType == typeof(ReadWriteTexture2D<,>) ||
+                genericType == typeof(ReadWriteTexture3D<>) ||
+                genericType == typeof(ReadWriteTexture3D<,>);
         }
     }
 }
