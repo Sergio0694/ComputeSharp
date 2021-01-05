@@ -4,13 +4,13 @@ using System.Runtime.CompilerServices;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Engines;
 
-namespace ComputeSharp.Benchmark
+namespace ComputeSharp.Benchmark.Blas
 {
     /// <summary>
     /// A <see langword="class"/> that benchmarks the APIs in the <see cref="Dnn"/> class, on both CPU and GPU.
     /// </summary>
     [SimpleJob(RunStrategy.Monitoring)]
-    public class DnnBenchmark : IDisposable
+    public class BlasBenchmark : IDisposable
     {
         /// <summary>
         /// The number of samples.
@@ -128,13 +128,19 @@ namespace ComputeSharp.Benchmark
         /// Runs a fully connected forward operation on the CPU.
         /// </summary>
         [Benchmark(Baseline = true)]
-        public void Cpu() => Dnn.FullyConnectedForwardCpu(C, N, M, P, X, W, B, Y);
+        public void Cpu()
+        {
+            BlasHelpers.FullyConnectedForwardCpu(C, N, M, P, X, W, B, Y);
+        }
 
         /// <summary>
         /// Runs a fully connected forward operation on the GPU.
         /// </summary>
         [Benchmark]
-        public void GpuWithNoTemporaryBuffers() => Dnn.FullyConnectedForwardGpu(Gpu.Default, C, N, M, P, BufferX, BufferW, BufferB, BufferY);
+        public void GpuWithNoTemporaryBuffers()
+        {
+            BlasHelpers.FullyConnectedForwardGpu(Gpu.Default, C, N, M, P, BufferX, BufferW, BufferB, BufferY);
+        }
 
         /// <summary>
         /// Runs a fully connected forward operation on the GPU, creating temporary GPU buffers to perform the operations.
@@ -147,7 +153,7 @@ namespace ComputeSharp.Benchmark
             using ReadOnlyBuffer<float> b = Gpu.Default.AllocateReadOnlyBuffer(B);
             using ReadWriteBuffer<float> y = Gpu.Default.AllocateReadWriteBuffer(Y);
 
-            Dnn.FullyConnectedForwardGpu(Gpu.Default, C, N, M, P, x, w, b, y);
+            BlasHelpers.FullyConnectedForwardGpu(Gpu.Default, C, N, M, P, x, w, b, y);
 
             y.GetData(Y);
         }
