@@ -1,6 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using ComputeSharp.Graphics;
 
 namespace ComputeSharp.Benchmark.Blas
 {

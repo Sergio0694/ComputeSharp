@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Text;
-using ComputeSharp.Graphics;
 using Microsoft.Toolkit.Diagnostics;
 
 namespace ComputeSharp.Exceptions

@@ -1,5 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Shaders.Translation.Interop;
 

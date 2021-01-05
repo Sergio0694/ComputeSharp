@@ -6,7 +6,7 @@ using Microsoft.Toolkit.Diagnostics;
 #if NET5_0
 using GC = System.GC;
 #else
-using GC = ComputeSharp.System.GC;
+using GC = Polyfills.GC;
 #endif
 
 namespace ComputeSharp
