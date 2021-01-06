@@ -78,6 +78,10 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 case "ComputeSharp.ReadOnlyTexture3D`2":
                 case "ComputeSharp.ReadWriteTexture3D`1":
                 case "ComputeSharp.ReadWriteTexture3D`2":
+                case "ComputeSharp.IReadOnlyTexture2D`1":
+                case "ComputeSharp.IReadWriteTexture2D`1":
+                case "ComputeSharp.IReadOnlyTexture3D`1":
+                case "ComputeSharp.IReadWriteTexture3D`1":
                     return true;
                 default: return false;
             };
@@ -134,6 +138,10 @@ namespace ComputeSharp.SourceGenerators.Mappings
                     "ComputeSharp.ReadOnlyTexture3D`2" => $"Texture3D<unorm {mapped}>",
                     "ComputeSharp.ReadWriteTexture3D`1" => $"RWTexture3D<{mapped}>",
                     "ComputeSharp.ReadWriteTexture3D`2" => $"RWTexture3D<unorm {mapped}>",
+                    "ComputeSharp.IReadOnlyTexture2D`1" => $"Texture2D<unorm {mapped}>",
+                    "ComputeSharp.IReadWriteTexture2D`1" => $"RWTexture2D<unorm {mapped}>",
+                    "ComputeSharp.IReadOnlyTexture3D`1" => $"Texture3D<unorm {mapped}>",
+                    "ComputeSharp.IReadWriteTexture3D`1" => $"RWTexture3D<unorm {mapped}>",
                     _ => throw new ArgumentException()
                 };
             }

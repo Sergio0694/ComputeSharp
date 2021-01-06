@@ -16,7 +16,7 @@ namespace ComputeSharp
     /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
     [DebuggerTypeProxy(typeof(Texture2DDebugView<>))]
     [DebuggerDisplay("{ToString(),raw}")]
-    public sealed class ReadWriteTexture2D<T, TPixel> : Texture2D<T>
+    public sealed class ReadWriteTexture2D<T, TPixel> : Texture2D<T>, IReadWriteTexture2D<TPixel>
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
     {
@@ -31,19 +31,10 @@ namespace ComputeSharp
         {
         }
 
-        /// <summary>
-        /// Gets a single <typeparamref name="TPixel"/> value from the current writeable texture.
-        /// </summary>
-        /// <param name="x">The horizontal offset of the value to get.</param>
-        /// <param name="y">The vertical offset of the value to get.</param>
-        /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
+        /// <inheritdoc/>
         public ref TPixel this[int x, int y] => throw new InvalidExecutionContextException($"{nameof(ReadWriteTexture2D<T, TPixel>)}<T>[int,int]");
 
-        /// <summary>
-        /// Gets or sets a single <typeparamref name="TPixel"/> value from the current writeable texture.
-        /// </summary>
-        /// <param name="xy">The coordinates of the value to get.</param>
-        /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
+        /// <inheritdoc/>
         public ref TPixel this[Int2 xy] => throw new InvalidExecutionContextException($"{nameof(ReadWriteTexture2D<T, TPixel>)}<T>[Int2]");
 
         /// <inheritdoc/>
