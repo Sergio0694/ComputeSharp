@@ -50,13 +50,32 @@ namespace ComputeSharp.__Internals
         /// Validates the given texture for usage with a specified device, and retrieves its GPU descriptor handle.
         /// </summary>
         /// <typeparam name="T">The type of values stored in the input texture.</typeparam>
-        /// <param name="texture">The input <see cref="Texture2D{T}"/> instance to check.</param>
+        /// <param name="texture">The input <see cref="ReadOnlyTexture2D{T}"/> instance to check.</param>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
         /// <returns>The GPU descriptor handle for the texture.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("This method is not intended to be called directly by user code")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ulong ValidateAndGetGpuDescriptorHandle<T>(Texture2D<T> texture, GraphicsDevice device)
+        public static ulong ValidateAndGetGpuDescriptorHandle<T>(ReadOnlyTexture2D<T> texture, GraphicsDevice device)
+            where T : unmanaged
+        {
+            texture.ThrowIfDisposed();
+            texture.ThrowIfDeviceMismatch(device);
+
+            return Unsafe.As<D3D12_GPU_DESCRIPTOR_HANDLE, ulong>(ref Unsafe.AsRef(in texture.D3D12GpuDescriptorHandle));
+        }
+
+        /// <summary>
+        /// Validates the given texture for usage with a specified device, and retrieves its GPU descriptor handle.
+        /// </summary>
+        /// <typeparam name="T">The type of values stored in the input texture.</typeparam>
+        /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to check.</param>
+        /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
+        /// <returns>The GPU descriptor handle for the texture.</returns>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("This method is not intended to be called directly by user code")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ulong ValidateAndGetGpuDescriptorHandle<T>(ReadWriteTexture2D<T> texture, GraphicsDevice device)
             where T : unmanaged
         {
             texture.ThrowIfDisposed();
@@ -115,13 +134,32 @@ namespace ComputeSharp.__Internals
         /// Validates the given texture for usage with a specified device, and retrieves its GPU descriptor handle.
         /// </summary>
         /// <typeparam name="T">The type of values stored in the input texture.</typeparam>
-        /// <param name="texture">The input <see cref="Texture3D{T}"/> instance to check.</param>
+        /// <param name="texture">The input <see cref="ReadOnlyTexture3D{T}"/> instance to check.</param>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
         /// <returns>The GPU descriptor handle for the texture.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("This method is not intended to be called directly by user code")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ulong ValidateAndGetGpuDescriptorHandle<T>(Texture3D<T> texture, GraphicsDevice device)
+        public static ulong ValidateAndGetGpuDescriptorHandle<T>(ReadOnlyTexture3D<T> texture, GraphicsDevice device)
+            where T : unmanaged
+        {
+            texture.ThrowIfDisposed();
+            texture.ThrowIfDeviceMismatch(device);
+
+            return Unsafe.As<D3D12_GPU_DESCRIPTOR_HANDLE, ulong>(ref Unsafe.AsRef(in texture.D3D12GpuDescriptorHandle));
+        }
+
+        /// <summary>
+        /// Validates the given texture for usage with a specified device, and retrieves its GPU descriptor handle.
+        /// </summary>
+        /// <typeparam name="T">The type of values stored in the input texture.</typeparam>
+        /// <param name="texture">The input <see cref="ReadWriteTexture3D{T}"/> instance to check.</param>
+        /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
+        /// <returns>The GPU descriptor handle for the texture.</returns>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("This method is not intended to be called directly by user code")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ulong ValidateAndGetGpuDescriptorHandle<T>(ReadWriteTexture3D<T> texture, GraphicsDevice device)
             where T : unmanaged
         {
             texture.ThrowIfDisposed();
