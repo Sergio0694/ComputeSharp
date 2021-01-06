@@ -21,9 +21,7 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
 
             SampleProjectDirectory = Path.Combine(path, "samples", "ComputeSharp.Sample.NuGet");
 
-            string
-                sampleProjectPath = Path.Combine(SampleProjectDirectory, "ComputeSharp.Sample.NuGet.csproj"),
-                packagingProjectPath = Path.Combine(path, "src", "ComputeSharp.Package", "ComputeSharp.Package.msbuildproj");
+            string packagingProjectPath = Path.Combine(path, "src", "ComputeSharp.Package", "ComputeSharp.Package.msbuildproj");
 
             // Run dotnet pack and on the packaging project, to ensure the local NuGet package is available.
             Process.Start("dotnet", $"pack {packagingProjectPath} -c Release").WaitForExit();
@@ -41,6 +39,8 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
         [DataRow(Configuration.Release, RID.Win_x64)]
         public void DotnetRunWorks(Configuration configuration, RID rid)
         {
+            CleanSampleProject(configuration, rid);
+
             Assert.AreEqual(0, Exec(SampleProjectDirectory, "dotnet", $"run -c {configuration} {ToOption(rid)}"));
         }
 
@@ -51,6 +51,7 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
         [DataRow(Configuration.Release, RID.Win_x64)]
         public void DotnetBuildWithRunningDotnetHostFromProjectDirectoryWorks(Configuration configuration, RID rid)
         {
+            CleanSampleProject(configuration, rid);
             BuildSampleProject(configuration, rid);
 
             string realtivePathToDll = Path.Combine("bin", $"{configuration}", "net5.0", $"{ToDirectory(rid)}", "ComputeSharp.Sample.NuGet.dll");
@@ -65,6 +66,7 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
         [DataRow(Configuration.Release, RID.Win_x64)]
         public void DotnetBuildWithRunningDotnetHostDirectlyWorks(Configuration configuration, RID rid)
         {
+            CleanSampleProject(configuration, rid);
             BuildSampleProject(configuration, rid);
 
             string pathToDllDirectory = Path.Combine(SampleProjectDirectory, "bin", $"{configuration}", "net5.0", $"{ToDirectory(rid)}");
@@ -79,6 +81,7 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
         [DataRow(Configuration.Release, RID.Win_x64)]
         public void DotnetBuildWithRunningAppHostFromProjectDirectoryWorks(Configuration configuration, RID rid)
         {
+            CleanSampleProject(configuration, rid);
             BuildSampleProject(configuration, rid);
 
             string relativePathToAppHost = Path.Combine("bin", $"{configuration}", "net5.0", $"{ToDirectory(rid)}", "ComputeSharp.Sample.NuGet.exe");
@@ -93,6 +96,7 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
         [DataRow(Configuration.Release, RID.Win_x64)]
         public void DotnetBuildWithRunningAppHostDirectlyWorks(Configuration configuration, RID rid)
         {
+            CleanSampleProject(configuration, rid);
             BuildSampleProject(configuration, rid);
 
             string pathToAppHostDirectory = Path.Combine(SampleProjectDirectory, "bin", $"{configuration}", "net5.0", $"{ToDirectory(rid)}");
@@ -104,15 +108,17 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
         [TestMethod]
         [DataRow(PublishMode.SelfContained, DeploymentMode.Multiassembly, NativeLibrariesDeploymentMode.NotApplicable)]
         [DataRow(PublishMode.FrameworkDependent, DeploymentMode.Multiassembly, NativeLibrariesDeploymentMode.NotApplicable)]
-        [DataRow(PublishMode.SelfContained, DeploymentMode.SingleFile, NativeLibrariesDeploymentMode.BundleWithApplication)]
+        [DataRow(PublishMode.SelfContained, DeploymentMode.SingleFile, NativeLibrariesDeploymentMode.CopyToApplicationDirectory)]
         [DataRow(PublishMode.SelfContained, DeploymentMode.SingleFile, NativeLibrariesDeploymentMode.ExtractToTemporaryDirectory)]
-        [DataRow(PublishMode.FrameworkDependent, DeploymentMode.SingleFile, NativeLibrariesDeploymentMode.BundleWithApplication)]
+        [DataRow(PublishMode.FrameworkDependent, DeploymentMode.SingleFile, NativeLibrariesDeploymentMode.CopyToApplicationDirectory)]
         [DataRow(PublishMode.FrameworkDependent, DeploymentMode.SingleFile, NativeLibrariesDeploymentMode.ExtractToTemporaryDirectory)]
         public void DotnetPublishWorks(PublishMode publishMode, DeploymentMode deploymentMode, NativeLibrariesDeploymentMode nativeLibsDeploymentMode)
         {
             // Publishing without specifying a RID is not supported
             // We do not test Debug builds as it was determined that they are not an important scenario
-            Exec(SampleProjectDirectory, "dotnet", $"publish -c Release -r win-x64 {ToOption(publishMode)} {ToOption(deploymentMode)} {ToOption(nativeLibsDeploymentMode)}");
+            CleanSampleProject(Configuration.Release, RID.Win_x64);
+
+            Exec(SampleProjectDirectory, "dotnet", $"publish -c Release -r win-x64 {ToOption(publishMode)} {ToOption(deploymentMode)} {ToOption(nativeLibsDeploymentMode)} /bl");
             string pathToAppHost = Path.Combine("bin", $"Release", "net5.0", "win-x64", "publish", "ComputeSharp.Sample.NuGet.exe");
             Assert.AreEqual(0, Exec(SampleProjectDirectory, pathToAppHost, ""));
         }
@@ -125,6 +131,18 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
         private static void BuildSampleProject(Configuration configuration, RID rid)
         {
             Exec(SampleProjectDirectory, "dotnet", $"build -c {configuration} {ToOption(rid)}");
+        }
+
+        /// <summary>
+        /// Cleans the sample project's artifacts for a specific configuration and target runtime.
+        /// This method is called at the start of each test method to work around bugs around some up-to-date checks
+        /// Causing certain targets to not run and effectively corrupting the build output.
+        /// </summary>
+        /// <param name="configuration">The configuration for which the output is cleaned.</param>
+        /// <param name="rid">The RID for which the output is cleaned.</param>
+        private static void CleanSampleProject(Configuration configuration, RID rid)
+        {
+            Exec(SampleProjectDirectory, "dotnet", $"clean -c {configuration} {ToOption(rid)}");
         }
 
         /// <summary>
@@ -182,7 +200,7 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
         private static string ToOption(NativeLibrariesDeploymentMode deploymentMode) => deploymentMode switch
         {
             NativeLibrariesDeploymentMode.NotApplicable => "",
-            NativeLibrariesDeploymentMode.BundleWithApplication => "/p:IncludeNativeLibrariesForSelfExtract=false",
+            NativeLibrariesDeploymentMode.CopyToApplicationDirectory => "/p:IncludeNativeLibrariesForSelfExtract=false",
             NativeLibrariesDeploymentMode.ExtractToTemporaryDirectory => "/p:IncludeNativeLibrariesForSelfExtract=true",
             _ => throw new InvalidEnumArgumentException(nameof(deploymentMode), (int)deploymentMode, typeof(NativeLibrariesDeploymentMode))
         };
@@ -217,23 +235,35 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
             Win_x64
         }
 
+        /// <summary>
+        /// Publish mode: should the application carry the framework with itself.
+        /// </summary>
         public enum PublishMode
         {
             FrameworkDependent,
             SelfContained
         }
 
+        /// <summary>
+        /// Deployment mode: how should the application be packaged.
+        /// Notably, these tests employ .NET 5 style SingleFile, aka SuperHost.
+        /// It does not affect native libraries packaging in .NET 5, but may in the future.
+        /// </summary>
         public enum DeploymentMode
         {
             Multiassembly,
             SingleFile
         }
 
+        /// <summary>
+        /// Deployment mode for application's native dependencies.
+        /// Not applicable to multiassembly deployment mode.
+        /// </summary>
         public enum NativeLibrariesDeploymentMode
         {
             NotApplicable,
             ExtractToTemporaryDirectory,
-            BundleWithApplication
+            CopyToApplicationDirectory
         }
     }
 }
