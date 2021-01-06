@@ -9,7 +9,7 @@ using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 namespace ComputeSharp.Graphics.Commands
 {
     /// <summary>
-    /// A command list to set and execute operaations on the GPU.
+    /// A command list to set and execute operations on the GPU.
     /// </summary>
     internal unsafe ref struct CommandList
     {

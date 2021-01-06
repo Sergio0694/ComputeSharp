@@ -28,7 +28,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
         /// Tries to get the mapped HLSL-compatible identifier name for the input identifier name.
         /// </summary>
         /// <param name="name">The input identifier name.</param>
-        /// <param name="mapped">The mapped identifier name, if aa replacement is needed.</param>
+        /// <param name="mapped">The mapped identifier name, if a replacement is needed.</param>
         /// <returns>The HLSL-compatible identifier name that can be used in an HLSL shader.</returns>
         [Pure]
         public static bool TryGetMappedName(string name, out string? mapped)

@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using ComputeSharp.__Internals;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
@@ -15,13 +16,15 @@ using static TerraFX.Interop.D3D12_SRV_DIMENSION;
 using static TerraFX.Interop.D3D12_UAV_DIMENSION;
 using FX = TerraFX.Interop.Windows;
 
+#pragma warning disable CS0618
+
 namespace ComputeSharp.Resources
 {
     /// <summary>
     /// A <see langword="class"/> representing a typed 3D texture stored on GPU memory.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-    public unsafe abstract class Texture3D<T> : NativeObject
+    public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper.IGraphicsResource
         where T : unmanaged
     {
         /// <summary>
@@ -303,6 +306,15 @@ namespace ComputeSharp.Resources
             {
                 GraphicsDeviceMismatchException.Throw(this, device);
             }
+        }
+
+        /// <inheritdoc/>
+        D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
+        {
+            ThrowIfDisposed();
+            ThrowIfDeviceMismatch(device);
+
+            return D3D12GpuDescriptorHandle;
         }
     }
 }
