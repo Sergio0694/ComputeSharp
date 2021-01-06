@@ -107,12 +107,12 @@ namespace ComputeSharp.BokehBlur.Processors
             /// <summary>
             /// Performs a vertical 1D complex convolution with the specified parameters.
             /// </summary>
-            /// <param name="source">The source <see cref="ReadWriteTexture2D{T, TPixel}"/> to read data from.</param>
+            /// <param name="source">The source <see cref="IReadWriteTexture2D{TPixel}"/> to read data from.</param>
             /// <param name="target">The target <see cref="ReadWriteTexture2D{T}"/> to write the results to.</param>
             /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel.</param>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void ApplyVerticalConvolution(
-                ReadWriteTexture2D<Rgba32, Vector4> source,
+                IReadWriteTexture2D<Vector4> source,
                 ReadWriteTexture2D<Vector4> target,
                 ReadOnlyBuffer<float> kernel)
             {
@@ -140,7 +140,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 public readonly int maxX;
                 public readonly int kernelLength;
 
-                public readonly ReadWriteTexture2D<Rgba32, Vector4> source;
+                public readonly IReadWriteTexture2D<Vector4> source;
                 public readonly ReadWriteTexture2D<Vector4> target;
                 public readonly ReadOnlyBuffer<float> kernel;
 
@@ -168,12 +168,12 @@ namespace ComputeSharp.BokehBlur.Processors
             /// Performs an horizontal 1D complex convolution with the specified parameters.
             /// </summary>
             /// <param name="source">The source <see cref="ReadWriteTexture2D{T}"/> to read data from.</param>
-            /// <param name="target">The target <see cref="ReadWriteTexture2D{T, TPixel}"/> to write the results to.</param>
+            /// <param name="target">The target <see cref="IReadWriteTexture2D{TPixel}"/> to write the results to.</param>
             /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel.</param>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void ApplyHorizontalConvolution(
                 ReadWriteTexture2D<Vector4> source,
-                ReadWriteTexture2D<Rgba32, Vector4> target,
+                IReadWriteTexture2D<Vector4> target,
                 ReadOnlyBuffer<float> kernel)
             {
                 int height = Source.Height;
@@ -201,7 +201,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 public readonly int kernelLength;
 
                 public readonly ReadWriteTexture2D<Vector4> source;
-                public readonly ReadWriteTexture2D<Rgba32, Vector4> target;
+                public readonly IReadWriteTexture2D<Vector4> target;
                 public readonly ReadOnlyBuffer<float> kernel;
 
                 /// <inheritdoc/>

@@ -288,13 +288,13 @@ namespace ComputeSharp.BokehBlur.Processors
             /// <summary>
             /// Performs a vertical 1D complex convolution with the specified parameters.
             /// </summary>
-            /// <param name="source">The source <see cref="ReadOnlyTexture2D{T}"/> to read data from.</param>
+            /// <param name="source">The source <see cref="IReadOnlyTexture2D{TPixel}"/> to read data from.</param>
             /// <param name="reals">The target <see cref="ReadWriteTexture2D{T}"/> to write the real results to.</param>
             /// <param name="imaginaries">The target <see cref="ReadWriteTexture2D{T}"/> to write the imaginary results to.</param>
             /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel.</param>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void ApplyVerticalConvolution(
-                ReadWriteTexture2D<Rgba32, Vector4> source,
+                IReadWriteTexture2D<Vector4> source,
                 ReadWriteTexture2D<Vector4> reals,
                 ReadWriteTexture2D<Vector4> imaginaries,
                 ReadOnlyBuffer<Complex64> kernel)
@@ -324,7 +324,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 public int maxX;
                 public int kernelLength;
 
-                public ReadWriteTexture2D<Rgba32, Vector4> source;
+                public IReadWriteTexture2D<Vector4> source;
                 public ReadWriteTexture2D<Vector4> reals;
                 public ReadWriteTexture2D<Vector4> imaginaries;
                 public ReadOnlyBuffer<Complex64> kernel;
@@ -431,9 +431,9 @@ namespace ComputeSharp.BokehBlur.Processors
             /// <summary>
             /// Applies the gamma highlight pass to compute the final pixel values for a target image.
             /// </summary>
-            /// <param name="source">The source <see cref="ReadWriteTexture2D{T}"/> instance to modify.</param>
+            /// <param name="source">The source <see cref="IReadWriteTexture2D{TPixel}"/> instance to modify.</param>
             [Pure]
-            private void ApplyGammaHighlight(ReadWriteTexture2D<Rgba32, Vector4> source)
+            private void ApplyGammaHighlight(IReadWriteTexture2D<Vector4> source)
             {
                 Gpu.Default.For(source.Height, new GammaHighlightProcessor(source.Width, source));
             }
@@ -446,7 +446,7 @@ namespace ComputeSharp.BokehBlur.Processors
             {
                 public readonly int width;
 
-                public readonly ReadWriteTexture2D<Rgba32, Vector4> source;
+                public readonly IReadWriteTexture2D<Vector4> source;
 
                 /// <inheritdoc/>
                 public void Execute(ThreadIds ids)
@@ -466,11 +466,11 @@ namespace ComputeSharp.BokehBlur.Processors
             /// Applies the inverse gamma highlight pass to compute the final pixel values for a target image.
             /// </summary>
             /// <param name="source">The source <see cref="ReadWriteTexture2D{T}"/> instance to read from.</param>
-            /// <param name="target">The target <see cref="ReadWriteTexture2D{T, TPixel}"/> instance to write to.</param>
+            /// <param name="target">The target <see cref="IReadWriteTexture2D{TPixel}"/> instance to write to.</param>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void ApplyInverseGammaExposure(
                 ReadWriteTexture2D<Vector4> source,
-                ReadWriteTexture2D<Rgba32, Vector4> target)
+                IReadWriteTexture2D<Vector4> target)
             {
                 Gpu.Default.For(source.Height, new InverseGammaHighlightProcessor(source.Width, source, target));
             }
@@ -484,7 +484,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 public readonly int width;
 
                 public readonly ReadWriteTexture2D<Vector4> source;
-                public readonly ReadWriteTexture2D<Rgba32, Vector4> target;
+                public readonly IReadWriteTexture2D<Vector4> target;
 
                 /// <inheritdoc/>
                 public void Execute(ThreadIds ids)
