@@ -4,13 +4,18 @@ using System.Diagnostics;
 using System.IO;
 
 [assembly: Parallelize(Workers = 0, Scope = ExecutionScope.ClassLevel)]
+
 namespace ComputeSharp.Tests.NativeLibrariesResolver
 {
     [TestClass]
     public class NativeLibrariesResolverTests
     {
+        /// <summary>
+        /// Performs static initialization for the assembly before any unit tests are run.
+        /// </summary>
+        /// <param name="context">The <see cref="TestContext"/> for the test runner instance in use.</param>
         [AssemblyInitialize]
-        public static void Initialize(TestContext context)
+        public static void Initialize(TestContext _)
         {
             string path = Path.GetDirectoryName(typeof(NativeLibrariesResolverTests).Assembly.Location);
 
@@ -23,7 +28,7 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
 
             string packagingProjectPath = Path.Combine(path, "src", "ComputeSharp.Package", "ComputeSharp.Package.msbuildproj");
 
-            // Run dotnet pack and on the packaging project, to ensure the local NuGet package is available.
+            // Run dotnet pack and on the packaging project, to ensure the local NuGet package is available
             Process.Start("dotnet", $"pack {packagingProjectPath} -c Release").WaitForExit();
         }
 
@@ -114,23 +119,15 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
         [DataRow(PublishMode.FrameworkDependent, DeploymentMode.SingleFile, NativeLibrariesDeploymentMode.ExtractToTemporaryDirectory)]
         public void DotnetPublishWorks(PublishMode publishMode, DeploymentMode deploymentMode, NativeLibrariesDeploymentMode nativeLibsDeploymentMode)
         {
-            // Publishing without specifying a RID is not supported
-            // We do not test Debug builds as it was determined that they are not an important scenario
+            // Publishing without specifying a RID is not supported.
+            // Furthermore, only publishing in Release mode is tested.
             CleanSampleProject(Configuration.Release, RID.Win_x64);
 
             Exec(SampleProjectDirectory, "dotnet", $"publish -c Release -r win-x64 {ToOption(publishMode)} {ToOption(deploymentMode)} {ToOption(nativeLibsDeploymentMode)} /bl");
-            string pathToAppHost = Path.Combine("bin", $"Release", "net5.0", "win-x64", "publish", "ComputeSharp.Sample.NuGet.exe");
-            Assert.AreEqual(0, Exec(SampleProjectDirectory, pathToAppHost, ""));
-        }
 
-        /// <summary>
-        /// Builds the sample project with a specific configuration and target runtime.
-        /// </summary>
-        /// <param name="configuration">The configuration to use to build the project.</param>
-        /// <param name="rid">The RID to use to build the project.</param>
-        private static void BuildSampleProject(Configuration configuration, RID rid)
-        {
-            Exec(SampleProjectDirectory, "dotnet", $"build -c {configuration} {ToOption(rid)}");
+            string pathToAppHost = Path.Combine("bin", $"Release", "net5.0", "win-x64", "publish", "ComputeSharp.Sample.NuGet.exe");
+
+            Assert.AreEqual(0, Exec(SampleProjectDirectory, pathToAppHost, ""));
         }
 
         /// <summary>
@@ -143,6 +140,16 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
         private static void CleanSampleProject(Configuration configuration, RID rid)
         {
             Exec(SampleProjectDirectory, "dotnet", $"clean -c {configuration} {ToOption(rid)}");
+        }
+
+        /// <summary>
+        /// Builds the sample project with a specific configuration and target runtime.
+        /// </summary>
+        /// <param name="configuration">The configuration to use to build the project.</param>
+        /// <param name="rid">The RID to use to build the project.</param>
+        private static void BuildSampleProject(Configuration configuration, RID rid)
+        {
+            Exec(SampleProjectDirectory, "dotnet", $"build -c {configuration} {ToOption(rid)}");
         }
 
         /// <summary>
@@ -172,7 +179,7 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
         }
 
         /// <summary>
-        /// Gets a text representation of a cmd option for the dotnet tool, for the given <see cref="RID"/>.
+        /// Gets a text representation of the command line argument for the given <see cref="RID"/>.
         /// </summary>
         /// <param name="rid">The input <see cref="RID"/> value.</param>
         /// <returns>A text representation for <paramref name="rid"/>.</returns>
@@ -183,6 +190,11 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
             _ => throw new InvalidEnumArgumentException(nameof(rid), (int)rid, typeof(RID))
         };
 
+        /// <summary>
+        /// Gets a text representation of the command line argument for the given <see cref="PublishMode"/>.
+        /// </summary>
+        /// <param name="publishMode">The input <see cref="PublishMode"/> value.</param>
+        /// <returns>A text representation for <paramref name="publishMode"/>.</returns>
         private static string ToOption(PublishMode publishMode) => publishMode switch
         {
             PublishMode.FrameworkDependent => "--self-contained false",
@@ -190,6 +202,11 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
             _ => throw new InvalidEnumArgumentException(nameof(publishMode), (int)publishMode, typeof(PublishMode))
         };
 
+        /// <summary>
+        /// Gets a text representation of the command line argument for the given <see cref="DeploymentMode"/>.
+        /// </summary>
+        /// <param name="deploymentMode">The input <see cref="DeploymentMode"/> value.</param>
+        /// <returns>A text representation for <paramref name="deploymentMode"/>.</returns>
         private static string ToOption(DeploymentMode deploymentMode) => deploymentMode switch
         {
             DeploymentMode.Multiassembly => "/p:PublishSingleFile=false",
@@ -197,6 +214,11 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
             _ => throw new InvalidEnumArgumentException(nameof(deploymentMode), (int)deploymentMode, typeof(DeploymentMode))
         };
 
+        /// <summary>
+        /// Gets a text representation of the command line argument for the given <see cref="NativeLibrariesDeploymentMode"/>.
+        /// </summary>
+        /// <param name="deploymentMode">The input <see cref="NativeLibrariesDeploymentMode"/> value.</param>
+        /// <returns>A text representation for <paramref name="deploymentMode"/>.</returns>
         private static string ToOption(NativeLibrariesDeploymentMode deploymentMode) => deploymentMode switch
         {
             NativeLibrariesDeploymentMode.NotApplicable => "",
@@ -236,7 +258,7 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
         }
 
         /// <summary>
-        /// Publish mode: should the application carry the framework with itself.
+        /// Indicates how should the application carry the framework with itself.
         /// </summary>
         public enum PublishMode
         {
@@ -245,9 +267,8 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
         }
 
         /// <summary>
-        /// Deployment mode: how should the application be packaged.
-        /// Notably, these tests employ .NET 5 style SingleFile, aka SuperHost.
-        /// It does not affect native libraries packaging in .NET 5, but may in the future.
+        /// Indicates how should the application be packaged. Notably, these tests employ .NET 5 style SingleFile,
+        /// aka SuperHost. It does not affect native libraries packaging in .NET 5, but may in the future.
         /// </summary>
         public enum DeploymentMode
         {
@@ -256,7 +277,7 @@ namespace ComputeSharp.Tests.NativeLibrariesResolver
         }
 
         /// <summary>
-        /// Deployment mode for application's native dependencies.
+        /// Indicates the deployment mode for application's native dependencies.
         /// Not applicable to multiassembly deployment mode.
         /// </summary>
         public enum NativeLibrariesDeploymentMode
