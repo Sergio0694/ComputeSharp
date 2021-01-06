@@ -32,7 +32,7 @@ namespace ComputeSharp.Resources
         /// <summary>
         /// The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
         /// </summary>
-        internal readonly D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandle;
+        private readonly D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandle;
 
         /// <summary>
         /// The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
