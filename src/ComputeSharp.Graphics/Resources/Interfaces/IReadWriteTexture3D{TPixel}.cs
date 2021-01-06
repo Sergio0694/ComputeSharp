@@ -9,6 +9,21 @@
         where TPixel : unmanaged
     {
         /// <summary>
+        /// Gets the width of the current texture.
+        /// </summary>
+        public int Width { get; }
+
+        /// <summary>
+        /// Gets the height of the current texture.
+        /// </summary>
+        public int Height { get; }
+
+        /// <summary>
+        /// Gets the depth of the current texture.
+        /// </summary>
+        public int Depth { get; }
+
+        /// <summary>
         /// Gets a single <typeparamref name="TPixel"/> value from the current writeable texture.
         /// </summary>
         /// <param name="x">The horizontal offset of the value to get.</param>
