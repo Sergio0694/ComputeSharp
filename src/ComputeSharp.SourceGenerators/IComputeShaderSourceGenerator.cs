@@ -78,7 +78,7 @@ namespace ComputeSharp.SourceGenerators
                 var processedMembers = GetProcessedMembers(structDeclarationSymbol, discoveredTypes).ToArray();
                 var (entryPoint, localFunctions) = GetProcessedMethods(structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods);
                 var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
-                var processedMethods = localFunctions.Concat(staticMethods.Values.Select(static method => method.ToFullString())).ToArray();
+                var processedMethods = localFunctions.Concat(staticMethods.Values).Select(static method => method.ToFullString()).ToArray();
 
                 // Create the compilation unit with the source attribute
                 var source =
@@ -140,7 +140,7 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
         [Pure]
-        private static (string EntryPoint, IEnumerable<string> Methods) GetProcessedMethods(
+        private static (string EntryPoint, IEnumerable<SyntaxNode> Methods) GetProcessedMethods(
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             SemanticModel semanticModel,
@@ -154,7 +154,7 @@ namespace ComputeSharp.SourceGenerators
                 select (MethodDeclarationSyntax)syntaxNode).ToImmutableArray();
 
             string? entryPoint = null;
-            List<string> methods = new();
+            List<SyntaxNode> methods = new();
 
             foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
             {
@@ -177,12 +177,12 @@ namespace ComputeSharp.SourceGenerators
 
                     entryPoint = processedMethod.NormalizeWhitespace().ToFullString();
                 }
-                else methods.Add(processedMethod.NormalizeWhitespace().ToFullString());
+                else methods.Add(processedMethod);
 
                 // Emit the extracted local functions
                 foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
                 {
-                    methods.Add(localFunction.Value.NormalizeWhitespace().ToFullString());
+                    methods.Add(localFunction.Value);
                 }
             }
 
