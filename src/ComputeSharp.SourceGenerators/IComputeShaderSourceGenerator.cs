@@ -226,6 +226,48 @@ namespace ComputeSharp.SourceGenerators
                     .ToFullString();
             }
         }
+
+        /// <summary>
+        /// Creates a method to get a specific dimension size for a specified resource type.
+        /// </summary>
+        /// <param name="resourceType">The input resource type (without generic parameters).</param>
+        /// <param name="itemType">The type of items in the input resource.</param>
+        /// <param name="rank">The rank of the resource (must be 2 for structured buffers).</param>
+        /// <param name="axis">The target axis to get the dimension for.</param>
+        /// <returns>A <see cref="MethodDeclarationSyntax"/> instance with the requested tree.</returns>
+        internal static MethodDeclarationSyntax CreateResourceDimensionAccessorMethod(string resourceType, string itemType, int rank, int axis)
+        {
+            // Create a static method to get a specified dimension for a target resource type.
+            // The method will automatically create the necessary number of temporary variables
+            // depending on the rank of the input resource (eg. 2 for Texture2D<T> resources).
+            // For instance, this code will generate the following tree for Texture2D<float>.Width:
+            //
+            // static int __get_Dimension0(Texture2D<float> texture)
+            // {
+            //     uint a, b;
+            //     texture.GetDimensions(a, b);
+            //
+            //     return a;
+            // }
+            return
+                MethodDeclaration(PredefinedType(Token(SyntaxKind.IntKeyword)), $"__get_Dimension{axis}")
+                .AddModifiers(Token(SyntaxKind.StaticKeyword))
+                .AddParameterListParameters(
+                    Parameter(Identifier("resource"))
+                    .WithType(GenericName(Identifier(resourceType))
+                    .AddTypeArgumentListArguments(IdentifierName(itemType))))
+                .WithBody(Block(
+                    LocalDeclarationStatement(
+                        VariableDeclaration(PredefinedType(Token(SyntaxKind.UIntKeyword)))
+                        .AddVariables(Enumerable.Range(0, rank).Select(static i => VariableDeclarator(Identifier(('a' + i).ToString()))).ToArray())),
+                    ExpressionStatement(
+                        InvocationExpression(MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName("resource"),
+                            IdentifierName("GetDimensions")))
+                        .AddArgumentListArguments(Enumerable.Range(0, rank).Select(static i => Argument(IdentifierName(('a' + i).ToString()))).ToArray())),
+                    ReturnStatement(IdentifierName(('a' + axis).ToString()))));
+        }
     }
 }
 
