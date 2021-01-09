@@ -32,6 +32,29 @@ namespace ComputeSharp.SourceGenerators.Mappings
         };
 
         /// <summary>
+        /// The mapping of supported known size accessors for HLSL resource types.
+        /// </summary>
+        private static readonly IReadOnlyDictionary<string, (int Rank, int Axis)> KnownSizeAccessors = new Dictionary<string, (int, int)>
+        {
+            ["ComputeSharp.Resources.Buffer`1.Length"] = (2, 0),
+            ["ComputeSharp.Resources.Texture2D`1.Width"] = (2, 0),
+            ["ComputeSharp.Resources.Texture2D`1.Height"] = (2, 1),
+            ["ComputeSharp.Resources.Texture3D`1.Width"] = (3, 0),
+            ["ComputeSharp.Resources.Texture3D`1.Height"] = (3, 1),
+            ["ComputeSharp.Resources.Texture3D`1.Depth"] = (3, 2),
+            ["ComputeSharp.IReadOnlyTexture2D`1.Width"] = (2, 0),
+            ["ComputeSharp.IReadOnlyTexture2D`1.Height"] = (2, 1),
+            ["ComputeSharp.IReadOnlyTexture3D`1.Width"] = (3, 0),
+            ["ComputeSharp.IReadOnlyTexture3D`1.Height"] = (3, 1),
+            ["ComputeSharp.IReadOnlyTexture3D`1.Depth"] = (3, 2),
+            ["ComputeSharp.IReadWriteTexture2D`1.Width"] = (2, 0),
+            ["ComputeSharp.IReadWriteTexture2D`1.Height"] = (2, 1),
+            ["ComputeSharp.IReadWriteTexture3D`1.Width"] = (3, 0),
+            ["ComputeSharp.IReadWriteTexture3D`1.Height"] = (3, 1),
+            ["ComputeSharp.IReadWriteTexture3D`1.Depth"] = (3, 2)
+        };
+
+        /// <summary>
         /// The mapping of supported known members to HLSL names.
         /// </summary>
         private static readonly IReadOnlyDictionary<string, string> KnownMembers = BuildKnownMembersMap();
@@ -192,6 +215,27 @@ namespace ComputeSharp.SourceGenerators.Mappings
         public static bool TryGetMappedIndexerTypeName(string name, out string? mapped)
         {
             return KnownIndexers.TryGetValue(name, out mapped);
+        }
+
+        /// <summary>
+        /// Tries to get the mapped HLSL-compatible indexer vector type name for the input indexer name.
+        /// </summary>
+        /// <param name="name">The input fully qualified indexer name.</param>
+        /// <param name="mapped">The mapped type name, if one is found.</param>
+        /// <returns>The HLSL-compatible type name that can be used in an HLSL shader for the given indexer.</returns>
+        [Pure]
+        public static bool TryGetAccessorRankAndAxis(string name, out int rank, out int axis)
+        {
+            if (KnownSizeAccessors.TryGetValue(name, out var info))
+            {
+                (rank, axis) = info;
+
+                return true;
+            }
+
+            (rank, axis) = default((int, int));
+
+            return false;
         }
     }
 }
