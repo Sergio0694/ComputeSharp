@@ -473,6 +473,11 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 !this.constantDefinitions.ContainsKey(operation.Field))
             {
                 this.constantDefinitions.Add(operation.Field, operation.Field.ConstantValue!.ToString());
+
+                var ownerTypeName = ((INamedTypeSymbol)operation.Field.ContainingSymbol).ToDisplayString().Replace(".", "__");
+                var constantName = $"__{ownerTypeName}__{operation.Field.Name}";
+
+                return IdentifierName(constantName);
             }
 
             return updatedNode;

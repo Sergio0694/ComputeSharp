@@ -80,7 +80,7 @@ namespace ComputeSharp.SourceGenerators
                 var (entryPoint, localFunctions) = GetProcessedMethods(structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
                 var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
                 var processedMethods = localFunctions.Concat(staticMethods.Values).Select(static method => method.NormalizeWhitespace().ToFullString()).ToArray();
-                var processedConstants = GetProcessedConstants(structDeclarationSymbol, constantDefinitions);
+                var processedConstants = GetProcessedConstants(constantDefinitions);
 
                 // Create the compilation unit with the source attribute
                 var source =
@@ -197,25 +197,17 @@ namespace ComputeSharp.SourceGenerators
         /// <summary>
         /// Gets a sequence of discovered constants.
         /// </summary>
-        /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <returns>A sequence of discovered constants to declare in the shader.</returns>
         [Pure]
-        private static IEnumerable<IEnumerable<string>> GetProcessedConstants(INamedTypeSymbol structDeclarationSymbol, IReadOnlyDictionary<IFieldSymbol, string> constantDefinitions)
+        private static IEnumerable<IEnumerable<string>> GetProcessedConstants(IReadOnlyDictionary<IFieldSymbol, string> constantDefinitions)
         {
             foreach (var constant in constantDefinitions)
             {
-                if (SymbolEqualityComparer.Default.Equals(structDeclarationSymbol, constant.Key.ContainingSymbol))
-                {
-                    yield return new string[] { constant.Key.Name, constant.Value };
-                }
-                else
-                {
-                    var ownerTypeName = ((INamedTypeSymbol)constant.Key.ContainingSymbol).GetFullMetadataName().Replace(".", "__");
-                    var constantName = $"{ownerTypeName}__{constant.Key.Name}";
+                var ownerTypeName = ((INamedTypeSymbol)constant.Key.ContainingSymbol).ToDisplayString().Replace(".", "__");
+                var constantName = $"__{ownerTypeName}__{constant.Key.Name}";
 
-                    yield return new string[] { constantName, constant.Value };
-                }
+                yield return new string[] { constantName, constant.Value };
             }
         }
 
