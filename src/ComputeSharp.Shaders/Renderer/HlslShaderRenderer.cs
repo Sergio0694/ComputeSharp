@@ -31,17 +31,27 @@ namespace ComputeSharp.Shaders.Renderer
             builder.AppendLine("//                  AUTO GENERATED");
             builder.AppendLine("// ================================================");
             builder.AppendLine("// This shader was created by ComputeSharp.");
-            builder.AppendLine("// See: https://github.com/Sergio0694/ComputeSharp.");            
+            builder.AppendLine("// See: https://github.com/Sergio0694/ComputeSharp.");
+            builder.AppendLine();
+
+            // Constants
+            foreach (var constant in info.ConstantsInfo)
+            {
+                builder.Append("#define ");
+                builder.Append(constant.Key);
+                builder.Append(' ');
+                builder.AppendLine(constant.Value);
+                builder.AppendLine();
+            }
 
             // Declared types
             foreach (var type in info.DeclaredTypes)
             {
-                builder.AppendLine();
                 builder.AppendLine(type);
+                builder.AppendLine();
             }
 
             // Captured variables
-            builder.AppendLine();
             builder.AppendLine("cbuffer _ : register(b0)");
             builder.AppendLine('{');
             builder.AppendLine("    uint __x;");

@@ -96,7 +96,7 @@ namespace ComputeSharp.SourceGenerators
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods)
         {
-            ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, discoveredTypes, staticMethods);
+            ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, discoveredTypes, staticMethods, null); // TODO: implement constant support
 
             // Rewrite the method syntax tree
             var processedMethod = shaderSourceRewriter

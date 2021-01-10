@@ -38,6 +38,11 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         private readonly IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods;
 
         /// <summary>
+        /// The collection of discovered constant definitions.
+        /// </summary>
+        private readonly IDictionary<IFieldSymbol, string> constantDefinitions;
+
+        /// <summary>
         /// The collection of processed local functions in the current tree.
         /// </summary>
         private readonly Dictionary<string, LocalFunctionStatementSyntax> localFunctions;
@@ -59,16 +64,19 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the target syntax tree.</param>
         /// <param name="discoveredTypes">The set of discovered custom types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
+        /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         public ShaderSourceRewriter(
             INamedTypeSymbol shaderType,
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
-            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods)
+            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
+            IDictionary<IFieldSymbol, string> constantDefinitions)
         {
             this.shaderType = shaderType;
             this.semanticModel = semanticModel;
             this.discoveredTypes = discoveredTypes;
             this.staticMethods = staticMethods;
+            this.constantDefinitions = constantDefinitions;
             this.localFunctions = new();
             this.implicitVariables = new();
         }
@@ -79,14 +87,17 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the target syntax tree.</param>
         /// <param name="discoveredTypes">The set of discovered custom types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
+        /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         public ShaderSourceRewriter(
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
-            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods)
+            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
+            IDictionary<IFieldSymbol, string> constantDefinitions)
         {
             this.semanticModel = semanticModel;
             this.discoveredTypes = discoveredTypes;
             this.staticMethods = staticMethods;
+            this.constantDefinitions = constantDefinitions;
             this.implicitVariables = new();
             this.localFunctions = new();
         }
@@ -398,7 +409,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
                     if (!this.staticMethods.ContainsKey(method))
                     {
-                        ShaderSourceRewriter shaderSourceRewriter = new(this.semanticModel, this.discoveredTypes, this.staticMethods);
+                        ShaderSourceRewriter shaderSourceRewriter = new(this.semanticModel, this.discoveredTypes, this.staticMethods, this.constantDefinitions);
                         MethodDeclarationSyntax
                             methodNode = (MethodDeclarationSyntax)method.DeclaringSyntaxReferences[0].GetSyntax(),
                             processedMethod = shaderSourceRewriter.Visit(methodNode)!.NormalizeWhitespace().WithoutTrivia();
@@ -447,6 +458,21 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 this.implicitVariables.Add(VariableDeclaration(typeSyntax).AddVariables(VariableDeclarator(identifier)));
 
                 return updatedNode.WithExpression(IdentifierName(identifier));
+            }
+
+            return updatedNode;
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
+        {
+            var updatedNode = (IdentifierNameSyntax)base.VisitIdentifierName(node)!;
+
+            if (this.semanticModel.GetOperation(node) is IFieldReferenceOperation operation &&
+                operation.Field.IsConst &&
+                !this.constantDefinitions.ContainsKey(operation.Field))
+            {
+                this.constantDefinitions.Add(operation.Field, operation.Field.ConstantValue!.ToString());
             }
 
             return updatedNode;

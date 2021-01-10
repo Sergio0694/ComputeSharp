@@ -24,13 +24,21 @@ namespace ComputeSharp.__Internals
         /// <param name="args">The mapped collection of shader fields.</param>
         /// <param name="executeMethod">The source code for the <see cref="IComputeShader.Execute"/> method.</param>
         /// <param name="methods">The collection of processed methods.</param>
-        public IComputeShaderSourceAttribute(string shaderTypeName, string[] types, object[] args, string executeMethod, string[] methods)
+        /// <param name="constants">The collection of discovered constants.</param>
+        public IComputeShaderSourceAttribute(
+            string shaderTypeName,
+            string[] types,
+            object[] args,
+            string executeMethod,
+            string[] methods,
+            object[] constants)
         {
             ShaderTypeName = shaderTypeName;
             Types = types;
             Fields = args.Cast<string[]>().ToDictionary(static arg => arg[0], static arg => (arg[1], arg[2]));
             ExecuteMethod = executeMethod;
             Methods = methods;
+            Constants = constants.Cast<string[]>().ToDictionary(static c => c[0], static c => c[1]);
         }
 
         /// <summary>
@@ -57,6 +65,11 @@ namespace ComputeSharp.__Internals
         /// Gets the collection of processed methods.
         /// </summary>
         internal IReadOnlyCollection<string> Methods { get; }
+
+        /// <summary>
+        /// Gets the collection of discovered constants.
+        /// </summary>
+        internal IReadOnlyDictionary<string, string> Constants { get; }
 
         /// <summary>
         /// Gets the associated <see cref="IComputeShaderSourceAttribute"/> instance for a specified type.

@@ -45,6 +45,7 @@ namespace ComputeSharp.SourceGenerators
                 // We need to sets to track all discovered custom types and static methods
                 HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
                 Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
+                Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
                 // Helper that converts a sequence of string sequences into a nested array expression.
                 // That is, this applies the following transformation:
@@ -76,9 +77,10 @@ namespace ComputeSharp.SourceGenerators
 
                 // Explore the syntax tree and extract the processed info
                 var processedMembers = GetProcessedMembers(structDeclarationSymbol, discoveredTypes).ToArray();
-                var (entryPoint, localFunctions) = GetProcessedMethods(structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods);
+                var (entryPoint, localFunctions) = GetProcessedMethods(structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
                 var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
                 var processedMethods = localFunctions.Concat(staticMethods.Values).Select(static method => method.NormalizeWhitespace().ToFullString()).ToArray();
+                var processedConstants = GetProcessedConstants(structDeclarationSymbol, constantDefinitions);
 
                 // Create the compilation unit with the source attribute
                 var source =
@@ -90,7 +92,8 @@ namespace ComputeSharp.SourceGenerators
                             AttributeArgument(ArrayExpression(processedTypes)),
                             AttributeArgument(NestedArrayExpression(processedMembers)),
                             AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(entryPoint))),
-                            AttributeArgument(ArrayExpression(processedMethods)))))
+                            AttributeArgument(ArrayExpression(processedMethods)),
+                            AttributeArgument(NestedArrayExpression(processedConstants)))))
                     .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                     .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
                     .NormalizeWhitespace()
@@ -138,6 +141,7 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the type to process.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
+        /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
         [Pure]
         private static (string EntryPoint, IEnumerable<SyntaxNode> Methods) GetProcessedMethods(
@@ -145,7 +149,8 @@ namespace ComputeSharp.SourceGenerators
             INamedTypeSymbol structDeclarationSymbol,
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
-            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods)
+            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
+            IDictionary<IFieldSymbol, string> constantDefinitions)
         {
             // Find all declared methods in the type
             ImmutableArray<MethodDeclarationSyntax> methodDeclarations = (
@@ -159,7 +164,7 @@ namespace ComputeSharp.SourceGenerators
             foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
             {
                 IMethodSymbol methodDeclarationSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration)!;
-                ShaderSourceRewriter shaderSourceRewriter = new(structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods);
+                ShaderSourceRewriter shaderSourceRewriter = new(structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
 
                 // Rewrite the method syntax tree
                 var processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();
@@ -187,6 +192,31 @@ namespace ComputeSharp.SourceGenerators
             }
 
             return (entryPoint!, methods);
+        }
+
+        /// <summary>
+        /// Gets a sequence of discovered constants.
+        /// </summary>
+        /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
+        /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+        /// <returns>A sequence of discovered constants to declare in the shader.</returns>
+        [Pure]
+        private static IEnumerable<IEnumerable<string>> GetProcessedConstants(INamedTypeSymbol structDeclarationSymbol, IReadOnlyDictionary<IFieldSymbol, string> constantDefinitions)
+        {
+            foreach (var constant in constantDefinitions)
+            {
+                if (SymbolEqualityComparer.Default.Equals(structDeclarationSymbol, constant.Key.ContainingSymbol))
+                {
+                    yield return new string[] { constant.Key.Name, constant.Value };
+                }
+                else
+                {
+                    var ownerTypeName = ((INamedTypeSymbol)constant.Key.ContainingSymbol).GetFullMetadataName().Replace(".", "__");
+                    var constantName = $"{ownerTypeName}__{constant.Key.Name}";
+
+                    yield return new string[] { constantName, constant.Value };
+                }
+            }
         }
 
         /// <summary>
