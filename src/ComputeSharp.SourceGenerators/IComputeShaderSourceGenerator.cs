@@ -88,6 +88,8 @@ namespace ComputeSharp.SourceGenerators
         {
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
+                if (fieldSymbol.IsStatic) continue;
+
                 INamedTypeSymbol typeSymbol = (INamedTypeSymbol)fieldSymbol.Type;
 
                 string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
@@ -103,6 +105,36 @@ namespace ComputeSharp.SourceGenerators
                 {
                     types.Add((INamedTypeSymbol)typeSymbol.TypeArguments[0]);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets a sequence of captured members and their mapped names.
+        /// </summary>
+        /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+        /// <param name="types">The collection of currently discovered types.</param>
+        /// <returns>A sequence of captured members in <paramref name="structDeclarationSymbol"/>.</returns>
+        [Pure]
+        private static IEnumerable<IEnumerable<string>> GetGroupSharedMembers(INamedTypeSymbol structDeclarationSymbol, ICollection<INamedTypeSymbol> types)
+        {
+            foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
+            {
+                if (!fieldSymbol.IsStatic) continue;
+
+                AttributeData attribute = fieldSymbol.GetAttributes().First(static a => a.AttributeClass is { Name: nameof(GroupSharedAttribute) });
+                int? bufferSize = (int?)attribute.ConstructorArguments.FirstOrDefault().Value;
+                IArrayTypeSymbol typeSymbol = (IArrayTypeSymbol)fieldSymbol.Type;
+
+                string typeName = HlslKnownTypes.GetMappedElementName(typeSymbol);
+
+                _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
+
+                yield return new[]
+                {
+                    mapping ?? fieldSymbol.Name,
+                    typeName,
+                    bufferSize?.ToString() ?? "-1"
+                };
             }
         }
 

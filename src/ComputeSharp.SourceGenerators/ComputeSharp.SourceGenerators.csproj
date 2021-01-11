@@ -14,6 +14,7 @@
       and to match members based on full name, so the types being in the generator assembly are not an issue.-->
   <ItemGroup>
     <Compile Include="..\ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" Link="Core\Attributes\AutoConstructorAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Core\Attributes\GroupSharedAttribute.cs" Link="Core\Attributes\GroupSharedAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Attributes\ShaderMethodAttribute.cs" Link="Core\Attributes\ShaderMethodAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Attributes\__Internals\IComputeShaderSourceAttribute.cs" Link="Core\Attributes\__Internals\IComputeShaderSourceAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" Link="Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" />

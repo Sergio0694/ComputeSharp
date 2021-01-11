@@ -150,6 +150,24 @@ namespace ComputeSharp.SourceGenerators.Mappings
         }
 
         /// <summary>
+        /// Gets the mapped HLSL-compatible type name for the input element type symbol.
+        /// </summary>
+        /// <param name="typeSymbol">The input type to map.</param>
+        /// <returns>The HLSL-compatible type name that can be used in an HLSL shader.</returns>
+        [Pure]
+        public static string GetMappedElementName(IArrayTypeSymbol typeSymbol)
+        {
+            string elementTypeName = ((INamedTypeSymbol)typeSymbol.ElementType).GetFullMetadataName();
+
+            if (KnownTypes.TryGetValue(elementTypeName, out string? mapped))
+            {
+                return mapped;
+            }
+
+            return elementTypeName.Replace(".", "__");
+        }
+
+        /// <summary>
         /// Gets the mapped HLSL-compatible type name for the input type name.
         /// </summary>
         /// <param name="name">The input type name to map.</param>
