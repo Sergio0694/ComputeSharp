@@ -293,14 +293,15 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             if (node.IsKind(SyntaxKind.SimpleMemberAccessExpression) &&
                 this.semanticModel.GetOperation(node) is IMemberReferenceOperation operation)
             {
-                // If the current member access is to a constant, hardcode the value in HLSL
-                if (operation.ConstantValue is { HasValue: true } and { Value: object value })
+                // If the member access is a constant, track it and replace the tree with the processed constant name
+                if (operation is IFieldReferenceOperation fieldOperation && fieldOperation.Field.IsConst)
                 {
-                    return ParseExpression(value switch
-                    {
-                        IFormattable f => f.ToString(null, CultureInfo.InvariantCulture),
-                        _ => value.ToString()
-                    });
+                    this.constantDefinitions[fieldOperation.Field] = fieldOperation.Field.ConstantValue!.ToString();
+
+                    var ownerTypeName = ((INamedTypeSymbol)fieldOperation.Field.ContainingSymbol).ToDisplayString().Replace(".", "__");
+                    var constantName = $"__{ownerTypeName}__{fieldOperation.Field.Name}";
+
+                    return IdentifierName(constantName);
                 }
 
                 // If the current member access is a field or property access, check the lookup table
@@ -468,11 +469,9 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (IdentifierNameSyntax)base.VisitIdentifierName(node)!;
 
-            if (this.semanticModel.GetOperation(node) is IFieldReferenceOperation operation &&
-                operation.Field.IsConst &&
-                !this.constantDefinitions.ContainsKey(operation.Field))
+            if (this.semanticModel.GetOperation(node) is IFieldReferenceOperation operation && operation.Field.IsConst)
             {
-                this.constantDefinitions.Add(operation.Field, operation.Field.ConstantValue!.ToString());
+                this.constantDefinitions[operation.Field] = operation.Field.ConstantValue!.ToString();
 
                 var ownerTypeName = ((INamedTypeSymbol)operation.Field.ContainingSymbol).ToDisplayString().Replace(".", "__");
                 var constantName = $"__{ownerTypeName}__{operation.Field.Name}";
