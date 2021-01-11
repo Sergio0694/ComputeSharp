@@ -31,7 +31,21 @@ namespace ComputeSharp.Shaders.Renderer
             builder.AppendLine("//                  AUTO GENERATED");
             builder.AppendLine("// ================================================");
             builder.AppendLine("// This shader was created by ComputeSharp.");
-            builder.AppendLine("// See: https://github.com/Sergio0694/ComputeSharp.");            
+            builder.AppendLine("// See: https://github.com/Sergio0694/ComputeSharp.");
+
+            // Constants
+            if (info.ConstantsInfo.Count > 0)
+            {
+                builder.AppendLine();
+
+                foreach (var constant in info.ConstantsInfo)
+                {
+                    builder.Append("#define ");
+                    builder.Append(constant.Key);
+                    builder.Append(' ');
+                    builder.AppendLine(constant.Value);
+                }
+            }
 
             // Declared types
             foreach (var type in info.DeclaredTypes)

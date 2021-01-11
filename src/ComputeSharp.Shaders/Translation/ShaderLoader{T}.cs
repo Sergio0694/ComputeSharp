@@ -62,6 +62,11 @@ namespace ComputeSharp.Shaders.Translation
         private readonly List<string> methodsInfo = new();
 
         /// <summary>
+        /// The <see cref="Dictionary{TKey,TValue}"/> with the discovered constants for the shader.
+        /// </summary>
+        private readonly Dictionary<string, string> constantsInfo = new();
+
+        /// <summary>
         /// The <see cref="List{T}"/> with the collected declared types for the shader.
         /// </summary>
         private readonly List<string> declaredTypes = new();
@@ -94,6 +99,9 @@ namespace ComputeSharp.Shaders.Translation
         public IReadOnlyCollection<string> MethodsInfo => this.methodsInfo;
 
         /// <inheritdoc/>
+        public IReadOnlyDictionary<string, string> ConstantsInfo => this.constantsInfo;
+
+        /// <inheritdoc/>
         public IReadOnlyCollection<string> DeclaredTypes => this.declaredTypes;
 
         /// <summary>
@@ -106,14 +114,31 @@ namespace ComputeSharp.Shaders.Translation
         {
             ShaderLoader<T> @this = new();
 
+            @this.LoadMethodMetadata();
+
             // Reading members through reflection requires an object parameter, so here we're just boxing
             // the input shader once to avoid allocating it multiple times while processing the shader.
             @this.d3D12DescriptorRanges1 = @this.LoadFieldsInfo(shader);
 
-            @this.LoadMethodMetadata();
             @this.InitializeDispatchDataLoader();
 
             return @this;
+        }
+
+        /// <summary>
+        /// Loads the metadata info for the current shader.
+        /// </summary>
+        private void LoadMethodMetadata()
+        {
+            EntryPoint = Attribute.ExecuteMethod;
+
+            this.declaredTypes.AddRange(Attribute.Types);
+            this.methodsInfo.AddRange(Attribute.Methods);
+
+            foreach (var pair in Attribute.Constants)
+            {
+                this.constantsInfo.Add(pair.Key, pair.Value);
+            }
         }
 
         /// <summary>
@@ -197,19 +222,13 @@ namespace ComputeSharp.Shaders.Translation
                 this.declaredTypes.AddRange(methodSource.Types);
                 this.methodsInfo.Add(methodSource.GetMappedInvokeMethod(hlslName));
                 this.methodsInfo.AddRange(methodSource.Methods);
+
+                foreach (var pair in methodSource.Constants)
+                {
+                    this.constantsInfo[pair.Key] = pair.Value;
+                }
             }
             else ThrowHelper.ThrowArgumentException("Invalid captured variable");
-        }
-
-        /// <summary>
-        /// Loads the metadata info for the current shader.
-        /// </summary>
-        private void LoadMethodMetadata()
-        {
-            EntryPoint = Attribute.ExecuteMethod;
-
-            this.methodsInfo.AddRange(Attribute.Methods);
-            this.declaredTypes.AddRange(Attribute.Types);
         }
     }
 }

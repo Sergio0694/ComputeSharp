@@ -42,12 +42,11 @@ namespace ComputeSharp.SourceGenerators
                 var structName = structDeclaration.Identifier.Text;
                 var structModifiers = structDeclaration.Modifiers;
                 var fields = (
-                    from fieldDeclaration in structDeclaration.Members.OfType<FieldDeclarationSyntax>()
-                    let fieldType = fieldDeclaration.Declaration.Type
-                    let typeName = semanticModel.GetTypeInfo(fieldType).Type!.ToDisplayString()
+                    from fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>()
+                    where !fieldSymbol.IsConst
+                    let typeName = fieldSymbol.Type!.ToDisplayString()
                     let fieldFullType = ParseTypeName(typeName)
-                    from fieldVariable in fieldDeclaration.Declaration.Variables
-                    select (Type: fieldFullType, fieldVariable.Identifier)).ToImmutableArray();
+                    select (Type: fieldFullType, Identifier: Identifier(fieldSymbol.Name))).ToImmutableArray();
 
                 // Create the constructor declaration for the type. This will
                 // produce a constructor with simple initialization of all variables:

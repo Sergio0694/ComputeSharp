@@ -38,6 +38,11 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         private readonly IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods;
 
         /// <summary>
+        /// The collection of discovered constant definitions.
+        /// </summary>
+        private readonly IDictionary<IFieldSymbol, string> constantDefinitions;
+
+        /// <summary>
         /// The collection of processed local functions in the current tree.
         /// </summary>
         private readonly Dictionary<string, LocalFunctionStatementSyntax> localFunctions;
@@ -59,16 +64,19 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the target syntax tree.</param>
         /// <param name="discoveredTypes">The set of discovered custom types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
+        /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         public ShaderSourceRewriter(
             INamedTypeSymbol shaderType,
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
-            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods)
+            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
+            IDictionary<IFieldSymbol, string> constantDefinitions)
         {
             this.shaderType = shaderType;
             this.semanticModel = semanticModel;
             this.discoveredTypes = discoveredTypes;
             this.staticMethods = staticMethods;
+            this.constantDefinitions = constantDefinitions;
             this.localFunctions = new();
             this.implicitVariables = new();
         }
@@ -79,14 +87,17 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the target syntax tree.</param>
         /// <param name="discoveredTypes">The set of discovered custom types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
+        /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         public ShaderSourceRewriter(
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
-            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods)
+            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
+            IDictionary<IFieldSymbol, string> constantDefinitions)
         {
             this.semanticModel = semanticModel;
             this.discoveredTypes = discoveredTypes;
             this.staticMethods = staticMethods;
+            this.constantDefinitions = constantDefinitions;
             this.implicitVariables = new();
             this.localFunctions = new();
         }
@@ -282,14 +293,15 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             if (node.IsKind(SyntaxKind.SimpleMemberAccessExpression) &&
                 this.semanticModel.GetOperation(node) is IMemberReferenceOperation operation)
             {
-                // If the current member access is to a constant, hardcode the value in HLSL
-                if (operation.ConstantValue is { HasValue: true } and { Value: object value })
+                // If the member access is a constant, track it and replace the tree with the processed constant name
+                if (operation is IFieldReferenceOperation fieldOperation && fieldOperation.Field.IsConst)
                 {
-                    return ParseExpression(value switch
-                    {
-                        IFormattable f => f.ToString(null, CultureInfo.InvariantCulture),
-                        _ => value.ToString()
-                    });
+                    this.constantDefinitions[fieldOperation.Field] = fieldOperation.Field.ConstantValue!.ToString();
+
+                    var ownerTypeName = ((INamedTypeSymbol)fieldOperation.Field.ContainingSymbol).ToDisplayString().Replace(".", "__");
+                    var constantName = $"__{ownerTypeName}__{fieldOperation.Field.Name}";
+
+                    return IdentifierName(constantName);
                 }
 
                 // If the current member access is a field or property access, check the lookup table
@@ -398,7 +410,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
                     if (!this.staticMethods.ContainsKey(method))
                     {
-                        ShaderSourceRewriter shaderSourceRewriter = new(this.semanticModel, this.discoveredTypes, this.staticMethods);
+                        ShaderSourceRewriter shaderSourceRewriter = new(this.semanticModel, this.discoveredTypes, this.staticMethods, this.constantDefinitions);
                         MethodDeclarationSyntax
                             methodNode = (MethodDeclarationSyntax)method.DeclaringSyntaxReferences[0].GetSyntax(),
                             processedMethod = shaderSourceRewriter.Visit(methodNode)!.NormalizeWhitespace().WithoutTrivia();
@@ -447,6 +459,24 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 this.implicitVariables.Add(VariableDeclaration(typeSyntax).AddVariables(VariableDeclarator(identifier)));
 
                 return updatedNode.WithExpression(IdentifierName(identifier));
+            }
+
+            return updatedNode;
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
+        {
+            var updatedNode = (IdentifierNameSyntax)base.VisitIdentifierName(node)!;
+
+            if (this.semanticModel.GetOperation(node) is IFieldReferenceOperation operation && operation.Field.IsConst)
+            {
+                this.constantDefinitions[operation.Field] = operation.Field.ConstantValue!.ToString();
+
+                var ownerTypeName = ((INamedTypeSymbol)operation.Field.ContainingSymbol).ToDisplayString().Replace(".", "__");
+                var constantName = $"__{ownerTypeName}__{operation.Field.Name}";
+
+                return IdentifierName(constantName);
             }
 
             return updatedNode;

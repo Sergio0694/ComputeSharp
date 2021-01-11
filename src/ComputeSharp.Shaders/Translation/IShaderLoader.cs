@@ -29,6 +29,11 @@ namespace ComputeSharp.Shaders.Translation
         public IReadOnlyCollection<string> MethodsInfo { get; }
 
         /// <summary>
+        /// Gets the collection of constants to be declared in the shader.
+        /// </summary>
+        public IReadOnlyDictionary<string, string> ConstantsInfo { get; }
+
+        /// <summary>
         /// Gets the collection of declared types for the shader.
         /// </summary>
         public IReadOnlyCollection<string> DeclaredTypes { get; }

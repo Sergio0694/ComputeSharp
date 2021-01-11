@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Reflection;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Exceptions;
@@ -35,13 +36,15 @@ namespace ComputeSharp.__Internals
         /// <param name="types">The collection of custom types.</param>
         /// <param name="invokeMethod">The source code for the target entry point method.</param>
         /// <param name="methods">The collection of processed methods.</param>
-        public ShaderMethodSourceAttribute(string methodName, string[] types, string invokeMethod, string[] methods)
+        /// <param name="constants">The collection of discovered constants.</param>
+        public ShaderMethodSourceAttribute(string methodName, string[] types, string invokeMethod, string[] methods, object[] constants)
         {
             this.invokeMethod = invokeMethod;
 
             MethodName = methodName;
             Types = types;
             Methods = methods;
+            Constants = constants.Cast<string[]>().ToDictionary(static c => c[0], static c => c[1]);
         }
 
         /// <summary>
@@ -58,6 +61,11 @@ namespace ComputeSharp.__Internals
         /// Gets the collection of processed methods.
         /// </summary>
         internal IReadOnlyCollection<string> Methods { get; }
+
+        /// <summary>
+        /// Gets the collection of discovered constants.
+        /// </summary>
+        internal IReadOnlyDictionary<string, string> Constants { get; }
 
         /// <summary>
         /// Gets the mapped source code for the current method.

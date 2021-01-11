@@ -141,6 +141,8 @@ namespace ComputeSharp.SourceGenerators
                 }
                 else if (HlslKnownTypes.IsScalarOrVectorType(typeName))
                 {
+                    if (fieldSymbol.IsConst) continue;
+
                     var (fieldSize, fieldPack) = HlslKnownSizes.GetTypeInfo(typeName);
 
                     // Calculate the right offset with 16-bytes padding (HLSL constant buffer).
