@@ -9,7 +9,7 @@ namespace ComputeSharp
     /// correctly, wrapped methods need to have this attribute manually applied to them.
     /// Methods also need to be static, though this can only be tested at runtime.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public sealed class ShaderMethodAttribute : Attribute
     {
     }
