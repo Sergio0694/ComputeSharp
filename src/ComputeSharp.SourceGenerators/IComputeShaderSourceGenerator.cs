@@ -12,6 +12,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static ComputeSharp.SourceGenerators.Helpers.SyntaxFactoryHelper;
 
 #pragma warning disable CS0618
 
@@ -46,34 +47,6 @@ namespace ComputeSharp.SourceGenerators
                 HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
                 Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
                 Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
-
-                // Helper that converts a sequence of string sequences into a nested array expression.
-                // That is, this applies the following transformation:
-                //   - { ("K1", "V1"), ("K2", "V2") } => new object[] { new[] { "K1", "V1" }, new[] { "K2", "V2" } }
-                static ArrayCreationExpressionSyntax NestedArrayExpression(IEnumerable<IEnumerable<string>> groups)
-                {
-                    return
-                        ArrayCreationExpression(
-                        ArrayType(PredefinedType(Token(SyntaxKind.ObjectKeyword)))
-                        .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
-                        .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
-                        .AddExpressions(groups.Select(static group =>
-                            ImplicitArrayCreationExpression(InitializerExpression(SyntaxKind.ArrayInitializerExpression).AddExpressions(
-                                group.Select(static item => LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(item))).ToArray()))).ToArray()));
-                }
-
-                // Helper that converts a sequence of strings into an array expression.
-                // That is, this applies the following transformation:
-                //   - { "S1", "S2" } => new string[] { "S1", "S2" }
-                static ArrayCreationExpressionSyntax ArrayExpression(IEnumerable<string> values)
-                {
-                    return
-                        ArrayCreationExpression(
-                        ArrayType(PredefinedType(Token(SyntaxKind.StringKeyword)))
-                        .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
-                        .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
-                        .AddExpressions(values.Select(static value => LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(value))).ToArray()));
-                }
 
                 // Explore the syntax tree and extract the processed info
                 var processedMembers = GetProcessedMembers(structDeclarationSymbol, discoveredTypes).ToArray();
@@ -200,7 +173,7 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <returns>A sequence of discovered constants to declare in the shader.</returns>
         [Pure]
-        private static IEnumerable<IEnumerable<string>> GetProcessedConstants(IReadOnlyDictionary<IFieldSymbol, string> constantDefinitions)
+        internal static IEnumerable<IEnumerable<string>> GetProcessedConstants(IReadOnlyDictionary<IFieldSymbol, string> constantDefinitions)
         {
             foreach (var constant in constantDefinitions)
             {

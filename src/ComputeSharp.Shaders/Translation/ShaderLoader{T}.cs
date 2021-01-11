@@ -132,14 +132,13 @@ namespace ComputeSharp.Shaders.Translation
         {
             EntryPoint = Attribute.ExecuteMethod;
 
+            this.declaredTypes.AddRange(Attribute.Types);
             this.methodsInfo.AddRange(Attribute.Methods);
 
             foreach (var pair in Attribute.Constants)
             {
                 this.constantsInfo.Add(pair.Key, pair.Value);
             }
-
-            this.declaredTypes.AddRange(Attribute.Types);
         }
 
         /// <summary>
@@ -223,6 +222,11 @@ namespace ComputeSharp.Shaders.Translation
                 this.declaredTypes.AddRange(methodSource.Types);
                 this.methodsInfo.Add(methodSource.GetMappedInvokeMethod(hlslName));
                 this.methodsInfo.AddRange(methodSource.Methods);
+
+                foreach (var pair in methodSource.Constants)
+                {
+                    this.constantsInfo[pair.Key] = pair.Value;
+                }
             }
             else ThrowHelper.ThrowArgumentException("Invalid captured variable");
         }

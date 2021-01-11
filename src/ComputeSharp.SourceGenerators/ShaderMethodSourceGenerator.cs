@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static ComputeSharp.SourceGenerators.Helpers.SyntaxFactoryHelper;
 
 #pragma warning disable CS0618
 
@@ -44,23 +45,12 @@ namespace ComputeSharp.SourceGenerators
                 // We need to sets to track all discovered custom types and static methods
                 HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
                 Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
+                Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
                 // Explore the syntax tree and extract the processed info
-                var (invokeMethod, processedMethods) = GetProcessedMethods(methodDeclaration, semanticModel, discoveredTypes, staticMethods);
+                var (invokeMethod, processedMethods) = GetProcessedMethods(methodDeclaration, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
                 var processedTypes = IComputeShaderSourceGenerator.GetProcessedTypes(discoveredTypes).ToArray();
-
-                // Helper that converts a sequence of strings into an array expression.
-                // That is, this applies the following transformation:
-                //   - { "S1", "S2" } => new string[] { "S1", "S2" }
-                static ArrayCreationExpressionSyntax ArrayExpression(IEnumerable<string> values)
-                {
-                    return
-                        ArrayCreationExpression(
-                        ArrayType(PredefinedType(Token(SyntaxKind.StringKeyword)))
-                        .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
-                        .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
-                        .AddExpressions(values.Select(static value => LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(value))).ToArray()));
-                }
+                var processedConstants = IComputeShaderSourceGenerator.GetProcessedConstants(constantDefinitions);
 
                 // Create the compilation unit with the source attribute
                 var source =
@@ -70,7 +60,8 @@ namespace ComputeSharp.SourceGenerators
                             AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(methodDeclarationSymbol.GetFullMetadataName(true)))),
                             AttributeArgument(ArrayExpression(processedTypes)),
                             AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(invokeMethod))),
-                            AttributeArgument(ArrayExpression(processedMethods)))))
+                            AttributeArgument(ArrayExpression(processedMethods)),
+                            AttributeArgument(NestedArrayExpression(processedConstants)))))
                     .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                     .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
                     .NormalizeWhitespace()
@@ -88,15 +79,17 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the method to process.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
+        /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <returns>A sequence of processed methods in <paramref name="methodDeclaration"/>.</returns>
         [Pure]
         private static (string InvokeMethod, IEnumerable<string> Methods) GetProcessedMethods(
             MethodDeclarationSyntax methodDeclaration,
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
-            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods)
+            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
+            IDictionary<IFieldSymbol, string> constantDefinitions)
         {
-            ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, discoveredTypes, staticMethods, null); // TODO: implement constant support
+            ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, discoveredTypes, staticMethods, constantDefinitions);
 
             // Rewrite the method syntax tree
             var processedMethod = shaderSourceRewriter
