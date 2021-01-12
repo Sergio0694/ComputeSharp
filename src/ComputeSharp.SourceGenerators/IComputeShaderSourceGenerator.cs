@@ -50,6 +50,7 @@ namespace ComputeSharp.SourceGenerators
 
                 // Explore the syntax tree and extract the processed info
                 var processedMembers = GetProcessedMembers(structDeclarationSymbol, discoveredTypes).ToArray();
+                var sharedBuffers = GetGroupSharedMembers(structDeclarationSymbol, discoveredTypes).ToArray();
                 var (entryPoint, localFunctions) = GetProcessedMethods(structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
                 var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
                 var processedMethods = localFunctions.Concat(staticMethods.Values).Select(static method => method.NormalizeWhitespace().ToFullString()).ToArray();
@@ -66,7 +67,8 @@ namespace ComputeSharp.SourceGenerators
                             AttributeArgument(NestedArrayExpression(processedMembers)),
                             AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(entryPoint))),
                             AttributeArgument(ArrayExpression(processedMethods)),
-                            AttributeArgument(NestedArrayExpression(processedConstants)))))
+                            AttributeArgument(NestedArrayExpression(processedConstants)),
+                            AttributeArgument(NestedArrayExpression(sharedBuffers)))))
                     .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                     .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
                     .NormalizeWhitespace()
@@ -115,7 +117,7 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="types">The collection of currently discovered types.</param>
         /// <returns>A sequence of captured members in <paramref name="structDeclarationSymbol"/>.</returns>
         [Pure]
-        private static IEnumerable<IEnumerable<string>> GetGroupSharedMembers(INamedTypeSymbol structDeclarationSymbol, ICollection<INamedTypeSymbol> types)
+        private static IEnumerable<(string Name, string Type, int? Count)> GetGroupSharedMembers(INamedTypeSymbol structDeclarationSymbol, ICollection<INamedTypeSymbol> types)
         {
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
@@ -129,12 +131,9 @@ namespace ComputeSharp.SourceGenerators
 
                 _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
 
-                yield return new[]
-                {
-                    mapping ?? fieldSymbol.Name,
-                    typeName,
-                    bufferSize?.ToString() ?? "-1"
-                };
+                yield return (mapping ?? fieldSymbol.Name, typeName, bufferSize);
+
+                types.Add((INamedTypeSymbol)typeSymbol.ElementType);
             }
         }
 

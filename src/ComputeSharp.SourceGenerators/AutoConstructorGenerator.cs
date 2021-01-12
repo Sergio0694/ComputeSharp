@@ -43,7 +43,7 @@ namespace ComputeSharp.SourceGenerators
                 var structModifiers = structDeclaration.Modifiers;
                 var fields = (
                     from fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>()
-                    where !fieldSymbol.IsConst
+                    where !fieldSymbol.IsConst && !fieldSymbol.IsStatic
                     let typeName = fieldSymbol.Type!.ToDisplayString()
                     let fieldFullType = ParseTypeName(typeName)
                     select (Type: fieldFullType, Identifier: Identifier(fieldSymbol.Name))).ToImmutableArray();
