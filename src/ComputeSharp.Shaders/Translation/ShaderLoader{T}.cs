@@ -104,6 +104,9 @@ namespace ComputeSharp.Shaders.Translation
         /// <inheritdoc/>
         public IReadOnlyCollection<string> DeclaredTypes => this.declaredTypes;
 
+        /// <inheritdoc/>
+        public IReadOnlyDictionary<string, (string Type, int? Count)> SharedBuffers { get; private set; }
+
         /// <summary>
         /// Loads and processes an input<typeparamref name="T"/> shadeer.
         /// </summary>
@@ -131,6 +134,7 @@ namespace ComputeSharp.Shaders.Translation
         private void LoadMethodMetadata()
         {
             EntryPoint = Attribute.ExecuteMethod;
+            SharedBuffers = Attribute.SharedBuffers;
 
             this.declaredTypes.AddRange(Attribute.Types);
             this.methodsInfo.AddRange(Attribute.Methods);

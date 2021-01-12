@@ -114,6 +114,22 @@ namespace ComputeSharp.Shaders.Renderer
                 }
             }
 
+            // Shared buffers
+            foreach (var buffer in info.SharedBuffers)
+            {
+                builder.AppendLine();
+                builder.Append("groupshared ");
+                builder.Append(buffer.Value.Type);
+                builder.Append(' ');
+                builder.Append(buffer.Key);
+                builder.Append('[');
+
+                if (buffer.Value.Count is int count) builder.Append(count.ToString());
+                else builder.Append((threadsX * threadsY * threadsZ).ToString());
+
+                builder.AppendLine("];");
+            }
+
             // Captured methods
             foreach (var function in info.MethodsInfo)
             {

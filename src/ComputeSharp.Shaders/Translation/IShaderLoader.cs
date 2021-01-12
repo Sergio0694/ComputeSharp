@@ -11,31 +11,36 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// Gets the generated source code for the method in the current shader.
         /// </summary>
-        public string EntryPoint { get; }
+        string EntryPoint { get; }
 
         /// <summary>
         /// Gets the collection of <see cref="Renderer.Models.HlslResourceInfo"/> items for the shader fields.
         /// </summary>
-        public IReadOnlyList<HlslResourceInfo> HlslResourceInfo { get; }
+        IReadOnlyList<HlslResourceInfo> HlslResourceInfo { get; }
 
         /// <summary>
         /// Gets the collection of <see cref="CapturedFieldInfo"/> items for the shader fields.
         /// </summary>
-        public IReadOnlyList<CapturedFieldInfo> FieldsInfo { get; }
+        IReadOnlyList<CapturedFieldInfo> FieldsInfo { get; }
 
         /// <summary>
         /// Gets the collection of methods to be used in the shader.
         /// </summary>
-        public IReadOnlyCollection<string> MethodsInfo { get; }
+        IReadOnlyCollection<string> MethodsInfo { get; }
 
         /// <summary>
         /// Gets the collection of constants to be declared in the shader.
         /// </summary>
-        public IReadOnlyDictionary<string, string> ConstantsInfo { get; }
+        IReadOnlyDictionary<string, string> ConstantsInfo { get; }
 
         /// <summary>
         /// Gets the collection of declared types for the shader.
         /// </summary>
-        public IReadOnlyCollection<string> DeclaredTypes { get; }
+        IReadOnlyCollection<string> DeclaredTypes { get; }
+
+        /// <summary>
+        /// Gets the collection of discovered constants.
+        /// </summary>
+        IReadOnlyDictionary<string, (string Type, int? Count)> SharedBuffers { get; }
     }
 }
