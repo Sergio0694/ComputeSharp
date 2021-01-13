@@ -106,6 +106,21 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// </summary>
         public IReadOnlyDictionary<string, LocalFunctionStatementSyntax> LocalFunctions => this.localFunctions;
 
+        /// <summary>
+        /// Gets whether or not the shader uses <see cref="GroupIds"/> at least once (except <see cref="GroupIds.Index"/>).
+        /// </summary>
+        public bool IsGroupIdsUsed { get; private set; }
+
+        /// <summary>
+        /// Gets whether or not the shader uses <see cref="GroupIds.Index/> at least once.
+        /// </summary>
+        public bool IsGroupIdsIndexUsed { get; private set; }
+
+        /// <summary>
+        /// Gets whether or not the shader uses <see cref="WarpIds"/> at least once.
+        /// </summary>
+        public bool IsWarpIdsUsed { get; set; }
+
         /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
         public MethodDeclarationSyntax? Visit(MethodDeclarationSyntax? node)
         {
@@ -307,11 +322,22 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 // to see if the member should be rewritten for HLSL compliance, and rewrite if needed.
                 if (HlslKnownMembers.TryGetMappedName(operation.Member.ToDisplayString(), out string? mapping))
                 {
+                    // Mark which dispatch properties have been used, to optimize the declaration afterwards
+                    if (operation.Member.IsStatic)
+                    {
+                        string typeName = operation.Member.ContainingType.GetFullMetadataName();
+
+                        if (mapping == $"__{nameof(GroupIds)}__get_Index") IsGroupIdsIndexUsed = true;
+                        else if (typeName == typeof(GroupIds).FullName) IsGroupIdsUsed = true;
+                        else if (typeName == typeof(WarpIds).FullName) IsWarpIdsUsed = true;
+                    }
+
                     // Static and instance members are handled differently, with static members being
                     // converted into a literal expression, and instance getting an updated identifier.
-                    // For instance, consider these two cases:
+                    // For instance, consider these three cases:
                     //   - Vector3.One (static) => float3(1.0f, 1.0f, 1.0f)
-                    //   - ThredIds.X (instance) => [arg].x
+                    //   - ThreadIds.X (custom) => ThreadIds.x
+                    //   - uint3.X (instance) => [arg].x
                     return operation.Member.IsStatic switch
                     {
                         true => ParseExpression(mapping!),

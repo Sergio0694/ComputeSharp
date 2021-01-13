@@ -179,7 +179,7 @@ namespace ComputeSharp.SourceGenerators
                     methodDeclarationSymbol.TypeParameters.Length == 0 &&
                     methodDeclarationSymbol.Parameters.Length == 0)
                 {
-                    processedMethod = new ExecuteMethodRewriter().Visit(processedMethod)!;
+                    processedMethod = new ExecuteMethodRewriter(shaderSourceRewriter).Visit(processedMethod)!;
 
                     entryPoint = processedMethod.NormalizeWhitespace().ToFullString();
                 }

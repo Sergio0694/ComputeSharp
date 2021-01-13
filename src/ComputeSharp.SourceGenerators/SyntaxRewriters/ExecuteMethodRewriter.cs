@@ -10,6 +10,20 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
     /// </summary>
     internal sealed class ExecuteMethodRewriter : CSharpSyntaxRewriter
     {
+        /// <summary>
+        /// The <see cref="ShaderSourceRewriter"/> instance used to process the input tree.
+        /// </summary>
+        private readonly ShaderSourceRewriter shaderSourceRewriter;
+
+        /// <summary>
+        /// Creates a new <see cref="ExecuteMethodRewriter"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="shaderSourceRewriter">The <see cref="ShaderSourceRewriter"/> instance used to process the input tree.</param>
+        public ExecuteMethodRewriter(ShaderSourceRewriter shaderSourceRewriter)
+        {
+            this.shaderSourceRewriter = shaderSourceRewriter;
+        }
+
         /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
         public TNode? Visit<TNode>(TNode? node)
             where TNode : SyntaxNode
@@ -22,11 +36,24 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (ParameterListSyntax)base.VisitParameterList(node)!;
 
-            return updatedNode.AddParameters(
-                Parameter(Identifier($"uint3 {nameof(ThreadIds)} : SV_DispatchThreadID")),
-                Parameter(Identifier($"uint3 {nameof(GroupIds)} : SV_GroupThreadID")),
-                Parameter(Identifier($"uint __{nameof(GroupIds)}__get_Index : SV_GroupIndex")),
-                Parameter(Identifier($"uint3 {nameof(WarpIds)} : SV_GroupID")));
+            updatedNode = updatedNode.AddParameters(Parameter(Identifier($"uint3 {nameof(ThreadIds)} : SV_DispatchThreadID")));
+
+            if (this.shaderSourceRewriter.IsGroupIdsUsed)
+            {
+                updatedNode = updatedNode.AddParameters(Parameter(Identifier($"uint3 {nameof(GroupIds)} : SV_GroupThreadID")));
+            }
+
+            if (this.shaderSourceRewriter.IsGroupIdsIndexUsed)
+            {
+                updatedNode = updatedNode.AddParameters(Parameter(Identifier($"uint __{nameof(GroupIds)}__get_Index : SV_GroupIndex")));
+            }
+
+            if (this.shaderSourceRewriter.IsWarpIdsUsed)
+            {
+                updatedNode = updatedNode.AddParameters(Parameter(Identifier($"uint3 {nameof(WarpIds)} : SV_GroupID")));
+            }
+
+            return updatedNode;
         }
 
         /// <inheritdoc/>
