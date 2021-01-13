@@ -25,7 +25,8 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             return updatedNode.AddParameters(
                 Parameter(Identifier($"uint3 {nameof(ThreadIds)} : SV_DispatchThreadID")),
                 Parameter(Identifier($"uint3 {nameof(GroupIds)} : SV_GroupThreadID")),
-                Parameter(Identifier($"uint __{nameof(GroupIds)}__get_Index : SV_GroupIndex")));
+                Parameter(Identifier($"uint __{nameof(GroupIds)}__get_Index : SV_GroupIndex")),
+                Parameter(Identifier($"uint3 {nameof(WarpIds)} : SV_GroupID")));
         }
 
         /// <inheritdoc/>
