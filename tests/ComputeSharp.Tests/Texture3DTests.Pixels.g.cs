@@ -113,9 +113,9 @@ namespace ComputeSharp.Tests
             public readonly ReadOnlyTexture3D<Bgra32, Vector4> source;
             public readonly ReadWriteTexture3D<Bgra32, Vector4> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.XYZ] = (source[ids.XYZ] + destination[ids.XYZ]) / 2;
+                destination[ThreadIds.XYZ] = (source[ThreadIds.XYZ] + destination[ThreadIds.XYZ]) / 2;
             }
         }
 
@@ -125,9 +125,9 @@ namespace ComputeSharp.Tests
             public readonly ReadOnlyTexture3D<Bgra32, Float4> source;
             public readonly ReadWriteTexture3D<Bgra32, Float4> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.XYZ] = (source[ids.XYZ] + destination[ids.XYZ]) / 2;
+                destination[ThreadIds.XYZ] = (source[ThreadIds.XYZ] + destination[ThreadIds.XYZ]) / 2;
             }
         }
 
@@ -137,9 +137,9 @@ namespace ComputeSharp.Tests
             public readonly ReadOnlyTexture3D<R16, float> source;
             public readonly ReadWriteTexture3D<R16, float> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.XYZ] = (source[ids.XYZ] + destination[ids.XYZ]) / 2;
+                destination[ThreadIds.XYZ] = (source[ThreadIds.XYZ] + destination[ThreadIds.XYZ]) / 2;
             }
         }
 
@@ -149,9 +149,9 @@ namespace ComputeSharp.Tests
             public readonly ReadOnlyTexture3D<R8, float> source;
             public readonly ReadWriteTexture3D<R8, float> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.XYZ] = (source[ids.XYZ] + destination[ids.XYZ]) / 2;
+                destination[ThreadIds.XYZ] = (source[ThreadIds.XYZ] + destination[ThreadIds.XYZ]) / 2;
             }
         }
 
@@ -161,9 +161,9 @@ namespace ComputeSharp.Tests
             public readonly ReadOnlyTexture3D<Rg16, Vector2> source;
             public readonly ReadWriteTexture3D<Rg16, Vector2> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.XYZ] = (source[ids.XYZ] + destination[ids.XYZ]) / 2;
+                destination[ThreadIds.XYZ] = (source[ThreadIds.XYZ] + destination[ThreadIds.XYZ]) / 2;
             }
         }
 
@@ -173,9 +173,9 @@ namespace ComputeSharp.Tests
             public readonly ReadOnlyTexture3D<Rg16, Float2> source;
             public readonly ReadWriteTexture3D<Rg16, Float2> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.XYZ] = (source[ids.XYZ] + destination[ids.XYZ]) / 2;
+                destination[ThreadIds.XYZ] = (source[ThreadIds.XYZ] + destination[ThreadIds.XYZ]) / 2;
             }
         }
 
@@ -185,9 +185,9 @@ namespace ComputeSharp.Tests
             public readonly ReadOnlyTexture3D<Rg32, Vector2> source;
             public readonly ReadWriteTexture3D<Rg32, Vector2> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.XYZ] = (source[ids.XYZ] + destination[ids.XYZ]) / 2;
+                destination[ThreadIds.XYZ] = (source[ThreadIds.XYZ] + destination[ThreadIds.XYZ]) / 2;
             }
         }
 
@@ -197,9 +197,9 @@ namespace ComputeSharp.Tests
             public readonly ReadOnlyTexture3D<Rg32, Float2> source;
             public readonly ReadWriteTexture3D<Rg32, Float2> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.XYZ] = (source[ids.XYZ] + destination[ids.XYZ]) / 2;
+                destination[ThreadIds.XYZ] = (source[ThreadIds.XYZ] + destination[ThreadIds.XYZ]) / 2;
             }
         }
 
@@ -209,9 +209,9 @@ namespace ComputeSharp.Tests
             public readonly ReadOnlyTexture3D<Rgba32, Vector4> source;
             public readonly ReadWriteTexture3D<Rgba32, Vector4> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.XYZ] = (source[ids.XYZ] + destination[ids.XYZ]) / 2;
+                destination[ThreadIds.XYZ] = (source[ThreadIds.XYZ] + destination[ThreadIds.XYZ]) / 2;
             }
         }
 
@@ -221,9 +221,9 @@ namespace ComputeSharp.Tests
             public readonly ReadOnlyTexture3D<Rgba32, Float4> source;
             public readonly ReadWriteTexture3D<Rgba32, Float4> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.XYZ] = (source[ids.XYZ] + destination[ids.XYZ]) / 2;
+                destination[ThreadIds.XYZ] = (source[ThreadIds.XYZ] + destination[ThreadIds.XYZ]) / 2;
             }
         }
 
@@ -233,9 +233,9 @@ namespace ComputeSharp.Tests
             public readonly ReadOnlyTexture3D<Rgba64, Vector4> source;
             public readonly ReadWriteTexture3D<Rgba64, Vector4> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.XYZ] = (source[ids.XYZ] + destination[ids.XYZ]) / 2;
+                destination[ThreadIds.XYZ] = (source[ThreadIds.XYZ] + destination[ThreadIds.XYZ]) / 2;
             }
         }
 
@@ -245,9 +245,9 @@ namespace ComputeSharp.Tests
             public readonly ReadOnlyTexture3D<Rgba64, Float4> source;
             public readonly ReadWriteTexture3D<Rgba64, Float4> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.XYZ] = (source[ids.XYZ] + destination[ids.XYZ]) / 2;
+                destination[ThreadIds.XYZ] = (source[ThreadIds.XYZ] + destination[ThreadIds.XYZ]) / 2;
             }
         }
     }

@@ -69,9 +69,9 @@ foreach (var (t, tPixel) in EnumerateTypes())
             public readonly ReadOnlyTexture3D<<#=t#>, <#=tPixel#>> source;
             public readonly ReadWriteTexture3D<<#=t#>, <#=tPixel#>> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.XYZ] = (source[ids.XYZ] + destination[ids.XYZ]) / 2;
+                destination[ThreadIds.XYZ] = (source[ThreadIds.XYZ] + destination[ThreadIds.XYZ]) / 2;
             }
         }
 <#
