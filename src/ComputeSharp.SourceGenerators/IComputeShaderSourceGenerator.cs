@@ -171,18 +171,15 @@ namespace ComputeSharp.SourceGenerators
                 ShaderSourceRewriter shaderSourceRewriter = new(structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
 
                 // Rewrite the method syntax tree
-                var processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();
+                MethodDeclarationSyntax? processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();
 
                 // If the method is the shader entry point, do additional processing
                 if (methodDeclarationSymbol.Name == nameof(IComputeShader.Execute) &&
                     methodDeclarationSymbol.ReturnsVoid &&
                     methodDeclarationSymbol.TypeParameters.Length == 0 &&
-                    methodDeclarationSymbol.Parameters.Length == 1 &&
-                    methodDeclarationSymbol.Parameters[0].Type.ToDisplayString() == typeof(ThreadIds).FullName)
+                    methodDeclarationSymbol.Parameters.Length == 0)
                 {
-                    var parameterName = methodDeclarationSymbol.Parameters[0].Name;
-
-                    processedMethod = new ExecuteMethodRewriter(parameterName).Visit(processedMethod)!;
+                    processedMethod = new ExecuteMethodRewriter().Visit(processedMethod)!;
 
                     entryPoint = processedMethod.NormalizeWhitespace().ToFullString();
                 }

@@ -190,6 +190,15 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 knownMembers.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"{item.Property.Name.ToLower()}");
             }
 
+            // Programmatically load mappings for the dispatch types
+            foreach (var item in
+                from type in HlslKnownTypes.HlslDispatchTypes
+                from property in type.GetProperties(BindingFlags.Static | BindingFlags.Public)
+                select (Type: type, Property: property))
+            {
+                knownMembers.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"{item.Type.Name}.{item.Property.Name.ToLower()}");
+            }
+
             return knownMembers;
         }
 
