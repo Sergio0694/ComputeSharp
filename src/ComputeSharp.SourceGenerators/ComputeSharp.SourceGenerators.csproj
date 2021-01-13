@@ -18,6 +18,8 @@
     <Compile Include="..\ComputeSharp.Core\Attributes\ShaderMethodAttribute.cs" Link="Core\Attributes\ShaderMethodAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Attributes\__Internals\IComputeShaderSourceAttribute.cs" Link="Core\Attributes\__Internals\IComputeShaderSourceAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" Link="Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Core\Dispatch\ThreadIds.cs" Link="Core\Dispatch\ThreadIds.cs" />
+    <Compile Include="..\ComputeSharp.Core\Dispatch\GroupIds.cs" Link="Core\Dispatch\GroupIds.cs" />
     <Compile Include="..\ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" Link="Core\Exceptions\InvalidExecutionContextException.cs" />
     <Compile Include="..\ComputeSharp.Core\Exceptions\MissingMethodSourceException.cs" Link="Core\Exceptions\MissingMethodSourceException.cs" />
     <Compile Include="..\ComputeSharp.Core\Extensions\MethodInfoExtensions.cs" Link="Core\Extensions\MethodInfoExtensions.cs" />
@@ -38,7 +40,6 @@
     <Compile Include="..\ComputeSharp.Core\Primitives\Int\Int2.cs" Link="Core\Primitives\Int\Int2.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\Int\Int3.cs" Link="Core\Primitives\Int\Int3.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\Int\Int4.cs" Link="Core\Primitives\Int\Int4.cs" />
-    <Compile Include="..\ComputeSharp.Core\Primitives\ThreadIds.cs" Link="Core\Primitives\ThreadIds.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt2.cs" Link="Core\Primitives\UInt\UInt2.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt3.cs" Link="Core\Primitives\UInt\UInt3.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt4.cs" Link="Core\Primitives\UInt\UInt4.cs" />

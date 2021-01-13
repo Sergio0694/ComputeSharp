@@ -61,7 +61,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
         /// </summary>
         public static IReadOnlyCollection<Type> HlslDispatchTypes { get; } = new[]
         {
-            typeof(ThreadIds)
+            typeof(ThreadIds), typeof(GroupIds)
         };
 
         /// <summary>

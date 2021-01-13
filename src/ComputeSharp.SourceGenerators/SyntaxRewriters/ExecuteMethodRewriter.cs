@@ -22,7 +22,10 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (ParameterListSyntax)base.VisitParameterList(node)!;
 
-            return updatedNode.AddParameters(Parameter(Identifier($"uint3 {nameof(ThreadIds)} : SV_DispatchThreadID")));
+            return updatedNode.AddParameters(
+                Parameter(Identifier($"uint3 {nameof(ThreadIds)} : SV_DispatchThreadID")),
+                Parameter(Identifier($"uint3 {nameof(GroupIds)} : SV_GroupThreadID")),
+                Parameter(Identifier($"uint __{nameof(GroupIds)}__get_Index : SV_GroupIndex")));
         }
 
         /// <inheritdoc/>
