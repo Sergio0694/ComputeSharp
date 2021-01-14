@@ -251,7 +251,7 @@ namespace ComputeSharp.Shaders.Renderer
             /// <summary>
             /// Ensures that <see cref="array"/> has enough free space to contain a given number of new items.
             /// </summary>
-            /// <param name="sizeHint">The minimum number of items to ensure space for in <see cref="array"/>.</param>
+            /// <param name="requestedSize">The minimum number of items to ensure space for in <see cref="array"/>.</param>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void EnsureCapacity(int requestedSize)
             {
@@ -297,7 +297,7 @@ namespace ComputeSharp.Shaders.Renderer
             internal sealed class DebugView
             {
                 /// <summary>
-                /// Initializes a new instance of the <see cref="DebugView{T}"/> class with the specified parameters.
+                /// Initializes a new instance of the <see cref="DebugView"/> class with the specified parameters.
                 /// </summary>
                 /// <param name="builder">The input <see cref="ArrayPoolStringBuilder"/> instance to display.</param>
                 public DebugView(ArrayPoolStringBuilder builder)

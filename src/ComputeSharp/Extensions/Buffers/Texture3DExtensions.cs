@@ -41,7 +41,7 @@ namespace ComputeSharp
         /// <param name="destination">The input array to write data to.</param>
         /// <remarks>
         /// The input 3D array needs to have each 2D plane stacked on the depth axis. That is, the expected
-        /// layout of the input array has to be [<see cref="Depth"/>, <see cref="Height"/>, <see cref="Width"/>].
+        /// layout of the input array has to be of shape [depth, height, width].
         /// </remarks>
         public static void GetData<T>(this Texture3D<T> texture, T[,,] destination)
             where T : unmanaged
@@ -59,7 +59,7 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items stored on the texture.</typeparam>
         /// <param name="texture">The input <see cref="Texture3D{T}"/> instance to read data from.</param>
         /// <param name="destination">The input array to write data to.</param>
-        /// <param name="offset">The starting offset within <paramref name="source"/> to write data to.</param>
+        /// <param name="offset">The starting offset within <paramref name="destination"/> to write data to.</param>
         public static void GetData<T>(this Texture3D<T> texture, T[] destination, int offset)
             where T : unmanaged
         {
@@ -73,7 +73,7 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items stored on the texture.</typeparam>
         /// <param name="texture">The input <see cref="Texture3D{T}"/> instance to read data from.</param>
         /// <param name="destination">The input array to write data to.</param>
-        /// <param name="offset">The starting offset within <paramref name="source"/> to write data to.</param>
+        /// <param name="offset">The starting offset within <paramref name="destination"/> to write data to.</param>
         /// <param name="x">The horizontal range of items to copy.</param>
         /// <param name="y">The vertical range of items to copy.</param>
         /// <param name="z">The depthwise range of items to copy.</param>
@@ -90,7 +90,7 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items stored on the texture.</typeparam>
         /// <param name="texture">The input <see cref="Texture3D{T}"/> instance to read data from.</param>
         /// <param name="destination">The input array to write data to.</param>
-        /// <param name="offset">The starting offset within <paramref name="source"/> to write data to.</param>
+        /// <param name="offset">The starting offset within <paramref name="destination"/> to write data to.</param>
         /// <param name="x">The horizontal offset in the source texture.</param>
         /// <param name="y">The vertical offset in the source texture.</param>
         /// <param name="z">The depthwise offset in the source texture.</param>
@@ -162,7 +162,7 @@ namespace ComputeSharp
         /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
         /// <remarks>
         /// The source 3D array needs to have each 2D plane stacked on the depth axis. That is, the expected
-        /// layout of the input array has to be [<see cref="Depth"/>, <see cref="Height"/>, <see cref="Width"/>].
+        /// layout of the input array has to be of shape [depth, height, width].
         /// </remarks>
         public static void SetData<T>(this Texture3D<T> texture, T[,,] source)
             where T : unmanaged

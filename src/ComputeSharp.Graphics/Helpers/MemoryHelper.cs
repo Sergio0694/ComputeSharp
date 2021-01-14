@@ -174,7 +174,6 @@ namespace ComputeSharp.Graphics.Helpers
         /// Copies the content of a source memory area to the 3D area pointed by an input pointer.
         /// The destination memory area has padding in each row, while the source does not.
         /// </summary>
-        /// <typeparam name="T">The type of values to read.</typeparam>
         /// <param name="source">The source memory area to read from.</param>
         /// <param name="destination">The pointer that indicates the 3D memory area to write to.</param>
         /// <param name="height">The height of the 3D memory area to write to.</param>
@@ -219,7 +218,6 @@ namespace ComputeSharp.Graphics.Helpers
         /// Copies a 3D memory area pointed by a pointer value to a target memory area.
         /// The source memory area has padding in each row, while the target does not.
         /// </summary>
-        /// <typeparam name="T">The type of values to read.</typeparam>
         /// <param name="source">The pointer that indicates the memory area to read from.</param>
         /// <param name="height">The height of the 3D memory area to read.</param>
         /// <param name="depth">The depth of the 3D memory area to read.</param>

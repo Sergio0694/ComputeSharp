@@ -68,7 +68,7 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
         /// <param name="buffer">The input <see cref="Buffer{T}"/> instance to read data from.</param>
         /// <param name="destination">The input array to write data to.</param>
-        /// <param name="destinationOffset">The starting offset within <paramref name="source"/> to write data to.</param>
+        /// <param name="destinationOffset">The starting offset within <paramref name="destination"/> to write data to.</param>
         /// <param name="bufferOffset">The offset to start reading data from.</param>
         /// <param name="count">The number of items to read.</param>
         public static void GetData<T>(this Buffer<T> buffer, T[] destination, int destinationOffset, int bufferOffset, int count)

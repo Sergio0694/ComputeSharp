@@ -111,7 +111,7 @@ namespace ComputeSharp.Shaders.Translation
         /// Loads and processes an input<typeparamref name="T"/> shadeer.
         /// </summary>
         /// <param name="shader">The <typeparamref name="T"/> instance to use to build the shader.</param>
-        /// <returns>A new <see cref="ShaderLoader"/> instance representing the input shader.</returns>
+        /// <returns>A new <see cref="ShaderLoader{T}"/> instance representing the input shader.</returns>
         [Pure]
         public static ShaderLoader<T> Load(in T shader)
         {
@@ -179,7 +179,7 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <summary>
-        /// Loads a specified <see cref="ReadableMember"/> and adds it to the shader model.
+        /// Loads a specified <see cref="FieldInfo"/> and adds it to the shader model.
         /// </summary>
         /// <param name="shader">The boxed <typeparamref name="T"/> instance to use to build the shader.</param>
         /// <param name="fieldInfo">The target <see cref="FieldInfo"/> to load.</param>

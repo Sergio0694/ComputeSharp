@@ -79,7 +79,7 @@ namespace ComputeSharp.Graphics.Commands.Interop
         /// Rents a new CPU and GPU handle pair to use in a memory buffer.
         /// </summary>
         /// <param name="d3D12CpuDescriptorHandle">The resulting <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value.</param>
-        /// <param name="d3D12CpuDescriptorHandle">The resulting <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value.</param>
+        /// <param name="d3D12GpuDescriptorHandle">The resulting <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value.</param>
         public void Rent(
             out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
             out D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle)
@@ -106,7 +106,7 @@ namespace ComputeSharp.Graphics.Commands.Interop
         /// Returns a CPU and GPU handle pair for later use.
         /// </summary>
         /// <param name="d3D12CpuDescriptorHandle">The returned <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value.</param>
-        /// <param name="d3D12CpuDescriptorHandle">The returned <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value.</param>
+        /// <param name="d3D12GpuDescriptorHandle">The returned <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value.</param>
         public void Return(
             D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
             D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle)

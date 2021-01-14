@@ -423,6 +423,7 @@ namespace ComputeSharp.Graphics.Extensions
         /// </summary>
         /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the command list.</param>
         /// <param name="d3D12CommandListType">The type of command list to create.</param>
+        /// <param name="d3D12CommandAllocator">The command allocator to use to create the command list.</param>
         /// <returns>A pointer to the newly allocated <see cref="ID3D12GraphicsCommandList"/> instance.</returns>
         /// <exception cref="Exception">Thrown when the creation of the command list fails.</exception>
         public static ComPtr<ID3D12GraphicsCommandList> CreateCommandList(

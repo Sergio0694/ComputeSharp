@@ -152,11 +152,11 @@ namespace ComputeSharp
         internal bool IsCacheCoherentUMA { get; }
 
         /// <summary>
-        /// Checks whether the current device supports the creation of <see cref="Buffers.Abstract.Texture2D{T}"/>
+        /// Checks whether the current device supports the creation of <see cref="Resources.Texture2D{T}"/>
         /// resources for a specified type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type of values to check support for.</typeparam>
-        /// <returns>Whether <see cref="Buffers.Abstract.Texture2D{T}"/> instances can be created by the current device.</returns>
+        /// <returns>Whether <see cref="Resources.Texture2D{T}"/> instances can be created by the current device.</returns>
         [Pure]
         public bool IsTexture2DSupportedForType<T>()
             where T : unmanaged
@@ -167,11 +167,11 @@ namespace ComputeSharp
         }
 
         /// <summary>
-        /// Checks whether the current device supports the creation of <see cref="Buffers.Abstract.Texture3D{T}"/>
+        /// Checks whether the current device supports the creation of <see cref="Resources.Texture3D{T}"/>
         /// resources for a specified type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type of values to check support for.</typeparam>
-        /// <returns>Whether <see cref="Buffers.Abstract.Texture3D{T}"/> instances can be created by the current device.</returns>
+        /// <returns>Whether <see cref="Resources.Texture3D{T}"/> instances can be created by the current device.</returns>
         [Pure]
         public bool IsTexture3DSupportedForType<T>()
             where T : unmanaged
@@ -181,7 +181,7 @@ namespace ComputeSharp
             return this.d3D12Device.Get()->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE3D);
         }
 
-        /// <inheritdoc cref="ID3D12DescriptorHandleAllocator.Allocate"/>
+        /// <inheritdoc cref="ID3D12DescriptorHandleAllocator.Rent"/>
         internal void RentShaderResourceViewDescriptorHandles(
             out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
             out D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle)
