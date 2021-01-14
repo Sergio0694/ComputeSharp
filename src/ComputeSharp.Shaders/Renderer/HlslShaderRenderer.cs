@@ -33,7 +33,16 @@ namespace ComputeSharp.Shaders.Renderer
             builder.AppendLine("// This shader was created by ComputeSharp.");
             builder.AppendLine("// See: https://github.com/Sergio0694/ComputeSharp.");
 
-            // Constants
+            // Group size constants
+            builder.AppendLine();
+            builder.Append("#define __GroupSize__get_X ");
+            builder.AppendLine(threadsX.ToString());
+            builder.Append("#define __GroupSize__get_Y ");
+            builder.AppendLine(threadsY.ToString());
+            builder.Append("#define __GroupSize__get_Z ");
+            builder.AppendLine(threadsZ.ToString());
+
+            // User defined onstants
             if (info.ConstantsInfo.Count > 0)
             {
                 builder.AppendLine();
@@ -139,13 +148,7 @@ namespace ComputeSharp.Shaders.Renderer
 
             // Entry point
             builder.AppendLine();
-            builder.Append("[NumThreads(");
-            builder.Append(threadsX.ToString());
-            builder.Append(", ");
-            builder.Append(threadsY.ToString());
-            builder.Append(", ");
-            builder.Append(threadsZ.ToString());
-            builder.AppendLine(")]");
+            builder.AppendLine("[NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]");
             builder.AppendLine(info.EntryPoint);
 
             return builder;

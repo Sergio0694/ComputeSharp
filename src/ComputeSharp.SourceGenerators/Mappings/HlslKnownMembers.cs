@@ -211,6 +211,28 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 }
             }
 
+            // Programmatically load mappings for the group size
+            foreach (var property in typeof(GroupSize).GetProperties(BindingFlags.Static | BindingFlags.Public))
+            {
+                string key = $"{typeof(GroupSize).FullName}{Type.Delimiter}{property.Name}";
+
+                switch (property.Name)
+                {
+                    case nameof(GroupSize.Count):
+                        knownMembers.Add(key, "__GroupSize__get_X * __GroupSize__get_Y * __GroupSize__get_Z");
+                        break;
+                    case string name when name.Length == 1:
+                        knownMembers.Add(key, $"__GroupSize__get_{name}");
+                        break;
+                    case string name when name.Length == 1:
+                        knownMembers.Add(key, $"__GroupSize__get_{name[0]} * __GroupSize__get_{name[1]}");
+                        break;
+                    case string name when name.Length == 1:
+                        knownMembers.Add(key, $"__GroupSize__get_{name[0]} * __GroupSize__get_{name[1]} * __GroupSize__get_{name[2]}");
+                        break;
+                }
+            }
+
             return knownMembers;
         }
 
