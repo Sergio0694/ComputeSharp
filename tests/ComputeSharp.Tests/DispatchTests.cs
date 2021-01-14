@@ -79,5 +79,34 @@ namespace ComputeSharp.Tests
                 buffer[ThreadIds.XYZ].W = GroupIds.Index;
             }
         }
+
+        [TestMethod]
+        public void Verify_GroupSize()
+        {
+            using ReadWriteBuffer<int> buffer = Gpu.Default.AllocateReadWriteBuffer<int>(32);
+
+            Gpu.Default.For(1, 1, 1, 4, 15, 7, new GroupSizeShader(buffer));
+            
+            int[] data = buffer.GetData();
+
+            Assert.AreEqual(4, data[0]);
+            Assert.AreEqual(15, data[1]);
+            Assert.AreEqual(7, data[2]);
+            Assert.AreEqual(4 * 15 * 7, data[3]);
+        }
+
+        [AutoConstructor]
+        internal readonly partial struct GroupSizeShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<int> buffer;
+
+            public void Execute()
+            {
+                buffer[0] = GroupSize.X;
+                buffer[1] = GroupSize.Y;
+                buffer[2] = GroupSize.Z;
+                buffer[3] = GroupSize.Count;
+            }
+        }
     }
 }
