@@ -10,7 +10,6 @@ using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
-using static TerraFX.Interop.D3D12_FORMAT_SUPPORT1;
 using static TerraFX.Interop.D3D12_RESOURCE_STATES;
 using static TerraFX.Interop.D3D12_SRV_DIMENSION;
 using static TerraFX.Interop.D3D12_UAV_DIMENSION;
@@ -61,7 +60,8 @@ namespace ComputeSharp.Resources
         /// <param name="width">The width of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
         /// <param name="resourceType">The resource type for the current texture.</param>
-        private protected Texture3D(GraphicsDevice device, int width, int height, int depth, ResourceType resourceType)
+        /// <param name="d3D12FormatSupport">The format support for the current texture type.</param>
+        private protected Texture3D(GraphicsDevice device, int width, int height, int depth, ResourceType resourceType, D3D12_FORMAT_SUPPORT1 d3D12FormatSupport)
         {
             device.ThrowIfDisposed();
 
@@ -69,7 +69,7 @@ namespace ComputeSharp.Resources
             Guard.IsBetweenOrEqualTo(height, 1, FX.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(height));
             Guard.IsBetweenOrEqualTo(depth, 1, FX.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(depth));
 
-            if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE2D))
+            if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), d3D12FormatSupport))
             {
                 UnsupportedTextureTypeException.ThrowForTexture2D<T>();
             }

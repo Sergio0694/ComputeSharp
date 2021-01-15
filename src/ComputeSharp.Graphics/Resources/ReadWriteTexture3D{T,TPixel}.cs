@@ -4,6 +4,7 @@ using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Resources.Enums;
 using ComputeSharp.Resources;
 using ComputeSharp.Resources.Views;
+using static TerraFX.Interop.D3D12_FORMAT_SUPPORT1;
 
 #pragma warning disable CS0618
 
@@ -28,7 +29,7 @@ namespace ComputeSharp
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
         internal ReadWriteTexture3D(GraphicsDevice device, int width, int height, int depth)
-            : base(device, width, height, depth, ResourceType.ReadWrite)
+            : base(device, width, height, depth, ResourceType.ReadWrite, D3D12_FORMAT_SUPPORT1_TEXTURE3D | D3D12_FORMAT_SUPPORT1_TYPED_UNORDERED_ACCESS_VIEW)
         {
         }
 

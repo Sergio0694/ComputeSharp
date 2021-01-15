@@ -3,6 +3,7 @@ using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Resources.Enums;
 using ComputeSharp.Resources;
 using ComputeSharp.Resources.Views;
+using static TerraFX.Interop.D3D12_FORMAT_SUPPORT1;
 
 namespace ComputeSharp
 {
@@ -22,7 +23,7 @@ namespace ComputeSharp
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         internal ReadWriteTexture2D(GraphicsDevice device, int width, int height)
-            : base(device, width, height, ResourceType.ReadWrite)
+            : base(device, width, height, ResourceType.ReadWrite, D3D12_FORMAT_SUPPORT1_TEXTURE2D | D3D12_FORMAT_SUPPORT1_TYPED_UNORDERED_ACCESS_VIEW)
         {
         }
 

@@ -505,7 +505,7 @@ namespace ComputeSharp.Graphics.Extensions
 
             d3D12Device.CheckFeatureSupport(D3D12_FEATURE_FORMAT_SUPPORT, &d3D12FeatureDataFormatSupport, (uint)sizeof(D3D12_FEATURE_DATA_FORMAT_SUPPORT)).Assert();
 
-            return (d3D12FeatureDataFormatSupport.Support1 & d3D12FormatSupport1) != 0;
+            return (d3D12FeatureDataFormatSupport.Support1 & d3D12FormatSupport1) == d3D12FormatSupport1;
         }
     }
 }

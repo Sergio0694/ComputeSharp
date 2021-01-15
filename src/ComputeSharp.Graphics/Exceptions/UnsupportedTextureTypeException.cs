@@ -35,12 +35,12 @@ namespace ComputeSharp.Exceptions
 
             builder.AppendLine(rank switch
             {
-                2 => $"{nameof(GraphicsDevice.IsTexture2DSupportedForType)}<T>().",
-                3 => $"{nameof(GraphicsDevice.IsTexture3DSupportedForType)}<T>().",
+                2 => $"{nameof(GraphicsDevice.IsReadOnlyTexture2DSupportedForType)}<T>() or {nameof(GraphicsDevice.IsReadWriteTexture2DSupportedForType)}<T>().",
+                3 => $"{nameof(GraphicsDevice.IsReadOnlyTexture3DSupportedForType)}<T>() or {nameof(GraphicsDevice.IsReadWriteTexture3DSupportedForType)}<T>().",
                 _ => ThrowHelper.ThrowArgumentException<string>("Invalid texture rank")
             });
 
-            builder.AppendLine($"As a possible workaround on older devices, consider using a texture type of lower rank, or a linear buffer.");
+            builder.AppendLine("As a possible workaround on older devices, consider using a texture type of lower rank, or a linear buffer.");
             builder.ToString();
 
             return new(builder.ToString());
