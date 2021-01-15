@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Mappings;
@@ -310,7 +311,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 // If the member access is a constant, track it and replace the tree with the processed constant name
                 if (operation is IFieldReferenceOperation fieldOperation && fieldOperation.Field.IsConst)
                 {
-                    this.constantDefinitions[fieldOperation.Field] = fieldOperation.Field.ConstantValue!.ToString();
+                    this.constantDefinitions[fieldOperation.Field] = ((IFormattable)fieldOperation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
 
                     var ownerTypeName = ((INamedTypeSymbol)fieldOperation.Field.ContainingSymbol).ToDisplayString().Replace(".", "__");
                     var constantName = $"__{ownerTypeName}__{fieldOperation.Field.Name}";
@@ -496,7 +497,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
             if (this.semanticModel.GetOperation(node) is IFieldReferenceOperation operation && operation.Field.IsConst)
             {
-                this.constantDefinitions[operation.Field] = operation.Field.ConstantValue!.ToString();
+                this.constantDefinitions[operation.Field] = ((IFormattable)operation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
 
                 var ownerTypeName = ((INamedTypeSymbol)operation.Field.ContainingSymbol).ToDisplayString().Replace(".", "__");
                 var constantName = $"__{ownerTypeName}__{operation.Field.Name}";
