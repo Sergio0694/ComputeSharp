@@ -190,6 +190,49 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 knownMembers.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"{item.Property.Name.ToLower()}");
             }
 
+            // Store GroupIds.Index for a quicker comparison afterwards
+            PropertyInfo groupindexProperty = typeof(GroupIds).GetProperty(nameof(GroupIds.Index), BindingFlags.Static | BindingFlags.Public);
+
+            // Programmatically load mappings for the dispatch types
+            foreach (var item in
+                from type in HlslKnownTypes.HlslDispatchTypes
+                from property in type.GetProperties(BindingFlags.Static | BindingFlags.Public)
+                select (Type: type, Property: property))
+            {
+                if (item.Property == groupindexProperty)
+                {
+                    // The thread group index is a standalone parameter, so if this property is used, we
+                    // just map the access directly to that implicit and hidden parameter name instead.
+                    knownMembers.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"__{nameof(GroupIds)}__get_Index");
+                }
+                else
+                {
+                    knownMembers.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"{item.Type.Name}.{item.Property.Name.ToLower()}");
+                }
+            }
+
+            // Programmatically load mappings for the group size
+            foreach (var property in typeof(GroupSize).GetProperties(BindingFlags.Static | BindingFlags.Public))
+            {
+                string key = $"{typeof(GroupSize).FullName}{Type.Delimiter}{property.Name}";
+
+                switch (property.Name)
+                {
+                    case nameof(GroupSize.Count):
+                        knownMembers.Add(key, "__GroupSize__get_X * __GroupSize__get_Y * __GroupSize__get_Z");
+                        break;
+                    case string name when name.Length == 1:
+                        knownMembers.Add(key, $"__GroupSize__get_{name}");
+                        break;
+                    case string name when name.Length == 1:
+                        knownMembers.Add(key, $"__GroupSize__get_{name[0]} * __GroupSize__get_{name[1]}");
+                        break;
+                    case string name when name.Length == 1:
+                        knownMembers.Add(key, $"__GroupSize__get_{name[0]} * __GroupSize__get_{name[1]} * __GroupSize__get_{name[2]}");
+                        break;
+                }
+            }
+
             return knownMembers;
         }
 

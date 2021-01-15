@@ -120,6 +120,7 @@ namespace ComputeSharp.Graphics.Commands
         /// <param name="d3D12ResourceSource">The source <see cref="ID3D12Resource"/> (a texture) to read from.</param>
         /// <param name="x">The horizontal offset in the destination texture.</param>
         /// <param name="y">The vertical offset in the destination texture.</param>
+        /// <param name="z">The depthwise offset in the destination texture.</param>
         /// <param name="width">The width of the memory area to read from.</param>
         /// <param name="height">The height of the memory area to read from.</param>
         /// <param name="depth">The depth of the memory area to read from.</param>
@@ -166,7 +167,7 @@ namespace ComputeSharp.Graphics.Commands
         /// <summary>
         /// Sets a given <see cref="PipelineData"/> object ready to be executed.
         /// </summary>
-        /// <param name="pipelineState">The input <see cref="PipelineData"/> to setup.</param>
+        /// <param name="pipelineData">The input <see cref="PipelineData"/> to setup.</param>
         public readonly void SetPipelineData(PipelineData pipelineData)
         {
             this.d3D12GraphicsCommandList.Get()->SetComputeRootSignature(pipelineData.D3D12RootSignature);

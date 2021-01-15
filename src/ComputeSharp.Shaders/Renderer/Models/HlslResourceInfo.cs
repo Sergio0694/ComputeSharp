@@ -5,6 +5,7 @@
     /// </summary>
     /// <param name="FieldType">The type of the current field in the HLSL shader.</param>
     /// <param name="FieldName">The name to use for the current field.</param>
+    /// <param name="BufferIndex">The register index to bind the resource to.</param>
     internal abstract record HlslResourceInfo(string FieldType, string FieldName, int BufferIndex)
         : CapturedFieldInfo(FieldType, FieldName)
     {

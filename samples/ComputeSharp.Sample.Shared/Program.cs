@@ -47,9 +47,9 @@ namespace ComputeSharp.Sample
             public readonly ReadWriteBuffer<float> buffer;
 
             /// <inheritdoc/>
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                buffer[ids.X] *= 2;
+                buffer[ThreadIds.X] *= 2;
             }
         }
 

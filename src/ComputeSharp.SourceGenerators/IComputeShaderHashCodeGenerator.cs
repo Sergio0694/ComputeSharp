@@ -120,6 +120,8 @@ namespace ComputeSharp.SourceGenerators
         {
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
+                if (fieldSymbol.IsStatic) continue;
+
                 INamedTypeSymbol typeSymbol = (INamedTypeSymbol)fieldSymbol.Type;
 
                 if (typeSymbol.TypeKind != TypeKind.Delegate) continue;

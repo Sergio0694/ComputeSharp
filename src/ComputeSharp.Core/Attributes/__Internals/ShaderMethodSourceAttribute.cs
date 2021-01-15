@@ -79,10 +79,10 @@ namespace ComputeSharp.__Internals
         }
 
         /// <summary>
-        /// Gets the associated <see cref="ShaderMethodSourceAttribute"/> instance for a specified type.
+        /// Gets the associated <see cref="ShaderMethodSourceAttribute"/> instance for a specified delegate.
         /// </summary>
-        /// <typeparam name="T">The shader type to get the attribute for.</typeparam>
-        /// <returns>The associated <see cref="IComputeShaderSourceAttribute"/> instance for type <typeparamref name="T"/>.</returns>
+        /// <param name="function">The input <see cref="Delegate"/> instance to get info for.</param>
+        /// <returns>The associated <see cref="ShaderMethodSourceAttribute"/> instance for the given delegate.</returns>
         [Pure]
         internal static ShaderMethodSourceAttribute GetForDelegate(Delegate function)
         {

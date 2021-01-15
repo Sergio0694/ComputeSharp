@@ -11,17 +11,17 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
     internal sealed class ExecuteMethodRewriter : CSharpSyntaxRewriter
     {
         /// <summary>
-        /// The identifier name for the input <see langword="uint3"/> parameter.
+        /// The <see cref="ShaderSourceRewriter"/> instance used to process the input tree.
         /// </summary>
-        private readonly string threadIdsIdentifier;
+        private readonly ShaderSourceRewriter shaderSourceRewriter;
 
         /// <summary>
         /// Creates a new <see cref="ExecuteMethodRewriter"/> instance with the specified parameters.
         /// </summary>
-        /// <param name="threadIdsIdentifier">The identifier name for the input <see langword="uint3"/> parameter.</param>
-        public ExecuteMethodRewriter(string threadIdsIdentifier)
+        /// <param name="shaderSourceRewriter">The <see cref="ShaderSourceRewriter"/> instance used to process the input tree.</param>
+        public ExecuteMethodRewriter(ShaderSourceRewriter shaderSourceRewriter)
         {
-            this.threadIdsIdentifier = threadIdsIdentifier;
+            this.shaderSourceRewriter = shaderSourceRewriter;
         }
 
         /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
@@ -32,11 +32,28 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         }
 
         /// <inheritdoc/>
-        public override SyntaxNode VisitParameter(ParameterSyntax node)
+        public override SyntaxNode? VisitParameterList(ParameterListSyntax node)
         {
-            var updatedNode = (ParameterSyntax)base.VisitParameter(node)!;
+            var updatedNode = (ParameterListSyntax)base.VisitParameterList(node)!;
 
-            return updatedNode.WithIdentifier(Identifier($"{updatedNode.Identifier.Text} : SV_DispatchThreadId"));
+            updatedNode = updatedNode.AddParameters(Parameter(Identifier($"uint3 {nameof(ThreadIds)} : SV_DispatchThreadID")));
+
+            if (this.shaderSourceRewriter.IsGroupIdsUsed)
+            {
+                updatedNode = updatedNode.AddParameters(Parameter(Identifier($"uint3 {nameof(GroupIds)} : SV_GroupThreadID")));
+            }
+
+            if (this.shaderSourceRewriter.IsGroupIdsIndexUsed)
+            {
+                updatedNode = updatedNode.AddParameters(Parameter(Identifier($"uint __{nameof(GroupIds)}__get_Index : SV_GroupIndex")));
+            }
+
+            if (this.shaderSourceRewriter.IsWarpIdsUsed)
+            {
+                updatedNode = updatedNode.AddParameters(Parameter(Identifier($"uint3 {nameof(WarpIds)} : SV_GroupID")));
+            }
+
+            return updatedNode;
         }
 
         /// <inheritdoc/>
@@ -48,9 +65,9 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             // check to ensure that invocation outside of the requested range are discarded.
             // The following snippet creates this prologue before the user provided body:
             //
-            // if (ids.X < __x &&
-            //     ids.Y < __y &&
-            //     ids.Z < __z)
+            // if (ThreadIds.x < __x &&
+            //     ThreadIds.y < __y &&
+            //     ThreadIds.z < __z)
             // {
             //     <body>
             // }
@@ -60,19 +77,19 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                         BinaryExpression(SyntaxKind.LessThanExpression,
                             MemberAccessExpression(
                                 SyntaxKind.SimpleMemberAccessExpression,
-                                IdentifierName(this.threadIdsIdentifier),
+                                IdentifierName(nameof(ThreadIds)),
                                 IdentifierName("x")),
                             IdentifierName("__x")),
                         BinaryExpression(SyntaxKind.LessThanExpression,
                             MemberAccessExpression(
                                 SyntaxKind.SimpleMemberAccessExpression,
-                                IdentifierName(this.threadIdsIdentifier),
+                                IdentifierName(nameof(ThreadIds)),
                                 IdentifierName("y")),
                             IdentifierName("__y"))),
                     BinaryExpression(SyntaxKind.LessThanExpression,
                         MemberAccessExpression(
                             SyntaxKind.SimpleMemberAccessExpression,
-                            IdentifierName(this.threadIdsIdentifier),
+                            IdentifierName(nameof(ThreadIds)),
                             IdentifierName("z")),
                         IdentifierName("__z")));
 

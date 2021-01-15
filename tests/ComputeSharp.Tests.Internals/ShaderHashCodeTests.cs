@@ -13,7 +13,7 @@ namespace ComputeSharp.Tests.Internals
             public float A;
             public ReadWriteBuffer<float> B;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
                 B[0] = A;
             }
@@ -46,7 +46,7 @@ namespace ComputeSharp.Tests.Internals
             public ReadWriteBuffer<float> B;
             public Func<float, float> F;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
                 B[0] = F(A);
             }

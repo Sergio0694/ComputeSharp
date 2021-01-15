@@ -178,7 +178,7 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
         /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
+        /// <param name="offset">The starting offset within <paramref name="array"/> to read data from.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <returns>A <see cref="ReadOnlyTexture2D{T}"/> instance with the contents of the input array.</returns>
@@ -269,7 +269,7 @@ namespace ComputeSharp
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
         /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
+        /// <param name="offset">The starting offset within <paramref name="array"/> to read data from.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <returns>A <see cref="ReadOnlyTexture2D{T,TPixel}"/> instance with the contents of the input array.</returns>
@@ -362,7 +362,7 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
         /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
+        /// <param name="offset">The starting offset within <paramref name="array"/> to read data from.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
@@ -461,7 +461,7 @@ namespace ComputeSharp
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
         /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
+        /// <param name="offset">The starting offset within <paramref name="array"/> to read data from.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
@@ -622,7 +622,7 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
         /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
+        /// <param name="offset">The starting offset within <paramref name="array"/> to read data from.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <returns>A <see cref="ReadWriteTexture2D{T}"/> instance with the contents of the input array.</returns>
@@ -713,7 +713,7 @@ namespace ComputeSharp
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
         /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
+        /// <param name="offset">The starting offset within <paramref name="array"/> to read data from.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <returns>A <see cref="ReadWriteTexture2D{T,TPixel}"/> instance with the contents of the input array.</returns>
@@ -806,7 +806,7 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
         /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
+        /// <param name="offset">The starting offset within <paramref name="array"/> to read data from.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
@@ -905,7 +905,7 @@ namespace ComputeSharp
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
         /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
+        /// <param name="offset">The starting offset within <paramref name="array"/> to read data from.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>

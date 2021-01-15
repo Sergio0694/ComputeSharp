@@ -115,7 +115,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 public readonly ReadOnlyBuffer<float> kernel;
 
                 /// <inheritdoc/>
-                public void Execute(ThreadIds ids)
+                public void Execute()
                 {
                     Vector4 result = Vector4.Zero;
                     int maxY = source.Height - 1;
@@ -125,14 +125,14 @@ namespace ComputeSharp.BokehBlur.Processors
 
                     for (int i = 0; i < kernelLength; i++)
                     {
-                        int offsetY = Hlsl.Clamp(ids.Y + i - radiusY, 0, maxY);
-                        int offsetX = Hlsl.Clamp(ids.X, 0, maxX);
+                        int offsetY = Hlsl.Clamp(ThreadIds.Y + i - radiusY, 0, maxY);
+                        int offsetX = Hlsl.Clamp(ThreadIds.X, 0, maxX);
                         Vector4 color = source[offsetX, offsetY];
 
                         result += kernel[i] * color;
                     }
 
-                    target[ids.XY] = result;
+                    target[ThreadIds.XY] = result;
                 }
             }
 
@@ -147,24 +147,24 @@ namespace ComputeSharp.BokehBlur.Processors
                 public readonly ReadOnlyBuffer<float> kernel;
 
                 /// <inheritdoc/>
-                public void Execute(ThreadIds ids)
+                public void Execute()
                 {
                     Vector4 result = Vector4.Zero;
                     int maxY = source.Height - 1;
                     int maxX = source.Width - 1;
                     int kernelLength = kernel.Length;
                     int radiusX = kernelLength >> 1;
-                    int offsetY = Hlsl.Clamp(ids.Y, 0, maxY);
+                    int offsetY = Hlsl.Clamp(ThreadIds.Y, 0, maxY);
 
                     for (int i = 0; i < kernelLength; i++)
                     {
-                        int offsetX = Hlsl.Clamp(ids.X + i - radiusX, 0, maxX);
+                        int offsetX = Hlsl.Clamp(ThreadIds.X + i - radiusX, 0, maxX);
                         Vector4 color = source[offsetX, offsetY];
 
                         result += kernel[i] * color;
                     }
 
-                    target[ids.XY] = result;
+                    target[ThreadIds.XY] = result;
                 }
             }
         }

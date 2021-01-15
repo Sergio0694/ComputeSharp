@@ -302,7 +302,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 public ReadOnlyBuffer<Complex64> kernel;
 
                 /// <inheritdoc/>
-                public void Execute(ThreadIds ids)
+                public void Execute()
                 {
                     Vector4 real = Vector4.Zero;
                     Vector4 imaginary = Vector4.Zero;
@@ -313,8 +313,8 @@ namespace ComputeSharp.BokehBlur.Processors
 
                     for (int i = 0; i < kernelLength; i++)
                     {
-                        int offsetY = Hlsl.Clamp(ids.Y + i - radiusY, 0, maxY);
-                        int offsetX = Hlsl.Clamp(ids.X, 0, maxX);
+                        int offsetY = Hlsl.Clamp(ThreadIds.Y + i - radiusY, 0, maxY);
+                        int offsetX = Hlsl.Clamp(ThreadIds.X, 0, maxX);
                         Vector4 color = source[offsetX, offsetY];
                         Complex64 factors = kernel[i];
 
@@ -322,8 +322,8 @@ namespace ComputeSharp.BokehBlur.Processors
                         imaginary += factors.Imaginary * color;
                     }
 
-                    reals[ids.XY] = real;
-                    imaginaries[ids.XY] = imaginary;
+                    reals[ThreadIds.XY] = real;
+                    imaginaries[ThreadIds.XY] = imaginary;
                 }
             }
 
@@ -342,7 +342,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 public ReadOnlyBuffer<Complex64> kernel;
 
                 /// <inheritdoc/>
-                public void Execute(ThreadIds ids)
+                public void Execute()
                 {
                     Vector4 real = Vector4.Zero;
                     Vector4 imaginary = Vector4.Zero;
@@ -350,11 +350,11 @@ namespace ComputeSharp.BokehBlur.Processors
                     int maxX = target.Width;
                     int kernelLength = kernel.Length;
                     int radiusX = kernelLength >> 1;
-                    int offsetY = Hlsl.Clamp(ids.Y, 0, maxY);
+                    int offsetY = Hlsl.Clamp(ThreadIds.Y, 0, maxY);
 
                     for (int i = 0; i < kernelLength; i++)
                     {
-                        int offsetX = Hlsl.Clamp(ids.X + i - radiusX, 0, maxX);
+                        int offsetX = Hlsl.Clamp(ThreadIds.X + i - radiusX, 0, maxX);
                         Vector4 sourceReal = reals[offsetX, offsetY];
                         Vector4 sourceImaginary = imaginaries[offsetX, offsetY];
                         Complex64 factors = kernel[i];
@@ -363,7 +363,7 @@ namespace ComputeSharp.BokehBlur.Processors
                         imaginary += factors.Real * sourceImaginary + factors.Imaginary * sourceReal;
                     }
 
-                    target[ids.XY] += real * z + imaginary * w;
+                    target[ThreadIds.XY] += real * z + imaginary * w;
                 }
             }
 
@@ -376,17 +376,17 @@ namespace ComputeSharp.BokehBlur.Processors
                 public readonly IReadWriteTexture2D<Vector4> source;
 
                 /// <inheritdoc/>
-                public void Execute(ThreadIds ids)
+                public void Execute()
                 {
                     int width = source.Width;
 
                     for (int i = 0; i < width; i++)
                     {
-                        Float4 v = source[i, ids.X];
+                        Float4 v = source[i, ThreadIds.X];
 
                         v.XYZ = v.XYZ * v.XYZ * v.XYZ;
 
-                        source[i, ids.X] = v;
+                        source[i, ThreadIds.X] = v;
                     }
                 }
             }
@@ -401,18 +401,18 @@ namespace ComputeSharp.BokehBlur.Processors
                 public readonly IReadWriteTexture2D<Vector4> target;
 
                 /// <inheritdoc/>
-                public void Execute(ThreadIds ids)
+                public void Execute()
                 {
                     int width = source.Width;
 
                     for (int i = 0; i < width; i++)
                     {
-                        Float4 v = source[i, ids.X];
+                        Float4 v = source[i, ThreadIds.X];
 
                         v.XYZ = Hlsl.Clamp(v.XYZ, 0, float.MaxValue);
                         v.XYZ = Hlsl.Pow(v.XYZ, 1 / 3f);
 
-                        target[i, ids.X] = v;
+                        target[i, ThreadIds.X] = v;
                     }
                 }
             }

@@ -57,5 +57,37 @@ namespace ComputeSharp.SourceGenerators.Helpers
                     ImplicitArrayCreationExpression(InitializerExpression(SyntaxKind.ArrayInitializerExpression).AddExpressions(
                         group.Select(static item => LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(item))).ToArray()))).ToArray()));
         }
+
+        /// <summary>
+        /// Creates an <see cref="object"/>[] array expression with the nested groups in the input sequence.
+        /// <para>
+        /// That it, it applies the following transformation:
+        /// <code>
+        /// { ("K1", "V1", I1), ("K2", "V2", null) } => new object[] { new object[] { "K1", "V1", I1 }, new object[] { "K2", "V2", null } }
+        /// </code>
+        /// </para>
+        /// </summary>
+        /// <param name="values">The input sequence of <see cref="string"/> groups.</param>
+        /// <returns>An <see cref="ArrayCreationExpression"/> instance with the described contents.</returns>
+        [Pure]
+        public static ArrayCreationExpressionSyntax NestedArrayExpression(IEnumerable<(string A, string B, int? C)> groups)
+        {
+            return
+                ArrayCreationExpression(
+                ArrayType(PredefinedType(Token(SyntaxKind.ObjectKeyword)))
+                .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
+                .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
+                .AddExpressions(groups.Select(static group =>
+                    ArrayCreationExpression(
+                    ArrayType(PredefinedType(Token(SyntaxKind.ObjectKeyword)))
+                    .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
+                    .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
+                    .AddExpressions(
+                        LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(group.A)),
+                        LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(group.B)),
+                        group.C is int i
+                            ? LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(i))
+                            : LiteralExpression(SyntaxKind.NullLiteralExpression)))).ToArray()));
+        }
     }
 }

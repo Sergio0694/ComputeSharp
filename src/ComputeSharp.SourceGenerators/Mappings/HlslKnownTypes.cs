@@ -41,8 +41,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
             [typeof(double).FullName] = "double",
             [typeof(Double2).FullName] = "double2",
             [typeof(Double3).FullName] = "double3",
-            [typeof(Double4).FullName] = "double4",
-            [typeof(ThreadIds).FullName] = "int3"
+            [typeof(Double4).FullName] = "double4"
         };
 
         /// <summary>
@@ -50,12 +49,21 @@ namespace ComputeSharp.SourceGenerators.Mappings
         /// </summary>
         public static IReadOnlyCollection<Type> HlslMappedVectorTypes { get; } = new[]
         {
-            typeof(ThreadIds),
             typeof(Bool2), typeof(Bool3), typeof(Bool4),
             typeof(Int2), typeof(Int3), typeof(Int4),
             typeof(UInt2), typeof(UInt3), typeof(UInt4),
             typeof(Float2), typeof(Float3), typeof(Float4),
             typeof(Double2), typeof(Double3), typeof(Double4)
+        };
+
+        /// <summary>
+        /// Gets the known HLSL dispatch types.
+        /// </summary>
+        public static IReadOnlyCollection<Type> HlslDispatchTypes { get; } = new[]
+        {
+            typeof(ThreadIds),
+            typeof(GroupIds),
+            typeof(WarpIds)
         };
 
         /// <summary>
@@ -94,9 +102,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
         /// <returns>Whether or not <paramref name="typeName"/> represents a typed resource type.</returns>
         public static bool IsScalarOrVectorType(string typeName)
         {
-            return
-                KnownTypes.ContainsKey(typeName) &&
-                typeName != typeof(ThreadIds).FullName;
+            return KnownTypes.ContainsKey(typeName);
         }
 
         /// <summary>
@@ -147,6 +153,24 @@ namespace ComputeSharp.SourceGenerators.Mappings
             }
 
             return KnownTypes[typeName];
+        }
+
+        /// <summary>
+        /// Gets the mapped HLSL-compatible type name for the input element type symbol.
+        /// </summary>
+        /// <param name="typeSymbol">The input type to map.</param>
+        /// <returns>The HLSL-compatible type name that can be used in an HLSL shader.</returns>
+        [Pure]
+        public static string GetMappedElementName(IArrayTypeSymbol typeSymbol)
+        {
+            string elementTypeName = ((INamedTypeSymbol)typeSymbol.ElementType).GetFullMetadataName();
+
+            if (KnownTypes.TryGetValue(elementTypeName, out string? mapped))
+            {
+                return mapped;
+            }
+
+            return elementTypeName.Replace(".", "__");
         }
 
         /// <summary>

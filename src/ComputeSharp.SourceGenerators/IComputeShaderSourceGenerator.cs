@@ -50,6 +50,7 @@ namespace ComputeSharp.SourceGenerators
 
                 // Explore the syntax tree and extract the processed info
                 var processedMembers = GetProcessedMembers(structDeclarationSymbol, discoveredTypes).ToArray();
+                var sharedBuffers = GetGroupSharedMembers(structDeclarationSymbol, discoveredTypes).ToArray();
                 var (entryPoint, localFunctions) = GetProcessedMethods(structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
                 var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
                 var processedMethods = localFunctions.Concat(staticMethods.Values).Select(static method => method.NormalizeWhitespace().ToFullString()).ToArray();
@@ -66,7 +67,8 @@ namespace ComputeSharp.SourceGenerators
                             AttributeArgument(NestedArrayExpression(processedMembers)),
                             AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(entryPoint))),
                             AttributeArgument(ArrayExpression(processedMethods)),
-                            AttributeArgument(NestedArrayExpression(processedConstants)))))
+                            AttributeArgument(NestedArrayExpression(processedConstants)),
+                            AttributeArgument(NestedArrayExpression(sharedBuffers)))))
                     .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                     .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
                     .NormalizeWhitespace()
@@ -88,6 +90,8 @@ namespace ComputeSharp.SourceGenerators
         {
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
+                if (fieldSymbol.IsStatic) continue;
+
                 INamedTypeSymbol typeSymbol = (INamedTypeSymbol)fieldSymbol.Type;
 
                 string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
@@ -103,6 +107,33 @@ namespace ComputeSharp.SourceGenerators
                 {
                     types.Add((INamedTypeSymbol)typeSymbol.TypeArguments[0]);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets a sequence of captured members and their mapped names.
+        /// </summary>
+        /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+        /// <param name="types">The collection of currently discovered types.</param>
+        /// <returns>A sequence of captured members in <paramref name="structDeclarationSymbol"/>.</returns>
+        [Pure]
+        private static IEnumerable<(string Name, string Type, int? Count)> GetGroupSharedMembers(INamedTypeSymbol structDeclarationSymbol, ICollection<INamedTypeSymbol> types)
+        {
+            foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
+            {
+                if (!fieldSymbol.IsStatic) continue;
+
+                AttributeData attribute = fieldSymbol.GetAttributes().First(static a => a.AttributeClass is { Name: nameof(GroupSharedAttribute) });
+                int? bufferSize = (int?)attribute.ConstructorArguments.FirstOrDefault().Value;
+                IArrayTypeSymbol typeSymbol = (IArrayTypeSymbol)fieldSymbol.Type;
+
+                string typeName = HlslKnownTypes.GetMappedElementName(typeSymbol);
+
+                _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
+
+                yield return (mapping ?? fieldSymbol.Name, typeName, bufferSize);
+
+                types.Add((INamedTypeSymbol)typeSymbol.ElementType);
             }
         }
 
@@ -140,18 +171,15 @@ namespace ComputeSharp.SourceGenerators
                 ShaderSourceRewriter shaderSourceRewriter = new(structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
 
                 // Rewrite the method syntax tree
-                var processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();
+                MethodDeclarationSyntax? processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();
 
                 // If the method is the shader entry point, do additional processing
                 if (methodDeclarationSymbol.Name == nameof(IComputeShader.Execute) &&
                     methodDeclarationSymbol.ReturnsVoid &&
                     methodDeclarationSymbol.TypeParameters.Length == 0 &&
-                    methodDeclarationSymbol.Parameters.Length == 1 &&
-                    methodDeclarationSymbol.Parameters[0].Type.ToDisplayString() == typeof(ThreadIds).FullName)
+                    methodDeclarationSymbol.Parameters.Length == 0)
                 {
-                    var parameterName = methodDeclarationSymbol.Parameters[0].Name;
-
-                    processedMethod = new ExecuteMethodRewriter(parameterName).Visit(processedMethod)!;
+                    processedMethod = new ExecuteMethodRewriter(shaderSourceRewriter).Visit(processedMethod)!;
 
                     entryPoint = processedMethod.NormalizeWhitespace().ToFullString();
                 }
