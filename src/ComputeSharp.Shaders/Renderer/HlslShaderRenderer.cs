@@ -43,17 +43,12 @@ namespace ComputeSharp.Shaders.Renderer
             builder.AppendLine(threadsZ.ToString());
 
             // User defined onstants
-            if (info.ConstantsInfo.Count > 0)
+            foreach (var constant in info.ConstantsInfo)
             {
-                builder.AppendLine();
-
-                foreach (var constant in info.ConstantsInfo)
-                {
-                    builder.Append("#define ");
-                    builder.Append(constant.Key);
-                    builder.Append(' ');
-                    builder.AppendLine(constant.Value);
-                }
+                builder.Append("#define ");
+                builder.Append(constant.Key);
+                builder.Append(' ');
+                builder.AppendLine(constant.Value);
             }
 
             // Declared types
