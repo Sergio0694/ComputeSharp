@@ -95,7 +95,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 Span<Rgba32> span = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(pixelSpan);
 
                 using ReadWriteTexture2D<Rgba32, Vector4> sourceTexture = Gpu.Default.AllocateReadWriteTexture2D<Rgba32, Vector4>(span, source.Width, source.Height);
-                using ReadWriteTexture2D<Vector4> firstPassTexture = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
+                using ReadWriteTexture2D<Rgba32, Vector4> firstPassTexture = Gpu.Default.AllocateReadWriteTexture2D<Rgba32, Vector4>(source.Width, source.Height);
                 using ReadOnlyBuffer<float> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer(Kernel);
 
                 Gpu.Default.For<VerticalConvolutionProcessor>(source.Width, source.Height, new(sourceTexture, firstPassTexture, kernelBuffer));
@@ -111,7 +111,7 @@ namespace ComputeSharp.BokehBlur.Processors
             internal readonly partial struct VerticalConvolutionProcessor : IComputeShader
             {
                 public readonly IReadWriteTexture2D<Vector4> source;
-                public readonly ReadWriteTexture2D<Vector4> target;
+                public readonly IReadWriteTexture2D<Vector4> target;
                 public readonly ReadOnlyBuffer<float> kernel;
 
                 /// <inheritdoc/>
@@ -142,7 +142,7 @@ namespace ComputeSharp.BokehBlur.Processors
             [AutoConstructor]
             internal readonly partial struct HorizontalConvolutionProcessor : IComputeShader
             {
-                public readonly ReadWriteTexture2D<Vector4> source;
+                public readonly IReadWriteTexture2D<Vector4> source;
                 public readonly IReadWriteTexture2D<Vector4> target;
                 public readonly ReadOnlyBuffer<float> kernel;
 
