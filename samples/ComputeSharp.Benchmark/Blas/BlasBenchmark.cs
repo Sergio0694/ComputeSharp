@@ -153,7 +153,7 @@ namespace ComputeSharp.Benchmark.Blas
             using ReadOnlyBuffer<float> x = Gpu.Default.AllocateReadOnlyBuffer(X);
             using ReadOnlyBuffer<float> w = Gpu.Default.AllocateReadOnlyBuffer(W);
             using ReadOnlyBuffer<float> b = Gpu.Default.AllocateReadOnlyBuffer(B);
-            using ReadWriteBuffer<float> y = Gpu.Default.AllocateReadWriteBuffer(Y);
+            using ReadWriteBuffer<float> y = Gpu.Default.AllocateReadWriteBuffer<float>(Y.Length);
 
             BlasHelpers.FullyConnectedForwardGpu(Gpu.Default, C, N, M, P, x, w, b, y);
 
