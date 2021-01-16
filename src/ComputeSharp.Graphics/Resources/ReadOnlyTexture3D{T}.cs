@@ -23,8 +23,9 @@ namespace ComputeSharp
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
-        internal ReadOnlyTexture3D(GraphicsDevice device, int width, int height, int depth)
-            : base(device, width, height, depth, ResourceType.ReadOnly, D3D12_FORMAT_SUPPORT1_TEXTURE3D)
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+        internal ReadOnlyTexture3D(GraphicsDevice device, int width, int height, int depth, AllocationMode allocationMode)
+            : base(device, width, height, depth, ResourceType.ReadOnly, allocationMode, D3D12_FORMAT_SUPPORT1_TEXTURE3D)
         {
         }
 

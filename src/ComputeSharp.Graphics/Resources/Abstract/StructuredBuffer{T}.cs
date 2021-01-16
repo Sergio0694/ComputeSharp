@@ -22,8 +22,9 @@ namespace ComputeSharp.Resources
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
         /// <param name="length">The number of items to store in the current buffer.</param>
         /// <param name="resourceType">The buffer type for the current buffer.</param>
-        private protected unsafe StructuredBuffer(GraphicsDevice device, int length, ResourceType resourceType)
-            : base(device, length, (uint)sizeof(T), resourceType)
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+        private protected unsafe StructuredBuffer(GraphicsDevice device, int length, ResourceType resourceType, AllocationMode allocationMode)
+            : base(device, length, (uint)sizeof(T), resourceType, allocationMode)
         {
         }
 
@@ -57,7 +58,7 @@ namespace ComputeSharp.Resources
                     byteOffset = (nint)offset * sizeof(T),
                     byteSize = size * sizeof(T);
 
-                using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, (ulong)byteSize, false);
+                using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, AllocationMode.Default, (ulong)byteSize, false);
 
                 using (CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY))
                 {
@@ -109,7 +110,7 @@ namespace ComputeSharp.Resources
                     byteOffset = (nint)offset * sizeof(T),
                     byteSize = size * sizeof(T);
 
-                using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, (ulong)byteSize, false);
+                using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, AllocationMode.Default, (ulong)byteSize, false);
 
                 using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
                 fixed (void* sourcePointer = &source)

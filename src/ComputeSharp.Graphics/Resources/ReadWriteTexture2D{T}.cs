@@ -22,8 +22,9 @@ namespace ComputeSharp
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
-        internal ReadWriteTexture2D(GraphicsDevice device, int width, int height)
-            : base(device, width, height, ResourceType.ReadWrite, D3D12_FORMAT_SUPPORT1_TEXTURE2D | D3D12_FORMAT_SUPPORT1_TYPED_UNORDERED_ACCESS_VIEW)
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+        internal ReadWriteTexture2D(GraphicsDevice device, int width, int height, AllocationMode allocationMode)
+            : base(device, width, height, ResourceType.ReadWrite, allocationMode, D3D12_FORMAT_SUPPORT1_TEXTURE2D | D3D12_FORMAT_SUPPORT1_TYPED_UNORDERED_ACCESS_VIEW)
         {
         }
 

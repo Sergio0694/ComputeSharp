@@ -257,7 +257,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 Span<Rgba32> span = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(pixelSpan);
 
                 using ReadWriteTexture2D<Rgba32, Vector4> texture = Gpu.Default.AllocateReadWriteTexture2D<Rgba32, Vector4>(span, source.Width, source.Height);
-                using ReadWriteTexture2D<Vector4> temporary = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
+                using ReadWriteTexture2D<Vector4> temporary = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height, AllocationMode.Clear);
                 using ReadWriteTexture2D<Vector4> reals = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
                 using ReadWriteTexture2D<Vector4> imaginaries = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
                 using ReadOnlyBuffer<Complex64> kernel = Gpu.Default.AllocateReadOnlyBuffer<Complex64>(KernelSize);

@@ -50,7 +50,8 @@ namespace ComputeSharp.Resources
         /// <param name="length">The number of items to store in the current buffer.</param>
         /// <param name="elementSizeInBytes">The size in bytes of each buffer item (including padding, if any).</param>
         /// <param name="resourceType">The resource type for the current buffer.</param>
-        private protected Buffer(GraphicsDevice device, int length, uint elementSizeInBytes, ResourceType resourceType)
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+        private protected Buffer(GraphicsDevice device, int length, uint elementSizeInBytes, ResourceType resourceType, AllocationMode allocationMode)
         {
             device.ThrowIfDisposed();
 
@@ -68,7 +69,7 @@ namespace ComputeSharp.Resources
             GraphicsDevice = device;
             Length = length;
 
-            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, (ulong)SizeInBytes, device.IsCacheCoherentUMA);
+            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, allocationMode, (ulong)SizeInBytes, device.IsCacheCoherentUMA);
 
             device.RentShaderResourceViewDescriptorHandles(out D3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 

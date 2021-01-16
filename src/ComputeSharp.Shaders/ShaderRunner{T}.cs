@@ -37,7 +37,7 @@ namespace ComputeSharp.Shaders
         {
             ConditionalWeakTable<GraphicsDevice, ConstantBuffer<Int4>> map = variablesBuffers ??= new();
 
-            return map.GetValue(device, static gpu => new(gpu, 256));
+            return map.GetValue(device, static gpu => new(gpu, 256, AllocationMode.Default));
         }
     }
 

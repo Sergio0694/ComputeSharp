@@ -101,15 +101,18 @@ namespace ComputeSharp.Graphics.Extensions
         /// </summary>
         /// <param name="d3D12Device">The <see cref="ID3D12Device"/> instance in use.</param>
         /// <param name="resourceType">The resource type currently in use.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
         /// <param name="sizeInBytes">The size in bytes of the current buffer.</param>
         /// <param name="isCacheCoherentUMA">Indicates whether or not the current device has a cache coherent UMA architecture.</param>
         /// <returns>An <see cref="ID3D12Resource"/> reference for the current buffer.</returns>
         public static ComPtr<ID3D12Resource> CreateCommittedResource(
             this ref ID3D12Device d3D12Device,
             ResourceType resourceType,
+            AllocationMode allocationMode,
             ulong sizeInBytes,
             bool isCacheCoherentUMA)
         {
+            D3D12_HEAP_FLAGS d3D12HeapFlags = allocationMode == AllocationMode.Default ? D3D12_HEAP_FLAG_CREATE_NOT_ZEROED : D3D12_HEAP_FLAG_NONE;
             (D3D12_HEAP_TYPE d3D12HeapType,
              D3D12_RESOURCE_FLAGS d3D12ResourceFlags,
              D3D12_RESOURCE_STATES d3D12ResourceStates) = resourceType switch
@@ -145,7 +148,7 @@ namespace ComputeSharp.Graphics.Extensions
 
             d3D12Device.CreateCommittedResource(
                 &d3D12HeapProperties,
-                D3D12_HEAP_FLAG_NONE,
+                d3D12HeapFlags,
                 &d3D12ResourceDescription,
                 d3D12ResourceStates,
                 null,
@@ -160,6 +163,7 @@ namespace ComputeSharp.Graphics.Extensions
         /// </summary>
         /// <param name="d3D12Device">The <see cref="ID3D12Device"/> instance in use.</param>
         /// <param name="resourceType">The resource type currently in use.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
         /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
         /// <param name="width">The width of the texture resource.</param>
         /// <param name="height">The height of the texture resource.</param>
@@ -169,12 +173,14 @@ namespace ComputeSharp.Graphics.Extensions
         public static ComPtr<ID3D12Resource> CreateCommittedResource(
             this ref ID3D12Device d3D12Device,
             ResourceType resourceType,
+            AllocationMode allocationMode,
             DXGI_FORMAT dxgiFormat,
             uint width,
             uint height,
             bool isCacheCoherentUMA,
             out D3D12_RESOURCE_STATES d3D12ResourceStates)
         {
+            D3D12_HEAP_FLAGS d3D12HeapFlags = allocationMode == AllocationMode.Default ? D3D12_HEAP_FLAG_CREATE_NOT_ZEROED : D3D12_HEAP_FLAG_NONE;
             D3D12_RESOURCE_FLAGS d3D12ResourceFlags;
 
             (d3D12ResourceFlags, d3D12ResourceStates) = resourceType switch
@@ -207,7 +213,7 @@ namespace ComputeSharp.Graphics.Extensions
 
             d3D12Device.CreateCommittedResource(
                 &d3D12HeapProperties,
-                D3D12_HEAP_FLAG_NONE,
+                d3D12HeapFlags,
                 &d3D12ResourceDescription,
                 d3D12ResourceStates,
                 null,
@@ -222,6 +228,7 @@ namespace ComputeSharp.Graphics.Extensions
         /// </summary>
         /// <param name="d3D12Device">The <see cref="ID3D12Device"/> instance in use.</param>
         /// <param name="resourceType">The resource type currently in use.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
         /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
         /// <param name="width">The width of the texture resource.</param>
         /// <param name="height">The height of the texture resource.</param>
@@ -232,6 +239,7 @@ namespace ComputeSharp.Graphics.Extensions
         public static ComPtr<ID3D12Resource> CreateCommittedResource(
             this ref ID3D12Device d3D12Device,
             ResourceType resourceType,
+            AllocationMode allocationMode,
             DXGI_FORMAT dxgiFormat,
             uint width,
             uint height,
@@ -239,6 +247,7 @@ namespace ComputeSharp.Graphics.Extensions
             bool isCacheCoherentUMA,
             out D3D12_RESOURCE_STATES d3D12ResourceStates)
         {
+            D3D12_HEAP_FLAGS d3D12HeapFlags = allocationMode == AllocationMode.Default ? D3D12_HEAP_FLAG_CREATE_NOT_ZEROED : D3D12_HEAP_FLAG_NONE;
             D3D12_RESOURCE_FLAGS d3D12ResourceFlags;
 
             (d3D12ResourceFlags, d3D12ResourceStates) = resourceType switch
@@ -271,7 +280,7 @@ namespace ComputeSharp.Graphics.Extensions
 
             d3D12Device.CreateCommittedResource(
                 &d3D12HeapProperties,
-                D3D12_HEAP_FLAG_NONE,
+                d3D12HeapFlags,
                 &d3D12ResourceDescription,
                 d3D12ResourceStates,
                 null,
