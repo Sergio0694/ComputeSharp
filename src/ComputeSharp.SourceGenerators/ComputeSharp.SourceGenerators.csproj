@@ -16,6 +16,7 @@
     <Compile Include="..\ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" Link="Core\Attributes\AutoConstructorAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Attributes\GroupSharedAttribute.cs" Link="Core\Attributes\GroupSharedAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Attributes\ShaderMethodAttribute.cs" Link="Core\Attributes\ShaderMethodAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Core\Attributes\__Internals\ComputeRoot32BitConstantsAttribute.cs" Link="Core\Attributes\__Internals\ComputeRoot32BitConstantsAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Attributes\__Internals\IComputeShaderSourceAttribute.cs" Link="Core\Attributes\__Internals\IComputeShaderSourceAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" Link="Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Dispatch\GroupIds.cs" Link="Core\Dispatch\GroupIds.cs" />

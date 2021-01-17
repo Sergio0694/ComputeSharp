@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Shaders.Extensions;
@@ -15,32 +13,6 @@ using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 
 namespace ComputeSharp.Shaders
 {
-    /// <summary>
-    /// A <see langword="class"/> with helper methods to support <see cref="ShaderRunner{T}"/>.
-    /// This type is primarily needed to avoid having fields being repeated per generic instantiation.
-    /// </summary>
-    internal static class ShaderRunner
-    {
-        /// <summary>
-        /// A thread-safe map of reusable GPU buffers for captured locals.
-        /// </summary>
-        [ThreadStatic]
-        private static ConditionalWeakTable<GraphicsDevice, ConstantBuffer<Int4>>? variablesBuffers;
-
-        /// <summary>
-        /// Gets the reusable <see cref="ConstantBuffer{T}"/> instance for a shader invocation.
-        /// </summary>
-        /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
-        /// <returns>The reusable <see cref="ConstantBuffer{T}"/> instance to populate.</returns>
-        [Pure]
-        public static ConstantBuffer<Int4> GetVariablesBuffer(GraphicsDevice device)
-        {
-            ConditionalWeakTable<GraphicsDevice, ConstantBuffer<Int4>> map = variablesBuffers ??= new();
-
-            return map.GetValue(device, static gpu => new(gpu, 256, AllocationMode.Default));
-        }
-    }
-
     /// <summary>
     /// A <see langword="class"/> responsible for performing all the necessary operations to compile and run a compute shader.
     /// </summary>
@@ -126,21 +98,16 @@ namespace ComputeSharp.Shaders
             // Extract the dispatch data for the shader invocation
             using DispatchData dispatchData = shaderData.Loader.GetDispatchData(device, in shader, x, y, z);
 
-            // Load the captured buffers
+            // Initialize the loop targets and the captured values
+            commandList.SetComputeRoot32BitConstants(dispatchData.Variables);
+
             ReadOnlySpan<D3D12_GPU_DESCRIPTOR_HANDLE> resources = dispatchData.Resources;
 
             for (int i = 0; i < resources.Length; i++)
             {
+                // Load the captured buffers
                 commandList.SetComputeRootDescriptorTable(i + 1, resources[i]);
             }
-
-            // Initialize the loop targets and the captured values
-            ConstantBuffer<Int4> variablesBuffer = ShaderRunner.GetVariablesBuffer(device);
-            ReadOnlySpan<Int4> variables = dispatchData.Variables;
-
-            variablesBuffer.SetData(ref MemoryMarshal.GetReference(variables), variables.Length, 0);
-
-            commandList.SetComputeRootDescriptorTable(0, variablesBuffer.D3D12GpuDescriptorHandle);
 
             // Calculate the dispatch values
             int
@@ -186,7 +153,7 @@ namespace ComputeSharp.Shaders
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static unsafe void CreatePipelineData(GraphicsDevice device, in CachedShader<T> shaderData, out PipelineData pipelineData)
         {
-            using ComPtr<ID3D12RootSignature> d3D12RootSignature = device.D3D12Device->CreateRootSignature(shaderData.Loader.D3D12DescriptorRanges1);
+            using ComPtr<ID3D12RootSignature> d3D12RootSignature = device.D3D12Device->CreateRootSignature(shaderData.Loader.D3D12Root32BitConstantsCount, shaderData.Loader.D3D12DescriptorRanges1);
             using ComPtr<ID3D12PipelineState> d3D12PipelineState = device.D3D12Device->CreateComputePipelineState(d3D12RootSignature.Get(), shaderData.Bytecode.D3D12ShaderBytecode);
 
             pipelineData = new PipelineData(d3D12RootSignature.Move(), d3D12PipelineState.Move());

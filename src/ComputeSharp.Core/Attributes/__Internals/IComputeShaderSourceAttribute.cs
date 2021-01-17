@@ -25,7 +25,7 @@ namespace ComputeSharp.__Internals
         /// <param name="executeMethod">The source code for the <see cref="IComputeShader.Execute"/> method.</param>
         /// <param name="methods">The collection of processed methods.</param>
         /// <param name="constants">The collection of discovered constants.</param>
-        /// <param name="sharedBuffers">The collection of group shared buffers</param>
+        /// <param name="sharedBuffers">The collection of group shared buffers.</param>
         public IComputeShaderSourceAttribute(
             string shaderTypeName,
             string[] types,

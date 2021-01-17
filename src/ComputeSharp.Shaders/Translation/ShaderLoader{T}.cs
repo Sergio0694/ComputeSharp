@@ -79,6 +79,11 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <summary>
+        /// Gets the number of 32 bit constants in the root signature for the shader.
+        /// </summary>
+        public int D3D12Root32BitConstantsCount { get; private set; }
+
+        /// <summary>
         /// Gets a <see cref="Span{T}"/> with the loaded <see cref="D3D12_DESCRIPTOR_RANGE1"/> items for the shader.
         /// </summary>
         public ReadOnlySpan<D3D12_DESCRIPTOR_RANGE1> D3D12DescriptorRanges1
@@ -163,11 +168,6 @@ namespace ComputeSharp.Shaders.Translation
             }
 
             List<D3D12_DESCRIPTOR_RANGE1> d3D12DescriptorRanges1 = new();
-
-            // Descriptor for the buffer for captured scalar/vector variables
-            D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1 = new(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, this.constantBuffersCount++);
-
-            d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
 
             // Inspect the captured fields
             foreach (FieldInfo fieldInfo in shaderFields)

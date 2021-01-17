@@ -35,7 +35,6 @@ namespace ComputeSharp.Resources
         /// <summary>
         /// The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
         /// </summary>
-        /// <remarks>This field is dynamically accessed when loading shader dispatch data.</remarks>
         internal readonly D3D12_GPU_DESCRIPTOR_HANDLE D3D12GpuDescriptorHandle;
 
         /// <summary>
