@@ -58,7 +58,7 @@ namespace ComputeSharp.Shaders.Translation
         {
             // Resources and variables buffers
             ulong[] resources = ArrayPool<ulong>.Shared.Rent(this.totalResourceCount);
-            byte[] variables = ArrayPool<byte>.Shared.Rent(4096);
+            byte[] variables = ArrayPool<byte>.Shared.Rent(256);
 
             ref ulong r0 = ref MemoryMarshal.GetArrayDataReference(resources);
             ref byte r1 = ref MemoryMarshal.GetArrayDataReference(variables);

@@ -28,18 +28,22 @@ namespace ComputeSharp.Shaders.Extensions
 
             fixed (D3D12_DESCRIPTOR_RANGE1* d3D12DescriptorRange1 = d3D12DescriptorRanges1)
             {
-                D3D12_ROOT_PARAMETER1* d3D12RootParameters1 = stackalloc D3D12_ROOT_PARAMETER1[d3D12DescriptorRanges1.Length];
+                D3D12_ROOT_PARAMETER1* d3D12RootParameters1 = stackalloc D3D12_ROOT_PARAMETER1[d3D12DescriptorRanges1.Length + 1];
+
+                // The initial constant buffer is initialized with 32 bit root constants.
+                // This avoids having to manage an extra buffer for each shader dispatch.
+                D3D12_ROOT_PARAMETER1.InitAsConstants(out *d3D12RootParameters1, 3, 0); // TODO: fix length
 
                 // Pack each descriptor range into a root parameter with that single range as content
                 for (int i = 0; i < d3D12DescriptorRanges1.Length; i++)
                 {
-                    D3D12_ROOT_PARAMETER1.InitAsDescriptorTable(out d3D12RootParameters1[i], 1, d3D12DescriptorRange1 + i);
+                    D3D12_ROOT_PARAMETER1.InitAsDescriptorTable(out d3D12RootParameters1[i + 1], 1, d3D12DescriptorRange1 + i);
                 }
 
                 // Root signature description wrapping the packed collection of root parameters
                 D3D12_VERSIONED_ROOT_SIGNATURE_DESC.Init_1_1(
                     out D3D12_VERSIONED_ROOT_SIGNATURE_DESC d3D12VersionedRootSignatureDescription,
-                    (uint)d3D12DescriptorRanges1.Length,
+                    (uint)d3D12DescriptorRanges1.Length + 1,
                     d3D12RootParameters1);
 
                 // Serialize the root signature from the data just computed. When this is done

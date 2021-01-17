@@ -164,11 +164,6 @@ namespace ComputeSharp.Shaders.Translation
 
             List<D3D12_DESCRIPTOR_RANGE1> d3D12DescriptorRanges1 = new();
 
-            // Descriptor for the buffer for captured scalar/vector variables
-            D3D12_DESCRIPTOR_RANGE1 d3D12DescriptorRange1 = new(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, this.constantBuffersCount++);
-
-            d3D12DescriptorRanges1.Add(d3D12DescriptorRange1);
-
             // Inspect the captured fields
             foreach (FieldInfo fieldInfo in shaderFields)
             {

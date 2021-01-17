@@ -155,6 +155,18 @@ namespace ComputeSharp.Graphics.Commands
         }
 
         /// <summary>
+        /// Binds an input constant buffer to the first root parameter.
+        /// </summary>
+        /// <param name="data">The input buffer with the constant data to bind.</param>
+        public readonly unsafe void SetComputeRoot32BitConstants(ReadOnlySpan<uint> data)
+        {
+            fixed (uint* p = data)
+            {
+                this.d3D12GraphicsCommandList.Get()->SetComputeRoot32BitConstants(0, (uint)data.Length, p, 0);
+            }
+        }
+
+        /// <summary>
         /// Binds an input <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value to a specified root parameter.
         /// </summary>
         /// <param name="rootParameterIndex">The root parameter index to bind to the input resource.</param>

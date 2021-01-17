@@ -163,12 +163,6 @@ namespace ComputeSharp.SourceGenerators
                 }
             }
 
-            // After all the captured fields have been processed, ansure the reported byte size for
-            // the local variables is padded to the standard alignment for constant buffers. This is
-            // necessary to enable loading all the dispatch data after reinterpreting it to a sequence
-            // of values of size 16 bytes (in particular, Int4 is used), without reading out of bounds.
-            rawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
-
             yield return ReturnStatement(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(rawDataOffset)));
         }
     }
