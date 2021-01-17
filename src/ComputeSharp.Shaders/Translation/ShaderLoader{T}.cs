@@ -79,6 +79,11 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <summary>
+        /// Gets the number of 32 bit constants in the root signature for the shader.
+        /// </summary>
+        public int D3D12Root32BitConstantsCount { get; private set; }
+
+        /// <summary>
         /// Gets a <see cref="Span{T}"/> with the loaded <see cref="D3D12_DESCRIPTOR_RANGE1"/> items for the shader.
         /// </summary>
         public ReadOnlySpan<D3D12_DESCRIPTOR_RANGE1> D3D12DescriptorRanges1

@@ -15,11 +15,13 @@ namespace ComputeSharp.Shaders.Extensions
         /// Creates a new <see cref="ID3D12RootSignature"/> for a given device.
         /// </summary>
         /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the root signature.</param>
+        /// <param name="d3D12Root32BitConstantsCount">The number of 32 bit root constants to load.</param>
         /// <param name="d3D12DescriptorRanges1">The input descriptor ranges for the signature to create.</param>
         /// <returns>A pointer to the newly allocated <see cref="ID3D12RootSignature"/> instance.</returns>
         /// <exception cref="Exception">Thrown when the creation of the root signature fails.</exception>
         public static ComPtr<ID3D12RootSignature> CreateRootSignature(
             this ref ID3D12Device d3D12Device,
+            int d3D12Root32BitConstantsCount,
             ReadOnlySpan<D3D12_DESCRIPTOR_RANGE1> d3D12DescriptorRanges1)
         {
             using ComPtr<ID3DBlob> d3D3Blob = default;
@@ -32,7 +34,7 @@ namespace ComputeSharp.Shaders.Extensions
 
                 // The initial constant buffer is initialized with 32 bit root constants.
                 // This avoids having to manage an extra buffer for each shader dispatch.
-                D3D12_ROOT_PARAMETER1.InitAsConstants(out *d3D12RootParameters1, 3, 0); // TODO: fix length
+                D3D12_ROOT_PARAMETER1.InitAsConstants(out *d3D12RootParameters1, (uint)d3D12Root32BitConstantsCount, 0);
 
                 // Pack each descriptor range into a root parameter with that single range as content
                 for (int i = 0; i < d3D12DescriptorRanges1.Length; i++)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using ComputeSharp.__Internals;
 using ComputeSharp.Shaders.Translation.Models;
 using TerraFX.Interop;
 #if NET5_0
@@ -11,6 +12,8 @@ using MemoryMarshal = System.Runtime.InteropServices.MemoryMarshal;
 #else
 using MemoryMarshal = Polyfills.MemoryMarshal;
 #endif
+
+#pragma warning disable CS0618
 
 namespace ComputeSharp.Shaders.Translation
 {
@@ -84,6 +87,10 @@ namespace ComputeSharp.Shaders.Translation
             Type type = typeof(T).Assembly.GetType("ComputeSharp.__Internals.DispatchDataLoader")!;
             MethodInfo method = type.GetMethod("LoadDispatchData", argumentTypes)!;
 
+            // Extract the computed count of 32 bit root constants to load
+            D3D12Root32BitConstantsCount = ((ComputeRoot32BitConstantsAttribute)method.ReturnTypeCustomAttributes.GetCustomAttributes(false)[0]).Count;
+
+            // Create a delegate from the generated shader data loader
             this.dispatchDataLoader = method.CreateDelegate<DispatchDataLoader>();
         }
     }
