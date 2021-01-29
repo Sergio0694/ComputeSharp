@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Helpers;
 
 namespace ComputeSharp

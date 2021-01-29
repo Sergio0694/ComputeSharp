@@ -3,7 +3,7 @@ using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using TerraFX.Interop;
 
-namespace ComputeSharp.Graphics
+namespace ComputeSharp
 {
     /// <summary>
     /// A locally unique identifier for a graphics device.

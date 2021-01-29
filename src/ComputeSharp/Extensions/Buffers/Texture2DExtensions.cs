@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
-using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Resources;
 using Microsoft.Toolkit.Diagnostics;
 
 namespace ComputeSharp
@@ -91,7 +91,7 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items stored on the texture.</typeparam>
         /// <param name="texture">The input <see cref="Texture2D{T}"/> instance to read data from.</param>
         /// <param name="destination">The input array to write data to.</param>
-        /// <param name="offset">The starting offset within <paramref name="source"/> to write data to.</param>
+        /// <param name="offset">The starting offset within <paramref name="destination"/> to write data to.</param>
         public static void GetData<T>(this Texture2D<T> texture, T[] destination, int offset)
             where T : unmanaged
         {
@@ -104,7 +104,7 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items stored on the texture.</typeparam>
         /// <param name="texture">The input <see cref="Texture2D{T}"/> instance to read data from.</param>
         /// <param name="destination">The input array to write data to.</param>
-        /// <param name="offset">The starting offset within <paramref name="source"/> to write data to.</param>
+        /// <param name="offset">The starting offset within <paramref name="destination"/> to write data to.</param>
         /// <param name="x">The horizontal range of items to copy.</param>
         /// <param name="y">The vertical range of items to copy.</param>
         public static void GetData<T>(this Texture2D<T> texture, T[] destination, int offset, Range x, Range y)
@@ -119,7 +119,7 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items stored on the texture.</typeparam>
         /// <param name="texture">The input <see cref="Texture2D{T}"/> instance to read data from.</param>
         /// <param name="destination">The input array to write data to.</param>
-        /// <param name="offset">The starting offset within <paramref name="source"/> to write data to.</param>
+        /// <param name="offset">The starting offset within <paramref name="destination"/> to write data to.</param>
         /// <param name="x">The horizontal offset in the source texture.</param>
         /// <param name="y">The vertical offset in the source texture.</param>
         /// <param name="width">The width of the memory area to copy.</param>

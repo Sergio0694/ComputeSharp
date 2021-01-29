@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Text;
-using ComputeSharp.Graphics;
-using ComputeSharp.Graphics.Buffers.Abstract;
-using ComputeSharp.Graphics.Interop;
+using ComputeSharp.Interop;
+using ComputeSharp.Resources;
 
 namespace ComputeSharp.Exceptions
 {

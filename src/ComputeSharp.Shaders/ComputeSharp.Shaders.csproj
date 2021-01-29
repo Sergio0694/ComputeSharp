@@ -1,8 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TargetFrameworks>net5.0</TargetFrameworks>
+    <OutputPath>bin\Release</OutputPath>
+    <DocumentationFile>ComputeSharp.Shaders.xml</DocumentationFile>
+    <Description>ComputeSharp.Shaders</Description>
   </PropertyGroup>
 
   <ItemGroup>

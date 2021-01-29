@@ -5,9 +5,11 @@ using System.Diagnostics.Contracts;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.Graphics;
+using ComputeSharp.__Internals;
 using ComputeSharp.Shaders.Translation.Models;
 using TerraFX.Interop;
+
+#pragma warning disable CS0618
 
 namespace ComputeSharp.Shaders.Translation
 {
@@ -55,7 +57,7 @@ namespace ComputeSharp.Shaders.Translation
         {
             // Resources and variables buffers
             ulong[] resources = ArrayPool<ulong>.Shared.Rent(this.totalResourceCount);
-            byte[] variables = ArrayPool<byte>.Shared.Rent(4096);
+            byte[] variables = ArrayPool<byte>.Shared.Rent(256);
 
             ref ulong r0 = ref MemoryMarshal.GetArrayDataReference(resources);
             ref byte r1 = ref MemoryMarshal.GetArrayDataReference(variables);
@@ -81,6 +83,10 @@ namespace ComputeSharp.Shaders.Translation
             Type type = typeof(T).Assembly.GetType("ComputeSharp.__Internals.DispatchDataLoader")!;
             MethodInfo method = type.GetMethod("LoadDispatchData", argumentTypes)!;
 
+            // Extract the computed count of 32 bit root constants to load
+            D3D12Root32BitConstantsCount = ((ComputeRoot32BitConstantsAttribute)method.ReturnTypeCustomAttributes.GetCustomAttributes(false)[0]).Count;
+
+            // Create a delegate from the generated shader data loader
             this.dispatchDataLoader = method.CreateDelegate<DispatchDataLoader>();
         }
     }

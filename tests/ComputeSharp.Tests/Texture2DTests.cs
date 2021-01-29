@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Resources;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.Toolkit.HighPerformance.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -159,9 +159,9 @@ namespace ComputeSharp.Tests
             public readonly ReadOnlyTexture2D<int> source;
             public readonly ReadWriteBuffer<int> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.Y * 32 + ids.X] = source[ids.XY];
+                destination[ThreadIds.Y * 32 + ThreadIds.X] = source[ThreadIds.XY];
             }
         }
 
@@ -188,9 +188,9 @@ namespace ComputeSharp.Tests
             public readonly ReadWriteTexture2D<int> source;
             public readonly ReadWriteTexture2D<int> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.XY] = source[ids.XY];
+                destination[ThreadIds.XY] = source[ThreadIds.XY];
             }
         }
     }

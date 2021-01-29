@@ -1,6 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using ComputeSharp.Graphics;
 
 namespace ComputeSharp.Benchmark.Blas
 {
@@ -93,17 +92,17 @@ namespace ComputeSharp.Benchmark.Blas
             public readonly ReadWriteBuffer<float> y;
 
             /// <inheritdoc/>
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                int x_offset = ids.X * n * p + ids.Y * m;
+                int x_offset = ThreadIds.X * n * p + ThreadIds.Y * m;
                 float result = 0f;
 
                 for (int k = 0; k < m; k++)
                 {
-                    result += x[x_offset + k] * w[k * p + ids.Z];
+                    result += x[x_offset + k] * w[k * p + ThreadIds.Z];
                 }
 
-                y[ids.X * n * p + ids.Y * p + ids.Z] = result + b[ids.Z];
+                y[ThreadIds.X * n * p + ThreadIds.Y * p + ThreadIds.Z] = result + b[ThreadIds.Z];
             }
         }
     }

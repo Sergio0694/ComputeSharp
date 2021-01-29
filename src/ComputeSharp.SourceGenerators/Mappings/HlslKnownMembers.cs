@@ -21,10 +21,37 @@ namespace ComputeSharp.SourceGenerators.Mappings
             [$"ComputeSharp.ReadOnlyTexture2D`2.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
             [$"ComputeSharp.ReadWriteTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
             [$"ComputeSharp.ReadWriteTexture2D`2.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
+            [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
+            [$"ComputeSharp.IReadWriteTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
             [$"ComputeSharp.ReadOnlyTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
             [$"ComputeSharp.ReadOnlyTexture3D`2.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
             [$"ComputeSharp.ReadWriteTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
-            [$"ComputeSharp.ReadWriteTexture3D`2.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3"
+            [$"ComputeSharp.ReadWriteTexture3D`2.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
+            [$"ComputeSharp.IReadOnlyTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
+            [$"ComputeSharp.IReadWriteTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3"
+        };
+
+        /// <summary>
+        /// The mapping of supported known size accessors for HLSL resource types.
+        /// </summary>
+        private static readonly IReadOnlyDictionary<string, (int Rank, int Axis)> KnownSizeAccessors = new Dictionary<string, (int, int)>
+        {
+            ["ComputeSharp.Resources.Buffer`1.Length"] = (2, 0),
+            ["ComputeSharp.Resources.Texture2D`1.Width"] = (2, 0),
+            ["ComputeSharp.Resources.Texture2D`1.Height"] = (2, 1),
+            ["ComputeSharp.Resources.Texture3D`1.Width"] = (3, 0),
+            ["ComputeSharp.Resources.Texture3D`1.Height"] = (3, 1),
+            ["ComputeSharp.Resources.Texture3D`1.Depth"] = (3, 2),
+            ["ComputeSharp.IReadOnlyTexture2D`1.Width"] = (2, 0),
+            ["ComputeSharp.IReadOnlyTexture2D`1.Height"] = (2, 1),
+            ["ComputeSharp.IReadOnlyTexture3D`1.Width"] = (3, 0),
+            ["ComputeSharp.IReadOnlyTexture3D`1.Height"] = (3, 1),
+            ["ComputeSharp.IReadOnlyTexture3D`1.Depth"] = (3, 2),
+            ["ComputeSharp.IReadWriteTexture2D`1.Width"] = (2, 0),
+            ["ComputeSharp.IReadWriteTexture2D`1.Height"] = (2, 1),
+            ["ComputeSharp.IReadWriteTexture3D`1.Width"] = (3, 0),
+            ["ComputeSharp.IReadWriteTexture3D`1.Height"] = (3, 1),
+            ["ComputeSharp.IReadWriteTexture3D`1.Depth"] = (3, 2)
         };
 
         /// <summary>
@@ -163,6 +190,49 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 knownMembers.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"{item.Property.Name.ToLower()}");
             }
 
+            // Store GroupIds.Index for a quicker comparison afterwards
+            PropertyInfo groupindexProperty = typeof(GroupIds).GetProperty(nameof(GroupIds.Index), BindingFlags.Static | BindingFlags.Public);
+
+            // Programmatically load mappings for the dispatch types
+            foreach (var item in
+                from type in HlslKnownTypes.HlslDispatchTypes
+                from property in type.GetProperties(BindingFlags.Static | BindingFlags.Public)
+                select (Type: type, Property: property))
+            {
+                if (item.Property == groupindexProperty)
+                {
+                    // The thread group index is a standalone parameter, so if this property is used, we
+                    // just map the access directly to that implicit and hidden parameter name instead.
+                    knownMembers.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"__{nameof(GroupIds)}__get_Index");
+                }
+                else
+                {
+                    knownMembers.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"{item.Type.Name}.{item.Property.Name.ToLower()}");
+                }
+            }
+
+            // Programmatically load mappings for the group size
+            foreach (var property in typeof(GroupSize).GetProperties(BindingFlags.Static | BindingFlags.Public))
+            {
+                string key = $"{typeof(GroupSize).FullName}{Type.Delimiter}{property.Name}";
+
+                switch (property.Name)
+                {
+                    case nameof(GroupSize.Count):
+                        knownMembers.Add(key, "__GroupSize__get_X * __GroupSize__get_Y * __GroupSize__get_Z");
+                        break;
+                    case string name when name.Length == 1:
+                        knownMembers.Add(key, $"__GroupSize__get_{name}");
+                        break;
+                    case string name when name.Length == 1:
+                        knownMembers.Add(key, $"__GroupSize__get_{name[0]} * __GroupSize__get_{name[1]}");
+                        break;
+                    case string name when name.Length == 1:
+                        knownMembers.Add(key, $"__GroupSize__get_{name[0]} * __GroupSize__get_{name[1]} * __GroupSize__get_{name[2]}");
+                        break;
+                }
+            }
+
             return knownMembers;
         }
 
@@ -188,6 +258,27 @@ namespace ComputeSharp.SourceGenerators.Mappings
         public static bool TryGetMappedIndexerTypeName(string name, out string? mapped)
         {
             return KnownIndexers.TryGetValue(name, out mapped);
+        }
+
+        /// <summary>
+        /// Tries to get the mapped HLSL-compatible indexer vector type name for the input indexer name.
+        /// </summary>
+        /// <param name="name">The input fully qualified indexer name.</param>
+        /// <param name="mapped">The mapped type name, if one is found.</param>
+        /// <returns>The HLSL-compatible type name that can be used in an HLSL shader for the given indexer.</returns>
+        [Pure]
+        public static bool TryGetAccessorRankAndAxis(string name, out int rank, out int axis)
+        {
+            if (KnownSizeAccessors.TryGetValue(name, out var info))
+            {
+                (rank, axis) = info;
+
+                return true;
+            }
+
+            (rank, axis) = default((int, int));
+
+            return false;
         }
     }
 }

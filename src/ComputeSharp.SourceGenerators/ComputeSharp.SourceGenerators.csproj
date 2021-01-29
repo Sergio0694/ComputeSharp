@@ -2,13 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>9.0</LangVersion>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <PackFolder>analyzers\dotnet\cs</PackFolder>
     <PackSymbols>false</PackSymbols>
+    <Description>ComputeSharp.SourceGenerators</Description>
   </PropertyGroup>
 
   <!--The source generator cannot contain package references or project references, so instead we're just
@@ -16,9 +12,15 @@
       and to match members based on full name, so the types being in the generator assembly are not an issue.-->
   <ItemGroup>
     <Compile Include="..\ComputeSharp.Core\Attributes\AutoConstructorAttribute.cs" Link="Core\Attributes\AutoConstructorAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Core\Attributes\GroupSharedAttribute.cs" Link="Core\Attributes\GroupSharedAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Attributes\ShaderMethodAttribute.cs" Link="Core\Attributes\ShaderMethodAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Core\Attributes\__Internals\ComputeRoot32BitConstantsAttribute.cs" Link="Core\Attributes\__Internals\ComputeRoot32BitConstantsAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Attributes\__Internals\IComputeShaderSourceAttribute.cs" Link="Core\Attributes\__Internals\IComputeShaderSourceAttribute.cs" />
     <Compile Include="..\ComputeSharp.Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" Link="Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Core\Dispatch\GroupIds.cs" Link="Core\Dispatch\GroupIds.cs" />
+    <Compile Include="..\ComputeSharp.Core\Dispatch\GroupSize.cs" Link="Core\Dispatch\GroupSize.cs" />
+    <Compile Include="..\ComputeSharp.Core\Dispatch\ThreadIds.cs" Link="Core\Dispatch\ThreadIds.cs" />
+    <Compile Include="..\ComputeSharp.Core\Dispatch\WarpIds.cs" Link="Core\Dispatch\WarpIds.cs" />
     <Compile Include="..\ComputeSharp.Core\Exceptions\InvalidExecutionContextException.cs" Link="Core\Exceptions\InvalidExecutionContextException.cs" />
     <Compile Include="..\ComputeSharp.Core\Exceptions\MissingMethodSourceException.cs" Link="Core\Exceptions\MissingMethodSourceException.cs" />
     <Compile Include="..\ComputeSharp.Core\Extensions\MethodInfoExtensions.cs" Link="Core\Extensions\MethodInfoExtensions.cs" />
@@ -39,7 +41,6 @@
     <Compile Include="..\ComputeSharp.Core\Primitives\Int\Int2.cs" Link="Core\Primitives\Int\Int2.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\Int\Int3.cs" Link="Core\Primitives\Int\Int3.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\Int\Int4.cs" Link="Core\Primitives\Int\Int4.cs" />
-    <Compile Include="..\ComputeSharp.Core\Primitives\ThreadIds.cs" Link="Core\Primitives\ThreadIds.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt2.cs" Link="Core\Primitives\UInt\UInt2.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt3.cs" Link="Core\Primitives\UInt\UInt3.cs" />
     <Compile Include="..\ComputeSharp.Core\Primitives\UInt\UInt4.cs" Link="Core\Primitives\UInt\UInt4.cs" />

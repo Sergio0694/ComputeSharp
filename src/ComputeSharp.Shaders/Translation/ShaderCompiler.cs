@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
-using System.IO;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Exceptions;
 using TerraFX.Interop;
@@ -15,7 +11,7 @@ namespace ComputeSharp.Shaders.Translation
     /// <summary>
     /// A <see langword="class"/> that uses the DXC APIs to compile compute shaders.
     /// </summary>
-    internal static unsafe class ShaderCompiler
+    internal static unsafe partial class ShaderCompiler
     {
         /// <summary>
         /// The <see cref="IDxcCompiler"/> instance to use to create the bytecode for HLSL sources.
@@ -57,64 +53,6 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <summary>
-        /// Initializes the DLL resolvers for the dxcompiler.dll and dxil.dll libraries.
-        /// </summary>
-        private static void InitializeDxcLibrariesLoading()
-        {
-            // Test whether the native libraries are present in the same folder of the executable
-            // (which is the case when the program was built with a runtime identifier), or whether
-            // they are in the "runtimes\win-x64\native" folder in the executable directory.
-            string nugetNativeLibsPath = Path.Combine(AppContext.BaseDirectory, @"runtimes\win-x64\native");
-            bool isNuGetRuntimeLibrariesDirectoryPresent = Directory.Exists(nugetNativeLibsPath);
-
-            // Register a custom library resolver for the two DXC libraries. We need to either manually load the two
-            // libraries from the NuGet directory, if an RID is not in use, or we need to ensure that dxil.dll is
-            // loaded correctly in case the program was executed with the host being in another directory.
-            // This happens when doing eg. "dotnet bin\Debug\net5.0\MyApp.dll", which would crash at runtime.
-            FX.ResolveLibrary += (n, a, s) => ResolveLibrary(n, a, s, isNuGetRuntimeLibrariesDirectoryPresent);
-        }
-
-        /// <summary>
-        /// A custom resolver to override the default library resolution behavior for the DXC and DXIL libraries.
-        /// This either loads the libraries from the NuGet directory, or just ensures that DXIL is always loaded.
-        /// </summary>
-        /// <inheritdoc cref="DllImportResolver"/>
-        private static IntPtr ResolveLibrary(string libraryName, Assembly assembly, DllImportSearchPath? searchPath, bool isNuGetRuntimeLibrariesDirectoryPresent)
-        {
-            if (libraryName is not "dxcompiler") return IntPtr.Zero;
-
-            if (isNuGetRuntimeLibrariesDirectoryPresent)
-            {
-                string
-                    dxcompilerPath = Path.Combine(AppContext.BaseDirectory, @"runtimes\win-x64\native\dxcompiler.dll"),
-                    dxilPath = Path.Combine(AppContext.BaseDirectory, @"runtimes\win-x64\native\dxil.dll");
-
-                // Load DXIL first so that DXC doesn't fail to load it, and then DXIL, both from the NuGet path
-                if (NativeLibrary.TryLoad(dxilPath, out _) && NativeLibrary.TryLoad(dxcompilerPath, out IntPtr handle))
-                {
-                    return handle;
-                }
-            }
-            else
-            {
-                // Even when the two libraries are correctly copied next to the executable in use, we load them
-                // manually to ensure the operation is successful. This is to avoid failures in cases such as when
-                // doing "dotnet bin\MyApp.dll", ie. when the host is in another path than the executable in use.
-                // This is probably because DXIL is a native dependency for DXC, but the way Windows loads these
-                // libraries doesn't take into account the .NET concepts of "app directory": neither the current "bin"
-                // directory nor the "process directory", which is "C:\Program Files\dotnet", actually contain the
-                // native library we need, hence the runtime crash. Manually loading the library this way solves this.
-                if (NativeLibrary.TryLoad("dxil", assembly, searchPath, out _) &&
-                    NativeLibrary.TryLoad("dxcompiler", assembly, searchPath, out IntPtr handle))
-                {
-                    return handle;
-                }
-            }
-
-            return IntPtr.Zero;
-        }
-
-        /// <summary>
         /// Compiles a new HLSL shader from the input source code.
         /// </summary>
         /// <param name="source">The HLSL source code to compile.</param>
@@ -143,7 +81,7 @@ namespace ComputeSharp.Shaders.Translation
             fixed (char* optimization = "-O3")
             {
                 DxcCompiler.Get()->Compile(
-                    dxcBlobEncoding.Upcast<IDxcBlobEncoding, IDxcBlob>().Get(),
+                    (IDxcBlob*)dxcBlobEncoding.Get(),
                     (ushort*)shaderName,
                     (ushort*)entryPoint,
                     (ushort*)shaderProfile,
@@ -175,7 +113,6 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         /// <param name="dxcOperationResult">The input (faulting) operation.</param>
         /// <returns>This method always throws and never actually returs.</returns>
-        [DoesNotReturn]
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static ComPtr<IDxcBlob> ThrowHslsCompilationException(IDxcOperationResult* dxcOperationResult)
         {

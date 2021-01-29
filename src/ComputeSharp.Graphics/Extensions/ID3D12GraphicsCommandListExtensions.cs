@@ -17,7 +17,6 @@ namespace ComputeSharp.Graphics.Extensions
         /// <param name="z">The depthwise offset in the destination texture.</param>
         /// <param name="d3D12ResourceSource">The source <see cref="ID3D12Resource"/> (a buffer) to read from.</param>
         /// <param name="d3D12PlacedSubresourceFootprintSource">The <see cref="D3D12_PLACED_SUBRESOURCE_FOOTPRINT"/> value describing <paramref name="d3D12ResourceSource"/>.</param>
-
         public static void CopyTextureRegion(
             this ref ID3D12GraphicsCommandList d3D12GraphicsCommandList,
             ID3D12Resource* d3D12ResourceDestination,

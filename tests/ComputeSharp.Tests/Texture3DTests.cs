@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Resources;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.Toolkit.HighPerformance.Extensions;
 using Microsoft.Toolkit.HighPerformance.Memory;
@@ -193,9 +193,9 @@ namespace ComputeSharp.Tests
             public readonly ReadOnlyTexture3D<int> source;
             public readonly ReadWriteBuffer<int> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.Z * 32 * 32 + ids.Y * 32 + ids.X] = source[ids.XYZ];
+                destination[ThreadIds.Z * 32 * 32 + ThreadIds.Y * 32 + ThreadIds.X] = source[ThreadIds.XYZ];
             }
         }
 
@@ -222,9 +222,9 @@ namespace ComputeSharp.Tests
             public readonly ReadWriteTexture3D<int> source;
             public readonly ReadWriteTexture3D<int> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.XYZ] = source[ids.XYZ];
+                destination[ThreadIds.XYZ] = source[ThreadIds.XYZ];
             }
         }
     }

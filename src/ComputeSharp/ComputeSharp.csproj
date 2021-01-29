@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <LangVersion>9.0</LangVersion>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TargetFrameworks>net5.0</TargetFrameworks>
+    <OutputPath>bin\Release</OutputPath>
+    <DocumentationFile>ComputeSharp.xml</DocumentationFile>
+    <Description>ComputeSharp</Description>
   </PropertyGroup>
 
   <ItemGroup>

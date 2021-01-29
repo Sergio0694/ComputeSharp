@@ -95,39 +95,13 @@ namespace ComputeSharp.BokehBlur.Processors
                 Span<Rgba32> span = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(pixelSpan);
 
                 using ReadWriteTexture2D<Rgba32, Vector4> sourceTexture = Gpu.Default.AllocateReadWriteTexture2D<Rgba32, Vector4>(span, source.Width, source.Height);
-                using ReadWriteTexture2D<Vector4> firstPassTexture = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
+                using ReadWriteTexture2D<Rgba32, Vector4> firstPassTexture = Gpu.Default.AllocateReadWriteTexture2D<Rgba32, Vector4>(source.Width, source.Height);
                 using ReadOnlyBuffer<float> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer(Kernel);
 
-                ApplyVerticalConvolution(sourceTexture, firstPassTexture, kernelBuffer);
-                ApplyHorizontalConvolution(firstPassTexture, sourceTexture, kernelBuffer);
+                Gpu.Default.For<VerticalConvolutionProcessor>(source.Width, source.Height, new(sourceTexture, firstPassTexture, kernelBuffer));
+                Gpu.Default.For<HorizontalConvolutionProcessor>(source.Width, source.Height, new(firstPassTexture, sourceTexture, kernelBuffer));
 
                 sourceTexture.GetData(span);
-            }
-
-            /// <summary>
-            /// Performs a vertical 1D complex convolution with the specified parameters.
-            /// </summary>
-            /// <param name="source">The source <see cref="ReadWriteTexture2D{T, TPixel}"/> to read data from.</param>
-            /// <param name="target">The target <see cref="ReadWriteTexture2D{T}"/> to write the results to.</param>
-            /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel.</param>
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void ApplyVerticalConvolution(
-                ReadWriteTexture2D<Rgba32, Vector4> source,
-                ReadWriteTexture2D<Vector4> target,
-                ReadOnlyBuffer<float> kernel)
-            {
-                int height = Source.Height;
-                int width = Source.Width;
-
-                VerticalConvolutionProcessor shader = new(
-                    maxY: height - 1,
-                    maxX: width - 1,
-                    kernel.Length,
-                    source,
-                    target,
-                    kernel);
-
-                Gpu.Default.For(width, height, in shader);
             }
 
             /// <summary>
@@ -136,58 +110,30 @@ namespace ComputeSharp.BokehBlur.Processors
             [AutoConstructor]
             internal readonly partial struct VerticalConvolutionProcessor : IComputeShader
             {
-                public readonly int maxY;
-                public readonly int maxX;
-                public readonly int kernelLength;
-
-                public readonly ReadWriteTexture2D<Rgba32, Vector4> source;
-                public readonly ReadWriteTexture2D<Vector4> target;
+                public readonly IReadWriteTexture2D<Vector4> source;
+                public readonly IReadWriteTexture2D<Vector4> target;
                 public readonly ReadOnlyBuffer<float> kernel;
 
                 /// <inheritdoc/>
-                public void Execute(ThreadIds ids)
+                public void Execute()
                 {
                     Vector4 result = Vector4.Zero;
+                    int maxY = source.Height - 1;
+                    int maxX = source.Width - 1;
+                    int kernelLength = kernel.Length;
                     int radiusY = kernelLength >> 1;
-                    int sourceOffsetColumnBase = ids.X;
 
                     for (int i = 0; i < kernelLength; i++)
                     {
-                        int offsetY = Hlsl.Clamp(ids.Y + i - radiusY, 0, maxY);
-                        int offsetX = Hlsl.Clamp(sourceOffsetColumnBase, 0, maxX);
+                        int offsetY = Hlsl.Clamp(ThreadIds.Y + i - radiusY, 0, maxY);
+                        int offsetX = Hlsl.Clamp(ThreadIds.X, 0, maxX);
                         Vector4 color = source[offsetX, offsetY];
 
                         result += kernel[i] * color;
                     }
 
-                    target[ids.XY] = result;
+                    target[ThreadIds.XY] = result;
                 }
-            }
-
-            /// <summary>
-            /// Performs an horizontal 1D complex convolution with the specified parameters.
-            /// </summary>
-            /// <param name="source">The source <see cref="ReadWriteTexture2D{T}"/> to read data from.</param>
-            /// <param name="target">The target <see cref="ReadWriteTexture2D{T, TPixel}"/> to write the results to.</param>
-            /// <param name="kernel">The <see cref="ReadOnlyBuffer{T}"/> with the values for the current complex kernel.</param>
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            private void ApplyHorizontalConvolution(
-                ReadWriteTexture2D<Vector4> source,
-                ReadWriteTexture2D<Rgba32, Vector4> target,
-                ReadOnlyBuffer<float> kernel)
-            {
-                int height = Source.Height;
-                int width = Source.Width;
-
-                HorizontalConvolutionProcessor shader = new(
-                    maxY: height - 1,
-                    maxX: width - 1,
-                    kernel.Length,
-                    source,
-                    target,
-                    kernel);
-
-                Gpu.Default.For(width, height, in shader);
             }
 
             /// <summary>
@@ -196,31 +142,29 @@ namespace ComputeSharp.BokehBlur.Processors
             [AutoConstructor]
             internal readonly partial struct HorizontalConvolutionProcessor : IComputeShader
             {
-                public readonly int maxY;
-                public readonly int maxX;
-                public readonly int kernelLength;
-
-                public readonly ReadWriteTexture2D<Vector4> source;
-                public readonly ReadWriteTexture2D<Rgba32, Vector4> target;
+                public readonly IReadWriteTexture2D<Vector4> source;
+                public readonly IReadWriteTexture2D<Vector4> target;
                 public readonly ReadOnlyBuffer<float> kernel;
 
                 /// <inheritdoc/>
-                public void Execute(ThreadIds ids)
+                public void Execute()
                 {
                     Vector4 result = Vector4.Zero;
+                    int maxY = source.Height - 1;
+                    int maxX = source.Width - 1;
+                    int kernelLength = kernel.Length;
                     int radiusX = kernelLength >> 1;
-                    int sourceOffsetColumnBase = ids.X;
-                    int offsetY = Hlsl.Clamp(ids.Y, 0, maxY);
+                    int offsetY = Hlsl.Clamp(ThreadIds.Y, 0, maxY);
 
                     for (int i = 0; i < kernelLength; i++)
                     {
-                        int offsetX = Hlsl.Clamp(sourceOffsetColumnBase + i - radiusX, 0, maxX);
+                        int offsetX = Hlsl.Clamp(ThreadIds.X + i - radiusX, 0, maxX);
                         Vector4 color = source[offsetX, offsetY];
 
                         result += kernel[i] * color;
                     }
 
-                    target[ids.XY] = result;
+                    target[ThreadIds.XY] = result;
                 }
             }
         }

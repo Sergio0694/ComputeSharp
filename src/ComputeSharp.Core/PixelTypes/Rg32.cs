@@ -30,8 +30,8 @@ namespace ComputeSharp
         /// <summary>
         /// Initializes a new instance of the <see cref="Rg32"/> struct.
         /// </summary>
-        /// <param name="x">The x-component</param>
-        /// <param name="y">The y-component</param>
+        /// <param name="r">The red component.</param>
+        /// <param name="g">The green component.</param>
         public Rg32(ushort r, ushort g)
         {
             R = r;

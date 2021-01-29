@@ -38,6 +38,11 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         private readonly IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods;
 
         /// <summary>
+        /// The collection of discovered constant definitions.
+        /// </summary>
+        private readonly IDictionary<IFieldSymbol, string> constantDefinitions;
+
+        /// <summary>
         /// The collection of processed local functions in the current tree.
         /// </summary>
         private readonly Dictionary<string, LocalFunctionStatementSyntax> localFunctions;
@@ -59,16 +64,19 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the target syntax tree.</param>
         /// <param name="discoveredTypes">The set of discovered custom types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
+        /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         public ShaderSourceRewriter(
             INamedTypeSymbol shaderType,
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
-            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods)
+            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
+            IDictionary<IFieldSymbol, string> constantDefinitions)
         {
             this.shaderType = shaderType;
             this.semanticModel = semanticModel;
             this.discoveredTypes = discoveredTypes;
             this.staticMethods = staticMethods;
+            this.constantDefinitions = constantDefinitions;
             this.localFunctions = new();
             this.implicitVariables = new();
         }
@@ -79,14 +87,17 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the target syntax tree.</param>
         /// <param name="discoveredTypes">The set of discovered custom types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
+        /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         public ShaderSourceRewriter(
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
-            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods)
+            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
+            IDictionary<IFieldSymbol, string> constantDefinitions)
         {
             this.semanticModel = semanticModel;
             this.discoveredTypes = discoveredTypes;
             this.staticMethods = staticMethods;
+            this.constantDefinitions = constantDefinitions;
             this.implicitVariables = new();
             this.localFunctions = new();
         }
@@ -95,6 +106,21 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// Gets the collection of processed local functions in the current tree.
         /// </summary>
         public IReadOnlyDictionary<string, LocalFunctionStatementSyntax> LocalFunctions => this.localFunctions;
+
+        /// <summary>
+        /// Gets whether or not the shader uses <see cref="GroupIds"/> at least once (except <see cref="GroupIds.Index"/>).
+        /// </summary>
+        public bool IsGroupIdsUsed { get; private set; }
+
+        /// <summary>
+        /// Gets whether or not the shader uses <see cref="GroupIds.Index/> at least once.
+        /// </summary>
+        public bool IsGroupIdsIndexUsed { get; private set; }
+
+        /// <summary>
+        /// Gets whether or not the shader uses <see cref="WarpIds"/> at least once.
+        /// </summary>
+        public bool IsWarpIdsUsed { get; set; }
 
         /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
         public MethodDeclarationSyntax? Visit(MethodDeclarationSyntax? node)
@@ -282,31 +308,93 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             if (node.IsKind(SyntaxKind.SimpleMemberAccessExpression) &&
                 this.semanticModel.GetOperation(node) is IMemberReferenceOperation operation)
             {
-                // If the current member access is to a constant, hardcode the value in HLSL
-                if (operation.ConstantValue is { HasValue: true } and { Value: object value })
+                // If the member access is a constant, track it and replace the tree with the processed constant name
+                if (operation is IFieldReferenceOperation fieldOperation && fieldOperation.Field.IsConst)
                 {
-                    return ParseExpression(value switch
-                    {
-                        IFormattable f => f.ToString(null, CultureInfo.InvariantCulture),
-                        _ => value.ToString()
-                    });
+                    this.constantDefinitions[fieldOperation.Field] = ((IFormattable)fieldOperation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
+
+                    var ownerTypeName = ((INamedTypeSymbol)fieldOperation.Field.ContainingSymbol).ToDisplayString().Replace(".", "__");
+                    var constantName = $"__{ownerTypeName}__{fieldOperation.Field.Name}";
+
+                    return IdentifierName(constantName);
                 }
 
                 // If the current member access is a field or property access, check the lookup table
                 // to see if the member should be rewritten for HLSL compliance, and rewrite if needed.
                 if (HlslKnownMembers.TryGetMappedName(operation.Member.ToDisplayString(), out string? mapping))
                 {
+                    // Mark which dispatch properties have been used, to optimize the declaration afterwards
+                    if (operation.Member.IsStatic)
+                    {
+                        string typeName = operation.Member.ContainingType.GetFullMetadataName();
+
+                        if (mapping == $"__{nameof(GroupIds)}__get_Index") IsGroupIdsIndexUsed = true;
+                        else if (typeName == typeof(GroupIds).FullName) IsGroupIdsUsed = true;
+                        else if (typeName == typeof(WarpIds).FullName) IsWarpIdsUsed = true;
+                    }
+
                     // Static and instance members are handled differently, with static members being
                     // converted into a literal expression, and instance getting an updated identifier.
-                    // For instance, consider these two cases:
+                    // For instance, consider these three cases:
                     //   - Vector3.One (static) => float3(1.0f, 1.0f, 1.0f)
-                    //   - ThredIds.X (instance) => [arg].x
+                    //   - ThreadIds.X (custom) => ThreadIds.x
+                    //   - uint3.X (instance) => [arg].x
                     return operation.Member.IsStatic switch
                     {
                         true => ParseExpression(mapping!),
                         false => updatedNode.WithName(IdentifierName(mapping!))
                     };
-                }                
+                }
+
+                // If the current member access is an access to any of the size properties in the available
+                // resource types (either buffer or texture types), then rewrite the subtree to transform the
+                // property access into an invocation of an autogenerated static helper method to get the target
+                // dimension for the buffer in use. The helper method is added to the list of static helpers.
+                if (operation is IPropertyReferenceOperation propertyOperation &&
+                    HlslKnownMembers.TryGetAccessorRankAndAxis(propertyOperation.Property.GetFullMetadataName(), out int rank, out int axis))
+                {
+                    IMethodSymbol key = propertyOperation.Property.GetMethod!;
+
+                    if (!this.staticMethods.TryGetValue(key, out MethodDeclarationSyntax? methodSyntax))
+                    {
+                        INamedTypeSymbol resourceType = (INamedTypeSymbol)this.semanticModel.GetTypeInfo(node.Expression).Type!;
+                        string resourceName = HlslKnownTypes.GetMappedName(resourceType);
+
+                        // Create a static method to get a specified dimension for a target resource type.
+                        // The method will automatically create the necessary number of temporary variables
+                        // depending on the rank of the input resource (eg. 2 for Texture2D<T> resources).
+                        // For instance, this code will generate the following tree for Texture2D<float>.Width:
+                        //
+                        // static int __get_Dimension0(Texture2D<float> texture)
+                        // {
+                        //     uint _0, _1;
+                        //     texture.GetDimensions(_0, _1);
+                        //
+                        //     return _0;
+                        // }
+                        methodSyntax =
+                            MethodDeclaration(PredefinedType(Token(SyntaxKind.IntKeyword)), $"__get_Dimension{axis}")
+                            .AddModifiers(Token(SyntaxKind.StaticKeyword))
+                            .AddParameterListParameters(
+                                Parameter(Identifier("resource"))
+                                .WithType(IdentifierName(resourceName)))
+                            .WithBody(Block(
+                                LocalDeclarationStatement(
+                                    VariableDeclaration(PredefinedType(Token(SyntaxKind.UIntKeyword)))
+                                    .AddVariables(Enumerable.Range(0, rank).Select(static i => VariableDeclarator(Identifier("_" + i))).ToArray())),
+                                ExpressionStatement(
+                                    InvocationExpression(MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("resource"),
+                                        IdentifierName("GetDimensions")))
+                                    .AddArgumentListArguments(Enumerable.Range(0, rank).Select(static i => Argument(IdentifierName("_" + i))).ToArray())),
+                                ReturnStatement(IdentifierName("_" + axis))));
+
+                        this.staticMethods.Add(key, methodSyntax);
+                    }
+
+                    return InvocationExpression(IdentifierName(methodSyntax.Identifier)).AddArgumentListArguments(Argument(updatedNode.Expression));
+                }
             }
 
             return updatedNode;
@@ -348,7 +436,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
                     if (!this.staticMethods.ContainsKey(method))
                     {
-                        ShaderSourceRewriter shaderSourceRewriter = new(this.semanticModel, this.discoveredTypes, this.staticMethods);
+                        ShaderSourceRewriter shaderSourceRewriter = new(this.semanticModel, this.discoveredTypes, this.staticMethods, this.constantDefinitions);
                         MethodDeclarationSyntax
                             methodNode = (MethodDeclarationSyntax)method.DeclaringSyntaxReferences[0].GetSyntax(),
                             processedMethod = shaderSourceRewriter.Visit(methodNode)!.NormalizeWhitespace().WithoutTrivia();
@@ -397,6 +485,24 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 this.implicitVariables.Add(VariableDeclaration(typeSyntax).AddVariables(VariableDeclarator(identifier)));
 
                 return updatedNode.WithExpression(IdentifierName(identifier));
+            }
+
+            return updatedNode;
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
+        {
+            var updatedNode = (IdentifierNameSyntax)base.VisitIdentifierName(node)!;
+
+            if (this.semanticModel.GetOperation(node) is IFieldReferenceOperation operation && operation.Field.IsConst)
+            {
+                this.constantDefinitions[operation.Field] = ((IFormattable)operation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
+
+                var ownerTypeName = ((INamedTypeSymbol)operation.Field.ContainingSymbol).ToDisplayString().Replace(".", "__");
+                var constantName = $"__{ownerTypeName}__{operation.Field.Name}";
+
+                return IdentifierName(constantName);
             }
 
             return updatedNode;

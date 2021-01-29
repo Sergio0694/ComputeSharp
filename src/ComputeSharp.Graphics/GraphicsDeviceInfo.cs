@@ -1,7 +1,7 @@
 ﻿using TerraFX.Interop;
 using static TerraFX.Interop.DXGI_ADAPTER_FLAG;
 
-namespace ComputeSharp.Graphics
+namespace ComputeSharp
 {
     /// <summary>
     /// A type containing info on a given DX12.0 device that can be used.
@@ -11,7 +11,7 @@ namespace ComputeSharp.Graphics
         /// <summary>
         /// Creates a new <see cref="GraphicsDeviceInfo"/> instance with the specified parameters.
         /// </summary>
-        /// <param name="description">The available info for the associate device.</param>
+        /// <param name="dxgiDescription1">The available info for the associated device.</param>
         internal unsafe GraphicsDeviceInfo(DXGI_ADAPTER_DESC1* dxgiDescription1)
         {
             Luid = Luid.FromLUID(dxgiDescription1->AdapterLuid);

@@ -30,8 +30,8 @@ namespace ComputeSharp
         /// <summary>
         /// Initializes a new instance of the <see cref="Rg16"/> struct.
         /// </summary>
-        /// <param name="x">The x-component</param>
-        /// <param name="y">The y-component</param>
+        /// <param name="r">The red component.</param>
+        /// <param name="g">The green component.</param>
         public Rg16(byte r, byte g)
         {
             R = r;
@@ -73,7 +73,7 @@ namespace ComputeSharp
         public static bool operator !=(Rg16 left, Rg16 right) => !left.Equals(right);
 
         /// <inheritdoc/>
-        public override readonly bool Equals(object obj) => obj is Rg16 rgba32 && Equals(rgba32);
+        public override readonly bool Equals(object? obj) => obj is Rg16 rgba32 && Equals(rgba32);
 
         /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

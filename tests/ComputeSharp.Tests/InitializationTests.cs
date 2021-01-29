@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using ComputeSharp.Graphics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests
@@ -87,9 +86,9 @@ namespace ComputeSharp.Tests
         {
             public readonly ReadWriteBuffer<int> buffer;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                buffer[ids.X] = ids.X;
+                buffer[ThreadIds.X] = ThreadIds.X;
             }
         }
     }

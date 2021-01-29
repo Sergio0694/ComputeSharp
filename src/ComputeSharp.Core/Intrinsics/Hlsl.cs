@@ -154,6 +154,28 @@ namespace ComputeSharp
         public static bool All(Float4 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(All)}({nameof(Float4)})");
 
         /// <summary>
+        /// Blocks execution of all threads in a group until all memory accesses have been completed.
+        /// </summary>
+        /// <remarks>
+        /// A memory barrier guarantees that outstanding memory operations have completed.
+        /// Threads are synchronized at GroupSync barriers.
+        /// This may stall a thread or threads if memory operations are in progress.
+        /// </remarks>
+        [PreserveMemberName]
+        public static void AllMemoryBarrier() => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(AllMemoryBarrier)}()");
+
+        /// <summary>
+        /// Blocks execution of all threads in a group until all memory accesses have been completed and all threads in the group have reached this call.
+        /// </summary>
+        /// <remarks>
+        /// A memory barrier guarantees that outstanding memory operations have completed.
+        /// Threads are synchronized at GroupSync barriers.
+        /// This may stall a thread or threads if memory operations are in progress.
+        /// </remarks>
+        [PreserveMemberName]
+        public static void AllMemoryBarrierWithGroupSync() => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(AllMemoryBarrierWithGroupSync)}()");
+
+        /// <summary>
         /// Determines if any components of the specified value are non-zero.
         /// </summary>
         /// <param name="x">The specified value.</param>
@@ -617,6 +639,18 @@ namespace ComputeSharp
         public static Float3 Degrees(Float4 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Degrees)}({nameof(Float4)})");
 
         /// <summary>
+        /// Blocks execution of all threads in a group until all device memory accesses have been completed.
+        /// </summary>
+        [PreserveMemberName]
+        public static void DeviceMemoryBarrier() => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(DeviceMemoryBarrier)}()");
+
+        /// <summary>
+        /// Blocks execution of all threads in a group until all device memory accesses have been completed and all threads in the group have reached this call.
+        /// </summary>
+        [PreserveMemberName]
+        public static void DeviceMemoryBarrierWithGroupSync() => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(DeviceMemoryBarrierWithGroupSync)}()");
+
+        /// <summary>
         /// Returns a distance scalar between two <see cref="Float2"/> values.
         /// </summary>
         /// <param name="x">The first <see cref="Float2"/> value to compare.</param>
@@ -869,6 +903,18 @@ namespace ComputeSharp
         /// <returns>The fractional part of the <paramref name="x"/> parameter.</returns>
         [Pure]
         public static Float4 Frexp(Float4 x, out Float4 exp) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Frexp)}({nameof(Float4)},{nameof(Float4)})");
+
+        /// <summary>
+        /// Blocks execution of all threads in a group until all group shared accesses have been completed.
+        /// </summary>
+        [PreserveMemberName]
+        public static void GroupMemoryBarrier() => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(GroupMemoryBarrier)}()");
+
+        /// <summary>
+        /// Blocks execution of all threads in a group until all group shared accesses have been completed and all threads in the group have reached this call.
+        /// </summary>
+        [PreserveMemberName]
+        public static void GroupMemoryBarrierWithGroupSync() => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(GroupMemoryBarrierWithGroupSync)}()");
 
         /// <summary>
         /// Performs a guaranteed atomic add of a value to a destination.

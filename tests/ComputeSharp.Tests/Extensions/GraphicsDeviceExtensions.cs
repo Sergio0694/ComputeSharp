@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using ComputeSharp.__Internals;
-using ComputeSharp.Graphics;
-using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Resources;
 
 #pragma warning disable CS0618
 

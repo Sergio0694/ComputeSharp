@@ -1,13 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TargetFrameworks>net5.0</TargetFrameworks>
+    <OutputPath>bin\Release</OutputPath>
+    <DocumentationFile>ComputeSharp.Graphics.xml</DocumentationFile>
+    <Description>ComputeSharp.Graphics</Description>
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="Microsoft.Toolkit" Version="7.0.0-preview4" />
-	<PackageReference Include="TerraFX.Interop.Windows" Version="10.0.19041-beta2-449553204" />
+    <PackageReference Include="Microsoft.Toolkit" Version="7.0.0-preview4" />
+    <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.19041-beta2" />
   </ItemGroup>
 
   <ItemGroup>

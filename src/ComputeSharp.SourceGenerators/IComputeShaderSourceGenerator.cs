@@ -12,6 +12,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static ComputeSharp.SourceGenerators.Helpers.SyntaxFactoryHelper;
 
 #pragma warning disable CS0618
 
@@ -45,40 +46,15 @@ namespace ComputeSharp.SourceGenerators
                 // We need to sets to track all discovered custom types and static methods
                 HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
                 Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
-
-                // Helper that converts a sequence of string sequences into a nested array expression.
-                // That is, this applies the following transformation:
-                //   - { ("K1", "V1"), ("K2", "V2") } => new object[] { new[] { "K1", "V1" }, new[] { "K2", "V2" } }
-                static ArrayCreationExpressionSyntax NestedArrayExpression(IEnumerable<IEnumerable<string>> groups)
-                {
-                    return
-                        ArrayCreationExpression(
-                        ArrayType(PredefinedType(Token(SyntaxKind.ObjectKeyword)))
-                        .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
-                        .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
-                        .AddExpressions(groups.Select(static group =>
-                            ImplicitArrayCreationExpression(InitializerExpression(SyntaxKind.ArrayInitializerExpression).AddExpressions(
-                                group.Select(static item => LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(item))).ToArray()))).ToArray()));
-                }
-
-                // Helper that converts a sequence of strings into an array expression.
-                // That is, this applies the following transformation:
-                //   - { "S1", "S2" } => new string[] { "S1", "S2" }
-                static ArrayCreationExpressionSyntax ArrayExpression(IEnumerable<string> values)
-                {
-                    return
-                        ArrayCreationExpression(
-                        ArrayType(PredefinedType(Token(SyntaxKind.StringKeyword)))
-                        .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
-                        .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
-                        .AddExpressions(values.Select(static value => LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(value))).ToArray()));
-                }
+                Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
                 // Explore the syntax tree and extract the processed info
                 var processedMembers = GetProcessedMembers(structDeclarationSymbol, discoveredTypes).ToArray();
-                var (entryPoint, localFunctions) = GetProcessedMethods(structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods);
+                var sharedBuffers = GetGroupSharedMembers(structDeclarationSymbol, discoveredTypes).ToArray();
+                var (entryPoint, localFunctions) = GetProcessedMethods(structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
                 var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
-                var processedMethods = localFunctions.Concat(staticMethods.Values.Select(static method => method.ToFullString())).ToArray();
+                var processedMethods = localFunctions.Concat(staticMethods.Values).Select(static method => method.NormalizeWhitespace().ToFullString()).ToArray();
+                var processedConstants = GetProcessedConstants(constantDefinitions);
 
                 // Create the compilation unit with the source attribute
                 var source =
@@ -90,7 +66,9 @@ namespace ComputeSharp.SourceGenerators
                             AttributeArgument(ArrayExpression(processedTypes)),
                             AttributeArgument(NestedArrayExpression(processedMembers)),
                             AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(entryPoint))),
-                            AttributeArgument(ArrayExpression(processedMethods)))))
+                            AttributeArgument(ArrayExpression(processedMethods)),
+                            AttributeArgument(NestedArrayExpression(processedConstants)),
+                            AttributeArgument(NestedArrayExpression(sharedBuffers)))))
                     .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                     .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
                     .NormalizeWhitespace()
@@ -112,6 +90,8 @@ namespace ComputeSharp.SourceGenerators
         {
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
+                if (fieldSymbol.IsStatic) continue;
+
                 INamedTypeSymbol typeSymbol = (INamedTypeSymbol)fieldSymbol.Type;
 
                 string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
@@ -131,6 +111,33 @@ namespace ComputeSharp.SourceGenerators
         }
 
         /// <summary>
+        /// Gets a sequence of captured members and their mapped names.
+        /// </summary>
+        /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+        /// <param name="types">The collection of currently discovered types.</param>
+        /// <returns>A sequence of captured members in <paramref name="structDeclarationSymbol"/>.</returns>
+        [Pure]
+        private static IEnumerable<(string Name, string Type, int? Count)> GetGroupSharedMembers(INamedTypeSymbol structDeclarationSymbol, ICollection<INamedTypeSymbol> types)
+        {
+            foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
+            {
+                if (!fieldSymbol.IsStatic) continue;
+
+                AttributeData attribute = fieldSymbol.GetAttributes().First(static a => a.AttributeClass is { Name: nameof(GroupSharedAttribute) });
+                int? bufferSize = (int?)attribute.ConstructorArguments.FirstOrDefault().Value;
+                IArrayTypeSymbol typeSymbol = (IArrayTypeSymbol)fieldSymbol.Type;
+
+                string typeName = HlslKnownTypes.GetMappedElementName(typeSymbol);
+
+                _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
+
+                yield return (mapping ?? fieldSymbol.Name, typeName, bufferSize);
+
+                types.Add((INamedTypeSymbol)typeSymbol.ElementType);
+            }
+        }
+
+        /// <summary>
         /// Gets a sequence of processed methods declared within a given type.
         /// </summary>
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
@@ -138,14 +145,16 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the type to process.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
+        /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
         [Pure]
-        private static (string EntryPoint, IEnumerable<string> Methods) GetProcessedMethods(
+        private static (string EntryPoint, IEnumerable<SyntaxNode> Methods) GetProcessedMethods(
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
-            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods)
+            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
+            IDictionary<IFieldSymbol, string> constantDefinitions)
         {
             // Find all declared methods in the type
             ImmutableArray<MethodDeclarationSyntax> methodDeclarations = (
@@ -154,39 +163,53 @@ namespace ComputeSharp.SourceGenerators
                 select (MethodDeclarationSyntax)syntaxNode).ToImmutableArray();
 
             string? entryPoint = null;
-            List<string> methods = new();
+            List<SyntaxNode> methods = new();
 
             foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
             {
                 IMethodSymbol methodDeclarationSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration)!;
-                ShaderSourceRewriter shaderSourceRewriter = new(structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods);
+                ShaderSourceRewriter shaderSourceRewriter = new(structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
 
                 // Rewrite the method syntax tree
-                var processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();
+                MethodDeclarationSyntax? processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();
 
                 // If the method is the shader entry point, do additional processing
                 if (methodDeclarationSymbol.Name == nameof(IComputeShader.Execute) &&
                     methodDeclarationSymbol.ReturnsVoid &&
                     methodDeclarationSymbol.TypeParameters.Length == 0 &&
-                    methodDeclarationSymbol.Parameters.Length == 1 &&
-                    methodDeclarationSymbol.Parameters[0].Type.ToDisplayString() == typeof(ThreadIds).FullName)
+                    methodDeclarationSymbol.Parameters.Length == 0)
                 {
-                    var parameterName = methodDeclarationSymbol.Parameters[0].Name;
-
-                    processedMethod = new ExecuteMethodRewriter(parameterName).Visit(processedMethod)!;
+                    processedMethod = new ExecuteMethodRewriter(shaderSourceRewriter).Visit(processedMethod)!;
 
                     entryPoint = processedMethod.NormalizeWhitespace().ToFullString();
                 }
-                else methods.Add(processedMethod.NormalizeWhitespace().ToFullString());
+                else methods.Add(processedMethod);
 
                 // Emit the extracted local functions
                 foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
                 {
-                    methods.Add(localFunction.Value.NormalizeWhitespace().ToFullString());
+                    methods.Add(localFunction.Value);
                 }
             }
 
             return (entryPoint!, methods);
+        }
+
+        /// <summary>
+        /// Gets a sequence of discovered constants.
+        /// </summary>
+        /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+        /// <returns>A sequence of discovered constants to declare in the shader.</returns>
+        [Pure]
+        internal static IEnumerable<IEnumerable<string>> GetProcessedConstants(IReadOnlyDictionary<IFieldSymbol, string> constantDefinitions)
+        {
+            foreach (var constant in constantDefinitions)
+            {
+                var ownerTypeName = ((INamedTypeSymbol)constant.Key.ContainingSymbol).ToDisplayString().Replace(".", "__");
+                var constantName = $"__{ownerTypeName}__{constant.Key.Name}";
+
+                yield return new string[] { constantName, constant.Value };
+            }
         }
 
         /// <summary>

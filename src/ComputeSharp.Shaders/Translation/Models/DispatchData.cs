@@ -64,14 +64,14 @@ namespace ComputeSharp.Shaders.Translation.Models
         /// <summary>
         /// Gets a <see cref="ReadOnlySpan{T}"/> with the padded data representing all the captured variables.
         /// </summary>
-        public unsafe ReadOnlySpan<Int4> Variables
+        public unsafe ReadOnlySpan<uint> Variables
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 ref byte r0 = ref MemoryMarshal.GetArrayDataReference(this.variablesArray);
-                ref Int4 r1 = ref Unsafe.As<byte, Int4>(ref r0);
-                int length = (int)((uint)this.variablesByteSize / (uint)sizeof(Int4));
+                ref uint r1 = ref Unsafe.As<byte, uint>(ref r0);
+                int length = (int)((uint)this.variablesByteSize / sizeof(uint));
 
                 return MemoryMarshal.CreateReadOnlySpan(ref r1, length);
             }

@@ -31,7 +31,25 @@ namespace ComputeSharp.Shaders.Renderer
             builder.AppendLine("//                  AUTO GENERATED");
             builder.AppendLine("// ================================================");
             builder.AppendLine("// This shader was created by ComputeSharp.");
-            builder.AppendLine("// See: https://github.com/Sergio0694/ComputeSharp.");            
+            builder.AppendLine("// See: https://github.com/Sergio0694/ComputeSharp.");
+
+            // Group size constants
+            builder.AppendLine();
+            builder.Append("#define __GroupSize__get_X ");
+            builder.AppendLine(threadsX.ToString());
+            builder.Append("#define __GroupSize__get_Y ");
+            builder.AppendLine(threadsY.ToString());
+            builder.Append("#define __GroupSize__get_Z ");
+            builder.AppendLine(threadsZ.ToString());
+
+            // User defined onstants
+            foreach (var constant in info.ConstantsInfo)
+            {
+                builder.Append("#define ");
+                builder.Append(constant.Key);
+                builder.Append(' ');
+                builder.AppendLine(constant.Value);
+            }
 
             // Declared types
             foreach (var type in info.DeclaredTypes)
@@ -100,6 +118,22 @@ namespace ComputeSharp.Shaders.Renderer
                 }
             }
 
+            // Shared buffers
+            foreach (var buffer in info.SharedBuffers)
+            {
+                builder.AppendLine();
+                builder.Append("groupshared ");
+                builder.Append(buffer.Value.Type);
+                builder.Append(' ');
+                builder.Append(buffer.Key);
+                builder.Append('[');
+
+                if (buffer.Value.Count is int count) builder.Append(count.ToString());
+                else builder.Append((threadsX * threadsY * threadsZ).ToString());
+
+                builder.AppendLine("];");
+            }
+
             // Captured methods
             foreach (var function in info.MethodsInfo)
             {
@@ -109,13 +143,7 @@ namespace ComputeSharp.Shaders.Renderer
 
             // Entry point
             builder.AppendLine();
-            builder.Append("[NumThreads(");
-            builder.Append(threadsX.ToString());
-            builder.Append(", ");
-            builder.Append(threadsY.ToString());
-            builder.Append(", ");
-            builder.Append(threadsZ.ToString());
-            builder.AppendLine(")]");
+            builder.AppendLine("[NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]");
             builder.AppendLine(info.EntryPoint);
 
             return builder;
@@ -163,11 +191,11 @@ namespace ComputeSharp.Shaders.Renderer
             /// Appends the input sequence of characters to the current buffer.
             /// </summary>
             /// <param name="value">The input characters to write.</param>
-            public void Append(ReadOnlySpan<char> value)
+            public void Append(string value)
             {
                 EnsureCapacity(value.Length);
 
-                value.CopyTo(this.array.AsSpan(this.index));
+                value.AsSpan().CopyTo(this.array.AsSpan(this.index));
 
                 this.index += value.Length;
             }
@@ -186,11 +214,11 @@ namespace ComputeSharp.Shaders.Renderer
             /// Appends the input sequence of characters to the current buffer, with a trailing new line.
             /// </summary>
             /// <param name="value">The input characters to write.</param>
-            public void AppendLine(ReadOnlySpan<char> value)
+            public void AppendLine(string value)
             {
                 EnsureCapacity(value.Length + 1);
 
-                value.CopyTo(this.array.AsSpan(this.index));
+                value.AsSpan().CopyTo(this.array.AsSpan(this.index));
 
                 this.index += value.Length;
 
@@ -221,7 +249,7 @@ namespace ComputeSharp.Shaders.Renderer
             /// <summary>
             /// Ensures that <see cref="array"/> has enough free space to contain a given number of new items.
             /// </summary>
-            /// <param name="sizeHint">The minimum number of items to ensure space for in <see cref="array"/>.</param>
+            /// <param name="requestedSize">The minimum number of items to ensure space for in <see cref="array"/>.</param>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             private void EnsureCapacity(int requestedSize)
             {
@@ -267,7 +295,7 @@ namespace ComputeSharp.Shaders.Renderer
             internal sealed class DebugView
             {
                 /// <summary>
-                /// Initializes a new instance of the <see cref="DebugView{T}"/> class with the specified parameters.
+                /// Initializes a new instance of the <see cref="DebugView"/> class with the specified parameters.
                 /// </summary>
                 /// <param name="builder">The input <see cref="ArrayPoolStringBuilder"/> instance to display.</param>
                 public DebugView(ArrayPoolStringBuilder builder)

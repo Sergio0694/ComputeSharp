@@ -6,7 +6,7 @@ using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Commands.Interop;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
-using ComputeSharp.Graphics.Interop;
+using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
@@ -14,7 +14,7 @@ using static TerraFX.Interop.D3D12_FEATURE;
 using static TerraFX.Interop.D3D12_FORMAT_SUPPORT1;
 using static TerraFX.Interop.DXGI_ADAPTER_FLAG;
 
-namespace ComputeSharp.Graphics
+namespace ComputeSharp
 {
     /// <summary>
     /// A <see langword="class"/> that represents a DX12-compatible GPU device that can be used to run compute shaders.
@@ -152,13 +152,13 @@ namespace ComputeSharp.Graphics
         internal bool IsCacheCoherentUMA { get; }
 
         /// <summary>
-        /// Checks whether the current device supports the creation of <see cref="Buffers.Abstract.Texture2D{T}"/>
-        /// resources for a specified type <typeparamref name="T"/>.
+        /// Checks whether the current device supports the creation of
+        /// <see cref="ReadOnlyTexture2D{T}"/> resources for a specified type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type of values to check support for.</typeparam>
-        /// <returns>Whether <see cref="Buffers.Abstract.Texture2D{T}"/> instances can be created by the current device.</returns>
+        /// <returns>Whether <see cref="ReadOnlyTexture2D{T}"/> instances can be created by the current device.</returns>
         [Pure]
-        public bool IsTexture2DSupportedForType<T>()
+        public bool IsReadOnlyTexture2DSupportedForType<T>()
             where T : unmanaged
         {
             ThrowIfDisposed();
@@ -167,13 +167,30 @@ namespace ComputeSharp.Graphics
         }
 
         /// <summary>
-        /// Checks whether the current device supports the creation of <see cref="Buffers.Abstract.Texture3D{T}"/>
-        /// resources for a specified type <typeparamref name="T"/>.
+        /// Checks whether the current device supports the creation of
+        /// <see cref="ReadWriteTexture2D{T}"/> resources for a specified type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type of values to check support for.</typeparam>
-        /// <returns>Whether <see cref="Buffers.Abstract.Texture3D{T}"/> instances can be created by the current device.</returns>
+        /// <returns>Whether <see cref="ReadWriteTexture2D{T}"/> instances can be created by the current device.</returns>
         [Pure]
-        public bool IsTexture3DSupportedForType<T>()
+        public bool IsReadWriteTexture2DSupportedForType<T>()
+            where T : unmanaged
+        {
+            ThrowIfDisposed();
+
+            return this.d3D12Device.Get()->IsDxgiFormatSupported(
+                DXGIFormatHelper.GetForType<T>(),
+                D3D12_FORMAT_SUPPORT1_TEXTURE2D | D3D12_FORMAT_SUPPORT1_TYPED_UNORDERED_ACCESS_VIEW);
+        }
+
+        /// <summary>
+        /// Checks whether the current device supports the creation of
+        /// <see cref="ReadOnlyTexture3D{T}"/> resources for a specified type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of values to check support for.</typeparam>
+        /// <returns>Whether <see cref="ReadOnlyTexture3D{T}"/> instances can be created by the current device.</returns>
+        [Pure]
+        public bool IsReadOnlyTexture3DSupportedForType<T>()
             where T : unmanaged
         {
             ThrowIfDisposed();
@@ -181,7 +198,24 @@ namespace ComputeSharp.Graphics
             return this.d3D12Device.Get()->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE3D);
         }
 
-        /// <inheritdoc cref="ID3D12DescriptorHandleAllocator.Allocate"/>
+        /// <summary>
+        /// Checks whether the current device supports the creation of
+        /// <see cref="ReadWriteTexture3D{T}"/> resources for a specified type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of values to check support for.</typeparam>
+        /// <returns>Whether <see cref="ReadWriteTexture3D{T}"/> instances can be created by the current device.</returns>
+        [Pure]
+        public bool IsReadWriteTexture3DSupportedForType<T>()
+            where T : unmanaged
+        {
+            ThrowIfDisposed();
+
+            return this.d3D12Device.Get()->IsDxgiFormatSupported(
+                DXGIFormatHelper.GetForType<T>(),
+                D3D12_FORMAT_SUPPORT1_TEXTURE3D | D3D12_FORMAT_SUPPORT1_TYPED_UNORDERED_ACCESS_VIEW);
+        }
+
+        /// <inheritdoc cref="ID3D12DescriptorHandleAllocator.Rent"/>
         internal void RentShaderResourceViewDescriptorHandles(
             out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
             out D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle)

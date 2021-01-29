@@ -2,7 +2,7 @@ using System;
 using System.Numerics;
 using System.Reflection;
 using ComputeSharp.__Internals;
-using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Resources;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

@@ -1,6 +1,11 @@
 <Project>
   <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
+    <Company>Sergio Pedri</Company>
+    <Copyright>Copyright (c) 2021 Sergio Pedri</Copyright>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

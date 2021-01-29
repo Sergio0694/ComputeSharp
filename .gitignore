@@ -330,4 +330,7 @@ ASALocalRun/
 .mfractor/
 
 # Sample images
-**/city_*.jpg
+samples/**/city_*.jpg
+
+# XML docs files
+src/**/ComputeSharp*.xml

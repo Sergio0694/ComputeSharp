@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using ComputeSharp.Graphics.Buffers.Abstract;
+using ComputeSharp.Resources;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -223,9 +223,9 @@ namespace ComputeSharp.Tests
             public readonly ConstantBuffer<int> source;
             public readonly ReadWriteBuffer<int> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.X] = source[ids.X];
+                destination[ThreadIds.X] = source[ThreadIds.X];
             }
         }
 
@@ -250,9 +250,9 @@ namespace ComputeSharp.Tests
             public readonly ReadOnlyBuffer<int> source;
             public readonly ReadWriteBuffer<int> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.X] = source[ids.X];
+                destination[ThreadIds.X] = source[ThreadIds.X];
             }
         }
 
@@ -277,9 +277,9 @@ namespace ComputeSharp.Tests
             public readonly ReadWriteBuffer<int> source;
             public readonly ReadWriteBuffer<int> destination;
 
-            public void Execute(ThreadIds ids)
+            public void Execute()
             {
-                destination[ids.X] = source[ids.X];
+                destination[ThreadIds.X] = source[ThreadIds.X];
             }
         }
     }
