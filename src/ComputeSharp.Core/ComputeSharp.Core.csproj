@@ -4,6 +4,7 @@
     <TargetFrameworks>net5.0</TargetFrameworks>
     <OutputPath>bin\Release</OutputPath>
     <DocumentationFile>ComputeSharp.Core.xml</DocumentationFile>
+    <Description>ComputeSharp.Core</Description>
   </PropertyGroup>
 
 </Project>

@@ -4,6 +4,7 @@
     <TargetFrameworks>net5.0</TargetFrameworks>
     <OutputPath>bin\Release</OutputPath>
     <DocumentationFile>ComputeSharp.Graphics.xml</DocumentationFile>
+    <Description>ComputeSharp.Graphics</Description>
   </PropertyGroup>
 
   <ItemGroup>

@@ -2,11 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <PackFolder>analyzers\dotnet\cs</PackFolder>
     <PackSymbols>false</PackSymbols>
+    <Description>ComputeSharp.SourceGenerators</Description>
   </PropertyGroup>
 
   <!--The source generator cannot contain package references or project references, so instead we're just
