@@ -55,7 +55,6 @@ namespace ComputeSharp
             texture.GetData(destination.AsSpan(), 0, 0, texture.Width, texture.Height);
         }
 
-#if NET5_0
         /// <summary>
         /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target array.
         /// </summary>
@@ -69,7 +68,6 @@ namespace ComputeSharp
         {
             texture.GetData(destination.AsSpan(), x, y);
         }
-#endif
 
         /// <summary>
         /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target array.
@@ -100,7 +98,6 @@ namespace ComputeSharp
             texture.GetData(destination.AsSpan(offset), 0, 0, texture.Width, texture.Height);
         }
 
-#if NET5_0
         /// <summary>
         /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target array.
         /// </summary>
@@ -115,7 +112,6 @@ namespace ComputeSharp
         {
             texture.GetData(destination.AsSpan(offset), x, y);
         }
-#endif
 
         /// <summary>
         /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target array.
@@ -147,7 +143,6 @@ namespace ComputeSharp
             texture.GetData(destination, 0, 0, texture.Width, texture.Height);
         }
 
-#if NET5_0
         /// <summary>
         /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target <see cref="Span{T}"/>.
         /// </summary>
@@ -164,7 +159,6 @@ namespace ComputeSharp
 
             texture.GetData(destination, offsetX, offsetY, width, height);
         }
-#endif
 
         /// <summary>
         /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target <see cref="Span{T}"/>.
@@ -209,7 +203,6 @@ namespace ComputeSharp
             texture.SetData(source.AsSpan(), 0, 0, texture.Width, texture.Height);
         }
 
-#if NET5_0
         /// <summary>
         /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="Texture2D{T}"/> instance.
         /// </summary>
@@ -223,7 +216,6 @@ namespace ComputeSharp
         {
             texture.SetData(source.AsSpan(), x, y);
         }
-#endif
 
         /// <summary>
         /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="Texture2D{T}"/> instance.
@@ -241,7 +233,6 @@ namespace ComputeSharp
             texture.SetData(source.AsSpan(), x, y, width, height);
         }
 
-#if NET5_0
         /// <summary>
         /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="Texture2D{T}"/> instance.
         /// </summary>
@@ -256,7 +247,6 @@ namespace ComputeSharp
         {
             texture.SetData(source.AsSpan(offset), x, y);
         }
-#endif
 
         /// <summary>
         /// Writes the contents of a given <typeparamref name="T"/> array to a specified area of the current <see cref="Texture2D{T}"/> instance.
@@ -288,7 +278,6 @@ namespace ComputeSharp
             texture.SetData(source, 0, 0, texture.Width, texture.Height);
         }
 
-#if NET5_0
         /// <summary>
         /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to a specified area of the current <see cref="Texture2D{T}"/> instance.
         /// </summary>
@@ -305,7 +294,6 @@ namespace ComputeSharp
 
             texture.SetData(source, offsetX, offsetY, width, height);
         }
-#endif
 
         /// <summary>
         /// Writes the contents of a given <see cref="ReadOnlySpan{T}"/> to a specified area of the current <see cref="Texture2D{T}"/> instance.

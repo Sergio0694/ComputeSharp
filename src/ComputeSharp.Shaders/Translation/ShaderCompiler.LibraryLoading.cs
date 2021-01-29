@@ -1,9 +1,7 @@
-﻿#if NET5_0
-using System;
+﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using FX = TerraFX.Interop.Windows;
-#endif
 
 namespace ComputeSharp.Shaders.Translation
 {
@@ -15,7 +13,6 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         private static void InitializeDxcLibrariesLoading()
         {
-#if NET5_0
             // Test whether the native libraries are present in the same folder of the executable
             // (which is the case when the program was built with a runtime identifier), or whether
             // they are in the "runtimes\win-x64\native" folder in the executable directory.
@@ -60,7 +57,6 @@ namespace ComputeSharp.Shaders.Translation
 
                 return IntPtr.Zero;
             };
-#endif
         }
     }
 }

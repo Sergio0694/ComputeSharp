@@ -54,16 +54,10 @@ namespace ComputeSharp.Shaders.Translation.Models
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-#if NET5_0
                 ref ulong r0 = ref MemoryMarshal.GetArrayDataReference(this.resourcesArray);
                 ref D3D12_GPU_DESCRIPTOR_HANDLE r1 = ref Unsafe.As<ulong, D3D12_GPU_DESCRIPTOR_HANDLE>(ref r0);
 
                 return MemoryMarshal.CreateReadOnlySpan(ref r1, this.resourcesCount);
-#else
-                Span<ulong> span = this.resourcesArray.AsSpan(0, this.resourcesCount);
-
-                return MemoryMarshal.Cast<ulong, D3D12_GPU_DESCRIPTOR_HANDLE>(span);
-#endif
             }
         }
 
@@ -75,17 +69,11 @@ namespace ComputeSharp.Shaders.Translation.Models
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-#if NET5_0
                 ref byte r0 = ref MemoryMarshal.GetArrayDataReference(this.variablesArray);
                 ref uint r1 = ref Unsafe.As<byte, uint>(ref r0);
                 int length = (int)((uint)this.variablesByteSize / sizeof(uint));
 
                 return MemoryMarshal.CreateReadOnlySpan(ref r1, length);
-#else
-                Span<byte> span = this.variablesArray.AsSpan(0, this.variablesByteSize);
-
-                return MemoryMarshal.Cast<byte, uint>(span);
-#endif
             }
         }
 
