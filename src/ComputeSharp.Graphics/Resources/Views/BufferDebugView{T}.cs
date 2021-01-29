@@ -1,9 +1,5 @@
-﻿using System.Diagnostics;
-#if NET5_0
-using GC = System.GC;
-#else
-using GC = Polyfills.GC;
-#endif
+﻿using System;
+using System.Diagnostics;
 
 namespace ComputeSharp.Resources.Views
 {

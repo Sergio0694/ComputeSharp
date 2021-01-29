@@ -4,14 +4,10 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using ComputeSharp.__Internals;
 using ComputeSharp.Shaders.Translation.Models;
 using TerraFX.Interop;
-#if NET5_0
-using MemoryMarshal = System.Runtime.InteropServices.MemoryMarshal;
-#else
-using MemoryMarshal = Polyfills.MemoryMarshal;
-#endif
 
 #pragma warning disable CS0618
 

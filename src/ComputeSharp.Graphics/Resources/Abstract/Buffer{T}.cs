@@ -1,5 +1,6 @@
 ﻿using System.Buffers;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Resources.Enums;
@@ -7,11 +8,6 @@ using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
-#if NET5_0
-using MemoryMarshal = System.Runtime.InteropServices.MemoryMarshal;
-#else
-using MemoryMarshal = Polyfills.MemoryMarshal;
-#endif
 
 namespace ComputeSharp.Resources
 {
