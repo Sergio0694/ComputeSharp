@@ -65,18 +65,6 @@ namespace ComputeSharp.Graphics
         }
 
         /// <summary>
-        /// Gets the address of the current <see cref="AllocatorPtr"/> instance as a raw <see cref="Allocator"/> double pointer.
-        /// This method is only valid when the current <see cref="AllocatorPtr"/> instance is on the stack or pinned.
-        /// </summary>
-        /// <returns>The raw pointer to the current <see cref="AllocatorPtr"/> instance.</returns>
-        [Pure]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly Allocator** GetAddressOf()
-        {
-            return (Allocator**)Unsafe.AsPointer(ref Unsafe.AsRef(in this));
-        }
-
-        /// <summary>
         /// Gets the address of the current <see cref="AllocatorPtr"/> instance as a managed <see cref="Allocator"/> reference to pointer.
         /// </summary>
         /// <returns>The reference to the current <see cref="AllocatorPtr"/> instance.</returns>
@@ -88,21 +76,6 @@ namespace ComputeSharp.Graphics
             {
                 return ref *ptr;
             }
-        }
-
-        /// <summary>
-        /// Gets the address of the current <see cref="AllocatorPtr"/> instance as a raw <see langword="void"/> double pointer.
-        /// </summary>
-        /// <returns>The raw pointer to the input <see cref="AllocatorPtr"/> instance.</returns>
-        /// <remarks>This method is only valid when the current <see cref="AllocatorPtr"/> instance is on the stack or pinned.</remarks>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public AllocatorPtr Move()
-        {
-            AllocatorPtr copy = this;
-
-            this = default;
-
-            return copy;
         }
     }
 }

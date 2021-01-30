@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using ComputeSharp.__Internals;
 using ComputeSharp.Exceptions;
+using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
@@ -56,6 +57,11 @@ namespace ComputeSharp.Resources
         /// </summary>
         private readonly D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint;
 
+        /// The <see cref="Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>, if any.
+        /// </summary>
+        /// <remarks>This will be <see langword="null"/> if the owning device has <see cref="GraphicsDevice.IsCacheCoherentUMA"/> set.</remarks>
+        private AllocationPtr allocation;
+
         /// <summary>
         /// Creates a new <see cref="Texture3D{T}"/> instance with the specified parameters.
         /// </summary>
@@ -81,15 +87,30 @@ namespace ComputeSharp.Resources
 
             GraphicsDevice = device;
 
-            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(
-                resourceType,
-                allocationMode,
-                DXGIFormatHelper.GetForType<T>(),
-                (uint)width,
-                (uint)height,
-                (ushort)depth,
-                device.IsCacheCoherentUMA,
-                out this.d3D12ResourceState);
+            if (device.IsCacheCoherentUMA)
+            {
+                this.d3D12Resource = device.D3D12Device->CreateCommittedResource(
+                    resourceType,
+                    allocationMode,
+                    DXGIFormatHelper.GetForType<T>(),
+                    (uint)width,
+                    (uint)height,
+                    (ushort)depth,
+                    true,
+                    out this.d3D12ResourceState);
+            }
+            else
+            {
+                this.allocation = device.Allocator->CreateResource(
+                    resourceType,
+                    allocationMode,
+                    DXGIFormatHelper.GetForType<T>(),
+                    (uint)width,
+                    (uint)height,
+                    (ushort)depth,
+                    out this.d3D12ResourceState);
+                this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
+            }
 
             this.d3D12CommandListType = this.d3D12ResourceState == D3D12_RESOURCE_STATE_COMMON
                 ? D3D12_COMMAND_LIST_TYPE_COPY
@@ -181,7 +202,18 @@ namespace ComputeSharp.Resources
                 out ulong rowSizeInBytes,
                 out ulong totalSizeInBytes);
 
-            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, AllocationMode.Default, totalSizeInBytes, GraphicsDevice.IsCacheCoherentUMA);
+            using AllocationPtr allocation = default;
+            using ComPtr<ID3D12Resource> d3D12Resource = default;
+
+            if (GraphicsDevice.IsCacheCoherentUMA)
+            {
+                *&d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, AllocationMode.Default, totalSizeInBytes, true);
+            }
+            else
+            {
+                *&allocation = GraphicsDevice.Allocator->CreateResource(ResourceType.ReadBack, AllocationMode.Default, totalSizeInBytes);
+                *&d3D12Resource = new ComPtr<ID3D12Resource>(allocation.Get()->GetResource());
+            }
 
             using (CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType))
             {
@@ -337,7 +369,18 @@ namespace ComputeSharp.Resources
                 out ulong rowSizeInBytes,
                 out ulong totalSizeInBytes);
 
-            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, AllocationMode.Default, totalSizeInBytes, GraphicsDevice.IsCacheCoherentUMA);
+            using AllocationPtr allocation = default;
+            using ComPtr<ID3D12Resource> d3D12Resource = default;
+
+            if (GraphicsDevice.IsCacheCoherentUMA)
+            {
+                *&d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, AllocationMode.Default, totalSizeInBytes, true);
+            }
+            else
+            {
+                *&allocation = GraphicsDevice.Allocator->CreateResource(ResourceType.Upload, AllocationMode.Default, totalSizeInBytes);
+                *&d3D12Resource = new ComPtr<ID3D12Resource>(allocation.Get()->GetResource());
+            }
 
             using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
             fixed (void* sourcePointer = &source)

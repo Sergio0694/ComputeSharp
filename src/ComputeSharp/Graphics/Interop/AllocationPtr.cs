@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using TerraFX.Interop;
@@ -74,20 +73,6 @@ namespace ComputeSharp.Graphics
         public readonly Allocation** GetAddressOf()
         {
             return (Allocation**)Unsafe.AsPointer(ref Unsafe.AsRef(in this));
-        }
-
-        /// <summary>
-        /// Gets the address of the current <see cref="AllocationPtr"/> instance as a managed <see cref="Allocation"/> reference to pointer.
-        /// </summary>
-        /// <returns>The reference to the current <see cref="AllocationPtr"/> instance.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public readonly ref Allocation* GetPinnableReference()
-        {
-            fixed (Allocation** ptr = &this.pointer)
-            {
-                return ref *ptr;
-            }
         }
 
         /// <summary>

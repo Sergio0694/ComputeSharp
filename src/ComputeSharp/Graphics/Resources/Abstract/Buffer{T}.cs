@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
+using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
@@ -39,6 +40,12 @@ namespace ComputeSharp.Resources
         protected readonly nint SizeInBytes;
 
         /// <summary>
+        /// The <see cref="Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>, if any.
+        /// </summary>
+        /// <remarks>This will be <see langword="null"/> if the owning device has <see cref="GraphicsDevice.IsCacheCoherentUMA"/> set.</remarks>
+        private AllocationPtr allocation;
+
+        /// <summary>
         /// Creates a new <see cref="Buffer{T}"/> instance with the specified parameters.
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
@@ -64,7 +71,15 @@ namespace ComputeSharp.Resources
             GraphicsDevice = device;
             Length = length;
 
-            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, allocationMode, (ulong)SizeInBytes, device.IsCacheCoherentUMA);
+            if (device.IsCacheCoherentUMA)
+            {
+                this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, allocationMode, (ulong)SizeInBytes, true);
+            }
+            else
+            {
+                this.allocation = device.Allocator->CreateResource(resourceType, allocationMode, (ulong)SizeInBytes);
+                this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
+            }
 
             device.RentShaderResourceViewDescriptorHandles(out D3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 
@@ -156,6 +171,7 @@ namespace ComputeSharp.Resources
         protected override bool OnDispose()
         {
             this.d3D12Resource.Dispose();
+            this.allocation.Dispose();
 
             if (GraphicsDevice?.IsDisposed == false)
             {
