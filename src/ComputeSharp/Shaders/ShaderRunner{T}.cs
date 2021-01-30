@@ -212,7 +212,7 @@ namespace ComputeSharp.Shaders
             using ComPtr<ID3D12RootSignature> d3D12RootSignature = device.D3D12Device->CreateRootSignature(shaderData.Loader.D3D12Root32BitConstantsCount, shaderData.Loader.D3D12DescriptorRanges1);
             using ComPtr<ID3D12PipelineState> d3D12PipelineState = device.D3D12Device->CreateComputePipelineState(d3D12RootSignature.Get(), shaderData.Bytecode.D3D12ShaderBytecode);
 
-            pipelineData = new PipelineData(d3D12RootSignature.Move(), d3D12PipelineState.Move());
+            pipelineData = new PipelineData(d3D12RootSignature.Get(), d3D12PipelineState.Get());
 
             shaderData.CachedPipelines.Add(device, pipelineData);
         }

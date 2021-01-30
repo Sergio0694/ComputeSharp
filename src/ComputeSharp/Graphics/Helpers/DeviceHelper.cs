@@ -66,7 +66,7 @@ namespace ComputeSharp.Graphics.Helpers
             if (TryGetDefaultDevice(d3D12Device.GetAddressOf(), dxgiAdapter.GetAddressOf(), &dxgiDescription1) ||
                 TryGetWarpDevice(d3D12Device.GetAddressOf(), dxgiAdapter.GetAddressOf(), &dxgiDescription1))
             {
-                return GetOrCreateDevice(d3D12Device.Move(), dxgiAdapter.Get(), &dxgiDescription1);
+                return GetOrCreateDevice(d3D12Device.Get(), dxgiAdapter.Get(), &dxgiDescription1);
             }
 
             return ThrowHelper.ThrowNotSupportedException<GraphicsDevice>("There isn't a supported GPU device on the current machine");

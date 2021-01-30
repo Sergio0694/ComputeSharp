@@ -23,10 +23,10 @@ namespace ComputeSharp.Graphics.Commands
         /// </summary>
         /// <param name="d3D12RootSignature">The <see cref="ID3D12RootSignature"/> value for the current shader.</param>
         /// <param name="d3D12PipelineState">The compiled pipeline state to reuse for the current shader.</param>
-        public PipelineData(ComPtr<ID3D12RootSignature> d3D12RootSignature, ComPtr<ID3D12PipelineState> d3D12PipelineState)
+        public PipelineData(ID3D12RootSignature* d3D12RootSignature, ID3D12PipelineState* d3D12PipelineState)
         {
-            this.d3D12RootSignature = d3D12RootSignature;
-            this.d3D12PipelineState = d3D12PipelineState;
+            this.d3D12RootSignature = new ComPtr<ID3D12RootSignature>(d3D12RootSignature);
+            this.d3D12PipelineState = new ComPtr<ID3D12PipelineState>(d3D12PipelineState);
         }
 
         /// <summary>

@@ -28,7 +28,7 @@ namespace ComputeSharp.Graphics.Helpers
         /// <param name="dxgiAdapter">The <see cref="IDXGIAdapter"/> that <paramref name="d3D12Device"/> was created from.</param>
         /// <param name="dxgiDescription1">The available info for the <see cref="GraphicsDevice"/> instance.</param>
         /// <returns>A <see cref="GraphicsDevice"/> instance for the input device.</returns>
-        private static unsafe GraphicsDevice GetOrCreateDevice(ComPtr<ID3D12Device> d3D12Device, IDXGIAdapter* dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1)
+        private static unsafe GraphicsDevice GetOrCreateDevice(ID3D12Device* d3D12Device, IDXGIAdapter* dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1)
         {
             lock (DevicesCache)
             {
