@@ -115,9 +115,12 @@ namespace ComputeSharp
             allocatorDesc.pDevice = d3D12Device;
             allocatorDesc.pAdapter = dxgiAdapter;
 
-            fixed (Allocator** allocator = this.allocator)
+            if (!IsCacheCoherentUMA)
             {
-                D3D12MemoryAllocator.CreateAllocator(&allocatorDesc, allocator).Assert();
+                fixed (Allocator** allocator = this.allocator)
+                {
+                    D3D12MemoryAllocator.CreateAllocator(&allocatorDesc, allocator).Assert();
+                }
             }
         }
 
