@@ -73,11 +73,17 @@ namespace ComputeSharp
         private ulong nextD3D12CopyFenceValue = 1;
 
         /// <summary>
+        /// The <see cref="Allocator"/> in use associated to the current device.
+        /// </summary>
+        internal Allocator* allocator;
+
+        /// <summary>
         /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="ID3D12Device"/>.
         /// </summary>
         /// <param name="d3D12Device">The <see cref="ID3D12Device"/> to use for the new <see cref="GraphicsDevice"/> instance.</param>
+        /// <param name="dxgiAdapter">The <see cref="IDXGIAdapter"/> that <paramref name="d3D12Device"/> was created from.</param>
         /// <param name="dxgiDescription1">The available info for the new <see cref="GraphicsDevice"/> instance.</param>
-        internal GraphicsDevice(ComPtr<ID3D12Device> d3D12Device, DXGI_ADAPTER_DESC1* dxgiDescription1)
+        internal GraphicsDevice(ComPtr<ID3D12Device> d3D12Device, IDXGIAdapter* dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1)
         {
             this.d3D12Device = d3D12Device;
             this.d3D12ComputeCommandQueue = d3D12Device.Get()->CreateCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE);
@@ -103,6 +109,15 @@ namespace ComputeSharp
             var d3D12Architecture1Data = d3D12Device.Get()->CheckFeatureSupport<D3D12_FEATURE_DATA_ARCHITECTURE1>(D3D12_FEATURE_ARCHITECTURE1);
 
             IsCacheCoherentUMA = d3D12Architecture1Data.CacheCoherentUMA != 0;
+
+            ALLOCATOR_DESC allocatorDesc = default;
+            allocatorDesc.pDevice = d3D12Device.Get();
+            allocatorDesc.pAdapter = dxgiAdapter;
+
+            fixed (Allocator** allocator = &this.allocator)
+            {
+                D3D12MemoryAllocator.CreateAllocator(&allocatorDesc, allocator).Assert();
+            }
         }
 
         /// <summary>
@@ -316,6 +331,12 @@ namespace ComputeSharp
             this.computeCommandAllocatorPool.Dispose();
             this.copyCommandAllocatorPool.Dispose();
             this.shaderResourceViewDescriptorAllocator.Dispose();
+
+            if (this.allocator != null)
+            {
+                this.allocator->Release();
+                this.allocator = null;
+            }
 
             return true;
         }

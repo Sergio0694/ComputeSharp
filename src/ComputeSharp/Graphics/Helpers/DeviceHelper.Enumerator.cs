@@ -141,7 +141,7 @@ namespace ComputeSharp.Graphics.Helpers
                                     FX.__uuidof<ID3D12Device>(),
                                     d3D12Device.GetVoidAddressOf()).Assert();
 
-                                this.graphicsDevice = GetOrCreateDevice(d3D12Device.Move(), &dxgiDescription1);
+                                this.graphicsDevice = GetOrCreateDevice(d3D12Device.Move(), (IDXGIAdapter*)dxgiAdapter1.Get(), &dxgiDescription1);
                                 this.isCompleted = true;
 
                                 return true;
@@ -182,7 +182,7 @@ namespace ComputeSharp.Graphics.Helpers
                                     FX.__uuidof<ID3D12Device>(),
                                     d3D12Device.GetVoidAddressOf()).Assert();
 
-                                this.graphicsDevice = GetOrCreateDevice(d3D12Device.Move(), &dxgiDescription1);
+                                this.graphicsDevice = GetOrCreateDevice(d3D12Device.Move(), (IDXGIAdapter*)dxgiAdapter1.Get(), &dxgiDescription1);
 
                                 return true;
                             }

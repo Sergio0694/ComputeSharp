@@ -10,7 +10,7 @@ using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_DESCRIPTOR_RANGE_TYPE;
 
-#pragma warning disable CS0618, CS8618
+#pragma warning disable CS0419, CS0618, CS8618
 
 namespace ComputeSharp.Shaders.Translation
 {

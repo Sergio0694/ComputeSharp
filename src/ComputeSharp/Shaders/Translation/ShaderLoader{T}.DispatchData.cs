@@ -9,7 +9,7 @@ using ComputeSharp.__Internals;
 using ComputeSharp.Shaders.Translation.Models;
 using TerraFX.Interop;
 
-#pragma warning disable CS0618
+#pragma warning disable CS0419, CS0618
 
 namespace ComputeSharp.Shaders.Translation
 {
