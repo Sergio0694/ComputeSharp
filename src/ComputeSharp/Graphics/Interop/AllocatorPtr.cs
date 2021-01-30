@@ -1,9 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using TerraFX.Interop;
 
-namespace ComputeSharp.Graphics.Interop
+namespace ComputeSharp.Graphics
 {
     /// <summary>
     /// A <see cref="ComPtr{T}"/>-equivalent type to safely work with <see cref="Allocator"/> pointers.
@@ -26,6 +27,16 @@ namespace ComputeSharp.Graphics.Interop
         public AllocatorPtr(Allocator* other)
         {
             pointer = other;
+        }
+
+        /// <summary>
+        /// Unwraps a <see cref="AllocatorPtr"/> instance and returns the internal raw pointer.
+        /// </summary>
+        /// <param name="other">The <see cref="AllocatorPtr"/> instance to unwrap.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator Allocator*(AllocatorPtr other)
+        {
+            return other.Get();
         }
 
         /// <inheritdoc/>
@@ -66,16 +77,17 @@ namespace ComputeSharp.Graphics.Interop
         }
 
         /// <summary>
-        /// Gets the address of the current <see cref="AllocatorPtr"/> instance as a raw <see langword="void"/> double pointer.
+        /// Gets the address of the current <see cref="AllocatorPtr"/> instance as a managed <see cref="Allocator"/> reference to pointer.
         /// </summary>
-        /// <returns>The raw pointer to the input <see cref="AllocatorPtr"/> instance.</returns>
-        /// <remarks>This method is only valid when the current <see cref="AllocatorPtr"/> instance is on the stack or pinned.</remarks>
-        [Pure]
+        /// <returns>The reference to the current <see cref="AllocatorPtr"/> instance.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public readonly void** GetVoidAddressOf<T>()
-            where T : unmanaged
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public readonly ref Allocator* GetPinnableReference()
         {
-            return (void**)Unsafe.AsPointer(ref Unsafe.AsRef(in this));
+            fixed (Allocator** ptr = &this.pointer)
+            {
+                return ref *ptr;
+            }
         }
 
         /// <summary>

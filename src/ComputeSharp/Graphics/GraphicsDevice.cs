@@ -2,6 +2,7 @@
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
+using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Commands.Interop;
 using ComputeSharp.Graphics.Extensions;
@@ -75,7 +76,7 @@ namespace ComputeSharp
         /// <summary>
         /// The <see cref="Allocator"/> in use associated to the current device.
         /// </summary>
-        internal Allocator* allocator;
+        internal AllocatorPtr allocator;
 
         /// <summary>
         /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="ID3D12Device"/>.
@@ -114,7 +115,7 @@ namespace ComputeSharp
             allocatorDesc.pDevice = d3D12Device;
             allocatorDesc.pAdapter = dxgiAdapter;
 
-            fixed (Allocator** allocator = &this.allocator)
+            fixed (Allocator** allocator = this.allocator)
             {
                 D3D12MemoryAllocator.CreateAllocator(&allocatorDesc, allocator).Assert();
             }
@@ -160,6 +161,11 @@ namespace ComputeSharp
         /// Gets the underlying <see cref="ID3D12Device"/> wrapped by the current instance.
         /// </summary>
         internal ID3D12Device* D3D12Device => this.d3D12Device;
+
+        /// <summary>
+        /// Gets the underlying <see cref="Allocator"/> wrapped by the current instance.
+        /// </summary>
+        internal Allocator* Allocator => this.allocator;
 
         /// <summary>
         /// Gets whether or not the current device has a cache coherent UMA architecture.
@@ -331,12 +337,7 @@ namespace ComputeSharp
             this.computeCommandAllocatorPool.Dispose();
             this.copyCommandAllocatorPool.Dispose();
             this.shaderResourceViewDescriptorAllocator.Dispose();
-
-            if (this.allocator != null)
-            {
-                this.allocator->Release();
-                this.allocator = null;
-            }
+            this.allocator.Dispose();
 
             return true;
         }
