@@ -14,7 +14,7 @@ namespace ComputeSharp
     /// A <see langword="class"/> representing a typed buffer stored on CPU memory, that can be used to transfer data to the GPU.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
-    public sealed unsafe class UploadBuffer<T> : NativeObject, IMemoryOwner<T>, ITransferBuffer<T>
+    public sealed unsafe class UploadBuffer<T> : NativeObject, IMemoryOwner<T>
         where T : unmanaged
     {
         /// <summary>
