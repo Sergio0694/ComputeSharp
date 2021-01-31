@@ -977,6 +977,104 @@ namespace ComputeSharp
         }
 
         /// <summary>
+        /// Allocates a new upload buffer with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
+        /// <param name="length">The length of the buffer to allocate.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+        /// <returns>A zeroed <see cref="ReadOnlyBuffer{T}"/> instance of size <paramref name="length"/>.</returns>
+        [Pure]
+        public static UploadBuffer<T> AllocateUploadBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
+            where T : unmanaged
+        {
+            return new(device, length, allocationMode);
+        }
+
+        /// <summary>
+        /// Allocates a new readonly buffer with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
+        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated buffer.</param>
+        /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input array.</returns>
+        [Pure]
+        public static UploadBuffer<T> AllocateUploadBuffer<T>(this GraphicsDevice device, T[] array)
+            where T : unmanaged
+        {
+            return device.AllocateUploadBuffer<T>(array.AsSpan());
+        }
+
+        /// <summary>
+        /// Allocates a new readonly buffer with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
+        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated buffer.</param>
+        /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
+        [Pure]
+        public static UploadBuffer<T> AllocateUploadBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> span)
+            where T : unmanaged
+        {
+            UploadBuffer<T> buffer = new(device, span.Length, AllocationMode.Default);
+
+            span.CopyTo(buffer.Span);
+
+            return buffer;
+        }
+
+        /// <summary>
+        /// Allocates a new upload buffer with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
+        /// <param name="length">The length of the buffer to allocate.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+        /// <returns>A zeroed <see cref="ReadOnlyBuffer{T}"/> instance of size <paramref name="length"/>.</returns>
+        [Pure]
+        public static ReadBackBuffer<T> AllocateReadBackBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
+            where T : unmanaged
+        {
+            return new(device, length, allocationMode);
+        }
+
+        /// <summary>
+        /// Allocates a new readonly buffer with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
+        /// <param name="source">The input <see cref="Buffer{T}"/> with the data to copy on the allocated buffer.</param>
+        /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input array.</returns>
+        [Pure]
+        public static ReadBackBuffer<T> AllocateReadBackBuffer<T>(this GraphicsDevice device, StructuredBuffer<T> source)
+            where T : unmanaged
+        {
+            ReadBackBuffer<T> buffer = new(device, source.Length, AllocationMode.Default);
+
+            source.GetData(buffer, 0, buffer.Length, 0);
+
+            return buffer;
+        }
+
+        /// <summary>
+        /// Allocates a new readonly buffer with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
+        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated buffer.</param>
+        /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
+        [Pure]
+        public static ReadBackBuffer<T> AllocateReadBackBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> span)
+            where T : unmanaged
+        {
+            ReadBackBuffer<T> buffer = new(device, span.Length, AllocationMode.Default);
+
+            span.CopyTo(buffer.Span);
+
+            return buffer;
+        }
+
+        /// <summary>
         /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
         /// </summary>
         /// <typeparam name="T">The type of compute shader to run.</typeparam>
