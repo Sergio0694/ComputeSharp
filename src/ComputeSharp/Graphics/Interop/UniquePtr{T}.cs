@@ -11,8 +11,8 @@ namespace ComputeSharp.Graphics
     /// </summary>
     /// <typeparam name="T">Must be either <see cref="Allocator"/>, <see cref="Allocation"/>, <see cref="Pool"/> or <see cref="VirtualBlock"/>.</typeparam>
     /// <remarks>
-    /// While this type is not marked as <see langword="ref"/> so that it can also be used in fields, make sure to
-    /// keep the reference counts properly tracked if you do store <see cref="ComPtr{T}"/> instances on the heap.
+    /// This type is not marked as <see langword="ref"/> so that it can also be used in fields, so make sure to
+    /// avoid copying it and disposing it multiple times, as that would lead to a access violation exceptions.
     /// </remarks>
     internal unsafe struct UniquePtr<T> : IDisposable
         where T : unmanaged
