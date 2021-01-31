@@ -29,14 +29,14 @@ namespace ComputeSharp.Resources
         }
 
         /// <inheritdoc/>
-        internal override unsafe void GetData(ref T destination, int size, int offset)
+        internal override unsafe void GetData(ref T destination, int length, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
             ThrowIfDisposed();
 
             Guard.IsInRange(offset, 0, Length, nameof(offset));
-            Guard.IsLessThanOrEqualTo(offset + size, Length, nameof(size));
+            Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(length));
 
             if (GraphicsDevice.IsCacheCoherentUMA)
             {
@@ -47,7 +47,7 @@ namespace ComputeSharp.Resources
                     MemoryHelper.Copy(
                         resource.Pointer,
                         (uint)offset,
-                        (uint)size,
+                        (uint)length,
                         (uint)sizeof(T),
                         destinationPointer);
                 }
@@ -56,13 +56,13 @@ namespace ComputeSharp.Resources
             {
                 nint
                     byteOffset = (nint)offset * sizeof(T),
-                    byteSize = size * sizeof(T);
+                    byteLength = length * sizeof(T);
 
-                using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, AllocationMode.Default, (ulong)byteSize, false);
+                using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, AllocationMode.Default, (ulong)byteLength, false);
 
                 using (CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY))
                 {
-                    copyCommandList.CopyBufferRegion(d3D12Resource.Get(), 0, D3D12Resource, (ulong)byteOffset, (ulong)byteSize);
+                    copyCommandList.CopyBufferRegion(d3D12Resource.Get(), 0, D3D12Resource, (ulong)byteOffset, (ulong)byteLength);
                     copyCommandList.ExecuteAndWaitForCompletion();
                 }
 
@@ -73,7 +73,7 @@ namespace ComputeSharp.Resources
                     MemoryHelper.Copy(
                         resource.Pointer,
                         0u,
-                        (uint)size,
+                        (uint)length,
                         (uint)sizeof(T),
                         destinationPointer);
                 }
@@ -81,14 +81,14 @@ namespace ComputeSharp.Resources
         }
 
         /// <inheritdoc/>
-        internal override unsafe void SetData(ref T source, int size, int offset)
+        internal override unsafe void SetData(ref T source, int length, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
             ThrowIfDisposed();
 
             Guard.IsInRange(offset, 0, Length, nameof(offset));
-            Guard.IsLessThanOrEqualTo(offset + size, Length, nameof(size));
+            Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(length));
 
             if (GraphicsDevice.IsCacheCoherentUMA)
             {
@@ -99,7 +99,7 @@ namespace ComputeSharp.Resources
                     MemoryHelper.Copy(
                         sourcePointer,
                         (uint)offset,
-                        (uint)size,
+                        (uint)length,
                         (uint)sizeof(T),
                         resource.Pointer);
                 }
@@ -108,9 +108,9 @@ namespace ComputeSharp.Resources
             {
                 nint
                     byteOffset = (nint)offset * sizeof(T),
-                    byteSize = size * sizeof(T);
+                    byteLength = length * sizeof(T);
 
-                using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, AllocationMode.Default, (ulong)byteSize, false);
+                using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, AllocationMode.Default, (ulong)byteLength, false);
 
                 using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
                 fixed (void* sourcePointer = &source)
@@ -118,16 +118,42 @@ namespace ComputeSharp.Resources
                     MemoryHelper.Copy(
                         sourcePointer,
                         0u,
-                        (uint)size,
+                        (uint)length,
                         (uint)sizeof(T),
                         resource.Pointer);
                 }
 
                 using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
-                copyCommandList.CopyBufferRegion(D3D12Resource, (ulong)byteOffset, d3D12Resource.Get(), 0, (ulong)byteSize);
+                copyCommandList.CopyBufferRegion(D3D12Resource, (ulong)byteOffset, d3D12Resource.Get(), 0, (ulong)byteLength);
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
+        }
+
+        /// <inheritdoc/>
+        public unsafe void SetData(UploadBuffer<T> source, int sourceOffset, int length, int offset)
+        {
+            GraphicsDevice.ThrowIfDisposed();
+
+            ThrowIfDisposed();
+
+            source.ThrowIfDeviceMismatch(GraphicsDevice);
+            source.ThrowIfDisposed();
+
+            Guard.IsInRange(offset, 0, Length, nameof(offset));
+            Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(length));
+            Guard.IsInRange(sourceOffset, 0, source.Length, nameof(sourceOffset));
+            Guard.IsLessThanOrEqualTo(sourceOffset + length, source.Length, nameof(length));
+
+            ulong
+                byteSourceOffset = (uint)sourceOffset * (uint)sizeof(T),
+                byteOffset = (uint)offset * (uint)sizeof(T),
+                byteLength = (uint)length * (uint)sizeof(T);
+
+            using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+
+            copyCommandList.CopyBufferRegion(D3D12Resource, byteOffset, source.D3D12Resource, byteSourceOffset, byteLength);
+            copyCommandList.ExecuteAndWaitForCompletion();
         }
 
         /// <inheritdoc/>

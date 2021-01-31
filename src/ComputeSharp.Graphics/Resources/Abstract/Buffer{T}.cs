@@ -110,17 +110,17 @@ namespace ComputeSharp.Resources
         /// Reads the contents of the specified range from the current <see cref="Buffer{T}"/> instance and writes them into a target memory area.
         /// </summary>
         /// <param name="destination">The input memory area to write data to.</param>
-        /// <param name="size">The size of the memory area to write data to.</param>
+        /// <param name="length">The length of the memory area to write data to.</param>
         /// <param name="offset">The offset to start reading data from.</param>
-        internal abstract void GetData(ref T destination, int size, int offset);
+        internal abstract void GetData(ref T destination, int length, int offset);
 
         /// <summary>
         /// Writes the contents of a given memory area to a specified area of the current <see cref="Buffer{T}"/> instance.
         /// </summary>
         /// <param name="source">The input memory area to read data from.</param>
-        /// <param name="size">The size of the input memory area to read data from.</param>
+        /// <param name="length">The length of the input memory area to read data from.</param>
         /// <param name="offset">The offset to start writing data to.</param>
-        internal abstract void SetData(ref T source, int size, int offset);
+        internal abstract void SetData(ref T source, int length, int offset);
 
         /// <summary>
         /// Writes the contents of a given <see cref="Buffer{T}"/> to the current <see cref="Buffer{T}"/> instance.
