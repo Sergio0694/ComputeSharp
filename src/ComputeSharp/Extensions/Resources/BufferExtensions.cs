@@ -46,7 +46,7 @@ namespace ComputeSharp
         }
 
         /// <summary>
-        /// Reads the contents of s <see cref="Buffer{T}"/> instance and writes them into a target array.
+        /// Reads the contents of a <see cref="Buffer{T}"/> instance and writes them into a target array.
         /// </summary>
         /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
         /// <param name="buffer">The input <see cref="Buffer{T}"/> instance to read data from.</param>
@@ -58,7 +58,7 @@ namespace ComputeSharp
         }
 
         /// <summary>
-        /// Reads the contents of the specified range from s <see cref="Buffer{T}"/> instance and writes them into a target array.
+        /// Reads the contents of the specified range from a <see cref="Buffer{T}"/> instance and writes them into a target array.
         /// </summary>
         /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
         /// <param name="buffer">The input <see cref="Buffer{T}"/> instance to read data from.</param>

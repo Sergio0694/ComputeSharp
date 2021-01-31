@@ -80,8 +80,14 @@ namespace ComputeSharp.Resources
             }
         }
 
-        /// <inheritdoc/>
-        public unsafe void GetData(ReadBackBuffer<T> destination, int destinationOffset, int length, int offset)
+        /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="StructuredBuffer{T}"/> instance and writes them into a target <see cref="ReadBackBuffer{T}"/> instance.
+        /// </summary>
+        /// <param name="destination">The target <see cref="ReadBackBuffer{T}"/> instance to write data to.</param>
+        /// <param name="destinationOffset">The starting offset within <paramref name="destination"/> to write data to.</param>
+        /// <param name="length">The number of items to read.</param>
+        /// <param name="offset">The offset to start reading data from.</param>
+        internal unsafe void GetData(ReadBackBuffer<T> destination, int destinationOffset, int length, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -156,8 +162,14 @@ namespace ComputeSharp.Resources
             }
         }
 
-        /// <inheritdoc/>
-        public unsafe void SetData(UploadBuffer<T> source, int sourceOffset, int length, int offset)
+        /// <summary>
+        /// Reads the contents of the specified range from an input <see cref="ReadBackBuffer{T}"/> instance and writes them to the current the current <see cref="StructuredBuffer{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input <see cref="UploadBuffer{T}"/> instance to read data from.</param>
+        /// <param name="sourceOffset">The starting offset within <paramref name="source"/> to read data from.</param>
+        /// <param name="length">The number of items to read.</param>
+        /// <param name="offset">The offset to start reading writing data to.</param>
+        internal unsafe void SetData(UploadBuffer<T> source, int sourceOffset, int length, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
