@@ -30,7 +30,7 @@ namespace ComputeSharp.Sample
             Gpu.Default.For(100, new MainKernel(gpuBuffer));
 
             // Get the data back
-            gpuBuffer.GetData(array);
+            gpuBuffer.CopyTo(array);
 
             // Print the updated matrix
             Console.WriteLine("===================== AFTER ======================");

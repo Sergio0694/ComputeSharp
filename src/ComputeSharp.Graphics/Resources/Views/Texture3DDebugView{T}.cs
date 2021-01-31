@@ -19,7 +19,7 @@ namespace ComputeSharp.Resources.Views
             {
                 var items = new T[texture.Depth, texture.Height, texture.Width];
 
-                texture.GetData(ref items[0, 0, 0], items.Length, 0, 0, 0, texture.Width, texture.Height, texture.Depth);
+                texture.CopyTo(ref items[0, 0, 0], items.Length, 0, 0, 0, texture.Width, texture.Height, texture.Depth);
 
                 Items = items;
             }

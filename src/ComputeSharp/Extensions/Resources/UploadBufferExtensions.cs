@@ -18,7 +18,7 @@ namespace ComputeSharp
         public static void CopyTo<T>(this UploadBuffer<T> buffer, StructuredBuffer<T> destination)
             where T : unmanaged
         {
-            destination.SetData(buffer, 0, buffer.Length, 0);
+            destination.CopyFrom(buffer, 0, buffer.Length, 0);
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace ComputeSharp
         public static void CopyTo<T>(this UploadBuffer<T> buffer, StructuredBuffer<T> destination, int destinationOffset, int bufferOffset, int count)
             where T : unmanaged
         {
-            destination.SetData(buffer, bufferOffset, count, destinationOffset);
+            destination.CopyFrom(buffer, bufferOffset, count, destinationOffset);
         }
     }
 }

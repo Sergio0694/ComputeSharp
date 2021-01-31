@@ -66,7 +66,7 @@ namespace ComputeSharp.Tests
             Assert.AreEqual(texture.Depth, depth);
             Assert.AreSame(texture.GraphicsDevice, Gpu.Default);
 
-            float[,,] result = texture.GetData();
+            float[,,] result = texture.ToArray();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(result.GetLength(0), depth);
@@ -79,7 +79,7 @@ namespace ComputeSharp.Tests
 
             float[] flat = new float[result.Length];
 
-            texture.GetData(flat);
+            texture.CopyTo(flat);
 
             CollectionAssert.AreEqual(flat, data);
         }
@@ -94,7 +94,7 @@ namespace ComputeSharp.Tests
 
             texture.Dispose();
 
-            _ = texture.GetData();
+            _ = texture.ToArray();
         }
 
         [TestMethod]
@@ -129,7 +129,7 @@ namespace ComputeSharp.Tests
 
             int[,,] result = new int[depth, height, width];
 
-            texture.GetData(result.AsSpan(), x, y, z, width, height, depth);
+            texture.CopyTo(result.AsSpan(), x, y, z, width, height, depth);
 
             for (int k = 0; k < depth; k++)
             {
@@ -169,7 +169,7 @@ namespace ComputeSharp.Tests
 
             float[] result = new float[array.Length];
 
-            texture.GetData(result, x, y, z, width, height, depth);
+            texture.CopyTo(result, x, y, z, width, height, depth);
         }
 
         [TestMethod]
@@ -182,7 +182,7 @@ namespace ComputeSharp.Tests
 
             Gpu.Default.For(source.Width, source.Height, source.Depth, new ReadOnlyTexture3DKernel(source, destination));
 
-            int[] result = destination.GetData();
+            int[] result = destination.ToArray();
 
             CollectionAssert.AreEqual(data, result);
         }
@@ -211,7 +211,7 @@ namespace ComputeSharp.Tests
 
             int[] result = new int[data.Length];
 
-            destination.GetData(result);
+            destination.CopyTo(result);
 
             CollectionAssert.AreEqual(data, result);
         }

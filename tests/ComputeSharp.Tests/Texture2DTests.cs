@@ -53,7 +53,7 @@ namespace ComputeSharp.Tests
             Assert.AreEqual(texture.Height, 128);
             Assert.AreSame(texture.GraphicsDevice, Gpu.Default);
 
-            float[,] result = texture.GetData();
+            float[,] result = texture.ToArray();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(data.Length, result.Length);
@@ -70,7 +70,7 @@ namespace ComputeSharp.Tests
 
             texture.Dispose();
 
-            _ = texture.GetData();
+            _ = texture.ToArray();
         }
 
         [TestMethod]
@@ -100,7 +100,7 @@ namespace ComputeSharp.Tests
 
             float[] result = new float[width * height];
 
-            texture.GetData(result, x, y, width, height);
+            texture.CopyTo(result, x, y, width, height);
 
             Span2D<float>
                 expected = new Span2D<float>(array, 64, 64).Slice(y, x, height, width),
@@ -135,7 +135,7 @@ namespace ComputeSharp.Tests
 
             float[] result = new float[4096];
 
-            texture.GetData(result, x, y, width, height);
+            texture.CopyTo(result, x, y, width, height);
         }
 
         [TestMethod]
@@ -148,7 +148,7 @@ namespace ComputeSharp.Tests
 
             Gpu.Default.For(source.Width, source.Height, new ReadOnlyTexture2DKernel(source, destination));
 
-            int[] result = destination.GetData();
+            int[] result = destination.ToArray();
 
             CollectionAssert.AreEqual(data, result);
         }
@@ -177,7 +177,7 @@ namespace ComputeSharp.Tests
 
             int[] result = new int[data.Length];
 
-            destination.GetData(result);
+            destination.CopyTo(result);
 
             CollectionAssert.AreEqual(data, result);
         }

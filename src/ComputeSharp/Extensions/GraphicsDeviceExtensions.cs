@@ -55,7 +55,7 @@ namespace ComputeSharp
         {
             ConstantBuffer<T> buffer = new(device, source.Length, AllocationMode.Default);
 
-            buffer.SetData(source);
+            buffer.CopyFrom(source);
 
             return buffer;
         }
@@ -73,7 +73,7 @@ namespace ComputeSharp
         {
             ConstantBuffer<T> constantBuffer = new(device, source.Length, AllocationMode.Default);
 
-            constantBuffer.SetData(source);
+            constantBuffer.CopyFrom(source);
 
             return constantBuffer;
         }
@@ -120,7 +120,7 @@ namespace ComputeSharp
         {
             ReadOnlyBuffer<T> buffer = new(device, source.Length, AllocationMode.Default);
 
-            buffer.SetData(source);
+            buffer.CopyFrom(source);
 
             return buffer;
         }
@@ -138,7 +138,7 @@ namespace ComputeSharp
         {
             ReadOnlyBuffer<T> readWriteBuffer = new(device, source.Length, AllocationMode.Default);
 
-            readWriteBuffer.SetData(source, 0, source.Length, 0);
+            readWriteBuffer.CopyFrom(source, 0, source.Length, 0);
 
             return readWriteBuffer;
         }
@@ -156,7 +156,7 @@ namespace ComputeSharp
         {
             ReadOnlyBuffer<T> readWriteBuffer = new(device, source.Length, AllocationMode.Default);
 
-            readWriteBuffer.SetData(source);
+            readWriteBuffer.CopyFrom(source);
 
             return readWriteBuffer;
         }
@@ -223,7 +223,7 @@ namespace ComputeSharp
         {
             ReadOnlyTexture2D<T> texture = new(device, source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
-            texture.SetData(source);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -243,7 +243,7 @@ namespace ComputeSharp
         {
             ReadOnlyTexture2D<T> texture = new(device, width, height, AllocationMode.Default);
 
-            texture.SetData(source);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -318,7 +318,7 @@ namespace ComputeSharp
         {
             ReadOnlyTexture2D<T, TPixel> texture = new(device, source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
-            texture.SetData(source);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -340,7 +340,7 @@ namespace ComputeSharp
         {
             ReadOnlyTexture2D<T, TPixel> texture = new(device, width, height, AllocationMode.Default);
 
-            texture.SetData(source);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -414,7 +414,7 @@ namespace ComputeSharp
         {
             ReadOnlyTexture3D<T> texture = new(device, source.GetLength(2), source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
-            texture.SetData(source);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -435,7 +435,7 @@ namespace ComputeSharp
         {
             ReadOnlyTexture3D<T> texture = new(device, width, height, depth, AllocationMode.Default);
 
-            texture.SetData(source);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -517,7 +517,7 @@ namespace ComputeSharp
         {
             ReadOnlyTexture3D<T, TPixel> texture = new(device, source.GetLength(2), source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
-            texture.SetData(source);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -540,7 +540,7 @@ namespace ComputeSharp
         {
             ReadOnlyTexture3D<T, TPixel> texture = new(device, width, height, depth, AllocationMode.Default);
 
-            texture.SetData(source);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -587,7 +587,7 @@ namespace ComputeSharp
         {
             ReadWriteBuffer<T> buffer = new(device, source.Length, AllocationMode.Default);
 
-            buffer.SetData(source);
+            buffer.CopyFrom(source);
 
             return buffer;
         }
@@ -605,7 +605,7 @@ namespace ComputeSharp
         {
             ReadWriteBuffer<T> readWriteBuffer = new(device, source.Length, AllocationMode.Default);
 
-            readWriteBuffer.SetData(source, 0, source.Length, 0);
+            readWriteBuffer.CopyFrom(source, 0, source.Length, 0);
 
             return readWriteBuffer;
         }
@@ -623,7 +623,7 @@ namespace ComputeSharp
         {
             ReadWriteBuffer<T> readWriteBuffer = new(device, source.Length, AllocationMode.Default);
 
-            readWriteBuffer.SetData(source);
+            readWriteBuffer.CopyFrom(source);
 
             return readWriteBuffer;
         }
@@ -690,7 +690,7 @@ namespace ComputeSharp
         {
             ReadWriteTexture2D<T> texture = new(device, source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
-            texture.SetData(source);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -710,7 +710,7 @@ namespace ComputeSharp
         {
             ReadWriteTexture2D<T> texture = new(device, width, height, AllocationMode.Default);
 
-            texture.SetData(source);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -785,7 +785,7 @@ namespace ComputeSharp
         {
             ReadWriteTexture2D<T, TPixel> texture = new(device, source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
-            texture.SetData(source);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -807,7 +807,7 @@ namespace ComputeSharp
         {
             ReadWriteTexture2D<T, TPixel> texture = new(device, width, height, AllocationMode.Default);
 
-            texture.SetData(source);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -881,7 +881,7 @@ namespace ComputeSharp
         {
             ReadWriteTexture3D<T> texture = new(device, source.GetLength(2), source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
-            texture.SetData(source);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -902,7 +902,7 @@ namespace ComputeSharp
         {
             ReadWriteTexture3D<T> texture = new(device, width, height, depth, AllocationMode.Default);
 
-            texture.SetData(source);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -984,7 +984,7 @@ namespace ComputeSharp
         {
             ReadWriteTexture3D<T, TPixel> texture = new(device, source.GetLength(2), source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
-            texture.SetData(source);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -1007,7 +1007,7 @@ namespace ComputeSharp
         {
             ReadWriteTexture3D<T, TPixel> texture = new(device, width, height, depth, AllocationMode.Default);
 
-            texture.SetData(source);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -1105,7 +1105,7 @@ namespace ComputeSharp
         {
             ReadBackBuffer<T> buffer = new(device, source.Length, AllocationMode.Default);
 
-            source.GetData(buffer, 0, buffer.Length, 0);
+            source.CopyTo(buffer, 0, buffer.Length, 0);
 
             return buffer;
         }

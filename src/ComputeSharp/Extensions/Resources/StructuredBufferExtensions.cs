@@ -18,7 +18,7 @@ namespace ComputeSharp
         public static void CopyTo<T>(this StructuredBuffer<T> buffer, ReadBackBuffer<T> destination)
             where T : unmanaged
         {
-            buffer.GetData(destination, 0, buffer.Length, 0);
+            buffer.CopyTo(destination, 0, buffer.Length, 0);
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace ComputeSharp
         public static void CopyTo<T>(this StructuredBuffer<T> buffer, ReadBackBuffer<T> destination, int destinationOffset, int bufferOffset, int count)
             where T : unmanaged
         {
-            buffer.GetData(destination, destinationOffset, count, bufferOffset);
+            buffer.CopyTo(destination, destinationOffset, count, bufferOffset);
         }
     }
 }

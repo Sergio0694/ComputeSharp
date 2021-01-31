@@ -142,7 +142,7 @@ namespace ComputeSharp.Resources
         /// <param name="width">The width of the memory area to copy.</param>
         /// <param name="height">The height of the memory area to copy.</param>
         /// <param name="depth">The depth of the memory area to copy.</param>
-        internal void GetData(ref T destination, int size, int x, int y, int z, int width, int height, int depth)
+        internal void CopyTo(ref T destination, int size, int x, int y, int z, int width, int height, int depth)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -221,7 +221,7 @@ namespace ComputeSharp.Resources
         /// <param name="width">The width of the memory area to write to.</param>
         /// <param name="height">The height of the memory area to write to.</param>
         /// <param name="depth">The depth of the memory area to write to.</param>
-        internal void SetData(ref T source, int size, int x, int y, int z, int width, int height, int depth)
+        internal void CopyFrom(ref T source, int size, int x, int y, int z, int width, int height, int depth)
         {
             GraphicsDevice.ThrowIfDisposed();
 

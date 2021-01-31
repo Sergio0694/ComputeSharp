@@ -270,7 +270,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 {
                     Vector4 parameters = KernelParameters[j];
 
-                    kernel.SetData(Kernels[j]);
+                    kernel.CopyFrom(Kernels[j]);
 
                     Gpu.Default.For<VerticalConvolutionProcessor>(
                         source.Width,
@@ -287,7 +287,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 Gpu.Default.For<InverseGammaHighlightProcessor>(source.Height, new(temporary, texture));
 
                 // Write the final pixel data
-                texture.GetData(span);
+                texture.CopyTo(span);
             }
 
             /// <summary>

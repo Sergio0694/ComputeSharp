@@ -20,7 +20,7 @@ namespace ComputeSharp.Resources.Views
             {
                 var items = GC.AllocateUninitializedArray<T>(buffer.Length);
 
-                buffer.GetData(ref items[0], buffer.Length, 0);
+                buffer.CopyTo(ref items[0], buffer.Length, 0);
 
                 Items = items;
             }

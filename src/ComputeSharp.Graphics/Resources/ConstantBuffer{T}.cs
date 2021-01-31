@@ -59,7 +59,7 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        internal override unsafe void GetData(ref T destination, int size, int offset)
+        internal override unsafe void CopyTo(ref T destination, int size, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -94,7 +94,7 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        internal override unsafe void SetData(ref T source, int size, int offset)
+        internal override unsafe void CopyFrom(ref T source, int size, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -129,7 +129,7 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        public override unsafe void SetData(Buffer<T> source)
+        public override unsafe void CopyFrom(Buffer<T> source)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -146,7 +146,7 @@ namespace ComputeSharp
                 copyCommandList.CopyBufferRegion(D3D12Resource, 0, source.D3D12Resource, 0,(ulong)SizeInBytes);
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
-            else SetDataWithCpuBuffer(source);
+            else CopyFromWithCpuBuffer(source);
         }
 
         /// <inheritdoc/>

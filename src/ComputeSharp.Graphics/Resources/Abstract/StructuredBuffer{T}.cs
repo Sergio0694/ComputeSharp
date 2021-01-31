@@ -29,7 +29,7 @@ namespace ComputeSharp.Resources
         }
 
         /// <inheritdoc/>
-        internal override unsafe void GetData(ref T destination, int length, int offset)
+        internal override unsafe void CopyTo(ref T destination, int length, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -87,7 +87,7 @@ namespace ComputeSharp.Resources
         /// <param name="destinationOffset">The starting offset within <paramref name="destination"/> to write data to.</param>
         /// <param name="length">The number of items to read.</param>
         /// <param name="offset">The offset to start reading data from.</param>
-        internal unsafe void GetData(ReadBackBuffer<T> destination, int destinationOffset, int length, int offset)
+        internal unsafe void CopyTo(ReadBackBuffer<T> destination, int destinationOffset, int length, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -113,7 +113,7 @@ namespace ComputeSharp.Resources
         }
 
         /// <inheritdoc/>
-        internal override unsafe void SetData(ref T source, int length, int offset)
+        internal override unsafe void CopyFrom(ref T source, int length, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -169,7 +169,7 @@ namespace ComputeSharp.Resources
         /// <param name="sourceOffset">The starting offset within <paramref name="source"/> to read data from.</param>
         /// <param name="length">The number of items to read.</param>
         /// <param name="offset">The offset to start reading writing data to.</param>
-        internal unsafe void SetData(UploadBuffer<T> source, int sourceOffset, int length, int offset)
+        internal unsafe void CopyFrom(UploadBuffer<T> source, int sourceOffset, int length, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -195,7 +195,7 @@ namespace ComputeSharp.Resources
         }
 
         /// <inheritdoc/>
-        public override unsafe void SetData(Buffer<T> source)
+        public override unsafe void CopyFrom(Buffer<T> source)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -212,7 +212,7 @@ namespace ComputeSharp.Resources
                 copyCommandList.CopyBufferRegion(D3D12Resource, 0, source.D3D12Resource, 0,(ulong)SizeInBytes);
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
-            else SetDataWithCpuBuffer(source);
+            else CopyFromWithCpuBuffer(source);
         }
     }
 }
