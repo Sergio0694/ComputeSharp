@@ -76,7 +76,7 @@ namespace ComputeSharp
         /// <summary>
         /// The <see cref="Allocator"/> in use associated to the current device.
         /// </summary>
-        private AllocatorPtr allocator;
+        private UniquePtr<Allocator> allocator;
 
         /// <summary>
         /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="ID3D12Device"/>.

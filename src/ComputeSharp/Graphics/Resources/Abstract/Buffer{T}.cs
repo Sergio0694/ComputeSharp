@@ -43,7 +43,7 @@ namespace ComputeSharp.Resources
         /// The <see cref="Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>, if any.
         /// </summary>
         /// <remarks>This will be <see langword="null"/> if the owning device has <see cref="GraphicsDevice.IsCacheCoherentUMA"/> set.</remarks>
-        private AllocationPtr allocation;
+        private UniquePtr<Allocation> allocation;
 
         /// <summary>
         /// Creates a new <see cref="Buffer{T}"/> instance with the specified parameters.

@@ -60,7 +60,7 @@ namespace ComputeSharp.Resources
         /// The <see cref="Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>, if any.
         /// </summary>
         /// <remarks>This will be <see langword="null"/> if the owning device has <see cref="GraphicsDevice.IsCacheCoherentUMA"/> set.</remarks>
-        private AllocationPtr allocation;
+        private UniquePtr<Allocation> allocation;
 
         /// <summary>
         /// Creates a new <see cref="Texture3D{T}"/> instance with the specified parameters.
@@ -202,7 +202,7 @@ namespace ComputeSharp.Resources
                 out ulong rowSizeInBytes,
                 out ulong totalSizeInBytes);
 
-            using AllocationPtr allocation = default;
+            using UniquePtr<Allocation> allocation = default;
             using ComPtr<ID3D12Resource> d3D12Resource = default;
 
             if (GraphicsDevice.IsCacheCoherentUMA)
@@ -369,7 +369,7 @@ namespace ComputeSharp.Resources
                 out ulong rowSizeInBytes,
                 out ulong totalSizeInBytes);
 
-            using AllocationPtr allocation = default;
+            using UniquePtr<Allocation> allocation = default;
             using ComPtr<ID3D12Resource> d3D12Resource = default;
 
             if (GraphicsDevice.IsCacheCoherentUMA)

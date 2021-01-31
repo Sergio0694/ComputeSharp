@@ -21,8 +21,8 @@ namespace ComputeSharp.Graphics.Extensions
         /// <param name="resourceType">The resource type currently in use.</param>
         /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
         /// <param name="sizeInBytes">The size in bytes of the current buffer.</param>
-        /// <returns>An <see cref="AllocationPtr"/> reference for the current buffer.</returns>
-        public static AllocationPtr CreateResource(
+        /// <returns>An <see cref="UniquePtr{T}"/> reference for the current <see cref="Allocation"/> object.</returns>
+        public static UniquePtr<Allocation> CreateResource(
             this ref Allocator allocator,
             ResourceType resourceType,
             AllocationMode allocationMode,
@@ -41,7 +41,7 @@ namespace ComputeSharp.Graphics.Extensions
                  _ => ThrowHelper.ThrowArgumentException<(D3D12_HEAP_TYPE, D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
             };
 
-            using AllocationPtr allocation = default;
+            using UniquePtr<Allocation> allocation = default;
 
             D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Buffer(sizeInBytes, d3D12ResourceFlags);
 
@@ -71,8 +71,8 @@ namespace ComputeSharp.Graphics.Extensions
         /// <param name="width">The width of the texture resource.</param>
         /// <param name="height">The height of the texture resource.</param>
         /// <param name="d3D12ResourceStates">The default <see cref="D3D12_RESOURCE_STATES"/> value for the resource.</param>
-        /// <returns>An <see cref="AllocationPtr"/> reference for the current texture.</returns>
-        public static AllocationPtr CreateResource(
+        /// <returns>An <see cref="UniquePtr{T}"/> reference for the current <see cref="Allocation"/> object.</returns>
+        public static UniquePtr<Allocation> CreateResource(
             this ref Allocator allocator,
             ResourceType resourceType,
             AllocationMode allocationMode,
@@ -91,7 +91,7 @@ namespace ComputeSharp.Graphics.Extensions
                 _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
             };
 
-            using AllocationPtr allocation = default;
+            using UniquePtr<Allocation> allocation = default;
 
             D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex2D(dxgiFormat, width, height, flags: d3D12ResourceFlags);
 
@@ -122,8 +122,8 @@ namespace ComputeSharp.Graphics.Extensions
         /// <param name="height">The height of the texture resource.</param>
         /// <param name="depth">The depth of the texture resource.</param>
         /// <param name="d3D12ResourceStates">The default <see cref="D3D12_RESOURCE_STATES"/> value for the resource.</param>
-        /// <returns>An <see cref="AllocationPtr"/> reference for the current texture.</returns>
-        public static AllocationPtr CreateResource(
+        /// <returns>An <see cref="UniquePtr{T}"/> reference for the current <see cref="Allocation"/> object.</returns>
+        public static UniquePtr<Allocation> CreateResource(
             this ref Allocator allocator,
             ResourceType resourceType,
             AllocationMode allocationMode,
@@ -143,7 +143,7 @@ namespace ComputeSharp.Graphics.Extensions
                 _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
             };
 
-            using AllocationPtr allocation = default;
+            using UniquePtr<Allocation> allocation = default;
 
             D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(dxgiFormat, width, height, depth, flags: d3D12ResourceFlags);
 
