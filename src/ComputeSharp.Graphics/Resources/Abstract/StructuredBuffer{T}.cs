@@ -81,6 +81,32 @@ namespace ComputeSharp.Resources
         }
 
         /// <inheritdoc/>
+        public unsafe void GetData(ReadBackBuffer<T> destination, int destinationOffset, int length, int offset)
+        {
+            GraphicsDevice.ThrowIfDisposed();
+
+            ThrowIfDisposed();
+
+            destination.ThrowIfDeviceMismatch(GraphicsDevice);
+            destination.ThrowIfDisposed();
+
+            Guard.IsInRange(offset, 0, Length, nameof(offset));
+            Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(length));
+            Guard.IsInRange(destinationOffset, 0, destination.Length, nameof(destinationOffset));
+            Guard.IsLessThanOrEqualTo(destinationOffset + length, destination.Length, nameof(length));
+
+            ulong
+                byteDestinationOffset = (uint)destinationOffset * (uint)sizeof(T),
+                byteOffset = (uint)offset * (uint)sizeof(T),
+                byteLength = (uint)length * (uint)sizeof(T);
+
+            using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+
+            copyCommandList.CopyBufferRegion(destination.D3D12Resource, byteDestinationOffset, D3D12Resource, byteOffset, byteLength);
+            copyCommandList.ExecuteAndWaitForCompletion();
+        }
+
+        /// <inheritdoc/>
         internal override unsafe void SetData(ref T source, int length, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
