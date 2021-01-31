@@ -130,6 +130,24 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
+        /// <param name="source">The input <see cref="UploadBuffer{T}"/> with the data to copy on the allocated buffer.</param>
+        /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input <see cref="UploadBuffer{T}"/>.</returns>
+        [Pure]
+        public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, UploadBuffer<T> source)
+            where T : unmanaged
+        {
+            ReadOnlyBuffer<T> readWriteBuffer = new(device, source.Length, AllocationMode.Default);
+
+            readWriteBuffer.SetData(source, 0, source.Length, 0);
+
+            return readWriteBuffer;
+        }
+
+        /// <summary>
+        /// Allocates a new readonly buffer with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
         /// <param name="source">The input <see cref="Buffer{T}"/> with the data to copy on the allocated buffer.</param>
         /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input <see cref="Buffer{T}"/>.</returns>
         [Pure]
@@ -572,6 +590,24 @@ namespace ComputeSharp
             buffer.SetData(source);
 
             return buffer;
+        }
+
+        /// <summary>
+        /// Allocates a new read write buffer with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
+        /// <param name="source">The input <see cref="UploadBuffer{T}"/> with the data to copy on the allocated buffer.</param>
+        /// <returns>A read write <see cref="ReadWriteBuffer{T}"/> instance with the contents of the input <see cref="UploadBuffer{T}"/>.</returns>
+        [Pure]
+        public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, UploadBuffer<T> source)
+            where T : unmanaged
+        {
+            ReadWriteBuffer<T> readWriteBuffer = new(device, source.Length, AllocationMode.Default);
+
+            readWriteBuffer.SetData(source, 0, source.Length, 0);
+
+            return readWriteBuffer;
         }
 
         /// <summary>
@@ -1043,24 +1079,6 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
-        /// <param name="source">The input <see cref="Buffer{T}"/> with the data to copy on the allocated buffer.</param>
-        /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input array.</returns>
-        [Pure]
-        public static ReadBackBuffer<T> AllocateReadBackBuffer<T>(this GraphicsDevice device, StructuredBuffer<T> source)
-            where T : unmanaged
-        {
-            ReadBackBuffer<T> buffer = new(device, source.Length, AllocationMode.Default);
-
-            source.GetData(buffer, 0, buffer.Length, 0);
-
-            return buffer;
-        }
-
-        /// <summary>
-        /// Allocates a new readonly buffer with the specified parameters.
-        /// </summary>
-        /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
-        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
         /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated buffer.</param>
         /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
@@ -1070,6 +1088,24 @@ namespace ComputeSharp
             ReadBackBuffer<T> buffer = new(device, source.Length, AllocationMode.Default);
 
             source.CopyTo(buffer.Span);
+
+            return buffer;
+        }
+
+        /// <summary>
+        /// Allocates a new readonly buffer with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
+        /// <param name="source">The input <see cref="Buffer{T}"/> with the data to copy on the allocated buffer.</param>
+        /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input array.</returns>
+        [Pure]
+        public static ReadBackBuffer<T> AllocateReadBackBuffer<T>(this GraphicsDevice device, StructuredBuffer<T> source)
+            where T : unmanaged
+        {
+            ReadBackBuffer<T> buffer = new(device, source.Length, AllocationMode.Default);
+
+            source.GetData(buffer, 0, buffer.Length, 0);
 
             return buffer;
         }
