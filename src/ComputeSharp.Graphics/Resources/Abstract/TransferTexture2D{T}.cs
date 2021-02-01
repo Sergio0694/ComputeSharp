@@ -167,7 +167,7 @@ namespace ComputeSharp.Resources
             /// <inheritdoc/>
             public override Span<T> GetSpan()
             {
-                return new(this.texture.mappedData, this.texture.Height * this.texture.rowPitch);
+                return new(this.texture.mappedData, this.texture.Width * (this.texture.Width + this.texture.rowPitch));
             }
 
             /// <inheritdoc/>

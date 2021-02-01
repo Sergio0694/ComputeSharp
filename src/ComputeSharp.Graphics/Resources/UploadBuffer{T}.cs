@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using ComputeSharp.Graphics.Resources.Enums;
+using ComputeSharp.Resources;
 using ComputeSharp.Resources.Views;
 
 namespace ComputeSharp

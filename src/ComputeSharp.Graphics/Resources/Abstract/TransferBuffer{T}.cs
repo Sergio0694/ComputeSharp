@@ -8,7 +8,7 @@ using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 
-namespace ComputeSharp
+namespace ComputeSharp.Resources
 {
     /// <summary>
     /// A <see langword="class"/> representing a typed buffer stored on CPU memory, that can be used to transfer data to/from the GPU.
@@ -21,11 +21,6 @@ namespace ComputeSharp
         /// The <see cref="ID3D12Resource"/> instance currently mapped.
         /// </summary>
         private ComPtr<ID3D12Resource> d3D12Resource;
-
-        /// <summary>
-        /// The size in bytes of the current buffer (this value is never negative).
-        /// </summary>
-        private readonly nint sizeInBytes;
 
         /// <summary>
         /// The pointer to the start of the mapped buffer data.
@@ -49,8 +44,9 @@ namespace ComputeSharp
             GraphicsDevice = device;
             Length = length;
 
-            this.sizeInBytes = checked((nint)(length * (uint)sizeof(T)));
-            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, allocationMode, (ulong)this.sizeInBytes, device.IsCacheCoherentUMA);
+            ulong sizeInBytes = (uint)length * (uint)sizeof(T);
+
+            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, allocationMode, sizeInBytes, device.IsCacheCoherentUMA);
             this.mappedData = (T*)this.d3D12Resource.Get()->Map().Pointer;
         }
 
@@ -147,11 +143,11 @@ namespace ComputeSharp
             /// <inheritdoc/>
             public override MemoryHandle Pin(int elementIndex = 0)
             {
-                Guard.IsInRange(elementIndex, 0, this.buffer.Length, nameof(elementIndex));
+                Guard.IsEqualTo(elementIndex, 0, nameof(elementIndex));
 
                 this.buffer.ThrowIfDisposed();
 
-                return new(this.buffer.mappedData + elementIndex);
+                return new(this.buffer.mappedData);
             }
 
             /// <inheritdoc/>
