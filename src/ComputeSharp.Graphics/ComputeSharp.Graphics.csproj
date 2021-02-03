@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit" Version="7.0.0-build.756" />
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.0.0-build.756" />
     <PackageReference Include="TerraFX.Interop.Windows" Version="10.0.19041-beta2" />
   </ItemGroup>
 

@@ -7,7 +7,6 @@ using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Graphics.Resources.Enums;
 using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
-using Microsoft.Toolkit.HighPerformance.Memory;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
 using static TerraFX.Interop.D3D12_FORMAT_SUPPORT1;
@@ -94,21 +93,7 @@ namespace ComputeSharp.Resources
         internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
 
         /// <inheritdoc/>
-        public Memory2D<T> Memory
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                ThrowIfDisposed();
-
-                MemoryManager memoryManager = new(this);
-
-                return new(memoryManager, 0, Height, Width, this.rowPitch);
-            }
-        }
-
-        /// <inheritdoc/>
-        public Span2D<T> Span
+        public TextureView2D<T> View
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get

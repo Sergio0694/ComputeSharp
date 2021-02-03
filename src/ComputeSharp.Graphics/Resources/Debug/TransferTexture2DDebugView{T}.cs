@@ -15,7 +15,7 @@ namespace ComputeSharp.Resources.Debug
         /// <param name="texture">The input <see cref="TransferTexture2D{T}"/> instance with the items to display.</param>
         public TransferTexture2DDebugView(TransferTexture2D<T>? texture)
         {
-            Items = texture?.Span.ToArray();
+            Items = texture?.View.ToArray();
         }
 
         /// <summary>
