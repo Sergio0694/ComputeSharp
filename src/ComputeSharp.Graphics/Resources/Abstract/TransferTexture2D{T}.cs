@@ -29,9 +29,9 @@ namespace ComputeSharp.Resources
         private readonly T* mappedData;
 
         /// <summary>
-        /// The pitch size for each row within <see cref="mappedData"/>.
+        /// The stride in bytes for each row within <see cref="mappedData"/>.
         /// </summary>
-        private readonly int rowPitch;
+        private readonly int strideInBytes;
 
         /// <summary>
         /// Creates a new <see cref="TransferTexture2D{T}"/> instance with the specified parameters.
@@ -67,7 +67,7 @@ namespace ComputeSharp.Resources
 
             this.d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(resourceType, allocationMode, totalSizeInBytes, GraphicsDevice.IsCacheCoherentUMA);
             this.mappedData = (T*)this.d3D12Resource.Get()->Map().Pointer;
-            this.rowPitch = (int)((d3D12PlacedSubresourceFootprint.Footprint.RowPitch - rowSizeInBytes) / (uint)sizeof(T));
+            this.strideInBytes = (int)d3D12PlacedSubresourceFootprint.Footprint.RowPitch;
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace ComputeSharp.Resources
             {
                 ThrowIfDisposed();
 
-                return new(this.mappedData, Height, Width, this.rowPitch);
+                return new(this.mappedData, Height, Width, this.strideInBytes);
             }
         }
 
