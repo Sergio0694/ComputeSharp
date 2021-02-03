@@ -27,13 +27,13 @@ namespace ComputeSharp
         // bytes, as the texture layout alignment is unrelated to the logical type in use.
         // Assuming we a stride that's greater than the logical rows, we might have:
         //
-        //                _____________________stride_____...
+        //                _____________________stride______...
         //    pointer__  /________width_________
         //             \/                       \
         // | -- | -- | |- | -- | -- | -- | -- | -- | -- | -- |_
         // | -- | -- | XX | XX | XX | XX | XX | XX | -- | -- | |
         // | -- | -- | XX | XX | XX | XX | XX | XX | -- | -- | |
-        // | -- | -- | XX | XX | XX | XX | XX | XX | -- | -- | |_height
+        // | -- | -- | XX | XX | XX | XX | XX | XX | -- | -- | |-height
         // | -- | -- | XX | XX | XX | XX | XX | XX | -- | -- |_|
         // | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- |
         // | -- | -- | -- | -- | -- | -- | -- | -- | -- | -- |
@@ -73,8 +73,8 @@ namespace ComputeSharp
         internal TextureView2D(T* pointer, int width, int height, int strideInBytes)
         {
             this.pointer = pointer;
-            this.height = height;
             this.width = width;
+            this.height = height;
             this.strideInBytes = strideInBytes;
         }
 
@@ -122,60 +122,60 @@ namespace ComputeSharp
         /// <summary>
         /// Gets the element at the specified zero-based indices.
         /// </summary>
-        /// <param name="row">The target row to get the element from.</param>
-        /// <param name="column">The target column to get the element from.</param>
+        /// <param name="x">The target column to get the element from.</param>
+        /// <param name="y">The target row to get the element from.</param>
         /// <returns>A reference to the element at the specified indices.</returns>
         /// <exception cref="IndexOutOfRangeException">
-        /// Thrown when either <paramref name="row"/> or <paramref name="column"/> are invalid.
+        /// Thrown when either <paramref name="x"/> or <paramref name="y"/> are invalid.
         /// </exception>
-        public ref T this[int row, int column]
+        public ref T this[int x, int y]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if ((uint)row >= (uint)Height ||
-                    (uint)column >= (uint)this.width)
+                if ((uint)x >= (uint)this.width ||
+                    (uint)y >= (uint)this.height)
                 {
                     ThrowHelper.ThrowIndexOutOfRangeException();
                 }
 
-                return ref *(((T*)((byte*)this.pointer + (row * this.strideInBytes))) + column);
+                return ref *(((T*)((byte*)this.pointer + (y * this.strideInBytes))) + x);
             }
         }
 
         /// <summary>
         /// Gets the element at the specified zero-based indices.
         /// </summary>
-        /// <param name="row">The target row to get the element from.</param>
-        /// <param name="column">The target column to get the element from.</param>
+        /// <param name="x">The target column to get the element from.</param>
+        /// <param name="y">The target row to get the element from.</param>
         /// <returns>A reference to the element at the specified indices.</returns>
         /// <exception cref="IndexOutOfRangeException">
-        /// Thrown when either <paramref name="row"/> or <paramref name="column"/> are invalid.
+        /// Thrown when either <paramref name="x"/> or <paramref name="y"/> are invalid.
         /// </exception>
-        public ref T this[Index row, Index column]
+        public ref T this[Index x, Index y]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => ref this[row.GetOffset(Height), column.GetOffset(this.width)];
+            get => ref this[x.GetOffset(this.width), y.GetOffset(this.height)];
         }
 
         /// <summary>
         /// Slices the current instance with the specified parameters.
         /// </summary>
-        /// <param name="rows">The target range of rows to select.</param>
-        /// <param name="columns">The target range of columns to select.</param>
+        /// <param name="x">The target range of columns to select.</param>
+        /// <param name="y">The target range of rows to select.</param>
         /// <exception cref="ArgumentException">
-        /// Thrown when either <paramref name="rows"/> or <paramref name="columns"/> are invalid.
+        /// Thrown when either <paramref name="x"/> or <paramref name="y"/> are invalid.
         /// </exception>
         /// <returns>A new <see cref="TextureView2D{T}"/> instance representing a slice of the current one.</returns>
-        public TextureView2D<T> this[Range rows, Range columns]
+        public TextureView2D<T> this[Range x, Range y]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                var (row, height) = rows.GetOffsetAndLength(Height);
-                var (column, width) = columns.GetOffsetAndLength(this.width);
+                var (column, width) = x.GetOffsetAndLength(this.width);
+                var (row, height) = y.GetOffsetAndLength(this.height);
 
-                return Slice(row, column, height, width);
+                return Slice(column, row, width, height);
             }
         }
 
@@ -195,7 +195,7 @@ namespace ComputeSharp
             }
             else
             {
-                for (int i = 0; i < Height; i++)
+                for (int i = 0; i < this.height; i++)
                 {
                     GetRowSpan(i).Clear();
                 }
@@ -227,7 +227,7 @@ namespace ComputeSharp
                     ThrowHelper.ThrowArgumentExceptionForDestinationTooShort();
                 }
 
-                for (int i = 0, j = 0; i < Height; i++, j += this.width)
+                for (int i = 0, j = 0; i < this.height; i++, j += this.width)
                 {
                     GetRowSpan(i).CopyTo(destination.Slice(j));
                 }
@@ -244,8 +244,8 @@ namespace ComputeSharp
         /// </exception>
         public void CopyTo(TextureView2D<T> destination)
         {
-            if (destination.Height != Height ||
-                destination.width != this.width)
+            if (destination.width != this.width ||
+                destination.width != this.height)
             {
                 ThrowHelper.ThrowArgumentException();
             }
@@ -261,7 +261,7 @@ namespace ComputeSharp
             }
             else
             {
-                for (int i = 0; i < Height; i++)
+                for (int i = 0; i < this.height; i++)
                 {
                     GetRowSpan(i).CopyTo(destination.GetRowSpan(i));
                 }
@@ -292,8 +292,8 @@ namespace ComputeSharp
         /// <returns>Whether or not the operation was successful.</returns>
         public bool TryCopyTo(TextureView2D<T> destination)
         {
-            if (destination.Height == Height &&
-                destination.Width == this.width)
+            if (destination.width == this.width ||
+                destination.height == this.height)
             {
                 CopyTo(destination);
 
@@ -321,7 +321,7 @@ namespace ComputeSharp
             else
             {
                 // Fill one row at a time
-                for (int i = 0; i < Height; i++)
+                for (int i = 0; i < this.height; i++)
                 {
                     GetRowSpan(i).Fill(value);
                 }
@@ -344,8 +344,8 @@ namespace ComputeSharp
         /// <summary>
         /// Slices the current instance with the specified parameters.
         /// </summary>
-        /// <param name="row">The target row to map within the current instance.</param>
-        /// <param name="column">The target column to map within the current instance.</param>
+        /// <param name="x">The target column to map within the current instance.</param>
+        /// <param name="y">The target row to map within the current instance.</param>
         /// <param name="height">The height to map within the current instance.</param>
         /// <param name="width">The width to map within the current instance.</param>
         /// <exception cref="ArgumentException">
@@ -354,29 +354,29 @@ namespace ComputeSharp
         /// </exception>
         /// <returns>A new <see cref="TextureView2D{T}"/> instance representing a slice of the current one.</returns>
         [Pure]
-        public TextureView2D<T> Slice(int row, int column, int height, int width)
+        public TextureView2D<T> Slice(int x, int y, int width, int height)
         {
-            if ((uint)row >= Height)
-            {
-                ThrowHelper.ThrowArgumentOutOfRangeExceptionForRow();
-            }
-
-            if ((uint)column >= this.width)
+            if ((uint)x >= this.width)
             {
                 ThrowHelper.ThrowArgumentOutOfRangeExceptionForColumn();
             }
 
-            if ((uint)height > (Height - row))
+            if ((uint)y >= this.height)
+            {
+                ThrowHelper.ThrowArgumentOutOfRangeExceptionForRow();
+            }
+
+            if ((uint)height > (this.height - y))
             {
                 ThrowHelper.ThrowArgumentOutOfRangeExceptionForHeight();
             }
 
-            if ((uint)width > (this.width - column))
+            if ((uint)width > (this.width - x))
             {
                 ThrowHelper.ThrowArgumentOutOfRangeExceptionForWidth();
             }
 
-            T* pointer = (T*)((byte*)this.pointer + (row * this.strideInBytes)) + column;
+            T* pointer = (T*)((byte*)this.pointer + (y * this.strideInBytes)) + x;
 
             return new(pointer, width, height, this.strideInBytes);
         }
@@ -390,7 +390,7 @@ namespace ComputeSharp
         [Pure]
         public Span<T> GetRowSpan(int row)
         {
-            if ((uint)row >= (uint)Height)
+            if ((uint)row >= (uint)this.height)
             {
                 ThrowHelper.ThrowArgumentOutOfRangeExceptionForRow();
             }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Buffers;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
@@ -121,58 +119,6 @@ namespace ComputeSharp.Resources
             if (GraphicsDevice != device)
             {
                 GraphicsDeviceMismatchException.Throw(this, device);
-            }
-        }
-
-        /// <summary>
-        /// A <see cref="MemoryManager{T}"/> implementation wrapping a <see cref="TransferTexture2D{T}"/> instance.
-        /// </summary>
-        private sealed class MemoryManager : MemoryManager<T>
-        {
-            /// <summary>
-            /// The <see cref="TransferTexture2D{T}"/> in use.
-            /// </summary>
-            private readonly TransferTexture2D<T> texture;
-
-            /// <summary>
-            /// Creates a new <see cref="MemoryManager"/> instance for a given texture.
-            /// </summary>
-            /// <param name="texture">The <see cref="TransferTexture2D{T}"/> in use.</param>
-            public MemoryManager(TransferTexture2D<T> texture)
-            {
-                this.texture = texture;
-            }
-
-            /// <inheritdoc/>
-            public override Memory<T> Memory
-            {
-                get => ThrowHelper.ThrowNotSupportedException<Memory<T>>();
-            }
-
-            /// <inheritdoc/>
-            public override Span<T> GetSpan()
-            {
-                return new(this.texture.mappedData, this.texture.Width * (this.texture.Width + this.texture.rowPitch));
-            }
-
-            /// <inheritdoc/>
-            public override MemoryHandle Pin(int elementIndex = 0)
-            {
-                Guard.IsEqualTo(elementIndex, 0, nameof(elementIndex));
-
-                this.texture.ThrowIfDisposed();
-
-                return new(this.texture.mappedData);
-            }
-
-            /// <inheritdoc/>
-            public override void Unpin()
-            {
-            }
-
-            /// <inheritdoc/>
-            protected override void Dispose(bool disposing)
-            {
             }
         }
     }
