@@ -9,7 +9,7 @@ using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Graphics.Resources.Enums;
 using ComputeSharp.Graphics.Resources.Interop;
 using ComputeSharp.Resources;
-using ComputeSharp.Resources.Views;
+using ComputeSharp.Resources.Debug;
 using Microsoft.Toolkit.Diagnostics;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 using FX = TerraFX.Interop.Windows;

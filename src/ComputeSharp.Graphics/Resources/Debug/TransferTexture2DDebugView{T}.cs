@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace ComputeSharp.Resources.Views
+namespace ComputeSharp.Resources.Debug
 {
     /// <summary>
     /// A debug proxy used to display items in a <see cref="TransferTexture2D{T}"/> instance.

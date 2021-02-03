@@ -2,7 +2,7 @@
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Resources.Enums;
 using ComputeSharp.Resources;
-using ComputeSharp.Resources.Views;
+using ComputeSharp.Resources.Debug;
 using static TerraFX.Interop.D3D12_FORMAT_SUPPORT1;
 
 namespace ComputeSharp
