@@ -52,6 +52,14 @@ namespace ComputeSharp.Resources.Views
         }
 
         /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> when the "z" parameter is invalid.
+        /// </summary>
+        public static void ThrowArgumentOutOfRangeExceptionForZ()
+        {
+            throw new ArgumentOutOfRangeException("z");
+        }
+
+        /// <summary>
         /// Throws an <see cref="ArgumentOutOfRangeException"/> when the "height" parameter is invalid.
         /// </summary>
         public static void ThrowArgumentOutOfRangeExceptionForHeight()
