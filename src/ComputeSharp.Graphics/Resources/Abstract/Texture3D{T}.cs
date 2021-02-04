@@ -211,6 +211,73 @@ namespace ComputeSharp.Resources
         }
 
         /// <summary>
+        /// Reads the contents of the specified range from the current <see cref="Texture3D{T}"/> instance and writes them into a <see cref="ReadBackTexture3D{T}"/> instance.
+        /// </summary>
+        /// <param name="destination">The target <see cref="ReadBackTexture3D{T}"/> instance to write data to.</param>
+        /// <param name="size">The size of the memory area to write data to.</param>
+        /// <param name="x">The horizontal offset in the source texture.</param>
+        /// <param name="y">The vertical offset in the source texture.</param>
+        /// <param name="z">The depthwise offset in the source texture.</param>
+        /// <param name="width">The width of the memory area to copy.</param>
+        /// <param name="height">The height of the memory area to copy.</param>
+        /// <param name="depth">The depth of the memory area to copy.</param>
+        internal void CopyTo(ReadBackTexture3D<T> destination, int size, int x, int y, int z, int width, int height, int depth)
+        {
+            GraphicsDevice.ThrowIfDisposed();
+
+            ThrowIfDisposed();
+
+            destination.ThrowIfDeviceMismatch(GraphicsDevice);
+            destination.ThrowIfDisposed();
+
+            Guard.IsInRange(x, 0, Width, nameof(x));
+            Guard.IsInRange(y, 0, Height, nameof(y));
+            Guard.IsInRange(z, 0, Depth, nameof(z));
+            Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
+            Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
+            Guard.IsBetweenOrEqualTo(depth, 1, Depth, nameof(depth));
+            Guard.IsBetweenOrEqualTo(width, 1, destination.Width, nameof(width));
+            Guard.IsBetweenOrEqualTo(height, 1, destination.Height, nameof(height));
+            Guard.IsBetweenOrEqualTo(depth, 1, destination.Depth, nameof(depth));
+            Guard.IsLessThanOrEqualTo(x + width, Width, nameof(x));
+            Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
+            Guard.IsLessThanOrEqualTo(z + depth, Depth, nameof(z));
+
+            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(DXGIFormatHelper.GetForType<T>(), (ulong)width, (uint)height, (ushort)depth);
+
+            GraphicsDevice.D3D12Device->GetCopyableFootprint(
+                &d3D12ResourceDescription,
+                out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
+                out ulong rowSizeInBytes,
+                out ulong totalSizeInBytes);
+
+            using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
+
+            if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
+            {
+                copyCommandList.ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_SOURCE);
+            }
+
+            copyCommandList.CopyTextureRegion(
+                destination.D3D12Resource,
+                &d3D12PlacedSubresourceFootprint,
+                D3D12Resource,
+                (uint)x,
+                (uint)y,
+                (ushort)z,
+                (uint)width,
+                (uint)height,
+                (ushort)depth);
+
+            if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
+            {
+                copyCommandList.ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, this.d3D12ResourceState);
+            }
+
+            copyCommandList.ExecuteAndWaitForCompletion();
+        }
+
+        /// <summary>
         /// Writes the contents of a given memory area to a specified area of the current <see cref="Texture3D{T}"/> instance.
         /// </summary>
         /// <param name="source">The input memory area to read data from.</param>
@@ -274,6 +341,70 @@ namespace ComputeSharp.Resources
                 (uint)y,
                 (ushort)z,
                 d3D12Resource.Get(),
+                &d3D12PlacedSubresourceFootprint);
+
+            if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
+            {
+                copyCommandList.ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, this.d3D12ResourceState);
+            }
+
+            copyCommandList.ExecuteAndWaitForCompletion();
+        }
+
+        /// <summary>
+        /// Writes the contents of a given <see cref="UploadTexture3D{T}"/> instance to a specified area of the current <see cref="Texture3D{T}"/> instance.
+        /// </summary>
+        /// <param name="source">The input <see cref="UploadTexture3D{T}"/> instance to read data from.</param>
+        /// <param name="size">The size of the memory area to read data from.</param>
+        /// <param name="x">The horizontal offset in the destination texture.</param>
+        /// <param name="y">The vertical offset in the destination texture.</param>
+        /// <param name="z">The depthwise offseet in the destination texture.</param>
+        /// <param name="width">The width of the memory area to write to.</param>
+        /// <param name="height">The height of the memory area to write to.</param>
+        /// <param name="depth">The depth of the memory area to write to.</param>
+        internal void CopyFrom(ReadBackTexture3D<T> source, int size, int x, int y, int z, int width, int height, int depth)
+        {
+            GraphicsDevice.ThrowIfDisposed();
+
+            ThrowIfDisposed();
+
+            source.ThrowIfDeviceMismatch(GraphicsDevice);
+            source.ThrowIfDisposed();
+
+            Guard.IsInRange(x, 0, Width, nameof(x));
+            Guard.IsInRange(y, 0, Height, nameof(y));
+            Guard.IsInRange(z, 0, Depth, nameof(z));
+            Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
+            Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
+            Guard.IsBetweenOrEqualTo(depth, 1, Depth, nameof(depth));
+            Guard.IsBetweenOrEqualTo(width, 1, source.Width, nameof(width));
+            Guard.IsBetweenOrEqualTo(height, 1, source.Height, nameof(height));
+            Guard.IsBetweenOrEqualTo(depth, 1, source.Depth, nameof(depth));
+            Guard.IsLessThanOrEqualTo(x + width, Width, nameof(x));
+            Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
+            Guard.IsLessThanOrEqualTo(z + depth, Depth, nameof(z));
+
+            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(DXGIFormatHelper.GetForType<T>(), (ulong)width, (uint)height, (ushort)depth);
+
+            GraphicsDevice.D3D12Device->GetCopyableFootprint(
+                &d3D12ResourceDescription,
+                out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
+                out ulong rowSizeInBytes,
+                out ulong totalSizeInBytes);
+
+            using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
+
+            if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
+            {
+                copyCommandList.ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_DEST);
+            }
+
+            copyCommandList.CopyTextureRegion(
+                D3D12Resource,
+                (uint)x,
+                (uint)y,
+                (ushort)z,
+                source.D3D12Resource,
                 &d3D12PlacedSubresourceFootprint);
 
             if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
