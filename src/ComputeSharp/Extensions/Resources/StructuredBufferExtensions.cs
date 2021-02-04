@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-using ComputeSharp.Resources;
+﻿using ComputeSharp.Resources;
 
 namespace ComputeSharp
 {
@@ -14,7 +13,6 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
         /// <param name="buffer">The input <see cref="StructuredBuffer{T}"/> instance to read data from.</param>
         /// <param name="destination">The target <see cref="ReadBackBuffer{T}"/> instance to write data to.</param>
-        [Pure]
         public static void CopyTo<T>(this StructuredBuffer<T> buffer, ReadBackBuffer<T> destination)
             where T : unmanaged
         {

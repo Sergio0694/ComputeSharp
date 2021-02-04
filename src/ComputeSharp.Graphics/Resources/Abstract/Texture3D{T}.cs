@@ -214,14 +214,13 @@ namespace ComputeSharp.Resources
         /// Reads the contents of the specified range from the current <see cref="Texture3D{T}"/> instance and writes them into a <see cref="ReadBackTexture3D{T}"/> instance.
         /// </summary>
         /// <param name="destination">The target <see cref="ReadBackTexture3D{T}"/> instance to write data to.</param>
-        /// <param name="size">The size of the memory area to write data to.</param>
         /// <param name="x">The horizontal offset in the source texture.</param>
         /// <param name="y">The vertical offset in the source texture.</param>
         /// <param name="z">The depthwise offset in the source texture.</param>
         /// <param name="width">The width of the memory area to copy.</param>
         /// <param name="height">The height of the memory area to copy.</param>
         /// <param name="depth">The depth of the memory area to copy.</param>
-        internal void CopyTo(ReadBackTexture3D<T> destination, int size, int x, int y, int z, int width, int height, int depth)
+        internal void CopyTo(ReadBackTexture3D<T> destination, int x, int y, int z, int width, int height, int depth)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -355,14 +354,13 @@ namespace ComputeSharp.Resources
         /// Writes the contents of a given <see cref="UploadTexture3D{T}"/> instance to a specified area of the current <see cref="Texture3D{T}"/> instance.
         /// </summary>
         /// <param name="source">The input <see cref="UploadTexture3D{T}"/> instance to read data from.</param>
-        /// <param name="size">The size of the memory area to read data from.</param>
         /// <param name="x">The horizontal offset in the destination texture.</param>
         /// <param name="y">The vertical offset in the destination texture.</param>
         /// <param name="z">The depthwise offseet in the destination texture.</param>
         /// <param name="width">The width of the memory area to write to.</param>
         /// <param name="height">The height of the memory area to write to.</param>
         /// <param name="depth">The depth of the memory area to write to.</param>
-        internal void CopyFrom(ReadBackTexture3D<T> source, int size, int x, int y, int z, int width, int height, int depth)
+        internal void CopyFrom(UploadTexture3D<T> source, int x, int y, int z, int width, int height, int depth)
         {
             GraphicsDevice.ThrowIfDisposed();
 
