@@ -98,10 +98,10 @@ namespace ComputeSharp.Resources
             switch (resourceType)
             {
                 case ResourceType.ReadOnly:
-                    device.D3D12Device->CreateShaderResourceView(this.d3D12Resource, DXGIFormatHelper.GetForType<T>(), D3D12_SRV_DIMENSION_TEXTURE3D, D3D12CpuDescriptorHandle);
+                    device.D3D12Device->CreateShaderResourceView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_SRV_DIMENSION_TEXTURE3D, D3D12CpuDescriptorHandle);
                     break;
                 case ResourceType.ReadWrite:
-                    device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource, DXGIFormatHelper.GetForType<T>(), D3D12_UAV_DIMENSION_TEXTURE3D, D3D12CpuDescriptorHandle);
+                    device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_UAV_DIMENSION_TEXTURE3D, D3D12CpuDescriptorHandle);
                     break;
             }
         }
@@ -173,10 +173,10 @@ namespace ComputeSharp.Resources
             {
                 if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
                 {
-                    copyCommandList.ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_SOURCE);
+                    copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_SOURCE);
                 }
 
-                copyCommandList.CopyTextureRegion(
+                copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
                     d3D12Resource.Get(),
                     &d3D12PlacedSubresourceFootprint,
                     D3D12Resource,
@@ -189,7 +189,7 @@ namespace ComputeSharp.Resources
 
                 if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
                 {
-                    copyCommandList.ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, this.d3D12ResourceState);
+                    copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, this.d3D12ResourceState);
                 }
 
                 copyCommandList.ExecuteAndWaitForCompletion();
@@ -254,10 +254,10 @@ namespace ComputeSharp.Resources
 
             if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
             {
-                copyCommandList.ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_SOURCE);
+                copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_SOURCE);
             }
 
-            copyCommandList.CopyTextureRegion(
+            copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
                 destination.D3D12Resource,
                 &d3D12PlacedSubresourceFootprint,
                 D3D12Resource,
@@ -270,7 +270,7 @@ namespace ComputeSharp.Resources
 
             if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
             {
-                copyCommandList.ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, this.d3D12ResourceState);
+                copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, this.d3D12ResourceState);
             }
 
             copyCommandList.ExecuteAndWaitForCompletion();
@@ -331,10 +331,10 @@ namespace ComputeSharp.Resources
 
             if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
             {
-                copyCommandList.ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_DEST);
+                copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_DEST);
             }
 
-            copyCommandList.CopyTextureRegion(
+            copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
                 D3D12Resource,
                 (uint)x,
                 (uint)y,
@@ -344,7 +344,7 @@ namespace ComputeSharp.Resources
 
             if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
             {
-                copyCommandList.ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, this.d3D12ResourceState);
+                copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, this.d3D12ResourceState);
             }
 
             copyCommandList.ExecuteAndWaitForCompletion();
@@ -394,10 +394,10 @@ namespace ComputeSharp.Resources
 
             if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
             {
-                copyCommandList.ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_DEST);
+                copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_DEST);
             }
 
-            copyCommandList.CopyTextureRegion(
+            copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
                 D3D12Resource,
                 (uint)x,
                 (uint)y,
@@ -407,7 +407,7 @@ namespace ComputeSharp.Resources
 
             if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
             {
-                copyCommandList.ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, this.d3D12ResourceState);
+                copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, this.d3D12ResourceState);
             }
 
             copyCommandList.ExecuteAndWaitForCompletion();

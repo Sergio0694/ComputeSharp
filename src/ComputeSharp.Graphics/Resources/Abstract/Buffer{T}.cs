@@ -71,13 +71,13 @@ namespace ComputeSharp.Resources
             switch (resourceType)
             {
                 case ResourceType.Constant:
-                    device.D3D12Device->CreateConstantBufferView(this.d3D12Resource, SizeInBytes, D3D12CpuDescriptorHandle);
+                    device.D3D12Device->CreateConstantBufferView(this.d3D12Resource.Get(), SizeInBytes, D3D12CpuDescriptorHandle);
                     break;
                 case ResourceType.ReadOnly:
-                    device.D3D12Device->CreateShaderResourceView(this.d3D12Resource, (uint)length, elementSizeInBytes, D3D12CpuDescriptorHandle);
+                    device.D3D12Device->CreateShaderResourceView(this.d3D12Resource.Get(), (uint)length, elementSizeInBytes, D3D12CpuDescriptorHandle);
                     break;
                 case ResourceType.ReadWrite:
-                    device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource, (uint)length, elementSizeInBytes, D3D12CpuDescriptorHandle);
+                    device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), (uint)length, elementSizeInBytes, D3D12CpuDescriptorHandle);
                     break;
             }
         }

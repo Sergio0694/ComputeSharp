@@ -1,4 +1,5 @@
-﻿using TerraFX.Interop;
+﻿using System;
+using TerraFX.Interop;
 
 namespace ComputeSharp.Graphics.Extensions
 {
@@ -64,6 +65,37 @@ namespace ComputeSharp.Graphics.Extensions
             D3D12_BOX d3D12Box = new((int)x, (int)y, z, (int)(x + width), (int)(y + height), z + depth);
 
             d3D12GraphicsCommandList.CopyTextureRegion(&d3D12TextureCopyLocationDestination, 0, 0, 0, &d3D12TextureCopyLocationSource, &d3D12Box);
+        }
+
+        /// <summary>
+        /// Creates a resource barrier to transition a resource to a specific state.
+        /// </summary>
+        /// <param name="d3D12GraphicsCommandList">The <see cref="ID3D12GraphicsCommandList"/> instance in use.</param>
+        /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to change state for.</param>
+        /// <param name="d3D12ResourceStatesBefore">The starting <see cref="D3D12_RESOURCE_STATES"/> value for the transition.</param>
+        /// <param name="d3D12ResourceStatesAfter">The destnation <see cref="D3D12_RESOURCE_STATES"/> value for the transition.</param>
+        public static void ResourceBarrier(
+            this ref ID3D12GraphicsCommandList d3D12GraphicsCommandList,
+            ID3D12Resource* d3D12Resource,
+            D3D12_RESOURCE_STATES d3D12ResourceStatesBefore,
+            D3D12_RESOURCE_STATES d3D12ResourceStatesAfter)
+        {
+            D3D12_RESOURCE_BARRIER d3D12ResourceBarrier = D3D12_RESOURCE_BARRIER.InitTransition(d3D12Resource, d3D12ResourceStatesBefore, d3D12ResourceStatesAfter);
+
+            d3D12GraphicsCommandList.ResourceBarrier(1, &d3D12ResourceBarrier);
+        }
+
+        /// <summary>
+        /// Binds an input constant buffer to the first root parameter.
+        /// </summary>
+        /// <param name="d3D12GraphicsCommandList">The <see cref="ID3D12GraphicsCommandList"/> instance in use.</param>
+        /// <param name="data">The input buffer with the constant data to bind.</param>
+        public static void SetComputeRoot32BitConstants(this ref ID3D12GraphicsCommandList d3D12GraphicsCommandList, ReadOnlySpan<uint> data)
+        {
+            fixed (uint* p = data)
+            {
+                d3D12GraphicsCommandList.SetComputeRoot32BitConstants(0, (uint)data.Length, p, 0);
+            }
         }
     }
 }
