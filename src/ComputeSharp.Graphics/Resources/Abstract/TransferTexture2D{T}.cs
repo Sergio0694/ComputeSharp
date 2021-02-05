@@ -29,9 +29,9 @@ namespace ComputeSharp.Resources
         private readonly T* mappedData;
 
         /// <summary>
-        /// The stride in bytes for each row within <see cref="mappedData"/>.
+        /// The <see cref="D3D12_PLACED_SUBRESOURCE_FOOTPRINT"/> description for the current resource.
         /// </summary>
-        private readonly int strideInBytes;
+        private readonly D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint;
 
         /// <summary>
         /// Creates a new <see cref="TransferTexture2D{T}"/> instance with the specified parameters.
@@ -61,13 +61,12 @@ namespace ComputeSharp.Resources
                 DXGIFormatHelper.GetForType<T>(),
                 (uint)width,
                 (uint)height,
-                out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
-                out ulong rowSizeInBytes,
+                out this.d3D12PlacedSubresourceFootprint,
+                out _,
                 out ulong totalSizeInBytes);
 
             this.d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(resourceType, allocationMode, totalSizeInBytes, GraphicsDevice.IsCacheCoherentUMA);
             this.mappedData = (T*)this.d3D12Resource.Get()->Map().Pointer;
-            this.strideInBytes = (int)d3D12PlacedSubresourceFootprint.Footprint.RowPitch;
         }
 
         /// <summary>
@@ -90,6 +89,11 @@ namespace ComputeSharp.Resources
         /// </summary>
         internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
 
+        /// <summary>
+        /// Gets the <see cref="D3D12_PLACED_SUBRESOURCE_FOOTPRINT"/> value for the current resource.
+        /// </summary>
+        internal ref readonly D3D12_PLACED_SUBRESOURCE_FOOTPRINT D3D12PlacedSubresourceFootprint => ref this.d3D12PlacedSubresourceFootprint;
+
         /// <inheritdoc/>
         public TextureView2D<T> View
         {
@@ -98,7 +102,7 @@ namespace ComputeSharp.Resources
             {
                 ThrowIfDisposed();
 
-                return new(this.mappedData, Height, Width, this.strideInBytes);
+                return new(this.mappedData, Height, Width, (int)this.d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
             }
         }
 

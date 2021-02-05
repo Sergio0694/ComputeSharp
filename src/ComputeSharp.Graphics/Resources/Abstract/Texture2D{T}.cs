@@ -52,6 +52,11 @@ namespace ComputeSharp.Resources
         private readonly D3D12_COMMAND_LIST_TYPE d3D12CommandListType;
 
         /// <summary>
+        /// The <see cref="D3D12_PLACED_SUBRESOURCE_FOOTPRINT"/> description for the current resource.
+        /// </summary>
+        private readonly D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint;
+
+        /// <summary>
         /// Creates a new <see cref="Texture2D{T}"/> instance with the specified parameters.
         /// </summary>
         /// <param name="device">The <see cref="ComputeSharp.GraphicsDevice"/> associated with the current instance.</param>
@@ -88,6 +93,14 @@ namespace ComputeSharp.Resources
             this.d3D12CommandListType = this.d3D12ResourceState == D3D12_RESOURCE_STATE_COMMON
                 ? D3D12_COMMAND_LIST_TYPE_COPY
                 : D3D12_COMMAND_LIST_TYPE_COMPUTE;
+
+            GraphicsDevice.D3D12Device->GetCopyableFootprint(
+                DXGIFormatHelper.GetForType<T>(),
+                (uint)width,
+                (uint)height,
+                out this.d3D12PlacedSubresourceFootprint,
+                out _,
+                out _);
 
             device.RentShaderResourceViewDescriptorHandles(out D3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 
@@ -149,7 +162,7 @@ namespace ComputeSharp.Resources
                 DXGIFormatHelper.GetForType<T>(),
                 (uint)width,
                 (uint)height,
-                out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
+                out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprintDestination,
                 out ulong rowSizeInBytes,
                 out ulong totalSizeInBytes);
 
@@ -163,15 +176,18 @@ namespace ComputeSharp.Resources
                 }
 
                 copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
-                    d3D12Resource.Get(),
-                    &d3D12PlacedSubresourceFootprint,
-                    D3D12Resource,
-                    (uint)x,
-                    (uint)y,
-                    0,
+                    d3D12ResourceDestination: d3D12Resource.Get(),
+                    &d3D12PlacedSubresourceFootprintDestination,
+                    destinationX: 0,
+                    destinationY: 0,
+                    destinationZ: 0,
+                    d3D12ResourceSource: D3D12Resource,
+                    sourceX: (uint)x,
+                    sourceY: (uint)y,
+                    sourceZ: 0,
                     (uint)width,
                     (uint)height,
-                    1);
+                    depth: 1);
 
                 if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
                 {
@@ -189,7 +205,7 @@ namespace ComputeSharp.Resources
                     resource.Pointer,
                     (uint)height,
                     rowSizeInBytes,
-                    d3D12PlacedSubresourceFootprint.Footprint.RowPitch,
+                    d3D12PlacedSubresourceFootprintDestination.Footprint.RowPitch,
                     destinationPointer);
             }
         }
@@ -220,14 +236,6 @@ namespace ComputeSharp.Resources
             Guard.IsLessThanOrEqualTo(x + width, Width, nameof(x));
             Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
 
-            GraphicsDevice.D3D12Device->GetCopyableFootprint(
-                DXGIFormatHelper.GetForType<T>(),
-                (uint)destination.Width,
-                (uint)destination.Height,
-                out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
-                out ulong rowSizeInBytes,
-                out ulong totalSizeInBytes);
-
             using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
 
             if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
@@ -235,16 +243,22 @@ namespace ComputeSharp.Resources
                 copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_SOURCE);
             }
 
-            copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
-                destination.D3D12Resource,
-                &d3D12PlacedSubresourceFootprint,
-                D3D12Resource,
-                (uint)x,
-                (uint)y,
-                0,
-                (uint)width,
-                (uint)height,
-                1);
+            fixed (D3D12_PLACED_SUBRESOURCE_FOOTPRINT* d3D12PlacedSubresourceFootprintDestination = &destination.D3D12PlacedSubresourceFootprint)
+            {
+                copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
+                    d3D12ResourceDestination: destination.D3D12Resource,
+                    d3D12PlacedSubresourceFootprintDestination,
+                    destinationX: 0,
+                    destinationY: 0,
+                    destinationZ: 0,
+                    d3D12ResourceSource: D3D12Resource,
+                    sourceX: (uint)x,
+                    sourceY: (uint)y,
+                    sourceZ: 0,
+                    (uint)width,
+                    (uint)height,
+                    1);
+            }
 
             if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
             {
@@ -281,7 +295,7 @@ namespace ComputeSharp.Resources
                 DXGIFormatHelper.GetForType<T>(),
                 (uint)width,
                 (uint)height,
-                out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
+                out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprintSource,
                 out ulong rowSizeInBytes,
                 out ulong totalSizeInBytes);
 
@@ -295,7 +309,7 @@ namespace ComputeSharp.Resources
                     resource.Pointer,
                     (uint)height,
                     rowSizeInBytes,
-                    d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
+                    d3D12PlacedSubresourceFootprintSource.Footprint.RowPitch);
             }
 
             using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
@@ -306,12 +320,18 @@ namespace ComputeSharp.Resources
             }
 
             copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
-                D3D12Resource,
-                (uint)x,
-                (uint)y,
-                0,
-                d3D12Resource.Get(),
-                &d3D12PlacedSubresourceFootprint);
+                d3D12ResourceDestination: D3D12Resource,
+                destinationX: (uint)x,
+                destinationY: (uint)y,
+                destinationZ: 0,
+                d3D12ResourceSource: d3D12Resource.Get(),
+                &d3D12PlacedSubresourceFootprintSource,
+                sourceX: 0,
+                sourceY: 0,
+                sourceZ: 0,
+                (uint)width,
+                (uint)height,
+                depth: 1);
 
             if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
             {
@@ -347,14 +367,6 @@ namespace ComputeSharp.Resources
             Guard.IsLessThanOrEqualTo(x + width, Width, nameof(x));
             Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
 
-            GraphicsDevice.D3D12Device->GetCopyableFootprint(
-                DXGIFormatHelper.GetForType<T>(),
-                (uint)source.Width,
-                (uint)source.Height,
-                out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
-                out ulong rowSizeInBytes,
-                out ulong totalSizeInBytes);
-
             using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
 
             if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
@@ -362,13 +374,22 @@ namespace ComputeSharp.Resources
                 copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_DEST);
             }
 
-            copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
-                D3D12Resource,
-                (uint)x,
-                (uint)y,
-                0,
-                source.D3D12Resource,
-                &d3D12PlacedSubresourceFootprint);
+            fixed (D3D12_PLACED_SUBRESOURCE_FOOTPRINT* d3D12PlacedSubresourceFootprintSource = &source.D3D12PlacedSubresourceFootprint)
+            {
+                copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
+                    d3D12ResourceDestination: D3D12Resource,
+                    destinationX: (uint)x,
+                    destinationY: (uint)y,
+                    destinationZ: 0,
+                    d3D12ResourceSource: source.D3D12Resource,
+                    d3D12PlacedSubresourceFootprintSource,
+                    sourceX: 0,
+                    sourceY: 0,
+                    sourceZ: 0,
+                    (uint)width,
+                    (uint)height,
+                    depth: 1);
+            }
 
             if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
             {

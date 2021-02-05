@@ -54,9 +54,9 @@ namespace ComputeSharp
         private readonly int height;
 
         /// <summary>
-        /// The stride of the specified 2D region.
+        /// The row pitch of the specified 2D region.
         /// </summary>
-        private readonly int strideInBytes;
+        private readonly int pitchInBytes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextureView2D{T}"/> struct with the specified parameters.
@@ -64,13 +64,13 @@ namespace ComputeSharp
         /// <param name="pointer">The pointer to the start of the memory area to map.</param>
         /// <param name="width">The width of the 2D memory area to map.</param>
         /// <param name="height">The height of the 2D memory area to map.</param>
-        /// <param name="strideInBytes">The stride in bytes of the 2D memory area to map.</param>
-        internal TextureView2D(T* pointer, int width, int height, int strideInBytes)
+        /// <param name="pitchInBytes">The row pitch in bytes of the 2D memory area to map.</param>
+        internal TextureView2D(T* pointer, int width, int height, int pitchInBytes)
         {
             this.pointer = pointer;
             this.width = width;
             this.height = height;
-            this.strideInBytes = strideInBytes;
+            this.pitchInBytes = pitchInBytes;
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace ComputeSharp
                     ThrowHelper.ThrowIndexOutOfRangeException();
                 }
 
-                return ref *((T*)((byte*)this.pointer + (y * this.strideInBytes)) + x);
+                return ref *((T*)((byte*)this.pointer + (y * this.pitchInBytes)) + x);
             }
         }
 
@@ -294,7 +294,7 @@ namespace ComputeSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T* DangerousGetAddressAndByteStride(out int strideInBytes)
         {
-            strideInBytes = this.strideInBytes;
+            strideInBytes = this.pitchInBytes;
 
             return this.pointer;
         }
@@ -313,7 +313,7 @@ namespace ComputeSharp
                 ThrowHelper.ThrowArgumentOutOfRangeExceptionForRow();
             }
 
-            return new((byte*)this.pointer + (y * this.strideInBytes), this.width);
+            return new((byte*)this.pointer + (y * this.pitchInBytes), this.width);
         }
 
         /// <summary>
@@ -323,7 +323,7 @@ namespace ComputeSharp
         /// <returns>Whether or not <paramref name="span"/> was correctly assigned.</returns>
         public bool TryGetSpan(out Span<T> span)
         {
-            if (this.strideInBytes == this.width)
+            if (this.pitchInBytes == this.width)
             {
                 span = new(this.pointer, Length);
 
