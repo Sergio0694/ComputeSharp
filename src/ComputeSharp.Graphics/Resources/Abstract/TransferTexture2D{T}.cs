@@ -57,10 +57,10 @@ namespace ComputeSharp.Resources
             Width = width;
             Height = height;
 
-            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex2D(DXGIFormatHelper.GetForType<T>(), (ulong)width, (uint)height);
-
             GraphicsDevice.D3D12Device->GetCopyableFootprint(
-                &d3D12ResourceDescription,
+                DXGIFormatHelper.GetForType<T>(),
+                (uint)width,
+                (uint)height,
                 out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
                 out ulong rowSizeInBytes,
                 out ulong totalSizeInBytes);

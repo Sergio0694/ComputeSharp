@@ -159,10 +159,11 @@ namespace ComputeSharp.Resources
             Guard.IsLessThanOrEqualTo(z + depth, Depth, nameof(z));
             Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth, nameof(size));
 
-            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(DXGIFormatHelper.GetForType<T>(), (ulong)width, (uint)height, (ushort)depth);
-
             GraphicsDevice.D3D12Device->GetCopyableFootprint(
-                &d3D12ResourceDescription,
+                DXGIFormatHelper.GetForType<T>(),
+                (uint)width,
+                (uint)height,
+                (ushort)depth,
                 out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
                 out ulong rowSizeInBytes,
                 out ulong totalSizeInBytes);
@@ -242,10 +243,11 @@ namespace ComputeSharp.Resources
             Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
             Guard.IsLessThanOrEqualTo(z + depth, Depth, nameof(z));
 
-            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(DXGIFormatHelper.GetForType<T>(), (ulong)width, (uint)height, (ushort)depth);
-
             GraphicsDevice.D3D12Device->GetCopyableFootprint(
-                &d3D12ResourceDescription,
+                DXGIFormatHelper.GetForType<T>(),
+                (uint)width,
+                (uint)height,
+                (ushort)depth,
                 out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
                 out ulong rowSizeInBytes,
                 out ulong totalSizeInBytes);
@@ -304,10 +306,11 @@ namespace ComputeSharp.Resources
             Guard.IsLessThanOrEqualTo(z + depth, Depth, nameof(z));
             Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth, nameof(size));
 
-            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(DXGIFormatHelper.GetForType<T>(), (ulong)width, (uint)height, (ushort)depth);
-
             GraphicsDevice.D3D12Device->GetCopyableFootprint(
-                &d3D12ResourceDescription,
+                DXGIFormatHelper.GetForType<T>(),
+                (uint)width,
+                (uint)height,
+                (ushort)depth,
                 out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
                 out ulong rowSizeInBytes,
                 out ulong totalSizeInBytes);
@@ -382,10 +385,11 @@ namespace ComputeSharp.Resources
             Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
             Guard.IsLessThanOrEqualTo(z + depth, Depth, nameof(z));
 
-            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(DXGIFormatHelper.GetForType<T>(), (ulong)width, (uint)height, (ushort)depth);
-
             GraphicsDevice.D3D12Device->GetCopyableFootprint(
-                &d3D12ResourceDescription,
+                DXGIFormatHelper.GetForType<T>(),
+                (uint)width,
+                (uint)height,
+                (ushort)depth,
                 out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
                 out ulong rowSizeInBytes,
                 out ulong totalSizeInBytes);
