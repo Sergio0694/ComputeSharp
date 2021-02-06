@@ -18,12 +18,12 @@ namespace ComputeSharp
         /// <param name="texture">The input <see cref="Texture2D{T}"/> instance to read data from.</param>
         /// <returns>A <typeparamref name="T"/> array with the contents of the current texture.</returns>
         [Pure]
-        public static T[,] GetData<T>(this Texture2D<T> texture)
+        public static T[,] ToArray<T>(this Texture2D<T> texture)
             where T : unmanaged
         {
             T[,] data = new T[texture.Height, texture.Width];
 
-            texture.GetData(data);
+            texture.CopyTo(data);
 
             return data;
         }
@@ -34,13 +34,13 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items stored on the texture.</typeparam>
         /// <param name="texture">The input <see cref="Texture2D{T}"/> instance to read data from.</param>
         /// <param name="destination">The input array to write data to.</param>
-        public static void GetData<T>(this Texture2D<T> texture, T[,] destination)
+        public static void CopyTo<T>(this Texture2D<T> texture, T[,] destination)
             where T : unmanaged
         {
             Guard.IsEqualTo(destination.GetLength(0), texture.Height, nameof(destination));
             Guard.IsEqualTo(destination.GetLength(1), texture.Width, nameof(destination));
 
-            texture.GetData(ref destination[0, 0], destination.Length, 0, 0, texture.Width, texture.Height);
+            texture.CopyTo(ref destination[0, 0], destination.Length, 0, 0, texture.Width, texture.Height);
         }
 
         /// <summary>
@@ -49,10 +49,10 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items stored on the texture.</typeparam>
         /// <param name="texture">The input <see cref="Texture2D{T}"/> instance to read data from.</param>
         /// <param name="destination">The input array to write data to.</param>
-        public static void GetData<T>(this Texture2D<T> texture, T[] destination)
+        public static void CopyTo<T>(this Texture2D<T> texture, T[] destination)
             where T : unmanaged
         {
-            texture.GetData(destination.AsSpan(), 0, 0, texture.Width, texture.Height);
+            texture.CopyTo(destination.AsSpan(), 0, 0, texture.Width, texture.Height);
         }
 
         /// <summary>
@@ -63,10 +63,10 @@ namespace ComputeSharp
         /// <param name="destination">The input array to write data to.</param>
         /// <param name="x">The horizontal range of items to copy.</param>
         /// <param name="y">The vertical range of items to copy.</param>
-        public static void GetData<T>(this Texture2D<T> texture, T[] destination, Range x, Range y)
+        public static void CopyTo<T>(this Texture2D<T> texture, T[] destination, Range x, Range y)
             where T : unmanaged
         {
-            texture.GetData(destination.AsSpan(), x, y);
+            texture.CopyTo(destination.AsSpan(), x, y);
         }
 
         /// <summary>
@@ -79,10 +79,10 @@ namespace ComputeSharp
         /// <param name="y">The vertical offset in the source texture.</param>
         /// <param name="width">The width of the memory area to copy.</param>
         /// <param name="height">The height of the memory area to copy.</param>
-        public static void GetData<T>(this Texture2D<T> texture, T[] destination, int x, int y, int width, int height)
+        public static void CopyTo<T>(this Texture2D<T> texture, T[] destination, int x, int y, int width, int height)
             where T : unmanaged
         {
-            texture.GetData(destination.AsSpan(), x, y, width, height);
+            texture.CopyTo(destination.AsSpan(), x, y, width, height);
         }
 
         /// <summary>
@@ -92,10 +92,10 @@ namespace ComputeSharp
         /// <param name="texture">The input <see cref="Texture2D{T}"/> instance to read data from.</param>
         /// <param name="destination">The input array to write data to.</param>
         /// <param name="offset">The starting offset within <paramref name="destination"/> to write data to.</param>
-        public static void GetData<T>(this Texture2D<T> texture, T[] destination, int offset)
+        public static void CopyTo<T>(this Texture2D<T> texture, T[] destination, int offset)
             where T : unmanaged
         {
-            texture.GetData(destination.AsSpan(offset), 0, 0, texture.Width, texture.Height);
+            texture.CopyTo(destination.AsSpan(offset), 0, 0, texture.Width, texture.Height);
         }
 
         /// <summary>
@@ -107,10 +107,10 @@ namespace ComputeSharp
         /// <param name="offset">The starting offset within <paramref name="destination"/> to write data to.</param>
         /// <param name="x">The horizontal range of items to copy.</param>
         /// <param name="y">The vertical range of items to copy.</param>
-        public static void GetData<T>(this Texture2D<T> texture, T[] destination, int offset, Range x, Range y)
+        public static void CopyTo<T>(this Texture2D<T> texture, T[] destination, int offset, Range x, Range y)
             where T : unmanaged
         {
-            texture.GetData(destination.AsSpan(offset), x, y);
+            texture.CopyTo(destination.AsSpan(offset), x, y);
         }
 
         /// <summary>
@@ -124,10 +124,10 @@ namespace ComputeSharp
         /// <param name="y">The vertical offset in the source texture.</param>
         /// <param name="width">The width of the memory area to copy.</param>
         /// <param name="height">The height of the memory area to copy.</param>
-        public static void GetData<T>(this Texture2D<T> texture, T[] destination, int offset, int x, int y, int width, int height)
+        public static void CopyTo<T>(this Texture2D<T> texture, T[] destination, int offset, int x, int y, int width, int height)
             where T : unmanaged
         {
-            texture.GetData(destination.AsSpan(offset), x, y, width, height);
+            texture.CopyTo(destination.AsSpan(offset), x, y, width, height);
         }
 
         /// <summary>
@@ -137,10 +137,10 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items stored on the texture.</typeparam>
         /// <param name="texture">The input <see cref="Texture2D{T}"/> instance to read data from.</param>
         /// <param name="destination">The input <see cref="Span{T}"/> to write data to.</param>
-        public static void GetData<T>(this Texture2D<T> texture, Span<T> destination)
+        public static void CopyTo<T>(this Texture2D<T> texture, Span<T> destination)
             where T : unmanaged
         {
-            texture.GetData(destination, 0, 0, texture.Width, texture.Height);
+            texture.CopyTo(destination, 0, 0, texture.Width, texture.Height);
         }
 
         /// <summary>
@@ -151,13 +151,13 @@ namespace ComputeSharp
         /// <param name="destination">The input <see cref="Span{T}"/> to write data to.</param>
         /// <param name="x">The horizontal range of items to copy.</param>
         /// <param name="y">The vertical range of items to copy.</param>
-        public static void GetData<T>(this Texture2D<T> texture, Span<T> destination, Range x, Range y)
+        public static void CopyTo<T>(this Texture2D<T> texture, Span<T> destination, Range x, Range y)
             where T : unmanaged
         {
             var (offsetX, width) = x.GetOffsetAndLength(texture.Width);
             var (offsetY, height) = y.GetOffsetAndLength(texture.Height);
 
-            texture.GetData(destination, offsetX, offsetY, width, height);
+            texture.CopyTo(destination, offsetX, offsetY, width, height);
         }
 
         /// <summary>
@@ -170,10 +170,38 @@ namespace ComputeSharp
         /// <param name="y">The vertical offset in the source texture.</param>
         /// <param name="width">The width of the memory area to copy.</param>
         /// <param name="height">The height of the memory area to copy.</param>
-        public static void GetData<T>(this Texture2D<T> texture, Span<T> destination, int x, int y, int width, int height)
+        public static void CopyTo<T>(this Texture2D<T> texture, Span<T> destination, int x, int y, int width, int height)
             where T : unmanaged
         {
-            texture.GetData(ref MemoryMarshal.GetReference(destination), destination.Length, x, y, width, height);
+            texture.CopyTo(ref MemoryMarshal.GetReference(destination), destination.Length, x, y, width, height);
+        }
+
+        /// <summary>
+        /// Reads the contents of a <see cref="Texture2D{T}"/> instance and writes them into a target <see cref="ReadBackTexture2D{T}"/> instance.
+        /// </summary>
+        /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+        /// <param name="texture">The input <see cref="Texture2D{T}"/> instance to read data from.</param>
+        /// <param name="destination">The target <see cref="ReadBackTexture2D{T}"/> instance to write data to.</param>
+        public static void CopyTo<T>(this Texture2D<T> texture, ReadBackTexture2D<T> destination)
+            where T : unmanaged
+        {
+            texture.CopyTo(destination, 0, 0, 0, 0, texture.Width, texture.Height);
+        }
+
+        /// <summary>
+        /// Reads the contents of a <see cref="Texture2D{T}"/> instance and writes them into a target <see cref="ReadBackTexture2D{T}"/> instance.
+        /// </summary>
+        /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+        /// <param name="texture">The input <see cref="Texture2D{T}"/> instance to read data from.</param>
+        /// <param name="destination">The target <see cref="ReadBackTexture2D{T}"/> instance to write data to.</param>
+        /// <param name="x">The horizontal offset in the source texture.</param>
+        /// <param name="y">The vertical offset in the source texture.</param>
+        /// <param name="width">The width of the memory area to copy.</param>
+        /// <param name="height">The height of the memory area to copy.</param>
+        public static void CopyTo<T>(this Texture2D<T> texture, ReadBackTexture2D<T> destination, int x, int y, int width, int height)
+            where T : unmanaged
+        {
+            texture.CopyTo(destination, 0, 0, x, y, width, height);
         }
 
         /// <summary>
@@ -182,13 +210,13 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items stored on the texture.</typeparam>
         /// <param name="texture">The target <see cref="Texture2D{T}"/> instance to write data to.</param>
         /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
-        public static unsafe void SetData<T>(this Texture2D<T> texture, T[,] source)
+        public static unsafe void CopyFrom<T>(this Texture2D<T> texture, T[,] source)
             where T : unmanaged
         {
             Guard.IsEqualTo(source.GetLength(0), texture.Height, nameof(source));
             Guard.IsEqualTo(source.GetLength(1), texture.Width, nameof(source));
 
-            texture.SetData(ref source[0, 0], source.Length, 0, 0, texture.Width, texture.Height);
+            texture.CopyFrom(ref source[0, 0], source.Length, 0, 0, texture.Width, texture.Height);
         }
 
         /// <summary>
@@ -197,10 +225,10 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items stored on the texture.</typeparam>
         /// <param name="texture">The target <see cref="Texture2D{T}"/> instance to write data to.</param>
         /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
-        public static void SetData<T>(this Texture2D<T> texture, T[] source)
+        public static void CopyFrom<T>(this Texture2D<T> texture, T[] source)
             where T : unmanaged
         {
-            texture.SetData(source.AsSpan(), 0, 0, texture.Width, texture.Height);
+            texture.CopyFrom(source.AsSpan(), 0, 0, texture.Width, texture.Height);
         }
 
         /// <summary>
@@ -211,10 +239,10 @@ namespace ComputeSharp
         /// <param name="source">The input <typeparamref name="T"/> array to read data from.</param>
         /// <param name="x">The horizontal range of items to write.</param>
         /// <param name="y">The vertical range of items to write.</param>
-        public static void SetData<T>(this Texture2D<T> texture, T[] source, Range x, Range y)
+        public static void CopyFrom<T>(this Texture2D<T> texture, T[] source, Range x, Range y)
             where T : unmanaged
         {
-            texture.SetData(source.AsSpan(), x, y);
+            texture.CopyFrom(source.AsSpan(), x, y);
         }
 
         /// <summary>
@@ -227,10 +255,10 @@ namespace ComputeSharp
         /// <param name="y">The vertical offset in the destination texture.</param>
         /// <param name="width">The width of the memory area to write to.</param>
         /// <param name="height">The height of the memory area to write to.</param>
-        public static void SetData<T>(this Texture2D<T> texture, T[] source, int x, int y, int width, int height)
+        public static void CopyFrom<T>(this Texture2D<T> texture, T[] source, int x, int y, int width, int height)
             where T : unmanaged
         {
-            texture.SetData(source.AsSpan(), x, y, width, height);
+            texture.CopyFrom(source.AsSpan(), x, y, width, height);
         }
 
         /// <summary>
@@ -242,10 +270,10 @@ namespace ComputeSharp
         /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
         /// <param name="x">The horizontal range of items to write.</param>
         /// <param name="y">The vertical range of items to write.</param>
-        public static void SetData<T>(this Texture2D<T> texture, T[] source, int offset, Range x, Range y)
+        public static void CopyFrom<T>(this Texture2D<T> texture, T[] source, int offset, Range x, Range y)
             where T : unmanaged
         {
-            texture.SetData(source.AsSpan(offset), x, y);
+            texture.CopyFrom(source.AsSpan(offset), x, y);
         }
 
         /// <summary>
@@ -259,10 +287,10 @@ namespace ComputeSharp
         /// <param name="y">The vertical offset in the destination texture.</param>
         /// <param name="width">The width of the memory area to write to.</param>
         /// <param name="height">The height of the memory area to write to.</param>
-        public static void SetData<T>(this Texture2D<T> texture, T[] source, int offset, int x, int y, int width, int height)
+        public static void CopyFrom<T>(this Texture2D<T> texture, T[] source, int offset, int x, int y, int width, int height)
             where T : unmanaged
         {
-            texture.SetData(source.AsSpan(offset), x, y, width, height);
+            texture.CopyFrom(source.AsSpan(offset), x, y, width, height);
         }
 
         /// <summary>
@@ -272,10 +300,10 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items stored on the texture.</typeparam>
         /// <param name="texture">The target <see cref="Texture2D{T}"/> instance to write data to.</param>
         /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> to read data from.</param>
-        public static void SetData<T>(this Texture2D<T> texture, ReadOnlySpan<T> source)
+        public static void CopyFrom<T>(this Texture2D<T> texture, ReadOnlySpan<T> source)
             where T : unmanaged
         {
-            texture.SetData(source, 0, 0, texture.Width, texture.Height);
+            texture.CopyFrom(source, 0, 0, texture.Width, texture.Height);
         }
 
         /// <summary>
@@ -286,13 +314,13 @@ namespace ComputeSharp
         /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> to read data from.</param>
         /// <param name="x">The horizontal range of items to write.</param>
         /// <param name="y">The vertical range of items to write.</param>
-        public static void SetData<T>(this Texture2D<T> texture, ReadOnlySpan<T> source, Range x, Range y)
+        public static void CopyFrom<T>(this Texture2D<T> texture, ReadOnlySpan<T> source, Range x, Range y)
             where T : unmanaged
         {
             var (offsetX, width) = x.GetOffsetAndLength(texture.Width);
             var (offsetY, height) = y.GetOffsetAndLength(texture.Height);
 
-            texture.SetData(source, offsetX, offsetY, width, height);
+            texture.CopyFrom(source, offsetX, offsetY, width, height);
         }
 
         /// <summary>
@@ -305,10 +333,10 @@ namespace ComputeSharp
         /// <param name="y">The vertical offset in the destination texture.</param>
         /// <param name="width">The width of the memory area to write to.</param>
         /// <param name="height">The height of the memory area to write to.</param>
-        public static void SetData<T>(this Texture2D<T> texture, ReadOnlySpan<T> source, int x, int y, int width, int height)
+        public static void CopyFrom<T>(this Texture2D<T> texture, ReadOnlySpan<T> source, int x, int y, int width, int height)
             where T : unmanaged
         {
-            texture.SetData(ref MemoryMarshal.GetReference(source), source.Length, x, y, width, height);
+            texture.CopyFrom(ref MemoryMarshal.GetReference(source), source.Length, x, y, width, height);
         }
     }
 }

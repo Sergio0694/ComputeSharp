@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace ComputeSharp.Resources.Views
+namespace ComputeSharp.Resources.Debug
 {
     /// <summary>
     /// A debug proxy used to display items in a <see cref="Buffer{T}"/> instance.
@@ -20,7 +20,7 @@ namespace ComputeSharp.Resources.Views
             {
                 var items = GC.AllocateUninitializedArray<T>(buffer.Length);
 
-                buffer.GetData(ref items[0], buffer.Length, 0);
+                buffer.CopyTo(ref items[0], buffer.Length, 0);
 
                 Items = items;
             }

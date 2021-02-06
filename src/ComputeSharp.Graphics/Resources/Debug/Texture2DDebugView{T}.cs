@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace ComputeSharp.Resources.Views
+namespace ComputeSharp.Resources.Debug
 {
     /// <summary>
     /// A debug proxy used to display items in a <see cref="Texture2D{T}"/> instance.
@@ -19,7 +19,7 @@ namespace ComputeSharp.Resources.Views
             {
                 var items = new T[texture.Height, texture.Width];
 
-                texture.GetData(ref items[0, 0], items.Length, 0, 0, texture.Width, texture.Height);
+                texture.CopyTo(ref items[0, 0], items.Length, 0, 0, texture.Width, texture.Height);
 
                 Items = items;
             }

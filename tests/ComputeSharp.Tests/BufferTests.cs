@@ -26,10 +26,10 @@ namespace ComputeSharp.Tests
         [TestMethod]
         [DataRow(typeof(ConstantBuffer<>), -247824)]
         [DataRow(typeof(ConstantBuffer<>), -1)]
-        [DataRow(typeof(ConstantBuffer<>), -247824)]
-        [DataRow(typeof(ConstantBuffer<>), -1)]
-        [DataRow(typeof(ConstantBuffer<>), -247824)]
-        [DataRow(typeof(ConstantBuffer<>), -1)]
+        [DataRow(typeof(ReadOnlyBuffer<>), -247824)]
+        [DataRow(typeof(ReadOnlyBuffer<>), -1)]
+        [DataRow(typeof(ReadWriteBuffer<>), -247824)]
+        [DataRow(typeof(ReadWriteBuffer<>), -1)]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void Allocate_Uninitialized_Fail(Type bufferType, int length)
         {
@@ -50,7 +50,7 @@ namespace ComputeSharp.Tests
             Assert.AreEqual(buffer.Length, 128);
             Assert.AreSame(buffer.GraphicsDevice, Gpu.Default);
 
-            float[] result = buffer.GetData();
+            float[] result = buffer.ToArray();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(data.Length, result.Length);
@@ -78,7 +78,7 @@ namespace ComputeSharp.Tests
             Assert.AreEqual(destination.Length, 128);
             Assert.AreSame(destination.GraphicsDevice, Gpu.Default);
 
-            float[] result = destination.GetData();
+            float[] result = destination.ToArray();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(data.Length, result.Length);
@@ -96,7 +96,7 @@ namespace ComputeSharp.Tests
 
             buffer.Dispose();
 
-            _ = buffer.GetData();
+            _ = buffer.ToArray();
         }
 
         [TestMethod]
@@ -109,13 +109,13 @@ namespace ComputeSharp.Tests
         [DataRow(typeof(ReadWriteBuffer<>), 0, 4096)]
         [DataRow(typeof(ReadWriteBuffer<>), 128, 512)]
         [DataRow(typeof(ReadWriteBuffer<>), 2048, 2048)]
-        public void GetData_RangeToArray_Ok(Type bufferType, int offset, int count)
+        public void CopyTo_RangeToArray_Ok(Type bufferType, int offset, int count)
         {
             float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
 
             using Buffer<float> buffer = Gpu.Default.AllocateBuffer(bufferType, array);
 
-            float[] result = buffer.GetData(offset, count);
+            float[] result = buffer.ToArray(offset, count);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(result.Length, count);
@@ -136,13 +136,13 @@ namespace ComputeSharp.Tests
         [DataRow(typeof(ReadWriteBuffer<>), 512, 4096)]
         [DataRow(typeof(ReadWriteBuffer<>), 512, -128)]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void GetData_RangeToArray_Fail(Type bufferType, int offset, int count)
+        public void CopyTo_RangeToArray_Fail(Type bufferType, int offset, int count)
         {
             float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
 
             using Buffer<float> buffer = Gpu.Default.AllocateBuffer(bufferType, array);
 
-            _ = buffer.GetData(offset, count);
+            _ = buffer.ToArray(offset, count);
         }
 
         [TestMethod]
@@ -158,7 +158,7 @@ namespace ComputeSharp.Tests
         [DataRow(typeof(ReadWriteBuffer<>), 512, 0, 2048)]
         [DataRow(typeof(ReadWriteBuffer<>), 0, 512, 2048)]
         [DataRow(typeof(ReadWriteBuffer<>), 127, 1024, 587)]
-        public void GetData_RangeToVoid_Ok(Type bufferType, int destinationOffset, int bufferOffset, int count)
+        public void CopyTo_RangeToVoid_Ok(Type bufferType, int destinationOffset, int bufferOffset, int count)
         {
             float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
 
@@ -166,7 +166,7 @@ namespace ComputeSharp.Tests
 
             float[] result = new float[4096];
 
-            buffer.GetData(result, destinationOffset, bufferOffset, count);
+            buffer.CopyTo(result, destinationOffset, bufferOffset, count);
 
             Assert.IsTrue(array.AsSpan(bufferOffset, count).SequenceEqual(result.AsSpan(destinationOffset, count)));
         }
@@ -191,7 +191,7 @@ namespace ComputeSharp.Tests
         [DataRow(typeof(ReadWriteBuffer<>), 12, 1024, 3600)]
         [DataRow(typeof(ReadWriteBuffer<>), 12, 1024, -2096)]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void GetData_RangeToVoid_Fail(Type bufferType, int destinationOffset, int bufferOffset, int count)
+        public void CopyTo_RangeToVoid_Fail(Type bufferType, int destinationOffset, int bufferOffset, int count)
         {
             float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
 
@@ -199,7 +199,7 @@ namespace ComputeSharp.Tests
 
             float[] result = new float[4096];
 
-            buffer.GetData(result, destinationOffset, bufferOffset, count);
+            buffer.CopyTo(result, destinationOffset, bufferOffset, count);
         }
 
         [TestMethod]
@@ -212,7 +212,7 @@ namespace ComputeSharp.Tests
 
             Gpu.Default.For(source.Length, new ConstantBufferKernel(source, destination));
 
-            int[] result = destination.GetData();
+            int[] result = destination.ToArray();
 
             CollectionAssert.AreEqual(data, result);
         }
@@ -239,7 +239,7 @@ namespace ComputeSharp.Tests
 
             Gpu.Default.For(source.Length, new ReadOnlyBufferKernel(source, destination));
 
-            int[] result = destination.GetData();
+            int[] result = destination.ToArray();
 
             CollectionAssert.AreEqual(data, result);
         }
@@ -266,7 +266,7 @@ namespace ComputeSharp.Tests
 
             Gpu.Default.For(source.Length, new ReadWriteBufferKernel(source, destination));
 
-            int[] result = destination.GetData();
+            int[] result = destination.ToArray();
 
             CollectionAssert.AreEqual(data, result);
         }

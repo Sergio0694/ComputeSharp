@@ -457,24 +457,64 @@ namespace ComputeSharp.Graphics.Extensions
         /// Gets the layout data for a target resource.
         /// </summary>
         /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to get the layout info.</param>
-        /// <param name="d3D12ResourceDesc">The <see cref="D3D12_RESOURCE_DESC"/> value for the target resource.</param>
+        /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
+        /// <param name="width">The width of the texture resource.</param>
+        /// <param name="height">The height of the texture resource.</param>
         /// <param name="d3D12PlacedSubresourceFootprint">The resulting layout info for the resource.</param>
         /// <param name="rowSizeInBytes">The size in bytes of each row in the resource.</param>
         /// <param name="totalSizeInBytes">The total number of bytes for the resource.</param>
         public static void GetCopyableFootprint(
             this ref ID3D12Device d3D12Device,
-            D3D12_RESOURCE_DESC* d3D12ResourceDesc,
+            DXGI_FORMAT dxgiFormat,
+            uint width,
+            uint height,
             out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
             out ulong rowSizeInBytes,
             out ulong totalSizeInBytes)
         {
+            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex2D(dxgiFormat, width, height);
             ulong a, b;
 
             fixed (D3D12_PLACED_SUBRESOURCE_FOOTPRINT* p = &d3D12PlacedSubresourceFootprint)
             {
                 uint _;
 
-                d3D12Device.GetCopyableFootprints(d3D12ResourceDesc, 0, 1, 0, p, &_, &a, &b);
+                d3D12Device.GetCopyableFootprints(&d3D12ResourceDescription, 0, 1, 0, p, &_, &a, &b);
+            }
+
+            rowSizeInBytes = a;
+            totalSizeInBytes = b;
+        }
+
+        /// <summary>
+        /// Gets the layout data for a target resource.
+        /// </summary>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to get the layout info.</param>
+        /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
+        /// <param name="width">The width of the texture resource.</param>
+        /// <param name="height">The height of the texture resource.</param>
+        /// <param name="depth">The depth of the texture resource.</param>
+        /// <param name="d3D12PlacedSubresourceFootprint">The resulting layout info for the resource.</param>
+        /// <param name="rowSizeInBytes">The size in bytes of each row in the resource.</param>
+        /// <param name="totalSizeInBytes">The total number of bytes for the resource.</param>
+        public static void GetCopyableFootprint(
+            this ref ID3D12Device d3D12Device,
+            DXGI_FORMAT dxgiFormat,
+            uint width,
+            uint height,
+            ushort depth,
+            out D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint,
+            out ulong rowSizeInBytes,
+            out ulong totalSizeInBytes)
+        {
+            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(dxgiFormat, width, height, depth);
+            ulong a, b;
+
+            fixed (D3D12_PLACED_SUBRESOURCE_FOOTPRINT* p = &d3D12PlacedSubresourceFootprint)
+            {
+                uint _;
+
+                d3D12Device.GetCopyableFootprints(&d3D12ResourceDescription, 0, 1, 0, p, &_, &a, &b);
             }
 
             rowSizeInBytes = a;

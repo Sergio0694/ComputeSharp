@@ -71,13 +71,13 @@ namespace ComputeSharp.Resources
             switch (resourceType)
             {
                 case ResourceType.Constant:
-                    device.D3D12Device->CreateConstantBufferView(this.d3D12Resource, SizeInBytes, D3D12CpuDescriptorHandle);
+                    device.D3D12Device->CreateConstantBufferView(this.d3D12Resource.Get(), SizeInBytes, D3D12CpuDescriptorHandle);
                     break;
                 case ResourceType.ReadOnly:
-                    device.D3D12Device->CreateShaderResourceView(this.d3D12Resource, (uint)length, elementSizeInBytes, D3D12CpuDescriptorHandle);
+                    device.D3D12Device->CreateShaderResourceView(this.d3D12Resource.Get(), (uint)length, elementSizeInBytes, D3D12CpuDescriptorHandle);
                     break;
                 case ResourceType.ReadWrite:
-                    device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource, (uint)length, elementSizeInBytes, D3D12CpuDescriptorHandle);
+                    device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), (uint)length, elementSizeInBytes, D3D12CpuDescriptorHandle);
                     break;
             }
         }
@@ -110,29 +110,29 @@ namespace ComputeSharp.Resources
         /// Reads the contents of the specified range from the current <see cref="Buffer{T}"/> instance and writes them into a target memory area.
         /// </summary>
         /// <param name="destination">The input memory area to write data to.</param>
-        /// <param name="size">The size of the memory area to write data to.</param>
+        /// <param name="length">The length of the memory area to write data to.</param>
         /// <param name="offset">The offset to start reading data from.</param>
-        internal abstract void GetData(ref T destination, int size, int offset);
+        internal abstract void CopyTo(ref T destination, int length, int offset);
 
         /// <summary>
         /// Writes the contents of a given memory area to a specified area of the current <see cref="Buffer{T}"/> instance.
         /// </summary>
         /// <param name="source">The input memory area to read data from.</param>
-        /// <param name="size">The size of the input memory area to read data from.</param>
+        /// <param name="length">The length of the input memory area to read data from.</param>
         /// <param name="offset">The offset to start writing data to.</param>
-        internal abstract void SetData(ref T source, int size, int offset);
+        internal abstract void CopyFrom(ref T source, int length, int offset);
 
         /// <summary>
         /// Writes the contents of a given <see cref="Buffer{T}"/> to the current <see cref="Buffer{T}"/> instance.
         /// </summary>
         /// <param name="source">The input <see cref="Buffer{T}"/> to read data from.</param>
-        public abstract void SetData(Buffer<T> source);
+        public abstract void CopyFrom(Buffer<T> source);
 
         /// <summary>
         /// Writes the contents of a given <see cref="Buffer{T}"/> to the current <see cref="Buffer{T}"/> instance, using a temporary CPU buffer.
         /// </summary>
         /// <param name="source">The input <see cref="Buffer{T}"/> to read data from.</param>
-        protected void SetDataWithCpuBuffer(Buffer<T> source)
+        protected void CopyFromWithCpuBuffer(Buffer<T> source)
         {
             T[] array = ArrayPool<T>.Shared.Rent(source.Length);
 
@@ -140,9 +140,9 @@ namespace ComputeSharp.Resources
             {
                 ref T r0 = ref MemoryMarshal.GetArrayDataReference(array);
 
-                source.GetData(ref r0, source.Length, 0);
+                source.CopyTo(ref r0, source.Length, 0);
 
-                SetData(ref r0, source.Length, 0);
+                CopyFrom(ref r0, source.Length, 0);
             }
             finally
             {

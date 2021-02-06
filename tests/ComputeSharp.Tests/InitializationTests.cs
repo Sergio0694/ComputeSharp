@@ -56,7 +56,7 @@ namespace ComputeSharp.Tests
 
                 device.For(128, new SampleShader(buffer));
 
-                int[] data = buffer.GetData();
+                int[] data = buffer.ToArray();
 
                 Assert.IsTrue(data.SequenceEqual(Enumerable.Range(0, 128)));
             }
@@ -75,7 +75,7 @@ namespace ComputeSharp.Tests
 
                 device.For(128, new SampleShader(buffer));
 
-                int[] data = buffer.GetData();
+                int[] data = buffer.ToArray();
 
                 Assert.IsTrue(data.SequenceEqual(Enumerable.Range(0, 128)));
             }

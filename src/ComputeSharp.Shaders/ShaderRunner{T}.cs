@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Commands;
+using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Shaders.Extensions;
 using ComputeSharp.Shaders.Renderer;
 using ComputeSharp.Shaders.Translation;
@@ -55,7 +56,7 @@ namespace ComputeSharp.Shaders
         /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
         /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
         /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-        public static void Run(
+        public static unsafe void Run(
             GraphicsDevice device,
             int x,
             int y,
@@ -93,20 +94,21 @@ namespace ComputeSharp.Shaders
             // Create the commands list and set the pipeline state
             using CommandList commandList = new(device, D3D12_COMMAND_LIST_TYPE_COMPUTE);
 
-            commandList.SetPipelineData(pipelineData);
+            commandList.D3D12GraphicsCommandList->SetComputeRootSignature(pipelineData.D3D12RootSignature);
+            commandList.D3D12GraphicsCommandList->SetPipelineState(pipelineData.D3D12PipelineState);
 
             // Extract the dispatch data for the shader invocation
             using DispatchData dispatchData = shaderData.Loader.GetDispatchData(device, in shader, x, y, z);
 
             // Initialize the loop targets and the captured values
-            commandList.SetComputeRoot32BitConstants(dispatchData.Variables);
+            commandList.D3D12GraphicsCommandList->SetComputeRoot32BitConstants(dispatchData.Variables);
 
             ReadOnlySpan<D3D12_GPU_DESCRIPTOR_HANDLE> resources = dispatchData.Resources;
 
             for (int i = 0; i < resources.Length; i++)
             {
                 // Load the captured buffers
-                commandList.SetComputeRootDescriptorTable(i + 1, resources[i]);
+                commandList.D3D12GraphicsCommandList->SetComputeRootDescriptorTable((uint)i + 1, resources[i]);
             }
 
             // Calculate the dispatch values
@@ -116,7 +118,7 @@ namespace ComputeSharp.Shaders
                 groupsZ = Math.DivRem(z, threadsZ, out int modZ) + (modZ == 0 ? 0 : 1);
 
             // Dispatch and wait for completion
-            commandList.Dispatch(groupsX, groupsY, groupsZ);
+            commandList.D3D12GraphicsCommandList->Dispatch((uint)groupsX, (uint)groupsY, (uint)groupsZ);
             commandList.ExecuteAndWaitForCompletion();
         }
 

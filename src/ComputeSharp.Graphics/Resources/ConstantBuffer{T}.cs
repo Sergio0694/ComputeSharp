@@ -9,7 +9,7 @@ using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Graphics.Resources.Enums;
 using ComputeSharp.Graphics.Resources.Interop;
 using ComputeSharp.Resources;
-using ComputeSharp.Resources.Views;
+using ComputeSharp.Resources.Debug;
 using Microsoft.Toolkit.Diagnostics;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 using FX = TerraFX.Interop.Windows;
@@ -59,7 +59,7 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        internal override unsafe void GetData(ref T destination, int size, int offset)
+        internal override unsafe void CopyTo(ref T destination, int size, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -94,7 +94,7 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        internal override unsafe void SetData(ref T source, int size, int offset)
+        internal override unsafe void CopyFrom(ref T source, int size, int offset)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -129,7 +129,7 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        public override unsafe void SetData(Buffer<T> source)
+        public override unsafe void CopyFrom(Buffer<T> source)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -143,10 +143,10 @@ namespace ComputeSharp
                 // Directly copy the input buffer, if possible
                 using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
-                copyCommandList.CopyBufferRegion(D3D12Resource, 0, source.D3D12Resource, 0,(ulong)SizeInBytes);
+                copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(D3D12Resource, 0, source.D3D12Resource, 0,(ulong)SizeInBytes);
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
-            else SetDataWithCpuBuffer(source);
+            else CopyFromWithCpuBuffer(source);
         }
 
         /// <inheritdoc/>

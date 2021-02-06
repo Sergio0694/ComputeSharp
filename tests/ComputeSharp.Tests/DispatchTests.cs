@@ -13,7 +13,7 @@ namespace ComputeSharp.Tests
 
             Gpu.Default.For(buffer.Width, buffer.Height, buffer.Depth, new ThreadIdsShader(buffer));
 
-            Int4[,,] data = buffer.GetData();
+            Int4[,,] data = buffer.ToArray();
 
             for (int z = 0; z < 50; z++)
             {
@@ -49,7 +49,7 @@ namespace ComputeSharp.Tests
 
             Gpu.Default.For(buffer.Width, buffer.Height, buffer.Depth, 4, 4, 4, new GroupIdsShader(buffer));
 
-            Int4[,,] data = buffer.GetData();
+            Int4[,,] data = buffer.ToArray();
 
             for (int z = 0; z < 50; z++)
             {
@@ -87,7 +87,7 @@ namespace ComputeSharp.Tests
 
             Gpu.Default.For(1, 1, 1, 4, 15, 7, new GroupSizeShader(buffer));
             
-            int[] data = buffer.GetData();
+            int[] data = buffer.ToArray();
 
             Assert.AreEqual(4, data[0]);
             Assert.AreEqual(15, data[1]);

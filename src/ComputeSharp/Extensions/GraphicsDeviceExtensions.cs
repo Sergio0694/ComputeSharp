@@ -33,13 +33,13 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated buffer.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated buffer.</param>
         /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, T[] array)
+        public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, T[] source)
             where T : unmanaged
         {
-            return device.AllocateConstantBuffer<T>(array.AsSpan());
+            return device.AllocateConstantBuffer<T>(source.AsSpan());
         }
 
         /// <summary>
@@ -47,15 +47,15 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
-        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated buffer.</param>
+        /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated buffer.</param>
         /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
-        public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> span)
+        public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> source)
             where T : unmanaged
         {
-            ConstantBuffer<T> buffer = new(device, span.Length, AllocationMode.Default);
+            ConstantBuffer<T> buffer = new(device, source.Length, AllocationMode.Default);
 
-            buffer.SetData(span);
+            buffer.CopyFrom(source);
 
             return buffer;
         }
@@ -65,15 +65,15 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
-        /// <param name="buffer">The input <see cref="Buffer{T}"/> with the data to copy on the allocated buffer.</param>
+        /// <param name="source">The input <see cref="Buffer{T}"/> with the data to copy on the allocated buffer.</param>
         /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance with the contents of the input <see cref="Buffer{T}"/>.</returns>
         [Pure]
-        public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, Buffer<T> buffer)
+        public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, Buffer<T> source)
             where T : unmanaged
         {
-            ConstantBuffer<T> constantBuffer = new(device, buffer.Length, AllocationMode.Default);
+            ConstantBuffer<T> constantBuffer = new(device, source.Length, AllocationMode.Default);
 
-            constantBuffer.SetData(buffer);
+            constantBuffer.CopyFrom(source);
 
             return constantBuffer;
         }
@@ -98,13 +98,13 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated buffer.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated buffer.</param>
         /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, T[] array)
+        public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, T[] source)
             where T : unmanaged
         {
-            return device.AllocateReadOnlyBuffer<T>(array.AsSpan());
+            return device.AllocateReadOnlyBuffer<T>(source.AsSpan());
         }
 
         /// <summary>
@@ -112,15 +112,15 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
-        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated buffer.</param>
+        /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated buffer.</param>
         /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
-        public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> span)
+        public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> source)
             where T : unmanaged
         {
-            ReadOnlyBuffer<T> buffer = new(device, span.Length, AllocationMode.Default);
+            ReadOnlyBuffer<T> buffer = new(device, source.Length, AllocationMode.Default);
 
-            buffer.SetData(span);
+            buffer.CopyFrom(source);
 
             return buffer;
         }
@@ -130,15 +130,15 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
-        /// <param name="buffer">The input <see cref="Buffer{T}"/> with the data to copy on the allocated buffer.</param>
+        /// <param name="source">The input <see cref="Buffer{T}"/> with the data to copy on the allocated buffer.</param>
         /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input <see cref="Buffer{T}"/>.</returns>
         [Pure]
-        public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, Buffer<T> buffer)
+        public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, Buffer<T> source)
             where T : unmanaged
         {
-            ReadOnlyBuffer<T> readWriteBuffer = new(device, buffer.Length, AllocationMode.Default);
+            ReadOnlyBuffer<T> readWriteBuffer = new(device, source.Length, AllocationMode.Default);
 
-            readWriteBuffer.SetData(buffer);
+            readWriteBuffer.CopyFrom(source);
 
             return readWriteBuffer;
         }
@@ -164,15 +164,15 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <returns>A <see cref="ReadOnlyTexture2D{T}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, T[] array, int width, int height)
+        public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, T[] source, int width, int height)
             where T : unmanaged
         {
-            return device.AllocateReadOnlyTexture2D<T>(array.AsSpan(), width, height);
+            return device.AllocateReadOnlyTexture2D<T>(source.AsSpan(), width, height);
         }
 
         /// <summary>
@@ -180,16 +180,16 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <param name="offset">The starting offset within <paramref name="array"/> to read data from.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <returns>A <see cref="ReadOnlyTexture2D{T}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, T[] array, int offset, int width, int height)
+        public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, T[] source, int offset, int width, int height)
             where T : unmanaged
         {
-            return device.AllocateReadOnlyTexture2D<T>(array.AsSpan(offset), width, height);
+            return device.AllocateReadOnlyTexture2D<T>(source.AsSpan(offset), width, height);
         }
 
         /// <summary>
@@ -197,15 +197,15 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <returns>A read write <see cref="ReadOnlyTexture2D{T}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, T[,] array)
+        public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, T[,] source)
             where T : unmanaged
         {
-            ReadOnlyTexture2D<T> texture = new(device, array.GetLength(1), array.GetLength(0), AllocationMode.Default);
+            ReadOnlyTexture2D<T> texture = new(device, source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
-            texture.SetData(array);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -215,17 +215,17 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <returns>A <see cref="ReadOnlyTexture2D{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
-        public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, ReadOnlySpan<T> span, int width, int height)
+        public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height)
             where T : unmanaged
         {
             ReadOnlyTexture2D<T> texture = new(device, width, height, AllocationMode.Default);
 
-            texture.SetData(span);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -254,16 +254,16 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <returns>A <see cref="ReadOnlyTexture2D{T,TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, T[] array, int width, int height)
+        public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, T[] source, int width, int height)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
-            return device.AllocateReadOnlyTexture2D<T, TPixel>(array.AsSpan(), width, height);
+            return device.AllocateReadOnlyTexture2D<T, TPixel>(source.AsSpan(), width, height);
         }
 
         /// <summary>
@@ -272,17 +272,17 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <param name="offset">The starting offset within <paramref name="array"/> to read data from.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <returns>A <see cref="ReadOnlyTexture2D{T,TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, T[] array, int offset, int width, int height)
+        public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, T[] source, int offset, int width, int height)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
-            return device.AllocateReadOnlyTexture2D<T, TPixel>(array.AsSpan(offset), width, height);
+            return device.AllocateReadOnlyTexture2D<T, TPixel>(source.AsSpan(offset), width, height);
         }
 
         /// <summary>
@@ -291,16 +291,16 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <returns>A read write <see cref="ReadOnlyTexture2D{T,TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, T[,] array)
+        public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, T[,] source)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
-            ReadOnlyTexture2D<T, TPixel> texture = new(device, array.GetLength(1), array.GetLength(0), AllocationMode.Default);
+            ReadOnlyTexture2D<T, TPixel> texture = new(device, source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
-            texture.SetData(array);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -311,18 +311,18 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <returns>A <see cref="ReadOnlyTexture2D{T,TPixel}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
-        public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> span, int width, int height)
+        public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
             ReadOnlyTexture2D<T, TPixel> texture = new(device, width, height, AllocationMode.Default);
 
-            texture.SetData(span);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -349,16 +349,16 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
         /// <returns>A <see cref="ReadOnlyTexture3D{T}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, T[] array, int width, int height, int depth)
+        public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, T[] source, int width, int height, int depth)
             where T : unmanaged
         {
-            return device.AllocateReadOnlyTexture3D<T>(array.AsSpan(), width, height, depth);
+            return device.AllocateReadOnlyTexture3D<T>(source.AsSpan(), width, height, depth);
         }
 
         /// <summary>
@@ -366,17 +366,17 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <param name="offset">The starting offset within <paramref name="array"/> to read data from.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
         /// <returns>A <see cref="ReadOnlyTexture3D{T}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, T[] array, int offset, int width, int height, int depth)
+        public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, T[] source, int offset, int width, int height, int depth)
             where T : unmanaged
         {
-            return device.AllocateReadOnlyTexture3D<T>(array.AsSpan(offset), width, height, depth);
+            return device.AllocateReadOnlyTexture3D<T>(source.AsSpan(offset), width, height, depth);
         }
 
         /// <summary>
@@ -384,19 +384,19 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <returns>A read write <see cref="ReadOnlyTexture3D{T}"/> instance with the contents of the input array.</returns>
         /// <remarks>
         /// The source 3D array needs to have each 2D plane stacked on the depth axis.
         /// That is, the expected layout of the input array has to be [depth, height, width].
         /// </remarks>
         [Pure]
-        public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, T[,,] array)
+        public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, T[,,] source)
             where T : unmanaged
         {
-            ReadOnlyTexture3D<T> texture = new(device, array.GetLength(2), array.GetLength(1), array.GetLength(0), AllocationMode.Default);
+            ReadOnlyTexture3D<T> texture = new(device, source.GetLength(2), source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
-            texture.SetData(array);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -406,18 +406,18 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
         /// <returns>A <see cref="ReadOnlyTexture3D{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
-        public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, ReadOnlySpan<T> span, int width, int height, int depth)
+        public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height, int depth)
             where T : unmanaged
         {
             ReadOnlyTexture3D<T> texture = new(device, width, height, depth, AllocationMode.Default);
 
-            texture.SetData(span);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -447,17 +447,17 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
         /// <returns>A <see cref="ReadOnlyTexture3D{T,TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadOnlyTexture3D<T, TPixel> AllocateReadOnlyTexture3D<T, TPixel>(this GraphicsDevice device, T[] array, int width, int height, int depth)
+        public static ReadOnlyTexture3D<T, TPixel> AllocateReadOnlyTexture3D<T, TPixel>(this GraphicsDevice device, T[] source, int width, int height, int depth)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
-            return device.AllocateReadOnlyTexture3D<T, TPixel>(array.AsSpan(), width, height, depth);
+            return device.AllocateReadOnlyTexture3D<T, TPixel>(source.AsSpan(), width, height, depth);
         }
 
         /// <summary>
@@ -466,18 +466,18 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <param name="offset">The starting offset within <paramref name="array"/> to read data from.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
         /// <returns>A <see cref="ReadOnlyTexture3D{T,TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadOnlyTexture3D<T, TPixel> AllocateReadOnlyTexture3D<T, TPixel>(this GraphicsDevice device, T[] array, int offset, int width, int height, int depth)
+        public static ReadOnlyTexture3D<T, TPixel> AllocateReadOnlyTexture3D<T, TPixel>(this GraphicsDevice device, T[] source, int offset, int width, int height, int depth)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
-            return device.AllocateReadOnlyTexture3D<T, TPixel>(array.AsSpan(offset), width, height, depth);
+            return device.AllocateReadOnlyTexture3D<T, TPixel>(source.AsSpan(offset), width, height, depth);
         }
 
         /// <summary>
@@ -486,20 +486,20 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <returns>A read write <see cref="ReadOnlyTexture3D{T,TPixel}"/> instance with the contents of the input array.</returns>
         /// <remarks>
         /// The source 3D array needs to have each 2D plane stacked on the depth axis.
         /// That is, the expected layout of the input array has to be [depth, height, width].
         /// </remarks>
         [Pure]
-        public static ReadOnlyTexture3D<T, TPixel> AllocateReadOnlyTexture3D<T, TPixel>(this GraphicsDevice device, T[,,] array)
+        public static ReadOnlyTexture3D<T, TPixel> AllocateReadOnlyTexture3D<T, TPixel>(this GraphicsDevice device, T[,,] source)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
-            ReadOnlyTexture3D<T, TPixel> texture = new(device, array.GetLength(2), array.GetLength(1), array.GetLength(0), AllocationMode.Default);
+            ReadOnlyTexture3D<T, TPixel> texture = new(device, source.GetLength(2), source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
-            texture.SetData(array);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -510,19 +510,19 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
         /// <returns>A <see cref="ReadOnlyTexture3D{T,TPixel}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
-        public static ReadOnlyTexture3D<T, TPixel> AllocateReadOnlyTexture3D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> span, int width, int height, int depth)
+        public static ReadOnlyTexture3D<T, TPixel> AllocateReadOnlyTexture3D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height, int depth)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
             ReadOnlyTexture3D<T, TPixel> texture = new(device, width, height, depth, AllocationMode.Default);
 
-            texture.SetData(span);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -547,13 +547,13 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated buffer.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated buffer.</param>
         /// <returns>A read write <see cref="ReadWriteBuffer{T}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, T[] array)
+        public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, T[] source)
             where T : unmanaged
         {
-            return device.AllocateReadWriteBuffer<T>(array.AsSpan());
+            return device.AllocateReadWriteBuffer<T>(source.AsSpan());
         }
 
         /// <summary>
@@ -561,15 +561,15 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
-        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated buffer.</param>
+        /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated buffer.</param>
         /// <returns>A read write <see cref="ReadWriteBuffer{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
-        public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> span)
+        public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> source)
             where T : unmanaged
         {
-            ReadWriteBuffer<T> buffer = new(device, span.Length, AllocationMode.Default);
+            ReadWriteBuffer<T> buffer = new(device, source.Length, AllocationMode.Default);
 
-            buffer.SetData(span);
+            buffer.CopyFrom(source);
 
             return buffer;
         }
@@ -579,15 +579,15 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
-        /// <param name="buffer">The input <see cref="Buffer{T}"/> with the data to copy on the allocated buffer.</param>
+        /// <param name="source">The input <see cref="Buffer{T}"/> with the data to copy on the allocated buffer.</param>
         /// <returns>A read write <see cref="ReadWriteBuffer{T}"/> instance with the contents of the input <see cref="Buffer{T}"/>.</returns>
         [Pure]
-        public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, Buffer<T> buffer)
+        public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, Buffer<T> source)
             where T : unmanaged
         {
-            ReadWriteBuffer<T> readWriteBuffer = new(device, buffer.Length, AllocationMode.Default);
+            ReadWriteBuffer<T> readWriteBuffer = new(device, source.Length, AllocationMode.Default);
 
-            readWriteBuffer.SetData(buffer);
+            readWriteBuffer.CopyFrom(source);
 
             return readWriteBuffer;
         }
@@ -613,15 +613,15 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <returns>A <see cref="ReadWriteTexture2D{T}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, T[] array, int width, int height)
+        public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, T[] source, int width, int height)
             where T : unmanaged
         {
-            return device.AllocateReadWriteTexture2D<T>(array.AsSpan(), width, height);
+            return device.AllocateReadWriteTexture2D<T>(source.AsSpan(), width, height);
         }
 
         /// <summary>
@@ -629,16 +629,16 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <param name="offset">The starting offset within <paramref name="array"/> to read data from.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <returns>A <see cref="ReadWriteTexture2D{T}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, T[] array, int offset, int width, int height)
+        public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, T[] source, int offset, int width, int height)
             where T : unmanaged
         {
-            return device.AllocateReadWriteTexture2D<T>(array.AsSpan(offset), width, height);
+            return device.AllocateReadWriteTexture2D<T>(source.AsSpan(offset), width, height);
         }
 
         /// <summary>
@@ -646,15 +646,15 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <returns>A read write <see cref="ReadWriteTexture2D{T}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, T[,] array)
+        public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, T[,] source)
             where T : unmanaged
         {
-            ReadWriteTexture2D<T> texture = new(device, array.GetLength(1), array.GetLength(0), AllocationMode.Default);
+            ReadWriteTexture2D<T> texture = new(device, source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
-            texture.SetData(array);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -664,17 +664,17 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <returns>A <see cref="ReadWriteTexture2D{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
-        public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, ReadOnlySpan<T> span, int width, int height)
+        public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height)
             where T : unmanaged
         {
             ReadWriteTexture2D<T> texture = new(device, width, height, AllocationMode.Default);
 
-            texture.SetData(span);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -703,16 +703,16 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <returns>A <see cref="ReadWriteTexture2D{T,TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, T[] array, int width, int height)
+        public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, T[] source, int width, int height)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
-            return device.AllocateReadWriteTexture2D<T, TPixel>(array.AsSpan(), width, height);
+            return device.AllocateReadWriteTexture2D<T, TPixel>(source.AsSpan(), width, height);
         }
 
         /// <summary>
@@ -721,17 +721,17 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <param name="offset">The starting offset within <paramref name="array"/> to read data from.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <returns>A <see cref="ReadWriteTexture2D{T,TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, T[] array, int offset, int width, int height)
+        public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, T[] source, int offset, int width, int height)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
-            return device.AllocateReadWriteTexture2D<T, TPixel>(array.AsSpan(offset), width, height);
+            return device.AllocateReadWriteTexture2D<T, TPixel>(source.AsSpan(offset), width, height);
         }
 
         /// <summary>
@@ -740,16 +740,16 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <returns>A read write <see cref="ReadWriteTexture2D{T,TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, T[,] array)
+        public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, T[,] source)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
-            ReadWriteTexture2D<T, TPixel> texture = new(device, array.GetLength(1), array.GetLength(0), AllocationMode.Default);
+            ReadWriteTexture2D<T, TPixel> texture = new(device, source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
-            texture.SetData(array);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -760,18 +760,18 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <returns>A <see cref="ReadWriteTexture2D{T,TPixel}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
-        public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> span, int width, int height)
+        public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
             ReadWriteTexture2D<T, TPixel> texture = new(device, width, height, AllocationMode.Default);
 
-            texture.SetData(span);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -798,16 +798,16 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
         /// <returns>A <see cref="ReadWriteTexture3D{T}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, T[] array, int width, int height, int depth)
+        public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, T[] source, int width, int height, int depth)
             where T : unmanaged
         {
-            return device.AllocateReadWriteTexture3D<T>(array.AsSpan(), width, height, depth);
+            return device.AllocateReadWriteTexture3D<T>(source.AsSpan(), width, height, depth);
         }
 
         /// <summary>
@@ -815,17 +815,17 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <param name="offset">The starting offset within <paramref name="array"/> to read data from.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
         /// <returns>A <see cref="ReadWriteTexture3D{T}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, T[] array, int offset, int width, int height, int depth)
+        public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, T[] source, int offset, int width, int height, int depth)
             where T : unmanaged
         {
-            return device.AllocateReadWriteTexture3D<T>(array.AsSpan(offset), width, height, depth);
+            return device.AllocateReadWriteTexture3D<T>(source.AsSpan(offset), width, height, depth);
         }
 
         /// <summary>
@@ -833,19 +833,19 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <returns>A read write <see cref="ReadWriteTexture3D{T}"/> instance with the contents of the input array.</returns>
         /// <remarks>
         /// The source 3D array needs to have each 2D plane stacked on the depth axis.
         /// That is, the expected layout of the input array has to be [depth, height, width].
         /// </remarks>
         [Pure]
-        public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, T[,,] array)
+        public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, T[,,] source)
             where T : unmanaged
         {
-            ReadWriteTexture3D<T> texture = new(device, array.GetLength(2), array.GetLength(1), array.GetLength(0), AllocationMode.Default);
+            ReadWriteTexture3D<T> texture = new(device, source.GetLength(2), source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
-            texture.SetData(array);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -855,18 +855,18 @@ namespace ComputeSharp
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
         /// <returns>A <see cref="ReadWriteTexture3D{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
-        public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, ReadOnlySpan<T> span, int width, int height, int depth)
+        public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height, int depth)
             where T : unmanaged
         {
             ReadWriteTexture3D<T> texture = new(device, width, height, depth, AllocationMode.Default);
 
-            texture.SetData(span);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -881,7 +881,7 @@ namespace ComputeSharp
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
         /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
-        /// <returns>A zeroed <see cref="ReadWriteTexture3D{T,TPixel}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>].</returns>
+        /// <returns>A <see cref="ReadWriteTexture3D{T,TPixel}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>, <paramref name="depth"/>].</returns>
         [Pure]
         public static ReadWriteTexture3D<T, TPixel> AllocateReadWriteTexture3D<T, TPixel>(this GraphicsDevice device, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
             where T : unmanaged, IUnorm<TPixel>
@@ -896,17 +896,17 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
         /// <returns>A <see cref="ReadWriteTexture3D{T,TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadWriteTexture3D<T, TPixel> AllocateReadWriteTexture3D<T, TPixel>(this GraphicsDevice device, T[] array, int width, int height, int depth)
+        public static ReadWriteTexture3D<T, TPixel> AllocateReadWriteTexture3D<T, TPixel>(this GraphicsDevice device, T[] source, int width, int height, int depth)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
-            return device.AllocateReadWriteTexture3D<T, TPixel>(array.AsSpan(), width, height, depth);
+            return device.AllocateReadWriteTexture3D<T, TPixel>(source.AsSpan(), width, height, depth);
         }
 
         /// <summary>
@@ -915,18 +915,18 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <param name="offset">The starting offset within <paramref name="array"/> to read data from.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
         /// <returns>A <see cref="ReadWriteTexture3D{T,TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
-        public static ReadWriteTexture3D<T, TPixel> AllocateReadWriteTexture3D<T, TPixel>(this GraphicsDevice device, T[] array, int offset, int width, int height, int depth)
+        public static ReadWriteTexture3D<T, TPixel> AllocateReadWriteTexture3D<T, TPixel>(this GraphicsDevice device, T[] source, int offset, int width, int height, int depth)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
-            return device.AllocateReadWriteTexture3D<T, TPixel>(array.AsSpan(offset), width, height, depth);
+            return device.AllocateReadWriteTexture3D<T, TPixel>(source.AsSpan(offset), width, height, depth);
         }
 
         /// <summary>
@@ -935,20 +935,20 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="array">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <returns>A read write <see cref="ReadWriteTexture3D{T,TPixel}"/> instance with the contents of the input array.</returns>
         /// <remarks>
         /// The source 3D array needs to have each 2D plane stacked on the depth axis.
         /// That is, the expected layout of the input array has to be [depth, height, width].
         /// </remarks>
         [Pure]
-        public static ReadWriteTexture3D<T, TPixel> AllocateReadWriteTexture3D<T, TPixel>(this GraphicsDevice device, T[,,] array)
+        public static ReadWriteTexture3D<T, TPixel> AllocateReadWriteTexture3D<T, TPixel>(this GraphicsDevice device, T[,,] source)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
-            ReadWriteTexture3D<T, TPixel> texture = new(device, array.GetLength(2), array.GetLength(1), array.GetLength(0), AllocationMode.Default);
+            ReadWriteTexture3D<T, TPixel> texture = new(device, source.GetLength(2), source.GetLength(1), source.GetLength(0), AllocationMode.Default);
 
-            texture.SetData(array);
+            texture.CopyFrom(source);
 
             return texture;
         }
@@ -959,21 +959,117 @@ namespace ComputeSharp
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="span">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
+        /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
         /// <returns>A <see cref="ReadWriteTexture3D{T,TPixel}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
-        public static ReadWriteTexture3D<T, TPixel> AllocateReadWriteTexture3D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> span, int width, int height, int depth)
+        public static ReadWriteTexture3D<T, TPixel> AllocateReadWriteTexture3D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height, int depth)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
             ReadWriteTexture3D<T, TPixel> texture = new(device, width, height, depth, AllocationMode.Default);
 
-            texture.SetData(span);
+            texture.CopyFrom(source);
 
             return texture;
+        }
+
+        /// <summary>
+        /// Allocates a new upload buffer with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
+        /// <param name="length">The length of the buffer to allocate.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+        /// <returns>A <see cref="ReadOnlyBuffer{T}"/> instance of size <paramref name="length"/>.</returns>
+        [Pure]
+        public static UploadBuffer<T> AllocateUploadBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
+            where T : unmanaged
+        {
+            return new(device, length, allocationMode);
+        }
+
+        /// <summary>
+        /// Allocates a new upload 2D texture with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
+        /// <param name="width">The width of the texture.</param>
+        /// <param name="height">The height of the texture.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+        /// <returns>A <see cref="UploadTexture2D{T}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>].</returns>
+        [Pure]
+        public static UploadTexture2D<T> AllocateUploadTexture2D<T>(this GraphicsDevice device, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
+            where T : unmanaged
+        {
+            return new(device, width, height, allocationMode);
+        }
+
+        /// <summary>
+        /// Allocates a new upload 3D texture with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
+        /// <param name="width">The width of the texture.</param>
+        /// <param name="height">The height of the texture.</param>
+        /// <param name="depth">The depth of the texture.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+        /// <returns>A <see cref="UploadTexture3D{T}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>, <paramref name="depth"/>].</returns>
+        [Pure]
+        public static UploadTexture3D<T> AllocateUploadTexture3D<T>(this GraphicsDevice device, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
+            where T : unmanaged
+        {
+            return new(device, width, height, depth, allocationMode);
+        }
+
+        /// <summary>
+        /// Allocates a new readback buffer with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
+        /// <param name="length">The length of the buffer to allocate.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+        /// <returns>A <see cref="ReadBackBuffer{T}"/> instance of size <paramref name="length"/>.</returns>
+        [Pure]
+        public static ReadBackBuffer<T> AllocateReadBackBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
+            where T : unmanaged
+        {
+            return new(device, length, allocationMode);
+        }
+
+        /// <summary>
+        /// Allocates a new readback 2D texture with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
+        /// <param name="width">The width of the texture.</param>
+        /// <param name="height">The height of the texture.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+        /// <returns>A <see cref="ReadBackTexture2D{T}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>].</returns>
+        [Pure]
+        public static ReadBackTexture2D<T> AllocateReadBackTexture2D<T>(this GraphicsDevice device, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
+            where T : unmanaged
+        {
+            return new(device, width, height, allocationMode);
+        }
+
+        /// <summary>
+        /// Allocates a new readback 3D texture with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the buffer.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
+        /// <param name="width">The width of the texture.</param>
+        /// <param name="height">The height of the texture.</param>
+        /// <param name="depth">The depth of the texture.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
+        /// <returns>A <see cref="ReadBackTexture3D{T}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>, <paramref name="depth"/>].</returns>
+        [Pure]
+        public static ReadBackTexture3D<T> AllocateReadBackTexture3D<T>(this GraphicsDevice device, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
+            where T : unmanaged
+        {
+            return new(device, width, height, depth, allocationMode);
         }
 
         /// <summary>

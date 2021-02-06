@@ -101,7 +101,7 @@ namespace ComputeSharp.BokehBlur.Processors
                 Gpu.Default.For<VerticalConvolutionProcessor>(source.Width, source.Height, new(sourceTexture, firstPassTexture, kernelBuffer));
                 Gpu.Default.For<HorizontalConvolutionProcessor>(source.Width, source.Height, new(firstPassTexture, sourceTexture, kernelBuffer));
 
-                sourceTexture.GetData(span);
+                sourceTexture.CopyTo(span);
             }
 
             /// <summary>

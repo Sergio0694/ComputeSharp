@@ -157,7 +157,7 @@ namespace ComputeSharp.Benchmark.Blas
 
             BlasHelpers.FullyConnectedForwardGpu(Gpu.Default, C, N, M, P, x, w, b, y);
 
-            y.GetData(Y);
+            y.CopyTo(Y);
         }
     }
 }

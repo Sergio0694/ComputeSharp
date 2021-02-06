@@ -11,17 +11,17 @@
         /// <summary>
         /// Gets the width of the current texture.
         /// </summary>
-        public int Width { get; }
+        int Width { get; }
 
         /// <summary>
         /// Gets the height of the current texture.
         /// </summary>
-        public int Height { get; }
+        int Height { get; }
 
         /// <summary>
         /// Gets the depth of the current texture.
         /// </summary>
-        public int Depth { get; }
+        int Depth { get; }
 
         /// <summary>
         /// Gets a single <typeparamref name="TPixel"/> value from the current readonly texture.
@@ -30,13 +30,13 @@
         /// <param name="y">The vertical offset of the value to get.</param>
         /// <param name="z">The depthwise offset of the value to get.</param>
         /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
-        public TPixel this[int x, int y, int z] { get; }
+        TPixel this[int x, int y, int z] { get; }
 
         /// <summary>
         /// Gets a single <typeparamref name="TPixel"/> value from the current readonly texture.
         /// </summary>
         /// <param name="xyz">The coordinates of the value to get.</param>
         /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
-        public TPixel this[Int3 xyz] { get; }
+        TPixel this[Int3 xyz] { get; }
     }
 }
