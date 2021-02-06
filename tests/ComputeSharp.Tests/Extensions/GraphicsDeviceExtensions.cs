@@ -124,6 +124,69 @@ namespace ComputeSharp.Tests.Extensions
         }
 
         /// <summary>
+        /// Allocates a new <see cref="TransferBuffer{T}"/> instance of the specified type.
+        /// </summary>
+        /// <typeparam name="T">The type of items in the buffer.</typeparam>
+        /// <param name="device">The target <see cref="GraphicsDevice"/> instance to allocate the buffer for.</param>
+        /// <param name="type">The type of buffer to allocate.</param>
+        /// <param name="length">The length of the buffer to create.</param>
+        /// <returns>A <see cref="TransferBuffer{T}"/> instance of the requested size.</returns>
+        [Pure]
+        public static TransferBuffer<T> AllocateTransferBuffer<T>(this GraphicsDevice device, Type type, int length)
+            where T : unmanaged
+        {
+            return type switch
+            {
+                _ when type == typeof(UploadBuffer<>) => device.AllocateUploadBuffer<T>(length),
+                _ when type == typeof(ReadBackBuffer<>) => device.AllocateReadBackBuffer<T>(length),
+                _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
+            };
+        }
+
+        /// <summary>
+        /// Allocates a new <see cref="TransferTexture2D{T}"/> instance of the specified type.
+        /// </summary>
+        /// <typeparam name="T">The type of items in the buffer.</typeparam>
+        /// <param name="device">The target <see cref="GraphicsDevice"/> instance to allocate the buffer for.</param>
+        /// <param name="type">The type of buffer to allocate.</param>
+        /// <param name="width">The width of the texture to create.</param>
+        /// <param name="height">The height of the texture to create.</param>
+        /// <returns>A <see cref="TransferTexture2D{T}"/> instance of the requested size.</returns>
+        [Pure]
+        public static TransferTexture2D<T> AllocateTransferTexture2D<T>(this GraphicsDevice device, Type type, int width, int height)
+            where T : unmanaged
+        {
+            return type switch
+            {
+                _ when type == typeof(UploadTexture2D<>) => device.AllocateUploadTexture2D<T>(width, height),
+                _ when type == typeof(ReadBackTexture2D<>) => device.AllocateReadBackTexture2D<T>(width, height),
+                _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
+            };
+        }
+
+        /// <summary>
+        /// Allocates a new <see cref="TransferTexture3D{T}"/> instance of the specified type.
+        /// </summary>
+        /// <typeparam name="T">The type of items in the buffer.</typeparam>
+        /// <param name="device">The target <see cref="GraphicsDevice"/> instance to allocate the buffer for.</param>
+        /// <param name="type">The type of buffer to allocate.</param>
+        /// <param name="width">The width of the texture to create.</param>
+        /// <param name="height">The height of the texture to create.</param>
+        /// <param name="depth">The depth of the texture to create.</param>
+        /// <returns>A <see cref="TransferTexture3D{T}"/> instance of the requested size.</returns>
+        [Pure]
+        public static TransferTexture3D<T> AllocateTransferTexture3D<T>(this GraphicsDevice device, Type type, int width, int height, int depth)
+            where T : unmanaged
+        {
+            return type switch
+            {
+                _ when type == typeof(UploadTexture3D<>) => device.AllocateUploadTexture3D<T>(width, height, depth),
+                _ when type == typeof(ReadBackTexture3D<>) => device.AllocateReadBackTexture3D<T>(width, height, depth),
+                _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
+            };
+        }
+
+        /// <summary>
         /// Allocates a new <see cref="Buffer{T}"/> instance of the specified type.
         /// </summary>
         /// <typeparam name="T">The type of items in the buffer.</typeparam>

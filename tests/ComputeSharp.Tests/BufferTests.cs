@@ -26,10 +26,10 @@ namespace ComputeSharp.Tests
         [TestMethod]
         [DataRow(typeof(ConstantBuffer<>), -247824)]
         [DataRow(typeof(ConstantBuffer<>), -1)]
-        [DataRow(typeof(ConstantBuffer<>), -247824)]
-        [DataRow(typeof(ConstantBuffer<>), -1)]
-        [DataRow(typeof(ConstantBuffer<>), -247824)]
-        [DataRow(typeof(ConstantBuffer<>), -1)]
+        [DataRow(typeof(ReadOnlyBuffer<>), -247824)]
+        [DataRow(typeof(ReadOnlyBuffer<>), -1)]
+        [DataRow(typeof(ReadWriteBuffer<>), -247824)]
+        [DataRow(typeof(ReadWriteBuffer<>), -1)]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void Allocate_Uninitialized_Fail(Type bufferType, int length)
         {
