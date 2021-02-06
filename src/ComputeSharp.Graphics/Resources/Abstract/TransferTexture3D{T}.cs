@@ -69,7 +69,7 @@ namespace ComputeSharp.Resources
                 out _,
                 out ulong totalSizeInBytes);
 
-            using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(resourceType, allocationMode, totalSizeInBytes, GraphicsDevice.IsCacheCoherentUMA);
+            this.d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(resourceType, allocationMode, totalSizeInBytes, GraphicsDevice.IsCacheCoherentUMA);
             this.mappedData = (T*)this.d3D12Resource.Get()->Map().Pointer;
         }
 

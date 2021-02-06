@@ -361,7 +361,7 @@ namespace ComputeSharp.Resources
             source.ThrowIfDisposed();
 
             Guard.IsInRange(sourceX, 0, source.Width, nameof(sourceX));
-            Guard.IsInRange(sourceY, 0, source.Width, nameof(sourceY));
+            Guard.IsInRange(sourceY, 0, source.Height, nameof(sourceY));
             Guard.IsInRange(destinationX, 0, Width, nameof(destinationX));
             Guard.IsInRange(destinationY, 0, Height, nameof(destinationY));
             Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
