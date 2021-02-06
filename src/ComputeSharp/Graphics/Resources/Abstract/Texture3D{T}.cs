@@ -57,6 +57,7 @@ namespace ComputeSharp.Resources
         /// </summary>
         private readonly D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint;
 
+        /// <summary>
         /// The <see cref="Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>, if any.
         /// </summary>
         /// <remarks>This will be <see langword="null"/> if the owning device has <see cref="GraphicsDevice.IsCacheCoherentUMA"/> set.</remarks>
