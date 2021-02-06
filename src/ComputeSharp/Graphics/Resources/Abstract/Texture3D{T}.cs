@@ -117,7 +117,7 @@ namespace ComputeSharp.Resources
                 ? D3D12_COMMAND_LIST_TYPE_COPY
                 : D3D12_COMMAND_LIST_TYPE_COMPUTE;
 
-            GraphicsDevice.D3D12Device->GetCopyableFootprint(
+            device.D3D12Device->GetCopyableFootprint(
                 DXGIFormatHelper.GetForType<T>(),
                 (uint)width,
                 (uint)height,
@@ -502,6 +502,7 @@ namespace ComputeSharp.Resources
         protected override bool OnDispose()
         {
             this.d3D12Resource.Dispose();
+            this.allocation.Dispose();
 
             if (GraphicsDevice?.IsDisposed == false)
             {

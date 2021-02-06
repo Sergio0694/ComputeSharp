@@ -2,6 +2,7 @@
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Exceptions;
+using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
@@ -28,6 +29,12 @@ namespace ComputeSharp.Resources
         private readonly T* mappedData;
 
         /// <summary>
+        /// The <see cref="Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>, if any.
+        /// </summary>
+        /// <remarks>This will be <see langword="null"/> if the owning device has <see cref="GraphicsDevice.IsCacheCoherentUMA"/> set.</remarks>
+        private UniquePtr<Allocation> allocation;
+
+        /// <summary>
         /// Creates a new <see cref="TransferBuffer{T}"/> instance with the specified parameters.
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
@@ -46,7 +53,16 @@ namespace ComputeSharp.Resources
 
             ulong sizeInBytes = (uint)length * (uint)sizeof(T);
 
-            this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, allocationMode, sizeInBytes, device.IsCacheCoherentUMA);
+            if (device.IsCacheCoherentUMA)
+            {
+                this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, allocationMode, sizeInBytes, true);
+            }
+            else
+            {
+                this.allocation = device.Allocator->CreateResource(resourceType, allocationMode, sizeInBytes);
+                this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
+            }
+
             this.mappedData = (T*)this.d3D12Resource.Get()->Map().Pointer;
 
             this.d3D12Resource.Get()->SetName(this);
@@ -100,6 +116,7 @@ namespace ComputeSharp.Resources
         protected override bool OnDispose()
         {
             this.d3D12Resource.Dispose();
+            this.allocation.Dispose();
 
             return true;
         }
