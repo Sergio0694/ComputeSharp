@@ -16,7 +16,7 @@ namespace ComputeSharp
         public static void CopyTo<T>(this UploadTexture2D<T> texture, Texture2D<T> destination)
             where T : unmanaged
         {
-            destination.CopyFrom(texture, 0, 0, texture.Width, texture.Height);
+            destination.CopyFrom(texture, 0, 0, 0, 0, texture.Width, texture.Height);
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace ComputeSharp
         public static void CopyTo<T>(this UploadTexture2D<T> texture, Texture2D<T> destination, int x, int y, int width, int height)
             where T : unmanaged
         {
-            destination.CopyFrom(texture, x, y, width, height);
+            destination.CopyFrom(texture, x, y, 0, 0, width, height);
         }
     }
 }

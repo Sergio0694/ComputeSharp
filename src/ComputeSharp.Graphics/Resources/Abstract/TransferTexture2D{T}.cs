@@ -102,7 +102,7 @@ namespace ComputeSharp.Resources
             {
                 ThrowIfDisposed();
 
-                return new(this.mappedData, Height, Width, (int)this.d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
+                return new(this.mappedData, Width, Height, (int)this.d3D12PlacedSubresourceFootprint.Footprint.RowPitch);
             }
         }
 
