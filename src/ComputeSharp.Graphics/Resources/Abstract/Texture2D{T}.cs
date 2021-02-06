@@ -214,11 +214,13 @@ namespace ComputeSharp.Resources
         /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target <see cref="ReadBackTexture2D{T}"/> instance.
         /// </summary>
         /// <param name="destination">The target <see cref="ReadBackTexture2D{T}"/> instance to write data to.</param>
-        /// <param name="x">The horizontal offset in the source texture.</param>
-        /// <param name="y">The vertical offset in the source texture.</param>
+        /// <param name="destinationX">The horizontal offset within <paramref name="destination"/>.</param>
+        /// <param name="destinationY">The vertical offset within <paramref name="destination"/>.</param>
+        /// <param name="sourceX">The horizontal offset in the source texture.</param>
+        /// <param name="sourceY">The vertical offset in the source texture.</param>
         /// <param name="width">The width of the memory area to copy.</param>
         /// <param name="height">The height of the memory area to copy.</param>
-        internal void CopyTo(ReadBackTexture2D<T> destination, int x, int y, int width, int height)
+        internal void CopyTo(ReadBackTexture2D<T> destination, int destinationX, int destinationY, int sourceX, int sourceY, int width, int height)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -227,14 +229,18 @@ namespace ComputeSharp.Resources
             destination.ThrowIfDeviceMismatch(GraphicsDevice);
             destination.ThrowIfDisposed();
 
-            Guard.IsInRange(x, 0, Width, nameof(x));
-            Guard.IsInRange(y, 0, Height, nameof(y));
+            Guard.IsInRange(destinationX, 0, destination.Width, nameof(destinationX));
+            Guard.IsInRange(destinationY, 0, destination.Height, nameof(destinationY));
+            Guard.IsInRange(sourceX, 0, Width, nameof(sourceX));
+            Guard.IsInRange(sourceY, 0, Height, nameof(sourceY));
             Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
             Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
             Guard.IsBetweenOrEqualTo(width, 1, destination.Width, nameof(width));
             Guard.IsBetweenOrEqualTo(height, 1, destination.Height, nameof(height));
-            Guard.IsLessThanOrEqualTo(x + width, Width, nameof(x));
-            Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
+            Guard.IsBetweenOrEqualTo(destinationX + width, 1, destination.Width, nameof(destinationX));
+            Guard.IsBetweenOrEqualTo(destinationY + height, 1, destination.Height, nameof(destinationY));
+            Guard.IsLessThanOrEqualTo(sourceX + width, Width, nameof(sourceX));
+            Guard.IsLessThanOrEqualTo(sourceY + height, Height, nameof(sourceY));
 
             using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
 
@@ -248,12 +254,12 @@ namespace ComputeSharp.Resources
                 copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
                     d3D12ResourceDestination: destination.D3D12Resource,
                     d3D12PlacedSubresourceFootprintDestination,
-                    destinationX: 0,
-                    destinationY: 0,
+                    (uint)destinationX,
+                    (uint)destinationY,
                     destinationZ: 0,
                     d3D12ResourceSource: D3D12Resource,
-                    sourceX: (uint)x,
-                    sourceY: (uint)y,
+                    (uint)sourceX,
+                    (uint)sourceY,
                     sourceZ: 0,
                     (uint)width,
                     (uint)height,

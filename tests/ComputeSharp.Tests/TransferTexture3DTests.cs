@@ -49,7 +49,7 @@ namespace ComputeSharp.Tests
 
         [TestMethod]
         [DataRow(typeof(UploadTexture3D<>))]
-        //[DataRow(typeof(ReadBackTexture3D<>))]
+        [DataRow(typeof(ReadBackTexture3D<>))]
         [ExpectedException(typeof(ObjectDisposedException))]
         public void UsageAfterDispose(Type bufferType)
         {

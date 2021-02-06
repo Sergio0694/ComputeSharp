@@ -159,7 +159,7 @@ namespace ComputeSharp
         public static void CopyTo<T>(this Texture3D<T> texture, ReadBackTexture3D<T> destination)
             where T : unmanaged
         {
-            texture.CopyTo(destination, 0, 0, 0, texture.Width, texture.Height, texture.Depth);
+            texture.CopyTo(destination, 0, 0, 0, 0, 0, 0, texture.Width, texture.Height, texture.Depth);
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace ComputeSharp
         public static void CopyTo<T>(this Texture3D<T> texture, ReadBackTexture3D<T> destination, int x, int y, int z, int width, int height, int depth)
             where T : unmanaged
         {
-            texture.CopyTo(destination, x, y, z, width, height, depth);
+            texture.CopyTo(destination, 0, 0, 0, x, y, z, width, height, depth);
         }
 
         /// <summary>

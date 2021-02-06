@@ -232,13 +232,16 @@ namespace ComputeSharp.Resources
         /// Reads the contents of the specified range from the current <see cref="Texture3D{T}"/> instance and writes them into a <see cref="ReadBackTexture3D{T}"/> instance.
         /// </summary>
         /// <param name="destination">The target <see cref="ReadBackTexture3D{T}"/> instance to write data to.</param>
-        /// <param name="x">The horizontal offset in the source texture.</param>
-        /// <param name="y">The vertical offset in the source texture.</param>
-        /// <param name="z">The depthwise offset in the source texture.</param>
+        /// <param name="destinationX">The horizontal offset within <paramref name="destination"/>.</param>
+        /// <param name="destinationY">The vertical offset within <paramref name="destination"/>.</param>
+        /// <param name="destinationZ">The depthwise offset within <paramref name="destination"/>.</param>
+        /// <param name="sourceX">The horizontal offset in the source texture.</param>
+        /// <param name="sourceY">The vertical offset in the source texture.</param>
+        /// <param name="sourceZ">The depthwise offset in the source texture.</param>
         /// <param name="width">The width of the memory area to copy.</param>
         /// <param name="height">The height of the memory area to copy.</param>
         /// <param name="depth">The depth of the memory area to copy.</param>
-        internal void CopyTo(ReadBackTexture3D<T> destination, int x, int y, int z, int width, int height, int depth)
+        internal void CopyTo(ReadBackTexture3D<T> destination, int destinationX, int destinationY, int destinationZ, int sourceX, int sourceY, int sourceZ, int width, int height, int depth)
         {
             GraphicsDevice.ThrowIfDisposed();
 
@@ -247,18 +250,24 @@ namespace ComputeSharp.Resources
             destination.ThrowIfDeviceMismatch(GraphicsDevice);
             destination.ThrowIfDisposed();
 
-            Guard.IsInRange(x, 0, Width, nameof(x));
-            Guard.IsInRange(y, 0, Height, nameof(y));
-            Guard.IsInRange(z, 0, Depth, nameof(z));
+            Guard.IsInRange(destinationX, 0, destination.Width, nameof(destinationX));
+            Guard.IsInRange(destinationY, 0, destination.Height, nameof(destinationY));
+            Guard.IsInRange(destinationZ, 0, destination.Depth, nameof(destinationZ));
+            Guard.IsInRange(sourceX, 0, Width, nameof(sourceX));
+            Guard.IsInRange(sourceY, 0, Height, nameof(sourceY));
+            Guard.IsInRange(sourceZ, 0, Depth, nameof(sourceZ));
             Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
             Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
             Guard.IsBetweenOrEqualTo(depth, 1, Depth, nameof(depth));
             Guard.IsBetweenOrEqualTo(width, 1, destination.Width, nameof(width));
             Guard.IsBetweenOrEqualTo(height, 1, destination.Height, nameof(height));
             Guard.IsBetweenOrEqualTo(depth, 1, destination.Depth, nameof(depth));
-            Guard.IsLessThanOrEqualTo(x + width, Width, nameof(x));
-            Guard.IsLessThanOrEqualTo(y + height, Height, nameof(y));
-            Guard.IsLessThanOrEqualTo(z + depth, Depth, nameof(z));
+            Guard.IsBetweenOrEqualTo(destinationX + width, 1, destination.Width, nameof(destinationX));
+            Guard.IsBetweenOrEqualTo(destinationY + height, 1, destination.Height, nameof(destinationY));
+            Guard.IsBetweenOrEqualTo(destinationZ + depth, 1, destination.Depth, nameof(destinationZ));
+            Guard.IsLessThanOrEqualTo(sourceX + width, Width, nameof(sourceX));
+            Guard.IsLessThanOrEqualTo(sourceY + height, Height, nameof(sourceY));
+            Guard.IsLessThanOrEqualTo(sourceZ + depth, Depth, nameof(sourceZ));
 
             using CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType);
 
@@ -272,13 +281,13 @@ namespace ComputeSharp.Resources
                 copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
                     d3D12ResourceDestination: destination.D3D12Resource,
                     d3D12PlacedSubresourceFootprintDestination,
-                    destinationX: 0,
-                    destinationY: 0,
-                    destinationZ: 0,
+                    (uint)destinationX,
+                    (uint)destinationY,
+                    (ushort)destinationZ,
                     d3D12ResourceSource: D3D12Resource,
-                    sourceX: (uint)x,
-                    sourceY: (uint)y,
-                    sourceZ: (ushort)z,
+                    (uint)sourceX,
+                    (uint)sourceY,
+                    (ushort)sourceZ,
                     (uint)width,
                     (uint)height,
                     (ushort)depth);
