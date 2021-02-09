@@ -80,9 +80,6 @@ namespace ComputeSharp.Resources
             }
 
             GraphicsDevice = device;
-            Width = width;
-            Height = height;
-            Depth = depth;
 
             this.d3D12Resource = device.D3D12Device->CreateCommittedResource(
                 resourceType,
@@ -128,17 +125,17 @@ namespace ComputeSharp.Resources
         /// <summary>
         /// Gets the width of the current texture.
         /// </summary>
-        public int Width { get; }
+        public int Width => (int)this.d3D12PlacedSubresourceFootprint.Footprint.Width;
 
         /// <summary>
         /// Gets the height of the current texture.
         /// </summary>
-        public int Height { get; }
+        public int Height => (int)this.d3D12PlacedSubresourceFootprint.Footprint.Height;
 
         /// <summary>
         /// Gets the depth of the current texture.
         /// </summary>
-        public int Depth { get; }
+        public int Depth => (int)this.d3D12PlacedSubresourceFootprint.Footprint.Depth;
 
         /// <summary>
         /// Gets the <see cref="ID3D12Resource"/> instance currently mapped.
