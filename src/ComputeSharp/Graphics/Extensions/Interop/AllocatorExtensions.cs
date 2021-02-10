@@ -93,7 +93,7 @@ namespace ComputeSharp.Graphics.Extensions
 
             using UniquePtr<Allocation> allocation = default;
 
-            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex2D(dxgiFormat, width, height, flags: d3D12ResourceFlags);
+            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex2D(dxgiFormat, width, height, mipLevels: 1, flags: d3D12ResourceFlags);
 
             ALLOCATION_DESC allocationDesc = default;
             allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
@@ -145,7 +145,7 @@ namespace ComputeSharp.Graphics.Extensions
 
             using UniquePtr<Allocation> allocation = default;
 
-            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(dxgiFormat, width, height, depth, flags: d3D12ResourceFlags);
+            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(dxgiFormat, width, height, depth, mipLevels: 1, flags: d3D12ResourceFlags);
 
             ALLOCATION_DESC allocationDesc = default;
             allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
