@@ -140,7 +140,7 @@ namespace ComputeSharp.Shaders
             using var shaderSource = HlslShaderRenderer.Render(threadsX, threadsY, threadsZ, shaderLoader);
 
             // Compile the loaded shader to HLSL bytecode
-            IDxcBlobObject shaderBytecode = new(ShaderCompiler.CompileShader(shaderSource.WrittenSpan));
+            IDxcBlobObject shaderBytecode = new(ShaderCompiler.Instance.CompileShader(shaderSource.WrittenSpan));
 
             // Get the cached shader data
             shaderData = new CachedShader<T>(shaderLoader, shaderBytecode);

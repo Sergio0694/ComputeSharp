@@ -11,29 +11,39 @@ namespace ComputeSharp.Shaders.Translation
     /// <summary>
     /// A <see langword="class"/> that uses the DXC APIs to compile compute shaders.
     /// </summary>
-    internal static unsafe partial class ShaderCompiler
+    internal sealed unsafe partial class ShaderCompiler
     {
+        /// <summary>
+        /// The thread local <see cref="ShaderCompiler"/> instance.
+        /// This is necessary because the DXC library is strictly single-threaded.
+        /// </summary>
+        [ThreadStatic]
+        private static ShaderCompiler? instance;
+
         /// <summary>
         /// The <see cref="IDxcCompiler"/> instance to use to create the bytecode for HLSL sources.
         /// </summary>
-        private static readonly ComPtr<IDxcCompiler> DxcCompiler;
+        private readonly ComPtr<IDxcCompiler> DxcCompiler;
 
         /// <summary>
         /// The <see cref="IDxcLibrary"/> instance to use to work with <see cref="DxcCompiler"/>.
         /// </summary>
-        private static readonly ComPtr<IDxcLibrary> DxcLibrary;
+        private readonly ComPtr<IDxcLibrary> DxcLibrary;
 
         /// <summary>
         /// The <see cref="IDxcIncludeHandler"/> instance used to compile shaders with <see cref="DxcCompiler"/>.
         /// </summary>
-        private static readonly ComPtr<IDxcIncludeHandler> DxcIncludeHandler;
+        private readonly ComPtr<IDxcIncludeHandler> DxcIncludeHandler;
 
         /// <summary>
-        /// Initializes <see cref="DxcCompiler"/>, <see cref="DxcLibrary"/> and <see cref="DxcIncludeHandler"/>.
+        /// Creates a new <see cref="ShaderCompiler"/> instance.
         /// </summary>
-        static ShaderCompiler()
+        private ShaderCompiler()
         {
-            InitializeDxcLibrariesLoading();
+            lock(this)
+            {
+                InitializeDxcLibrariesLoading();
+            }
 
             using ComPtr<IDxcCompiler> dxcCompiler = default;
             using ComPtr<IDxcLibrary> dxcLibrary = default;
@@ -53,12 +63,27 @@ namespace ComputeSharp.Shaders.Translation
         }
 
         /// <summary>
+        /// Destroys the current <see cref="ShaderCompiler"/> instance.
+        /// </summary>
+        ~ShaderCompiler()
+        {
+            DxcCompiler.Dispose();
+            DxcLibrary.Dispose();
+            DxcIncludeHandler.Dispose();
+        }
+
+        /// <summary>
+        /// Gets a <see cref="ShaderCompiler"/> instance to use.
+        /// </summary>
+        public static ShaderCompiler Instance => instance ??= new();
+
+        /// <summary>
         /// Compiles a new HLSL shader from the input source code.
         /// </summary>
         /// <param name="source">The HLSL source code to compile.</param>
         /// <returns>The bytecode for the compiled shader.</returns>
         [Pure]
-        public static ComPtr<IDxcBlob> CompileShader(ReadOnlySpan<char> source)
+        public ComPtr<IDxcBlob> CompileShader(ReadOnlySpan<char> source)
         {
             using ComPtr<IDxcBlobEncoding> dxcBlobEncoding = default;
             using ComPtr<IDxcOperationResult> dxcOperationResult = default;

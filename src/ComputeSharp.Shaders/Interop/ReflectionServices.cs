@@ -51,7 +51,7 @@ namespace ComputeSharp.Interop
 
             using var shaderSource = HlslShaderRenderer.Render(1, 1, 1, shaderLoader);
 
-            using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.CompileShader(shaderSource.WrittenSpan);
+            using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.CompileShader(shaderSource.WrittenSpan);
 
             using ComPtr<IDxcUtils> dxcUtils = default;
             Guid dxcLibraryClsid = FX.CLSID_DxcLibrary;

@@ -6,7 +6,7 @@ using FX = TerraFX.Interop.Windows;
 namespace ComputeSharp.Shaders.Translation
 {
     /// <inheritdoc cref="ShaderCompiler"/>
-    internal static unsafe partial class ShaderCompiler
+    internal sealed unsafe partial class ShaderCompiler
     {
         /// <summary>
         /// Initializes the DLL resolvers for the dxcompiler.dll and dxil.dll libraries.

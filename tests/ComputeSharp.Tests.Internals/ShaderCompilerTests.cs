@@ -31,7 +31,7 @@ namespace ComputeSharp.Tests.Internals
         [TestMethod]
         public void CompileTest_Ok()
         {
-            using ComPtr<IDxcBlob> dxcBlob = ShaderCompiler.CompileShader(ShaderSource);
+            using ComPtr<IDxcBlob> dxcBlob = ShaderCompiler.Instance.CompileShader(ShaderSource);
         }
 
         [TestMethod]
@@ -40,7 +40,7 @@ namespace ComputeSharp.Tests.Internals
         {
             var faultyShader = ShaderSource.Replace("ids.x", "ids.X");
 
-            using ComPtr<IDxcBlob> dxcBlob = ShaderCompiler.CompileShader(faultyShader);
+            using ComPtr<IDxcBlob> dxcBlob = ShaderCompiler.Instance.CompileShader(faultyShader);
         }
     }
 }
