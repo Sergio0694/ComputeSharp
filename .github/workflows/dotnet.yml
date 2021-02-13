@@ -1,0 +1,54 @@
+name: .NET
+
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master, dev ]
+
+jobs:
+  build-project:
+    runs-on: windows-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Build
+      run: dotnet build src\ComputeSharp\ComputeSharp.csproj
+      shell: cmd
+  build-package:
+    runs-on: windows-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Build
+      run: dotnet build src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj -c Release
+      shell: cmd
+  run-tests:
+    runs-on: windows-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Run ComputeSharp.Tests
+      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj
+      shell: cmd
+    - name: Run ComputeSharp.Tests.Internals
+      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj
+      shell: cmd
+    - name: Run ComputeSharp.Tests.Internals.SourceGenerators
+      run: dotnet test tests\ComputeSharp.Tests.Internals.SourceGenerators\ComputeSharp.Tests.Internals.SourceGenerators.csproj
+      shell: cmd
+    - name: Run ComputeSharp.Tests.NativeLibrariesResolver
+      run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj
+      shell: cmd
