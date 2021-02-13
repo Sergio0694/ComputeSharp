@@ -1,0 +1,25 @@
+name: .NET
+
+on: [push, pull_request]
+
+jobs:
+  build-package:
+    runs-on: windows-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Create local NuGet feed
+      run: mkdir src\ComputeSharp.Package\bin\Release
+      shell: cmd
+    - name: Build
+      run: dotnet build src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj -c Release
+      shell: cmd
+    - name: Upload package artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ComputeSharp.nupkg
+        path: src\ComputeSharp.Package\bin\Release\*.nupkg
