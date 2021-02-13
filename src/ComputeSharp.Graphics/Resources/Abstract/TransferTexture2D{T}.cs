@@ -2,12 +2,12 @@
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
-using ComputeSharp.Graphics.Resources.Enums;
 using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
-using FX = TerraFX.Interop.Windows;
 using static TerraFX.Interop.D3D12_FORMAT_SUPPORT1;
+using FX = TerraFX.Interop.Windows;
+using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
 namespace ComputeSharp.Resources
 {

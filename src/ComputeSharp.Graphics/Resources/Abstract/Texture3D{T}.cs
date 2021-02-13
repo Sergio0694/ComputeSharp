@@ -4,7 +4,6 @@ using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
-using ComputeSharp.Graphics.Resources.Enums;
 using ComputeSharp.Graphics.Resources.Interop;
 using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
@@ -14,6 +13,7 @@ using static TerraFX.Interop.D3D12_RESOURCE_STATES;
 using static TerraFX.Interop.D3D12_SRV_DIMENSION;
 using static TerraFX.Interop.D3D12_UAV_DIMENSION;
 using FX = TerraFX.Interop.Windows;
+using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
 #pragma warning disable CS0618
 
