@@ -29,7 +29,11 @@ namespace ComputeSharp.Shaders.Translation
         /// <summary>
         /// The number of constant buffers to define in the shader.
         /// </summary>
-        private uint constantBuffersCount;
+        /// <remarks>
+        /// This starts at 1 as there's always an initial constant buffer before user-defined ones, containing
+        /// the captured scalar and vector values as well as the iteration ranges for the shader dispatch.
+        /// </remarks>
+        private uint constantBuffersCount = 1;
 
         /// <summary>
         /// The number of readonly buffers to define in the shader.

@@ -96,7 +96,7 @@ namespace ComputeSharp.Shaders.Renderer
                         builder.Append(buffer.FieldType);
                         builder.Append(' ');
                         builder.Append(buffer.FieldName);
-                        builder.Append("[2];");
+                        builder.AppendLine("[2];");
                         builder.AppendLine('}');
                         break;
 
