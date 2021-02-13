@@ -1,3 +1,4 @@
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests
@@ -29,6 +30,22 @@ namespace ComputeSharp.Tests
                     }
                 }
             }
+        }
+
+        [TestMethod]
+        [DataRow(0, 8, 8)]
+        [DataRow(8, 0, 8)]
+        [DataRow(8, 8, 0)]
+        [DataRow(8, -3, 16)]
+        [DataRow(-1, -1, -1)]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void Verify_ThreadIds_OutOfRange(int x, int y, int z)
+        {
+            using ReadWriteTexture3D<Int4> buffer = Gpu.Default.AllocateReadWriteTexture3D<Int4>(50, 50, 50);
+
+            Gpu.Default.For(x, y, z, new ThreadIdsShader(buffer));
+
+            Assert.Fail();
         }
 
         [AutoConstructor]
@@ -66,6 +83,25 @@ namespace ComputeSharp.Tests
                     }
                 }
             }
+        }
+
+        [TestMethod]
+        [DataRow(0, 8, 8)]
+        [DataRow(8, 0, 8)]
+        [DataRow(8, 8, 0)]
+        [DataRow(1025, 8, 8)]
+        [DataRow(8, 2000, 8)]
+        [DataRow(8, 8, 70)]
+        [DataRow(8, -1, 8)]
+        [DataRow(8, 15, 16)]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void Verify_GroupIds_OutOfRange(int x, int y, int z)
+        {
+            using ReadWriteTexture3D<Int4> buffer = Gpu.Default.AllocateReadWriteTexture3D<Int4>(50, 50, 50);
+
+            Gpu.Default.For(buffer.Width, buffer.Height, buffer.Depth, x, y, z, new GroupIdsShader(buffer));
+
+            Assert.Fail();
         }
 
         [AutoConstructor]
