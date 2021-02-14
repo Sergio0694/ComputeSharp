@@ -3,6 +3,76 @@ name: .NET
 on: [push, pull_request]
 
 jobs:
+  build-project:
+    runs-on: windows-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Create local NuGet feed
+      run: mkdir src\ComputeSharp.Package\bin\Release
+      shell: cmd
+    - name: Build
+      run: dotnet build src\ComputeSharp\ComputeSharp.csproj
+      shell: cmd
+  run-tests:
+    if: success()
+    needs: [build-project]
+    runs-on: windows-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Create local NuGet feed
+      run: mkdir src\ComputeSharp.Package\bin\Release
+      shell: cmd
+    - name: Build project
+      run: dotnet build src\ComputeSharp\ComputeSharp.csproj -c Release
+      shell: cmd
+    - name: Run ComputeSharp.Tests
+      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj
+      shell: cmd
+    - name: Run ComputeSharp.Tests.Internals
+      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj
+      shell: cmd
+    - name: Run ComputeSharp.Tests.Internals.SourceGenerators
+      run: dotnet test tests\ComputeSharp.Tests.Internals.SourceGenerators\ComputeSharp.Tests.Internals.SourceGenerators.csproj
+      shell: cmd
+  run-samples:
+    if: success()
+    needs: [run-tests]
+    runs-on: windows-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Create local NuGet feed
+      run: mkdir src\ComputeSharp.Package\bin\Release
+      shell: cmd
+    - name: Build project
+      run: dotnet build src\ComputeSharp\ComputeSharp.csproj -c Release
+      shell: cmd
+    - name: Build ComputeSharp.Sample.Local
+      run: dotnet build samples\ComputeSharp.Sample.Local\ComputeSharp.Sample.Local.csproj -c Release
+      shell: cmd
+    - name: Run ComputeSharp.Sample.Local
+      run: dotnet samples\ComputeSharp.Sample.Local\bin\Release\net5.0\ComputeSharp.Sample.Local.dll
+      shell: cmd
+    - name: Build ComputeSharp.ImageProcessing.csproj
+      run: dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release
+      shell: cmd
+    - name: Run ComputeSharp.ImageProcessing.csproj
+      run: dotnet samples\ComputeSharp.ImageProcessing\bin\Release\net5.0\ComputeSharp.ImageProcessing.dll
+      shell: cmd
   build-package:
     runs-on: windows-latest
     steps:
@@ -23,3 +93,20 @@ jobs:
       with:
         name: ComputeSharp.nupkg
         path: src\ComputeSharp.Package\bin\Release\*.nupkg
+  verify-libs:
+    if: success()
+    needs: [build-package]
+    runs-on: windows-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Create local NuGet feed
+      run: mkdir src\ComputeSharp.Package\bin\Release
+      shell: cmd
+    - name: Run ComputeSharp.Tests.NativeLibrariesResolver
+      run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj
+      shell: cmd
