@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using ComputeSharp.Core.Extensions;
+using ComputeSharp.Graphics.Helpers;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_QUEUE_FLAGS;
@@ -11,7 +12,6 @@ using static TerraFX.Interop.D3D12_DESCRIPTOR_HEAP_TYPE;
 using static TerraFX.Interop.D3D12_FEATURE;
 using static TerraFX.Interop.D3D12_FENCE_FLAGS;
 using static TerraFX.Interop.D3D12_MEMORY_POOL;
-using static TerraFX.Interop.D3D12_HEAP_FLAGS;
 using static TerraFX.Interop.D3D12_HEAP_TYPE;
 using static TerraFX.Interop.D3D12_RESOURCE_FLAGS;
 using static TerraFX.Interop.D3D12_RESOURCE_STATES;
@@ -112,7 +112,6 @@ namespace ComputeSharp.Graphics.Extensions
             ulong sizeInBytes,
             bool isCacheCoherentUMA)
         {
-            D3D12_HEAP_FLAGS d3D12HeapFlags = allocationMode == AllocationMode.Default ? D3D12_HEAP_FLAG_CREATE_NOT_ZEROED : D3D12_HEAP_FLAG_NONE;
             (D3D12_HEAP_TYPE d3D12HeapType,
              D3D12_RESOURCE_FLAGS d3D12ResourceFlags,
              D3D12_RESOURCE_STATES d3D12ResourceStates) = resourceType switch
@@ -148,7 +147,7 @@ namespace ComputeSharp.Graphics.Extensions
 
             d3D12Device.CreateCommittedResource(
                 &d3D12HeapProperties,
-                d3D12HeapFlags,
+                D3D12FeatureHelper.GetD3D12HeapFlags(allocationMode),
                 &d3D12ResourceDescription,
                 d3D12ResourceStates,
                 null,
@@ -180,7 +179,6 @@ namespace ComputeSharp.Graphics.Extensions
             bool isCacheCoherentUMA,
             out D3D12_RESOURCE_STATES d3D12ResourceStates)
         {
-            D3D12_HEAP_FLAGS d3D12HeapFlags = allocationMode == AllocationMode.Default ? D3D12_HEAP_FLAG_CREATE_NOT_ZEROED : D3D12_HEAP_FLAG_NONE;
             D3D12_RESOURCE_FLAGS d3D12ResourceFlags;
 
             (d3D12ResourceFlags, d3D12ResourceStates) = resourceType switch
@@ -213,7 +211,7 @@ namespace ComputeSharp.Graphics.Extensions
 
             d3D12Device.CreateCommittedResource(
                 &d3D12HeapProperties,
-                d3D12HeapFlags,
+                D3D12FeatureHelper.GetD3D12HeapFlags(allocationMode),
                 &d3D12ResourceDescription,
                 d3D12ResourceStates,
                 null,
@@ -247,7 +245,6 @@ namespace ComputeSharp.Graphics.Extensions
             bool isCacheCoherentUMA,
             out D3D12_RESOURCE_STATES d3D12ResourceStates)
         {
-            D3D12_HEAP_FLAGS d3D12HeapFlags = allocationMode == AllocationMode.Default ? D3D12_HEAP_FLAG_CREATE_NOT_ZEROED : D3D12_HEAP_FLAG_NONE;
             D3D12_RESOURCE_FLAGS d3D12ResourceFlags;
 
             (d3D12ResourceFlags, d3D12ResourceStates) = resourceType switch
@@ -280,7 +277,7 @@ namespace ComputeSharp.Graphics.Extensions
 
             d3D12Device.CreateCommittedResource(
                 &d3D12HeapProperties,
-                d3D12HeapFlags,
+                D3D12FeatureHelper.GetD3D12HeapFlags(allocationMode),
                 &d3D12ResourceDescription,
                 d3D12ResourceStates,
                 null,
