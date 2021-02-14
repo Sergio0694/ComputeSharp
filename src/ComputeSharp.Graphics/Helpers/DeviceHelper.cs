@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using ComputeSharp.Core.Extensions;
 using Microsoft.Toolkit.Diagnostics;
@@ -139,17 +138,11 @@ namespace ComputeSharp.Graphics.Helpers
         /// <summary>
         /// The creation flags for <see cref="IDXGIFactory"/> instances.
         /// </summary>
-        private const uint IDXGIFactoryCreationFlags =
-#if DEBUG
-            FX.DXGI_CREATE_FACTORY_DEBUG;
-#else
-            0;
-#endif
+        private const uint IDXGIFactoryCreationFlags = FX.DXGI_CREATE_FACTORY_DEBUG;
 
         /// <summary>
         /// Enables the debug layer for DirectX APIs.
         /// </summary>
-        [Conditional("DEBUG")]
         private static unsafe void EnableDebugMode()
         {
             using ComPtr<ID3D12Debug> d3D12Debug = default;

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using ComputeSharp.Graphics.Helpers;
 using Microsoft.Toolkit.Diagnostics;
 using HRESULT = System.Int32;
 
@@ -22,6 +23,8 @@ namespace ComputeSharp.Core.Extensions
         {
             if (result < 0)
             {
+                DeviceDebugHelper.FlushMessages();
+
                 ThrowHelper.ThrowWin32Exception(result);
             }
         }
