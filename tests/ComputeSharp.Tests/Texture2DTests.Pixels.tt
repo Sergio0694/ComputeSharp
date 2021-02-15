@@ -25,22 +25,24 @@ IEnumerable<(string T, string TPixel)> EnumerateTypes()
 #>
 using System;
 using System.Numerics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ComputeSharp.Tests.Attributes;
+using ComputeSharp.Tests.Extensions;
 
 namespace ComputeSharp.Tests
 {
     public partial class Texture2DTests
     {
-        [TestMethod]
+        [CombinatorialTestMethod]
+        [AllDevices]
 <#
 foreach (var (t, tPixel) in EnumerateTypes())
 {
 #>
-        [DataRow(typeof(<#=t#>), typeof(<#=tPixel#>))]
+        [Data(typeof(<#=t#>), typeof(<#=tPixel#>))]
 <#
 }
 #>
-        public void Dispatch_NormalizedTexture2D(Type t, Type tPixel)
+        public void Dispatch_NormalizedTexture2D(Device device, Type t, Type tPixel)
         {
 <#
 foreach (var (t, tPixel) in EnumerateTypes())
@@ -48,10 +50,10 @@ foreach (var (t, tPixel) in EnumerateTypes())
 #>
             if (t == typeof(<#=t#>) && tPixel == typeof(<#=tPixel#>))
             {
-                using ReadOnlyTexture2D<<#=t#>, <#=tPixel#>> source = Gpu.Default.AllocateReadOnlyTexture2D<<#=t#>, <#=tPixel#>>(128, 128);
-                using ReadWriteTexture2D<<#=t#>, <#=tPixel#>> destination = Gpu.Default.AllocateReadWriteTexture2D<<#=t#>, <#=tPixel#>>(128, 128);
+                using ReadOnlyTexture2D<<#=t#>, <#=tPixel#>> source = device.Get().AllocateReadOnlyTexture2D<<#=t#>, <#=tPixel#>>(128, 128);
+                using ReadWriteTexture2D<<#=t#>, <#=tPixel#>> destination = device.Get().AllocateReadWriteTexture2D<<#=t#>, <#=tPixel#>>(128, 128);
 
-                Gpu.Default.For(128, 128, new Shader_Unorm_<#=t#>_<#=tPixel#>(source, destination));
+                device.Get().For(128, 128, new Shader_Unorm_<#=t#>_<#=tPixel#>(source, destination));
             }
 <#
 }

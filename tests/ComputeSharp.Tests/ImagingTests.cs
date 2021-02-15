@@ -19,7 +19,7 @@ namespace ComputeSharp.Tests
         [TestMethod]
         public void BokehBlur()
         {
-            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Imaging");
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
 
             using var original = Image.Load<ImageSharpRgba32>(Path.Combine(path, "city.jpg"));
             using var cpu = original.Clone(c => c.BokehBlur(80, 2, 3));
@@ -38,7 +38,7 @@ namespace ComputeSharp.Tests
         [TestMethod]
         public void GaussianBlur()
         {
-            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Imaging");
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
 
             using var original = Image.Load<ImageSharpRgba32>(Path.Combine(path, "city.jpg"));
             using var cpu = original.Clone(c => c.GaussianBlur(30f));

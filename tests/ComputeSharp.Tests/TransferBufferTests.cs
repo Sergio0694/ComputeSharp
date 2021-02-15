@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Resources;
+using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.Toolkit.HighPerformance.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,12 +13,13 @@ namespace ComputeSharp.Tests
     [TestCategory("TransferBuffer")]
     public partial class TransferBufferTests
     {
-        [TestMethod]
-        [DataRow(typeof(UploadBuffer<>))]
-        [DataRow(typeof(ReadBackBuffer<>))]
-        public unsafe void Allocate_Uninitialized_Ok(Type bufferType)
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(UploadBuffer<>))]
+        [Resource(typeof(ReadBackBuffer<>))]
+        public unsafe void Allocate_Uninitialized_Ok(Device device, Type bufferType)
         {
-            using TransferBuffer<float> buffer = Gpu.Default.AllocateTransferBuffer<float>(bufferType, 128);
+            using TransferBuffer<float> buffer = device.Get().AllocateTransferBuffer<float>(bufferType, 128);
 
             Assert.IsNotNull(buffer);
             Assert.AreEqual(buffer.Length, 128);
@@ -25,41 +27,44 @@ namespace ComputeSharp.Tests
             Assert.AreEqual(buffer.Span.Length, 128);
             Assert.IsTrue(Unsafe.AreSame(ref buffer.Memory.Span[0], ref buffer.Span[0]));
             Assert.IsTrue(Unsafe.AreSame(ref *(float*)buffer.Memory.Pin().Pointer, ref buffer.Span[0]));
-            Assert.AreSame(buffer.GraphicsDevice, Gpu.Default);
+            Assert.AreSame(buffer.GraphicsDevice, device.Get());
         }
 
-        [TestMethod]
-        [DataRow(typeof(UploadBuffer<>), -247824)]
-        [DataRow(typeof(UploadBuffer<>), -1)]
-        [DataRow(typeof(ReadBackBuffer<>), -247824)]
-        [DataRow(typeof(ReadBackBuffer<>), -1)]
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(UploadBuffer<>))]
+        [Resource(typeof(ReadBackBuffer<>))]
+        [Data(-247824)]
+        [Data(-1)]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void Allocate_Uninitialized_Fail(Type bufferType, int length)
+        public void Allocate_Uninitialized_Fail(Device device, Type bufferType, int length)
         {
-            using TransferBuffer<float> buffer = Gpu.Default.AllocateTransferBuffer<float>(bufferType, length);
+            using TransferBuffer<float> buffer = device.Get().AllocateTransferBuffer<float>(bufferType, length);
         }
 
-        [TestMethod]
-        [DataRow(typeof(UploadBuffer<>))]
-        [DataRow(typeof(ReadBackBuffer<>))]
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(UploadBuffer<>))]
+        [Resource(typeof(ReadBackBuffer<>))]
         [ExpectedException(typeof(ObjectDisposedException))]
-        public void UsageAfterDispose(Type bufferType)
+        public void UsageAfterDispose(Device device, Type bufferType)
         {
-            using TransferBuffer<float> buffer = Gpu.Default.AllocateTransferBuffer<float>(bufferType, 128);
+            using TransferBuffer<float> buffer = device.Get().AllocateTransferBuffer<float>(bufferType, 128);
 
             buffer.Dispose();
 
             _ = buffer.Span;
         }
 
-        [TestMethod]
-        public void Allocate_UploadBuffer_Copy_Full()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void Allocate_UploadBuffer_Copy_Full(Device device)
         {
-            using UploadBuffer<int> uploadBuffer = Gpu.Default.AllocateUploadBuffer<int>(4096);
+            using UploadBuffer<int> uploadBuffer = device.Get().AllocateUploadBuffer<int>(4096);
 
             new Random(42).NextBytes(uploadBuffer.Span.AsBytes());
 
-            using ReadOnlyBuffer<int> readOnlyBuffer = Gpu.Default.AllocateReadOnlyBuffer<int>(uploadBuffer.Length);
+            using ReadOnlyBuffer<int> readOnlyBuffer = device.Get().AllocateReadOnlyBuffer<int>(uploadBuffer.Length);
 
             uploadBuffer.CopyTo(readOnlyBuffer);
 
@@ -69,18 +74,19 @@ namespace ComputeSharp.Tests
             Assert.IsTrue(uploadBuffer.Span.SequenceEqual(result));
         }
 
-        [TestMethod]
-        [DataRow(0, 0, 4096)]
-        [DataRow(128, 0, 2048)]
-        [DataRow(0, 128, 2048)]
-        [DataRow(97, 33, 512)]
-        public void Allocate_UploadBuffer_Copy_Range(int destinationOffset, int bufferOffset, int count)
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Data(0, 0, 4096)]
+        [Data(128, 0, 2048)]
+        [Data(0, 128, 2048)]
+        [Data(97, 33, 512)]
+        public void Allocate_UploadBuffer_Copy_Range(Device device, int destinationOffset, int bufferOffset, int count)
         {
-            using UploadBuffer<int> uploadBuffer = Gpu.Default.AllocateUploadBuffer<int>(4096);
+            using UploadBuffer<int> uploadBuffer = device.Get().AllocateUploadBuffer<int>(4096);
 
             new Random(42).NextBytes(uploadBuffer.Span.AsBytes());
 
-            using ReadOnlyBuffer<int> readOnlyBuffer = Gpu.Default.AllocateReadOnlyBuffer<int>(uploadBuffer.Length);
+            using ReadOnlyBuffer<int> readOnlyBuffer = device.Get().AllocateReadOnlyBuffer<int>(uploadBuffer.Length);
 
             uploadBuffer.CopyTo(readOnlyBuffer, destinationOffset, bufferOffset, count);
 
@@ -90,15 +96,16 @@ namespace ComputeSharp.Tests
             Assert.IsTrue(uploadBuffer.Span.Slice(bufferOffset, count).SequenceEqual(result));
         }
 
-        [TestMethod]
-        public void Allocate_ReadBackBuffer_Copy_Full()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void Allocate_ReadBackBuffer_Copy_Full(Device device)
         {
             int[] source = new int[4096];
 
             new Random(42).NextBytes(source.AsSpan().AsBytes());
 
-            using ReadOnlyBuffer<int> readOnlyBuffer = Gpu.Default.AllocateReadOnlyBuffer(source);
-            using ReadBackBuffer<int> readBackBuffer = Gpu.Default.AllocateReadBackBuffer<int>(readOnlyBuffer.Length);
+            using ReadOnlyBuffer<int> readOnlyBuffer = device.Get().AllocateReadOnlyBuffer(source);
+            using ReadBackBuffer<int> readBackBuffer = device.Get().AllocateReadBackBuffer<int>(readOnlyBuffer.Length);
 
             readOnlyBuffer.CopyTo(readBackBuffer);
 
@@ -106,19 +113,20 @@ namespace ComputeSharp.Tests
             Assert.IsTrue(source.AsSpan().SequenceEqual(readBackBuffer.Span));
         }
 
-        [TestMethod]
-        [DataRow(0, 0, 4096)]
-        [DataRow(128, 0, 2048)]
-        [DataRow(0, 128, 2048)]
-        [DataRow(97, 33, 512)]
-        public void Allocate_ReadBackBuffer_Copy_Range(int destinationOffset, int bufferOffset, int count)
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Data(0, 0, 4096)]
+        [Data(128, 0, 2048)]
+        [Data(0, 128, 2048)]
+        [Data(97, 33, 512)]
+        public void Allocate_ReadBackBuffer_Copy_Range(Device device, int destinationOffset, int bufferOffset, int count)
         {
             int[] source = new int[4096];
 
             new Random(42).NextBytes(source.AsSpan().AsBytes());
 
-            using ReadOnlyBuffer<int> readOnlyBuffer = Gpu.Default.AllocateReadOnlyBuffer(source);
-            using ReadBackBuffer<int> readBackBuffer = Gpu.Default.AllocateReadBackBuffer<int>(readOnlyBuffer.Length);
+            using ReadOnlyBuffer<int> readOnlyBuffer = device.Get().AllocateReadOnlyBuffer(source);
+            using ReadBackBuffer<int> readBackBuffer = device.Get().AllocateReadBackBuffer<int>(readOnlyBuffer.Length);
 
             readOnlyBuffer.CopyTo(readBackBuffer, destinationOffset, bufferOffset, count);
 

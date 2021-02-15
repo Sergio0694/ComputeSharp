@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using ComputeSharp.Tests.Attributes;
+using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests
@@ -14,23 +16,26 @@ namespace ComputeSharp.Tests
             Assert.IsTrue(Gpu.IsSupported);
         }
 
-        [TestMethod]
-        public void DefaultDeviceInfo()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void DeviceInfo(Device device)
         {
-            Assert.IsTrue(Gpu.Default.Luid != default);
-            Assert.IsTrue(Gpu.Default.Name is { Length: > 0 });
+            GraphicsDevice gpu = device.Get();
 
-            if (Gpu.Default.IsHardwareAccelerated)
+            Assert.IsTrue(gpu.Luid != default);
+            Assert.IsTrue(gpu.Name is { Length: > 0 });
+
+            if (gpu.IsHardwareAccelerated)
             {
-                Assert.IsTrue(Gpu.Default.DedicatedMemorySize != 0);
+                Assert.IsTrue(gpu.DedicatedMemorySize != 0);
             }
             else
             {
-                Assert.IsTrue(Gpu.Default.SharedMemorySize != 0);
+                Assert.IsTrue(gpu.SharedMemorySize != 0);
             }
 
-            Assert.IsTrue(Gpu.Default.ComputeUnits != 0);
-            Assert.IsTrue(Gpu.Default.WavefrontSize != 0);
+            Assert.IsTrue(gpu.ComputeUnits != 0);
+            Assert.IsTrue(gpu.WavefrontSize != 0);
         }
 
         [TestMethod]

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using ComputeSharp.Resources;
+using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.Toolkit.HighPerformance.Extensions;
 using Microsoft.Toolkit.HighPerformance.Memory;
@@ -12,59 +13,56 @@ namespace ComputeSharp.Tests
     [TestCategory("Texture3D")]
     public partial class Texture3DTests
     {
-        [TestMethod]
-        [DataRow(typeof(ReadOnlyTexture3D<>))]
-        [DataRow(typeof(ReadWriteTexture3D<>))]
-        public void Allocate_Uninitialized_Ok(Type textureType)
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ReadOnlyTexture3D<>))]
+        [Resource(typeof(ReadWriteTexture3D<>))]
+        public void Allocate_Uninitialized_Ok(Device device, Type textureType)
         {
-            using Texture3D<float> texture = Gpu.Default.AllocateTexture3D<float>(textureType, 64, 64, 12);
+            using Texture3D<float> texture = device.Get().AllocateTexture3D<float>(textureType, 64, 64, 12);
 
             Assert.IsNotNull(texture);
             Assert.AreEqual(texture.Width, 64);
             Assert.AreEqual(texture.Height, 64);
             Assert.AreEqual(texture.Depth, 12);
-            Assert.AreSame(texture.GraphicsDevice, Gpu.Default);
+            Assert.AreSame(texture.GraphicsDevice, device.Get());
         }
 
-        [TestMethod]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 128, -14253, 4)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 128, -1, 4)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 0, -4314, 4)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), -14, -53, 4)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 12, 12, -1)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 2, 4, ushort.MaxValue + 1)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 128, -14253, 4)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 128, -1, 4)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 0, -4314, 4)]
-        [DataRow(typeof(ReadWriteTexture3D<>), -14, -53, 4)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 12, 12, -1)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 2, 4, ushort.MaxValue + 1)]
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ReadOnlyTexture3D<>))]
+        [Resource(typeof(ReadWriteTexture3D<>))]
+        [Data(128, -14253, 4)]
+        [Data(128, -1, 4)]
+        [Data(0, -4314, 4)]
+        [Data(-14, -53, 4)]
+        [Data(12, 12, -1)]
+        [Data(2, 4, ushort.MaxValue + 1)]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void Allocate_Uninitialized_Fail(Type textureType, int width, int height, int depth)
+        public void Allocate_Uninitialized_Fail(Device device, Type textureType, int width, int height, int depth)
         {
-            using Texture3D<float> texture = Gpu.Default.AllocateTexture3D<float>(textureType, width, height, depth);
+            using Texture3D<float> texture = device.Get().AllocateTexture3D<float>(textureType, width, height, depth);
         }
 
-        [TestMethod]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 12, 12, 4)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 2, 12, 4)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 64, 64, 1)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 64, 27, 3)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 12, 12, 4)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 2, 12, 4)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 64, 64, 1)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 64, 27, 3)]
-        public void Allocate_FromArray(Type textureType, int width, int height, int depth)
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ReadOnlyTexture3D<>))]
+        [Resource(typeof(ReadWriteTexture3D<>))]
+        [Data(12, 12, 4)]
+        [Data(2, 12, 4)]
+        [Data(64, 64, 1)]
+        [Data(64, 27, 3)]
+        public void Allocate_FromArray(Device device, Type textureType, int width, int height, int depth)
         {
             float[] data = Enumerable.Range(0, width * height * depth).Select(static i => (float)i).ToArray();
 
-            using Texture3D<float> texture = Gpu.Default.AllocateTexture3D(textureType, data, width, height, depth);
+            using Texture3D<float> texture = device.Get().AllocateTexture3D(textureType, data, width, height, depth);
 
             Assert.IsNotNull(texture);
             Assert.AreEqual(texture.Width, width);
             Assert.AreEqual(texture.Height, height);
             Assert.AreEqual(texture.Depth, depth);
-            Assert.AreSame(texture.GraphicsDevice, Gpu.Default);
+            Assert.AreSame(texture.GraphicsDevice, device.Get());
 
             float[,,] result = texture.ToArray();
 
@@ -84,48 +82,42 @@ namespace ComputeSharp.Tests
             CollectionAssert.AreEqual(flat, data);
         }
 
-        [TestMethod]
-        [DataRow(typeof(ReadOnlyTexture3D<>))]
-        [DataRow(typeof(ReadWriteTexture3D<>))]
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ReadOnlyTexture3D<>))]
+        [Resource(typeof(ReadWriteTexture3D<>))]
         [ExpectedException(typeof(ObjectDisposedException))]
-        public void UsageAfterDispose(Type textureType)
+        public void UsageAfterDispose(Device device, Type textureType)
         {
-            using Texture3D<float> texture = Gpu.Default.AllocateTexture3D<float>(textureType, 10, 10, 4);
+            using Texture3D<float> texture = device.Get().AllocateTexture3D<float>(textureType, 10, 10, 4);
 
             texture.Dispose();
 
             _ = texture.ToArray();
         }
 
-        [TestMethod]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 0, 0, 0, 64, 64, 3)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 0, 14, 0, 64, 50, 3)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 0, 14, 1, 64, 50, 2)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 14, 0, 1, 50, 64, 2)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 10, 10, 2, 54, 54, 1)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 20, 20, 0, 32, 27, 3)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 60, 0, 0, 4, 64, 3)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 0, 60, 2, 64, 4, 1)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 63, 2, 0, 1, 60, 2)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 2, 63, 1, 60, 1, 2)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 0, 0, 0, 64, 64, 3)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 0, 14, 0, 64, 50, 3)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 0, 14, 1, 64, 50, 2)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 14, 0, 1, 50, 64, 2)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 10, 10, 2, 54, 54, 1)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 20, 20, 0, 32, 27, 3)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 60, 0, 0, 4, 64, 3)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 0, 60, 2, 64, 4, 1)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 63, 2, 0, 1, 60, 2)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 2, 63, 1, 60, 1, 2)]
-        public void GetData_RangeToVoid_Ok(Type textureType, int x, int y, int z, int width, int height, int depth)
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ReadOnlyTexture3D<>))]
+        [Resource(typeof(ReadWriteTexture3D<>))]
+        [Data(0, 0, 0, 64, 64, 3)]
+        [Data(0, 14, 0, 64, 50, 3)]
+        [Data(0, 14, 1, 64, 50, 2)]
+        [Data(14, 0, 1, 50, 64, 2)]
+        [Data(10, 10, 2, 54, 54, 1)]
+        [Data(20, 20, 0, 32, 27, 3)]
+        [Data(60, 0, 0, 4, 64, 3)]
+        [Data(0, 60, 2, 64, 4, 1)]
+        [Data(63, 2, 0, 1, 60, 2)]
+        [Data(2, 63, 1, 60, 1, 2)]
+        public void GetData_RangeToVoid_Ok(Device device, Type textureType, int x, int y, int z, int width, int height, int depth)
         {
             int[,,] array = new int[3, 64, 64];
 
             foreach (var item in array.AsSpan().Enumerate())
                 item.Value = item.Index;
 
-            using Texture3D<int> texture = Gpu.Default.AllocateTexture3D(textureType, array);
+            using Texture3D<int> texture = device.Get().AllocateTexture3D(textureType, array);
 
             int[,,] result = new int[depth, height, width];
 
@@ -141,46 +133,41 @@ namespace ComputeSharp.Tests
             }
         }
 
-        [TestMethod]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 0, -1, 0, 50, 50, 2)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), -1, 0, 0, 50, 50, 3)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 12, 0, 0, -1, 50, 1)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 12, 0, 0, 20, 50, 0)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 12, 0, 1, 20, -1, 2)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 12, 20, 2, 20, 50, 1)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 12, 20, 0, 60, 20, 3)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 80, 20, 2, 40, 20, 1)]
-        [DataRow(typeof(ReadOnlyTexture3D<>), 0, 80, 2, 40, 20, 1)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 0, -1, 0, 50, 50, 2)]
-        [DataRow(typeof(ReadWriteTexture3D<>), -1, 0, 0, 50, 50, 3)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 12, 0, 0, -1, 50, 1)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 12, 0, 0, 20, 50, 0)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 12, 0, 1, 20, -1, 2)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 12, 20, 2, 20, 50, 1)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 12, 20, 0, 60, 20, 3)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 80, 20, 2, 40, 20, 1)]
-        [DataRow(typeof(ReadWriteTexture3D<>), 0, 80, 2, 40, 20, 1)]
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ReadOnlyTexture3D<>))]
+        [Resource(typeof(ReadWriteTexture3D<>))]
+        [Data(0, -1, 0, 50, 50, 2)]
+        [Data(-1, 0, 0, 50, 50, 3)]
+        [Data(12, 0, 0, -1, 50, 1)]
+        [Data(12, 0, 0, 20, 50, 0)]
+        [Data(12, 0, 1, 20, -1, 2)]
+        [Data(12, 20, 2, 20, 50, 1)]
+        [Data(12, 20, 0, 60, 20, 3)]
+        [Data(80, 20, 2, 40, 20, 1)]
+        [Data(0, 80, 2, 40, 20, 1)]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void GetData_RangeToVoid_Fail(Type textureType, int x, int y, int z, int width, int height, int depth)
+        public void GetData_RangeToVoid_Fail(Device device, Type textureType, int x, int y, int z, int width, int height, int depth)
         {
             float[] array = Enumerable.Range(0, 64 * 64 * 3).Select(static i => (float)i).ToArray();
 
-            using Texture3D<float> texture = Gpu.Default.AllocateTexture3D(textureType, array, 64, 64, 3);
+            using Texture3D<float> texture = device.Get().AllocateTexture3D(textureType, array, 64, 64, 3);
 
             float[] result = new float[array.Length];
 
             texture.CopyTo(result, x, y, z, width, height, depth);
         }
 
-        [TestMethod]
-        public void Dispatch_ReadOnlyTexture3D()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void Dispatch_ReadOnlyTexture3D(Device device)
         {
             int[] data = Enumerable.Range(0, 32 * 32 * 3).ToArray();
 
-            using ReadOnlyTexture3D<int> source = Gpu.Default.AllocateReadOnlyTexture3D(data, 32, 32, 3);
-            using ReadWriteBuffer<int> destination = Gpu.Default.AllocateReadWriteBuffer<int>(data.Length);
+            using ReadOnlyTexture3D<int> source = device.Get().AllocateReadOnlyTexture3D(data, 32, 32, 3);
+            using ReadWriteBuffer<int> destination = device.Get().AllocateReadWriteBuffer<int>(data.Length);
 
-            Gpu.Default.For(source.Width, source.Height, source.Depth, new ReadOnlyTexture3DKernel(source, destination));
+            device.Get().For(source.Width, source.Height, source.Depth, new ReadOnlyTexture3DKernel(source, destination));
 
             int[] result = destination.ToArray();
 
@@ -199,15 +186,16 @@ namespace ComputeSharp.Tests
             }
         }
 
-        [TestMethod]
-        public void Dispatch_ReadWriteTexture2D()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void Dispatch_ReadWriteTexture2D(Device device)
         {
             int[] data = Enumerable.Range(0, 32 * 32 * 3).ToArray();
 
-            using ReadWriteTexture3D<int> source = Gpu.Default.AllocateReadWriteTexture3D(data, 32, 32, 3);
-            using ReadWriteTexture3D<int> destination = Gpu.Default.AllocateReadWriteTexture3D<int>(32, 32, 3);
+            using ReadWriteTexture3D<int> source = device.Get().AllocateReadWriteTexture3D(data, 32, 32, 3);
+            using ReadWriteTexture3D<int> destination = device.Get().AllocateReadWriteTexture3D<int>(32, 32, 3);
 
-            Gpu.Default.For(source.Width, source.Height, source.Depth, new ReadWriteTexture3DKernel(source, destination));
+            device.Get().For(source.Width, source.Height, source.Depth, new ReadWriteTexture3DKernel(source, destination));
 
             int[] result = new int[data.Length];
 

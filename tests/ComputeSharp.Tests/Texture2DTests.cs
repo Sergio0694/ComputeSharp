@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using ComputeSharp.Resources;
+using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.Toolkit.HighPerformance.Memory;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,47 +12,48 @@ namespace ComputeSharp.Tests
     [TestCategory("Texture2D")]
     public partial class Texture2DTests
     {
-        [TestMethod]
-        [DataRow(typeof(ReadOnlyTexture2D<>))]
-        [DataRow(typeof(ReadWriteTexture2D<>))]
-        public void Allocate_Uninitialized_Ok(Type textureType)
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ReadOnlyTexture2D<>))]
+        [Resource(typeof(ReadWriteTexture2D<>))]
+        public void Allocate_Uninitialized_Ok(Device device, Type textureType)
         {
-            using Texture2D<float> texture = Gpu.Default.AllocateTexture2D<float>(textureType, 128, 128);
+            using Texture2D<float> texture = device.Get().AllocateTexture2D<float>(textureType, 128, 128);
 
             Assert.IsNotNull(texture);
             Assert.AreEqual(texture.Width, 128);
             Assert.AreEqual(texture.Height, 128);
-            Assert.AreSame(texture.GraphicsDevice, Gpu.Default);
+            Assert.AreSame(texture.GraphicsDevice, device.Get());
         }
 
-        [TestMethod]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 128, -14253)]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 128, -1)]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 0, -4314)]
-        [DataRow(typeof(ReadOnlyTexture2D<>), -14, -53)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 128, -14253)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 128, -1)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 0, -4314)]
-        [DataRow(typeof(ReadWriteTexture2D<>), -14, -53)]
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ReadOnlyTexture2D<>))]
+        [Resource(typeof(ReadWriteTexture2D<>))]
+        [Data(128, -14253)]
+        [Data(128, -1)]
+        [Data(0, -4314)]
+        [Data(-14, -53)]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void Allocate_Uninitialized_Fail(Type textureType, int width, int height)
+        public void Allocate_Uninitialized_Fail(Device device, Type textureType, int width, int height)
         {
-            using Texture2D<float> texture = Gpu.Default.AllocateTexture2D<float>(textureType, width, height);
+            using Texture2D<float> texture = device.Get().AllocateTexture2D<float>(textureType, width, height);
         }
 
-        [TestMethod]
-        [DataRow(typeof(ReadOnlyTexture2D<>))]
-        [DataRow(typeof(ReadWriteTexture2D<>))]
-        public void Allocate_FromArray(Type textureType)
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ReadOnlyTexture2D<>))]
+        [Resource(typeof(ReadWriteTexture2D<>))]
+        public void Allocate_FromArray(Device device, Type textureType)
         {
             float[] data = Enumerable.Range(0, 128 * 128).Select(static i => (float)i).ToArray();
 
-            using Texture2D<float> texture = Gpu.Default.AllocateTexture2D(textureType, data, 128, 128);
+            using Texture2D<float> texture = device.Get().AllocateTexture2D(textureType, data, 128, 128);
 
             Assert.IsNotNull(texture);
             Assert.AreEqual(texture.Width, 128);
             Assert.AreEqual(texture.Height, 128);
-            Assert.AreSame(texture.GraphicsDevice, Gpu.Default);
+            Assert.AreSame(texture.GraphicsDevice, device.Get());
 
             float[,] result = texture.ToArray();
 
@@ -60,43 +62,38 @@ namespace ComputeSharp.Tests
             Assert.IsTrue(data.SequenceEqual(result.Cast<float>()));
         }
 
-        [TestMethod]
-        [DataRow(typeof(ReadOnlyTexture2D<>))]
-        [DataRow(typeof(ReadWriteTexture2D<>))]
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ReadOnlyTexture2D<>))]
+        [Resource(typeof(ReadWriteTexture2D<>))]
         [ExpectedException(typeof(ObjectDisposedException))]
-        public void UsageAfterDispose(Type textureType)
+        public void UsageAfterDispose(Device device, Type textureType)
         {
-            using Texture2D<float> texture = Gpu.Default.AllocateTexture2D<float>(textureType, 10, 10);
+            using Texture2D<float> texture = device.Get().AllocateTexture2D<float>(textureType, 10, 10);
 
             texture.Dispose();
 
             _ = texture.ToArray();
         }
 
-        [TestMethod]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 0, 0, 64, 64)]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 0, 14, 64, 50)]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 14, 0, 50, 64)]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 10, 10, 54, 54)]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 20, 20, 32, 27)]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 60, 0, 4, 64)]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 0, 60, 64, 4)]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 63, 2, 1, 60)]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 2, 63, 60, 1)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 0, 0, 64, 64)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 0, 14, 64, 50)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 14, 0, 50, 64)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 10, 10, 54, 54)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 20, 20, 32, 27)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 60, 0, 4, 64)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 0, 60, 64, 4)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 63, 2, 1, 60)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 2, 63, 60, 1)]
-        public void GetData_RangeToVoid_Ok(Type textureType, int x, int y, int width, int height)
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ReadOnlyTexture2D<>))]
+        [Resource(typeof(ReadWriteTexture2D<>))]
+        [Data(0, 0, 64, 64)]
+        [Data(0, 14, 64, 50)]
+        [Data(14, 0, 50, 64)]
+        [Data(10, 10, 54, 54)]
+        [Data(20, 20, 32, 27)]
+        [Data(60, 0, 4, 64)]
+        [Data(0, 60, 64, 4)]
+        [Data(63, 2, 1, 60)]
+        [Data(2, 63, 60, 1)]
+        public void GetData_RangeToVoid_Ok(Device device, Type textureType, int x, int y, int width, int height)
         {
             float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
 
-            using Texture2D<float> texture = Gpu.Default.AllocateTexture2D(textureType, array, 64, 64);
+            using Texture2D<float> texture = device.Get().AllocateTexture2D(textureType, array, 64, 64);
 
             float[] result = new float[width * height];
 
@@ -109,44 +106,40 @@ namespace ComputeSharp.Tests
             CollectionAssert.AreEqual(expected.ToArray(), data.ToArray());
         }
 
-        [TestMethod]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 0, -1, 50, 50)]
-        [DataRow(typeof(ReadOnlyTexture2D<>), -1, 0, 50, 50)]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 12, 0, -1, 50)]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 12, 0, 20, -1)]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 12, 20, 20, 50)]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 12, 20, 60, 20)]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 80, 20, 40, 20)]
-        [DataRow(typeof(ReadOnlyTexture2D<>), 0, 80, 40, 20)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 0, -1, 50, 50)]
-        [DataRow(typeof(ReadWriteTexture2D<>), -1, 0, 50, 50)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 12, 0, -1, 50)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 12, 0, 20, -1)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 12, 20, 20, 50)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 12, 20, 60, 20)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 80, 20, 40, 20)]
-        [DataRow(typeof(ReadWriteTexture2D<>), 0, 80, 40, 20)]
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ReadOnlyTexture2D<>))]
+        [Resource(typeof(ReadWriteTexture2D<>))]
+        [Data(0, -1, 50, 50)]
+        [Data(-1, 0, 50, 50)]
+        [Data(12, 0, -1, 50)]
+        [Data(12, 0, 20, -1)]
+        [Data(12, 20, 20, 50)]
+        [Data(12, 20, 60, 20)]
+        [Data(80, 20, 40, 20)]
+        [Data(0, 80, 40, 20)]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void GetData_RangeToVoid_Fail(Type textureType, int x, int y, int width, int height)
+        public void GetData_RangeToVoid_Fail(Device device, Type textureType, int x, int y, int width, int height)
         {
             float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
 
-            using Texture2D<float> texture = Gpu.Default.AllocateTexture2D(textureType, array, 64, 64);
+            using Texture2D<float> texture = device.Get().AllocateTexture2D(textureType, array, 64, 64);
 
             float[] result = new float[4096];
 
             texture.CopyTo(result, x, y, width, height);
         }
 
-        [TestMethod]
-        public void Dispatch_ReadOnlyTexture2D()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void Dispatch_ReadOnlyTexture2D(Device device)
         {
             int[] data = Enumerable.Range(0, 32 * 32).ToArray();
 
-            using ReadOnlyTexture2D<int> source = Gpu.Default.AllocateReadOnlyTexture2D(data, 32, 32);
-            using ReadWriteBuffer<int> destination = Gpu.Default.AllocateReadWriteBuffer<int>(data.Length);
+            using ReadOnlyTexture2D<int> source = device.Get().AllocateReadOnlyTexture2D(data, 32, 32);
+            using ReadWriteBuffer<int> destination = device.Get().AllocateReadWriteBuffer<int>(data.Length);
 
-            Gpu.Default.For(source.Width, source.Height, new ReadOnlyTexture2DKernel(source, destination));
+            device.Get().For(source.Width, source.Height, new ReadOnlyTexture2DKernel(source, destination));
 
             int[] result = destination.ToArray();
 
@@ -165,15 +158,16 @@ namespace ComputeSharp.Tests
             }
         }
 
-        [TestMethod]
-        public void Dispatch_ReadWriteTexture2D()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void Dispatch_ReadWriteTexture2D(Device device)
         {
             int[] data = Enumerable.Range(0, 32 * 32).ToArray();
 
-            using ReadWriteTexture2D<int> source = Gpu.Default.AllocateReadWriteTexture2D(data, 32, 32);
-            using ReadWriteTexture2D<int> destination = Gpu.Default.AllocateReadWriteTexture2D<int>(32, 32);
+            using ReadWriteTexture2D<int> source = device.Get().AllocateReadWriteTexture2D(data, 32, 32);
+            using ReadWriteTexture2D<int> destination = device.Get().AllocateReadWriteTexture2D<int>(32, 32);
 
-            Gpu.Default.For(source.Width, source.Height, new ReadWriteTexture2DKernel(source, destination));
+            device.Get().For(source.Width, source.Height, new ReadWriteTexture2DKernel(source, destination));
 
             int[] result = new int[data.Length];
 
