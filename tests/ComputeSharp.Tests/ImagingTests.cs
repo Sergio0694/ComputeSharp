@@ -5,6 +5,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using ComputeSharp.BokehBlur.Processors;
+using ComputeSharp.Tests.Attributes;
+using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
@@ -16,14 +18,15 @@ namespace ComputeSharp.Tests
     [TestCategory("Imaging")]
     public class ImagingTests
     {
-        [TestMethod]
-        public void BokehBlur()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void BokehBlur(Device device)
         {
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
 
             using var original = Image.Load<ImageSharpRgba32>(Path.Combine(path, "city.jpg"));
             using var cpu = original.Clone(c => c.BokehBlur(80, 2, 3));
-            using var gpu = original.Clone(c => c.ApplyProcessor(new HlslBokehBlurProcessor(80, 2)));
+            using var gpu = original.Clone(c => c.ApplyProcessor(new HlslBokehBlurProcessor(device.Get(), 80, 2)));
 
             string
                 expectedPath = Path.Combine(path, "city_bokeh_cpu.jpg"),
@@ -35,14 +38,15 @@ namespace ComputeSharp.Tests
             TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.000009f);
         }
 
-        [TestMethod]
-        public void GaussianBlur()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void GaussianBlur(Device device)
         {
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
 
             using var original = Image.Load<ImageSharpRgba32>(Path.Combine(path, "city.jpg"));
             using var cpu = original.Clone(c => c.GaussianBlur(30f));
-            using var gpu = original.Clone(c => c.ApplyProcessor(new HlslGaussianBlurProcessor(90)));
+            using var gpu = original.Clone(c => c.ApplyProcessor(new HlslGaussianBlurProcessor(device.Get(), 90)));
 
             string
                 expectedPath = Path.Combine(path, "city_gaussian_cpu.jpg"),

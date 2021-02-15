@@ -21,6 +21,11 @@ namespace ComputeSharp.BokehBlur.Processors
         public sealed partial class Implementation : ImageProcessor<ImageSharpRgba32>
         {
             /// <summary>
+            /// The <see cref="ComputeSharp.GraphicsDevice"/> instance in use.
+            /// </summary>
+            private readonly GraphicsDevice GraphicsDevice;
+
+            /// <summary>
             /// The kernel radius.
             /// </summary>
             private readonly int Radius;
@@ -65,6 +70,7 @@ namespace ComputeSharp.BokehBlur.Processors
             public Implementation(HlslBokehBlurProcessor definition, Configuration configuration, Image<ImageSharpRgba32> source, Rectangle sourceRectangle)
                 : base(configuration, source, sourceRectangle)
             {
+                GraphicsDevice = definition.GraphicsDevice;
                 Radius = definition.Radius;
                 KernelSize = Radius * 2 + 1;
                 ComponentsCount = definition.Components;
@@ -256,14 +262,14 @@ namespace ComputeSharp.BokehBlur.Processors
 
                 Span<Rgba32> span = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(pixelSpan);
 
-                using ReadWriteTexture2D<Rgba32, Vector4> texture = Gpu.Default.AllocateReadWriteTexture2D<Rgba32, Vector4>(span, source.Width, source.Height);
-                using ReadWriteTexture2D<Vector4> temporary = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height, AllocationMode.Clear);
-                using ReadWriteTexture2D<Vector4> reals = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
-                using ReadWriteTexture2D<Vector4> imaginaries = Gpu.Default.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
-                using ReadOnlyBuffer<Complex64> kernel = Gpu.Default.AllocateReadOnlyBuffer<Complex64>(KernelSize);
+                using ReadWriteTexture2D<Rgba32, Vector4> texture = GraphicsDevice.AllocateReadWriteTexture2D<Rgba32, Vector4>(span, source.Width, source.Height);
+                using ReadWriteTexture2D<Vector4> temporary = GraphicsDevice.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height, AllocationMode.Clear);
+                using ReadWriteTexture2D<Vector4> reals = GraphicsDevice.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
+                using ReadWriteTexture2D<Vector4> imaginaries = GraphicsDevice.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
+                using ReadOnlyBuffer<Complex64> kernel = GraphicsDevice.AllocateReadOnlyBuffer<Complex64>(KernelSize);
 
                 // Preliminary gamma highlight pass
-                Gpu.Default.For<GammaHighlightProcessor>(source.Height, new(texture));
+                GraphicsDevice.For<GammaHighlightProcessor>(source.Height, new(texture));
 
                 // Perform two 1D convolutions for each component in the current instance
                 for (int j = 0; j < Kernels.Length; j++)
@@ -272,19 +278,19 @@ namespace ComputeSharp.BokehBlur.Processors
 
                     kernel.CopyFrom(Kernels[j]);
 
-                    Gpu.Default.For<VerticalConvolutionProcessor>(
+                    GraphicsDevice.For<VerticalConvolutionProcessor>(
                         source.Width,
                         source.Height,
                         new(texture, reals, imaginaries, kernel));
 
-                    Gpu.Default.For<HorizontalConvolutionAndAccumulatePartialsProcessor>(
+                    GraphicsDevice.For<HorizontalConvolutionAndAccumulatePartialsProcessor>(
                         source.Width,
                         source.Height,
                         new(parameters.Z, parameters.W, reals, imaginaries, temporary, kernel));
                 }
 
                 // Apply the inverse gamma exposure pass
-                Gpu.Default.For<InverseGammaHighlightProcessor>(source.Height, new(temporary, texture));
+                GraphicsDevice.For<InverseGammaHighlightProcessor>(source.Height, new(temporary, texture));
 
                 // Write the final pixel data
                 texture.CopyTo(span);
