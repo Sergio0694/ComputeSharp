@@ -21,10 +21,12 @@ namespace ComputeSharp.Core.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Assert(this HRESULT result)
         {
+#if DEBUG
+            DeviceHelper.FlushAllID3D12InfoQueueMessages();
+#endif
+
             if (result < 0)
             {
-                DeviceDebugHelper.FlushMessages();
-
                 ThrowHelper.ThrowWin32Exception(result);
             }
         }
