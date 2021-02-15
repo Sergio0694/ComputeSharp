@@ -38,13 +38,13 @@ jobs:
       run: mkdir src\ComputeSharp.Package\bin\Release
       shell: cmd
     - name: Run ComputeSharp.Tests
-      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj
+      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
     - name: Run ComputeSharp.Tests.Internals
-      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj
+      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
     - name: Run ComputeSharp.Tests.Internals.SourceGenerators
-      run: dotnet test tests\ComputeSharp.Tests.Internals.SourceGenerators\ComputeSharp.Tests.Internals.SourceGenerators.csproj
+      run: dotnet test tests\ComputeSharp.Tests.Internals.SourceGenerators\ComputeSharp.Tests.Internals.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
 
   # Run all the local samples to ensure they build and run with no errors.
@@ -62,9 +62,6 @@ jobs:
     - name: Create local NuGet feed
       run: mkdir src\ComputeSharp.Package\bin\Release
       shell: cmd
-    - name: Build project
-      run: dotnet build src\ComputeSharp\ComputeSharp.csproj -c Release
-      shell: cmd
     - name: Build ComputeSharp.Sample.Local
       run: dotnet build samples\ComputeSharp.Sample.Local\ComputeSharp.Sample.Local.csproj -c Release
       shell: cmd
@@ -76,6 +73,9 @@ jobs:
       shell: cmd
     - name: Run ComputeSharp.ImageProcessing.csproj
       run: dotnet samples\ComputeSharp.ImageProcessing\bin\Release\net5.0\ComputeSharp.ImageProcessing.dll
+      shell: cmd
+    - name: Build ComputeSharp.Benchmark.csproj
+      run: dotnet build samples\ComputeSharp.Benchmark\ComputeSharp.Benchmark.csproj -c Release
       shell: cmd
 
   # Buils the .msbuildproj project to generate the NuGet package.
@@ -148,5 +148,5 @@ jobs:
       run: mkdir src\ComputeSharp.Package\bin\Release
       shell: cmd
     - name: Run ComputeSharp.Tests.NativeLibrariesResolver
-      run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj
+      run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
