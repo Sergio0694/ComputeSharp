@@ -409,7 +409,7 @@ namespace ComputeSharp.BokehBlur.Processors
                     {
                         Float4 v = source[i, ThreadIds.X];
 
-                        v.XYZ = Hlsl.Clamp(v.XYZ, 0, float.MaxValue);
+                        v = Hlsl.Clamp(v, 0, float.MaxValue);
                         v.XYZ = Hlsl.Pow(v.XYZ, 1 / 3f);
 
                         target[i, ThreadIds.X] = v;

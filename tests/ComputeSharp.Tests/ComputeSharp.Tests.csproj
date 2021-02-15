@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.0.0-preview4" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +21,18 @@
                       OutputItemType="Analyzer"
                       ReferenceOutputAssembly="false"
                       PrivateAssets="contentfiles;build"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Primitives\Complex64.cs" Link="Imaging\Primitives\Complex64.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslBokehBlurProcessor.cs" Link="Imaging\Processors\HlslBokehBlurProcessor.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslBokehBlurProcessor{TPixel}.cs" Link="Imaging\Processors\HlslBokehBlurProcessor{TPixel}.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor{TPixel}.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor{TPixel}.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\samples\ComputeSharp.ImageProcessing\city.jpg" Link="Imaging\city.jpg" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
