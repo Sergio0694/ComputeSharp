@@ -12,6 +12,7 @@ using static TerraFX.Interop.D3D12_DESCRIPTOR_HEAP_TYPE;
 using static TerraFX.Interop.D3D12_FEATURE;
 using static TerraFX.Interop.D3D12_FENCE_FLAGS;
 using static TerraFX.Interop.D3D12_MEMORY_POOL;
+using static TerraFX.Interop.D3D12_MESSAGE_ID;
 using static TerraFX.Interop.D3D12_HEAP_TYPE;
 using static TerraFX.Interop.D3D12_RESOURCE_FLAGS;
 using static TerraFX.Interop.D3D12_RESOURCE_STATES;
@@ -27,6 +28,34 @@ namespace ComputeSharp.Graphics.Extensions
     /// </summary>
     internal static unsafe class ID3D12DeviceExtensions
     {
+        /// <summary>
+        /// Creates a new <see cref="ID3D12InfoQueue"/> for a given device.
+        /// </summary>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the info queue.</param>
+        /// <returns>A pointer to the newly created <see cref="ID3D12InfoQueue"/> instance.</returns>
+        /// <exception cref="Exception">Thrown when the creation of the info queue fails.</exception>
+        public static ComPtr<ID3D12InfoQueue> CreateInfoQueue(this ref ID3D12Device d3D12Device)
+        {
+            ComPtr<ID3D12InfoQueue> d3D12InfoQueue = default;
+
+            d3D12Device.QueryInterface(FX.__uuidof<ID3D12InfoQueue>(), d3D12InfoQueue.GetVoidAddressOf()).Assert();
+
+            D3D12_MESSAGE_ID* d3D12MessageIds = stackalloc D3D12_MESSAGE_ID[3]
+            {
+                D3D12_MESSAGE_ID_CREATEDEVICE_DEBUG_LAYER_STARTUP_OPTIONS,
+                D3D12_MESSAGE_ID_MAP_INVALID_NULLRANGE,
+                D3D12_MESSAGE_ID_UNMAP_INVALID_NULLRANGE
+            };
+
+            D3D12_INFO_QUEUE_FILTER d3D12InfoQueueFilter = default;
+            d3D12InfoQueueFilter.DenyList.NumIDs = 3;
+            d3D12InfoQueueFilter.DenyList.pIDList = d3D12MessageIds;
+
+            d3D12InfoQueue.Get()->PushRetrievalFilter(&d3D12InfoQueueFilter).Assert();
+
+            return d3D12InfoQueue.Move();
+        }
+
         /// <summary>
         /// Creates a new <see cref="ID3D12CommandQueue"/> of the specified type, for a given device.
         /// </summary>

@@ -26,7 +26,7 @@ namespace ComputeSharp.Graphics.Helpers
                     var device = DevicesCache[pair.Key];
                     var queue = pair.Value;
 
-                    ulong messages = queue.Get()->GetNumStoredMessages();
+                    ulong messages = queue.Get()->GetNumStoredMessagesAllowedByRetrievalFilter();
 
                     if (messages > 0)
                     {

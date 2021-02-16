@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using TerraFX.Interop;
 #if DEBUG
-using ComputeSharp.Core.Extensions;
-using FX = TerraFX.Interop.Windows;
+using ComputeSharp.Graphics.Extensions;
 #endif
+using TerraFX.Interop;
 
 namespace ComputeSharp.Graphics.Helpers
 {
@@ -41,11 +40,7 @@ namespace ComputeSharp.Graphics.Helpers
                     DevicesCache.Add(luid, device);
 
 #if DEBUG
-                    ComPtr<ID3D12InfoQueue> d3D12InfoQueue = default;
-
-                    int res = d3D12Device.Get()->QueryInterface(FX.__uuidof<ID3D12InfoQueue>(), d3D12InfoQueue.GetVoidAddressOf());
-
-                    D3D12InfoQueueMap.Add(luid, d3D12InfoQueue);
+                    D3D12InfoQueueMap.Add(luid, d3D12Device.Get()->CreateInfoQueue());
 #endif
                 }
 
