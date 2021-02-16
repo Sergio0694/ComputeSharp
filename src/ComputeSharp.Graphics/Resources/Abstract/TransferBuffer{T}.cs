@@ -67,6 +67,11 @@ namespace ComputeSharp.Resources
         /// </summary>
         internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
 
+        /// <summary>
+        /// Gets the pointer to the start of the mapped buffer data.
+        /// </summary>
+        internal T* MappedData => this.mappedData;
+
         /// <inheritdoc/>
         public Memory<T> Memory
         {
