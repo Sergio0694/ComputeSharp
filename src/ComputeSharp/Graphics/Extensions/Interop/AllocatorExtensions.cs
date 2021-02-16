@@ -1,5 +1,6 @@
 ﻿using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Resources.Enums;
+using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_HEAP_TYPE;

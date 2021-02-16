@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
-using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;

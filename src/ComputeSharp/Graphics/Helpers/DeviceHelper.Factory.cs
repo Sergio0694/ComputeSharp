@@ -41,7 +41,7 @@ namespace ComputeSharp.Graphics.Helpers
                     DevicesCache.Add(luid, device);
 
 #if DEBUG
-                    D3D12InfoQueueMap.Add(luid, d3D12Device.Get()->CreateInfoQueue());
+                    D3D12InfoQueueMap.Add(luid, d3D12Device->CreateInfoQueue());
 #endif
                 }
 

@@ -1,7 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using ComputeSharp.__Internals;
 using ComputeSharp.Exceptions;
-using ComputeSharp.Graphics;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;

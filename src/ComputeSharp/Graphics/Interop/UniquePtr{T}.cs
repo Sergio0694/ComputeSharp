@@ -4,7 +4,7 @@ using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using TerraFX.Interop;
 
-namespace ComputeSharp.Graphics
+namespace ComputeSharp.Interop
 {
     /// <summary>
     /// A <see cref="ComPtr{T}"/>-equivalent type to safely work with pointers to public <see cref="D3D12MemoryAllocator"/> APIs.

@@ -1,8 +1,8 @@
-﻿using ComputeSharp.Graphics;
-using ComputeSharp.Graphics.Commands;
+﻿using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Graphics.Resources.Interop;
+using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
