@@ -22,13 +22,23 @@ namespace ComputeSharp.Core.Extensions
         public static void Assert(this HRESULT result)
         {
 #if DEBUG
-            DeviceHelper.FlushAllID3D12InfoQueueMessages();
-#endif
+            bool hasErrorsOrWarnings = DeviceHelper.FlushAllID3D12InfoQueueMessagesAndCheckForErrorsOrWarnings();
 
             if (result < 0)
             {
                 ThrowHelper.ThrowWin32Exception(result);
             }
+
+            if (hasErrorsOrWarnings)
+            {
+                ThrowHelper.ThrowWin32Exception("Warning or error detected by ID3D12InfoQueue");
+            }
+#else
+            if (result < 0)
+            {
+                ThrowHelper.ThrowWin32Exception(result);
+            }
+#endif
         }
     }
 }
