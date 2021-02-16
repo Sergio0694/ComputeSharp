@@ -80,6 +80,8 @@ namespace ComputeSharp.Resources
                     device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), (uint)length, elementSizeInBytes, D3D12CpuDescriptorHandle);
                     break;
             }
+
+            this.d3D12Resource.Get()->SetName(this);
         }
 
         /// <summary>

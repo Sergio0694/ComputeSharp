@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Resources.Interop;
@@ -37,6 +38,23 @@ namespace ComputeSharp.Graphics.Extensions
         public static void Unmap(this ref ID3D12Resource d3D12Resource)
         {
             d3D12Resource.Unmap(0, null);
+        }
+
+        /// <summary>
+        /// Assigns a name to a given <see cref="ID3D12Resource"/>.
+        /// </summary>
+        /// <param name="d3D12Resource">The target <see cref="ID3D12Resource"/> to map.</param>
+        /// <param name="wrapper">The wrapper object to get the name from.</param>
+        /// <exception cref="Exception">Thrown when the mapping operation fails.</exception>
+        [Conditional("DEBUG")]
+        public static void SetName(this ref ID3D12Resource d3D12Resource, object wrapper)
+        {
+            string name = wrapper.ToString()!;
+
+            fixed (char* p = name)
+            {
+                d3D12Resource.SetName((ushort*)p).Assert();
+            }
         }
     }
 }

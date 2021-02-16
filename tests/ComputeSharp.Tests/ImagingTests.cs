@@ -22,6 +22,10 @@ namespace ComputeSharp.Tests
         [AllDevices]
         public void BokehBlur(Device device)
         {
+            // Early test to ensure the device is available. This saves time when running the
+            // unit test if the target device is not available, as we skip the preprocessing.
+            _ = device.Get();
+
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
 
             using var original = Image.Load<ImageSharpRgba32>(Path.Combine(path, "city.jpg"));
@@ -42,6 +46,8 @@ namespace ComputeSharp.Tests
         [AllDevices]
         public void GaussianBlur(Device device)
         {
+            _ = device.Get();
+
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
 
             using var original = Image.Load<ImageSharpRgba32>(Path.Combine(path, "city.jpg"));
