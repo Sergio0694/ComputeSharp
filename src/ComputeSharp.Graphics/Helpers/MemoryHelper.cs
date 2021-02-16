@@ -9,29 +9,6 @@ namespace ComputeSharp.Graphics.Helpers
     internal static class MemoryHelper
     {
         /// <summary>
-        /// Copies the content of a source memory area to a target one.
-        /// </summary>
-        /// <param name="source">The source memory area to read from.</param>
-        /// <param name="destination">The pointer for the destination memory area.</param>
-        /// <param name="offset">The destination offset to start writing data to.</param>
-        /// <param name="length">The number of items to copy.</param>
-        /// <param name="elementSizeInBytes">The size in bytes of each item to copy.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void Copy(
-            void* source,
-            void* destination,
-            uint offset,
-            uint length,
-            uint elementSizeInBytes)
-        {
-            Buffer.MemoryCopy(
-                source,
-                (byte*)destination + offset * elementSizeInBytes,
-                ulong.MaxValue,
-                elementSizeInBytes * length);
-        }
-
-        /// <summary>
         /// Copies the content of a source memory area to a target one, accounting for padding.
         /// The destination memory area has padding for each element, while the source does not.
         /// </summary>
@@ -40,19 +17,31 @@ namespace ComputeSharp.Graphics.Helpers
         /// <param name="offset">The destination offset to start writing data to.</param>
         /// <param name="length">The number of items to copy.</param>
         /// <param name="elementPitchInBytes">The padded size of each element.</param>
+        /// <param name="isPaddingInSourceToo">Indicates whether or not the source is padded too.</param>
         public static unsafe void Copy<T>(
             void* source,
             void* destination,
             uint offset,
             uint length,
-            uint elementPitchInBytes)
+            uint elementPitchInBytes,
+            bool isPaddingInSourceToo)
             where T : unmanaged
         {
             destination = (byte*)destination + offset * elementPitchInBytes;
 
-            for (int i = 0; i < length; i++)
+            if (isPaddingInSourceToo)
             {
-                *(T*)&((byte*)destination)[i * elementPitchInBytes] = ((T*)source)[i];
+                for (int i = 0; i < length; i++)
+                {
+                    *(T*)&((byte*)destination)[i * elementPitchInBytes] = *(T*)&((byte*)source)[i * elementPitchInBytes];
+                }
+            }
+            else
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    *(T*)&((byte*)destination)[i * elementPitchInBytes] = ((T*)source)[i];
+                }
             }
         }
 

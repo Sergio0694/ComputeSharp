@@ -199,12 +199,14 @@ namespace ComputeSharp.Resources
         {
             GraphicsDevice.ThrowIfDisposed();
 
-            ThrowIfDeviceMismatch(source.GraphicsDevice);
             ThrowIfDisposed();
+
+            source.ThrowIfDeviceMismatch(GraphicsDevice);
             source.ThrowIfDisposed();
 
-            if (!source.IsPaddingPresent &&
-                source.GraphicsDevice == GraphicsDevice)
+            Guard.IsLessThanOrEqualTo(source.Length, Length, nameof(Length));
+
+            if (!source.IsPaddingPresent)
             {
                 // Directly copy the input buffer
                 using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
