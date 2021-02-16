@@ -101,15 +101,29 @@ namespace ComputeSharp.Resources
             Guard.IsInRange(destinationOffset, 0, destination.Length, nameof(destinationOffset));
             Guard.IsLessThanOrEqualTo(destinationOffset + length, destination.Length, nameof(length));
 
-            ulong
-                byteDestinationOffset = (uint)destinationOffset * (uint)sizeof(T),
-                byteOffset = (uint)offset * (uint)sizeof(T),
-                byteLength = (uint)length * (uint)sizeof(T);
+            if (GraphicsDevice.IsCacheCoherentUMA)
+            {
+                using ID3D12ResourceMap resource = D3D12Resource->Map();
 
-            using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+                MemoryHelper.Copy(
+                    resource.Pointer,
+                    (uint)offset,
+                    (uint)length,
+                    (uint)sizeof(T),
+                    destination.MappedData + destinationOffset);
+            }
+            else
+            {
+                ulong
+                    byteDestinationOffset = (uint)destinationOffset * (uint)sizeof(T),
+                    byteOffset = (uint)offset * (uint)sizeof(T),
+                    byteLength = (uint)length * (uint)sizeof(T);
 
-            copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(destination.D3D12Resource, byteDestinationOffset, D3D12Resource, byteOffset, byteLength);
-            copyCommandList.ExecuteAndWaitForCompletion();
+                using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+
+                copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(destination.D3D12Resource, byteDestinationOffset, D3D12Resource, byteOffset, byteLength);
+                copyCommandList.ExecuteAndWaitForCompletion();
+            }
         }
 
         /// <inheritdoc/>
@@ -183,15 +197,29 @@ namespace ComputeSharp.Resources
             Guard.IsInRange(sourceOffset, 0, source.Length, nameof(sourceOffset));
             Guard.IsLessThanOrEqualTo(sourceOffset + length, source.Length, nameof(length));
 
-            ulong
-                byteSourceOffset = (uint)sourceOffset * (uint)sizeof(T),
-                byteOffset = (uint)offset * (uint)sizeof(T),
-                byteLength = (uint)length * (uint)sizeof(T);
+            if (GraphicsDevice.IsCacheCoherentUMA)
+            {
+                using ID3D12ResourceMap resource = D3D12Resource->Map();
 
-            using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+                MemoryHelper.Copy(
+                    source.MappedData,
+                    (uint)sourceOffset,
+                    (uint)length,
+                    (uint)sizeof(T),
+                    (T*)resource.Pointer + offset);
+            }
+            else
+            {
+                ulong
+                    byteSourceOffset = (uint)sourceOffset * (uint)sizeof(T),
+                    byteOffset = (uint)offset * (uint)sizeof(T),
+                    byteLength = (uint)length * (uint)sizeof(T);
 
-            copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(D3D12Resource, byteOffset, source.D3D12Resource, byteSourceOffset, byteLength);
-            copyCommandList.ExecuteAndWaitForCompletion();
+                using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+
+                copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(D3D12Resource, byteOffset, source.D3D12Resource, byteSourceOffset, byteLength);
+                copyCommandList.ExecuteAndWaitForCompletion();
+            }
         }
 
         /// <inheritdoc/>
@@ -199,12 +227,14 @@ namespace ComputeSharp.Resources
         {
             GraphicsDevice.ThrowIfDisposed();
 
-            ThrowIfDeviceMismatch(source.GraphicsDevice);
             ThrowIfDisposed();
+
+            source.ThrowIfDeviceMismatch(GraphicsDevice);
             source.ThrowIfDisposed();
 
-            if (!source.IsPaddingPresent &&
-                source.GraphicsDevice == GraphicsDevice)
+            Guard.IsLessThanOrEqualTo(source.Length, Length, nameof(Length));
+
+            if (!source.IsPaddingPresent)
             {
                 // Directly copy the input buffer
                 using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);

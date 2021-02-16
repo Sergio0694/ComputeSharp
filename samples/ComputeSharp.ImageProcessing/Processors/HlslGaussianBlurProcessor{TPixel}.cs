@@ -18,6 +18,11 @@ namespace ComputeSharp.BokehBlur.Processors
         internal sealed partial class Implementation : ImageProcessor<ImageSharpRgba32>
         {
             /// <summary>
+            /// The <see cref="ComputeSharp.GraphicsDevice"/> instance in use.
+            /// </summary>
+            private readonly GraphicsDevice GraphicsDevice;
+
+            /// <summary>
             /// The 1D kernel to apply.
             /// </summary>
             private readonly float[] Kernel;
@@ -33,6 +38,8 @@ namespace ComputeSharp.BokehBlur.Processors
                 : base(configuration, source, sourceRectangle)
             {
                 int kernelSize = definition.Radius * 2 + 1;
+
+                GraphicsDevice = definition.GraphicsDevice;
                 Kernel = CreateGaussianBlurKernel(kernelSize, definition.Sigma);
             }
 
@@ -94,12 +101,12 @@ namespace ComputeSharp.BokehBlur.Processors
 
                 Span<Rgba32> span = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(pixelSpan);
 
-                using ReadWriteTexture2D<Rgba32, Vector4> sourceTexture = Gpu.Default.AllocateReadWriteTexture2D<Rgba32, Vector4>(span, source.Width, source.Height);
-                using ReadWriteTexture2D<Rgba32, Vector4> firstPassTexture = Gpu.Default.AllocateReadWriteTexture2D<Rgba32, Vector4>(source.Width, source.Height);
-                using ReadOnlyBuffer<float> kernelBuffer = Gpu.Default.AllocateReadOnlyBuffer(Kernel);
+                using ReadWriteTexture2D<Rgba32, Vector4> sourceTexture = GraphicsDevice.AllocateReadWriteTexture2D<Rgba32, Vector4>(span, source.Width, source.Height);
+                using ReadWriteTexture2D<Rgba32, Vector4> firstPassTexture = GraphicsDevice.AllocateReadWriteTexture2D<Rgba32, Vector4>(source.Width, source.Height);
+                using ReadOnlyBuffer<float> kernelBuffer = GraphicsDevice.AllocateReadOnlyBuffer(Kernel);
 
-                Gpu.Default.For<VerticalConvolutionProcessor>(source.Width, source.Height, new(sourceTexture, firstPassTexture, kernelBuffer));
-                Gpu.Default.For<HorizontalConvolutionProcessor>(source.Width, source.Height, new(firstPassTexture, sourceTexture, kernelBuffer));
+                GraphicsDevice.For<VerticalConvolutionProcessor>(source.Width, source.Height, new(sourceTexture, firstPassTexture, kernelBuffer));
+                GraphicsDevice.For<HorizontalConvolutionProcessor>(source.Width, source.Height, new(firstPassTexture, sourceTexture, kernelBuffer));
 
                 sourceTexture.CopyTo(span);
             }

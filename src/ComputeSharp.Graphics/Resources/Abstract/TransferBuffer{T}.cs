@@ -48,6 +48,8 @@ namespace ComputeSharp.Resources
 
             this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, allocationMode, sizeInBytes, device.IsCacheCoherentUMA);
             this.mappedData = (T*)this.d3D12Resource.Get()->Map().Pointer;
+
+            this.d3D12Resource.Get()->SetName(this);
         }
 
         /// <summary>
@@ -64,6 +66,11 @@ namespace ComputeSharp.Resources
         /// Gets the <see cref="ID3D12Resource"/> instance currently mapped.
         /// </summary>
         internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
+
+        /// <summary>
+        /// Gets the pointer to the start of the mapped buffer data.
+        /// </summary>
+        internal T* MappedData => this.mappedData;
 
         /// <inheritdoc/>
         public Memory<T> Memory

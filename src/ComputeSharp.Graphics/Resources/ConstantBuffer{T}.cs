@@ -3,7 +3,6 @@ using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Helpers;
 using ComputeSharp.Exceptions;
-using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Graphics.Resources.Enums;
@@ -11,7 +10,6 @@ using ComputeSharp.Graphics.Resources.Interop;
 using ComputeSharp.Resources;
 using ComputeSharp.Resources.Debug;
 using Microsoft.Toolkit.Diagnostics;
-using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp
@@ -114,7 +112,8 @@ namespace ComputeSharp
                         resource.Pointer,
                         (uint)offset,
                         (uint)size,
-                        (uint)GetPaddedSize());
+                        (uint)GetPaddedSize(),
+                        isPaddingInSourceToo: false);
                 }
                 else
                 {
@@ -133,18 +132,37 @@ namespace ComputeSharp
         {
             GraphicsDevice.ThrowIfDisposed();
 
-            ThrowIfDeviceMismatch(source.GraphicsDevice);
             ThrowIfDisposed();
+
+            source.ThrowIfDeviceMismatch(GraphicsDevice);
             source.ThrowIfDisposed();
 
-            if (source is ConstantBuffer<T> &&
-                source.GraphicsDevice == GraphicsDevice)
-            {
-                // Directly copy the input buffer, if possible
-                using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+            Guard.IsLessThanOrEqualTo(source.Length, Length, nameof(Length));
 
-                copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(D3D12Resource, 0, source.D3D12Resource, 0,(ulong)SizeInBytes);
-                copyCommandList.ExecuteAndWaitForCompletion();
+            if (source is ConstantBuffer<T> buffer)
+            {
+                using ID3D12ResourceMap sourceMap = buffer.D3D12Resource->Map();
+                using ID3D12ResourceMap destinationMap = D3D12Resource->Map();
+
+                if (IsPaddingPresent)
+                {
+                    MemoryHelper.Copy<T>(
+                        sourceMap.Pointer,
+                        destinationMap.Pointer,
+                        0,
+                        (uint)source.Length,
+                        (uint)GetPaddedSize(),
+                        isPaddingInSourceToo: true);
+                }
+                else
+                {
+                    MemoryHelper.Copy(
+                        sourceMap.Pointer,
+                        0,
+                        (uint)source.Length,
+                        (uint)sizeof(T),
+                        destinationMap.Pointer);
+                }
             }
             else CopyFromWithCpuBuffer(source);
         }

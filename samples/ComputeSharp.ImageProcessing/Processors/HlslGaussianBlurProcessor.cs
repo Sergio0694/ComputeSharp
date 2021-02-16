@@ -20,24 +20,47 @@ namespace ComputeSharp.BokehBlur.Processors
         /// <summary>
         /// Initializes a new instance of the <see cref="HlslGaussianBlurProcessor"/> class.
         /// </summary>
-        public HlslGaussianBlurProcessor() : this(DefaultSigma, 9) { }
+        public HlslGaussianBlurProcessor()
+            : this(Gpu.Default, DefaultSigma, 9)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HlslGaussianBlurProcessor"/> class.
         /// </summary>
         /// <param name="radius">The radius value representing the size of the area to sample.</param>
-        public HlslGaussianBlurProcessor(int radius) : this(radius / 3F, radius) { }
+        public HlslGaussianBlurProcessor(int radius)
+            : this(Gpu.Default, radius / 3F, radius)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HlslGaussianBlurProcessor"/> class.
         /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
+        /// <param name="radius">The radius value representing the size of the area to sample.</param>
+        public HlslGaussianBlurProcessor(GraphicsDevice device, int radius)
+            : this(device, radius / 3F, radius)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HlslGaussianBlurProcessor"/> class.
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
         /// <param name="sigma"> The sigma value representing the weight of the blur. </param>
         /// <param name="radius">The radius value representing the size of the area to sample (this should be at least twice the sigma value)</param>
-        public HlslGaussianBlurProcessor(float sigma, int radius)
+        public HlslGaussianBlurProcessor(GraphicsDevice device, float sigma, int radius)
         {
+            GraphicsDevice = device;
             Sigma = sigma;
             Radius = radius;
         }
+
+        /// <summary>
+        /// The <see cref="ComputeSharp.GraphicsDevice"/> instance in use.
+        /// </summary>
+        private readonly GraphicsDevice GraphicsDevice;
 
         /// <summary>
         /// Gets the sigma value representing the weight of the blur.

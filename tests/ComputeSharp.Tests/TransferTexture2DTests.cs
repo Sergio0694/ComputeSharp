@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ComputeSharp.Resources;
+using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.Toolkit.HighPerformance.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,60 +12,62 @@ namespace ComputeSharp.Tests
     [TestCategory("TransferTexture2D")]
     public partial class TransferTexture2DTests
     {
-        [TestMethod]
-        [DataRow(typeof(UploadTexture2D<>))]
-        [DataRow(typeof(ReadBackTexture2D<>))]
-        public unsafe void Allocate_Uninitialized_Ok(Type bufferType)
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(UploadTexture2D<>))]
+        [Resource(typeof(ReadBackTexture2D<>))]
+        public unsafe void Allocate_Uninitialized_Ok(Device device, Type bufferType)
         {
-            using TransferTexture2D<float> buffer = Gpu.Default.AllocateTransferTexture2D<float>(bufferType, 128, 256);
+            using TransferTexture2D<float> buffer = device.Get().AllocateTransferTexture2D<float>(bufferType, 128, 256);
 
             Assert.IsNotNull(buffer);
             Assert.AreEqual(buffer.Width, 128);
             Assert.AreEqual(buffer.Height, 256);
             Assert.AreEqual(buffer.View.Width, 128);
             Assert.AreEqual(buffer.View.Height, 256);
-            Assert.AreSame(buffer.GraphicsDevice, Gpu.Default);
+            Assert.AreSame(buffer.GraphicsDevice, device.Get());
         }
 
-        [TestMethod]
-        [DataRow(typeof(UploadTexture2D<>), 128, -14253)]
-        [DataRow(typeof(UploadTexture2D<>), 128, -1)]
-        [DataRow(typeof(UploadTexture2D<>), 0, -4314)]
-        [DataRow(typeof(UploadTexture2D<>), -14, -53)]
-        [DataRow(typeof(ReadBackTexture2D<>), 128, -14253)]
-        [DataRow(typeof(ReadBackTexture2D<>), 128, -1)]
-        [DataRow(typeof(ReadBackTexture2D<>), 0, -4314)]
-        [DataRow(typeof(ReadBackTexture2D<>), -14, -53)]
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(UploadTexture2D<>))]
+        [Resource(typeof(ReadBackTexture2D<>))]
+        [Data(128, -14253)]
+        [Data(128, -1)]
+        [Data(0, -4314)]
+        [Data(-14, -53)]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void Allocate_Uninitialized_Fail(Type bufferType, int width, int height)
+        public void Allocate_Uninitialized_Fail(Device device, Type bufferType, int width, int height)
         {
-            using TransferTexture2D<float> buffer = Gpu.Default.AllocateTransferTexture2D<float>(bufferType, width, height);
+            using TransferTexture2D<float> buffer = device.Get().AllocateTransferTexture2D<float>(bufferType, width, height);
         }
 
-        [TestMethod]
-        [DataRow(typeof(UploadTexture2D<>))]
-        [DataRow(typeof(ReadBackTexture2D<>))]
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(UploadTexture2D<>))]
+        [Resource(typeof(ReadBackTexture2D<>))]
         [ExpectedException(typeof(ObjectDisposedException))]
-        public void UsageAfterDispose(Type bufferType)
+        public void UsageAfterDispose(Device device, Type bufferType)
         {
-            using TransferTexture2D<float> buffer = Gpu.Default.AllocateTransferTexture2D<float>(bufferType, 32, 32);
+            using TransferTexture2D<float> buffer = device.Get().AllocateTransferTexture2D<float>(bufferType, 32, 32);
 
             buffer.Dispose();
 
             _ = buffer.View;
         }
 
-        [TestMethod]
-        public void Allocate_UploadTexture2D_Copy_Full()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void Allocate_UploadTexture2D_Copy_Full(Device device)
         {
-            using UploadTexture2D<int> uploadTexture2D = Gpu.Default.AllocateUploadTexture2D<int>(256, 256);
+            using UploadTexture2D<int> uploadTexture2D = device.Get().AllocateUploadTexture2D<int>(256, 256);
 
             for (int i = 0; i < uploadTexture2D.Height; i++)
             {
                 new Random(i).NextBytes(uploadTexture2D.View.GetRowSpan(i).AsBytes());
             }
 
-            using ReadOnlyTexture2D<int> readOnlyTexture2D = Gpu.Default.AllocateReadOnlyTexture2D<int>(uploadTexture2D.Width, uploadTexture2D.Height);
+            using ReadOnlyTexture2D<int> readOnlyTexture2D = device.Get().AllocateReadOnlyTexture2D<int>(uploadTexture2D.Width, uploadTexture2D.Height);
 
             uploadTexture2D.CopyTo(readOnlyTexture2D);
 
@@ -79,21 +82,22 @@ namespace ComputeSharp.Tests
             }
         }
 
-        [TestMethod]
-        [DataRow(0, 0, 2048, 2048)]
-        [DataRow(128, 0, 1813, 2048)]
-        [DataRow(0, 128, 2000, 944)]
-        [DataRow(97, 33, 512, 794)]
-        public void Allocate_UploadTexture2D_Copy_Range(int x, int y, int width, int height)
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Data(0, 0, 2048, 2048)]
+        [Data(128, 0, 1813, 2048)]
+        [Data(0, 128, 2000, 944)]
+        [Data(97, 33, 512, 794)]
+        public void Allocate_UploadTexture2D_Copy_Range(Device device, int x, int y, int width, int height)
         {
-            using UploadTexture2D<int> uploadTexture2D = Gpu.Default.AllocateUploadTexture2D<int>(2048, 2048);
+            using UploadTexture2D<int> uploadTexture2D = device.Get().AllocateUploadTexture2D<int>(2048, 2048);
 
             for (int i = 0; i < uploadTexture2D.Height; i++)
             {
                 new Random(i).NextBytes(uploadTexture2D.View.GetRowSpan(i).AsBytes());
             }
 
-            using ReadOnlyTexture2D<int> readOnlyTexture2D = Gpu.Default.AllocateReadOnlyTexture2D<int>(uploadTexture2D.Width, uploadTexture2D.Height);
+            using ReadOnlyTexture2D<int> readOnlyTexture2D = device.Get().AllocateReadOnlyTexture2D<int>(uploadTexture2D.Width, uploadTexture2D.Height);
 
             uploadTexture2D.CopyTo(readOnlyTexture2D, x, y, width, height);
 
@@ -108,8 +112,9 @@ namespace ComputeSharp.Tests
             }
         }
 
-        [TestMethod]
-        public void Allocate_ReadBackTexture2D_Copy_Full()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void Allocate_ReadBackTexture2D_Copy_Full(Device device)
         {
             int[,] source = new int[256, 256];
 
@@ -118,8 +123,8 @@ namespace ComputeSharp.Tests
                 new Random(42).NextBytes(source.GetRowSpan(i).AsBytes());
             }
 
-            using ReadOnlyTexture2D<int> readOnlyTexture2D = Gpu.Default.AllocateReadOnlyTexture2D(source);
-            using ReadBackTexture2D<int> readBackTexture2D = Gpu.Default.AllocateReadBackTexture2D<int>(256, 256);
+            using ReadOnlyTexture2D<int> readOnlyTexture2D = device.Get().AllocateReadOnlyTexture2D(source);
+            using ReadBackTexture2D<int> readBackTexture2D = device.Get().AllocateReadBackTexture2D<int>(256, 256);
 
             readOnlyTexture2D.CopyTo(readBackTexture2D);
 
@@ -132,12 +137,13 @@ namespace ComputeSharp.Tests
             }
         }
 
-        [TestMethod]
-        [DataRow(0, 0, 2048, 2048)]
-        [DataRow(128, 0, 1813, 2048)]
-        [DataRow(0, 128, 2000, 944)]
-        [DataRow(97, 33, 512, 794)]
-        public void Allocate_ReadBackTexture2D_Copy_Range(int x, int y, int width, int height)
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Data(0, 0, 2048, 2048)]
+        [Data(128, 0, 1813, 2048)]
+        [Data(0, 128, 2000, 944)]
+        [Data(97, 33, 512, 794)]
+        public void Allocate_ReadBackTexture2D_Copy_Range(Device device, int x, int y, int width, int height)
         {
             int[,] source = new int[2048, 2048];
 
@@ -146,8 +152,8 @@ namespace ComputeSharp.Tests
                 new Random(42).NextBytes(source.GetRowSpan(i).AsBytes());
             }
 
-            using ReadOnlyTexture2D<int> readOnlyTexture2D = Gpu.Default.AllocateReadOnlyTexture2D(source);
-            using ReadBackTexture2D<int> readBackTexture2D = Gpu.Default.AllocateReadBackTexture2D<int>(2048, 2048);
+            using ReadOnlyTexture2D<int> readOnlyTexture2D = device.Get().AllocateReadOnlyTexture2D(source);
+            using ReadBackTexture2D<int> readBackTexture2D = device.Get().AllocateReadBackTexture2D<int>(2048, 2048);
 
             readOnlyTexture2D.CopyTo(readBackTexture2D, x, y, width, height);
 

@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+#if DEBUG
+using ComputeSharp.Graphics.Extensions;
+#endif
 using TerraFX.Interop;
 
 namespace ComputeSharp.Graphics.Helpers
@@ -9,7 +12,14 @@ namespace ComputeSharp.Graphics.Helpers
         /// <summary>
         /// The local cache of <see cref="GraphicsDevice"/> instances that are currently usable.
         /// </summary>
-        private static readonly Dictionary<Luid, GraphicsDevice> DevicesCache = new();
+        internal static readonly Dictionary<Luid, GraphicsDevice> DevicesCache = new();
+
+#if DEBUG
+        /// <summary>
+        /// The local map of <see cref="ID3D12InfoQueue"/> instances for the existing devices.
+        /// </summary>
+        private static readonly Dictionary<Luid, ComPtr<ID3D12InfoQueue>> D3D12InfoQueueMap = new();
+#endif
 
         /// <summary>
         /// Retrieves a <see cref="GraphicsDevice"/> instance for an <see cref="ID3D12Device"/> object.
@@ -28,6 +38,10 @@ namespace ComputeSharp.Graphics.Helpers
                     device = new GraphicsDevice(d3D12Device, dxgiDescription1);
 
                     DevicesCache.Add(luid, device);
+
+#if DEBUG
+                    D3D12InfoQueueMap.Add(luid, d3D12Device.Get()->CreateInfoQueue());
+#endif
                 }
 
                 return device;
@@ -43,6 +57,12 @@ namespace ComputeSharp.Graphics.Helpers
             lock (DevicesCache)
             {
                 DevicesCache.Remove(device.Luid);
+
+#if DEBUG
+                D3D12InfoQueueMap.Remove(device.Luid, out ComPtr<ID3D12InfoQueue> queue);
+
+                queue.Dispose();
+#endif
             }
         }
     }

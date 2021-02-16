@@ -26,7 +26,7 @@ namespace ComputeSharp.BokehBlur.Processors
         /// Initializes a new instance of the <see cref="HlslBokehBlurProcessor"/> class.
         /// </summary>
         public HlslBokehBlurProcessor()
-            : this(DefaultRadius, DefaultComponents)
+            : this(Gpu.Default, DefaultRadius, DefaultComponents)
         {
         }
 
@@ -36,10 +36,27 @@ namespace ComputeSharp.BokehBlur.Processors
         /// <param name="radius">The size of the area to sample.</param>
         /// <param name="components">The number of components to use to approximate the original 2D bokeh blur convolution kernel.</param>
         public HlslBokehBlurProcessor(int radius, int components)
+            : this(Gpu.Default, radius, components)
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HlslBokehBlurProcessor"/> class.
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
+        /// <param name="radius">The size of the area to sample.</param>
+        /// <param name="components">The number of components to use to approximate the original 2D bokeh blur convolution kernel.</param>
+        public HlslBokehBlurProcessor(GraphicsDevice device, int radius, int components)
+        {
+            GraphicsDevice = device;
             Radius = radius;
             Components = components;
         }
+
+        /// <summary>
+        /// Gets the <see cref="ComputeSharp.GraphicsDevice"/> associated with the current instance.
+        /// </summary>
+        public GraphicsDevice GraphicsDevice { get; }
 
         /// <summary>
         /// Gets the radius.

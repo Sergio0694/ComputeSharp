@@ -1,4 +1,6 @@
 using System;
+using ComputeSharp.Tests.Attributes;
+using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests
@@ -7,12 +9,13 @@ namespace ComputeSharp.Tests
     [TestCategory("Dispatch")]
     public partial class DispatchTests
     {
-        [TestMethod]
-        public void Verify_ThreadIds()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void Verify_ThreadIds(Device device)
         {
-            using ReadWriteTexture3D<Int4> buffer = Gpu.Default.AllocateReadWriteTexture3D<Int4>(50, 50, 50);
+            using ReadWriteTexture3D<Int4> buffer = device.Get().AllocateReadWriteTexture3D<Int4>(50, 50, 50);
 
-            Gpu.Default.For(buffer.Width, buffer.Height, buffer.Depth, new ThreadIdsShader(buffer));
+            device.Get().For(buffer.Width, buffer.Height, buffer.Depth, new ThreadIdsShader(buffer));
 
             Int4[,,] data = buffer.ToArray();
 
@@ -32,18 +35,19 @@ namespace ComputeSharp.Tests
             }
         }
 
-        [TestMethod]
-        [DataRow(0, 8, 8)]
-        [DataRow(8, 0, 8)]
-        [DataRow(8, 8, 0)]
-        [DataRow(8, -3, 16)]
-        [DataRow(-1, -1, -1)]
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Data(0, 8, 8)]
+        [Data(8, 0, 8)]
+        [Data(8, 8, 0)]
+        [Data(8, -3, 16)]
+        [Data(-1, -1, -1)]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void Verify_ThreadIds_OutOfRange(int x, int y, int z)
+        public void Verify_ThreadIds_OutOfRange(Device device, int x, int y, int z)
         {
-            using ReadWriteTexture3D<Int4> buffer = Gpu.Default.AllocateReadWriteTexture3D<Int4>(50, 50, 50);
+            using ReadWriteTexture3D<Int4> buffer = device.Get().AllocateReadWriteTexture3D<Int4>(50, 50, 50);
 
-            Gpu.Default.For(x, y, z, new ThreadIdsShader(buffer));
+            device.Get().For(x, y, z, new ThreadIdsShader(buffer));
 
             Assert.Fail();
         }
@@ -59,12 +63,13 @@ namespace ComputeSharp.Tests
             }
         }
 
-        [TestMethod]
-        public void Verify_GroupIds()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void Verify_GroupIds(Device device)
         {
-            using ReadWriteTexture3D<Int4> buffer = Gpu.Default.AllocateReadWriteTexture3D<Int4>(50, 50, 50);
+            using ReadWriteTexture3D<Int4> buffer = device.Get().AllocateReadWriteTexture3D<Int4>(50, 50, 50);
 
-            Gpu.Default.For(buffer.Width, buffer.Height, buffer.Depth, 4, 4, 4, new GroupIdsShader(buffer));
+            device.Get().For(buffer.Width, buffer.Height, buffer.Depth, 4, 4, 4, new GroupIdsShader(buffer));
 
             Int4[,,] data = buffer.ToArray();
 
@@ -85,21 +90,22 @@ namespace ComputeSharp.Tests
             }
         }
 
-        [TestMethod]
-        [DataRow(0, 8, 8)]
-        [DataRow(8, 0, 8)]
-        [DataRow(8, 8, 0)]
-        [DataRow(1025, 8, 8)]
-        [DataRow(8, 2000, 8)]
-        [DataRow(8, 8, 70)]
-        [DataRow(8, -1, 8)]
-        [DataRow(8, 15, 16)]
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Data(0, 8, 8)]
+        [Data(8, 0, 8)]
+        [Data(8, 8, 0)]
+        [Data(1025, 8, 8)]
+        [Data(8, 2000, 8)]
+        [Data(8, 8, 70)]
+        [Data(8, -1, 8)]
+        [Data(8, 15, 16)]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void Verify_GroupIds_OutOfRange(int x, int y, int z)
+        public void Verify_GroupIds_OutOfRange(Device device, int x, int y, int z)
         {
-            using ReadWriteTexture3D<Int4> buffer = Gpu.Default.AllocateReadWriteTexture3D<Int4>(50, 50, 50);
+            using ReadWriteTexture3D<Int4> buffer = device.Get().AllocateReadWriteTexture3D<Int4>(50, 50, 50);
 
-            Gpu.Default.For(buffer.Width, buffer.Height, buffer.Depth, x, y, z, new GroupIdsShader(buffer));
+            device.Get().For(buffer.Width, buffer.Height, buffer.Depth, x, y, z, new GroupIdsShader(buffer));
 
             Assert.Fail();
         }
@@ -116,12 +122,13 @@ namespace ComputeSharp.Tests
             }
         }
 
-        [TestMethod]
-        public void Verify_GroupSize()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void Verify_GroupSize(Device device)
         {
-            using ReadWriteBuffer<int> buffer = Gpu.Default.AllocateReadWriteBuffer<int>(32);
+            using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(32);
 
-            Gpu.Default.For(1, 1, 1, 4, 15, 7, new GroupSizeShader(buffer));
+            device.Get().For(1, 1, 1, 4, 15, 7, new GroupSizeShader(buffer));
             
             int[] data = buffer.ToArray();
 
