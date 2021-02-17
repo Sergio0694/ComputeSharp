@@ -31,12 +31,12 @@ namespace ComputeSharp.SourceGenerators.Extensions
             .WithParameterOptions(SymbolDisplayParameterOptions.None);
 
         /// <summary>
-        /// Gets the full metadata name for a given <see cref="INamedTypeSymbol"/> instance.
+        /// Gets the full metadata name for a given <see cref="ITypeSymbol"/> instance.
         /// </summary>
-        /// <param name="symbol">The input <see cref="INamedTypeSymbol"/> instance.</param>
+        /// <param name="symbol">The input <see cref="ITypeSymbol"/> instance.</param>
         /// <returns>The full metadata name for <paramref name="symbol"/>.</returns>
         [Pure]
-        public static string GetFullMetadataName(this INamedTypeSymbol symbol)
+        public static string GetFullMetadataName(this ITypeSymbol symbol)
         {
             static StringBuilder BuildFrom(ISymbol? symbol, StringBuilder builder)
             {

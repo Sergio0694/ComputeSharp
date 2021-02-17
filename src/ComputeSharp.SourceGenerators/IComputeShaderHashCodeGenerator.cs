@@ -120,11 +120,10 @@ namespace ComputeSharp.SourceGenerators
         {
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
-                if (fieldSymbol.IsStatic) continue;
-
-                INamedTypeSymbol typeSymbol = (INamedTypeSymbol)fieldSymbol.Type;
-
-                if (typeSymbol.TypeKind != TypeKind.Delegate) continue;
+                if (fieldSymbol.Type is not INamedTypeSymbol { TypeKind: TypeKind.Delegate, IsStatic: false } typeSymbol)
+                {
+                    continue;
+                }
 
                 // hash += hash << 5;
                 yield return ExpressionStatement(ParseExpression($"hash += hash << 5"));

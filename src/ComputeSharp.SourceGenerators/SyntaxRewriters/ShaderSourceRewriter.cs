@@ -478,7 +478,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             // Track and rewrite the discarded declaration
             if (this.semanticModel.GetOperation(node.Expression) is IDiscardOperation operation)
             {
-                TypeSyntax typeSyntax = operation.Type.TrackType(this.discoveredTypes);
+                TypeSyntax typeSyntax = operation.Type!.TrackType(this.discoveredTypes);
                 string identifier = $"__implicit{this.implicitVariables.Count}";
 
                 // Add the variable to the list of implicit declarations

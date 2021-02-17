@@ -4,6 +4,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using ComputeSharp.__Internals;
+using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Mappings;
 using ComputeSharp.SourceGenerators.SyntaxRewriters;
@@ -49,7 +50,7 @@ namespace ComputeSharp.SourceGenerators
                 Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
                 // Explore the syntax tree and extract the processed info
-                var processedMembers = GetProcessedMembers(structDeclarationSymbol, discoveredTypes).ToArray();
+                var processedMembers = GetProcessedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
                 var sharedBuffers = GetGroupSharedMembers(structDeclarationSymbol, discoveredTypes).ToArray();
                 var (entryPoint, localFunctions) = GetProcessedMethods(structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
                 var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
@@ -82,17 +83,30 @@ namespace ComputeSharp.SourceGenerators
         /// <summary>
         /// Gets a sequence of captured members and their mapped names.
         /// </summary>
+        /// <param name="context">The current generator context in use.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="types">The collection of currently discovered types.</param>
         /// <returns>A sequence of captured members in <paramref name="structDeclarationSymbol"/>.</returns>
         [Pure]
-        private static IEnumerable<IEnumerable<string>> GetProcessedMembers(INamedTypeSymbol structDeclarationSymbol, ICollection<INamedTypeSymbol> types)
+        private static IEnumerable<IEnumerable<string>> GetProcessedMembers(
+            GeneratorExecutionContext context,
+            INamedTypeSymbol structDeclarationSymbol,
+            ICollection<INamedTypeSymbol> types)
         {
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
-                if (fieldSymbol.IsStatic) continue;
+                // Captured fields must be named type symbols
+                if (fieldSymbol.Type is not INamedTypeSymbol typeSymbol)
+                {
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        DiagnosticDescriptors.InvalidShaderField,
+                        fieldSymbol.Locations.FirstOrDefault(),
+                        structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type));
 
-                INamedTypeSymbol typeSymbol = (INamedTypeSymbol)fieldSymbol.Type;
+                    continue;
+                }
+
+                if (fieldSymbol.IsStatic) continue;
 
                 string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
 
@@ -106,6 +120,14 @@ namespace ComputeSharp.SourceGenerators
                     typeSymbol.TypeArguments.Length == 1)
                 {
                     types.Add((INamedTypeSymbol)typeSymbol.TypeArguments[0]);
+                }
+                else if (!typeSymbol.IsUnmanagedType)
+                {
+                    // Shaders can only capture valid HLSL resource types or unmanaged types
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        DiagnosticDescriptors.InvalidShaderField,
+                        fieldSymbol.Locations.FirstOrDefault(),
+                        structDeclarationSymbol, fieldSymbol.Name, typeSymbol));
                 }
             }
         }
