@@ -93,6 +93,8 @@ namespace ComputeSharp.SourceGenerators
             INamedTypeSymbol structDeclarationSymbol,
             ICollection<INamedTypeSymbol> types)
         {
+            bool hlslResourceFound = false;
+
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
                 if (fieldSymbol.IsStatic) continue;
@@ -123,13 +125,18 @@ namespace ComputeSharp.SourceGenerators
 
                 string metadataName = typeSymbol.GetFullMetadataName();
 
-                // Track the type of items in the current buffer
-                if (HlslKnownTypes.IsStructuredBufferType(metadataName))
+                // Allowed fields must be either resources, unmanaged values or delegates
+                if (HlslKnownTypes.IsTypedResourceType(metadataName))
                 {
-                    types.Add((INamedTypeSymbol)typeSymbol.TypeArguments[0]);
+                    hlslResourceFound = true;
+
+                    // Track the type of items in the current buffer
+                    if (HlslKnownTypes.IsStructuredBufferType(metadataName))
+                    {
+                        types.Add((INamedTypeSymbol)typeSymbol.TypeArguments[0]);
+                    }
                 }
-                else if (!HlslKnownTypes.IsTypedResourceType(metadataName) &&
-                         !typeSymbol.IsUnmanagedType &&
+                else if (!typeSymbol.IsUnmanagedType &&
                          typeSymbol.TypeKind != TypeKind.Delegate)
                 {
                     // Shaders can only capture valid HLSL resource types or unmanaged types
@@ -147,6 +154,14 @@ namespace ComputeSharp.SourceGenerators
 
                 // Yield back the current mapping for the name (if the name used a reserved keyword)
                 yield return new[] { fieldSymbol.Name, mapping ?? fieldSymbol.Name, typeName };
+            }
+
+            if (!hlslResourceFound)
+            {
+                context.ReportDiagnostic(Diagnostic.Create(
+                    DiagnosticDescriptors.MissingShaderResources,
+                    structDeclarationSymbol.Locations.FirstOrDefault(),
+                    structDeclarationSymbol));
             }
         }
 

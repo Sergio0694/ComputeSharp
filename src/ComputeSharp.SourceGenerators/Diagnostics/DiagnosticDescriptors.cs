@@ -70,5 +70,21 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
             isEnabledByDefault: true,
             description: "A group shared field must be static.",
             helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a shader with no resources.
+        /// <para>
+        /// Format: <c>"The compute shader of type {0} contains no resources to work on."</c>.
+        /// </para>
+        /// </summary>
+        public static DiagnosticDescriptor MissingShaderResources { get; } = new(
+            id: "CMPS0005",
+            title: "Missing shader resources",
+            messageFormat: "The compute shader of type {0} contains no resources to work on.",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A compute shader must contain at least one resource.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
     }
 }
