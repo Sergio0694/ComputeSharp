@@ -48,7 +48,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0-4.final" PrivateAssets="all" Pack="false" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3-beta1.21116.13" PrivateAssets="all" Pack="false" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3-beta1.21117.2" PrivateAssets="all" Pack="false" />
   </ItemGroup>
 
 </Project>

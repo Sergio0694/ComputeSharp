@@ -121,13 +121,16 @@ namespace ComputeSharp.SourceGenerators
                     continue;
                 }
 
+                string metadataName = typeSymbol.GetFullMetadataName();
+
                 // Track the type of items in the current buffer
-                if (HlslKnownTypes.IsTypedResourceType(typeSymbol.GetFullMetadataName()) &&
-                    typeSymbol.TypeArguments.Length == 1)
+                if (HlslKnownTypes.IsStructuredBufferType(metadataName))
                 {
                     types.Add((INamedTypeSymbol)typeSymbol.TypeArguments[0]);
                 }
-                else if (!typeSymbol.IsUnmanagedType)
+                else if (!HlslKnownTypes.IsTypedResourceType(metadataName) &&
+                         !typeSymbol.IsUnmanagedType &&
+                         typeSymbol.TypeKind != TypeKind.Delegate)
                 {
                     // Shaders can only capture valid HLSL resource types or unmanaged types
                     context.ReportDiagnostic(Diagnostic.Create(

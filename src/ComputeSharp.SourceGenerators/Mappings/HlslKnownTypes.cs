@@ -67,6 +67,23 @@ namespace ComputeSharp.SourceGenerators.Mappings
         };
 
         /// <summary>
+        /// Checks whether or not a given type name matches a structured buffer type.
+        /// </summary>
+        /// <param name="typeName">The input type name to check.</param>
+        /// <returns>Whether or not <paramref name="typeName"/> represents a structured buffer type.</returns>
+        public static bool IsStructuredBufferType(string typeName)
+        {
+            switch (typeName)
+            {
+                case "ComputeSharp.ConstantBuffer`1":
+                case "ComputeSharp.ReadOnlyBuffer`1":
+                case "ComputeSharp.ReadWriteBuffer`1":
+                    return true;
+                default: return false;
+            };
+        }
+
+        /// <summary>
         /// Checks whether or not a given type name matches a typed resource type.
         /// </summary>
         /// <param name="typeName">The input type name to check.</param>
