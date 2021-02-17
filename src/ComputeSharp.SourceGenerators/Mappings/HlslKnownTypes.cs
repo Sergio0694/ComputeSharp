@@ -195,7 +195,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
             {
                 if (KnownTypes.ContainsKey(type.GetFullMetadataName())) return;
 
-                customTypes.Add(type);
+                if (!customTypes.Add(type)) return;
 
                 foreach (var field in type.GetMembers().OfType<IFieldSymbol>())
                 {

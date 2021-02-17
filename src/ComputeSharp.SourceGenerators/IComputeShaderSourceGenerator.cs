@@ -95,6 +95,8 @@ namespace ComputeSharp.SourceGenerators
         {
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
+                if (fieldSymbol.IsStatic) continue;
+
                 // Captured fields must be named type symbols
                 if (fieldSymbol.Type is not INamedTypeSymbol typeSymbol)
                 {
@@ -105,15 +107,6 @@ namespace ComputeSharp.SourceGenerators
 
                     continue;
                 }
-
-                if (fieldSymbol.IsStatic) continue;
-
-                string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
-
-                _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
-
-                // Yield back the current mapping for the name (if the name used a reserved keyword)
-                yield return new[] { fieldSymbol.Name, mapping ?? fieldSymbol.Name, typeName };
 
                 // Track the type of items in the current buffer
                 if (HlslKnownTypes.IsTypedResourceType(typeSymbol.GetFullMetadataName()) &&
@@ -129,6 +122,13 @@ namespace ComputeSharp.SourceGenerators
                         fieldSymbol.Locations.FirstOrDefault(),
                         structDeclarationSymbol, fieldSymbol.Name, typeSymbol));
                 }
+
+                string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
+
+                _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
+
+                // Yield back the current mapping for the name (if the name used a reserved keyword)
+                yield return new[] { fieldSymbol.Name, mapping ?? fieldSymbol.Name, typeName };
             }
         }
 
@@ -163,7 +163,7 @@ namespace ComputeSharp.SourceGenerators
                     continue;
                 }
 
-                if (typeSymbol.ElementType.IsUnmanagedType)
+                if (!typeSymbol.ElementType.IsUnmanagedType)
                 {
                     context.ReportDiagnostic(Diagnostic.Create(
                            DiagnosticDescriptors.InvalidGroupSharedFieldElementType,
