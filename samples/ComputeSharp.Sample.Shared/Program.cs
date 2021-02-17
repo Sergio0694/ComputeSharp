@@ -21,7 +21,7 @@ namespace ComputeSharp.Sample
             using ReadWriteBuffer<float> gpuBuffer = Gpu.Default.AllocateReadWriteBuffer(array);
 
             // Run the shader
-            Gpu.Default.For(100, new MainKernel(gpuBuffer));
+            Gpu.Default.For(100, new MainKernel());
 
             // Print the initial matrix
             PrintMatrix(array, width, height, "BEFORE");
@@ -40,6 +40,9 @@ namespace ComputeSharp.Sample
         internal readonly partial struct MainKernel : IComputeShader
         {
             public readonly ReadWriteBuffer<float> buffer;
+
+            [GroupShared]
+            public static string[] Foo;
 
             /// <inheritdoc/>
             public void Execute()

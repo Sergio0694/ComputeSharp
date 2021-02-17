@@ -51,7 +51,7 @@ namespace ComputeSharp.SourceGenerators
 
                 // Explore the syntax tree and extract the processed info
                 var processedMembers = GetProcessedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
-                var sharedBuffers = GetGroupSharedMembers(structDeclarationSymbol, discoveredTypes).ToArray();
+                var sharedBuffers = GetGroupSharedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
                 var (entryPoint, localFunctions) = GetProcessedMethods(structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
                 var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
                 var processedMethods = localFunctions.Concat(staticMethods.Values).Select(static method => method.NormalizeWhitespace().ToFullString()).ToArray();
@@ -135,19 +135,45 @@ namespace ComputeSharp.SourceGenerators
         /// <summary>
         /// Gets a sequence of captured members and their mapped names.
         /// </summary>
+        /// <param name="context">The current generator context in use.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="types">The collection of currently discovered types.</param>
         /// <returns>A sequence of captured members in <paramref name="structDeclarationSymbol"/>.</returns>
         [Pure]
-        private static IEnumerable<(string Name, string Type, int? Count)> GetGroupSharedMembers(INamedTypeSymbol structDeclarationSymbol, ICollection<INamedTypeSymbol> types)
+        private static IEnumerable<(string Name, string Type, int? Count)> GetGroupSharedMembers(
+            GeneratorExecutionContext context,
+            INamedTypeSymbol structDeclarationSymbol,
+            ICollection<INamedTypeSymbol> types)
         {
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
                 if (!fieldSymbol.IsStatic) continue;
 
-                AttributeData attribute = fieldSymbol.GetAttributes().First(static a => a.AttributeClass is { Name: nameof(GroupSharedAttribute) });
+                AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass is { Name: nameof(GroupSharedAttribute) });
+
+                if (attribute is null) continue;
+
+                if (fieldSymbol.Type is not IArrayTypeSymbol typeSymbol)
+                {
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        DiagnosticDescriptors.InvalidGroupSharedFieldType,
+                        fieldSymbol.Locations.FirstOrDefault(),
+                        structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type));
+
+                    continue;
+                }
+
+                if (typeSymbol.ElementType.IsUnmanagedType)
+                {
+                    context.ReportDiagnostic(Diagnostic.Create(
+                           DiagnosticDescriptors.InvalidGroupSharedFieldElementType,
+                           fieldSymbol.Locations.FirstOrDefault(),
+                           structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type));
+
+                    continue;
+                }
+                
                 int? bufferSize = (int?)attribute.ConstructorArguments.FirstOrDefault().Value;
-                IArrayTypeSymbol typeSymbol = (IArrayTypeSymbol)fieldSymbol.Type;
 
                 string typeName = HlslKnownTypes.GetMappedElementName(typeSymbol);
 
