@@ -97,6 +97,19 @@ namespace ComputeSharp.SourceGenerators
             {
                 if (fieldSymbol.IsStatic) continue;
 
+                AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass is { Name: nameof(GroupSharedAttribute) });
+
+                // Group shared fields must be static
+                if (attribute is not null)
+                {
+                    context.ReportDiagnostic(Diagnostic.Create(
+                        DiagnosticDescriptors.InvalidGroupSharedFieldDeclaration,
+                        fieldSymbol.Locations.FirstOrDefault(),
+                        structDeclarationSymbol, fieldSymbol.Name));
+
+                    continue;
+                }
+
                 // Captured fields must be named type symbols
                 if (fieldSymbol.Type is not INamedTypeSymbol typeSymbol)
                 {
@@ -121,6 +134,8 @@ namespace ComputeSharp.SourceGenerators
                         DiagnosticDescriptors.InvalidShaderField,
                         fieldSymbol.Locations.FirstOrDefault(),
                         structDeclarationSymbol, fieldSymbol.Name, typeSymbol));
+
+                    continue;
                 }
 
                 string typeName = HlslKnownTypes.GetMappedName(typeSymbol);

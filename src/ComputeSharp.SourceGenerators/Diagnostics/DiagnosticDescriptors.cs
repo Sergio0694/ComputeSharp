@@ -47,12 +47,28 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// </summary>
         public static DiagnosticDescriptor InvalidGroupSharedFieldElementType { get; } = new(
             id: "CMPS0003",
-            title: "Invalid group shared field type",
+            title: "Invalid group shared field element type",
             messageFormat: "The compute shader of type {0} contains a group shared field \"{1}\" of an invalid type {2} (it must be a primitive or unmanaged type)",
             category: typeof(IComputeShader).FullName,
             defaultSeverity: DiagnosticSeverity.Error,
             isEnabledByDefault: true,
             description: "A group shared field element must be of a primitive or unmanaged type.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid group shared field declaration.
+        /// <para>
+        /// Format: <c>"The compute shader of type {0} contains a group shared field \"{1}\" that is not static."</c>.
+        /// </para>
+        /// </summary>
+        public static DiagnosticDescriptor InvalidGroupSharedFieldDeclaration { get; } = new(
+            id: "CMPS0004",
+            title: "Invalid group shared field declaration",
+            messageFormat: "The compute shader of type {0} contains a group shared field \"{1}\" that is not static.",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A group shared field must be static.",
             helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
     }
 }
