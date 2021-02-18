@@ -216,6 +216,8 @@ namespace ComputeSharp.SourceGenerators.Mappings
 
                 foreach (var field in type.GetMembers().OfType<IFieldSymbol>())
                 {
+                    if (field.IsStatic) continue;
+
                     ExploreTypes((INamedTypeSymbol)field.Type, customTypes);
                 }
             }
@@ -255,6 +257,8 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 // Only add other custom types as dependencies, and ignore HLSL types
                 foreach (var field in type.GetMembers().OfType<IFieldSymbol>())
                 {
+                    if (field.IsStatic) continue;
+
                     INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
 
                     if (!KnownTypes.ContainsKey(fieldType.GetFullMetadataName()))

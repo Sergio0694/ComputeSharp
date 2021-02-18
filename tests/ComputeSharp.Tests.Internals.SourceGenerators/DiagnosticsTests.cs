@@ -921,7 +921,7 @@ namespace ComputeSharp.Tests.Internals
 
                     public void Execute()
                     {
-                        object bar;
+                        string bar;
                     }
                 }
             }";
