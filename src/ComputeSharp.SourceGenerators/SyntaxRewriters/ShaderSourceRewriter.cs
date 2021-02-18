@@ -154,6 +154,14 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
             var updatedNode = (MethodDeclarationSyntax?)base.Visit(node);
 
+
+            if (node!.Modifiers.Contains(Token(SyntaxKind.AsyncKeyword)))
+            {
+                this.context.ReportDiagnostic(Diagnostic.Create(
+                    DiagnosticDescriptors.AsyncModifierOnMethodOrFunction,
+                    node.GetLocation()));
+            }
+
             if (updatedNode is not null)
             {
                 var implicitBlock = Block(this.implicitVariables.Select(static v => LocalDeclarationStatement(v)).ToArray());
@@ -201,6 +209,13 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = ((LocalDeclarationStatementSyntax)base.VisitLocalDeclarationStatement(node)!);
 
+            if (this.semanticModel.GetOperation(node) is IOperation { Kind: OperationKind.UsingDeclaration })
+            {
+                this.context.ReportDiagnostic(Diagnostic.Create(
+                     DiagnosticDescriptors.UsingStatementOrDeclaration,
+                     node.GetLocation()));
+            }
+
             return updatedNode.ReplaceAndTrackType(updatedNode.Declaration.Type, node.Declaration.Type, this.semanticModel, this.discoveredTypes);
         }
 
@@ -208,6 +223,14 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         public override SyntaxNode VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
         {
             var updatedNode = (ObjectCreationExpressionSyntax)base.VisitObjectCreationExpression(node)!;
+
+            if (this.semanticModel.GetTypeInfo(node).Type is ITypeSymbol { IsUnmanagedType: false } type)
+            {
+                this.context.ReportDiagnostic(Diagnostic.Create(
+                    DiagnosticDescriptors.InvalidObjectCreationExpression,
+                    node.GetLocation(),
+                    type));
+            }
 
             updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node, this.semanticModel, this.discoveredTypes);
 
@@ -218,6 +241,18 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             }
 
             return InvocationExpression(updatedNode.Type, updatedNode.ArgumentList);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitAnonymousObjectCreationExpression(AnonymousObjectCreationExpressionSyntax node)
+        {
+            var updatedNode = (AnonymousObjectCreationExpressionSyntax)base.VisitAnonymousObjectCreationExpression(node)!;
+
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                DiagnosticDescriptors.AnonymousObjectCreationExpression,
+                node.GetLocation()));
+
+            return updatedNode;
         }
 
         /// <inheritdoc/>
@@ -317,6 +352,13 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 .WithBlockBody()
                 .WithAttributeLists(List<AttributeListSyntax>())
                 .WithIdentifier(Identifier($"__{this.currentMethod!.Identifier.Text}__{node.Identifier.Text}"));
+
+            if (node.Modifiers.Contains(Token(SyntaxKind.AsyncKeyword)))
+            {
+                this.context.ReportDiagnostic(Diagnostic.Create(
+                    DiagnosticDescriptors.AsyncModifierOnMethodOrFunction,
+                    node.GetLocation()));
+            }
 
             this.localFunctionDepth--;
 
@@ -553,6 +595,206 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             }
 
             return updatedNode;
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitAwaitExpression(AwaitExpressionSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                DiagnosticDescriptors.AwaitExpression,
+                node.GetLocation()));
+
+            return base.VisitAwaitExpression(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitCheckedExpression(CheckedExpressionSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                DiagnosticDescriptors.CheckedExpression,
+                node.GetLocation()));
+
+            return base.VisitCheckedExpression(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitCheckedStatement(CheckedStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                DiagnosticDescriptors.CheckedStatement,
+                node.GetLocation()));
+
+            return base.VisitCheckedStatement(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitFixedStatement(FixedStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                DiagnosticDescriptors.FixedStatement,
+                node.GetLocation()));
+
+            return base.VisitFixedStatement(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitForEachStatement(ForEachStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                   DiagnosticDescriptors.ForEachStatement,
+                   node.GetLocation()));
+
+            return base.VisitForEachStatement(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitForEachVariableStatement(ForEachVariableStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                   DiagnosticDescriptors.ForEachStatement,
+                   node.GetLocation()));
+
+            return base.VisitForEachVariableStatement(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitLockStatement(LockStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                   DiagnosticDescriptors.LockStatement,
+                   node.GetLocation()));
+
+            return base.VisitLockStatement(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitQueryExpression(QueryExpressionSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                      DiagnosticDescriptors.QueryExpression,
+                      node.GetLocation()));
+
+            return base.VisitQueryExpression(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitRangeExpression(RangeExpressionSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                      DiagnosticDescriptors.RangeExpression,
+                      node.GetLocation()));
+
+            return base.VisitRangeExpression(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitRecursivePattern(RecursivePatternSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                      DiagnosticDescriptors.RecursivePattern,
+                      node.GetLocation()));
+
+            return base.VisitRecursivePattern(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitRefType(RefTypeSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                      DiagnosticDescriptors.RefType,
+                      node.GetLocation()));
+
+            return base.VisitRefType(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitRelationalPattern(RelationalPatternSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                      DiagnosticDescriptors.RelationalPattern,
+                      node.GetLocation()));
+
+            return base.VisitRelationalPattern(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitSizeOfExpression(SizeOfExpressionSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                      DiagnosticDescriptors.SizeOfExpression,
+                      node.GetLocation()));
+
+            return base.VisitSizeOfExpression(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitStackAllocArrayCreationExpression(StackAllocArrayCreationExpressionSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                      DiagnosticDescriptors.StackAllocArrayCreationExpression,
+                      node.GetLocation()));
+
+            return base.VisitStackAllocArrayCreationExpression(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitThrowExpression(ThrowExpressionSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                      DiagnosticDescriptors.ThrowExpressionOrStatement,
+                      node.GetLocation()));
+
+            return base.VisitThrowExpression(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitThrowStatement(ThrowStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                     DiagnosticDescriptors.ThrowExpressionOrStatement,
+                     node.GetLocation()));
+
+            return base.VisitThrowStatement(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitTryStatement(TryStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                     DiagnosticDescriptors.TryStatement,
+                     node.GetLocation()));
+
+            return base.VisitTryStatement(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitTupleType(TupleTypeSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                     DiagnosticDescriptors.TupleType,
+                     node.GetLocation()));
+
+            return base.VisitTupleType(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitUsingStatement(UsingStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                     DiagnosticDescriptors.UsingStatementOrDeclaration,
+                     node.GetLocation()));
+
+            return base.VisitUsingStatement(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitYieldStatement(YieldStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(Diagnostic.Create(
+                     DiagnosticDescriptors.YieldStatement,
+                     node.GetLocation()));
+
+            return base.VisitYieldStatement(node);
         }
 
         /// <inheritdoc/>

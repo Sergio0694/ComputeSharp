@@ -150,5 +150,281 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
             isEnabledByDefault: true,
             description: "The WarpIds type can only be used within the main body of a compute shader.",
             helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid object creation expression.
+        /// <para>
+        /// Format: <c>"The type {0} cannot be created in a compute shader"</c>.
+        /// </para>
+        /// </summary>
+        public static DiagnosticDescriptor InvalidObjectCreationExpression { get; } = new(
+            id: "CMPS0010",
+            title: "Invalid object creation expression",
+            messageFormat: "The type {0} cannot be created in a compute shader (only unmanaged types are supported)",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "Only unmanaged value type objects can be created in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an anonymous object creation expression.
+        /// </summary>
+        public static DiagnosticDescriptor AnonymousObjectCreationExpression { get; } = new(
+            id: "CMPS0011",
+            title: "Anonymous object creation expression",
+            messageFormat: "An anonymous object cannot be created in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "An anonymous object cannot be created in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an async modifier on a method or function.
+        /// </summary>
+        public static DiagnosticDescriptor AsyncModifierOnMethodOrFunction { get; } = new(
+            id: "CMPS0012",
+            title: "Async modifier on method or function",
+            messageFormat: "The async modifier cannot be used in methods or functions used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "The async modifier cannot be used in methods or functions used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an await expression.
+        /// </summary>
+        public static DiagnosticDescriptor AwaitExpression { get; } = new(
+            id: "CMPS0013",
+            title: "Await expression",
+            messageFormat: "The await expression cannot be used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "The await expression cannot be used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a checked expression.
+        /// </summary>
+        public static DiagnosticDescriptor CheckedExpression { get; } = new(
+            id: "CMPS0014",
+            title: "Checked expression",
+            messageFormat: "A checked expression cannot be used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A checked expression cannot be used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a checked statement.
+        /// </summary>
+        public static DiagnosticDescriptor CheckedStatement { get; } = new(
+            id: "CMPS0015",
+            title: "Checked statement",
+            messageFormat: "A checked statement cannot be used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A checked statement cannot be used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a fixed statement.
+        /// </summary>
+        public static DiagnosticDescriptor FixedStatement { get; } = new(
+            id: "CMPS0016",
+            title: "Fixed statement",
+            messageFormat: "A fixed statement cannot be used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A fixed statement cannot be used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a foreach statement.
+        /// </summary>
+        public static DiagnosticDescriptor ForEachStatement { get; } = new(
+            id: "CMPS0017",
+            title: "Foreach statement",
+            messageFormat: "A foreach statement cannot be used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A foreach statement cannot be used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a lock statement.
+        /// </summary>
+        public static DiagnosticDescriptor LockStatement { get; } = new(
+            id: "CMPS0018",
+            title: "Foreach statement",
+            messageFormat: "A lock statement cannot be used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A lock statement cannot be used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a query statement.
+        /// </summary>
+        public static DiagnosticDescriptor QueryExpression { get; } = new(
+            id: "CMPS0019",
+            title: "Foreach statement",
+            messageFormat: "A LINQ query expression cannot be used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A LINQ query expression cannot be used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a range expression.
+        /// </summary>
+        public static DiagnosticDescriptor RangeExpression { get; } = new(
+            id: "CMPS0020",
+            title: "Range expression",
+            messageFormat: "A range expression cannot be used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A range expression cannot be used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a recursive pattern.
+        /// </summary>
+        public static DiagnosticDescriptor RecursivePattern { get; } = new(
+            id: "CMPS0021",
+            title: "Recursive pattern",
+            messageFormat: "A recursive pattern cannot be used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A recursive pattern cannot be used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a ref type.
+        /// </summary>
+        public static DiagnosticDescriptor RefType { get; } = new(
+            id: "CMPS0022",
+            title: "Ref type",
+            messageFormat: "A compute shader cannot have a ref type declaration",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A compute shader cannot have a ref type declaration.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a relational pattern.
+        /// </summary>
+        public static DiagnosticDescriptor RelationalPattern { get; } = new(
+            id: "CMPS0023",
+            title: "Relational pattern",
+            messageFormat: "A relational pattern cannot be used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A relational pattern cannot be used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a sizeof expression.
+        /// </summary>
+        public static DiagnosticDescriptor SizeOfExpression { get; } = new(
+            id: "CMPS0024",
+            title: "Sizeof expression",
+            messageFormat: "A sizeof expression cannot be used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A sizeof expression cannot be used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a stackalloc expression.
+        /// </summary>
+        public static DiagnosticDescriptor StackAllocArrayCreationExpression { get; } = new(
+            id: "CMPS0025",
+            title: "Stackalloc expression",
+            messageFormat: "A stackalloc expression cannot be used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A stackalloc expression cannot be used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a throw expression or statement.
+        /// </summary>
+        public static DiagnosticDescriptor ThrowExpressionOrStatement { get; } = new(
+            id: "CMPS0026",
+            title: "Throw expression or statement",
+            messageFormat: "Throw expressions and statements cannot be used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "Throw expressions and statements cannot be used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a try statement.
+        /// </summary>
+        public static DiagnosticDescriptor TryStatement { get; } = new(
+            id: "CMPS0027",
+            title: "Try statement",
+            messageFormat: "A try statement cannot be used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A try statement cannot be used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a tuple type.
+        /// </summary>
+        public static DiagnosticDescriptor TupleType { get; } = new(
+            id: "CMPS0028",
+            title: "Tuple type",
+            messageFormat: "A compute shader cannot have a tuple type declaration",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A compute shader cannot have a tuple type declaration.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a using statement or declaration.
+        /// </summary>
+        public static DiagnosticDescriptor UsingStatementOrDeclaration { get; } = new(
+            id: "CMPS0029",
+            title: "Using statement or declaration",
+            messageFormat: "Using statements and declarations cannot be used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "Using statements and declarations cannot be used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a yield statement.
+        /// </summary>
+        public static DiagnosticDescriptor YieldStatement { get; } = new(
+            id: "CMPS0030",
+            title: "Yield statement",
+            messageFormat: "A yield statement cannot be used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A yield statement cannot be used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
     }
 }
