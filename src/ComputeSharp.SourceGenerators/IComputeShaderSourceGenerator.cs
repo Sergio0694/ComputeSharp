@@ -14,6 +14,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static ComputeSharp.SourceGenerators.Helpers.SyntaxFactoryHelper;
+using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 
 #pragma warning disable CS0618
 
@@ -104,10 +105,7 @@ namespace ComputeSharp.SourceGenerators
                 // Group shared fields must be static
                 if (attribute is not null)
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(
-                        DiagnosticDescriptors.InvalidGroupSharedFieldDeclaration,
-                        fieldSymbol.Locations.FirstOrDefault(),
-                        structDeclarationSymbol, fieldSymbol.Name));
+                    context.ReportDiagnostic(InvalidGroupSharedFieldDeclaration, fieldSymbol, structDeclarationSymbol, fieldSymbol.Name);
 
                     continue;
                 }
@@ -115,10 +113,7 @@ namespace ComputeSharp.SourceGenerators
                 // Captured fields must be named type symbols
                 if (fieldSymbol.Type is not INamedTypeSymbol typeSymbol)
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(
-                        DiagnosticDescriptors.InvalidShaderField,
-                        fieldSymbol.Locations.FirstOrDefault(),
-                        structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type));
+                    context.ReportDiagnostic(InvalidShaderField, fieldSymbol, structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type);
 
                     continue;
                 }
@@ -140,10 +135,7 @@ namespace ComputeSharp.SourceGenerators
                          typeSymbol.TypeKind != TypeKind.Delegate)
                 {
                     // Shaders can only capture valid HLSL resource types or unmanaged types
-                    context.ReportDiagnostic(Diagnostic.Create(
-                        DiagnosticDescriptors.InvalidShaderField,
-                        fieldSymbol.Locations.FirstOrDefault(),
-                        structDeclarationSymbol, fieldSymbol.Name, typeSymbol));
+                    context.ReportDiagnostic(InvalidShaderField, fieldSymbol, structDeclarationSymbol, fieldSymbol.Name, typeSymbol);
 
                     continue;
                 }
@@ -158,10 +150,7 @@ namespace ComputeSharp.SourceGenerators
 
             if (!hlslResourceFound)
             {
-                context.ReportDiagnostic(Diagnostic.Create(
-                    DiagnosticDescriptors.MissingShaderResources,
-                    structDeclarationSymbol.Locations.FirstOrDefault(),
-                    structDeclarationSymbol));
+                context.ReportDiagnostic(MissingShaderResources, structDeclarationSymbol, structDeclarationSymbol);
             }
         }
 
@@ -188,20 +177,14 @@ namespace ComputeSharp.SourceGenerators
 
                 if (fieldSymbol.Type is not IArrayTypeSymbol typeSymbol)
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(
-                        DiagnosticDescriptors.InvalidGroupSharedFieldType,
-                        fieldSymbol.Locations.FirstOrDefault(),
-                        structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type));
+                    context.ReportDiagnostic(InvalidGroupSharedFieldType, fieldSymbol, structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type);
 
                     continue;
                 }
 
                 if (!typeSymbol.ElementType.IsUnmanagedType)
                 {
-                    context.ReportDiagnostic(Diagnostic.Create(
-                           DiagnosticDescriptors.InvalidGroupSharedFieldElementType,
-                           fieldSymbol.Locations.FirstOrDefault(),
-                           structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type));
+                    context.ReportDiagnostic(InvalidGroupSharedFieldElementType, fieldSymbol, structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type);
 
                     continue;
                 }

@@ -10,6 +10,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 {
@@ -157,9 +158,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
             if (node!.Modifiers.Contains(Token(SyntaxKind.AsyncKeyword)))
             {
-                this.context.ReportDiagnostic(Diagnostic.Create(
-                    DiagnosticDescriptors.AsyncModifierOnMethodOrFunction,
-                    node.GetLocation()));
+                this.context.ReportDiagnostic(AsyncModifierOnMethodOrFunction, node);
             }
 
             if (updatedNode is not null)
@@ -211,9 +210,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
             if (this.semanticModel.GetOperation(node) is IOperation { Kind: OperationKind.UsingDeclaration })
             {
-                this.context.ReportDiagnostic(Diagnostic.Create(
-                     DiagnosticDescriptors.UsingStatementOrDeclaration,
-                     node.GetLocation()));
+                this.context.ReportDiagnostic(UsingStatementOrDeclaration, node);
             }
 
             return updatedNode.ReplaceAndTrackType(updatedNode.Declaration.Type, node.Declaration.Type, this.semanticModel, this.discoveredTypes);
@@ -226,10 +223,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
             if (this.semanticModel.GetTypeInfo(node).Type is ITypeSymbol { IsUnmanagedType: false } type)
             {
-                this.context.ReportDiagnostic(Diagnostic.Create(
-                    DiagnosticDescriptors.InvalidObjectCreationExpression,
-                    node.GetLocation(),
-                    type));
+                this.context.ReportDiagnostic(InvalidObjectCreationExpression, node, type);
             }
 
             updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node, this.semanticModel, this.discoveredTypes);
@@ -248,9 +242,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (AnonymousObjectCreationExpressionSyntax)base.VisitAnonymousObjectCreationExpression(node)!;
 
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                DiagnosticDescriptors.AnonymousObjectCreationExpression,
-                node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.AnonymousObjectCreationExpression, node);
 
             return updatedNode;
         }
@@ -355,9 +347,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
             if (node.Modifiers.Contains(Token(SyntaxKind.AsyncKeyword)))
             {
-                this.context.ReportDiagnostic(Diagnostic.Create(
-                    DiagnosticDescriptors.AsyncModifierOnMethodOrFunction,
-                    node.GetLocation()));
+                this.context.ReportDiagnostic(AsyncModifierOnMethodOrFunction, node);
             }
 
             this.localFunctionDepth--;
@@ -417,7 +407,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
                             if (descriptor is not null)
                             {
-                                this.context.ReportDiagnostic(Diagnostic.Create(descriptor, node.GetLocation()));
+                                this.context.ReportDiagnostic(descriptor, node);
                             }
                         }
                     }
@@ -600,9 +590,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitAwaitExpression(AwaitExpressionSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                DiagnosticDescriptors.AwaitExpression,
-                node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.AwaitExpression, node);
 
             return base.VisitAwaitExpression(node);
         }
@@ -610,9 +598,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitCheckedExpression(CheckedExpressionSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                DiagnosticDescriptors.CheckedExpression,
-                node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.CheckedExpression, node);
 
             return base.VisitCheckedExpression(node);
         }
@@ -620,9 +606,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitCheckedStatement(CheckedStatementSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                DiagnosticDescriptors.CheckedStatement,
-                node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.CheckedStatement, node);
 
             return base.VisitCheckedStatement(node);
         }
@@ -630,9 +614,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitFixedStatement(FixedStatementSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                DiagnosticDescriptors.FixedStatement,
-                node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.FixedStatement, node);
 
             return base.VisitFixedStatement(node);
         }
@@ -640,9 +622,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitForEachStatement(ForEachStatementSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                   DiagnosticDescriptors.ForEachStatement,
-                   node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.ForEachStatement, node);
 
             return base.VisitForEachStatement(node);
         }
@@ -650,9 +630,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitForEachVariableStatement(ForEachVariableStatementSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                   DiagnosticDescriptors.ForEachStatement,
-                   node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.ForEachStatement, node);
 
             return base.VisitForEachVariableStatement(node);
         }
@@ -660,9 +638,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitLockStatement(LockStatementSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                   DiagnosticDescriptors.LockStatement,
-                   node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.LockStatement, node);
 
             return base.VisitLockStatement(node);
         }
@@ -670,9 +646,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitQueryExpression(QueryExpressionSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                      DiagnosticDescriptors.QueryExpression,
-                      node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.QueryExpression, node);
 
             return base.VisitQueryExpression(node);
         }
@@ -680,9 +654,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitRangeExpression(RangeExpressionSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                      DiagnosticDescriptors.RangeExpression,
-                      node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.RangeExpression, node);
 
             return base.VisitRangeExpression(node);
         }
@@ -690,9 +662,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitRecursivePattern(RecursivePatternSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                      DiagnosticDescriptors.RecursivePattern,
-                      node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.RecursivePattern, node);
 
             return base.VisitRecursivePattern(node);
         }
@@ -700,9 +670,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitRefType(RefTypeSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                      DiagnosticDescriptors.RefType,
-                      node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.RefType, node);
 
             return base.VisitRefType(node);
         }
@@ -710,9 +678,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitRelationalPattern(RelationalPatternSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                      DiagnosticDescriptors.RelationalPattern,
-                      node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.RelationalPattern, node);
 
             return base.VisitRelationalPattern(node);
         }
@@ -720,9 +686,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitSizeOfExpression(SizeOfExpressionSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                      DiagnosticDescriptors.SizeOfExpression,
-                      node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.SizeOfExpression, node);
 
             return base.VisitSizeOfExpression(node);
         }
@@ -730,9 +694,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitStackAllocArrayCreationExpression(StackAllocArrayCreationExpressionSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                      DiagnosticDescriptors.StackAllocArrayCreationExpression,
-                      node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.StackAllocArrayCreationExpression, node);
 
             return base.VisitStackAllocArrayCreationExpression(node);
         }
@@ -740,9 +702,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitThrowExpression(ThrowExpressionSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                      DiagnosticDescriptors.ThrowExpressionOrStatement,
-                      node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.ThrowExpressionOrStatement, node);
 
             return base.VisitThrowExpression(node);
         }
@@ -750,9 +710,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitThrowStatement(ThrowStatementSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                     DiagnosticDescriptors.ThrowExpressionOrStatement,
-                     node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.ThrowExpressionOrStatement, node);
 
             return base.VisitThrowStatement(node);
         }
@@ -760,9 +718,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitTryStatement(TryStatementSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                     DiagnosticDescriptors.TryStatement,
-                     node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.TryStatement, node);
 
             return base.VisitTryStatement(node);
         }
@@ -770,9 +726,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitTupleType(TupleTypeSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                     DiagnosticDescriptors.TupleType,
-                     node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.TupleType, node);
 
             return base.VisitTupleType(node);
         }
@@ -780,9 +734,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitUsingStatement(UsingStatementSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                     DiagnosticDescriptors.UsingStatementOrDeclaration,
-                     node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.UsingStatementOrDeclaration, node);
 
             return base.VisitUsingStatement(node);
         }
@@ -796,10 +748,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 node.Parent is VariableDeclarationSyntax declaration &&
                 this.semanticModel.GetTypeInfo(declaration.Type).Type is ITypeSymbol { IsUnmanagedType: false } type)
             {
-                this.context.ReportDiagnostic(Diagnostic.Create(
-                    DiagnosticDescriptors.InvalidObjectDeclaration,
-                    node.GetLocation(),
-                    type));
+                this.context.ReportDiagnostic(InvalidObjectDeclaration, node, type);
             }
 
             return updatedNode;
@@ -808,9 +757,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitYieldStatement(YieldStatementSyntax node)
         {
-            this.context.ReportDiagnostic(Diagnostic.Create(
-                     DiagnosticDescriptors.YieldStatement,
-                     node.GetLocation()));
+            this.context.ReportDiagnostic(DiagnosticDescriptors.YieldStatement, node);
 
             return base.VisitYieldStatement(node);
         }
