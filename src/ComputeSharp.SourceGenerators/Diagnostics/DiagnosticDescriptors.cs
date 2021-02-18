@@ -58,13 +58,13 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid group shared field declaration.
         /// <para>
-        /// Format: <c>"The compute shader of type {0} contains a group shared field \"{1}\" that is not static."</c>.
+        /// Format: <c>"The compute shader of type {0} contains a group shared field \"{1}\" that is not static"</c>.
         /// </para>
         /// </summary>
         public static DiagnosticDescriptor InvalidGroupSharedFieldDeclaration { get; } = new(
             id: "CMPS0004",
             title: "Invalid group shared field declaration",
-            messageFormat: "The compute shader of type {0} contains a group shared field \"{1}\" that is not static.",
+            messageFormat: "The compute shader of type {0} contains a group shared field \"{1}\" that is not static",
             category: typeof(IComputeShader).FullName,
             defaultSeverity: DiagnosticSeverity.Error,
             isEnabledByDefault: true,
@@ -74,17 +74,81 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a shader with no resources.
         /// <para>
-        /// Format: <c>"The compute shader of type {0} contains no resources to work on."</c>.
+        /// Format: <c>"The compute shader of type {0} contains no resources to work on"</c>.
         /// </para>
         /// </summary>
         public static DiagnosticDescriptor MissingShaderResources { get; } = new(
             id: "CMPS0005",
             title: "Missing shader resources",
-            messageFormat: "The compute shader of type {0} contains no resources to work on.",
+            messageFormat: "The compute shader of type {0} contains no resources to work on",
             category: typeof(IComputeShader).FullName,
             defaultSeverity: DiagnosticSeverity.Error,
             isEnabledByDefault: true,
             description: "A compute shader must contain at least one resource.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid <see cref="ThreadIds"/> usage.
+        /// <para>
+        /// Format: <c>"The ThreadIds type is used in method {0} of type {1}"</c>.
+        /// </para>
+        /// </summary>
+        public static DiagnosticDescriptor InvalidThreadIdsUsage { get; } = new(
+            id: "CMPS0006",
+            title: "Invalid ThreadIds usage",
+            messageFormat: "The ThreadIds type can only be used within the main body of a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "The ThreadIds type can only be used within the main body of a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid <see cref="GroupIds"/> usage.
+        /// <para>
+        /// Format: <c>"The GroupIds type is used in method {0} of type {1}"</c>.
+        /// </para>
+        /// </summary>
+        public static DiagnosticDescriptor InvalidGroupIdsUsage { get; } = new(
+            id: "CMPS0007",
+            title: "Invalid GroupIds usage",
+            messageFormat: "The GroupIds type can only be used within the main body of a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "The GroupIds type can only be used within the main body of a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid <see cref="GroupSize"/> usage.
+        /// <para>
+        /// Format: <c>"The GroupSize type is used in method {0} of type {1}"</c>.
+        /// </para>
+        /// </summary>
+        public static DiagnosticDescriptor InvalidGroupSizeUsage { get; } = new(
+            id: "CMPS0008",
+            title: "Invalid GroupSize usage",
+            messageFormat: "The GroupSize type can only be used within the main body of a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "The GroupSize type can only be used within the main body of a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid <see cref="WarpIds"/> usage.
+        /// <para>
+        /// Format: <c>"The WarpIds type is used in method {0} of type {1}"</c>.
+        /// </para>
+        /// </summary>
+        public static DiagnosticDescriptor InvalidWarpIdsUsage { get; } = new(
+            id: "CMPS0009",
+            title: "Invalid WarpIds usage",
+            messageFormat: "The WarpIds type can only be used within the main body of a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "The WarpIds type can only be used within the main body of a compute shader.",
             helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
     }
 }

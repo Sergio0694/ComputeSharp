@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
@@ -53,9 +54,24 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         private readonly List<VariableDeclarationSyntax> implicitVariables;
 
         /// <summary>
+        /// The current generator context in use.
+        /// </summary>
+        private readonly GeneratorExecutionContext context;
+
+        /// <summary>
+        /// Whether or not the current instance is processing a shader entry point.
+        /// </summary>
+        private readonly bool isEntryPoint;
+
+        /// <summary>
         /// The current <see cref="MethodDeclarationSyntax"/> tree being visited.
         /// </summary>
         private MethodDeclarationSyntax? currentMethod;
+
+        /// <summary>
+        /// The current depth inside local declarations.
+        /// </summary>
+        private int localFunctionDepth;
 
         /// <summary>
         /// Creates a new <see cref="ShaderSourceRewriter"/> instance with the specified parameters.
@@ -65,12 +81,16 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <param name="discoveredTypes">The set of discovered custom types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+        /// <param name="context">The current generator context in use.</param>
+        /// <param name="isEntryPoint">Whether or not the current instance is processing a shader entry point.</param>
         public ShaderSourceRewriter(
             INamedTypeSymbol shaderType,
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
-            IDictionary<IFieldSymbol, string> constantDefinitions)
+            IDictionary<IFieldSymbol, string> constantDefinitions,
+            GeneratorExecutionContext context,
+            bool isEntryPoint)
         {
             this.shaderType = shaderType;
             this.semanticModel = semanticModel;
@@ -79,6 +99,8 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             this.constantDefinitions = constantDefinitions;
             this.localFunctions = new();
             this.implicitVariables = new();
+            this.context = context;
+            this.isEntryPoint = isEntryPoint;
         }
 
         /// <summary>
@@ -88,11 +110,13 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <param name="discoveredTypes">The set of discovered custom types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+        /// <param name="context">The current generator context in use.</param>
         public ShaderSourceRewriter(
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
-            IDictionary<IFieldSymbol, string> constantDefinitions)
+            IDictionary<IFieldSymbol, string> constantDefinitions,
+            GeneratorExecutionContext context)
         {
             this.semanticModel = semanticModel;
             this.discoveredTypes = discoveredTypes;
@@ -100,6 +124,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             this.constantDefinitions = constantDefinitions;
             this.implicitVariables = new();
             this.localFunctions = new();
+            this.context = context;
         }
 
         /// <summary>
@@ -285,11 +310,15 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitLocalFunctionStatement(LocalFunctionStatementSyntax node)
         {
+            this.localFunctionDepth++;
+
             var updatedNode =
                 ((LocalFunctionStatementSyntax)base.VisitLocalFunctionStatement(node)!)
                 .WithBlockBody()
                 .WithAttributeLists(List<AttributeListSyntax>())
                 .WithIdentifier(Identifier($"__{this.currentMethod!.Identifier.Text}__{node.Identifier.Text}"));
+
+            this.localFunctionDepth--;
 
             // HLSL doesn't support local functions, so we first process them as usual and then remove
             // them from the current syntax tree completely. These will be added to the shader source
@@ -331,6 +360,24 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                         if (mapping == $"__{nameof(GroupIds)}__get_Index") IsGroupIdsIndexUsed = true;
                         else if (typeName == typeof(GroupIds).FullName) IsGroupIdsUsed = true;
                         else if (typeName == typeof(WarpIds).FullName) IsWarpIdsUsed = true;
+
+                        // Check that the dispatch info types are only used from the main shader body
+                        if (!this.isEntryPoint || this.localFunctionDepth > 0)
+                        {
+                            DiagnosticDescriptor? descriptor = typeName switch
+                            {
+                                _ when typeName == typeof(ThreadIds).FullName => DiagnosticDescriptors.InvalidThreadIdsUsage,
+                                _ when typeName == typeof(GroupIds).FullName => DiagnosticDescriptors.InvalidGroupIdsUsage,
+                                _ when typeName == typeof(GroupSize).FullName => DiagnosticDescriptors.InvalidGroupSizeUsage,
+                                _ when typeName == typeof(WarpIds).FullName => DiagnosticDescriptors.InvalidWarpIdsUsage,
+                                _ => null
+                            };
+
+                            if (descriptor is not null)
+                            {
+                                this.context.ReportDiagnostic(Diagnostic.Create(descriptor, node.GetLocation()));
+                            }
+                        }
                     }
 
                     // Static and instance members are handled differently, with static members being
@@ -436,7 +483,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
                     if (!this.staticMethods.ContainsKey(method))
                     {
-                        ShaderSourceRewriter shaderSourceRewriter = new(this.semanticModel, this.discoveredTypes, this.staticMethods, this.constantDefinitions);
+                        ShaderSourceRewriter shaderSourceRewriter = new(this.semanticModel, this.discoveredTypes, this.staticMethods, this.constantDefinitions, this.context);
                         MethodDeclarationSyntax
                             methodNode = (MethodDeclarationSyntax)method.DeclaringSyntaxReferences[0].GetSyntax(),
                             processedMethod = shaderSourceRewriter.Visit(methodNode)!.NormalizeWhitespace().WithoutTrivia();

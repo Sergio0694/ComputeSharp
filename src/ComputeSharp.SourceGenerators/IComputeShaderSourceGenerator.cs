@@ -52,7 +52,7 @@ namespace ComputeSharp.SourceGenerators
                 // Explore the syntax tree and extract the processed info
                 var processedMembers = GetProcessedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
                 var sharedBuffers = GetGroupSharedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
-                var (entryPoint, localFunctions) = GetProcessedMethods(structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
+                var (entryPoint, localFunctions) = GetProcessedMethods(context, structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
                 var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
                 var processedMethods = localFunctions.Concat(staticMethods.Values).Select(static method => method.NormalizeWhitespace().ToFullString()).ToArray();
                 var processedConstants = GetProcessedConstants(constantDefinitions);
@@ -221,6 +221,7 @@ namespace ComputeSharp.SourceGenerators
         /// <summary>
         /// Gets a sequence of processed methods declared within a given type.
         /// </summary>
+        /// <param name="context">The current generator context in use.</param>
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> instance for the current type.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the type to process.</param>
@@ -230,6 +231,7 @@ namespace ComputeSharp.SourceGenerators
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
         [Pure]
         private static (string EntryPoint, IEnumerable<SyntaxNode> Methods) GetProcessedMethods(
+            GeneratorExecutionContext context,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             SemanticModel semanticModel,
@@ -249,16 +251,27 @@ namespace ComputeSharp.SourceGenerators
             foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
             {
                 IMethodSymbol methodDeclarationSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration)!;
-                ShaderSourceRewriter shaderSourceRewriter = new(structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
+                bool isShaderEntryPoint =
+                    methodDeclarationSymbol.Name == nameof(IComputeShader.Execute) &&
+                    methodDeclarationSymbol.ReturnsVoid &&
+                    methodDeclarationSymbol.TypeParameters.Length == 0 &&
+                    methodDeclarationSymbol.Parameters.Length == 0;
+
+                // Create the source rewriter for the current method
+                ShaderSourceRewriter shaderSourceRewriter = new(
+                    structDeclarationSymbol,
+                    semanticModel,
+                    discoveredTypes,
+                    staticMethods,
+                    constantDefinitions,
+                    context,
+                    isShaderEntryPoint);
 
                 // Rewrite the method syntax tree
                 MethodDeclarationSyntax? processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();
 
                 // If the method is the shader entry point, do additional processing
-                if (methodDeclarationSymbol.Name == nameof(IComputeShader.Execute) &&
-                    methodDeclarationSymbol.ReturnsVoid &&
-                    methodDeclarationSymbol.TypeParameters.Length == 0 &&
-                    methodDeclarationSymbol.Parameters.Length == 0)
+                if (isShaderEntryPoint)
                 {
                     processedMethod = new ExecuteMethodRewriter(shaderSourceRewriter).Visit(processedMethod)!;
 

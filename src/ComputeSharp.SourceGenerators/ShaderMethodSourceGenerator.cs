@@ -48,7 +48,7 @@ namespace ComputeSharp.SourceGenerators
                 Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
                 // Explore the syntax tree and extract the processed info
-                var (invokeMethod, processedMethods) = GetProcessedMethods(methodDeclaration, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
+                var (invokeMethod, processedMethods) = GetProcessedMethods(context, methodDeclaration, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
                 var processedTypes = IComputeShaderSourceGenerator.GetProcessedTypes(discoveredTypes).ToArray();
                 var processedConstants = IComputeShaderSourceGenerator.GetProcessedConstants(constantDefinitions);
 
@@ -75,6 +75,7 @@ namespace ComputeSharp.SourceGenerators
         /// <summary>
         /// Gets a sequence of processed methods from a target method declaration.
         /// </summary>
+        /// <param name="context">The current generator context in use.</param>
         /// <param name="methodDeclaration">The <see cref="MethodDeclarationSyntax"/> instance for the current method.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the method to process.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
@@ -83,13 +84,14 @@ namespace ComputeSharp.SourceGenerators
         /// <returns>A sequence of processed methods in <paramref name="methodDeclaration"/>.</returns>
         [Pure]
         private static (string InvokeMethod, IEnumerable<string> Methods) GetProcessedMethods(
+            GeneratorExecutionContext context,
             MethodDeclarationSyntax methodDeclaration,
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
             IDictionary<IFieldSymbol, string> constantDefinitions)
         {
-            ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, discoveredTypes, staticMethods, constantDefinitions);
+            ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, discoveredTypes, staticMethods, constantDefinitions, context);
 
             // Rewrite the method syntax tree
             var processedMethod = shaderSourceRewriter

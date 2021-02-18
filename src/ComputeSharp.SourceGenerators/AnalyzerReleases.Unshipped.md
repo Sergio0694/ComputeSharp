@@ -9,3 +9,8 @@ CMPS0001 | ComputeSharp.IComputeShader | Error | IComputeShaderSourceGenerator, 
 CMPS0002 | ComputeSharp.IComputeShader | Error | IComputeShaderSourceGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
 CMPS0003 | ComputeSharp.IComputeShader | Error | IComputeShaderSourceGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
 CMPS0004 | ComputeSharp.IComputeShader | Error | IComputeShaderSourceGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPS0005 | ComputeSharp.IComputeShader | Error | IComputeShaderSourceGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPS0006 | ComputeSharp.IComputeShader | Error | IComputeShaderSourceGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPS0007 | ComputeSharp.IComputeShader | Error | IComputeShaderSourceGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPS0008 | ComputeSharp.IComputeShader | Error | IComputeShaderSourceGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPS0009 | ComputeSharp.IComputeShader | Error | IComputeShaderSourceGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
