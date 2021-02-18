@@ -316,6 +316,10 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                     return updatedNode.WithToken(Literal(updatedNode.Token.ValueText + "L", 0d));
                 }
             }
+            else if (updatedNode.IsKind(SyntaxKind.StringLiteralExpression))
+            {
+                this.context.ReportDiagnostic(StringLiteralExpression, node);
+            }
 
             return updatedNode;
         }

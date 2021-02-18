@@ -494,5 +494,18 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
             isEnabledByDefault: true,
             description: "The unsafe modifier cannot be used in methods or functions used in a compute shader.",
             helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a string literal.
+        /// </summary>
+        public static DiagnosticDescriptor StringLiteralExpression { get; } = new(
+            id: "CMPS0036",
+            title: "String literal expression",
+            messageFormat: "String literal expressions cannot be used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "String literal expressions cannot be used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
     }
 }

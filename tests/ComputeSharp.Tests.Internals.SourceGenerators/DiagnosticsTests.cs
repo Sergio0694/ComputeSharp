@@ -1070,6 +1070,33 @@ namespace ComputeSharp.Tests.Internals
             VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0035");
         }
 
+        [TestMethod]
+        public void StringLiteralExpression()
+        {
+            string source = @"
+            using ComputeSharp;
+
+            namespace ComputeSharp
+            {
+                public class ReadWriteBuffer<T> { }
+            }
+
+            namespace MyFancyApp.Sample
+            {
+                public struct MyShader : IComputeShader
+                {
+                    public ReadWriteBuffer<float> buffer;
+
+                    public void Execute()
+                    {
+                        _ = ""Hello world"";
+                    }
+                }
+            }";
+
+            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0036");
+        }
+
         /// <summary>
         /// Verifies the output of a source generator.
         /// </summary>
