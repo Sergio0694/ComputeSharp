@@ -426,5 +426,21 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
             isEnabledByDefault: true,
             description: "A yield statement cannot be used in a compute shader.",
             helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid object declaration.
+        /// <para>
+        /// Format: <c>"A variable of type {0} cannot be declared in a compute shader"</c>.
+        /// </para>
+        /// </summary>
+        public static DiagnosticDescriptor InvalidObjectDeclaration { get; } = new(
+            id: "CMPS0031",
+            title: "Invalid object declaration",
+            messageFormat: "A variable of type {0} cannot be declared in a compute shader (only unmanaged types are supported)",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "Only unmanaged value type objects can be declared in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
     }
 }

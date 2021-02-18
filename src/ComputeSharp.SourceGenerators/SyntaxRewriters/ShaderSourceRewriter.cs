@@ -788,6 +788,24 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         }
 
         /// <inheritdoc/>
+        public override SyntaxNode? VisitVariableDeclarator(VariableDeclaratorSyntax node)
+        {
+            var updatedNode = (VariableDeclaratorSyntax)base.VisitVariableDeclarator(node)!;
+
+            if (node.Initializer is null &&
+                node.Parent is VariableDeclarationSyntax declaration &&
+                this.semanticModel.GetTypeInfo(declaration.Type).Type is ITypeSymbol { IsUnmanagedType: false } type)
+            {
+                this.context.ReportDiagnostic(Diagnostic.Create(
+                    DiagnosticDescriptors.InvalidObjectDeclaration,
+                    node.GetLocation(),
+                    type));
+            }
+
+            return updatedNode;
+        }
+
+        /// <inheritdoc/>
         public override SyntaxNode? VisitYieldStatement(YieldStatementSyntax node)
         {
             this.context.ReportDiagnostic(Diagnostic.Create(

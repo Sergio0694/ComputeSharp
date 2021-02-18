@@ -35,3 +35,4 @@ CMPS0027 | ComputeSharp.IComputeShader | Error | IComputeShaderSourceGenerator, 
 CMPS0028 | ComputeSharp.IComputeShader | Error | IComputeShaderSourceGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
 CMPS0029 | ComputeSharp.IComputeShader | Error | IComputeShaderSourceGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
 CMPS0030 | ComputeSharp.IComputeShader | Error | IComputeShaderSourceGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPS0031 | ComputeSharp.IComputeShader | Error | IComputeShaderSourceGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
