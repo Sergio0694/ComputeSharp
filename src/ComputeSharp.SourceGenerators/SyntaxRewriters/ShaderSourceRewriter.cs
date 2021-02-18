@@ -155,10 +155,14 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
             var updatedNode = (MethodDeclarationSyntax?)base.Visit(node);
 
-
-            if (node!.Modifiers.Contains(Token(SyntaxKind.AsyncKeyword)))
+            if (node!.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword)))
             {
                 this.context.ReportDiagnostic(AsyncModifierOnMethodOrFunction, node);
+            }
+
+            if (node!.Modifiers.Any(m => m.IsKind(SyntaxKind.UnsafeKeyword)))
+            {
+                this.context.ReportDiagnostic(UnsafeModifierOnMethodOrFunction, node);
             }
 
             if (updatedNode is not null)
@@ -251,6 +255,11 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         public override SyntaxNode VisitImplicitObjectCreationExpression(ImplicitObjectCreationExpressionSyntax node)
         {
             var updatedNode = (ImplicitObjectCreationExpressionSyntax)base.VisitImplicitObjectCreationExpression(node)!;
+
+            if (this.semanticModel.GetTypeInfo(node).Type is ITypeSymbol { IsUnmanagedType: false } type)
+            {
+                this.context.ReportDiagnostic(InvalidObjectCreationExpression, node, type);
+            }
 
             TypeSyntax explicitType = IdentifierName("").ReplaceAndTrackType(node, this.semanticModel, this.discoveredTypes);
 
@@ -345,9 +354,14 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 .WithAttributeLists(List<AttributeListSyntax>())
                 .WithIdentifier(Identifier($"__{this.currentMethod!.Identifier.Text}__{node.Identifier.Text}"));
 
-            if (node.Modifiers.Contains(Token(SyntaxKind.AsyncKeyword)))
+            if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword)))
             {
                 this.context.ReportDiagnostic(AsyncModifierOnMethodOrFunction, node);
+            }
+
+            if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.UnsafeKeyword)))
+            {
+                this.context.ReportDiagnostic(UnsafeModifierOnMethodOrFunction, node);
             }
 
             this.localFunctionDepth--;
@@ -760,6 +774,30 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             this.context.ReportDiagnostic(DiagnosticDescriptors.YieldStatement, node);
 
             return base.VisitYieldStatement(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitFunctionPointerType(FunctionPointerTypeSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.FunctionPointer, node);
+
+            return base.VisitFunctionPointerType(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitPointerType(PointerTypeSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.PointerType, node);
+
+            return base.VisitPointerType(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitUnsafeStatement(UnsafeStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.UnsafeStatement, node);
+
+            return base.VisitUnsafeStatement(node);
         }
 
         /// <inheritdoc/>

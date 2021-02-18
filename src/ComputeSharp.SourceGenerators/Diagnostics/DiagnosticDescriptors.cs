@@ -442,5 +442,57 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
             isEnabledByDefault: true,
             description: "Only unmanaged value type objects can be declared in a compute shader.",
             helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a pointer type.
+        /// </summary>
+        public static DiagnosticDescriptor PointerType { get; } = new(
+            id: "CMPS0032",
+            title: "Pointer type",
+            messageFormat: "A compute shader cannot have a pointer type declaration",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A compute shader cannot have a pointer type declaration.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a function pointer type.
+        /// </summary>
+        public static DiagnosticDescriptor FunctionPointer { get; } = new(
+            id: "CMPS0033",
+            title: "Function pointer type",
+            messageFormat: "A compute shader cannot have a function pointer type declaration",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A compute shader cannot have a function pointer type declaration.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an unsafe statement.
+        /// </summary>
+        public static DiagnosticDescriptor UnsafeStatement { get; } = new(
+            id: "CMPS0034",
+            title: "Unsafe statement",
+            messageFormat: "A compute shader cannot have an unsafe statement",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A compute shader cannot have an unsafe statement.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an unsafe modifier on a method or function.
+        /// </summary>
+        public static DiagnosticDescriptor UnsafeModifierOnMethodOrFunction { get; } = new(
+            id: "CMPS0035",
+            title: "Unsafe modifier on method or function",
+            messageFormat: "The unsafe modifier cannot be used in methods or functions used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "The unsafe modifier cannot be used in methods or functions used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
     }
 }

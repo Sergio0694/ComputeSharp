@@ -106,8 +106,6 @@ namespace ComputeSharp.SourceGenerators
                 if (attribute is not null)
                 {
                     context.ReportDiagnostic(InvalidGroupSharedFieldDeclaration, fieldSymbol, structDeclarationSymbol, fieldSymbol.Name);
-
-                    continue;
                 }
 
                 // Captured fields must be named type symbols
