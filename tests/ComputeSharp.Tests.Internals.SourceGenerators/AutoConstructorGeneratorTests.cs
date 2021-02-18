@@ -10,11 +10,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests.Internals
 {
     [TestClass]
-    [TestCategory("SourceGenerator")]
-    public class SourceGeneratorTests
+    [TestCategory("AutoConstructorGenerator")]
+    public class AutoConstructorGeneratorTests
     {
         [TestMethod]
-        public void SequentialEnum()
+        public void GenerateConstructor()
         {
             string source = @"
             using System.Numerics;

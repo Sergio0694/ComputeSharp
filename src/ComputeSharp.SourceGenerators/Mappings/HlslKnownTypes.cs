@@ -67,6 +67,23 @@ namespace ComputeSharp.SourceGenerators.Mappings
         };
 
         /// <summary>
+        /// Checks whether or not a given type name matches a structured buffer type.
+        /// </summary>
+        /// <param name="typeName">The input type name to check.</param>
+        /// <returns>Whether or not <paramref name="typeName"/> represents a structured buffer type.</returns>
+        public static bool IsStructuredBufferType(string typeName)
+        {
+            switch (typeName)
+            {
+                case "ComputeSharp.ConstantBuffer`1":
+                case "ComputeSharp.ReadOnlyBuffer`1":
+                case "ComputeSharp.ReadWriteBuffer`1":
+                    return true;
+                default: return false;
+            };
+        }
+
+        /// <summary>
         /// Checks whether or not a given type name matches a typed resource type.
         /// </summary>
         /// <param name="typeName">The input type name to check.</param>
@@ -195,10 +212,12 @@ namespace ComputeSharp.SourceGenerators.Mappings
             {
                 if (KnownTypes.ContainsKey(type.GetFullMetadataName())) return;
 
-                customTypes.Add(type);
+                if (!customTypes.Add(type)) return;
 
                 foreach (var field in type.GetMembers().OfType<IFieldSymbol>())
                 {
+                    if (field.IsStatic) continue;
+
                     ExploreTypes((INamedTypeSymbol)field.Type, customTypes);
                 }
             }
@@ -238,6 +257,8 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 // Only add other custom types as dependencies, and ignore HLSL types
                 foreach (var field in type.GetMembers().OfType<IFieldSymbol>())
                 {
+                    if (field.IsStatic) continue;
+
                     INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
 
                     if (!KnownTypes.ContainsKey(fieldType.GetFullMetadataName()))

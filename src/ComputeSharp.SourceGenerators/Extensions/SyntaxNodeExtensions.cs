@@ -44,7 +44,20 @@ namespace ComputeSharp.SourceGenerators.Extensions
         public static TRoot ReplaceAndTrackType<TRoot>(this TRoot node, TypeSyntax targetType, SyntaxNode sourceType, SemanticModel semanticModel, ICollection<INamedTypeSymbol> discoveredTypes)
             where TRoot : SyntaxNode
         {
-            ITypeSymbol typeSymbol = semanticModel.GetTypeInfo(sourceType).Type!;
+            // Skip immediately for function pointers
+            if (sourceType is FunctionPointerTypeSyntax)
+            {
+                return node.ReplaceNode(targetType, ParseTypeName("void*"));
+            }
+
+            // Handle the various possible type kinds
+            ITypeSymbol typeSymbol = sourceType switch
+            {
+                RefTypeSyntax refType => semanticModel.GetTypeInfo(refType.Type).Type!,
+                PointerTypeSyntax pointerType => semanticModel.GetTypeInfo(pointerType.ElementType).Type!,
+                _ => semanticModel.GetTypeInfo(sourceType).Type!
+            };
+
             string typeName = typeSymbol.ToDisplayString(ISymbolExtensions.FullyQualifiedWithoutGlobalFormat);
 
             discoveredTypes.Add((INamedTypeSymbol)typeSymbol);

@@ -4,6 +4,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using ComputeSharp.__Internals;
+using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Mappings;
 using ComputeSharp.SourceGenerators.SyntaxRewriters;
@@ -13,6 +14,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static ComputeSharp.SourceGenerators.Helpers.SyntaxFactoryHelper;
+using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 
 #pragma warning disable CS0618
 
@@ -49,9 +51,9 @@ namespace ComputeSharp.SourceGenerators
                 Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
                 // Explore the syntax tree and extract the processed info
-                var processedMembers = GetProcessedMembers(structDeclarationSymbol, discoveredTypes).ToArray();
-                var sharedBuffers = GetGroupSharedMembers(structDeclarationSymbol, discoveredTypes).ToArray();
-                var (entryPoint, localFunctions) = GetProcessedMethods(structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
+                var processedMembers = GetProcessedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
+                var sharedBuffers = GetGroupSharedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
+                var (entryPoint, localFunctions) = GetProcessedMethods(context, structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
                 var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
                 var processedMethods = localFunctions.Concat(staticMethods.Values).Select(static method => method.NormalizeWhitespace().ToFullString()).ToArray();
                 var processedConstants = GetProcessedConstants(constantDefinitions);
@@ -82,17 +84,59 @@ namespace ComputeSharp.SourceGenerators
         /// <summary>
         /// Gets a sequence of captured members and their mapped names.
         /// </summary>
+        /// <param name="context">The current generator context in use.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="types">The collection of currently discovered types.</param>
         /// <returns>A sequence of captured members in <paramref name="structDeclarationSymbol"/>.</returns>
         [Pure]
-        private static IEnumerable<IEnumerable<string>> GetProcessedMembers(INamedTypeSymbol structDeclarationSymbol, ICollection<INamedTypeSymbol> types)
+        private static IEnumerable<IEnumerable<string>> GetProcessedMembers(
+            GeneratorExecutionContext context,
+            INamedTypeSymbol structDeclarationSymbol,
+            ICollection<INamedTypeSymbol> types)
         {
+            bool hlslResourceFound = false;
+
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
                 if (fieldSymbol.IsStatic) continue;
 
-                INamedTypeSymbol typeSymbol = (INamedTypeSymbol)fieldSymbol.Type;
+                AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass is { Name: nameof(GroupSharedAttribute) });
+
+                // Group shared fields must be static
+                if (attribute is not null)
+                {
+                    context.ReportDiagnostic(InvalidGroupSharedFieldDeclaration, fieldSymbol, structDeclarationSymbol, fieldSymbol.Name);
+                }
+
+                // Captured fields must be named type symbols
+                if (fieldSymbol.Type is not INamedTypeSymbol typeSymbol)
+                {
+                    context.ReportDiagnostic(InvalidShaderField, fieldSymbol, structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type);
+
+                    continue;
+                }
+
+                string metadataName = typeSymbol.GetFullMetadataName();
+
+                // Allowed fields must be either resources, unmanaged values or delegates
+                if (HlslKnownTypes.IsTypedResourceType(metadataName))
+                {
+                    hlslResourceFound = true;
+
+                    // Track the type of items in the current buffer
+                    if (HlslKnownTypes.IsStructuredBufferType(metadataName))
+                    {
+                        types.Add((INamedTypeSymbol)typeSymbol.TypeArguments[0]);
+                    }
+                }
+                else if (!typeSymbol.IsUnmanagedType &&
+                         typeSymbol.TypeKind != TypeKind.Delegate)
+                {
+                    // Shaders can only capture valid HLSL resource types or unmanaged types
+                    context.ReportDiagnostic(InvalidShaderField, fieldSymbol, structDeclarationSymbol, fieldSymbol.Name, typeSymbol);
+
+                    continue;
+                }
 
                 string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
 
@@ -100,32 +144,50 @@ namespace ComputeSharp.SourceGenerators
 
                 // Yield back the current mapping for the name (if the name used a reserved keyword)
                 yield return new[] { fieldSymbol.Name, mapping ?? fieldSymbol.Name, typeName };
+            }
 
-                // Track the type of items in the current buffer
-                if (HlslKnownTypes.IsTypedResourceType(typeSymbol.GetFullMetadataName()) &&
-                    typeSymbol.TypeArguments.Length == 1)
-                {
-                    types.Add((INamedTypeSymbol)typeSymbol.TypeArguments[0]);
-                }
+            if (!hlslResourceFound)
+            {
+                context.ReportDiagnostic(MissingShaderResources, structDeclarationSymbol, structDeclarationSymbol);
             }
         }
 
         /// <summary>
         /// Gets a sequence of captured members and their mapped names.
         /// </summary>
+        /// <param name="context">The current generator context in use.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="types">The collection of currently discovered types.</param>
         /// <returns>A sequence of captured members in <paramref name="structDeclarationSymbol"/>.</returns>
         [Pure]
-        private static IEnumerable<(string Name, string Type, int? Count)> GetGroupSharedMembers(INamedTypeSymbol structDeclarationSymbol, ICollection<INamedTypeSymbol> types)
+        private static IEnumerable<(string Name, string Type, int? Count)> GetGroupSharedMembers(
+            GeneratorExecutionContext context,
+            INamedTypeSymbol structDeclarationSymbol,
+            ICollection<INamedTypeSymbol> types)
         {
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
                 if (!fieldSymbol.IsStatic) continue;
 
-                AttributeData attribute = fieldSymbol.GetAttributes().First(static a => a.AttributeClass is { Name: nameof(GroupSharedAttribute) });
+                AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass is { Name: nameof(GroupSharedAttribute) });
+
+                if (attribute is null) continue;
+
+                if (fieldSymbol.Type is not IArrayTypeSymbol typeSymbol)
+                {
+                    context.ReportDiagnostic(InvalidGroupSharedFieldType, fieldSymbol, structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type);
+
+                    continue;
+                }
+
+                if (!typeSymbol.ElementType.IsUnmanagedType)
+                {
+                    context.ReportDiagnostic(InvalidGroupSharedFieldElementType, fieldSymbol, structDeclarationSymbol, fieldSymbol.Name, fieldSymbol.Type);
+
+                    continue;
+                }
+                
                 int? bufferSize = (int?)attribute.ConstructorArguments.FirstOrDefault().Value;
-                IArrayTypeSymbol typeSymbol = (IArrayTypeSymbol)fieldSymbol.Type;
 
                 string typeName = HlslKnownTypes.GetMappedElementName(typeSymbol);
 
@@ -140,6 +202,7 @@ namespace ComputeSharp.SourceGenerators
         /// <summary>
         /// Gets a sequence of processed methods declared within a given type.
         /// </summary>
+        /// <param name="context">The current generator context in use.</param>
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> instance for the current type.</param>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the type to process.</param>
@@ -149,6 +212,7 @@ namespace ComputeSharp.SourceGenerators
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
         [Pure]
         private static (string EntryPoint, IEnumerable<SyntaxNode> Methods) GetProcessedMethods(
+            GeneratorExecutionContext context,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             SemanticModel semanticModel,
@@ -168,16 +232,27 @@ namespace ComputeSharp.SourceGenerators
             foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
             {
                 IMethodSymbol methodDeclarationSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration)!;
-                ShaderSourceRewriter shaderSourceRewriter = new(structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
+                bool isShaderEntryPoint =
+                    methodDeclarationSymbol.Name == nameof(IComputeShader.Execute) &&
+                    methodDeclarationSymbol.ReturnsVoid &&
+                    methodDeclarationSymbol.TypeParameters.Length == 0 &&
+                    methodDeclarationSymbol.Parameters.Length == 0;
+
+                // Create the source rewriter for the current method
+                ShaderSourceRewriter shaderSourceRewriter = new(
+                    structDeclarationSymbol,
+                    semanticModel,
+                    discoveredTypes,
+                    staticMethods,
+                    constantDefinitions,
+                    context,
+                    isShaderEntryPoint);
 
                 // Rewrite the method syntax tree
                 MethodDeclarationSyntax? processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();
 
                 // If the method is the shader entry point, do additional processing
-                if (methodDeclarationSymbol.Name == nameof(IComputeShader.Execute) &&
-                    methodDeclarationSymbol.ReturnsVoid &&
-                    methodDeclarationSymbol.TypeParameters.Length == 0 &&
-                    methodDeclarationSymbol.Parameters.Length == 0)
+                if (isShaderEntryPoint)
                 {
                     processedMethod = new ExecuteMethodRewriter(shaderSourceRewriter).Visit(processedMethod)!;
 

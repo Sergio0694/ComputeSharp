@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
@@ -9,6 +10,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 
 namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 {
@@ -53,9 +55,24 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         private readonly List<VariableDeclarationSyntax> implicitVariables;
 
         /// <summary>
+        /// The current generator context in use.
+        /// </summary>
+        private readonly GeneratorExecutionContext context;
+
+        /// <summary>
+        /// Whether or not the current instance is processing a shader entry point.
+        /// </summary>
+        private readonly bool isEntryPoint;
+
+        /// <summary>
         /// The current <see cref="MethodDeclarationSyntax"/> tree being visited.
         /// </summary>
         private MethodDeclarationSyntax? currentMethod;
+
+        /// <summary>
+        /// The current depth inside local declarations.
+        /// </summary>
+        private int localFunctionDepth;
 
         /// <summary>
         /// Creates a new <see cref="ShaderSourceRewriter"/> instance with the specified parameters.
@@ -65,12 +82,16 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <param name="discoveredTypes">The set of discovered custom types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+        /// <param name="context">The current generator context in use.</param>
+        /// <param name="isEntryPoint">Whether or not the current instance is processing a shader entry point.</param>
         public ShaderSourceRewriter(
             INamedTypeSymbol shaderType,
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
-            IDictionary<IFieldSymbol, string> constantDefinitions)
+            IDictionary<IFieldSymbol, string> constantDefinitions,
+            GeneratorExecutionContext context,
+            bool isEntryPoint)
         {
             this.shaderType = shaderType;
             this.semanticModel = semanticModel;
@@ -79,6 +100,8 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             this.constantDefinitions = constantDefinitions;
             this.localFunctions = new();
             this.implicitVariables = new();
+            this.context = context;
+            this.isEntryPoint = isEntryPoint;
         }
 
         /// <summary>
@@ -88,11 +111,13 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <param name="discoveredTypes">The set of discovered custom types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+        /// <param name="context">The current generator context in use.</param>
         public ShaderSourceRewriter(
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
-            IDictionary<IFieldSymbol, string> constantDefinitions)
+            IDictionary<IFieldSymbol, string> constantDefinitions,
+            GeneratorExecutionContext context)
         {
             this.semanticModel = semanticModel;
             this.discoveredTypes = discoveredTypes;
@@ -100,6 +125,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             this.constantDefinitions = constantDefinitions;
             this.implicitVariables = new();
             this.localFunctions = new();
+            this.context = context;
         }
 
         /// <summary>
@@ -128,6 +154,16 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             this.currentMethod = node;
 
             var updatedNode = (MethodDeclarationSyntax?)base.Visit(node);
+
+            if (node!.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword)))
+            {
+                this.context.ReportDiagnostic(AsyncModifierOnMethodOrFunction, node);
+            }
+
+            if (node!.Modifiers.Any(m => m.IsKind(SyntaxKind.UnsafeKeyword)))
+            {
+                this.context.ReportDiagnostic(UnsafeModifierOnMethodOrFunction, node);
+            }
 
             if (updatedNode is not null)
             {
@@ -176,6 +212,11 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = ((LocalDeclarationStatementSyntax)base.VisitLocalDeclarationStatement(node)!);
 
+            if (this.semanticModel.GetOperation(node) is IOperation { Kind: OperationKind.UsingDeclaration })
+            {
+                this.context.ReportDiagnostic(UsingStatementOrDeclaration, node);
+            }
+
             return updatedNode.ReplaceAndTrackType(updatedNode.Declaration.Type, node.Declaration.Type, this.semanticModel, this.discoveredTypes);
         }
 
@@ -183,6 +224,11 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         public override SyntaxNode VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
         {
             var updatedNode = (ObjectCreationExpressionSyntax)base.VisitObjectCreationExpression(node)!;
+
+            if (this.semanticModel.GetTypeInfo(node).Type is ITypeSymbol { IsUnmanagedType: false } type)
+            {
+                this.context.ReportDiagnostic(InvalidObjectCreationExpression, node, type);
+            }
 
             updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node, this.semanticModel, this.discoveredTypes);
 
@@ -196,9 +242,24 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         }
 
         /// <inheritdoc/>
+        public override SyntaxNode? VisitAnonymousObjectCreationExpression(AnonymousObjectCreationExpressionSyntax node)
+        {
+            var updatedNode = (AnonymousObjectCreationExpressionSyntax)base.VisitAnonymousObjectCreationExpression(node)!;
+
+            this.context.ReportDiagnostic(DiagnosticDescriptors.AnonymousObjectCreationExpression, node);
+
+            return updatedNode;
+        }
+
+        /// <inheritdoc/>
         public override SyntaxNode VisitImplicitObjectCreationExpression(ImplicitObjectCreationExpressionSyntax node)
         {
             var updatedNode = (ImplicitObjectCreationExpressionSyntax)base.VisitImplicitObjectCreationExpression(node)!;
+
+            if (this.semanticModel.GetTypeInfo(node).Type is ITypeSymbol { IsUnmanagedType: false } type)
+            {
+                this.context.ReportDiagnostic(InvalidObjectCreationExpression, node, type);
+            }
 
             TypeSyntax explicitType = IdentifierName("").ReplaceAndTrackType(node, this.semanticModel, this.discoveredTypes);
 
@@ -255,6 +316,10 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                     return updatedNode.WithToken(Literal(updatedNode.Token.ValueText + "L", 0d));
                 }
             }
+            else if (updatedNode.IsKind(SyntaxKind.StringLiteralExpression))
+            {
+                this.context.ReportDiagnostic(StringLiteralExpression, node);
+            }
 
             return updatedNode;
         }
@@ -285,11 +350,25 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <inheritdoc/>
         public override SyntaxNode? VisitLocalFunctionStatement(LocalFunctionStatementSyntax node)
         {
+            this.localFunctionDepth++;
+
             var updatedNode =
                 ((LocalFunctionStatementSyntax)base.VisitLocalFunctionStatement(node)!)
                 .WithBlockBody()
                 .WithAttributeLists(List<AttributeListSyntax>())
                 .WithIdentifier(Identifier($"__{this.currentMethod!.Identifier.Text}__{node.Identifier.Text}"));
+
+            if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword)))
+            {
+                this.context.ReportDiagnostic(AsyncModifierOnMethodOrFunction, node);
+            }
+
+            if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.UnsafeKeyword)))
+            {
+                this.context.ReportDiagnostic(UnsafeModifierOnMethodOrFunction, node);
+            }
+
+            this.localFunctionDepth--;
 
             // HLSL doesn't support local functions, so we first process them as usual and then remove
             // them from the current syntax tree completely. These will be added to the shader source
@@ -331,6 +410,24 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                         if (mapping == $"__{nameof(GroupIds)}__get_Index") IsGroupIdsIndexUsed = true;
                         else if (typeName == typeof(GroupIds).FullName) IsGroupIdsUsed = true;
                         else if (typeName == typeof(WarpIds).FullName) IsWarpIdsUsed = true;
+
+                        // Check that the dispatch info types are only used from the main shader body
+                        if (!this.isEntryPoint || this.localFunctionDepth > 0)
+                        {
+                            DiagnosticDescriptor? descriptor = typeName switch
+                            {
+                                _ when typeName == typeof(ThreadIds).FullName => DiagnosticDescriptors.InvalidThreadIdsUsage,
+                                _ when typeName == typeof(GroupIds).FullName => DiagnosticDescriptors.InvalidGroupIdsUsage,
+                                _ when typeName == typeof(GroupSize).FullName => DiagnosticDescriptors.InvalidGroupSizeUsage,
+                                _ when typeName == typeof(WarpIds).FullName => DiagnosticDescriptors.InvalidWarpIdsUsage,
+                                _ => null
+                            };
+
+                            if (descriptor is not null)
+                            {
+                                this.context.ReportDiagnostic(descriptor, node);
+                            }
+                        }
                     }
 
                     // Static and instance members are handled differently, with static members being
@@ -436,7 +533,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
                     if (!this.staticMethods.ContainsKey(method))
                     {
-                        ShaderSourceRewriter shaderSourceRewriter = new(this.semanticModel, this.discoveredTypes, this.staticMethods, this.constantDefinitions);
+                        ShaderSourceRewriter shaderSourceRewriter = new(this.semanticModel, this.discoveredTypes, this.staticMethods, this.constantDefinitions, this.context);
                         MethodDeclarationSyntax
                             methodNode = (MethodDeclarationSyntax)method.DeclaringSyntaxReferences[0].GetSyntax(),
                             processedMethod = shaderSourceRewriter.Visit(methodNode)!.NormalizeWhitespace().WithoutTrivia();
@@ -478,7 +575,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             // Track and rewrite the discarded declaration
             if (this.semanticModel.GetOperation(node.Expression) is IDiscardOperation operation)
             {
-                TypeSyntax typeSyntax = operation.Type.TrackType(this.discoveredTypes);
+                TypeSyntax typeSyntax = operation.Type!.TrackType(this.discoveredTypes);
                 string identifier = $"__implicit{this.implicitVariables.Count}";
 
                 // Add the variable to the list of implicit declarations
@@ -506,6 +603,205 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             }
 
             return updatedNode;
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitAwaitExpression(AwaitExpressionSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.AwaitExpression, node);
+
+            return base.VisitAwaitExpression(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitCheckedExpression(CheckedExpressionSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.CheckedExpression, node);
+
+            return base.VisitCheckedExpression(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitCheckedStatement(CheckedStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.CheckedStatement, node);
+
+            return base.VisitCheckedStatement(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitFixedStatement(FixedStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.FixedStatement, node);
+
+            return base.VisitFixedStatement(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitForEachStatement(ForEachStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.ForEachStatement, node);
+
+            return base.VisitForEachStatement(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitForEachVariableStatement(ForEachVariableStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.ForEachStatement, node);
+
+            return base.VisitForEachVariableStatement(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitLockStatement(LockStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.LockStatement, node);
+
+            return base.VisitLockStatement(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitQueryExpression(QueryExpressionSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.QueryExpression, node);
+
+            return base.VisitQueryExpression(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitRangeExpression(RangeExpressionSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.RangeExpression, node);
+
+            return base.VisitRangeExpression(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitRecursivePattern(RecursivePatternSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.RecursivePattern, node);
+
+            return base.VisitRecursivePattern(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitRefType(RefTypeSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.RefType, node);
+
+            return base.VisitRefType(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitRelationalPattern(RelationalPatternSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.RelationalPattern, node);
+
+            return base.VisitRelationalPattern(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitSizeOfExpression(SizeOfExpressionSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.SizeOfExpression, node);
+
+            return base.VisitSizeOfExpression(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitStackAllocArrayCreationExpression(StackAllocArrayCreationExpressionSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.StackAllocArrayCreationExpression, node);
+
+            return base.VisitStackAllocArrayCreationExpression(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitThrowExpression(ThrowExpressionSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.ThrowExpressionOrStatement, node);
+
+            return base.VisitThrowExpression(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitThrowStatement(ThrowStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.ThrowExpressionOrStatement, node);
+
+            return base.VisitThrowStatement(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitTryStatement(TryStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.TryStatement, node);
+
+            return base.VisitTryStatement(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitTupleType(TupleTypeSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.TupleType, node);
+
+            return base.VisitTupleType(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitUsingStatement(UsingStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.UsingStatementOrDeclaration, node);
+
+            return base.VisitUsingStatement(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitVariableDeclarator(VariableDeclaratorSyntax node)
+        {
+            var updatedNode = (VariableDeclaratorSyntax)base.VisitVariableDeclarator(node)!;
+
+            if (node.Initializer is null &&
+                node.Parent is VariableDeclarationSyntax declaration &&
+                this.semanticModel.GetTypeInfo(declaration.Type).Type is ITypeSymbol { IsUnmanagedType: false } type)
+            {
+                this.context.ReportDiagnostic(InvalidObjectDeclaration, node, type);
+            }
+
+            return updatedNode;
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitYieldStatement(YieldStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.YieldStatement, node);
+
+            return base.VisitYieldStatement(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitFunctionPointerType(FunctionPointerTypeSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.FunctionPointer, node);
+
+            return base.VisitFunctionPointerType(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitPointerType(PointerTypeSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.PointerType, node);
+
+            return base.VisitPointerType(node);
+        }
+
+        /// <inheritdoc/>
+        public override SyntaxNode? VisitUnsafeStatement(UnsafeStatementSyntax node)
+        {
+            this.context.ReportDiagnostic(DiagnosticDescriptors.UnsafeStatement, node);
+
+            return base.VisitUnsafeStatement(node);
         }
 
         /// <inheritdoc/>

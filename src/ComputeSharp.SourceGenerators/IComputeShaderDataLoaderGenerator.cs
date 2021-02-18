@@ -141,9 +141,11 @@ namespace ComputeSharp.SourceGenerators
 
             foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
             {
-                if (fieldSymbol.IsStatic) continue;
+                if (fieldSymbol.Type is not INamedTypeSymbol { IsStatic: false } typeSymbol)
+                {
+                    continue;
+                }
 
-                INamedTypeSymbol typeSymbol = (INamedTypeSymbol)fieldSymbol.Type;
                 string typeName = typeSymbol.GetFullMetadataName();
 
                 if (HlslKnownTypes.IsTypedResourceType(typeName))
