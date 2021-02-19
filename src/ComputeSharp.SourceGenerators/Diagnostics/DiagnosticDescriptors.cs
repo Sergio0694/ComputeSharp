@@ -13,7 +13,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// Format: <c>"The compute shader of type {0} contains a field \"{1}\" of an invalid type {2}"</c>.
         /// </para>
         /// </summary>
-        public static DiagnosticDescriptor InvalidShaderField { get; } = new(
+        public static readonly DiagnosticDescriptor InvalidShaderField = new(
             id: "CMPS0001",
             title: "Invalid shader field",
             messageFormat: "The compute shader of type {0} contains a field \"{1}\" of an invalid type {2}",
@@ -29,7 +29,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// Format: <c>"The compute shader of type {0} contains a group shared field \"{1}\" of an invalid type {2}"</c>.
         /// </para>
         /// </summary>
-        public static DiagnosticDescriptor InvalidGroupSharedFieldType { get; } = new(
+        public static readonly DiagnosticDescriptor InvalidGroupSharedFieldType = new(
             id: "CMPS0002",
             title: "Invalid group shared field type",
             messageFormat: "The compute shader of type {0} contains a group shared field \"{1}\" of an invalid type {2} (it must be an array)",
@@ -45,7 +45,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// Format: <c>"The compute shader of type {0} contains a group shared field \"{1}\" of an invalid element type {2}"</c>.
         /// </para>
         /// </summary>
-        public static DiagnosticDescriptor InvalidGroupSharedFieldElementType { get; } = new(
+        public static readonly DiagnosticDescriptor InvalidGroupSharedFieldElementType = new(
             id: "CMPS0003",
             title: "Invalid group shared field element type",
             messageFormat: "The compute shader of type {0} contains a group shared field \"{1}\" of an invalid type {2} (it must be a primitive or unmanaged type)",
@@ -61,7 +61,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// Format: <c>"The compute shader of type {0} contains a group shared field \"{1}\" that is not static"</c>.
         /// </para>
         /// </summary>
-        public static DiagnosticDescriptor InvalidGroupSharedFieldDeclaration { get; } = new(
+        public static readonly DiagnosticDescriptor InvalidGroupSharedFieldDeclaration = new(
             id: "CMPS0004",
             title: "Invalid group shared field declaration",
             messageFormat: "The compute shader of type {0} contains a group shared field \"{1}\" that is not static",
@@ -77,7 +77,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// Format: <c>"The compute shader of type {0} contains no resources to work on"</c>.
         /// </para>
         /// </summary>
-        public static DiagnosticDescriptor MissingShaderResources { get; } = new(
+        public static readonly DiagnosticDescriptor MissingShaderResources = new(
             id: "CMPS0005",
             title: "Missing shader resources",
             messageFormat: "The compute shader of type {0} contains no resources to work on",
@@ -93,7 +93,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// Format: <c>"The ThreadIds type is used in method {0} of type {1}"</c>.
         /// </para>
         /// </summary>
-        public static DiagnosticDescriptor InvalidThreadIdsUsage { get; } = new(
+        public static readonly DiagnosticDescriptor InvalidThreadIdsUsage = new(
             id: "CMPS0006",
             title: "Invalid ThreadIds usage",
             messageFormat: "The ThreadIds type can only be used within the main body of a compute shader",
@@ -109,7 +109,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// Format: <c>"The GroupIds type is used in method {0} of type {1}"</c>.
         /// </para>
         /// </summary>
-        public static DiagnosticDescriptor InvalidGroupIdsUsage { get; } = new(
+        public static readonly DiagnosticDescriptor InvalidGroupIdsUsage = new(
             id: "CMPS0007",
             title: "Invalid GroupIds usage",
             messageFormat: "The GroupIds type can only be used within the main body of a compute shader",
@@ -125,7 +125,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// Format: <c>"The GroupSize type is used in method {0} of type {1}"</c>.
         /// </para>
         /// </summary>
-        public static DiagnosticDescriptor InvalidGroupSizeUsage { get; } = new(
+        public static readonly DiagnosticDescriptor InvalidGroupSizeUsage = new(
             id: "CMPS0008",
             title: "Invalid GroupSize usage",
             messageFormat: "The GroupSize type can only be used within the main body of a compute shader",
@@ -141,7 +141,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// Format: <c>"The WarpIds type is used in method {0} of type {1}"</c>.
         /// </para>
         /// </summary>
-        public static DiagnosticDescriptor InvalidWarpIdsUsage { get; } = new(
+        public static readonly DiagnosticDescriptor InvalidWarpIdsUsage = new(
             id: "CMPS0009",
             title: "Invalid WarpIds usage",
             messageFormat: "The WarpIds type can only be used within the main body of a compute shader",
@@ -157,7 +157,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// Format: <c>"The type {0} cannot be created in a compute shader"</c>.
         /// </para>
         /// </summary>
-        public static DiagnosticDescriptor InvalidObjectCreationExpression { get; } = new(
+        public static readonly DiagnosticDescriptor InvalidObjectCreationExpression = new(
             id: "CMPS0010",
             title: "Invalid object creation expression",
             messageFormat: "The type {0} cannot be created in a compute shader (only unmanaged types are supported)",
@@ -170,7 +170,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for an anonymous object creation expression.
         /// </summary>
-        public static DiagnosticDescriptor AnonymousObjectCreationExpression { get; } = new(
+        public static readonly DiagnosticDescriptor AnonymousObjectCreationExpression = new(
             id: "CMPS0011",
             title: "Anonymous object creation expression",
             messageFormat: "An anonymous object cannot be created in a compute shader",
@@ -183,7 +183,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for an async modifier on a method or function.
         /// </summary>
-        public static DiagnosticDescriptor AsyncModifierOnMethodOrFunction { get; } = new(
+        public static readonly DiagnosticDescriptor AsyncModifierOnMethodOrFunction = new(
             id: "CMPS0012",
             title: "Async modifier on method or function",
             messageFormat: "The async modifier cannot be used in methods or functions used in a compute shader",
@@ -196,7 +196,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for an await expression.
         /// </summary>
-        public static DiagnosticDescriptor AwaitExpression { get; } = new(
+        public static readonly DiagnosticDescriptor AwaitExpression = new(
             id: "CMPS0013",
             title: "Await expression",
             messageFormat: "The await expression cannot be used in a compute shader",
@@ -209,7 +209,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a checked expression.
         /// </summary>
-        public static DiagnosticDescriptor CheckedExpression { get; } = new(
+        public static readonly DiagnosticDescriptor CheckedExpression = new(
             id: "CMPS0014",
             title: "Checked expression",
             messageFormat: "A checked expression cannot be used in a compute shader",
@@ -222,7 +222,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a checked statement.
         /// </summary>
-        public static DiagnosticDescriptor CheckedStatement { get; } = new(
+        public static readonly DiagnosticDescriptor CheckedStatement = new(
             id: "CMPS0015",
             title: "Checked statement",
             messageFormat: "A checked statement cannot be used in a compute shader",
@@ -235,7 +235,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a fixed statement.
         /// </summary>
-        public static DiagnosticDescriptor FixedStatement { get; } = new(
+        public static readonly DiagnosticDescriptor FixedStatement = new(
             id: "CMPS0016",
             title: "Fixed statement",
             messageFormat: "A fixed statement cannot be used in a compute shader",
@@ -248,7 +248,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a foreach statement.
         /// </summary>
-        public static DiagnosticDescriptor ForEachStatement { get; } = new(
+        public static readonly DiagnosticDescriptor ForEachStatement = new(
             id: "CMPS0017",
             title: "Foreach statement",
             messageFormat: "A foreach statement cannot be used in a compute shader",
@@ -261,7 +261,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a lock statement.
         /// </summary>
-        public static DiagnosticDescriptor LockStatement { get; } = new(
+        public static readonly DiagnosticDescriptor LockStatement = new(
             id: "CMPS0018",
             title: "Foreach statement",
             messageFormat: "A lock statement cannot be used in a compute shader",
@@ -274,7 +274,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a query statement.
         /// </summary>
-        public static DiagnosticDescriptor QueryExpression { get; } = new(
+        public static readonly DiagnosticDescriptor QueryExpression = new(
             id: "CMPS0019",
             title: "Foreach statement",
             messageFormat: "A LINQ query expression cannot be used in a compute shader",
@@ -287,7 +287,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a range expression.
         /// </summary>
-        public static DiagnosticDescriptor RangeExpression { get; } = new(
+        public static readonly DiagnosticDescriptor RangeExpression = new(
             id: "CMPS0020",
             title: "Range expression",
             messageFormat: "A range expression cannot be used in a compute shader",
@@ -300,7 +300,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a recursive pattern.
         /// </summary>
-        public static DiagnosticDescriptor RecursivePattern { get; } = new(
+        public static readonly DiagnosticDescriptor RecursivePattern = new(
             id: "CMPS0021",
             title: "Recursive pattern",
             messageFormat: "A recursive pattern cannot be used in a compute shader",
@@ -313,7 +313,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a ref type.
         /// </summary>
-        public static DiagnosticDescriptor RefType { get; } = new(
+        public static readonly DiagnosticDescriptor RefType = new(
             id: "CMPS0022",
             title: "Ref type",
             messageFormat: "A compute shader cannot have a ref type declaration",
@@ -326,7 +326,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a relational pattern.
         /// </summary>
-        public static DiagnosticDescriptor RelationalPattern { get; } = new(
+        public static readonly DiagnosticDescriptor RelationalPattern = new(
             id: "CMPS0023",
             title: "Relational pattern",
             messageFormat: "A relational pattern cannot be used in a compute shader",
@@ -339,7 +339,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a sizeof expression.
         /// </summary>
-        public static DiagnosticDescriptor SizeOfExpression { get; } = new(
+        public static readonly DiagnosticDescriptor SizeOfExpression = new(
             id: "CMPS0024",
             title: "Sizeof expression",
             messageFormat: "A sizeof expression cannot be used in a compute shader",
@@ -352,7 +352,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a stackalloc expression.
         /// </summary>
-        public static DiagnosticDescriptor StackAllocArrayCreationExpression { get; } = new(
+        public static readonly DiagnosticDescriptor StackAllocArrayCreationExpression = new(
             id: "CMPS0025",
             title: "Stackalloc expression",
             messageFormat: "A stackalloc expression cannot be used in a compute shader",
@@ -365,7 +365,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a throw expression or statement.
         /// </summary>
-        public static DiagnosticDescriptor ThrowExpressionOrStatement { get; } = new(
+        public static readonly DiagnosticDescriptor ThrowExpressionOrStatement = new(
             id: "CMPS0026",
             title: "Throw expression or statement",
             messageFormat: "Throw expressions and statements cannot be used in a compute shader",
@@ -378,7 +378,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a try statement.
         /// </summary>
-        public static DiagnosticDescriptor TryStatement { get; } = new(
+        public static readonly DiagnosticDescriptor TryStatement = new(
             id: "CMPS0027",
             title: "Try statement",
             messageFormat: "A try statement cannot be used in a compute shader",
@@ -391,7 +391,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a tuple type.
         /// </summary>
-        public static DiagnosticDescriptor TupleType { get; } = new(
+        public static readonly DiagnosticDescriptor TupleType = new(
             id: "CMPS0028",
             title: "Tuple type",
             messageFormat: "A compute shader cannot have a tuple type declaration",
@@ -404,7 +404,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a using statement or declaration.
         /// </summary>
-        public static DiagnosticDescriptor UsingStatementOrDeclaration { get; } = new(
+        public static readonly DiagnosticDescriptor UsingStatementOrDeclaration = new(
             id: "CMPS0029",
             title: "Using statement or declaration",
             messageFormat: "Using statements and declarations cannot be used in a compute shader",
@@ -417,7 +417,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a yield statement.
         /// </summary>
-        public static DiagnosticDescriptor YieldStatement { get; } = new(
+        public static readonly DiagnosticDescriptor YieldStatement = new(
             id: "CMPS0030",
             title: "Yield statement",
             messageFormat: "A yield statement cannot be used in a compute shader",
@@ -433,7 +433,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// Format: <c>"A variable of type {0} cannot be declared in a compute shader"</c>.
         /// </para>
         /// </summary>
-        public static DiagnosticDescriptor InvalidObjectDeclaration { get; } = new(
+        public static readonly DiagnosticDescriptor InvalidObjectDeclaration = new(
             id: "CMPS0031",
             title: "Invalid object declaration",
             messageFormat: "A variable of type {0} cannot be declared in a compute shader (only unmanaged types are supported)",
@@ -446,7 +446,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a pointer type.
         /// </summary>
-        public static DiagnosticDescriptor PointerType { get; } = new(
+        public static readonly DiagnosticDescriptor PointerType = new(
             id: "CMPS0032",
             title: "Pointer type",
             messageFormat: "A compute shader cannot have a pointer type declaration",
@@ -459,7 +459,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a function pointer type.
         /// </summary>
-        public static DiagnosticDescriptor FunctionPointer { get; } = new(
+        public static readonly DiagnosticDescriptor FunctionPointer = new(
             id: "CMPS0033",
             title: "Function pointer type",
             messageFormat: "A compute shader cannot have a function pointer type declaration",
@@ -472,7 +472,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for an unsafe statement.
         /// </summary>
-        public static DiagnosticDescriptor UnsafeStatement { get; } = new(
+        public static readonly DiagnosticDescriptor UnsafeStatement = new(
             id: "CMPS0034",
             title: "Unsafe statement",
             messageFormat: "A compute shader cannot have an unsafe statement",
@@ -485,7 +485,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for an unsafe modifier on a method or function.
         /// </summary>
-        public static DiagnosticDescriptor UnsafeModifierOnMethodOrFunction { get; } = new(
+        public static readonly DiagnosticDescriptor UnsafeModifierOnMethodOrFunction = new(
             id: "CMPS0035",
             title: "Unsafe modifier on method or function",
             messageFormat: "The unsafe modifier cannot be used in methods or functions used in a compute shader",
@@ -498,7 +498,7 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for a string literal.
         /// </summary>
-        public static DiagnosticDescriptor StringLiteralExpression { get; } = new(
+        public static readonly DiagnosticDescriptor StringLiteralExpression = new(
             id: "CMPS0036",
             title: "String literal expression",
             messageFormat: "String literal expressions cannot be used in a compute shader",
