@@ -23,7 +23,7 @@ namespace ComputeSharp.Benchmark.Imaging
         /// <summary>
         /// The loaded image.
         /// </summary>
-        private Image<ImageSharpRgba32> image;
+        private Image<ImageSharpRgba32>? image;
 
         /// <summary>
         /// Initial setup for a benchmarking session.
@@ -31,7 +31,7 @@ namespace ComputeSharp.Benchmark.Imaging
         [GlobalSetup]
         public void Setup()
         {
-            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Imaging", "city.jpg");
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
 
             this.image = Image.Load<ImageSharpRgba32>(path);
 
@@ -45,7 +45,7 @@ namespace ComputeSharp.Benchmark.Imaging
         [GlobalCleanup]
         public void Dispose()
         {
-            this.image.Dispose();
+            this.image!.Dispose();
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace ComputeSharp.Benchmark.Imaging
         [BenchmarkCategory("BOKEH")]
         public void Bokeh_Cpu()
         {
-            this.image.Mutate(c => c.ApplyProcessor(new BokehBlurProcessor(80, 2, 3)));
+            this.image!.Mutate(c => c.ApplyProcessor(new BokehBlurProcessor(80, 2, 3)));
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace ComputeSharp.Benchmark.Imaging
         [BenchmarkCategory("BOKEH")]
         public void Bokeh_Gpu()
         {
-            this.image.Mutate(c => c.ApplyProcessor(new HlslBokehBlurProcessor(80, 2)));
+            this.image!.Mutate(c => c.ApplyProcessor(new HlslBokehBlurProcessor(80, 2)));
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace ComputeSharp.Benchmark.Imaging
         [BenchmarkCategory("GAUSSIAN")]
         public void Gaussian_Cpu()
         {
-            this.image.Mutate(c => c.ApplyProcessor(new GaussianBlurProcessor(80)));
+            this.image!.Mutate(c => c.ApplyProcessor(new GaussianBlurProcessor(80)));
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace ComputeSharp.Benchmark.Imaging
         [BenchmarkCategory("GAUSSIAN")]
         public void Gaussian_Gpu()
         {
-            this.image.Mutate(c => c.ApplyProcessor(new HlslGaussianBlurProcessor(80)));
+            this.image!.Mutate(c => c.ApplyProcessor(new HlslGaussianBlurProcessor(80)));
         }
     }
 }

@@ -14,7 +14,7 @@ namespace ComputeSharp.ImageProcessing
         static void Main()
         {
             Console.WriteLine(">> Loading image");
-            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "city.jpg");
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "city.jpg");
             using Image<ImageSharpRgba32> image = Image.Load<ImageSharpRgba32>(path);
 
             // Apply a series of processors and save the results
@@ -29,7 +29,7 @@ namespace ComputeSharp.ImageProcessing
 
                 Console.WriteLine($">> Saving {effect.Name} to disk");
                 string targetPath = Path.Combine(
-                    Path.GetRelativePath(Path.GetDirectoryName(path), @"..\..\..\"),
+                    Path.GetRelativePath(Path.GetDirectoryName(path)!, @"..\..\..\"),
                     $"{Path.GetFileNameWithoutExtension(path)}_{effect.Name}{Path.GetExtension(path)}");
                 copy.Save(targetPath);
             }

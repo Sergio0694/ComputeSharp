@@ -1,4 +1,6 @@
-﻿namespace ComputeSharp.Shaders.Renderer.Models
+﻿#pragma warning disable CS1572, CS1573
+
+namespace ComputeSharp.Shaders.Renderer.Models
 {
     /// <summary>
     /// A model that contains info on a shader typed resource field.

@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Company>Sergio Pedri</Company>
+    <Copyright>Copyright (c) 2021 Sergio Pedri</Copyright>
+  </PropertyGroup>
+</Project>
