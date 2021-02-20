@@ -64,7 +64,7 @@ namespace ComputeSharp.SourceGenerators
                     UsingDirective(IdentifierName("ComputeSharp.__Internals"))).AddAttributeLists(
                     AttributeList(SingletonSeparatedList(
                         Attribute(IdentifierName(typeof(IComputeShaderSourceAttribute).FullName)).AddArgumentListArguments(
-                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(structDeclarationSymbol.GetFullMetadataName()))),
+                            AttributeArgument(TypeOfExpression(IdentifierName(structDeclarationSymbol.ToDisplayString()))),
                             AttributeArgument(ArrayExpression(processedTypes)),
                             AttributeArgument(NestedArrayExpression(processedMembers)),
                             AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(entryPoint))),

@@ -19,7 +19,7 @@ namespace ComputeSharp.__Internals
         /// <summary>
         /// Creates a new <see cref="IComputeShaderSourceAttribute"/> instance with the specified parameters.
         /// </summary>
-        /// <param name="shaderTypeName">The fully qualified name of the shader type.</param>
+        /// <param name="shaderType">The type of the current shader.</param>
         /// <param name="types">The collection of custom types.</param>
         /// <param name="args">The mapped collection of shader fields.</param>
         /// <param name="executeMethod">The source code for the <see cref="IComputeShader.Execute"/> method.</param>
@@ -27,7 +27,7 @@ namespace ComputeSharp.__Internals
         /// <param name="constants">The collection of discovered constants.</param>
         /// <param name="sharedBuffers">The collection of group shared buffers.</param>
         public IComputeShaderSourceAttribute(
-            string shaderTypeName,
+            Type shaderType,
             string[] types,
             object[] args,
             string executeMethod,
@@ -35,7 +35,7 @@ namespace ComputeSharp.__Internals
             object[] constants,
             object[] sharedBuffers)
         {
-            ShaderTypeName = shaderTypeName;
+            ShaderType = shaderType;
             Types = types;
             Fields = args.Cast<string[]>().ToDictionary(static arg => arg[0], static arg => (arg[1], arg[2]));
             ExecuteMethod = executeMethod;
@@ -45,9 +45,9 @@ namespace ComputeSharp.__Internals
         }
 
         /// <summary>
-        /// Gets the fully qualified name of the shader type.
+        /// Gets the type of the current shader.
         /// </summary>
-        internal string ShaderTypeName { get; }
+        internal Type ShaderType { get; }
 
         /// <summary>
         /// Gets the collection of processed custom types.
@@ -87,18 +87,9 @@ namespace ComputeSharp.__Internals
         [Pure]
         internal static IComputeShaderSourceAttribute GetForType<T>()
         {
-            // Resolve the fully qualified name of the current type, without generic parameters.
-            // We can't use Type.FullName, as when T is a closed generic it includes the assembly too.
-            string fullname = typeof(T) switch
-            {
-                { IsGenericType: true } => typeof(T).GetGenericTypeDefinition().ToString().Split('[')[0],
-                _ => typeof(T).ToString()
-            };
+            Type shaderType = typeof(T);
 
-            return (
-                from attribute in typeof(T).Assembly.GetCustomAttributes<IComputeShaderSourceAttribute>()
-                where attribute.ShaderTypeName == fullname
-                select attribute).Single();
+            return shaderType.Assembly.GetCustomAttributes<IComputeShaderSourceAttribute>().Single(attribute => attribute.ShaderType == shaderType);
         }
     }
 }
