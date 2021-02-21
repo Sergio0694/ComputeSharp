@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Reflection;
+using ComputeSharp.Core.Intrinsics.Attributes;
 
 namespace ComputeSharp.SourceGenerators.Mappings
 {
@@ -10,19 +12,51 @@ namespace ComputeSharp.SourceGenerators.Mappings
     internal static class HlslKnownKeywords
     {
         /// <summary>
-        /// The mapping of known reserved HLSL keywords.
+        /// The mapping of known HLSL keywords.
         /// </summary>
-        private static readonly IReadOnlyCollection<string> KnownKeywords = new HashSet<string>(new[]
+        private static readonly IReadOnlyCollection<string> KnownKeywords = BuildKnownKeywordsMap();
+
+        /// <summary>
+        /// Builds the mapping of all known HLSL keywords.
+        /// </summary>
+        [Pure]
+        private static IReadOnlyCollection<string> BuildKnownKeywordsMap()
         {
-            "asm", "asm_fragment", "cbuffer", "centroid", "column_major",
-            "compile", "discard", "dword", "export", "fxgroup", "groupshared",
-            "half", "inline", "inout", "line", "lineadj", "linear", "matrix",
-            "nointerpolation", "noperspective", "NULL", "packoffset", "pass",
-            "pixelfragment", "point", "precise", "register", "row_major", "sample",
-            "sampler", "shared", "snorm", "stateblock", "stateblock_state", "tbuffer",
-            "technique", "typedef", "triangle", "triangleadj", "uniform", "unorm",
-            "unsigned", "vector", "vertexfragment", "zero"
-        });
+            // HLSL keywords
+            HashSet<string> knownKeywords = new(new[]
+            {
+                "asm", "asm_fragment", "cbuffer", "centroid", "column_major",
+                "compile", "discard", "dword", "export", "fxgroup", "groupshared",
+                "half", "inline", "inout", "line", "lineadj", "linear", "matrix",
+                "nointerpolation", "noperspective", "NULL", "packoffset", "pass",
+                "pixelfragment", "point", "precise", "register", "row_major", "sample",
+                "sampler", "shared", "snorm", "stateblock", "stateblock_state", "tbuffer",
+                "technique", "typedef", "triangle", "triangleadj", "uniform", "unorm",
+                "unsigned", "vector", "vertexfragment", "zero"
+            });
+
+            // Dispatch type names
+            knownKeywords.Add(nameof(ThreadIds));
+            knownKeywords.Add(nameof(GroupIds));
+            knownKeywords.Add(nameof(GroupSize));
+            knownKeywords.Add(nameof(WarpIds));
+
+            // HLSL intrinsics method names
+            foreach (var method in
+                from method in typeof(Hlsl).GetMethods(BindingFlags.Public | BindingFlags.Static)
+                group method by method.Name
+                into groups
+                select (Name: groups.Key, MethodInfo: groups.First()))
+            {
+                string hlslName = method.MethodInfo.GetCustomAttribute<PreserveMemberNameAttribute>() != null
+                    ? method.Name
+                    : method.Name.ToLowerInvariant();
+
+                knownKeywords.Add(hlslName);
+            }
+
+            return knownKeywords;
+        }
 
         /// <summary>
         /// Tries to get the mapped HLSL-compatible identifier name for the input identifier name.
