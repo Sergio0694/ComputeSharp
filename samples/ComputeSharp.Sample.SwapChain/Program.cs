@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using ComputeSharp.Interop;
-using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
 
@@ -70,7 +69,7 @@ namespace ComputeSharp.Sample.SwapChain
         /// <summary>
         /// The <see cref="ReadWriteTexture2D{T, TPixel}"/> instance used to prepare frames to display.
         /// </summary>
-        private ReadWriteTexture2D<Rgba32, Float4> texture = null!;
+        private ReadWriteTexture2D<Rgba32, Float4>? texture;
 
         public override string Title => "Fractal tiles";
 
@@ -176,6 +175,13 @@ namespace ComputeSharp.Sample.SwapChain
 
             // Close the command list to prepare it for future use
             this.d3D12GraphicsCommandList.Get()->Close();
+        }
+
+        public override unsafe void OnResize(Size size)
+        {
+            this.texture?.Dispose();
+
+            D3D12_RESOURCE_DESC d3D12Resource0Description = this.d3D12Resource0.Get()->GetDesc();
 
             // Create the 2D texture to use to generate frames to display
             this.texture = Gpu.Default.AllocateReadWriteTexture2D<Rgba32, Float4>(
@@ -183,14 +189,10 @@ namespace ComputeSharp.Sample.SwapChain
                 (int)d3D12Resource0Description.Height);
         }
 
-        public override void OnResize(Size size)
-        {
-        }
-
         public override unsafe void OnUpdate(TimeSpan time)
         {
             // Generate the new frame
-            Gpu.Default.For(texture.Width, texture.Height, new FractalTiling(texture, (float)time.TotalSeconds));
+            Gpu.Default.For(texture!.Width, texture.Height, new FractalTiling(texture, (float)time.TotalSeconds));
 
             using ComPtr<ID3D12Resource> d3D12Resource = default;
 
@@ -257,10 +259,6 @@ namespace ComputeSharp.Sample.SwapChain
 
             // Present the new frame
             this.dxgiSwapChain1.Get()->Present(0, 0);
-        }
-
-        public override void Dispose()
-        {
         }
     }
 

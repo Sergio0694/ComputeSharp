@@ -9,7 +9,7 @@ using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Sample.SwapChain
 {
-    internal abstract class Win32Application : IDisposable
+    internal abstract class Win32Application
     {
         public abstract string Title { get; }
 
@@ -18,8 +18,6 @@ namespace ComputeSharp.Sample.SwapChain
         public abstract void OnResize(Size size);
 
         public abstract void OnUpdate(TimeSpan time);
-
-        public abstract void Dispose();
     }
 
     /// <summary>
@@ -157,8 +155,6 @@ namespace ComputeSharp.Sample.SwapChain
                     Thread.Sleep(100);
                 }
             }
-
-            application.Dispose();
 
             // Return this part of the WM_QUIT message to Windows
             return (int)msg.wParam;
