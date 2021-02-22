@@ -207,7 +207,8 @@ namespace ComputeSharp.Sample.SwapChain
 
             this.currentBufferIndex ^= 1;
 
-            // Reset the command list to reuse
+            // Reset the command list and command allocator
+            this.d3D12CommandAllocator.Get()->Reset();
             this.d3D12GraphicsCommandList.Get()->Reset(this.d3D12CommandAllocator.Get(), null);
 
             D3D12_RESOURCE_BARRIER* d3D12ResourceBarriers = stackalloc D3D12_RESOURCE_BARRIER[]
