@@ -102,7 +102,7 @@ namespace ComputeSharp.Sample.SwapChain
                 dxgiSwapChainDesc1.AlphaMode = DXGI_ALPHA_MODE.DXGI_ALPHA_MODE_IGNORE;
                 dxgiSwapChainDesc1.BufferCount = 2;
                 dxgiSwapChainDesc1.Flags = 0;
-                dxgiSwapChainDesc1.Format = DXGI_FORMAT.DXGI_FORMAT_B8G8R8A8_UNORM;
+                dxgiSwapChainDesc1.Format = DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM;
                 dxgiSwapChainDesc1.Width = 0;
                 dxgiSwapChainDesc1.Height = 0;
                 dxgiSwapChainDesc1.SampleDesc = new DXGI_SAMPLE_DESC(count: 1, quality: 0);
@@ -133,6 +133,76 @@ namespace ComputeSharp.Sample.SwapChain
             _ = this.dxgiSwapChain1.CopyTo(dxgiSwapChain3.GetAddressOf());
 
             this.currentBufferIndex = dxgiSwapChain3.Get()->GetCurrentBackBufferIndex();
+
+            // ==============
+            // SAMPLE
+            // ==============
+
+            var desc = this.d3D12Resource0.Get()->GetDesc();
+
+            int width = (int)desc.Width;
+            int height = (int)desc.Height;
+
+            using ReadWriteTexture2D<Rgba32, Float4> texture = Gpu.Default.AllocateReadWriteTexture2D<Rgba32, Float4>(width, height);
+
+            Gpu.Default.For(texture.Width, texture.Height, new FractalTiling(texture, 0));
+
+            ID3D12Resource* resource;
+
+            _ = InteropServices.TryGetID3D12Resource(texture, FX.__uuidof<ID3D12Resource>(), (void**)&resource);
+
+            using ComPtr<ID3D12CommandAllocator> d3D12CommandAllocator = default;
+
+            this.d3D12Device.Get()->CreateCommandAllocator(
+                 D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_DIRECT,
+                 FX.__uuidof<ID3D12CommandAllocator>(),
+                 (void**)d3D12CommandAllocator.GetAddressOf());
+
+            using ComPtr<ID3D12GraphicsCommandList> d3D12GraphicsCommandList = default;
+
+            this.d3D12Device.Get()->CreateCommandList(
+                0,
+                D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_DIRECT,
+                d3D12CommandAllocator,
+                null,
+                FX.__uuidof<ID3D12GraphicsCommandList>(),
+                (void**)d3D12GraphicsCommandList.GetAddressOf());
+
+            D3D12_RESOURCE_BARRIER d3D12ResourceBarrierBefore = D3D12_RESOURCE_BARRIER.InitTransition(
+                resource,
+                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COPY_SOURCE);
+
+            d3D12GraphicsCommandList.Get()->ResourceBarrier(1, &d3D12ResourceBarrierBefore);
+
+            D3D12_RESOURCE_BARRIER d3D12ResourceBarrierBefore0 = D3D12_RESOURCE_BARRIER.InitTransition(
+                this.d3D12Resource0.Get(),
+                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COMMON,
+                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COPY_DEST);
+
+            d3D12GraphicsCommandList.Get()->ResourceBarrier(1, &d3D12ResourceBarrierBefore0);
+
+            d3D12GraphicsCommandList.Get()->CopyResource(this.d3D12Resource0.Get(), resource);
+
+            D3D12_RESOURCE_BARRIER d3D12ResourceBarrierAfter = D3D12_RESOURCE_BARRIER.InitTransition(
+                resource,
+                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COPY_SOURCE,
+                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+
+            d3D12GraphicsCommandList.Get()->ResourceBarrier(1, &d3D12ResourceBarrierAfter);
+
+            D3D12_RESOURCE_BARRIER d3D12ResourceBarrierAfter0 = D3D12_RESOURCE_BARRIER.InitTransition(
+                this.d3D12Resource0.Get(),
+                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COPY_DEST,
+                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COMMON);
+
+            d3D12GraphicsCommandList.Get()->ResourceBarrier(1, &d3D12ResourceBarrierAfter0);
+
+            d3D12GraphicsCommandList.Get()->Close();
+
+            this.d3D12CommandQueue.Get()->ExecuteCommandLists(1, (ID3D12CommandList**)d3D12GraphicsCommandList.GetAddressOf());
+
+            this.dxgiSwapChain1.Get()->Present(0, 0);
         }
 
         public override void OnResize(Size size)
@@ -145,6 +215,41 @@ namespace ComputeSharp.Sample.SwapChain
 
         public override void Dispose()
         {
+        }
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct FractalTiling : IComputeShader
+    {
+        public readonly IReadWriteTexture2D<Float4> texture;
+        public readonly float time;
+
+        /// <inheritdoc/>
+        public void Execute()
+        {
+            Float2 position = ((Float2)(256 * ThreadIds.XY)) / texture.Width + time;
+            Float4 color = 0;
+
+            for (int i = 0; i < 6; i++)
+            {
+                Float2 a = Hlsl.Floor(position);
+                Float2 b = Hlsl.Frac(position);
+                Float4 w = Hlsl.Frac(
+                    (Hlsl.Sin(a.X * 7 + 31.0f * a.Y + 0.01f * time) +
+                     new Float4(0.035f, 0.01f, 0, 0.7f))
+                     * 13.545317f);
+
+                color.XYZ += w.XYZ *
+                       2.0f * Hlsl.SmoothStep(0.45f, 0.55f, w.W) *
+                       Hlsl.Sqrt(16.0f * b.X * b.Y * (1.0f - b.X) * (1.0f - b.Y));
+
+                position /= 2.0f;
+                color /= 2.0f;
+            }
+
+            color.XYZ = Hlsl.Pow(color.XYZ, new Float3(0.7f, 0.8f, 0.5f));
+
+            texture[ThreadIds.XY] = color;
         }
     }
 }
