@@ -236,7 +236,7 @@ namespace ComputeSharp.Graphics.Extensions
                 d3D12HeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
             }
 
-            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex2D(dxgiFormat, width, height, flags: d3D12ResourceFlags);
+            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex2D(dxgiFormat, width, height, mipLevels: 1, flags: d3D12ResourceFlags);
 
             d3D12Device.CreateCommittedResource(
                 &d3D12HeapProperties,
@@ -302,7 +302,7 @@ namespace ComputeSharp.Graphics.Extensions
                 d3D12HeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
             }
 
-            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(dxgiFormat, width, height, depth, flags: d3D12ResourceFlags);
+            D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(dxgiFormat, width, height, depth, mipLevels: 1, flags: d3D12ResourceFlags);
 
             d3D12Device.CreateCommittedResource(
                 &d3D12HeapProperties,
