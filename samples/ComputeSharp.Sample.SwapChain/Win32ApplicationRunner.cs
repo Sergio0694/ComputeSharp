@@ -27,15 +27,55 @@ namespace ComputeSharp.Sample.SwapChain
     /// </summary>
     internal unsafe static class Win32ApplicationRunner
     {
+        /// <summary>
+        /// Whether or not a resize operation is in progress.
+        /// </summary>
         private static bool isResizing = false;
+
+        /// <summary>
+        /// Whether or not the application is currently paused.
+        /// </summary>
         private static bool isPaused = false;
+
+        /// <summary>
+        /// The <see cref="HWND"/> for the application window.
+        /// </summary>
         private static HWND hwnd;
+
+        /// <summary>
+        /// The current size of the application window.
+        /// </summary>
         private static Size windowSize;
+
+        /// <summary>
+        /// A <see cref="Stopwatch"/> instance used to track the elapsed time for the application.
+        /// </summary>
         private static Stopwatch stopwatch = null!;
+
+        /// <summary>
+        /// The application being run.
+        /// </summary>
         private static Win32Application application = null!;
+
+        /// <summary>
+        /// The number of elapsed milliseconds since the window title was last updated.
+        /// </summary>
         private static long elapsedMillisecondsForLastTitleUpdate;
+
+        /// <summary>
+        /// The number of elapsed frames since the window title was last updated.
+        /// </summary>
         private static int elapsedFramesSinceLastTitleUpdate;
 
+        /// <summary>
+        /// Runs a specified application and starts the main loop to update its state.
+        /// This is the entry point for a given application of type <typeparamref name="T"/>, and it should be
+        /// called as soon as the process is launched, excluding any other additional initialization needed.
+        /// <para>To launch an application, simply add this line to the project being used:</para>
+        /// <c>Win32ApplicationRunner.Run&lt;MyApplication>();</c>
+        /// </summary>
+        /// <typeparam name="T">The type of application being launched.</typeparam>
+        /// <returns>The exit code for the application.</returns>
         public static int Run<T>()
             where T : Win32Application, new()
         {
@@ -149,6 +189,8 @@ namespace ComputeSharp.Sample.SwapChain
 
             // Update the application state
             application.OnUpdate(stopwatch.Elapsed);
+
+            elapsedFramesSinceLastTitleUpdate++;
         }
 
         /// <summary>
@@ -186,7 +228,7 @@ namespace ComputeSharp.Sample.SwapChain
 
                         if (isPaused)
                         {
-                                FX.SetCapture(Win32ApplicationRunner.hwnd);
+                            FX.SetCapture(hwnd);
                         }
                         else
                         {
