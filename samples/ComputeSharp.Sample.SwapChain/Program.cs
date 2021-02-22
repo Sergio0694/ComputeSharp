@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using ComputeSharp.Interop;
+using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
 
@@ -34,7 +35,17 @@ namespace ComputeSharp.Sample.SwapChain
         /// <summary>
         /// The next fence value for graphics operations using <see cref="d3D12CommandQueue"/>.
         /// </summary>
-        //private ulong nextD3D12FenceValue = 1;
+        private ulong nextD3D12FenceValue = 1;
+
+        /// <summary>
+        /// The <see cref="ID3D12CommandAllocator"/> object to create command lists.
+        /// </summary>
+        private ComPtr<ID3D12CommandAllocator> d3D12CommandAllocator;
+
+        /// <summary>
+        /// The <see cref="ID3D12GraphicsCommandList"/> instance used to copy data to the back buffers.
+        /// </summary>
+        private ComPtr<ID3D12GraphicsCommandList> d3D12GraphicsCommandList;
 
         /// <summary>
         /// The <see cref="IDXGISwapChain1"/> instance used to display content onto the target window.
@@ -55,6 +66,11 @@ namespace ComputeSharp.Sample.SwapChain
         /// The index of the next buffer that can be used to present content.
         /// </summary>
         private uint currentBufferIndex;
+
+        /// <summary>
+        /// The <see cref="ReadWriteTexture2D{T, TPixel}"/> instance used to prepare frames to display.
+        /// </summary>
+        private ReadWriteTexture2D<Rgba32, Float4> texture = null!;
 
         public override string Title => "Fractal tiles";
 
@@ -127,90 +143,119 @@ namespace ComputeSharp.Sample.SwapChain
                 _ = dxgiSwapChain1.Get()->GetBuffer(1, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1);
             }
 
-            // Get the index of the current buffer
-            using ComPtr<IDXGISwapChain3> dxgiSwapChain3 = default;
+            // Get the index of the initial back buffer
+            using (ComPtr<IDXGISwapChain3> dxgiSwapChain3 = default)
+            {
+                _ = this.dxgiSwapChain1.CopyTo(dxgiSwapChain3.GetAddressOf());
 
-            _ = this.dxgiSwapChain1.CopyTo(dxgiSwapChain3.GetAddressOf());
+                this.currentBufferIndex = dxgiSwapChain3.Get()->GetCurrentBackBufferIndex();
+            }
 
-            this.currentBufferIndex = dxgiSwapChain3.Get()->GetCurrentBackBufferIndex();
+            D3D12_RESOURCE_DESC d3D12Resource0Description = this.d3D12Resource0.Get()->GetDesc();
 
-            // ==============
-            // SAMPLE
-            // ==============
+            // Create the command allocator to use
+            fixed (ID3D12CommandAllocator** d3D12CommandAllocator = this.d3D12CommandAllocator)
+            {
+                this.d3D12Device.Get()->CreateCommandAllocator(
+                    D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_DIRECT,
+                    FX.__uuidof<ID3D12CommandAllocator>(),
+                    (void**)d3D12CommandAllocator);
+            }
 
-            var desc = this.d3D12Resource0.Get()->GetDesc();
+            // Create the reusable command list to copy data to the back buffers
+            fixed (ID3D12GraphicsCommandList** d3D12GraphicsCommandList = this.d3D12GraphicsCommandList)
+            {
+                this.d3D12Device.Get()->CreateCommandList(
+                    0,
+                    D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_DIRECT,
+                    d3D12CommandAllocator,
+                    null,
+                    FX.__uuidof<ID3D12GraphicsCommandList>(),
+                    (void**)d3D12GraphicsCommandList);
+            }
 
-            int width = (int)desc.Width;
-            int height = (int)desc.Height;
+            // Close the command list to prepare it for future use
+            this.d3D12GraphicsCommandList.Get()->Close();
 
-            using ReadWriteTexture2D<Rgba32, Float4> texture = Gpu.Default.AllocateReadWriteTexture2D<Rgba32, Float4>(width, height);
-
-            Gpu.Default.For(texture.Width, texture.Height, new FractalTiling(texture, 0));
-
-            ID3D12Resource* resource;
-
-            _ = InteropServices.TryGetID3D12Resource(texture, FX.__uuidof<ID3D12Resource>(), (void**)&resource);
-
-            using ComPtr<ID3D12CommandAllocator> d3D12CommandAllocator = default;
-
-            this.d3D12Device.Get()->CreateCommandAllocator(
-                 D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_DIRECT,
-                 FX.__uuidof<ID3D12CommandAllocator>(),
-                 (void**)d3D12CommandAllocator.GetAddressOf());
-
-            using ComPtr<ID3D12GraphicsCommandList> d3D12GraphicsCommandList = default;
-
-            this.d3D12Device.Get()->CreateCommandList(
-                0,
-                D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_DIRECT,
-                d3D12CommandAllocator,
-                null,
-                FX.__uuidof<ID3D12GraphicsCommandList>(),
-                (void**)d3D12GraphicsCommandList.GetAddressOf());
-
-            D3D12_RESOURCE_BARRIER d3D12ResourceBarrierBefore = D3D12_RESOURCE_BARRIER.InitTransition(
-                resource,
-                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
-                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COPY_SOURCE);
-
-            d3D12GraphicsCommandList.Get()->ResourceBarrier(1, &d3D12ResourceBarrierBefore);
-
-            D3D12_RESOURCE_BARRIER d3D12ResourceBarrierBefore0 = D3D12_RESOURCE_BARRIER.InitTransition(
-                this.d3D12Resource0.Get(),
-                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COMMON,
-                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COPY_DEST);
-
-            d3D12GraphicsCommandList.Get()->ResourceBarrier(1, &d3D12ResourceBarrierBefore0);
-
-            d3D12GraphicsCommandList.Get()->CopyResource(this.d3D12Resource0.Get(), resource);
-
-            D3D12_RESOURCE_BARRIER d3D12ResourceBarrierAfter = D3D12_RESOURCE_BARRIER.InitTransition(
-                resource,
-                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COPY_SOURCE,
-                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
-
-            d3D12GraphicsCommandList.Get()->ResourceBarrier(1, &d3D12ResourceBarrierAfter);
-
-            D3D12_RESOURCE_BARRIER d3D12ResourceBarrierAfter0 = D3D12_RESOURCE_BARRIER.InitTransition(
-                this.d3D12Resource0.Get(),
-                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COPY_DEST,
-                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COMMON);
-
-            d3D12GraphicsCommandList.Get()->ResourceBarrier(1, &d3D12ResourceBarrierAfter0);
-
-            d3D12GraphicsCommandList.Get()->Close();
-
-            this.d3D12CommandQueue.Get()->ExecuteCommandLists(1, (ID3D12CommandList**)d3D12GraphicsCommandList.GetAddressOf());
-
-            this.dxgiSwapChain1.Get()->Present(0, 0);
+            // Create the 2D texture to use to generate frames to display
+            this.texture = Gpu.Default.AllocateReadWriteTexture2D<Rgba32, Float4>(
+                (int)d3D12Resource0Description.Width,
+                (int)d3D12Resource0Description.Height);
         }
 
         public override void OnResize(Size size)
         {
         }
 
-        public override void OnUpdate(TimeSpan time)
+        public override unsafe void OnUpdate(TimeSpan time)
         {
+            // Generate the new frame
+            Gpu.Default.For(texture.Width, texture.Height, new FractalTiling(texture, (float)time.TotalSeconds));
+
+            using ComPtr<ID3D12Resource> d3D12Resource = default;
+
+            // Get the underlying ID3D12Resource pointer for the texture
+            _ = InteropServices.TryGetID3D12Resource(texture, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
+
+            // Get the target back buffer to update
+            ID3D12Resource* d3D12ResourceBackBuffer = this.currentBufferIndex switch
+            {
+                0 => this.d3D12Resource0.Get(),
+                1 => this.d3D12Resource1.Get(),
+                _ => null
+            };
+
+            this.currentBufferIndex ^= 1;
+
+            // Reset the command list to reuse
+            this.d3D12GraphicsCommandList.Get()->Reset(this.d3D12CommandAllocator.Get(), null);
+
+            D3D12_RESOURCE_BARRIER* d3D12ResourceBarriers = stackalloc D3D12_RESOURCE_BARRIER[]
+            {
+                D3D12_RESOURCE_BARRIER.InitTransition(
+                    d3D12Resource.Get(),
+                    D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+                    D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COPY_SOURCE),
+                D3D12_RESOURCE_BARRIER.InitTransition(
+                    d3D12ResourceBackBuffer,
+                    D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COMMON,
+                    D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COPY_DEST)
+            };
+
+            // Transition the resources to COPY_DEST and COPY_SOURCE respectively
+            d3D12GraphicsCommandList.Get()->ResourceBarrier(2, d3D12ResourceBarriers);
+
+            // Copy the generated frame to the target back buffer
+            d3D12GraphicsCommandList.Get()->CopyResource(d3D12ResourceBackBuffer, d3D12Resource.Get());
+
+            d3D12ResourceBarriers[0] = D3D12_RESOURCE_BARRIER.InitTransition(
+                d3D12Resource.Get(),
+                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COPY_SOURCE,
+                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+
+            d3D12ResourceBarriers[1] = D3D12_RESOURCE_BARRIER.InitTransition(
+                d3D12ResourceBackBuffer,
+                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COPY_DEST,
+                D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COMMON);
+
+            // Transition the resources back to COMMON and UNORDERED_ACCESS respectively
+            d3D12GraphicsCommandList.Get()->ResourceBarrier(2, d3D12ResourceBarriers);
+
+            d3D12GraphicsCommandList.Get()->Close();
+
+            // Execute the command list to perform the copy
+            this.d3D12CommandQueue.Get()->ExecuteCommandLists(1, (ID3D12CommandList**)d3D12GraphicsCommandList.GetAddressOf());
+            this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), this.nextD3D12FenceValue);
+
+            if (this.nextD3D12FenceValue > this.d3D12Fence.Get()->GetCompletedValue())
+            {
+                this.d3D12Fence.Get()->SetEventOnCompletion(this.nextD3D12FenceValue, default);
+            }
+
+            this.nextD3D12FenceValue++;
+
+            // Present the new frame
+            this.dxgiSwapChain1.Get()->Present(0, 0);
         }
 
         public override void Dispose()
