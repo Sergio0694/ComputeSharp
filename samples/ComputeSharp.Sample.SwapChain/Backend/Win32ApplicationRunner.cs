@@ -7,19 +7,8 @@ using System.Threading;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
 
-namespace ComputeSharp.Sample.SwapChain
+namespace ComputeSharp.Sample.SwapChain.Backend
 {
-    internal abstract class Win32Application
-    {
-        public abstract string Title { get; }
-
-        public abstract void OnInitialize(Size size, HWND hwnd);
-
-        public abstract void OnResize(Size size);
-
-        public abstract void OnUpdate(TimeSpan time);
-    }
-
     /// <summary>
     /// A helper class to manage the creation and execution of Win32 applications.
     /// </summary>
@@ -74,10 +63,9 @@ namespace ComputeSharp.Sample.SwapChain
         /// </summary>
         /// <typeparam name="T">The type of application being launched.</typeparam>
         /// <returns>The exit code for the application.</returns>
-        public static int Run<T>()
-            where T : Win32Application, new()
+        public static int Run(Win32Application application)
         {
-            application = new T();
+            Win32ApplicationRunner.application = application;
 
             IntPtr hInstance = FX.GetModuleHandleW(null);
             uint width = 1280;
