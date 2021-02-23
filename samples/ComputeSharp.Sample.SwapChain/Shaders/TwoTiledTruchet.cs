@@ -120,7 +120,6 @@
             int height = texture.Height;
 
             Float2 uv = ((Float2)ThreadIds.XY - (Float2)(new Int2(width, height)) * 0.5f) / height;
-
             float gSc = 7.0f;
             Float2 p = uv * gSc - new Float2(-1, -0.5f) * time / 2.0f;
             float sf = 2.0f / height * gSc;
