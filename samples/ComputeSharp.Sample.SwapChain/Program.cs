@@ -7,7 +7,7 @@ namespace ComputeSharp.Sample.SwapChain
     {
         static void Main(string[] args)
         {
-            Win32ApplicationRunner.Run(new SwapChainApplication<FractalTiling>(static (texture, time) => new FractalTiling(texture, (float)time.TotalSeconds)));
+            Win32ApplicationRunner.Run(new SwapChainApplication<TwoTiledTruchet>(static (texture, time) => new(texture, (float)time.TotalSeconds)));
         }
     }
 }
