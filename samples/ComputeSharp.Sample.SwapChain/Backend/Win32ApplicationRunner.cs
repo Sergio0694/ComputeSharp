@@ -111,6 +111,14 @@ namespace ComputeSharp.Sample.SwapChain.Backend
                     hInstance,
                     (void*)GCHandle.ToIntPtr(GCHandle.Alloc(application))
                 );
+
+                MARGINS margins = default;
+                margins.cxLeftWidth = -1;
+                margins.cxRightWidth = -1;
+                margins.cyTopHeight = -1;
+                margins.cyBottomHeight = -1;
+
+                _ = FX.DwmExtendFrameIntoClientArea(hwnd, &margins);
             }
 
             windowSize = new Size((int)height, (int)width);
@@ -241,6 +249,8 @@ namespace ComputeSharp.Sample.SwapChain.Backend
 
                     return 0;
                 }
+
+                // Size update
                 case FX.WM_SIZE:
                 {
                     uint size = (uint)lParam;
@@ -251,6 +261,72 @@ namespace ComputeSharp.Sample.SwapChain.Backend
                     {
                         application.OnResize(windowSize);
                     }
+
+                    return 0;
+                }
+
+                // Size and position of the window (needed to enable the borderless mode)
+                case FX.WM_NCCALCSIZE:
+                {
+                    return 0;
+                }
+
+                // Enable dragging the window
+                case FX.WM_NCHITTEST:
+                {
+                    POINT point;
+                    RECT rect;
+
+                    _ = FX.GetCursorPos(&point);
+                    _ = FX.GetWindowRect(hwnd, &rect);
+
+                    bool
+                        isAtTop = Math.Abs(point.y - rect.top) < 12,
+                        isAtRight = Math.Abs(point.x - rect.right) < 12,
+                        isAtBottom = Math.Abs(point.y - rect.bottom) < 12,
+                        isAtLeft = Math.Abs(point.x - rect.left) < 12;
+
+                    if (isAtTop)
+                    {
+                        if (isAtRight) return FX.HTTOPRIGHT;
+                        if (isAtLeft) return FX.HTTOPLEFT;
+                        return FX.HTTOP;
+                    }
+
+                    if (isAtRight)
+                    {
+                        if (isAtTop) return FX.HTTOPRIGHT;
+                        if (isAtBottom) return FX.HTBOTTOMRIGHT;
+                        return FX.HTRIGHT;
+                    }
+
+                    if (isAtBottom)
+                    {
+                        if (isAtRight) return FX.HTBOTTOMRIGHT;
+                        if (isAtLeft) return FX.HTBOTTOMLEFT;
+                        return FX.HTBOTTOM;
+                    }
+
+                    if (isAtLeft)
+                    {
+                        if (isAtTop) return FX.HTTOPLEFT;
+                        if (isAtBottom) return FX.HTBOTTOMLEFT;
+                        return FX.HTLEFT;
+                    }
+
+                    return FX.HTCAPTION;
+                }
+
+                // Restore the drop shadow
+                case FX.WM_DWMCOMPOSITIONCHANGED:
+                {
+                    MARGINS margins = default;
+                    margins.cxLeftWidth = -1;
+                    margins.cxRightWidth = -1;
+                    margins.cyTopHeight = -1;
+                    margins.cyBottomHeight = -1;
+
+                    _ = FX.DwmExtendFrameIntoClientArea(hwnd, &margins);
 
                     return 0;
                 }
