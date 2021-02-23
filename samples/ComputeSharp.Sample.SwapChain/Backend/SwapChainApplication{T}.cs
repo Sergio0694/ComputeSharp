@@ -143,24 +143,6 @@ namespace ComputeSharp.Sample.SwapChain.Backend
                     dxgiSwapChain1);
             }
 
-            // Retrieve the back buffers for the swap chain
-            fixed (ID3D12Resource** d3D12Resource0 = this.d3D12Resource0)
-            fixed (ID3D12Resource** d3D12Resource1 = this.d3D12Resource1)
-            {
-                _ = dxgiSwapChain1.Get()->GetBuffer(0, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0);
-                _ = dxgiSwapChain1.Get()->GetBuffer(1, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1);
-            }
-
-            // Get the index of the initial back buffer
-            using (ComPtr<IDXGISwapChain3> dxgiSwapChain3 = default)
-            {
-                _ = this.dxgiSwapChain1.CopyTo(dxgiSwapChain3.GetAddressOf());
-
-                this.currentBufferIndex = dxgiSwapChain3.Get()->GetCurrentBackBufferIndex();
-            }
-
-            D3D12_RESOURCE_DESC d3D12Resource0Description = this.d3D12Resource0.Get()->GetDesc();
-
             // Create the command allocator to use
             fixed (ID3D12CommandAllocator** d3D12CommandAllocator = this.d3D12CommandAllocator)
             {
@@ -189,6 +171,36 @@ namespace ComputeSharp.Sample.SwapChain.Backend
         /// <inheritdoc/>
         public override unsafe void OnResize(Size size)
         {
+            this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), this.nextD3D12FenceValue);
+
+            // Wait for the fence again to ensure there are no pending operations
+            this.d3D12Fence.Get()->SetEventOnCompletion(this.nextD3D12FenceValue, default);
+
+            this.nextD3D12FenceValue++;
+
+            // Dispose the old buffers before resizing the buffer
+            this.d3D12Resource0.Dispose();
+            this.d3D12Resource1.Dispose();
+
+            // Resize the swap chain buffers
+            this.dxgiSwapChain1.Get()->ResizeBuffers(0, 0, 0, DXGI_FORMAT.DXGI_FORMAT_UNKNOWN, 0);
+
+            // Get the index of the initial back buffer
+            using (ComPtr<IDXGISwapChain3> dxgiSwapChain3 = default)
+            {
+                _ = this.dxgiSwapChain1.CopyTo(dxgiSwapChain3.GetAddressOf());
+
+                this.currentBufferIndex = dxgiSwapChain3.Get()->GetCurrentBackBufferIndex();
+            }
+
+            // Retrieve the back buffers for the swap chain
+            fixed (ID3D12Resource** d3D12Resource0 = this.d3D12Resource0)
+            fixed (ID3D12Resource** d3D12Resource1 = this.d3D12Resource1)
+            {
+                _ = dxgiSwapChain1.Get()->GetBuffer(0, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0);
+                _ = dxgiSwapChain1.Get()->GetBuffer(1, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1);
+            }
+
             this.texture?.Dispose();
 
             D3D12_RESOURCE_DESC d3D12Resource0Description = this.d3D12Resource0.Get()->GetDesc();
@@ -261,15 +273,15 @@ namespace ComputeSharp.Sample.SwapChain.Backend
             this.d3D12CommandQueue.Get()->ExecuteCommandLists(1, (ID3D12CommandList**)d3D12GraphicsCommandList.GetAddressOf());
             this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), this.nextD3D12FenceValue);
 
+            // Present the new frame
+            this.dxgiSwapChain1.Get()->Present(0, 0);
+
             if (this.nextD3D12FenceValue > this.d3D12Fence.Get()->GetCompletedValue())
             {
                 this.d3D12Fence.Get()->SetEventOnCompletion(this.nextD3D12FenceValue, default);
             }
 
             this.nextD3D12FenceValue++;
-
-            // Present the new frame
-            this.dxgiSwapChain1.Get()->Present(0, 0);
         }
     }
 }
