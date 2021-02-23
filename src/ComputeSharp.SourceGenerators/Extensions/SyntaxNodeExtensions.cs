@@ -58,6 +58,12 @@ namespace ComputeSharp.SourceGenerators.Extensions
                 _ => semanticModel.GetTypeInfo(sourceType).Type!
             };
 
+            // Do nothing if the type is just void
+            if (typeSymbol.SpecialType == SpecialType.System_Void)
+            {
+                return node;
+            }
+
             string typeName = typeSymbol.ToDisplayString(ISymbolExtensions.FullyQualifiedWithoutGlobalFormat);
 
             discoveredTypes.Add((INamedTypeSymbol)typeSymbol);

@@ -153,7 +153,9 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             this.currentMethod = node;
 
-            var updatedNode = (MethodDeclarationSyntax?)base.Visit(node);
+            var updatedNode = (MethodDeclarationSyntax?)base.Visit(node)!;
+
+            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.ReturnType, node!.ReturnType, this.semanticModel, this.discoveredTypes);
 
             if (node!.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword)))
             {
@@ -357,6 +359,8 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 .WithBlockBody()
                 .WithAttributeLists(List<AttributeListSyntax>())
                 .WithIdentifier(Identifier($"__{this.currentMethod!.Identifier.Text}__{node.Identifier.Text}"));
+
+            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.ReturnType, node!.ReturnType, this.semanticModel, this.discoveredTypes);
 
             if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword)))
             {
