@@ -582,6 +582,12 @@ namespace ComputeSharp
         public static explicit operator Float3(Double3 xyz) => throw new InvalidExecutionContextException($"{nameof(Double3)}.({nameof(Float3)})");
 
         /// <summary>
+        /// Negates a <see cref="Double3"/> value.
+        /// </summary>
+        /// <param name="xyz">The <see cref="Double3"/> value to negate.</param>
+        public static Double3 operator -(Double3 xyz) => throw new InvalidExecutionContextException($"{nameof(Double3)}.-");
+
+        /// <summary>
         /// Sums two <see cref="Double3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double3"/> value to sum.</param>

@@ -4000,6 +4000,12 @@ namespace ComputeSharp
         public static explicit operator UInt4(Float4 xyzw) => throw new InvalidExecutionContextException($"{nameof(Float4)}.({nameof(UInt4)})");
 
         /// <summary>
+        /// Negates a <see cref="Float4"/> value.
+        /// </summary>
+        /// <param name="xyzw">The <see cref="Float4"/> value to negate.</param>
+        public static Float4 operator -(Float4 xyzw) => throw new InvalidExecutionContextException($"{nameof(Float4)}.-");
+
+        /// <summary>
         /// Sums two <see cref="Float4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Float4"/> value to sum.</param>

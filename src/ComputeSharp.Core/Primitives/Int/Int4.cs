@@ -3978,13 +3978,19 @@ namespace ComputeSharp
         /// Casts a <see cref="Int4"/> value to a <see cref="Float4"/> one.
         /// </summary>
         /// <param name="xyzw">The input <see cref="Int4"/> value to cast.</param>
-        public static explicit operator Float4(Int4 xyzw) => throw new InvalidExecutionContextException($"{nameof(Int4)}.({nameof(Float4)})");
+        public static implicit operator Float4(Int4 xyzw) => throw new InvalidExecutionContextException($"{nameof(Int4)}.({nameof(Float4)})");
 
         /// <summary>
         /// Casts a <see cref="Int4"/> value to a <see cref="Double4"/> one.
         /// </summary>
         /// <param name="xyzw">The input <see cref="Int4"/> value to cast.</param>
-        public static explicit operator Double4(Int4 xyzw) => throw new InvalidExecutionContextException($"{nameof(Int4)}.({nameof(Double4)})");
+        public static implicit operator Double4(Int4 xyzw) => throw new InvalidExecutionContextException($"{nameof(Int4)}.({nameof(Double4)})");
+
+        /// <summary>
+        /// Negates a <see cref="Int4"/> value.
+        /// </summary>
+        /// <param name="xyzw">The <see cref="Int4"/> value to negate.</param>
+        public static Int4 operator -(Int4 xyzw) => throw new InvalidExecutionContextException($"{nameof(Int4)}.-");
 
         /// <summary>
         /// Sums two <see cref="Int4"/> values.

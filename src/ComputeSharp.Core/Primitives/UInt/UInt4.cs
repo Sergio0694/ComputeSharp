@@ -3978,13 +3978,13 @@ namespace ComputeSharp
         /// Casts a <see cref="UInt4"/> value to a <see cref="Float4"/> one.
         /// </summary>
         /// <param name="xyzw">The input <see cref="UInt4"/> value to cast.</param>
-        public static explicit operator Float4(UInt4 xyzw) => throw new InvalidExecutionContextException($"{nameof(UInt4)}.({nameof(Float4)})");
+        public static implicit operator Float4(UInt4 xyzw) => throw new InvalidExecutionContextException($"{nameof(UInt4)}.({nameof(Float4)})");
 
         /// <summary>
         /// Casts a <see cref="UInt4"/> value to a <see cref="Double4"/> one.
         /// </summary>
         /// <param name="xyzw">The input <see cref="UInt4"/> value to cast.</param>
-        public static explicit operator Double4(UInt4 xyzw) => throw new InvalidExecutionContextException($"{nameof(UInt4)}.({nameof(Double4)})");
+        public static implicit operator Double4(UInt4 xyzw) => throw new InvalidExecutionContextException($"{nameof(UInt4)}.({nameof(Double4)})");
 
         /// <summary>
         /// Sums two <see cref="UInt4"/> values.

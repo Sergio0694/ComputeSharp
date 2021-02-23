@@ -152,13 +152,19 @@ namespace ComputeSharp
         /// Casts a <see cref="Int2"/> value to a <see cref="Float2"/> one.
         /// </summary>
         /// <param name="xy">The input <see cref="Int2"/> value to cast.</param>
-        public static explicit operator Float2(Int2 xy) => throw new InvalidExecutionContextException($"{nameof(Int2)}.({nameof(Float2)})");
+        public static implicit operator Float2(Int2 xy) => throw new InvalidExecutionContextException($"{nameof(Int2)}.({nameof(Float2)})");
 
         /// <summary>
         /// Casts a <see cref="Int2"/> value to a <see cref="Double2"/> one.
         /// </summary>
         /// <param name="xy">The input <see cref="Int2"/> value to cast.</param>
-        public static explicit operator Double2(Int2 xy) => throw new InvalidExecutionContextException($"{nameof(Int2)}.({nameof(Double2)})");
+        public static implicit operator Double2(Int2 xy) => throw new InvalidExecutionContextException($"{nameof(Int2)}.({nameof(Double2)})");
+
+        /// <summary>
+        /// Negates a <see cref="Int2"/> value.
+        /// </summary>
+        /// <param name="xy">The <see cref="Int2"/> value to negate.</param>
+        public static Int2 operator -(Int2 xy) => throw new InvalidExecutionContextException($"{nameof(Int2)}.-");
 
         /// <summary>
         /// Sums two <see cref="Int2"/> values.

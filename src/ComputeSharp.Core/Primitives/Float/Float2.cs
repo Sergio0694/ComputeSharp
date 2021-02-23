@@ -174,6 +174,12 @@ namespace ComputeSharp
         public static explicit operator UInt2(Float2 xy) => throw new InvalidExecutionContextException($"{nameof(Float2)}.({nameof(UInt2)})");
 
         /// <summary>
+        /// Negates a <see cref="Float2"/> value.
+        /// </summary>
+        /// <param name="xy">The <see cref="Float2"/> value to negate.</param>
+        public static Float2 operator -(Float2 xy) => throw new InvalidExecutionContextException($"{nameof(Float2)}.-");
+
+        /// <summary>
         /// Sums two <see cref="Float2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Float2"/> value to sum.</param>
