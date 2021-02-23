@@ -1241,6 +1241,30 @@ namespace ComputeSharp
         public static Float4 Ldexp(Float4 x, Float4 exp) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Ldexp)}({nameof(Float4)},{nameof(Float4)})");
 
         /// <summary>
+        /// Returns the length of the specified floating-point vector.
+        /// </summary>
+        /// <param name="x">The specified floating-point vector.</param>
+        /// <returns>A floating-point scalar that represents the length of the x parameter.</returns>
+        [Pure]
+        public static float Length(Float2 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Length)}({nameof(Float2)})");
+
+        /// <summary>
+        /// Returns the length of the specified floating-point vector.
+        /// </summary>
+        /// <param name="x">The specified floating-point vector.</param>
+        /// <returns>A floating-point scalar that represents the length of the x parameter.</returns>
+        [Pure]
+        public static float Length(Float3 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Length)}({nameof(Float3)})");
+
+        /// <summary>
+        /// Returns the length of the specified floating-point vector.
+        /// </summary>
+        /// <param name="x">The specified floating-point vector.</param>
+        /// <returns>A floating-point scalar that represents the length of the x parameter.</returns>
+        [Pure]
+        public static float Length(Float4 x) => throw new InvalidExecutionContextException($"{nameof(Hlsl)}.{nameof(Length)}({nameof(Float4)})");
+
+        /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first value.</param>
