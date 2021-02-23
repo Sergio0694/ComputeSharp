@@ -251,6 +251,12 @@ namespace ComputeSharp.SourceGenerators
                 // Rewrite the method syntax tree
                 MethodDeclarationSyntax? processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();
 
+                // Emit the extracted local functions first
+                foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
+                {
+                    methods.Add(localFunction.Value);
+                }
+
                 // If the method is the shader entry point, do additional processing
                 if (isShaderEntryPoint)
                 {
@@ -259,12 +265,6 @@ namespace ComputeSharp.SourceGenerators
                     entryPoint = processedMethod.NormalizeWhitespace().ToFullString();
                 }
                 else methods.Add(processedMethod);
-
-                // Emit the extracted local functions
-                foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
-                {
-                    methods.Add(localFunction.Value);
-                }
             }
 
             return (entryPoint!, methods);

@@ -18,18 +18,6 @@
         /// </summary>
         public readonly float time;
 
-        // Fast hash for a pair of floats
-        private static float Hash21(Float2 p)
-        {
-            return Hlsl.Frac(Hlsl.Sin(Hlsl.Dot(p, new Float2(27.619f, 57.583f))) * 43758.5453f);
-        }
-
-        // HLSL's port of the GLSL mod intrinsic
-        private static float Mod(float x, float y)
-        {
-            return x - y * Hlsl.Floor(x / y);
-        }
-
         /// <summary>
         /// Calculates the Truchet distance field.
         /// </summary>
@@ -38,6 +26,18 @@
         /// <returns>The distance field for the input value.</returns>
         private Float2 DistanceField(Float2 p, out Float2 ang)
         {
+            // Fast hash for a pair of floats
+            static float Hash21(Float2 p)
+            {
+                return Hlsl.Frac(Hlsl.Sin(Hlsl.Dot(p, new Float2(27.619f, 57.583f))) * 43758.5453f);
+            }
+
+            // HLSL's port of the GLSL mod intrinsic
+            static float Mod(float x, float y)
+            {
+                return x - y * Hlsl.Floor(x / y);
+            }
+
             Float2 ip2 = Hlsl.Floor(p / 2.0f);
             Float2 ip = Hlsl.Floor(p);
             float rnd = Hash21(ip);
