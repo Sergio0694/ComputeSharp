@@ -33,19 +33,29 @@ namespace ComputeSharp
     /// <inheritdoc cref="<#=typeName#>"/>
     public partial struct <#=typeName#>
     {
+        /// <summary>
+        /// Gets or sets a specific component in the current <see cref="<#=typeName#>"/> instance.
+        /// </summary>
+        /// <param name="i">The index of the component to access.</param>
+        public ref <#=hlslElementTypeName#> this[int i]
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(<#=typeName#>)}[int]");
+        }
 <#
+
     PushIndent("    ");
     PushIndent("    ");
 
-    var properties = (
+    // Generate the combinatorial swizzling properties
+    foreach (
+        var property in
         from j in Enumerable.Range(2, i - 1)
         from source in new[] { "XYZW", "RGBA" }
         from name in EnumerateCombinations(source.Substring(0, j))
-        select (Name: name, Length: j)).ToArray();
-
-    for (int j = 0; j < properties.Length; j++)
+        select (Name: name, Length: j))
     {
-        var property = properties[j];
+        WriteLine("");
+
         string propertyType = property.Length == 1 ? hlslElementTypeName : $"{elementTypeName}{property.Length}";
         bool isReadonly = property.Name.Distinct().Count() < property.Name.Length;
 
@@ -73,8 +83,6 @@ namespace ComputeSharp
 
         PopIndent();
         WriteLine("}");
-
-        if (j < properties.Length - 1) WriteLine("");
     }
 
     PopIndent();

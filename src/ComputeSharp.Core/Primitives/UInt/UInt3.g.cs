@@ -6,6 +6,15 @@ namespace ComputeSharp
     public partial struct UInt3
     {
         /// <summary>
+        /// Gets or sets a specific component in the current <see cref="UInt3"/> instance.
+        /// </summary>
+        /// <param name="i">The index of the component to access.</param>
+        public ref uint this[int i]
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(UInt3)}[int]");
+        }
+
+        /// <summary>
         /// Gets a <see cref="UInt2"/> value with the values <see cref="X"/>, <see cref="X"/>.
         /// </summary>
         public UInt2 XX

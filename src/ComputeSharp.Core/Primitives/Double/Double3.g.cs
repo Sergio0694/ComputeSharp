@@ -6,6 +6,15 @@ namespace ComputeSharp
     public partial struct Double3
     {
         /// <summary>
+        /// Gets or sets a specific component in the current <see cref="Double3"/> instance.
+        /// </summary>
+        /// <param name="i">The index of the component to access.</param>
+        public ref double this[int i]
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Double3)}[int]");
+        }
+
+        /// <summary>
         /// Gets a <see cref="Double2"/> value with the values <see cref="X"/>, <see cref="X"/>.
         /// </summary>
         public Double2 XX

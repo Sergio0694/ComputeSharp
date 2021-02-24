@@ -6,6 +6,15 @@ namespace ComputeSharp
     public partial struct Bool3
     {
         /// <summary>
+        /// Gets or sets a specific component in the current <see cref="Bool3"/> instance.
+        /// </summary>
+        /// <param name="i">The index of the component to access.</param>
+        public ref bool this[int i]
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}[int]");
+        }
+
+        /// <summary>
         /// Gets a <see cref="Bool2"/> value with the values <see cref="X"/>, <see cref="X"/>.
         /// </summary>
         public Bool2 XX

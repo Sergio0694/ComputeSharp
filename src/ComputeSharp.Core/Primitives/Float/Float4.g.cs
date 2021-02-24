@@ -6,6 +6,15 @@ namespace ComputeSharp
     public partial struct Float4
     {
         /// <summary>
+        /// Gets or sets a specific component in the current <see cref="Float4"/> instance.
+        /// </summary>
+        /// <param name="i">The index of the component to access.</param>
+        public ref float this[int i]
+        {
+            get => throw new InvalidExecutionContextException($"{nameof(Float4)}[int]");
+        }
+
+        /// <summary>
         /// Gets a <see cref="Float2"/> value with the values <see cref="X"/>, <see cref="X"/>.
         /// </summary>
         public Float2 XX

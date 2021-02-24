@@ -141,16 +141,6 @@ namespace ComputeSharp
         }
 
         /// <summary>
-        /// Gets or sets a specific component in the current <see cref="Bool4"/> instance.
-        /// </summary>
-        /// <param name="i">The index of the component to access.</param>
-        public bool this[int i]
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool4)}[int]");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool4)}[int]");
-        }
-
-        /// <summary>
         /// Creates a new <see cref="Bool4"/> value with the same value for all its components.
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="Bool4"/> instance.</param>
