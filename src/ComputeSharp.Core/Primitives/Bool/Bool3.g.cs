@@ -6,524 +6,319 @@ namespace ComputeSharp
     public partial struct Bool3
     {
         /// <summary>
-        /// Gets or sets a specific component in the current <see cref="Bool3"/> instance.
+        /// Gets a reference to a specific component in the current <see cref="Bool3"/> instance.
         /// </summary>
         /// <param name="i">The index of the component to access.</param>
-        public ref bool this[int i]
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}[int]");
-        }
+        public ref bool this[int i] => throw new InvalidExecutionContextException($"{nameof(Bool3)}[int]");
 
         /// <summary>
-        /// Gets a <see cref="Bool2"/> value with the values <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="Bool2"/> value with the components <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public Bool2 XX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XX)}");
-        }
+        public ref readonly Bool2 XX => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XX)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Bool2"/> value with the values <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public Bool2 XY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XY)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XY)}");
-        }
+        public ref Bool2 XY => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XY)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Bool2"/> value with the values <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public Bool2 YX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YX)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YX)}");
-        }
+        public ref Bool2 YX => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YX)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool2"/> value with the values <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="Bool2"/> value with the components <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public Bool2 YY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YY)}");
-        }
+        public ref readonly Bool2 YY => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YY)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool2"/> value with the values <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="Bool2"/> value with the components <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public Bool2 RR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RR)}");
-        }
+        public ref readonly Bool2 RR => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RR)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Bool2"/> value with the values <see cref="R"/>, <see cref="G"/>.
+        /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public Bool2 RG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RG)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RG)}");
-        }
+        public ref Bool2 RG => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RG)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Bool2"/> value with the values <see cref="G"/>, <see cref="R"/>.
+        /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public Bool2 GR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GR)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GR)}");
-        }
+        public ref Bool2 GR => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GR)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool2"/> value with the values <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="Bool2"/> value with the components <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public Bool2 GG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GG)}");
-        }
+        public ref readonly Bool2 GG => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GG)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public Bool3 XXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XXX)}");
-        }
+        public ref readonly Bool3 XXX => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XXX)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public Bool3 XXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XXY)}");
-        }
+        public ref readonly Bool3 XXY => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XXY)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public Bool3 XXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XXZ)}");
-        }
+        public ref readonly Bool3 XXZ => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public Bool3 XYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XYX)}");
-        }
+        public ref readonly Bool3 XYX => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XYX)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public Bool3 XYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XYY)}");
-        }
+        public ref readonly Bool3 XYY => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XYY)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Bool3"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public Bool3 XYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XYZ)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XYZ)}");
-        }
+        public ref Bool3 XYZ => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public Bool3 XZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XZX)}");
-        }
+        public ref readonly Bool3 XZX => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XZX)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Bool3"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public Bool3 XZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XZY)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XZY)}");
-        }
+        public ref Bool3 XZY => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XZY)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public Bool3 XZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XZZ)}");
-        }
+        public ref readonly Bool3 XZZ => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(XZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public Bool3 YXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YXX)}");
-        }
+        public ref readonly Bool3 YXX => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YXX)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public Bool3 YXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YXY)}");
-        }
+        public ref readonly Bool3 YXY => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YXY)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Bool3"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public Bool3 YXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YXZ)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YXZ)}");
-        }
+        public ref Bool3 YXZ => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public Bool3 YYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YYX)}");
-        }
+        public ref readonly Bool3 YYX => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YYX)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public Bool3 YYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YYY)}");
-        }
+        public ref readonly Bool3 YYY => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YYY)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public Bool3 YYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YYZ)}");
-        }
+        public ref readonly Bool3 YYZ => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YYZ)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Bool3"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public Bool3 YZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YZX)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YZX)}");
-        }
+        public ref Bool3 YZX => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YZX)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public Bool3 YZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YZY)}");
-        }
+        public ref readonly Bool3 YZY => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YZY)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public Bool3 YZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YZZ)}");
-        }
+        public ref readonly Bool3 YZZ => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(YZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public Bool3 ZXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZXX)}");
-        }
+        public ref readonly Bool3 ZXX => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZXX)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Bool3"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public Bool3 ZXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZXY)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZXY)}");
-        }
+        public ref Bool3 ZXY => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZXY)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public Bool3 ZXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZXZ)}");
-        }
+        public ref readonly Bool3 ZXZ => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZXZ)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Bool3"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public Bool3 ZYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZYX)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZYX)}");
-        }
+        public ref Bool3 ZYX => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZYX)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public Bool3 ZYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZYY)}");
-        }
+        public ref readonly Bool3 ZYY => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZYY)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public Bool3 ZYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZYZ)}");
-        }
+        public ref readonly Bool3 ZYZ => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public Bool3 ZZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZZX)}");
-        }
+        public ref readonly Bool3 ZZX => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZZX)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public Bool3 ZZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZZY)}");
-        }
+        public ref readonly Bool3 ZZY => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZZY)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public Bool3 ZZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZZZ)}");
-        }
+        public ref readonly Bool3 ZZZ => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(ZZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public Bool3 RRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RRR)}");
-        }
+        public ref readonly Bool3 RRR => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RRR)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public Bool3 RRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RRG)}");
-        }
+        public ref readonly Bool3 RRG => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RRG)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public Bool3 RRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RRB)}");
-        }
+        public ref readonly Bool3 RRB => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RRB)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public Bool3 RGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RGR)}");
-        }
+        public ref readonly Bool3 RGR => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RGR)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public Bool3 RGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RGG)}");
-        }
+        public ref readonly Bool3 RGG => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RGG)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Bool3"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public Bool3 RGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RGB)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RGB)}");
-        }
+        public ref Bool3 RGB => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RGB)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public Bool3 RBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RBR)}");
-        }
+        public ref readonly Bool3 RBR => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RBR)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Bool3"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public Bool3 RBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RBG)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RBG)}");
-        }
+        public ref Bool3 RBG => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RBG)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public Bool3 RBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RBB)}");
-        }
+        public ref readonly Bool3 RBB => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(RBB)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public Bool3 GRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GRR)}");
-        }
+        public ref readonly Bool3 GRR => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GRR)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public Bool3 GRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GRG)}");
-        }
+        public ref readonly Bool3 GRG => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GRG)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Bool3"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public Bool3 GRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GRB)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GRB)}");
-        }
+        public ref Bool3 GRB => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GRB)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public Bool3 GGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GGR)}");
-        }
+        public ref readonly Bool3 GGR => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GGR)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public Bool3 GGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GGG)}");
-        }
+        public ref readonly Bool3 GGG => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GGG)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public Bool3 GGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GGB)}");
-        }
+        public ref readonly Bool3 GGB => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GGB)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Bool3"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public Bool3 GBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GBR)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GBR)}");
-        }
+        public ref Bool3 GBR => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GBR)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public Bool3 GBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GBG)}");
-        }
+        public ref readonly Bool3 GBG => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GBG)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public Bool3 GBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GBB)}");
-        }
+        public ref readonly Bool3 GBB => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(GBB)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public Bool3 BRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BRR)}");
-        }
+        public ref readonly Bool3 BRR => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BRR)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Bool3"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public Bool3 BRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BRG)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BRG)}");
-        }
+        public ref Bool3 BRG => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BRG)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public Bool3 BRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BRB)}");
-        }
+        public ref readonly Bool3 BRB => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BRB)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Bool3"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public Bool3 BGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BGR)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BGR)}");
-        }
+        public ref Bool3 BGR => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BGR)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public Bool3 BGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BGG)}");
-        }
+        public ref readonly Bool3 BGG => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BGG)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public Bool3 BGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BGB)}");
-        }
+        public ref readonly Bool3 BGB => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BGB)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public Bool3 BBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BBR)}");
-        }
+        public ref readonly Bool3 BBR => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BBR)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public Bool3 BBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BBG)}");
-        }
+        public ref readonly Bool3 BBG => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BBG)}");
 
         /// <summary>
-        /// Gets a <see cref="Bool3"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public Bool3 BBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BBB)}");
-        }
+        public ref readonly Bool3 BBB => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(BBB)}");
     }
 }

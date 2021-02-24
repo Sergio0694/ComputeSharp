@@ -6,525 +6,320 @@ namespace ComputeSharp
     public partial struct Float3
     {
         /// <summary>
-        /// Gets or sets a specific component in the current <see cref="Float3"/> instance.
+        /// Gets a reference to a specific component in the current <see cref="Float3"/> instance.
         /// </summary>
         /// <param name="i">The index of the component to access.</param>
-        public ref float this[int i]
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}[int]");
-        }
+        public ref float this[int i] => throw new InvalidExecutionContextException($"{nameof(Float3)}[int]");
 
         /// <summary>
-        /// Gets a <see cref="Float2"/> value with the values <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="Float2"/> value with the components <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public Float2 XX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XX)}");
-        }
+        public ref readonly Float2 XX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XX)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Float2"/> value with the values <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a reference to the <see cref="Float2"/> value with the components <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public Float2 XY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XY)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XY)}");
-        }
+        public ref Float2 XY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XY)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Float2"/> value with the values <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a reference to the <see cref="Float2"/> value with the components <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public Float2 YX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YX)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YX)}");
-        }
+        public ref Float2 YX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YX)}");
 
         /// <summary>
-        /// Gets a <see cref="Float2"/> value with the values <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="Float2"/> value with the components <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public Float2 YY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YY)}");
-        }
+        public ref readonly Float2 YY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YY)}");
 
         /// <summary>
-        /// Gets a <see cref="Float2"/> value with the values <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="Float2"/> value with the components <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public Float2 RR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RR)}");
-        }
+        public ref readonly Float2 RR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RR)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Float2"/> value with the values <see cref="R"/>, <see cref="G"/>.
+        /// Gets a reference to the <see cref="Float2"/> value with the components <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public Float2 RG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RG)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RG)}");
-        }
+        public ref Float2 RG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RG)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Float2"/> value with the values <see cref="G"/>, <see cref="R"/>.
+        /// Gets a reference to the <see cref="Float2"/> value with the components <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public Float2 GR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GR)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GR)}");
-        }
+        public ref Float2 GR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GR)}");
 
         /// <summary>
-        /// Gets a <see cref="Float2"/> value with the values <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="Float2"/> value with the components <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public Float2 GG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GG)}");
-        }
+        public ref readonly Float2 GG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GG)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public Float3 XXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XXX)}");
-        }
+        public ref readonly Float3 XXX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XXX)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public Float3 XXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XXY)}");
-        }
+        public ref readonly Float3 XXY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XXY)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public Float3 XXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XXZ)}");
-        }
+        public ref readonly Float3 XXZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public Float3 XYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XYX)}");
-        }
+        public ref readonly Float3 XYX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XYX)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public Float3 XYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XYY)}");
-        }
+        public ref readonly Float3 XYY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XYY)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Float3"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a reference to the <see cref="Float3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public Float3 XYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XYZ)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XYZ)}");
-        }
+        public ref Float3 XYZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public Float3 XZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XZX)}");
-        }
+        public ref readonly Float3 XZX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XZX)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Float3"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a reference to the <see cref="Float3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public Float3 XZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XZY)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XZY)}");
-        }
+        public ref Float3 XZY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XZY)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public Float3 XZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XZZ)}");
-        }
+        public ref readonly Float3 XZZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(XZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public Float3 YXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YXX)}");
-        }
+        public ref readonly Float3 YXX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YXX)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public Float3 YXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YXY)}");
-        }
+        public ref readonly Float3 YXY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YXY)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Float3"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a reference to the <see cref="Float3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public Float3 YXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YXZ)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YXZ)}");
-        }
+        public ref Float3 YXZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public Float3 YYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YYX)}");
-        }
+        public ref readonly Float3 YYX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YYX)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public Float3 YYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YYY)}");
-        }
+        public ref readonly Float3 YYY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YYY)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public Float3 YYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YYZ)}");
-        }
+        public ref readonly Float3 YYZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YYZ)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Float3"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a reference to the <see cref="Float3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public Float3 YZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YZX)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YZX)}");
-        }
+        public ref Float3 YZX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YZX)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public Float3 YZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YZY)}");
-        }
+        public ref readonly Float3 YZY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YZY)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public Float3 YZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YZZ)}");
-        }
+        public ref readonly Float3 YZZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(YZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public Float3 ZXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZXX)}");
-        }
+        public ref readonly Float3 ZXX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZXX)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Float3"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a reference to the <see cref="Float3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public Float3 ZXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZXY)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZXY)}");
-        }
+        public ref Float3 ZXY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZXY)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public Float3 ZXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZXZ)}");
-        }
+        public ref readonly Float3 ZXZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZXZ)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Float3"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a reference to the <see cref="Float3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public Float3 ZYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZYX)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZYX)}");
-        }
+        public ref Float3 ZYX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZYX)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public Float3 ZYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZYY)}");
-        }
+        public ref readonly Float3 ZYY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZYY)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public Float3 ZYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZYZ)}");
-        }
+        public ref readonly Float3 ZYZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public Float3 ZZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZZX)}");
-        }
+        public ref readonly Float3 ZZX => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZZX)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public Float3 ZZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZZY)}");
-        }
+        public ref readonly Float3 ZZY => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZZY)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public Float3 ZZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZZZ)}");
-        }
+        public ref readonly Float3 ZZZ => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(ZZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public Float3 RRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RRR)}");
-        }
+        public ref readonly Float3 RRR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RRR)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public Float3 RRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RRG)}");
-        }
+        public ref readonly Float3 RRG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RRG)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public Float3 RRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RRB)}");
-        }
+        public ref readonly Float3 RRB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RRB)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public Float3 RGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RGR)}");
-        }
+        public ref readonly Float3 RGR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RGR)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public Float3 RGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RGG)}");
-        }
+        public ref readonly Float3 RGG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RGG)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Float3"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a reference to the <see cref="Float3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public Float3 RGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RGB)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RGB)}");
-        }
+        public ref Float3 RGB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RGB)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public Float3 RBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RBR)}");
-        }
+        public ref readonly Float3 RBR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RBR)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Float3"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a reference to the <see cref="Float3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public Float3 RBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RBG)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RBG)}");
-        }
+        public ref Float3 RBG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RBG)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public Float3 RBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RBB)}");
-        }
+        public ref readonly Float3 RBB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(RBB)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public Float3 GRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GRR)}");
-        }
+        public ref readonly Float3 GRR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GRR)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public Float3 GRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GRG)}");
-        }
+        public ref readonly Float3 GRG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GRG)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Float3"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a reference to the <see cref="Float3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public Float3 GRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GRB)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GRB)}");
-        }
+        public ref Float3 GRB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GRB)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public Float3 GGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GGR)}");
-        }
+        public ref readonly Float3 GGR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GGR)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public Float3 GGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GGG)}");
-        }
+        public ref readonly Float3 GGG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GGG)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public Float3 GGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GGB)}");
-        }
+        public ref readonly Float3 GGB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GGB)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Float3"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a reference to the <see cref="Float3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public Float3 GBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GBR)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GBR)}");
-        }
+        public ref Float3 GBR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GBR)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public Float3 GBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GBG)}");
-        }
+        public ref readonly Float3 GBG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GBG)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public Float3 GBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GBB)}");
-        }
+        public ref readonly Float3 GBB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(GBB)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public Float3 BRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BRR)}");
-        }
+        public ref readonly Float3 BRR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BRR)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Float3"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a reference to the <see cref="Float3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public Float3 BRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BRG)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BRG)}");
-        }
+        public ref Float3 BRG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BRG)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public Float3 BRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BRB)}");
-        }
+        public ref readonly Float3 BRB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BRB)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="Float3"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a reference to the <see cref="Float3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public Float3 BGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BGR)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BGR)}");
-        }
+        public ref Float3 BGR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BGR)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public Float3 BGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BGG)}");
-        }
+        public ref readonly Float3 BGG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BGG)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public Float3 BGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BGB)}");
-        }
+        public ref readonly Float3 BGB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BGB)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public Float3 BBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BBR)}");
-        }
+        public ref readonly Float3 BBR => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BBR)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public Float3 BBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BBG)}");
-        }
+        public ref readonly Float3 BBG => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BBG)}");
 
         /// <summary>
-        /// Gets a <see cref="Float3"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public Float3 BBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BBB)}");
-        }
+        public ref readonly Float3 BBB => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(BBB)}");
 
         /// <summary>
         /// Negates a <see cref="Float3"/> value.

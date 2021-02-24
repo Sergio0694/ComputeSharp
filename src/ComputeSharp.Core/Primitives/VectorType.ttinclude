@@ -34,13 +34,10 @@ namespace ComputeSharp
     public partial struct <#=typeName#>
     {
         /// <summary>
-        /// Gets or sets a specific component in the current <see cref="<#=typeName#>"/> instance.
+        /// Gets a reference to a specific component in the current <see cref="<#=typeName#>"/> instance.
         /// </summary>
         /// <param name="i">The index of the component to access.</param>
-        public ref <#=hlslElementTypeName#> this[int i]
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(<#=typeName#>)}[int]");
-        }
+        public ref <#=hlslElementTypeName#> this[int i] => throw new InvalidExecutionContextException($"{nameof(<#=typeName#>)}[int]");
 <#
 
     PushIndent("    ");
@@ -58,31 +55,20 @@ namespace ComputeSharp
 
         string propertyType = property.Length == 1 ? hlslElementTypeName : $"{elementTypeName}{property.Length}";
         bool isReadonly = property.Name.Distinct().Count() < property.Name.Length;
+        string refType = isReadonly ? "ref readonly" : "ref";
 
         // XML docs
         WriteLine("/// <summary>");
-        Write("/// Gets ");
-        if (!isReadonly) Write("or sets ");
-        Write($"a <see cref=\"{propertyType}\"/> value with the values ");
+        Write("/// Gets a ");
+        if (isReadonly) Write("readonly ");
+        Write($"reference to the <see cref=\"{propertyType}\"/> value with the components ");
         Write(string.Join(", ", property.Name.Select(c => $"<see cref=\"{c}\"/>")));
         WriteLine(".");
         WriteLine("/// </summary>");
 
         // Property
-        WriteLine($"public {propertyType} {property.Name}");
-        WriteLine("{");
-
-        PushIndent("    ");
-
-        WriteLine($"get => throw new InvalidExecutionContextException($\"{{nameof({typeName})}}.{{nameof({property.Name})}}\");");
-
-        if (!isReadonly)
-        {
-            WriteLine($"set => throw new InvalidExecutionContextException($\"{{nameof({typeName})}}.{{nameof({property.Name})}}\");");
-        }
-
-        PopIndent();
-        WriteLine("}");
+        Write($"public {refType} {propertyType} {property.Name} ");
+        WriteLine($"=> throw new InvalidExecutionContextException($\"{{nameof({typeName})}}.{{nameof({property.Name})}}\");");
     }
 
     PopIndent();

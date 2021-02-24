@@ -6,4669 +6,2880 @@ namespace ComputeSharp
     public partial struct UInt4
     {
         /// <summary>
-        /// Gets or sets a specific component in the current <see cref="UInt4"/> instance.
+        /// Gets a reference to a specific component in the current <see cref="UInt4"/> instance.
         /// </summary>
         /// <param name="i">The index of the component to access.</param>
-        public ref uint this[int i]
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}[int]");
-        }
+        public ref uint this[int i] => throw new InvalidExecutionContextException($"{nameof(UInt4)}[int]");
 
         /// <summary>
-        /// Gets a <see cref="UInt2"/> value with the values <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt2"/> value with the components <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt2 XX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XX)}");
-        }
+        public ref readonly UInt2 XX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XX)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt2"/> value with the values <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt2 XY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XY)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XY)}");
-        }
+        public ref UInt2 XY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XY)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt2"/> value with the values <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt2 YX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YX)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YX)}");
-        }
+        public ref UInt2 YX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt2"/> value with the values <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt2"/> value with the components <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt2 YY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YY)}");
-        }
+        public ref readonly UInt2 YY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt2"/> value with the values <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt2"/> value with the components <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt2 RR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RR)}");
-        }
+        public ref readonly UInt2 RR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RR)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt2"/> value with the values <see cref="R"/>, <see cref="G"/>.
+        /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt2 RG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RG)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RG)}");
-        }
+        public ref UInt2 RG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RG)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt2"/> value with the values <see cref="G"/>, <see cref="R"/>.
+        /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt2 GR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GR)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GR)}");
-        }
+        public ref UInt2 GR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt2"/> value with the values <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt2"/> value with the components <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt2 GG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GG)}");
-        }
+        public ref readonly UInt2 GG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt3 XXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXX)}");
-        }
+        public ref readonly UInt3 XXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt3 XXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXY)}");
-        }
+        public ref readonly UInt3 XXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt3 XXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXZ)}");
-        }
+        public ref readonly UInt3 XXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt3 XYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYX)}");
-        }
+        public ref readonly UInt3 XYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt3 XYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYY)}");
-        }
+        public ref readonly UInt3 XYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYY)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt3"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt3 XYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYZ)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYZ)}");
-        }
+        public ref UInt3 XYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt3 XZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZX)}");
-        }
+        public ref readonly UInt3 XZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZX)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt3"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt3 XZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZY)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZY)}");
-        }
+        public ref UInt3 XZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt3 XZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZZ)}");
-        }
+        public ref readonly UInt3 XZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt3 YXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXX)}");
-        }
+        public ref readonly UInt3 YXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt3 YXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXY)}");
-        }
+        public ref readonly UInt3 YXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXY)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt3"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt3 YXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXZ)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXZ)}");
-        }
+        public ref UInt3 YXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt3 YYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYX)}");
-        }
+        public ref readonly UInt3 YYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt3 YYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYY)}");
-        }
+        public ref readonly UInt3 YYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt3 YYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYZ)}");
-        }
+        public ref readonly UInt3 YYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYZ)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt3"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt3 YZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZX)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZX)}");
-        }
+        public ref UInt3 YZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt3 YZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZY)}");
-        }
+        public ref readonly UInt3 YZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt3 YZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZZ)}");
-        }
+        public ref readonly UInt3 YZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt3 ZXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXX)}");
-        }
+        public ref readonly UInt3 ZXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXX)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt3"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt3 ZXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXY)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXY)}");
-        }
+        public ref UInt3 ZXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt3 ZXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXZ)}");
-        }
+        public ref readonly UInt3 ZXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXZ)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt3"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt3 ZYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYX)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYX)}");
-        }
+        public ref UInt3 ZYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt3 ZYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYY)}");
-        }
+        public ref readonly UInt3 ZYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt3 ZYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYZ)}");
-        }
+        public ref readonly UInt3 ZYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt3 ZZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZX)}");
-        }
+        public ref readonly UInt3 ZZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt3 ZZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZY)}");
-        }
+        public ref readonly UInt3 ZZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt3 ZZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZZ)}");
-        }
+        public ref readonly UInt3 ZZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt3 RRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRR)}");
-        }
+        public ref readonly UInt3 RRR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt3 RRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRG)}");
-        }
+        public ref readonly UInt3 RRG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt3 RRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRB)}");
-        }
+        public ref readonly UInt3 RRB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt3 RGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGR)}");
-        }
+        public ref readonly UInt3 RGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt3 RGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGG)}");
-        }
+        public ref readonly UInt3 RGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGG)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt3"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt3 RGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGB)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGB)}");
-        }
+        public ref UInt3 RGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt3 RBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBR)}");
-        }
+        public ref readonly UInt3 RBR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBR)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt3"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt3 RBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBG)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBG)}");
-        }
+        public ref UInt3 RBG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt3 RBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBB)}");
-        }
+        public ref readonly UInt3 RBB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt3 GRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRR)}");
-        }
+        public ref readonly UInt3 GRR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt3 GRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRG)}");
-        }
+        public ref readonly UInt3 GRG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRG)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt3"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt3 GRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRB)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRB)}");
-        }
+        public ref UInt3 GRB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt3 GGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGR)}");
-        }
+        public ref readonly UInt3 GGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt3 GGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGG)}");
-        }
+        public ref readonly UInt3 GGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt3 GGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGB)}");
-        }
+        public ref readonly UInt3 GGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGB)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt3"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt3 GBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBR)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBR)}");
-        }
+        public ref UInt3 GBR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt3 GBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBG)}");
-        }
+        public ref readonly UInt3 GBG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt3 GBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBB)}");
-        }
+        public ref readonly UInt3 GBB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt3 BRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRR)}");
-        }
+        public ref readonly UInt3 BRR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRR)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt3"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt3 BRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRG)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRG)}");
-        }
+        public ref UInt3 BRG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt3 BRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRB)}");
-        }
+        public ref readonly UInt3 BRB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRB)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt3"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt3 BGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGR)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGR)}");
-        }
+        public ref UInt3 BGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt3 BGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGG)}");
-        }
+        public ref readonly UInt3 BGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt3 BGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGB)}");
-        }
+        public ref readonly UInt3 BGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt3 BBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBR)}");
-        }
+        public ref readonly UInt3 BBR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt3 BBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBG)}");
-        }
+        public ref readonly UInt3 BBG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt3"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt3 BBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBB)}");
-        }
+        public ref readonly UInt3 BBB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 XXXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXXX)}");
-        }
+        public ref readonly UInt4 XXXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXXX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 XXXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXXY)}");
-        }
+        public ref readonly UInt4 XXXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXXY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 XXXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXXZ)}");
-        }
+        public ref readonly UInt4 XXXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 XXXW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXXW)}");
-        }
+        public ref readonly UInt4 XXXW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXXW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 XXYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXYX)}");
-        }
+        public ref readonly UInt4 XXYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 XXYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXYY)}");
-        }
+        public ref readonly UInt4 XXYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXYY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 XXYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXYZ)}");
-        }
+        public ref readonly UInt4 XXYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 XXYW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXYW)}");
-        }
+        public ref readonly UInt4 XXYW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXYW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 XXZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXZX)}");
-        }
+        public ref readonly UInt4 XXZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXZX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 XXZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXZY)}");
-        }
+        public ref readonly UInt4 XXZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 XXZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXZZ)}");
-        }
+        public ref readonly UInt4 XXZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 XXZW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXZW)}");
-        }
+        public ref readonly UInt4 XXZW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXZW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="W"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 XXWX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXWX)}");
-        }
+        public ref readonly UInt4 XXWX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXWX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 XXWY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXWY)}");
-        }
+        public ref readonly UInt4 XXWY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXWY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 XXWZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXWZ)}");
-        }
+        public ref readonly UInt4 XXWZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXWZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="X"/>, <see cref="W"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 XXWW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXWW)}");
-        }
+        public ref readonly UInt4 XXWW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XXWW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 XYXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYXX)}");
-        }
+        public ref readonly UInt4 XYXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYXX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 XYXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYXY)}");
-        }
+        public ref readonly UInt4 XYXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYXY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 XYXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYXZ)}");
-        }
+        public ref readonly UInt4 XYXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 XYXW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYXW)}");
-        }
+        public ref readonly UInt4 XYXW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYXW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 XYYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYYX)}");
-        }
+        public ref readonly UInt4 XYYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 XYYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYYY)}");
-        }
+        public ref readonly UInt4 XYYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYYY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 XYYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYYZ)}");
-        }
+        public ref readonly UInt4 XYYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 XYYW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYYW)}");
-        }
+        public ref readonly UInt4 XYYW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYYW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 XYZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYZX)}");
-        }
+        public ref readonly UInt4 XYZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYZX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 XYZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYZY)}");
-        }
+        public ref readonly UInt4 XYZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 XYZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYZZ)}");
-        }
+        public ref readonly UInt4 XYZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYZZ)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 XYZW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYZW)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYZW)}");
-        }
+        public ref UInt4 XYZW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYZW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 XYWX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYWX)}");
-        }
+        public ref readonly UInt4 XYWX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYWX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 XYWY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYWY)}");
-        }
+        public ref readonly UInt4 XYWY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYWY)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 XYWZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYWZ)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYWZ)}");
-        }
+        public ref UInt4 XYWZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYWZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 XYWW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYWW)}");
-        }
+        public ref readonly UInt4 XYWW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XYWW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 XZXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZXX)}");
-        }
+        public ref readonly UInt4 XZXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZXX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 XZXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZXY)}");
-        }
+        public ref readonly UInt4 XZXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZXY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 XZXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZXZ)}");
-        }
+        public ref readonly UInt4 XZXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 XZXW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZXW)}");
-        }
+        public ref readonly UInt4 XZXW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZXW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 XZYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZYX)}");
-        }
+        public ref readonly UInt4 XZYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 XZYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZYY)}");
-        }
+        public ref readonly UInt4 XZYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZYY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 XZYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZYZ)}");
-        }
+        public ref readonly UInt4 XZYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZYZ)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 XZYW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZYW)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZYW)}");
-        }
+        public ref UInt4 XZYW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZYW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 XZZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZZX)}");
-        }
+        public ref readonly UInt4 XZZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZZX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 XZZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZZY)}");
-        }
+        public ref readonly UInt4 XZZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 XZZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZZZ)}");
-        }
+        public ref readonly UInt4 XZZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 XZZW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZZW)}");
-        }
+        public ref readonly UInt4 XZZW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZZW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 XZWX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZWX)}");
-        }
+        public ref readonly UInt4 XZWX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZWX)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 XZWY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZWY)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZWY)}");
-        }
+        public ref UInt4 XZWY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZWY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 XZWZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZWZ)}");
-        }
+        public ref readonly UInt4 XZWZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZWZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 XZWW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZWW)}");
-        }
+        public ref readonly UInt4 XZWW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XZWW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="W"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 XWXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWXX)}");
-        }
+        public ref readonly UInt4 XWXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWXX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 XWXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWXY)}");
-        }
+        public ref readonly UInt4 XWXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWXY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 XWXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWXZ)}");
-        }
+        public ref readonly UInt4 XWXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="W"/>, <see cref="X"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 XWXW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWXW)}");
-        }
+        public ref readonly UInt4 XWXW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWXW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 XWYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWYX)}");
-        }
+        public ref readonly UInt4 XWYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 XWYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWYY)}");
-        }
+        public ref readonly UInt4 XWYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWYY)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 XWYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWYZ)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWYZ)}");
-        }
+        public ref UInt4 XWYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 XWYW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWYW)}");
-        }
+        public ref readonly UInt4 XWYW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWYW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 XWZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWZX)}");
-        }
+        public ref readonly UInt4 XWZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWZX)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 XWZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWZY)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWZY)}");
-        }
+        public ref UInt4 XWZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 XWZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWZZ)}");
-        }
+        public ref readonly UInt4 XWZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 XWZW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWZW)}");
-        }
+        public ref readonly UInt4 XWZW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWZW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="W"/>, <see cref="W"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 XWWX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWWX)}");
-        }
+        public ref readonly UInt4 XWWX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWWX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 XWWY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWWY)}");
-        }
+        public ref readonly UInt4 XWWY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWWY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 XWWZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWWZ)}");
-        }
+        public ref readonly UInt4 XWWZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWWZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="X"/>, <see cref="W"/>, <see cref="W"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 XWWW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWWW)}");
-        }
+        public ref readonly UInt4 XWWW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(XWWW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 YXXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXXX)}");
-        }
+        public ref readonly UInt4 YXXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXXX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 YXXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXXY)}");
-        }
+        public ref readonly UInt4 YXXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXXY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 YXXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXXZ)}");
-        }
+        public ref readonly UInt4 YXXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 YXXW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXXW)}");
-        }
+        public ref readonly UInt4 YXXW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXXW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 YXYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXYX)}");
-        }
+        public ref readonly UInt4 YXYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 YXYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXYY)}");
-        }
+        public ref readonly UInt4 YXYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXYY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 YXYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXYZ)}");
-        }
+        public ref readonly UInt4 YXYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 YXYW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXYW)}");
-        }
+        public ref readonly UInt4 YXYW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXYW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 YXZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXZX)}");
-        }
+        public ref readonly UInt4 YXZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXZX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 YXZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXZY)}");
-        }
+        public ref readonly UInt4 YXZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 YXZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXZZ)}");
-        }
+        public ref readonly UInt4 YXZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXZZ)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 YXZW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXZW)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXZW)}");
-        }
+        public ref UInt4 YXZW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXZW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 YXWX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXWX)}");
-        }
+        public ref readonly UInt4 YXWX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXWX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 YXWY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXWY)}");
-        }
+        public ref readonly UInt4 YXWY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXWY)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 YXWZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXWZ)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXWZ)}");
-        }
+        public ref UInt4 YXWZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXWZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 YXWW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXWW)}");
-        }
+        public ref readonly UInt4 YXWW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YXWW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 YYXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYXX)}");
-        }
+        public ref readonly UInt4 YYXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYXX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 YYXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYXY)}");
-        }
+        public ref readonly UInt4 YYXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYXY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 YYXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYXZ)}");
-        }
+        public ref readonly UInt4 YYXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 YYXW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYXW)}");
-        }
+        public ref readonly UInt4 YYXW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYXW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 YYYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYYX)}");
-        }
+        public ref readonly UInt4 YYYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 YYYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYYY)}");
-        }
+        public ref readonly UInt4 YYYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYYY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 YYYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYYZ)}");
-        }
+        public ref readonly UInt4 YYYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 YYYW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYYW)}");
-        }
+        public ref readonly UInt4 YYYW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYYW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 YYZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYZX)}");
-        }
+        public ref readonly UInt4 YYZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYZX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 YYZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYZY)}");
-        }
+        public ref readonly UInt4 YYZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 YYZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYZZ)}");
-        }
+        public ref readonly UInt4 YYZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 YYZW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYZW)}");
-        }
+        public ref readonly UInt4 YYZW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYZW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 YYWX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYWX)}");
-        }
+        public ref readonly UInt4 YYWX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYWX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 YYWY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYWY)}");
-        }
+        public ref readonly UInt4 YYWY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYWY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 YYWZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYWZ)}");
-        }
+        public ref readonly UInt4 YYWZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYWZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 YYWW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYWW)}");
-        }
+        public ref readonly UInt4 YYWW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YYWW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 YZXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZXX)}");
-        }
+        public ref readonly UInt4 YZXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZXX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 YZXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZXY)}");
-        }
+        public ref readonly UInt4 YZXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZXY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 YZXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZXZ)}");
-        }
+        public ref readonly UInt4 YZXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZXZ)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 YZXW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZXW)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZXW)}");
-        }
+        public ref UInt4 YZXW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZXW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 YZYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZYX)}");
-        }
+        public ref readonly UInt4 YZYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 YZYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZYY)}");
-        }
+        public ref readonly UInt4 YZYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZYY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 YZYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZYZ)}");
-        }
+        public ref readonly UInt4 YZYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 YZYW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZYW)}");
-        }
+        public ref readonly UInt4 YZYW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZYW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 YZZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZZX)}");
-        }
+        public ref readonly UInt4 YZZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZZX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 YZZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZZY)}");
-        }
+        public ref readonly UInt4 YZZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 YZZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZZZ)}");
-        }
+        public ref readonly UInt4 YZZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 YZZW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZZW)}");
-        }
+        public ref readonly UInt4 YZZW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZZW)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 YZWX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZWX)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZWX)}");
-        }
+        public ref UInt4 YZWX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZWX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 YZWY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZWY)}");
-        }
+        public ref readonly UInt4 YZWY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZWY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 YZWZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZWZ)}");
-        }
+        public ref readonly UInt4 YZWZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZWZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 YZWW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZWW)}");
-        }
+        public ref readonly UInt4 YZWW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YZWW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 YWXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWXX)}");
-        }
+        public ref readonly UInt4 YWXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWXX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 YWXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWXY)}");
-        }
+        public ref readonly UInt4 YWXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWXY)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 YWXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWXZ)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWXZ)}");
-        }
+        public ref UInt4 YWXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 YWXW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWXW)}");
-        }
+        public ref readonly UInt4 YWXW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWXW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 YWYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWYX)}");
-        }
+        public ref readonly UInt4 YWYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 YWYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWYY)}");
-        }
+        public ref readonly UInt4 YWYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWYY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 YWYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWYZ)}");
-        }
+        public ref readonly UInt4 YWYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 YWYW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWYW)}");
-        }
+        public ref readonly UInt4 YWYW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWYW)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 YWZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWZX)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWZX)}");
-        }
+        public ref UInt4 YWZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWZX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 YWZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWZY)}");
-        }
+        public ref readonly UInt4 YWZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 YWZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWZZ)}");
-        }
+        public ref readonly UInt4 YWZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 YWZW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWZW)}");
-        }
+        public ref readonly UInt4 YWZW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWZW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 YWWX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWWX)}");
-        }
+        public ref readonly UInt4 YWWX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWWX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 YWWY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWWY)}");
-        }
+        public ref readonly UInt4 YWWY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWWY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 YWWZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWWZ)}");
-        }
+        public ref readonly UInt4 YWWZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWWZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 YWWW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWWW)}");
-        }
+        public ref readonly UInt4 YWWW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(YWWW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 ZXXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXXX)}");
-        }
+        public ref readonly UInt4 ZXXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXXX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 ZXXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXXY)}");
-        }
+        public ref readonly UInt4 ZXXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXXY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 ZXXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXXZ)}");
-        }
+        public ref readonly UInt4 ZXXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 ZXXW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXXW)}");
-        }
+        public ref readonly UInt4 ZXXW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXXW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 ZXYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXYX)}");
-        }
+        public ref readonly UInt4 ZXYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 ZXYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXYY)}");
-        }
+        public ref readonly UInt4 ZXYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXYY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 ZXYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXYZ)}");
-        }
+        public ref readonly UInt4 ZXYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXYZ)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 ZXYW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXYW)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXYW)}");
-        }
+        public ref UInt4 ZXYW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXYW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 ZXZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXZX)}");
-        }
+        public ref readonly UInt4 ZXZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXZX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 ZXZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXZY)}");
-        }
+        public ref readonly UInt4 ZXZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 ZXZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXZZ)}");
-        }
+        public ref readonly UInt4 ZXZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 ZXZW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXZW)}");
-        }
+        public ref readonly UInt4 ZXZW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXZW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 ZXWX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXWX)}");
-        }
+        public ref readonly UInt4 ZXWX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXWX)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 ZXWY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXWY)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXWY)}");
-        }
+        public ref UInt4 ZXWY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXWY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 ZXWZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXWZ)}");
-        }
+        public ref readonly UInt4 ZXWZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXWZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 ZXWW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXWW)}");
-        }
+        public ref readonly UInt4 ZXWW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZXWW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 ZYXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYXX)}");
-        }
+        public ref readonly UInt4 ZYXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYXX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 ZYXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYXY)}");
-        }
+        public ref readonly UInt4 ZYXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYXY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 ZYXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYXZ)}");
-        }
+        public ref readonly UInt4 ZYXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYXZ)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 ZYXW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYXW)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYXW)}");
-        }
+        public ref UInt4 ZYXW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYXW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 ZYYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYYX)}");
-        }
+        public ref readonly UInt4 ZYYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 ZYYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYYY)}");
-        }
+        public ref readonly UInt4 ZYYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYYY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 ZYYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYYZ)}");
-        }
+        public ref readonly UInt4 ZYYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 ZYYW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYYW)}");
-        }
+        public ref readonly UInt4 ZYYW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYYW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 ZYZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYZX)}");
-        }
+        public ref readonly UInt4 ZYZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYZX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 ZYZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYZY)}");
-        }
+        public ref readonly UInt4 ZYZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 ZYZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYZZ)}");
-        }
+        public ref readonly UInt4 ZYZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 ZYZW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYZW)}");
-        }
+        public ref readonly UInt4 ZYZW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYZW)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 ZYWX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYWX)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYWX)}");
-        }
+        public ref UInt4 ZYWX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYWX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 ZYWY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYWY)}");
-        }
+        public ref readonly UInt4 ZYWY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYWY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 ZYWZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYWZ)}");
-        }
+        public ref readonly UInt4 ZYWZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYWZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 ZYWW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYWW)}");
-        }
+        public ref readonly UInt4 ZYWW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZYWW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 ZZXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZXX)}");
-        }
+        public ref readonly UInt4 ZZXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZXX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 ZZXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZXY)}");
-        }
+        public ref readonly UInt4 ZZXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZXY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 ZZXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZXZ)}");
-        }
+        public ref readonly UInt4 ZZXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 ZZXW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZXW)}");
-        }
+        public ref readonly UInt4 ZZXW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZXW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 ZZYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZYX)}");
-        }
+        public ref readonly UInt4 ZZYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 ZZYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZYY)}");
-        }
+        public ref readonly UInt4 ZZYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZYY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 ZZYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZYZ)}");
-        }
+        public ref readonly UInt4 ZZYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 ZZYW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZYW)}");
-        }
+        public ref readonly UInt4 ZZYW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZYW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 ZZZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZZX)}");
-        }
+        public ref readonly UInt4 ZZZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZZX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 ZZZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZZY)}");
-        }
+        public ref readonly UInt4 ZZZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 ZZZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZZZ)}");
-        }
+        public ref readonly UInt4 ZZZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 ZZZW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZZW)}");
-        }
+        public ref readonly UInt4 ZZZW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZZW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 ZZWX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZWX)}");
-        }
+        public ref readonly UInt4 ZZWX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZWX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 ZZWY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZWY)}");
-        }
+        public ref readonly UInt4 ZZWY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZWY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 ZZWZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZWZ)}");
-        }
+        public ref readonly UInt4 ZZWZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZWZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 ZZWW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZWW)}");
-        }
+        public ref readonly UInt4 ZZWW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZZWW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 ZWXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWXX)}");
-        }
+        public ref readonly UInt4 ZWXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWXX)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 ZWXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWXY)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWXY)}");
-        }
+        public ref UInt4 ZWXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWXY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 ZWXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWXZ)}");
-        }
+        public ref readonly UInt4 ZWXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 ZWXW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWXW)}");
-        }
+        public ref readonly UInt4 ZWXW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWXW)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 ZWYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWYX)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWYX)}");
-        }
+        public ref UInt4 ZWYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 ZWYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWYY)}");
-        }
+        public ref readonly UInt4 ZWYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWYY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 ZWYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWYZ)}");
-        }
+        public ref readonly UInt4 ZWYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 ZWYW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWYW)}");
-        }
+        public ref readonly UInt4 ZWYW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWYW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 ZWZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWZX)}");
-        }
+        public ref readonly UInt4 ZWZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWZX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 ZWZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWZY)}");
-        }
+        public ref readonly UInt4 ZWZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 ZWZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWZZ)}");
-        }
+        public ref readonly UInt4 ZWZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 ZWZW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWZW)}");
-        }
+        public ref readonly UInt4 ZWZW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWZW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 ZWWX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWWX)}");
-        }
+        public ref readonly UInt4 ZWWX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWWX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 ZWWY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWWY)}");
-        }
+        public ref readonly UInt4 ZWWY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWWY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 ZWWZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWWZ)}");
-        }
+        public ref readonly UInt4 ZWWZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWWZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 ZWWW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWWW)}");
-        }
+        public ref readonly UInt4 ZWWW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ZWWW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 WXXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXXX)}");
-        }
+        public ref readonly UInt4 WXXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXXX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 WXXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXXY)}");
-        }
+        public ref readonly UInt4 WXXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXXY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 WXXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXXZ)}");
-        }
+        public ref readonly UInt4 WXXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="X"/>, <see cref="X"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 WXXW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXXW)}");
-        }
+        public ref readonly UInt4 WXXW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXXW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 WXYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXYX)}");
-        }
+        public ref readonly UInt4 WXYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 WXYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXYY)}");
-        }
+        public ref readonly UInt4 WXYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXYY)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 WXYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXYZ)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXYZ)}");
-        }
+        public ref UInt4 WXYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 WXYW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXYW)}");
-        }
+        public ref readonly UInt4 WXYW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXYW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 WXZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXZX)}");
-        }
+        public ref readonly UInt4 WXZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXZX)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 WXZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXZY)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXZY)}");
-        }
+        public ref UInt4 WXZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 WXZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXZZ)}");
-        }
+        public ref readonly UInt4 WXZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 WXZW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXZW)}");
-        }
+        public ref readonly UInt4 WXZW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXZW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="X"/>, <see cref="W"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 WXWX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXWX)}");
-        }
+        public ref readonly UInt4 WXWX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXWX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 WXWY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXWY)}");
-        }
+        public ref readonly UInt4 WXWY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXWY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 WXWZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXWZ)}");
-        }
+        public ref readonly UInt4 WXWZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXWZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="X"/>, <see cref="W"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 WXWW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXWW)}");
-        }
+        public ref readonly UInt4 WXWW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WXWW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 WYXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYXX)}");
-        }
+        public ref readonly UInt4 WYXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYXX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 WYXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYXY)}");
-        }
+        public ref readonly UInt4 WYXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYXY)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 WYXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYXZ)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYXZ)}");
-        }
+        public ref UInt4 WYXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 WYXW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYXW)}");
-        }
+        public ref readonly UInt4 WYXW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYXW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 WYYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYYX)}");
-        }
+        public ref readonly UInt4 WYYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 WYYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYYY)}");
-        }
+        public ref readonly UInt4 WYYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYYY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 WYYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYYZ)}");
-        }
+        public ref readonly UInt4 WYYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 WYYW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYYW)}");
-        }
+        public ref readonly UInt4 WYYW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYYW)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 WYZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYZX)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYZX)}");
-        }
+        public ref UInt4 WYZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYZX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 WYZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYZY)}");
-        }
+        public ref readonly UInt4 WYZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 WYZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYZZ)}");
-        }
+        public ref readonly UInt4 WYZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 WYZW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYZW)}");
-        }
+        public ref readonly UInt4 WYZW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYZW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 WYWX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYWX)}");
-        }
+        public ref readonly UInt4 WYWX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYWX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 WYWY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYWY)}");
-        }
+        public ref readonly UInt4 WYWY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYWY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 WYWZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYWZ)}");
-        }
+        public ref readonly UInt4 WYWZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYWZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 WYWW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYWW)}");
-        }
+        public ref readonly UInt4 WYWW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WYWW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 WZXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZXX)}");
-        }
+        public ref readonly UInt4 WZXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZXX)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 WZXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZXY)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZXY)}");
-        }
+        public ref UInt4 WZXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZXY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 WZXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZXZ)}");
-        }
+        public ref readonly UInt4 WZXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 WZXW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZXW)}");
-        }
+        public ref readonly UInt4 WZXW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZXW)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 WZYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZYX)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZYX)}");
-        }
+        public ref UInt4 WZYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 WZYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZYY)}");
-        }
+        public ref readonly UInt4 WZYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZYY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 WZYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZYZ)}");
-        }
+        public ref readonly UInt4 WZYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 WZYW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZYW)}");
-        }
+        public ref readonly UInt4 WZYW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZYW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 WZZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZZX)}");
-        }
+        public ref readonly UInt4 WZZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZZX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 WZZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZZY)}");
-        }
+        public ref readonly UInt4 WZZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 WZZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZZZ)}");
-        }
+        public ref readonly UInt4 WZZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 WZZW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZZW)}");
-        }
+        public ref readonly UInt4 WZZW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZZW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 WZWX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZWX)}");
-        }
+        public ref readonly UInt4 WZWX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZWX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 WZWY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZWY)}");
-        }
+        public ref readonly UInt4 WZWY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZWY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 WZWZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZWZ)}");
-        }
+        public ref readonly UInt4 WZWZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZWZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 WZWW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZWW)}");
-        }
+        public ref readonly UInt4 WZWW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WZWW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="W"/>, <see cref="X"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 WWXX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWXX)}");
-        }
+        public ref readonly UInt4 WWXX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWXX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 WWXY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWXY)}");
-        }
+        public ref readonly UInt4 WWXY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWXY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 WWXZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWXZ)}");
-        }
+        public ref readonly UInt4 WWXZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWXZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="W"/>, <see cref="X"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 WWXW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWXW)}");
-        }
+        public ref readonly UInt4 WWXW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWXW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 WWYX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWYX)}");
-        }
+        public ref readonly UInt4 WWYX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWYX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 WWYY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWYY)}");
-        }
+        public ref readonly UInt4 WWYY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWYY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 WWYZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWYZ)}");
-        }
+        public ref readonly UInt4 WWYZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWYZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 WWYW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWYW)}");
-        }
+        public ref readonly UInt4 WWYW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWYW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 WWZX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWZX)}");
-        }
+        public ref readonly UInt4 WWZX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWZX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 WWZY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWZY)}");
-        }
+        public ref readonly UInt4 WWZY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWZY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 WWZZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWZZ)}");
-        }
+        public ref readonly UInt4 WWZZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWZZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 WWZW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWZW)}");
-        }
+        public ref readonly UInt4 WWZW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWZW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="W"/>, <see cref="W"/>, <see cref="X"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public UInt4 WWWX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWWX)}");
-        }
+        public ref readonly UInt4 WWWX => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWWX)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public UInt4 WWWY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWWY)}");
-        }
+        public ref readonly UInt4 WWWY => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWWY)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public UInt4 WWWZ
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWWZ)}");
-        }
+        public ref readonly UInt4 WWWZ => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWWZ)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="W"/>, <see cref="W"/>, <see cref="W"/>, <see cref="W"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public UInt4 WWWW
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWWW)}");
-        }
+        public ref readonly UInt4 WWWW => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(WWWW)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 RRRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRRR)}");
-        }
+        public ref readonly UInt4 RRRR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRRR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 RRRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRRG)}");
-        }
+        public ref readonly UInt4 RRRG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRRG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 RRRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRRB)}");
-        }
+        public ref readonly UInt4 RRRB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRRB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 RRRA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRRA)}");
-        }
+        public ref readonly UInt4 RRRA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRRA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 RRGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRGR)}");
-        }
+        public ref readonly UInt4 RRGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 RRGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRGG)}");
-        }
+        public ref readonly UInt4 RRGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRGG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 RRGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRGB)}");
-        }
+        public ref readonly UInt4 RRGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRGB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 RRGA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRGA)}");
-        }
+        public ref readonly UInt4 RRGA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRGA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 RRBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRBR)}");
-        }
+        public ref readonly UInt4 RRBR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRBR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 RRBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRBG)}");
-        }
+        public ref readonly UInt4 RRBG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRBG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 RRBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRBB)}");
-        }
+        public ref readonly UInt4 RRBB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRBB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 RRBA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRBA)}");
-        }
+        public ref readonly UInt4 RRBA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRBA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="A"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 RRAR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRAR)}");
-        }
+        public ref readonly UInt4 RRAR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRAR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="A"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 RRAG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRAG)}");
-        }
+        public ref readonly UInt4 RRAG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRAG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="A"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 RRAB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRAB)}");
-        }
+        public ref readonly UInt4 RRAB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRAB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="R"/>, <see cref="A"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 RRAA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRAA)}");
-        }
+        public ref readonly UInt4 RRAA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RRAA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 RGRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGRR)}");
-        }
+        public ref readonly UInt4 RGRR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGRR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 RGRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGRG)}");
-        }
+        public ref readonly UInt4 RGRG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGRG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 RGRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGRB)}");
-        }
+        public ref readonly UInt4 RGRB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGRB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 RGRA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGRA)}");
-        }
+        public ref readonly UInt4 RGRA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGRA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 RGGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGGR)}");
-        }
+        public ref readonly UInt4 RGGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 RGGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGGG)}");
-        }
+        public ref readonly UInt4 RGGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGGG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 RGGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGGB)}");
-        }
+        public ref readonly UInt4 RGGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGGB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 RGGA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGGA)}");
-        }
+        public ref readonly UInt4 RGGA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGGA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 RGBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGBR)}");
-        }
+        public ref readonly UInt4 RGBR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGBR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 RGBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGBG)}");
-        }
+        public ref readonly UInt4 RGBG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGBG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 RGBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGBB)}");
-        }
+        public ref readonly UInt4 RGBB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGBB)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="A"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 RGBA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGBA)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGBA)}");
-        }
+        public ref UInt4 RGBA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGBA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="A"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 RGAR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGAR)}");
-        }
+        public ref readonly UInt4 RGAR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGAR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="A"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 RGAG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGAG)}");
-        }
+        public ref readonly UInt4 RGAG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGAG)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="A"/>, <see cref="B"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 RGAB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGAB)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGAB)}");
-        }
+        public ref UInt4 RGAB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGAB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="G"/>, <see cref="A"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 RGAA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGAA)}");
-        }
+        public ref readonly UInt4 RGAA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RGAA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 RBRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBRR)}");
-        }
+        public ref readonly UInt4 RBRR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBRR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 RBRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBRG)}");
-        }
+        public ref readonly UInt4 RBRG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBRG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 RBRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBRB)}");
-        }
+        public ref readonly UInt4 RBRB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBRB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 RBRA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBRA)}");
-        }
+        public ref readonly UInt4 RBRA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBRA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 RBGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBGR)}");
-        }
+        public ref readonly UInt4 RBGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 RBGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBGG)}");
-        }
+        public ref readonly UInt4 RBGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBGG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 RBGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBGB)}");
-        }
+        public ref readonly UInt4 RBGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBGB)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="A"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 RBGA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBGA)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBGA)}");
-        }
+        public ref UInt4 RBGA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBGA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 RBBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBBR)}");
-        }
+        public ref readonly UInt4 RBBR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBBR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 RBBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBBG)}");
-        }
+        public ref readonly UInt4 RBBG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBBG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 RBBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBBB)}");
-        }
+        public ref readonly UInt4 RBBB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBBB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 RBBA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBBA)}");
-        }
+        public ref readonly UInt4 RBBA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBBA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="A"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 RBAR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBAR)}");
-        }
+        public ref readonly UInt4 RBAR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBAR)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="A"/>, <see cref="G"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 RBAG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBAG)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBAG)}");
-        }
+        public ref UInt4 RBAG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBAG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="A"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 RBAB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBAB)}");
-        }
+        public ref readonly UInt4 RBAB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBAB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="B"/>, <see cref="A"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 RBAA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBAA)}");
-        }
+        public ref readonly UInt4 RBAA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RBAA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="A"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 RARR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RARR)}");
-        }
+        public ref readonly UInt4 RARR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RARR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="A"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 RARG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RARG)}");
-        }
+        public ref readonly UInt4 RARG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RARG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="A"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 RARB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RARB)}");
-        }
+        public ref readonly UInt4 RARB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RARB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="A"/>, <see cref="R"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 RARA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RARA)}");
-        }
+        public ref readonly UInt4 RARA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RARA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="A"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 RAGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RAGR)}");
-        }
+        public ref readonly UInt4 RAGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RAGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="A"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 RAGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RAGG)}");
-        }
+        public ref readonly UInt4 RAGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RAGG)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="A"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 RAGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RAGB)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RAGB)}");
-        }
+        public ref UInt4 RAGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RAGB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="A"/>, <see cref="G"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 RAGA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RAGA)}");
-        }
+        public ref readonly UInt4 RAGA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RAGA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="A"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 RABR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RABR)}");
-        }
+        public ref readonly UInt4 RABR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RABR)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="A"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 RABG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RABG)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RABG)}");
-        }
+        public ref UInt4 RABG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RABG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="A"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 RABB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RABB)}");
-        }
+        public ref readonly UInt4 RABB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RABB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="A"/>, <see cref="B"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 RABA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RABA)}");
-        }
+        public ref readonly UInt4 RABA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RABA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="A"/>, <see cref="A"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 RAAR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RAAR)}");
-        }
+        public ref readonly UInt4 RAAR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RAAR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="A"/>, <see cref="A"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 RAAG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RAAG)}");
-        }
+        public ref readonly UInt4 RAAG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RAAG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="A"/>, <see cref="A"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 RAAB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RAAB)}");
-        }
+        public ref readonly UInt4 RAAB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RAAB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="R"/>, <see cref="A"/>, <see cref="A"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 RAAA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RAAA)}");
-        }
+        public ref readonly UInt4 RAAA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(RAAA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 GRRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRRR)}");
-        }
+        public ref readonly UInt4 GRRR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRRR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 GRRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRRG)}");
-        }
+        public ref readonly UInt4 GRRG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRRG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 GRRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRRB)}");
-        }
+        public ref readonly UInt4 GRRB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRRB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 GRRA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRRA)}");
-        }
+        public ref readonly UInt4 GRRA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRRA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 GRGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRGR)}");
-        }
+        public ref readonly UInt4 GRGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 GRGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRGG)}");
-        }
+        public ref readonly UInt4 GRGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRGG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 GRGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRGB)}");
-        }
+        public ref readonly UInt4 GRGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRGB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 GRGA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRGA)}");
-        }
+        public ref readonly UInt4 GRGA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRGA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 GRBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRBR)}");
-        }
+        public ref readonly UInt4 GRBR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRBR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 GRBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRBG)}");
-        }
+        public ref readonly UInt4 GRBG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRBG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 GRBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRBB)}");
-        }
+        public ref readonly UInt4 GRBB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRBB)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="A"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 GRBA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRBA)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRBA)}");
-        }
+        public ref UInt4 GRBA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRBA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="A"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 GRAR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRAR)}");
-        }
+        public ref readonly UInt4 GRAR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRAR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="A"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 GRAG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRAG)}");
-        }
+        public ref readonly UInt4 GRAG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRAG)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="A"/>, <see cref="B"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 GRAB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRAB)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRAB)}");
-        }
+        public ref UInt4 GRAB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRAB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="R"/>, <see cref="A"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 GRAA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRAA)}");
-        }
+        public ref readonly UInt4 GRAA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GRAA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 GGRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGRR)}");
-        }
+        public ref readonly UInt4 GGRR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGRR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 GGRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGRG)}");
-        }
+        public ref readonly UInt4 GGRG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGRG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 GGRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGRB)}");
-        }
+        public ref readonly UInt4 GGRB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGRB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 GGRA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGRA)}");
-        }
+        public ref readonly UInt4 GGRA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGRA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 GGGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGGR)}");
-        }
+        public ref readonly UInt4 GGGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 GGGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGGG)}");
-        }
+        public ref readonly UInt4 GGGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGGG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 GGGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGGB)}");
-        }
+        public ref readonly UInt4 GGGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGGB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 GGGA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGGA)}");
-        }
+        public ref readonly UInt4 GGGA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGGA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 GGBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGBR)}");
-        }
+        public ref readonly UInt4 GGBR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGBR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 GGBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGBG)}");
-        }
+        public ref readonly UInt4 GGBG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGBG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 GGBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGBB)}");
-        }
+        public ref readonly UInt4 GGBB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGBB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 GGBA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGBA)}");
-        }
+        public ref readonly UInt4 GGBA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGBA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="A"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 GGAR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGAR)}");
-        }
+        public ref readonly UInt4 GGAR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGAR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="A"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 GGAG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGAG)}");
-        }
+        public ref readonly UInt4 GGAG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGAG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="A"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 GGAB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGAB)}");
-        }
+        public ref readonly UInt4 GGAB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGAB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="G"/>, <see cref="A"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 GGAA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGAA)}");
-        }
+        public ref readonly UInt4 GGAA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GGAA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 GBRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBRR)}");
-        }
+        public ref readonly UInt4 GBRR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBRR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 GBRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBRG)}");
-        }
+        public ref readonly UInt4 GBRG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBRG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 GBRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBRB)}");
-        }
+        public ref readonly UInt4 GBRB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBRB)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="A"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 GBRA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBRA)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBRA)}");
-        }
+        public ref UInt4 GBRA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBRA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 GBGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBGR)}");
-        }
+        public ref readonly UInt4 GBGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 GBGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBGG)}");
-        }
+        public ref readonly UInt4 GBGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBGG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 GBGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBGB)}");
-        }
+        public ref readonly UInt4 GBGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBGB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 GBGA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBGA)}");
-        }
+        public ref readonly UInt4 GBGA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBGA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 GBBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBBR)}");
-        }
+        public ref readonly UInt4 GBBR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBBR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 GBBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBBG)}");
-        }
+        public ref readonly UInt4 GBBG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBBG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 GBBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBBB)}");
-        }
+        public ref readonly UInt4 GBBB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBBB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 GBBA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBBA)}");
-        }
+        public ref readonly UInt4 GBBA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBBA)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="A"/>, <see cref="R"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 GBAR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBAR)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBAR)}");
-        }
+        public ref UInt4 GBAR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBAR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="A"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 GBAG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBAG)}");
-        }
+        public ref readonly UInt4 GBAG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBAG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="A"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 GBAB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBAB)}");
-        }
+        public ref readonly UInt4 GBAB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBAB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="B"/>, <see cref="A"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 GBAA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBAA)}");
-        }
+        public ref readonly UInt4 GBAA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GBAA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="A"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 GARR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GARR)}");
-        }
+        public ref readonly UInt4 GARR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GARR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="A"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 GARG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GARG)}");
-        }
+        public ref readonly UInt4 GARG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GARG)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="A"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 GARB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GARB)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GARB)}");
-        }
+        public ref UInt4 GARB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GARB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="A"/>, <see cref="R"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 GARA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GARA)}");
-        }
+        public ref readonly UInt4 GARA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GARA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="A"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 GAGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GAGR)}");
-        }
+        public ref readonly UInt4 GAGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GAGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="A"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 GAGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GAGG)}");
-        }
+        public ref readonly UInt4 GAGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GAGG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="A"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 GAGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GAGB)}");
-        }
+        public ref readonly UInt4 GAGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GAGB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="A"/>, <see cref="G"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 GAGA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GAGA)}");
-        }
+        public ref readonly UInt4 GAGA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GAGA)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="A"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 GABR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GABR)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GABR)}");
-        }
+        public ref UInt4 GABR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GABR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="A"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 GABG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GABG)}");
-        }
+        public ref readonly UInt4 GABG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GABG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="A"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 GABB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GABB)}");
-        }
+        public ref readonly UInt4 GABB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GABB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="A"/>, <see cref="B"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 GABA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GABA)}");
-        }
+        public ref readonly UInt4 GABA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GABA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="A"/>, <see cref="A"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 GAAR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GAAR)}");
-        }
+        public ref readonly UInt4 GAAR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GAAR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="A"/>, <see cref="A"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 GAAG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GAAG)}");
-        }
+        public ref readonly UInt4 GAAG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GAAG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="A"/>, <see cref="A"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 GAAB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GAAB)}");
-        }
+        public ref readonly UInt4 GAAB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GAAB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="G"/>, <see cref="A"/>, <see cref="A"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 GAAA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GAAA)}");
-        }
+        public ref readonly UInt4 GAAA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(GAAA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 BRRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRRR)}");
-        }
+        public ref readonly UInt4 BRRR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRRR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 BRRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRRG)}");
-        }
+        public ref readonly UInt4 BRRG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRRG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 BRRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRRB)}");
-        }
+        public ref readonly UInt4 BRRB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRRB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 BRRA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRRA)}");
-        }
+        public ref readonly UInt4 BRRA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRRA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 BRGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRGR)}");
-        }
+        public ref readonly UInt4 BRGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 BRGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRGG)}");
-        }
+        public ref readonly UInt4 BRGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRGG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 BRGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRGB)}");
-        }
+        public ref readonly UInt4 BRGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRGB)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="A"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 BRGA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRGA)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRGA)}");
-        }
+        public ref UInt4 BRGA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRGA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 BRBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRBR)}");
-        }
+        public ref readonly UInt4 BRBR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRBR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 BRBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRBG)}");
-        }
+        public ref readonly UInt4 BRBG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRBG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 BRBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRBB)}");
-        }
+        public ref readonly UInt4 BRBB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRBB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 BRBA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRBA)}");
-        }
+        public ref readonly UInt4 BRBA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRBA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="A"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 BRAR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRAR)}");
-        }
+        public ref readonly UInt4 BRAR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRAR)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="A"/>, <see cref="G"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 BRAG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRAG)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRAG)}");
-        }
+        public ref UInt4 BRAG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRAG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="A"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 BRAB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRAB)}");
-        }
+        public ref readonly UInt4 BRAB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRAB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="R"/>, <see cref="A"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 BRAA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRAA)}");
-        }
+        public ref readonly UInt4 BRAA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BRAA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 BGRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGRR)}");
-        }
+        public ref readonly UInt4 BGRR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGRR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 BGRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGRG)}");
-        }
+        public ref readonly UInt4 BGRG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGRG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 BGRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGRB)}");
-        }
+        public ref readonly UInt4 BGRB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGRB)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="A"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 BGRA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGRA)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGRA)}");
-        }
+        public ref UInt4 BGRA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGRA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 BGGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGGR)}");
-        }
+        public ref readonly UInt4 BGGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 BGGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGGG)}");
-        }
+        public ref readonly UInt4 BGGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGGG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 BGGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGGB)}");
-        }
+        public ref readonly UInt4 BGGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGGB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 BGGA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGGA)}");
-        }
+        public ref readonly UInt4 BGGA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGGA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 BGBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGBR)}");
-        }
+        public ref readonly UInt4 BGBR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGBR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 BGBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGBG)}");
-        }
+        public ref readonly UInt4 BGBG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGBG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 BGBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGBB)}");
-        }
+        public ref readonly UInt4 BGBB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGBB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 BGBA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGBA)}");
-        }
+        public ref readonly UInt4 BGBA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGBA)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="A"/>, <see cref="R"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 BGAR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGAR)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGAR)}");
-        }
+        public ref UInt4 BGAR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGAR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="A"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 BGAG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGAG)}");
-        }
+        public ref readonly UInt4 BGAG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGAG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="A"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 BGAB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGAB)}");
-        }
+        public ref readonly UInt4 BGAB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGAB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="G"/>, <see cref="A"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 BGAA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGAA)}");
-        }
+        public ref readonly UInt4 BGAA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BGAA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 BBRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBRR)}");
-        }
+        public ref readonly UInt4 BBRR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBRR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 BBRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBRG)}");
-        }
+        public ref readonly UInt4 BBRG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBRG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 BBRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBRB)}");
-        }
+        public ref readonly UInt4 BBRB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBRB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 BBRA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBRA)}");
-        }
+        public ref readonly UInt4 BBRA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBRA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 BBGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBGR)}");
-        }
+        public ref readonly UInt4 BBGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 BBGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBGG)}");
-        }
+        public ref readonly UInt4 BBGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBGG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 BBGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBGB)}");
-        }
+        public ref readonly UInt4 BBGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBGB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 BBGA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBGA)}");
-        }
+        public ref readonly UInt4 BBGA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBGA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 BBBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBBR)}");
-        }
+        public ref readonly UInt4 BBBR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBBR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 BBBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBBG)}");
-        }
+        public ref readonly UInt4 BBBG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBBG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 BBBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBBB)}");
-        }
+        public ref readonly UInt4 BBBB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBBB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 BBBA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBBA)}");
-        }
+        public ref readonly UInt4 BBBA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBBA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="A"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 BBAR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBAR)}");
-        }
+        public ref readonly UInt4 BBAR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBAR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="A"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 BBAG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBAG)}");
-        }
+        public ref readonly UInt4 BBAG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBAG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="A"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 BBAB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBAB)}");
-        }
+        public ref readonly UInt4 BBAB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBAB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="B"/>, <see cref="A"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 BBAA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBAA)}");
-        }
+        public ref readonly UInt4 BBAA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BBAA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="A"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 BARR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BARR)}");
-        }
+        public ref readonly UInt4 BARR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BARR)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="A"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 BARG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BARG)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BARG)}");
-        }
+        public ref UInt4 BARG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BARG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="A"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 BARB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BARB)}");
-        }
+        public ref readonly UInt4 BARB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BARB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="A"/>, <see cref="R"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 BARA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BARA)}");
-        }
+        public ref readonly UInt4 BARA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BARA)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="A"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 BAGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BAGR)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BAGR)}");
-        }
+        public ref UInt4 BAGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BAGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="A"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 BAGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BAGG)}");
-        }
+        public ref readonly UInt4 BAGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BAGG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="A"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 BAGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BAGB)}");
-        }
+        public ref readonly UInt4 BAGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BAGB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="A"/>, <see cref="G"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 BAGA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BAGA)}");
-        }
+        public ref readonly UInt4 BAGA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BAGA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="A"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 BABR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BABR)}");
-        }
+        public ref readonly UInt4 BABR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BABR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="A"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 BABG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BABG)}");
-        }
+        public ref readonly UInt4 BABG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BABG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="A"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 BABB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BABB)}");
-        }
+        public ref readonly UInt4 BABB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BABB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="A"/>, <see cref="B"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 BABA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BABA)}");
-        }
+        public ref readonly UInt4 BABA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BABA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="A"/>, <see cref="A"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 BAAR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BAAR)}");
-        }
+        public ref readonly UInt4 BAAR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BAAR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="A"/>, <see cref="A"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 BAAG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BAAG)}");
-        }
+        public ref readonly UInt4 BAAG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BAAG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="A"/>, <see cref="A"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 BAAB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BAAB)}");
-        }
+        public ref readonly UInt4 BAAB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BAAB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="B"/>, <see cref="A"/>, <see cref="A"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 BAAA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BAAA)}");
-        }
+        public ref readonly UInt4 BAAA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(BAAA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 ARRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARRR)}");
-        }
+        public ref readonly UInt4 ARRR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARRR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 ARRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARRG)}");
-        }
+        public ref readonly UInt4 ARRG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARRG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 ARRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARRB)}");
-        }
+        public ref readonly UInt4 ARRB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARRB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="R"/>, <see cref="R"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 ARRA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARRA)}");
-        }
+        public ref readonly UInt4 ARRA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARRA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 ARGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARGR)}");
-        }
+        public ref readonly UInt4 ARGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 ARGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARGG)}");
-        }
+        public ref readonly UInt4 ARGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARGG)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 ARGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARGB)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARGB)}");
-        }
+        public ref UInt4 ARGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARGB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="R"/>, <see cref="G"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 ARGA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARGA)}");
-        }
+        public ref readonly UInt4 ARGA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARGA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 ARBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARBR)}");
-        }
+        public ref readonly UInt4 ARBR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARBR)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 ARBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARBG)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARBG)}");
-        }
+        public ref UInt4 ARBG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARBG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 ARBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARBB)}");
-        }
+        public ref readonly UInt4 ARBB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARBB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="R"/>, <see cref="B"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 ARBA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARBA)}");
-        }
+        public ref readonly UInt4 ARBA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARBA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="R"/>, <see cref="A"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 ARAR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARAR)}");
-        }
+        public ref readonly UInt4 ARAR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARAR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="R"/>, <see cref="A"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 ARAG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARAG)}");
-        }
+        public ref readonly UInt4 ARAG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARAG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="R"/>, <see cref="A"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 ARAB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARAB)}");
-        }
+        public ref readonly UInt4 ARAB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARAB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="R"/>, <see cref="A"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 ARAA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARAA)}");
-        }
+        public ref readonly UInt4 ARAA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ARAA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 AGRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGRR)}");
-        }
+        public ref readonly UInt4 AGRR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGRR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 AGRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGRG)}");
-        }
+        public ref readonly UInt4 AGRG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGRG)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 AGRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGRB)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGRB)}");
-        }
+        public ref UInt4 AGRB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGRB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="G"/>, <see cref="R"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 AGRA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGRA)}");
-        }
+        public ref readonly UInt4 AGRA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGRA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 AGGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGGR)}");
-        }
+        public ref readonly UInt4 AGGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 AGGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGGG)}");
-        }
+        public ref readonly UInt4 AGGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGGG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 AGGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGGB)}");
-        }
+        public ref readonly UInt4 AGGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGGB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="G"/>, <see cref="G"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 AGGA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGGA)}");
-        }
+        public ref readonly UInt4 AGGA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGGA)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 AGBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGBR)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGBR)}");
-        }
+        public ref UInt4 AGBR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGBR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 AGBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGBG)}");
-        }
+        public ref readonly UInt4 AGBG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGBG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 AGBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGBB)}");
-        }
+        public ref readonly UInt4 AGBB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGBB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="G"/>, <see cref="B"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 AGBA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGBA)}");
-        }
+        public ref readonly UInt4 AGBA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGBA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="G"/>, <see cref="A"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 AGAR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGAR)}");
-        }
+        public ref readonly UInt4 AGAR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGAR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="G"/>, <see cref="A"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 AGAG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGAG)}");
-        }
+        public ref readonly UInt4 AGAG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGAG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="G"/>, <see cref="A"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 AGAB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGAB)}");
-        }
+        public ref readonly UInt4 AGAB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGAB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="G"/>, <see cref="A"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 AGAA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGAA)}");
-        }
+        public ref readonly UInt4 AGAA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AGAA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 ABRR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABRR)}");
-        }
+        public ref readonly UInt4 ABRR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABRR)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 ABRG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABRG)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABRG)}");
-        }
+        public ref UInt4 ABRG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABRG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 ABRB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABRB)}");
-        }
+        public ref readonly UInt4 ABRB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABRB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="B"/>, <see cref="R"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 ABRA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABRA)}");
-        }
+        public ref readonly UInt4 ABRA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABRA)}");
 
         /// <summary>
-        /// Gets or sets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 ABGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABGR)}");
-            set => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABGR)}");
-        }
+        public ref UInt4 ABGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 ABGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABGG)}");
-        }
+        public ref readonly UInt4 ABGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABGG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 ABGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABGB)}");
-        }
+        public ref readonly UInt4 ABGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABGB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="B"/>, <see cref="G"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 ABGA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABGA)}");
-        }
+        public ref readonly UInt4 ABGA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABGA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 ABBR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABBR)}");
-        }
+        public ref readonly UInt4 ABBR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABBR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 ABBG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABBG)}");
-        }
+        public ref readonly UInt4 ABBG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABBG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 ABBB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABBB)}");
-        }
+        public ref readonly UInt4 ABBB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABBB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="B"/>, <see cref="B"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 ABBA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABBA)}");
-        }
+        public ref readonly UInt4 ABBA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABBA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="B"/>, <see cref="A"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 ABAR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABAR)}");
-        }
+        public ref readonly UInt4 ABAR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABAR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="B"/>, <see cref="A"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 ABAG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABAG)}");
-        }
+        public ref readonly UInt4 ABAG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABAG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="B"/>, <see cref="A"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 ABAB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABAB)}");
-        }
+        public ref readonly UInt4 ABAB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABAB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="B"/>, <see cref="A"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 ABAA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABAA)}");
-        }
+        public ref readonly UInt4 ABAA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(ABAA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="A"/>, <see cref="R"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 AARR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AARR)}");
-        }
+        public ref readonly UInt4 AARR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AARR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="A"/>, <see cref="R"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 AARG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AARG)}");
-        }
+        public ref readonly UInt4 AARG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AARG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="A"/>, <see cref="R"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 AARB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AARB)}");
-        }
+        public ref readonly UInt4 AARB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AARB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="A"/>, <see cref="R"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 AARA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AARA)}");
-        }
+        public ref readonly UInt4 AARA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AARA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="A"/>, <see cref="G"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 AAGR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AAGR)}");
-        }
+        public ref readonly UInt4 AAGR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AAGR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="A"/>, <see cref="G"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 AAGG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AAGG)}");
-        }
+        public ref readonly UInt4 AAGG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AAGG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="A"/>, <see cref="G"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 AAGB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AAGB)}");
-        }
+        public ref readonly UInt4 AAGB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AAGB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="A"/>, <see cref="G"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 AAGA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AAGA)}");
-        }
+        public ref readonly UInt4 AAGA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AAGA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="A"/>, <see cref="B"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 AABR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AABR)}");
-        }
+        public ref readonly UInt4 AABR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AABR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="A"/>, <see cref="B"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 AABG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AABG)}");
-        }
+        public ref readonly UInt4 AABG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AABG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="A"/>, <see cref="B"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 AABB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AABB)}");
-        }
+        public ref readonly UInt4 AABB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AABB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="A"/>, <see cref="B"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 AABA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AABA)}");
-        }
+        public ref readonly UInt4 AABA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AABA)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="A"/>, <see cref="A"/>, <see cref="R"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public UInt4 AAAR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AAAR)}");
-        }
+        public ref readonly UInt4 AAAR => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AAAR)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="A"/>, <see cref="A"/>, <see cref="G"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public UInt4 AAAG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AAAG)}");
-        }
+        public ref readonly UInt4 AAAG => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AAAG)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="A"/>, <see cref="A"/>, <see cref="B"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public UInt4 AAAB
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AAAB)}");
-        }
+        public ref readonly UInt4 AAAB => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AAAB)}");
 
         /// <summary>
-        /// Gets a <see cref="UInt4"/> value with the values <see cref="A"/>, <see cref="A"/>, <see cref="A"/>, <see cref="A"/>.
+        /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public UInt4 AAAA
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AAAA)}");
-        }
+        public ref readonly UInt4 AAAA => throw new InvalidExecutionContextException($"{nameof(UInt4)}.{nameof(AAAA)}");
 
         /// <summary>
         /// Sums two <see cref="UInt4"/> values.
