@@ -56,6 +56,73 @@ namespace ComputeSharp
         }
 
         /// <summary>
+        /// Creates a new <see cref="Float4"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="xy">The value to assign to the first and second vector components.</param>
+        /// <param name="z">The value to assign to the third vector component.</param>
+        /// <param name="w">The value to assign to the fourth vector component.</param>
+        public Float4(Float2 xy, float z, float w)
+        {
+            this.x = xy.X;
+            this.y = xy.Y;
+            this.z = z;
+            this.w = w;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Float4"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="x">The value to assign to the first vector component.</param>
+        /// <param name="y">The value to assign to the second vector component.</param>
+        /// <param name="zw">The value to assign to the third and fourth vector components.</param>
+        public Float4(float x, float y, Float2 zw)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = zw.X;
+            this.w = zw.Y;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Float4"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="xy">The value to assign to the first and second vector components.</param>
+        /// <param name="zw">The value to assign to the third and fourth vector components.</param>
+        public Float4(Float2 xy, Float2 zw)
+        {
+            this.x = xy.X;
+            this.y = xy.Y;
+            this.z = zw.X;
+            this.w = zw.Y;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Float4"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="xyz">The value to assign to the first, second and third vector components.</param>
+        /// <param name="w">The value to assign to the fourth vector component.</param>
+        public Float4(Float3 xyz, float w)
+        {
+            this.x = xyz.X;
+            this.y = xyz.Y;
+            this.z = xyz.Z;
+            this.w = w;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Float4"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="x">The value to assign to the first vector component.</param>
+        /// <param name="yzw">The value to assign to the second, third and fourth vector components.</param>
+        public Float4(float x, Float3 yzw)
+        {
+            this.x = x;
+            this.y = yzw.X;
+            this.z = yzw.Y;
+            this.w = yzw.Z;
+        }
+
+        /// <summary>
         /// Creates a new <see cref="Float4"/> value with the same value for all its components.
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="Float4"/> instance.</param>
