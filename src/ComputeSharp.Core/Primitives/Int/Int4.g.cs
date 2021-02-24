@@ -4660,5 +4660,39 @@ namespace ComputeSharp
         {
             get => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(AAAA)}");
         }
+
+        /// <summary>
+        /// Negates a <see cref="Int4"/> value.
+        /// </summary>
+        /// <param name="xyzw">The <see cref="Int4"/> value to negate.</param>
+        public static Int4 operator -(Int4 xyzw) => throw new InvalidExecutionContextException($"{nameof(Int4)}.-");
+
+        /// <summary>
+        /// Sums two <see cref="Int4"/> values.
+        /// </summary>
+        /// <param name="left">The first <see cref="Int4"/> value to sum.</param>
+        /// <param name="right">The second <see cref="Int4"/> value to sum.</param>
+        public static Int4 operator +(Int4 left, Int4 right) => throw new InvalidExecutionContextException($"{nameof(Int4)}.+");
+
+        /// <summary>
+        /// Divides two <see cref="Int4"/> values.
+        /// </summary>
+        /// <param name="left">The first <see cref="Int4"/> value to divide.</param>
+        /// <param name="right">The second <see cref="Int4"/> value to divide.</param>
+        public static Int4 operator /(Int4 left, Int4 right) => throw new InvalidExecutionContextException($"{nameof(Int4)}./");
+
+        /// <summary>
+        /// Multiplies two <see cref="Int4"/> values.
+        /// </summary>
+        /// <param name="left">The first <see cref="Int4"/> value to multiply.</param>
+        /// <param name="right">The second <see cref="Int4"/> value to multiply.</param>
+        public static Int4 operator *(Int4 left, Int4 right) => throw new InvalidExecutionContextException($"{nameof(Int4)}.*");
+
+        /// <summary>
+        /// Subtracts two <see cref="Int4"/> values.
+        /// </summary>
+        /// <param name="left">The first <see cref="Int4"/> value to subtract.</param>
+        /// <param name="right">The second <see cref="Int4"/> value to subtract.</param>
+        public static Int4 operator -(Int4 left, Int4 right) => throw new InvalidExecutionContextException($"{nameof(Int4)}.-");
     }
 }

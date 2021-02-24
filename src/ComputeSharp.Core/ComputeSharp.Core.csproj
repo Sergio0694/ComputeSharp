@@ -90,10 +90,80 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Primitives\Bool\Bool2.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Bool2.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Primitives\Bool\Bool3.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Bool3.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Primitives\Bool\Bool4.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Bool4.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Primitives\Double\Double2.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Double2.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Primitives\Double\Double3.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Double3.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Primitives\Double\Double4.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Double4.tt</DependentUpon>
+    </Compile>
     <Compile Update="Primitives\Float\Float2.g.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Float2.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Primitives\Float\Float3.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Float3.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Primitives\Float\Float4.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Float4.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Primitives\Int\Int2.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Int2.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Primitives\Int\Int3.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Int3.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Primitives\Int\Int4.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Int4.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Primitives\UInt\UInt2.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UInt2.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Primitives\UInt\UInt3.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UInt3.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Primitives\UInt\UInt4.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UInt4.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 

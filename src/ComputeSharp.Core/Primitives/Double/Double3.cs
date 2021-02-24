@@ -124,39 +124,5 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="xyz">The input <see cref="Double3"/> value to cast.</param>
         public static explicit operator Float3(Double3 xyz) => throw new InvalidExecutionContextException($"{nameof(Double3)}.({nameof(Float3)})");
-
-        /// <summary>
-        /// Negates a <see cref="Double3"/> value.
-        /// </summary>
-        /// <param name="xyz">The <see cref="Double3"/> value to negate.</param>
-        public static Double3 operator -(Double3 xyz) => throw new InvalidExecutionContextException($"{nameof(Double3)}.-");
-
-        /// <summary>
-        /// Sums two <see cref="Double3"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Double3"/> value to sum.</param>
-        /// <param name="right">The second <see cref="Double3"/> value to sum.</param>
-        public static Double3 operator +(Double3 left, Double3 right) => throw new InvalidExecutionContextException($"{nameof(Double3)}.+");
-
-        /// <summary>
-        /// Divides two <see cref="Double3"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Double3"/> value to divide.</param>
-        /// <param name="right">The second <see cref="Double3"/> value to divide.</param>
-        public static Double3 operator /(Double3 left, Double3 right) => throw new InvalidExecutionContextException($"{nameof(Double3)}./");
-
-        /// <summary>
-        /// Multiplies two <see cref="Double3"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Double3"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="Double3"/> value to multiply.</param>
-        public static Double3 operator *(Double3 left, Double3 right) => throw new InvalidExecutionContextException($"{nameof(Double3)}.*");
-
-        /// <summary>
-        /// Subtracts two <see cref="Double3"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Double3"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="Double3"/> value to subtract.</param>
-        public static Double3 operator -(Double3 left, Double3 right) => throw new InvalidExecutionContextException($"{nameof(Double3)}.-");
     }
 }

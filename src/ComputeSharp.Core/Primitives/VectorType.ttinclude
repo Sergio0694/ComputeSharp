@@ -79,6 +79,56 @@ namespace ComputeSharp
 
     PopIndent();
     PopIndent();
+
+    // Generate the negation operator
+    if (elementTypeName != "Bool" && elementTypeName != "UInt")
+    {
+        WriteLine("");
+
+        string argumentName = "xyzw".Substring(0, i);
+#>
+        /// <summary>
+        /// Negates a <see cref="<#=typeName#>"/> value.
+        /// </summary>
+        /// <param name="<#=argumentName#>">The <see cref="<#=typeName#>"/> value to negate.</param>
+        public static <#=typeName#> operator -(<#=typeName#> <#=argumentName#>) => throw new InvalidExecutionContextException($"{nameof(<#=typeName#>)}.-");
+<#
+    }
+
+    // Generate the numerical operators
+    if (elementTypeName != "Bool")
+    {
+        WriteLine("");
+#>
+        /// <summary>
+        /// Sums two <see cref="<#=typeName#>"/> values.
+        /// </summary>
+        /// <param name="left">The first <see cref="<#=typeName#>"/> value to sum.</param>
+        /// <param name="right">The second <see cref="<#=typeName#>"/> value to sum.</param>
+        public static <#=typeName#> operator +(<#=typeName#> left, <#=typeName#> right) => throw new InvalidExecutionContextException($"{nameof(<#=typeName#>)}.+");
+
+        /// <summary>
+        /// Divides two <see cref="<#=typeName#>"/> values.
+        /// </summary>
+        /// <param name="left">The first <see cref="<#=typeName#>"/> value to divide.</param>
+        /// <param name="right">The second <see cref="<#=typeName#>"/> value to divide.</param>
+        public static <#=typeName#> operator /(<#=typeName#> left, <#=typeName#> right) => throw new InvalidExecutionContextException($"{nameof(<#=typeName#>)}./");
+
+        /// <summary>
+        /// Multiplies two <see cref="<#=typeName#>"/> values.
+        /// </summary>
+        /// <param name="left">The first <see cref="<#=typeName#>"/> value to multiply.</param>
+        /// <param name="right">The second <see cref="<#=typeName#>"/> value to multiply.</param>
+        public static <#=typeName#> operator *(<#=typeName#> left, <#=typeName#> right) => throw new InvalidExecutionContextException($"{nameof(<#=typeName#>)}.*");
+
+        /// <summary>
+        /// Subtracts two <see cref="<#=typeName#>"/> values.
+        /// </summary>
+        /// <param name="left">The first <see cref="<#=typeName#>"/> value to subtract.</param>
+        /// <param name="right">The second <see cref="<#=typeName#>"/> value to subtract.</param>
+        public static <#=typeName#> operator -(<#=typeName#> left, <#=typeName#> right) => throw new InvalidExecutionContextException($"{nameof(<#=typeName#>)}.-");
+<#
+    }
 #>
     }
 }

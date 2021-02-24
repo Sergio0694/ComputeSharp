@@ -116,39 +116,5 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="xy">The input <see cref="Float2"/> value to cast.</param>
         public static explicit operator UInt2(Float2 xy) => throw new InvalidExecutionContextException($"{nameof(Float2)}.({nameof(UInt2)})");
-
-        /// <summary>
-        /// Negates a <see cref="Float2"/> value.
-        /// </summary>
-        /// <param name="xy">The <see cref="Float2"/> value to negate.</param>
-        public static Float2 operator -(Float2 xy) => throw new InvalidExecutionContextException($"{nameof(Float2)}.-");
-
-        /// <summary>
-        /// Sums two <see cref="Float2"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Float2"/> value to sum.</param>
-        /// <param name="right">The second <see cref="Float2"/> value to sum.</param>
-        public static Float2 operator +(Float2 left, Float2 right) => throw new InvalidExecutionContextException($"{nameof(Float2)}.+");
-
-        /// <summary>
-        /// Divides two <see cref="Float2"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Float2"/> value to divide.</param>
-        /// <param name="right">The second <see cref="Float2"/> value to divide.</param>
-        public static Float2 operator /(Float2 left, Float2 right) => throw new InvalidExecutionContextException($"{nameof(Float2)}./");
-
-        /// <summary>
-        /// Multiplies two <see cref="Float2"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Float2"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="Float2"/> value to multiply.</param>
-        public static Float2 operator *(Float2 left, Float2 right) => throw new InvalidExecutionContextException($"{nameof(Float2)}.*");
-
-        /// <summary>
-        /// Subtracts two <see cref="Float2"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Float2"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="Float2"/> value to subtract.</param>
-        public static Float2 operator -(Float2 left, Float2 right) => throw new InvalidExecutionContextException($"{nameof(Float2)}.-");
     }
 }

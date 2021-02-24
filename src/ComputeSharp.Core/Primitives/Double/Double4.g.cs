@@ -4660,5 +4660,39 @@ namespace ComputeSharp
         {
             get => throw new InvalidExecutionContextException($"{nameof(Double4)}.{nameof(AAAA)}");
         }
+
+        /// <summary>
+        /// Negates a <see cref="Double4"/> value.
+        /// </summary>
+        /// <param name="xyzw">The <see cref="Double4"/> value to negate.</param>
+        public static Double4 operator -(Double4 xyzw) => throw new InvalidExecutionContextException($"{nameof(Double4)}.-");
+
+        /// <summary>
+        /// Sums two <see cref="Double4"/> values.
+        /// </summary>
+        /// <param name="left">The first <see cref="Double4"/> value to sum.</param>
+        /// <param name="right">The second <see cref="Double4"/> value to sum.</param>
+        public static Double4 operator +(Double4 left, Double4 right) => throw new InvalidExecutionContextException($"{nameof(Double4)}.+");
+
+        /// <summary>
+        /// Divides two <see cref="Double4"/> values.
+        /// </summary>
+        /// <param name="left">The first <see cref="Double4"/> value to divide.</param>
+        /// <param name="right">The second <see cref="Double4"/> value to divide.</param>
+        public static Double4 operator /(Double4 left, Double4 right) => throw new InvalidExecutionContextException($"{nameof(Double4)}./");
+
+        /// <summary>
+        /// Multiplies two <see cref="Double4"/> values.
+        /// </summary>
+        /// <param name="left">The first <see cref="Double4"/> value to multiply.</param>
+        /// <param name="right">The second <see cref="Double4"/> value to multiply.</param>
+        public static Double4 operator *(Double4 left, Double4 right) => throw new InvalidExecutionContextException($"{nameof(Double4)}.*");
+
+        /// <summary>
+        /// Subtracts two <see cref="Double4"/> values.
+        /// </summary>
+        /// <param name="left">The first <see cref="Double4"/> value to subtract.</param>
+        /// <param name="right">The second <see cref="Double4"/> value to subtract.</param>
+        public static Double4 operator -(Double4 left, Double4 right) => throw new InvalidExecutionContextException($"{nameof(Double4)}.-");
     }
 }

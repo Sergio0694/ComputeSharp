@@ -145,33 +145,5 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="xyzw">The input <see cref="UInt4"/> value to cast.</param>
         public static implicit operator Double4(UInt4 xyzw) => throw new InvalidExecutionContextException($"{nameof(UInt4)}.({nameof(Double4)})");
-
-        /// <summary>
-        /// Sums two <see cref="UInt4"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="UInt4"/> value to sum.</param>
-        /// <param name="right">The second <see cref="UInt4"/> value to sum.</param>
-        public static UInt4 operator +(UInt4 left, UInt4 right) => throw new InvalidExecutionContextException($"{nameof(UInt4)}.+");
-
-        /// <summary>
-        /// Divides two <see cref="UInt4"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="UInt4"/> value to divide.</param>
-        /// <param name="right">The second <see cref="UInt4"/> value to divide.</param>
-        public static UInt4 operator /(UInt4 left, UInt4 right) => throw new InvalidExecutionContextException($"{nameof(UInt4)}./");
-
-        /// <summary>
-        /// Multiplies two <see cref="UInt4"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="UInt4"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="UInt4"/> value to multiply.</param>
-        public static UInt4 operator *(UInt4 left, UInt4 right) => throw new InvalidExecutionContextException($"{nameof(UInt4)}.*");
-
-        /// <summary>
-        /// Subtracts two <see cref="UInt4"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="UInt4"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="UInt4"/> value to subtract.</param>
-        public static UInt4 operator -(UInt4 left, UInt4 right) => throw new InvalidExecutionContextException($"{nameof(UInt4)}.-");
     }
 }
