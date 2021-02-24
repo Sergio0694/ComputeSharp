@@ -2,7 +2,7 @@
 using System.Drawing;
 using TerraFX.Interop;
 
-namespace ComputeSharp.Sample.SwapChain.Backend
+namespace ComputeSharp.SwapChain.Backend
 {
     /// <summary>
     /// A class representing a simple Win32 application.

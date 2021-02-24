@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.Sample.SwapChain.Shaders
+﻿namespace ComputeSharp.SwapChain.Shaders
 {
     /// <summary>
     /// A shader creating an abstract and colorful animation.

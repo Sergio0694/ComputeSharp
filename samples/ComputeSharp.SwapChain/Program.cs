@@ -1,8 +1,8 @@
 ﻿using System;
-using ComputeSharp.Sample.SwapChain.Backend;
-using ComputeSharp.Sample.SwapChain.Shaders;
+using ComputeSharp.SwapChain.Backend;
+using ComputeSharp.SwapChain.Shaders;
 
-namespace ComputeSharp.Sample.SwapChain
+namespace ComputeSharp.SwapChain
 {
     class Program
     {

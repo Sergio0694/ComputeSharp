@@ -47,7 +47,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Tests.Internal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Tests.NativeLibrariesResolver", "tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj", "{BF52326F-E415-49E6-8595-62762216762B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.Sample.SwapChain", "samples\ComputeSharp.Sample.SwapChain\ComputeSharp.Sample.SwapChain.csproj", "{E7C9247D-016B-4819-AF9F-0E9B3591E04B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.SwapChain", "samples\ComputeSharp.SwapChain\ComputeSharp.SwapChain.csproj", "{E7C9247D-016B-4819-AF9F-0E9B3591E04B}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

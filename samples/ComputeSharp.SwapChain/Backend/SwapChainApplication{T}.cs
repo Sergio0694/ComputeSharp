@@ -4,7 +4,7 @@ using ComputeSharp.Interop;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
 
-namespace ComputeSharp.Sample.SwapChain.Backend
+namespace ComputeSharp.SwapChain.Backend
 {
     internal sealed class SwapChainApplication<T> : Win32Application
         where T : struct, IComputeShader

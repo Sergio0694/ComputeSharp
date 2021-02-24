@@ -7,7 +7,7 @@ using System.Threading;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
 
-namespace ComputeSharp.Sample.SwapChain.Backend
+namespace ComputeSharp.SwapChain.Backend
 {
     /// <summary>
     /// A helper class to manage the creation and execution of Win32 applications.
