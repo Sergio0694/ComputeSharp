@@ -11,13 +11,14 @@ namespace ComputeSharp.Tests
     {
         [CombinatorialTestMethod]
         [AllDevices]
-        public void Verify_ThreadIds(Device device)
+        public unsafe void Verify_ThreadIds(Device device)
         {
             using ReadWriteTexture3D<Int4> buffer = device.Get().AllocateReadWriteTexture3D<Int4>(50, 50, 50);
 
             device.Get().For(buffer.Width, buffer.Height, buffer.Depth, new ThreadIdsShader(buffer));
 
             Int4[,,] data = buffer.ToArray();
+            int* value = stackalloc int[4];
 
             for (int z = 0; z < 50; z++)
             {
@@ -25,11 +26,11 @@ namespace ComputeSharp.Tests
                 {
                     for (int y = 0; y < 50; y++)
                     {
-                        Int4 value = data[z, y, x];
+                        *(Int4*)value = data[z, y, x];
 
-                        Assert.AreEqual(x, value.X);
-                        Assert.AreEqual(y, value.Y);
-                        Assert.AreEqual(z, value.Z);
+                        Assert.AreEqual(x, value[0]);
+                        Assert.AreEqual(y, value[1]);
+                        Assert.AreEqual(z, value[2]);
                     }
                 }
             }
@@ -65,13 +66,14 @@ namespace ComputeSharp.Tests
 
         [CombinatorialTestMethod]
         [AllDevices]
-        public void Verify_GroupIds(Device device)
+        public unsafe void Verify_GroupIds(Device device)
         {
             using ReadWriteTexture3D<Int4> buffer = device.Get().AllocateReadWriteTexture3D<Int4>(50, 50, 50);
 
             device.Get().For(buffer.Width, buffer.Height, buffer.Depth, 4, 4, 4, new GroupIdsShader(buffer));
 
             Int4[,,] data = buffer.ToArray();
+            int* value = stackalloc int[4];
 
             for (int z = 0; z < 50; z++)
             {
@@ -79,12 +81,12 @@ namespace ComputeSharp.Tests
                 {
                     for (int y = 0; y < 50; y++)
                     {
-                        Int4 value = data[z, y, x];
+                        *(Int4*)value = data[z, y, x];
 
-                        Assert.AreEqual(x % 4, value.X);
-                        Assert.AreEqual(y % 4, value.Y);
-                        Assert.AreEqual(z % 4, value.Z);
-                        Assert.AreEqual(value.Z * 4 * 4 + value.Y * 4 + value.X, value.W);
+                        Assert.AreEqual(x % 4, value[0]);
+                        Assert.AreEqual(y % 4, value[1]);
+                        Assert.AreEqual(z % 4, value[2]);
+                        Assert.AreEqual(value[2] * 4 * 4 + value[1] * 4 + value[0], value[3]);
                     }
                 }
             }
