@@ -1,0 +1,87 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".g.cs"#>
+<#
+// Enumerates on all combinations of a given string (with repetition)
+IEnumerable<string> EnumerateCombinations(string text)
+{
+    static IEnumerable<string> EnumerateCombinations(string text, int length)
+    {
+        if (length == 1) return text.Select(c => c.ToString());
+
+        return EnumerateCombinations(text, length - 1).SelectMany(s => text, (s1, s2) => s1 + s2);
+    }
+
+    return EnumerateCombinations(text, text.Length);
+}
+
+// Generates all vector access properties for a specified type
+void GenerateVectorProperties(string typeName)
+{
+    string elementTypeName = Regex.Match(typeName, @"^[A-Za-z]+").Value;
+    string hlslElementTypeName = elementTypeName.ToLower();
+    int i = int.Parse(Regex.Match(typeName, @"\d+$").Value);
+#>
+using ComputeSharp.Exceptions;
+
+namespace ComputeSharp
+{
+    /// <inheritdoc cref="<#=typeName#>"/>
+    public partial struct <#=typeName#>
+    {
+<#
+    PushIndent("    ");
+    PushIndent("    ");
+
+    var properties = (
+        from j in Enumerable.Range(2, i - 1)
+        from source in new[] { "XYZW", "RGBA" }
+        from name in EnumerateCombinations(source.Substring(0, j))
+        select (Name: name, Length: j)).ToArray();
+
+    for (int j = 0; j < properties.Length; j++)
+    {
+        var property = properties[j];
+        string propertyType = property.Length == 1 ? hlslElementTypeName : $"{elementTypeName}{property.Length}";
+        bool isReadonly = property.Name.Distinct().Count() < property.Name.Length;
+
+        // XML docs
+        WriteLine("/// <summary>");
+        Write("/// Gets ");
+        if (!isReadonly) Write("or sets ");
+        Write($"a <see cref=\"{propertyType}\"/> value with the values ");
+        Write(string.Join(", ", property.Name.Select(c => $"<see cref=\"{c}\"/>")));
+        WriteLine(".");
+        WriteLine("/// </summary>");
+
+        // Property
+        WriteLine($"public {propertyType} {property.Name}");
+        WriteLine("{");
+
+        PushIndent("    ");
+
+        WriteLine($"get => throw new InvalidExecutionContextException($\"{{nameof({typeName})}}.{{nameof({property.Name})}}\");");
+
+        if (!isReadonly)
+        {
+            WriteLine($"set => throw new InvalidExecutionContextException($\"{{nameof({typeName})}}.{{nameof({property.Name})}}\");");
+        }
+
+        PopIndent();
+        WriteLine("}");
+
+        if (j < properties.Length - 1) WriteLine("");
+    }
+
+    PopIndent();
+    PopIndent();
+#>
+    }
+}
+<#
+}
+#>

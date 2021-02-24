@@ -9,7 +9,7 @@ namespace ComputeSharp
     /// </summary>
     [DebuggerDisplay("({X}, {Y})")]
     [StructLayout(LayoutKind.Sequential, Size = sizeof(double) * 2)]
-    public struct Double2
+    public partial struct Double2
     {
         /// <summary>
         /// Gets an <see cref="Double2"/> value with all components set to 0.
@@ -79,62 +79,6 @@ namespace ComputeSharp
             get => throw new InvalidExecutionContextException($"{nameof(Double2)}[int]");
             set => throw new InvalidExecutionContextException($"{nameof(Double2)}[int]");
         }
-
-        /// <summary>
-        /// Gets an <see cref="Double2"/> value with the <see cref="X"/> value for all components.
-        /// </summary>
-        public Double2 XX => throw new InvalidExecutionContextException($"{nameof(Double2)}.{nameof(XX)}");
-
-        /// <summary>
-        /// Gets or sets an <see cref="Double2"/> value with the <see cref="X"/> and <see cref="Y"/> values.
-        /// </summary>
-        public Double2 XY
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Double2)}.{nameof(XY)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Double2)}.{nameof(XY)}");
-        }
-
-        /// <summary>
-        /// Gets an <see cref="Double2"/> value with the <see cref="Y"/> and <see cref="X"/> values.
-        /// </summary>
-        public Double2 YX
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Double2)}.{nameof(YX)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Double2)}.{nameof(YX)}");
-        }
-
-        /// <summary>
-        /// Gets an <see cref="Double2"/> value with the <see cref="Y"/> value for all components.
-        /// </summary>
-        public Double2 YY => throw new InvalidExecutionContextException($"{nameof(Double2)}.{nameof(YY)}");
-
-        /// <summary>
-        /// Gets an <see cref="Double2"/> value with the <see cref="R"/> value for all components.
-        /// </summary>
-        public Double2 RR => throw new InvalidExecutionContextException($"{nameof(Double2)}.{nameof(RR)}");
-
-        /// <summary>
-        /// Gets or sets an <see cref="Double2"/> value with the <see cref="R"/> and <see cref="G"/> values.
-        /// </summary>
-        public Double2 RG
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Double2)}.{nameof(RG)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Double2)}.{nameof(RG)}");
-        }
-
-        /// <summary>
-        /// Gets an <see cref="Double2"/> value with the <see cref="G"/> and <see cref="R"/> values.
-        /// </summary>
-        public Double2 GR
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Double2)}.{nameof(GR)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Double2)}.{nameof(GR)}");
-        }
-
-        /// <summary>
-        /// Gets an <see cref="Double2"/> value with the <see cref="G"/> value for all components.
-        /// </summary>
-        public Double2 GG => throw new InvalidExecutionContextException($"{nameof(Double2)}.{nameof(GG)}");
 
         /// <summary>
         /// Creates a new <see cref="Double2"/> value with the same value for all its components.
