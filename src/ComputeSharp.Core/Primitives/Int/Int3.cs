@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
@@ -8,7 +7,6 @@ namespace ComputeSharp
     /// A <see langword="struct"/> that maps the <see langword="int3"/> HLSL type.
     /// </summary>
     [DebuggerDisplay("({X}, {Y}, {Z})")]
-    [StructLayout(LayoutKind.Sequential, Size = sizeof(int) * 3)]
     public partial struct Int3
     {
         /// <summary>
