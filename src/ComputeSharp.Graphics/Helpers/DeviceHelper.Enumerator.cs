@@ -159,7 +159,11 @@ namespace ComputeSharp.Graphics.Helpers
 
                             dxgiAdapter1.Get()->GetDesc1(&dxgiDescription1).Assert();
 
-                            if (dxgiDescription1.DedicatedVideoMemory == 0) continue;
+                            if (dxgiDescription1.VendorId == MicrosoftVendorId &&
+                                dxgiDescription1.DeviceId == WarpDeviceId)
+                            {
+                                continue;
+                            }
 
                             HRESULT createDeviceResult = FX.D3D12CreateDevice(
                                 dxgiAdapter1.AsIUnknown().Get(),

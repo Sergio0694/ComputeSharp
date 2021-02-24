@@ -15,6 +15,16 @@ namespace ComputeSharp.Graphics.Helpers
     internal static partial class DeviceHelper
     {
         /// <summary>
+        /// The vendor id for Microsoft adapters (the "Microsoft Basic Render").
+        /// </summary>
+        private const uint MicrosoftVendorId = 0x1414;
+
+        /// <summary>
+        /// The device id for the WARP device.
+        /// </summary>
+        private const uint WarpDeviceId = 0x8C;
+
+        /// <summary>
         /// Gets whether or not there is a default device available, without creating it.
         /// </summary>
         /// <returns>Whether or not there is a device supporting at least DX12.0.</returns>   
@@ -92,7 +102,11 @@ namespace ComputeSharp.Graphics.Helpers
 
                 dxgiAdapter1.Get()->GetDesc1(dxgiDescription1).Assert();
 
-                if (dxgiDescription1->DedicatedVideoMemory == 0) continue;
+                if (dxgiDescription1->VendorId == MicrosoftVendorId &&
+                    dxgiDescription1->DeviceId == WarpDeviceId)
+                {
+                    continue;
+                }
 
                 HRESULT createDeviceResult = FX.D3D12CreateDevice(
                     dxgiAdapter1.AsIUnknown().Get(),
