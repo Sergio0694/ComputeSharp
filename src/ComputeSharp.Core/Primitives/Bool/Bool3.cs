@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
-using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
 {
@@ -8,7 +6,6 @@ namespace ComputeSharp
     /// A <see langword="struct"/> that maps the <see langword="bool3"/> HLSL type.
     /// </summary>
     [DebuggerDisplay("({X}, {Y}, {Z})")]
-    [StructLayout(LayoutKind.Explicit, Size = sizeof(int) * 3)]
     public partial struct Bool3
     {
         /// <summary>
@@ -44,72 +41,9 @@ namespace ComputeSharp
         /// <param name="z">The value to assign to the third vector component.</param>
         public Bool3(bool x, bool y, bool z)
         {
-            _X = x;
-            _Y = y;
-            _Z = z;
-        }
-
-        [FieldOffset(0)]
-        private bool _X;
-
-        /// <summary>
-        /// Gets or sets the value of the first vector component.
-        /// </summary>
-        public bool X
-        {
-            get => _X;
-            set => _X = value;
-        }
-
-        [FieldOffset(4)]
-        private bool _Y;
-
-        /// <summary>
-        /// Gets or sets the value of the second vector component.
-        /// </summary>
-        public bool Y
-        {
-            get => _Y;
-            set => _Y = value;
-        }
-
-        [FieldOffset(8)]
-        private bool _Z;
-
-        /// <summary>
-        /// Gets or sets the value of the third vector component.
-        /// </summary>
-        public bool Z
-        {
-            get => _Z;
-            set => _Z = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the first color component.
-        /// </summary>
-        public bool R
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(R)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(R)}");
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the second color component.
-        /// </summary>
-        public bool G
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(G)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(G)}");
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the third color component.
-        /// </summary>
-        public bool B
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(B)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool3)}.{nameof(B)}");
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
 
         /// <summary>

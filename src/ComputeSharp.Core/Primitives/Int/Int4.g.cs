@@ -1,15 +1,69 @@
-﻿using ComputeSharp.Exceptions;
+﻿using System.Runtime.InteropServices;
+using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
 {
     /// <inheritdoc cref="Int4"/>
+    [StructLayout(LayoutKind.Explicit, Size = 16)]
     public partial struct Int4
     {
+        [FieldOffset(0)]
+        private int x;
+
+        [FieldOffset(4)]
+        private int y;
+
+        [FieldOffset(8)]
+        private int z;
+
+        [FieldOffset(12)]
+        private int w;
+
         /// <summary>
         /// Gets a reference to a specific component in the current <see cref="Int4"/> instance.
         /// </summary>
         /// <param name="i">The index of the component to access.</param>
         public ref int this[int i] => throw new InvalidExecutionContextException($"{nameof(Int4)}[int]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="int"/> value representing the <c>X</c> component.
+        /// </summary>
+        public ref int X => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(X)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="int"/> value representing the <c>Y</c> component.
+        /// </summary>
+        public ref int Y => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(Y)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="int"/> value representing the <c>Z</c> component.
+        /// </summary>
+        public ref int Z => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(Z)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="int"/> value representing the <c>W</c> component.
+        /// </summary>
+        public ref int W => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(W)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="int"/> value representing the <c>R</c> component.
+        /// </summary>
+        public ref int R => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(R)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="int"/> value representing the <c>G</c> component.
+        /// </summary>
+        public ref int G => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(G)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="int"/> value representing the <c>B</c> component.
+        /// </summary>
+        public ref int B => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(B)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="int"/> value representing the <c>A</c> component.
+        /// </summary>
+        public ref int A => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(A)}");
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int2"/> value with the components <see cref="X"/>, <see cref="X"/>.

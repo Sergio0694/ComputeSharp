@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
@@ -8,7 +7,6 @@ namespace ComputeSharp
     /// A <see langword="struct"/> that maps the <see langword="int2"/> HLSL type.
     /// </summary>
     [DebuggerDisplay("({X}, {Y})")]
-    [StructLayout(LayoutKind.Sequential, Size = sizeof(int) * 2)]
     public partial struct Int2
     {
         /// <summary>
@@ -38,36 +36,8 @@ namespace ComputeSharp
         /// <param name="y">The value to assign to the second vector component.</param>
         public Int2(int x, int y)
         {
-            X = x;
-            Y = y;
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the first vector component.
-        /// </summary>
-        public int X { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of the second vector component.
-        /// </summary>
-        public int Y { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of the first color component.
-        /// </summary>
-        public int R
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(R)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(R)}");
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the second color component.
-        /// </summary>
-        public int G
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(G)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Int2)}.{nameof(G)}");
+            this.x = x;
+            this.y = y;
         }
 
         /// <summary>

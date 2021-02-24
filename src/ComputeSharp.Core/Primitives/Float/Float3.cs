@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Numerics;
-using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
@@ -9,7 +8,6 @@ namespace ComputeSharp
     /// A <see langword="struct"/> that maps the <see langword="float3"/> HLSL type.
     /// </summary>
     [DebuggerDisplay("({X}, {Y}, {Z})")]
-    [StructLayout(LayoutKind.Sequential, Size = sizeof(float) * 3)]
     public partial struct Float3
     {
         /// <summary>
@@ -45,51 +43,9 @@ namespace ComputeSharp
         /// <param name="z">The value to assign to the third vector component.</param>
         public Float3(float x, float y, float z)
         {
-            X = x;
-            Y = y;
-            Z = z;
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the first vector component.
-        /// </summary>
-        public float X { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of the second vector component.
-        /// </summary>
-        public float Y { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of the third vector component.
-        /// </summary>
-        public float Z { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of the first color component.
-        /// </summary>
-        public float R
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(R)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(R)}");
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the second color component.
-        /// </summary>
-        public float G
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(G)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(G)}");
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the third color component.
-        /// </summary>
-        public float B
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(B)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(B)}");
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
 
         /// <summary>

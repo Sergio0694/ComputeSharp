@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Numerics;
-using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
@@ -9,7 +8,6 @@ namespace ComputeSharp
     /// A <see langword="struct"/> that maps the <see langword="float2"/> HLSL type.
     /// </summary>
     [DebuggerDisplay("({X}, {Y})")]
-    [StructLayout(LayoutKind.Sequential, Size = sizeof(float) * 2)]
     public partial struct Float2
     {
         /// <summary>
@@ -39,36 +37,8 @@ namespace ComputeSharp
         /// <param name="y">The value to assign to the second vector component.</param>
         public Float2(float x, float y)
         {
-            X = x;
-            Y = y;
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the first vector component.
-        /// </summary>
-        public float X { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of the second vector component.
-        /// </summary>
-        public float Y { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of the first color component.
-        /// </summary>
-        public float R
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float2)}.{nameof(R)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float2)}.{nameof(R)}");
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the second color component.
-        /// </summary>
-        public float G
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Float2)}.{nameof(G)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Float2)}.{nameof(G)}");
+            this.x = x;
+            this.y = y;
         }
 
         /// <summary>

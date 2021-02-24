@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
@@ -8,7 +7,6 @@ namespace ComputeSharp
     /// A <see langword="struct"/> that maps the <see langword="double3"/> HLSL type.
     /// </summary>
     [DebuggerDisplay("({X}, {Y}, {Z})")]
-    [StructLayout(LayoutKind.Sequential, Size = sizeof(double) * 3)]
     public partial struct Double3
     {
         /// <summary>
@@ -44,51 +42,9 @@ namespace ComputeSharp
         /// <param name="z">The value to assign to the third vector component.</param>
         public Double3(double x, double y, double z)
         {
-            X = x;
-            Y = y;
-            Z = z;
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the first vector component.
-        /// </summary>
-        public double X { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of the second vector component.
-        /// </summary>
-        public double Y { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of the third vector component.
-        /// </summary>
-        public double Z { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of the first color component.
-        /// </summary>
-        public double R
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(R)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(R)}");
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the second color component.
-        /// </summary>
-        public double G
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(G)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(G)}");
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the third color component.
-        /// </summary>
-        public double B
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(B)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Double3)}.{nameof(B)}");
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
 
         /// <summary>

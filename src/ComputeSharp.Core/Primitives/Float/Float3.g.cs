@@ -1,15 +1,56 @@
-﻿using ComputeSharp.Exceptions;
+﻿using System.Runtime.InteropServices;
+using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
 {
     /// <inheritdoc cref="Float3"/>
+    [StructLayout(LayoutKind.Explicit, Size = 12)]
     public partial struct Float3
     {
+        [FieldOffset(0)]
+        private float x;
+
+        [FieldOffset(4)]
+        private float y;
+
+        [FieldOffset(8)]
+        private float z;
+
         /// <summary>
         /// Gets a reference to a specific component in the current <see cref="Float3"/> instance.
         /// </summary>
         /// <param name="i">The index of the component to access.</param>
         public ref float this[int i] => throw new InvalidExecutionContextException($"{nameof(Float3)}[int]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="float"/> value representing the <c>X</c> component.
+        /// </summary>
+        public ref float X => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(X)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="float"/> value representing the <c>Y</c> component.
+        /// </summary>
+        public ref float Y => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(Y)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="float"/> value representing the <c>Z</c> component.
+        /// </summary>
+        public ref float Z => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(Z)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="float"/> value representing the <c>R</c> component.
+        /// </summary>
+        public ref float R => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(R)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="float"/> value representing the <c>G</c> component.
+        /// </summary>
+        public ref float G => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(G)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="float"/> value representing the <c>B</c> component.
+        /// </summary>
+        public ref float B => throw new InvalidExecutionContextException($"{nameof(Float3)}.{nameof(B)}");
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Float2"/> value with the components <see cref="X"/>, <see cref="X"/>.

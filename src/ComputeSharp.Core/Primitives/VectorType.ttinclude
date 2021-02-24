@@ -20,36 +20,54 @@ IEnumerable<string> EnumerateCombinations(string text)
 }
 
 // Generates all vector access properties for a specified type
-void GenerateVectorProperties(string typeName)
+void GenerateVectorProperties(string typeName, int elementSize)
 {
     string elementTypeName = Regex.Match(typeName, @"^[A-Za-z]+").Value;
     string hlslElementTypeName = elementTypeName.ToLower();
     int i = int.Parse(Regex.Match(typeName, @"\d+$").Value);
 #>
+using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
 {
     /// <inheritdoc cref="<#=typeName#>"/>
+    [StructLayout(LayoutKind.Explicit, Size = <#=(elementSize * i)#>)]
     public partial struct <#=typeName#>
     {
+<#
+    PushIndent("    ");
+    PushIndent("    ");
+
+    // Generate the private fields
+    foreach (char name in "xyzw".Substring(0, i))
+    {
+        WriteLine($"[FieldOffset({"xyzw".IndexOf(name) * elementSize})]");
+        WriteLine($"private {hlslElementTypeName} {name};");
+        WriteLine("");
+    }
+
+    PopIndent();
+    PopIndent();
+#>
         /// <summary>
         /// Gets a reference to a specific component in the current <see cref="<#=typeName#>"/> instance.
         /// </summary>
         /// <param name="i">The index of the component to access.</param>
         public ref <#=hlslElementTypeName#> this[int i] => throw new InvalidExecutionContextException($"{nameof(<#=typeName#>)}[int]");
 <#
-
     PushIndent("    ");
     PushIndent("    ");
 
     // Generate the combinatorial swizzling properties
     foreach (
-        var property in
+        (string Name, int Length) property in
+        "XYZW".Substring(0, i).Select(c => (c.ToString(), 1)).Concat(
+        "RGBA".Substring(0, i).Select(c => (c.ToString(), 1))).Concat(
         from j in Enumerable.Range(2, i - 1)
         from source in new[] { "XYZW", "RGBA" }
         from name in EnumerateCombinations(source.Substring(0, j))
-        select (Name: name, Length: j))
+        select (name, j)))
     {
         WriteLine("");
 
@@ -59,11 +77,18 @@ namespace ComputeSharp
 
         // XML docs
         WriteLine("/// <summary>");
-        Write("/// Gets a ");
-        if (isReadonly) Write("readonly ");
-        Write($"reference to the <see cref=\"{propertyType}\"/> value with the components ");
-        Write(string.Join(", ", property.Name.Select(c => $"<see cref=\"{c}\"/>")));
-        WriteLine(".");
+        if (property.Length == 1)
+        {
+            WriteLine($"/// Gets a reference to the <see cref=\"{propertyType}\"/> value representing the <c>{property.Name}</c> component.");
+        }
+        else
+        {
+            Write("/// Gets a ");
+            if (isReadonly) Write("readonly ");
+            Write($"reference to the <see cref=\"{propertyType}\"/> value with the components ");
+            Write(string.Join(", ", property.Name.Select(c => $"<see cref=\"{c}\"/>")));
+            WriteLine(".");           
+        }
         WriteLine("/// </summary>");
 
         // Property

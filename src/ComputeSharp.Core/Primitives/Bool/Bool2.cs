@@ -1,6 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
-using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
 {
@@ -8,7 +6,6 @@ namespace ComputeSharp
     /// A <see langword="struct"/> that maps the <see langword="bool2"/> HLSL type.
     /// </summary>
     [DebuggerDisplay("({X}, {Y})")]
-    [StructLayout(LayoutKind.Explicit, Size = sizeof(int) * 2)]
     public partial struct Bool2
     {
         /// <summary>
@@ -38,50 +35,8 @@ namespace ComputeSharp
         /// <param name="y">The value to assign to the second vector component.</param>
         public Bool2(bool x, bool y)
         {
-            _X = x;
-            _Y = y;
-        }
-
-        [FieldOffset(0)]
-        private bool _X;
-
-        /// <summary>
-        /// Gets or sets the value of the first vector component.
-        /// </summary>
-        public bool X
-        {
-            get => _X;
-            set => _X = value;
-        }
-
-        [FieldOffset(4)]
-        private bool _Y;
-
-        /// <summary>
-        /// Gets or sets the value of the second vector component.
-        /// </summary>
-        public bool Y
-        {
-            get => _Y;
-            set => _Y = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the first color component.
-        /// </summary>
-        public bool R
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool2)}.{nameof(R)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool2)}.{nameof(R)}");
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the second color component.
-        /// </summary>
-        public bool G
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Bool2)}.{nameof(G)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Bool2)}.{nameof(G)}");
+            this.x = x;
+            this.y = y;
         }
 
         /// <summary>

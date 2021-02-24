@@ -1,15 +1,69 @@
-﻿using ComputeSharp.Exceptions;
+﻿using System.Runtime.InteropServices;
+using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
 {
     /// <inheritdoc cref="Double4"/>
+    [StructLayout(LayoutKind.Explicit, Size = 32)]
     public partial struct Double4
     {
+        [FieldOffset(0)]
+        private double x;
+
+        [FieldOffset(8)]
+        private double y;
+
+        [FieldOffset(16)]
+        private double z;
+
+        [FieldOffset(24)]
+        private double w;
+
         /// <summary>
         /// Gets a reference to a specific component in the current <see cref="Double4"/> instance.
         /// </summary>
         /// <param name="i">The index of the component to access.</param>
         public ref double this[int i] => throw new InvalidExecutionContextException($"{nameof(Double4)}[int]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the <c>X</c> component.
+        /// </summary>
+        public ref double X => throw new InvalidExecutionContextException($"{nameof(Double4)}.{nameof(X)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the <c>Y</c> component.
+        /// </summary>
+        public ref double Y => throw new InvalidExecutionContextException($"{nameof(Double4)}.{nameof(Y)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the <c>Z</c> component.
+        /// </summary>
+        public ref double Z => throw new InvalidExecutionContextException($"{nameof(Double4)}.{nameof(Z)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the <c>W</c> component.
+        /// </summary>
+        public ref double W => throw new InvalidExecutionContextException($"{nameof(Double4)}.{nameof(W)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the <c>R</c> component.
+        /// </summary>
+        public ref double R => throw new InvalidExecutionContextException($"{nameof(Double4)}.{nameof(R)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the <c>G</c> component.
+        /// </summary>
+        public ref double G => throw new InvalidExecutionContextException($"{nameof(Double4)}.{nameof(G)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the <c>B</c> component.
+        /// </summary>
+        public ref double B => throw new InvalidExecutionContextException($"{nameof(Double4)}.{nameof(B)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the <c>A</c> component.
+        /// </summary>
+        public ref double A => throw new InvalidExecutionContextException($"{nameof(Double4)}.{nameof(A)}");
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double2"/> value with the components <see cref="X"/>, <see cref="X"/>.

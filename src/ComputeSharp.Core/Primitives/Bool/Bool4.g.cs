@@ -1,15 +1,69 @@
-﻿using ComputeSharp.Exceptions;
+﻿using System.Runtime.InteropServices;
+using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
 {
     /// <inheritdoc cref="Bool4"/>
+    [StructLayout(LayoutKind.Explicit, Size = 16)]
     public partial struct Bool4
     {
+        [FieldOffset(0)]
+        private bool x;
+
+        [FieldOffset(4)]
+        private bool y;
+
+        [FieldOffset(8)]
+        private bool z;
+
+        [FieldOffset(12)]
+        private bool w;
+
         /// <summary>
         /// Gets a reference to a specific component in the current <see cref="Bool4"/> instance.
         /// </summary>
         /// <param name="i">The index of the component to access.</param>
         public ref bool this[int i] => throw new InvalidExecutionContextException($"{nameof(Bool4)}[int]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="bool"/> value representing the <c>X</c> component.
+        /// </summary>
+        public ref bool X => throw new InvalidExecutionContextException($"{nameof(Bool4)}.{nameof(X)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="bool"/> value representing the <c>Y</c> component.
+        /// </summary>
+        public ref bool Y => throw new InvalidExecutionContextException($"{nameof(Bool4)}.{nameof(Y)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="bool"/> value representing the <c>Z</c> component.
+        /// </summary>
+        public ref bool Z => throw new InvalidExecutionContextException($"{nameof(Bool4)}.{nameof(Z)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="bool"/> value representing the <c>W</c> component.
+        /// </summary>
+        public ref bool W => throw new InvalidExecutionContextException($"{nameof(Bool4)}.{nameof(W)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="bool"/> value representing the <c>R</c> component.
+        /// </summary>
+        public ref bool R => throw new InvalidExecutionContextException($"{nameof(Bool4)}.{nameof(R)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="bool"/> value representing the <c>G</c> component.
+        /// </summary>
+        public ref bool G => throw new InvalidExecutionContextException($"{nameof(Bool4)}.{nameof(G)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="bool"/> value representing the <c>B</c> component.
+        /// </summary>
+        public ref bool B => throw new InvalidExecutionContextException($"{nameof(Bool4)}.{nameof(B)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="bool"/> value representing the <c>A</c> component.
+        /// </summary>
+        public ref bool A => throw new InvalidExecutionContextException($"{nameof(Bool4)}.{nameof(A)}");
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool2"/> value with the components <see cref="X"/>, <see cref="X"/>.

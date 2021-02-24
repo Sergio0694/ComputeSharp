@@ -1,4 +1,4 @@
 ﻿<#@include file="..\VectorType.ttinclude" #>
 <#
-GenerateVectorProperties("Float2");
+GenerateVectorProperties("Float2", sizeof(float));
 #>

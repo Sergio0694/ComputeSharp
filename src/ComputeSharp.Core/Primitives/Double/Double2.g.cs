@@ -1,15 +1,43 @@
-﻿using ComputeSharp.Exceptions;
+﻿using System.Runtime.InteropServices;
+using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
 {
     /// <inheritdoc cref="Double2"/>
+    [StructLayout(LayoutKind.Explicit, Size = 16)]
     public partial struct Double2
     {
+        [FieldOffset(0)]
+        private double x;
+
+        [FieldOffset(8)]
+        private double y;
+
         /// <summary>
         /// Gets a reference to a specific component in the current <see cref="Double2"/> instance.
         /// </summary>
         /// <param name="i">The index of the component to access.</param>
         public ref double this[int i] => throw new InvalidExecutionContextException($"{nameof(Double2)}[int]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the <c>X</c> component.
+        /// </summary>
+        public ref double X => throw new InvalidExecutionContextException($"{nameof(Double2)}.{nameof(X)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the <c>Y</c> component.
+        /// </summary>
+        public ref double Y => throw new InvalidExecutionContextException($"{nameof(Double2)}.{nameof(Y)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the <c>R</c> component.
+        /// </summary>
+        public ref double R => throw new InvalidExecutionContextException($"{nameof(Double2)}.{nameof(R)}");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the <c>G</c> component.
+        /// </summary>
+        public ref double G => throw new InvalidExecutionContextException($"{nameof(Double2)}.{nameof(G)}");
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double2"/> value with the components <see cref="X"/>, <see cref="X"/>.

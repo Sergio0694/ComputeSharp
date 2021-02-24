@@ -44,51 +44,9 @@ namespace ComputeSharp
         /// <param name="z">The value to assign to the third vector component.</param>
         public Int3(int x, int y, int z)
         {
-            X = x;
-            Y = y;
-            Z = z;
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the first vector component.
-        /// </summary>
-        public int X { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of the second vector component.
-        /// </summary>
-        public int Y { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of the third vector component.
-        /// </summary>
-        public int Z { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of the first color component.
-        /// </summary>
-        public int R
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(R)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(R)}");
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the second color component.
-        /// </summary>
-        public int G
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(G)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(G)}");
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the third color component.
-        /// </summary>
-        public int B
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(B)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Int3)}.{nameof(B)}");
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
 
         /// <summary>

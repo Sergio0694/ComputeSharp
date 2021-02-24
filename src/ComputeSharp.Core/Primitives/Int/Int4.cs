@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
@@ -8,7 +7,6 @@ namespace ComputeSharp
     /// A <see langword="struct"/> that maps the <see langword="int4"/> HLSL type.
     /// </summary>
     [DebuggerDisplay("({X}, {Y}, {Z}, {W})")]
-    [StructLayout(LayoutKind.Sequential, Size = sizeof(int) * 4)]
     public partial struct Int4
     {
         /// <summary>
@@ -50,66 +48,10 @@ namespace ComputeSharp
         /// <param name="w">The value to assign to the fourth vector component.</param>
         public Int4(int x, int y, int z, int w)
         {
-            X = x;
-            Y = y;
-            Z = z;
-            W = w;
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the first vector component.
-        /// </summary>
-        public int X { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of the second vector component.
-        /// </summary>
-        public int Y { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of the third vector component.
-        /// </summary>
-        public int Z { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of the fourth vector component.
-        /// </summary>
-        public int W { get; set; }
-
-        /// <summary>
-        /// Gets or sets the value of the first color component.
-        /// </summary>
-        public int R
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(R)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(R)}");
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the second color component.
-        /// </summary>
-        public int G
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(G)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(G)}");
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the third color component.
-        /// </summary>
-        public int B
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(B)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(B)}");
-        }
-
-        /// <summary>
-        /// Gets or sets the value of the fourth color component.
-        /// </summary>
-        public int A
-        {
-            get => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(A)}");
-            set => throw new InvalidExecutionContextException($"{nameof(Int4)}.{nameof(A)}");
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.w = w;
         }
 
         /// <summary>
