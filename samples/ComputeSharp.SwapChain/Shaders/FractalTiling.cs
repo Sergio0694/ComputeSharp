@@ -43,6 +43,7 @@
             }
 
             color.XYZ = Hlsl.Pow(color.XYZ, new Float3(0.7f, 0.8f, 0.5f));
+            color.W = 1.0f;
 
             texture[ThreadIds.XY] = color;
         }

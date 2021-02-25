@@ -67,7 +67,7 @@ namespace ComputeSharp.Tests
         /// <summary>
         /// An tolerant image comparer type, from <see href="https://github.com/SixLabors/ImageSharp">ImageSharp</see>.
         /// </summary>
-        private static class TolerantImageComparer
+        internal static class TolerantImageComparer
         {
             /// <summary>
             /// Asserts that two images are equal.
