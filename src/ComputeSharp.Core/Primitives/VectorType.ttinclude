@@ -6,17 +6,57 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".g.cs"#>
 <#
-// Enumerates on all combinations of a given string (with repetition)
-IEnumerable<string> EnumerateCombinations(string text)
+IEnumerable<string> EnumeratePropertyNames(string source)
 {
-    static IEnumerable<string> EnumerateCombinations(string text, int length)
+    // Creates a comparison for a string based on indices of each character in a key
+    static int CompareBy(string text, string key)
     {
-        if (length == 1) return text.Select(c => c.ToString());
-
-        return EnumerateCombinations(text, length - 1).SelectMany(s => text, (s1, s2) => s1 + s2);
+        return text.Select(c => key.IndexOf(c)).Aggregate(0, (r, i) => (r << 4) + i);
     }
 
-    return EnumerateCombinations(text, text.Length);
+    // Returns all combinations from an input string
+    static IEnumerable<string> Combinations(string text)
+    {
+        if (text.Length > 1)
+        {
+            for (int i = text.Length - 1; i >= 0; i--)
+            {
+                var characters = text.ToList();
+
+                characters.RemoveAt(i);
+
+                string substring = string.Join("", characters);
+
+                foreach (var combination in Combinations(substring))
+                {
+                    yield return combination;
+                }
+            }
+        }
+
+        yield return text;
+    }
+
+    // Returns all permutations (with repetition) of a given string
+    static IEnumerable<string> Permutations(string text)
+    {
+        static IEnumerable<string> EnumeratePermutations(string text, int length)
+        {
+            if (length == 1) return text.Select(c => c.ToString());
+
+            return EnumeratePermutations(text, length - 1).SelectMany(s => text, (s1, s2) => s1 + s2);
+        }
+
+        return EnumeratePermutations(text, text.Length);
+    }
+
+    return
+        Combinations(source)
+        .Distinct()
+        .SelectMany(Permutations)
+        .OrderBy(s => s.Length)
+        .ThenBy(s => CompareBy(s, source))
+        .Distinct();
 }
 
 // Generates all vector access properties for a specified type
@@ -61,39 +101,37 @@ namespace ComputeSharp
 
     // Generate the combinatorial swizzling properties
     foreach (
-        (string Name, int Length) property in
-        "XYZW".Substring(0, i).Select(c => (c.ToString(), 1)).Concat(
-        "RGBA".Substring(0, i).Select(c => (c.ToString(), 1))).Concat(
-        from j in Enumerable.Range(2, i - 1)
+        var propertyName in
         from source in new[] { "XYZW", "RGBA" }
-        from name in EnumerateCombinations(source.Substring(0, j))
-        select (name, j)))
+        from name in EnumeratePropertyNames(source)
+        where name.Length <= i
+        select name)
     {
         WriteLine("");
 
-        string propertyType = property.Length == 1 ? hlslElementTypeName : $"{elementTypeName}{property.Length}";
-        bool isReadonly = property.Name.Distinct().Count() < property.Name.Length;
+        string propertyType = propertyName.Length == 1 ? hlslElementTypeName : $"{elementTypeName}{propertyName.Length}";
+        bool isReadonly = propertyName.Distinct().Count() < propertyName.Length;
         string refType = isReadonly ? "ref readonly" : "ref";
 
         // XML docs
         WriteLine("/// <summary>");
-        if (property.Length == 1)
+        if (propertyName.Length == 1)
         {
-            WriteLine($"/// Gets a reference to the <see cref=\"{propertyType}\"/> value representing the <c>{property.Name}</c> component.");
+            WriteLine($"/// Gets a reference to the <see cref=\"{propertyType}\"/> value representing the <c>{propertyName}</c> component.");
         }
         else
         {
             Write("/// Gets a ");
             if (isReadonly) Write("readonly ");
             Write($"reference to the <see cref=\"{propertyType}\"/> value with the components ");
-            Write(string.Join(", ", property.Name.Select(c => $"<see cref=\"{c}\"/>")));
+            Write(string.Join(", ", propertyName.Select(c => $"<see cref=\"{c}\"/>")));
             WriteLine(".");           
         }
         WriteLine("/// </summary>");
 
         // Property
-        Write($"public {refType} {propertyType} {property.Name} ");
-        WriteLine($"=> throw new InvalidExecutionContextException($\"{{nameof({typeName})}}.{{nameof({property.Name})}}\");");
+        Write($"public {refType} {propertyType} {propertyName} ");
+        WriteLine($"=> throw new InvalidExecutionContextException($\"{{nameof({typeName})}}.{{nameof({propertyName})}}\");");
     }
 
     PopIndent();
