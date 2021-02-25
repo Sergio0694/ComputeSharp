@@ -507,5 +507,85 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
             isEnabledByDefault: true,
             description: "String literal expressions cannot be used in a compute shader.",
             helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an internal error in <see cref="AutoConstructorGenerator"/>.
+        /// <para>
+        /// Format: <c>"The generator AutoConstructorGenerator failed to execute on type {0}, and its constructor might not be available"</c>.
+        /// </para>
+        /// </summary>
+        public static readonly DiagnosticDescriptor AutoConstructorGeneratorError = new(
+            id: "CMPS0037",
+            title: $"Internal error for {nameof(AutoConstructorGenerator)}",
+            messageFormat: $"The generator {nameof(AutoConstructorGenerator)} failed to execute on type {{0}}, and its constructor might not be available",
+            category: typeof(AutoConstructorGenerator).FullName,
+            defaultSeverity: DiagnosticSeverity.Warning,
+            isEnabledByDefault: true,
+            description: $"The {nameof(AutoConstructorGenerator)} generator encountered an error while processing a type, and its constructor might not be available. Please report this issue at https://github.com/Sergio0694/ComputeSharp/issues.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an internal error in <see cref="IComputeShaderDataLoaderGenerator"/>.
+        /// <para>
+        /// Format: <c>"The generator IComputeShaderDataLoaderGenerator failed to execute on type {0}, and trying to use that shader might result in a runtime crash"</c>.
+        /// </para>
+        /// </summary>
+        public static readonly DiagnosticDescriptor IComputeShaderDataLoaderGeneratorError = new(
+            id: "CMPS0038",
+            title: $"Internal error for {nameof(IComputeShaderDataLoaderGenerator)}",
+            messageFormat: $"The generator {nameof(IComputeShaderDataLoaderGenerator)} failed to execute on type {{0}}, and trying to use that shader might result in a runtime crash",
+            category: typeof(IComputeShaderDataLoaderGenerator).FullName,
+            defaultSeverity: DiagnosticSeverity.Warning,
+            isEnabledByDefault: true,
+            description: $"The {nameof(IComputeShaderDataLoaderGenerator)} generator encountered an error while processing a type, and trying to use that shader might result in a runtime crash. Please report this issue at https://github.com/Sergio0694/ComputeSharp/issues.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an internal error in <see cref="IComputeShaderHashCodeGenerator"/>.
+        /// <para>
+        /// Format: <c>"The generator IComputeShaderHashCodeGenerator failed to execute on type {0}, and trying to use that shader might result in a runtime crash"</c>.
+        /// </para>
+        /// </summary>
+        public static readonly DiagnosticDescriptor IComputeShaderHashCodeGeneratorError = new(
+            id: "CMPS0039",
+            title: $"Internal error for {nameof(IComputeShaderHashCodeGenerator)}",
+            messageFormat: $"The generator {nameof(IComputeShaderHashCodeGenerator)} failed to execute on type {{0}}, and trying to use that shader might result in a runtime crash",
+            category: typeof(IComputeShaderHashCodeGenerator).FullName,
+            defaultSeverity: DiagnosticSeverity.Warning,
+            isEnabledByDefault: true,
+            description: $"The {nameof(IComputeShaderHashCodeGenerator)} generator encountered an error while processing a type, and trying to use that shader might result in a runtime crash. Please report this issue at https://github.com/Sergio0694/ComputeSharp/issues.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an internal error in <see cref="IComputeShaderSourceGenerator"/>.
+        /// <para>
+        /// Format: <c>"The generator IComputeShaderSourceGenerator failed to execute on type {0}, and trying to use that shader might result in a runtime crash"</c>.
+        /// </para>
+        /// </summary>
+        public static readonly DiagnosticDescriptor IComputeShaderSourceGeneratorError = new(
+            id: "CMPS0040",
+            title: $"Internal error for {nameof(IComputeShaderSourceGenerator)}",
+            messageFormat: $"The generator {nameof(IComputeShaderSourceGenerator)} failed to execute on type {{0}}, and trying to use that shader might result in a runtime crash",
+            category: typeof(IComputeShaderSourceGenerator).FullName,
+            defaultSeverity: DiagnosticSeverity.Warning,
+            isEnabledByDefault: true,
+            description: $"The {nameof(IComputeShaderSourceGenerator)} generator encountered an error while processing a type, and trying to use that shader might result in a runtime crash. Please report this issue at https://github.com/Sergio0694/ComputeSharp/issues.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an internal error in <see cref="ShaderMethodSourceGenerator"/>.
+        /// <para>
+        /// Format: <c>"The generator ShaderMethodSourceGenerator failed to execute on method {0}, and using it in a shader might result in a runtime crash"</c>.
+        /// </para>
+        /// </summary>
+        public static readonly DiagnosticDescriptor ShaderMethodSourceGeneratorError = new(
+            id: "CMPS0041",
+            title: $"Internal error for {nameof(ShaderMethodSourceGenerator)}",
+            messageFormat: $"The generator {nameof(ShaderMethodSourceGenerator)} failed to execute on method {{0}}, and using it in a shader might result in a runtime crash",
+            category: typeof(ShaderMethodSourceGenerator).FullName,
+            defaultSeverity: DiagnosticSeverity.Warning,
+            isEnabledByDefault: true,
+            description: $"The {nameof(ShaderMethodSourceGenerator)} generator encountered an error while processing a method, and using it in a shader might result in a runtime crash. Please report this issue at https://github.com/Sergio0694/ComputeSharp/issues.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
     }
 }

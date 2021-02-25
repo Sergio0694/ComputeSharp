@@ -41,3 +41,8 @@ CMPS0033 | ComputeSharp.IComputeShader | Error | IComputeShaderSourceGenerator, 
 CMPS0034 | ComputeSharp.IComputeShader | Error | IComputeShaderSourceGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
 CMPS0035 | ComputeSharp.IComputeShader | Error | IComputeShaderSourceGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
 CMPS0036 | ComputeSharp.IComputeShader | Error | IComputeShaderSourceGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPS0037 | ComputeSharp.SourceGenerators.AutoConstructorGenerator | Warning | AutoConstructorGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPS0038 | ComputeSharp.SourceGenerators.IComputeShaderDataLoaderGenerator | Warning | IComputeShaderDataLoaderGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPS0039 | ComputeSharp.SourceGenerators.IComputeShaderHashCodeGenerator | Warning | IComputeShaderHashCodeGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPS0040 | ComputeSharp.SourceGenerators.IComputeShaderSourceGenerator | Warning | IComputeShaderSourceGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPS0041 | ComputeSharp.SourceGenerators.ShaderMethodSourceGenerator | Warning | ShaderMethodSourceGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)

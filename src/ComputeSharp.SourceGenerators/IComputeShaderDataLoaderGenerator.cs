@@ -6,12 +6,14 @@ using System.Linq;
 using System.Text;
 using ComputeSharp.__Internals;
 using ComputeSharp.Core.Helpers;
+using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 #pragma warning disable CS0618
@@ -53,75 +55,94 @@ namespace ComputeSharp.SourceGenerators
                 SemanticModel semanticModel = context.Compilation.GetSemanticModel(structDeclaration.SyntaxTree);
                 INamedTypeSymbol structDeclarationSymbol = semanticModel.GetDeclaredSymbol(structDeclaration)!;
 
-                // Only process compute shader types
-                if (!structDeclarationSymbol.Interfaces.Any(static interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) continue;
-
-                TypeSyntax shaderType = ParseTypeName(structDeclarationSymbol.ToDisplayString());
-                BlockSyntax block = Block(GetDispatchDataLoadingStatements(structDeclarationSymbol, out int root32BitConstantsCount));
-
-                // Create a static method to create the combined hashcode for a given shader type.
-                // This code takes a block syntax and produces a compilation unit as follows:
-                //
-                // using System;
-                // using System.ComponentModel;
-                //
-                // namespace ComputeSharp.__Internals
-                // {
-                //     internal static partial class DispatchDataLoader
-                //     {
-                //         [System.ComponentModel.EditorBrowsable(EditorBrowsableState.Never)]
-                //         [System.Obsolete("This method is not intended to be called directly by user code")]
-                //         [return: ComputeRoot32BitConstants(42)]
-                //         public static int LoadDispatchData(GraphicsDevice device, in ShaderType shader, ref ulong r0, ref byte r1)
-                //         {
-                //             ...
-                //         }
-                //     }
-                // }
-                var source =
-                    CompilationUnit().AddUsings(
-                    UsingDirective(IdentifierName("System")),
-                    UsingDirective(IdentifierName("System.ComponentModel")),
-                    UsingDirective(IdentifierName("System.Runtime.CompilerServices"))).AddMembers(
-                    NamespaceDeclaration(IdentifierName("ComputeSharp.__Internals")).AddMembers(
-                    ClassDeclaration("DispatchDataLoader").AddModifiers(
-                        Token(SyntaxKind.InternalKeyword),
-                        Token(SyntaxKind.StaticKeyword),
-                        Token(SyntaxKind.PartialKeyword)).AddAttributeLists(attributes).AddMembers(
-                    MethodDeclaration(
-                        PredefinedType(Token(SyntaxKind.IntKeyword)),
-                        Identifier("LoadDispatchData")).AddAttributeLists(
-                        AttributeList(SingletonSeparatedList(
-                            Attribute(IdentifierName("EditorBrowsable")).AddArgumentListArguments(
-                            AttributeArgument(ParseExpression("EditorBrowsableState.Never"))))),
-                        AttributeList(SingletonSeparatedList(
-                            Attribute(IdentifierName("Obsolete")).AddArgumentListArguments(
-                            AttributeArgument(LiteralExpression(
-                                SyntaxKind.StringLiteralExpression,
-                                Literal("This method is not intended to be called directly by user code")))))),
-                        AttributeList(SingletonSeparatedList(
-                            Attribute(IdentifierName(nameof(ComputeRoot32BitConstantsAttribute).Replace("Attribute", "")))
-                            .AddArgumentListArguments(AttributeArgument(LiteralExpression(
-                                SyntaxKind.NumericLiteralExpression,
-                                Literal(root32BitConstantsCount))))))
-                        .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.ReturnKeyword)))).AddModifiers(
-                        Token(SyntaxKind.PublicKeyword),
-                        Token(SyntaxKind.StaticKeyword)).AddParameterListParameters(
-                        Parameter(Identifier("device")).WithType(IdentifierName("ComputeSharp.GraphicsDevice")),
-                        Parameter(Identifier("shader")).WithModifiers(TokenList(Token(SyntaxKind.InKeyword))).WithType(shaderType),
-                        Parameter(Identifier("r0")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(PredefinedType(Token(SyntaxKind.ULongKeyword))),
-                        Parameter(Identifier("r1")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(PredefinedType(Token(SyntaxKind.ByteKeyword))))
-                        .WithBody(block)))
-                    .WithNamespaceKeyword(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.NamespaceKeyword, TriviaList())))
-                    .NormalizeWhitespace()
-                    .ToFullString();
-
-                // Clear the attribute list to avoid duplicates
-                attributes = Array.Empty<AttributeListSyntax>();
-
-                // Add the method source attribute
-                context.AddSource(structDeclarationSymbol.GetGeneratedFileName<IComputeShaderDataLoaderGenerator>(), SourceText.From(source, Encoding.UTF8));
+                try
+                {
+                    OnExecute(context, structDeclaration, structDeclarationSymbol, ref attributes);
+                }
+                catch
+                {
+                    context.ReportDiagnostic(IComputeShaderDataLoaderGeneratorError, structDeclaration, structDeclarationSymbol);
+                }
             }
+        }
+
+        /// <summary>
+        /// Processes a given target type.
+        /// </summary>
+        /// <param name="context">The input <see cref="GeneratorExecutionContext"/> instance to use.</param>
+        /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> node to process.</param>
+        /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
+        /// <param name="attributes">The list of <see cref="AttributeListSyntax"/> instances to append to the first copy of the partial class being generated.</param>
+        private static void OnExecute(GeneratorExecutionContext context, StructDeclarationSyntax structDeclaration, INamedTypeSymbol structDeclarationSymbol, ref AttributeListSyntax[] attributes)
+        {
+            // Only process compute shader types
+            if (!structDeclarationSymbol.Interfaces.Any(static interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) return;
+
+            TypeSyntax shaderType = ParseTypeName(structDeclarationSymbol.ToDisplayString());
+            BlockSyntax block = Block(GetDispatchDataLoadingStatements(structDeclarationSymbol, out int root32BitConstantsCount));
+
+            // Create a static method to create the combined hashcode for a given shader type.
+            // This code takes a block syntax and produces a compilation unit as follows:
+            //
+            // using System;
+            // using System.ComponentModel;
+            //
+            // namespace ComputeSharp.__Internals
+            // {
+            //     internal static partial class DispatchDataLoader
+            //     {
+            //         [System.ComponentModel.EditorBrowsable(EditorBrowsableState.Never)]
+            //         [System.Obsolete("This method is not intended to be called directly by user code")]
+            //         [return: ComputeRoot32BitConstants(42)]
+            //         public static int LoadDispatchData(GraphicsDevice device, in ShaderType shader, ref ulong r0, ref byte r1)
+            //         {
+            //             ...
+            //         }
+            //     }
+            // }
+            var source =
+                CompilationUnit().AddUsings(
+                UsingDirective(IdentifierName("System")),
+                UsingDirective(IdentifierName("System.ComponentModel")),
+                UsingDirective(IdentifierName("System.Runtime.CompilerServices"))).AddMembers(
+                NamespaceDeclaration(IdentifierName("ComputeSharp.__Internals")).AddMembers(
+                ClassDeclaration("DispatchDataLoader").AddModifiers(
+                    Token(SyntaxKind.InternalKeyword),
+                    Token(SyntaxKind.StaticKeyword),
+                    Token(SyntaxKind.PartialKeyword)).AddAttributeLists(attributes).AddMembers(
+                MethodDeclaration(
+                    PredefinedType(Token(SyntaxKind.IntKeyword)),
+                    Identifier("LoadDispatchData")).AddAttributeLists(
+                    AttributeList(SingletonSeparatedList(
+                        Attribute(IdentifierName("EditorBrowsable")).AddArgumentListArguments(
+                        AttributeArgument(ParseExpression("EditorBrowsableState.Never"))))),
+                    AttributeList(SingletonSeparatedList(
+                        Attribute(IdentifierName("Obsolete")).AddArgumentListArguments(
+                        AttributeArgument(LiteralExpression(
+                            SyntaxKind.StringLiteralExpression,
+                            Literal("This method is not intended to be called directly by user code")))))),
+                    AttributeList(SingletonSeparatedList(
+                        Attribute(IdentifierName(nameof(ComputeRoot32BitConstantsAttribute).Replace("Attribute", "")))
+                        .AddArgumentListArguments(AttributeArgument(LiteralExpression(
+                            SyntaxKind.NumericLiteralExpression,
+                            Literal(root32BitConstantsCount))))))
+                    .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.ReturnKeyword)))).AddModifiers(
+                    Token(SyntaxKind.PublicKeyword),
+                    Token(SyntaxKind.StaticKeyword)).AddParameterListParameters(
+                    Parameter(Identifier("device")).WithType(IdentifierName("ComputeSharp.GraphicsDevice")),
+                    Parameter(Identifier("shader")).WithModifiers(TokenList(Token(SyntaxKind.InKeyword))).WithType(shaderType),
+                    Parameter(Identifier("r0")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(PredefinedType(Token(SyntaxKind.ULongKeyword))),
+                    Parameter(Identifier("r1")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(PredefinedType(Token(SyntaxKind.ByteKeyword))))
+                    .WithBody(block)))
+                .WithNamespaceKeyword(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.NamespaceKeyword, TriviaList())))
+                .NormalizeWhitespace()
+                .ToFullString();
+
+            // Clear the attribute list to avoid duplicates
+            attributes = Array.Empty<AttributeListSyntax>();
+
+            // Add the method source attribute
+            context.AddSource(structDeclarationSymbol.GetGeneratedFileName<IComputeShaderDataLoaderGenerator>(), SourceText.From(source, Encoding.UTF8));
         }
 
         /// <summary>

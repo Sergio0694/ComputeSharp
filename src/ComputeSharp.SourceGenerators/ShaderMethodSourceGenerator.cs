@@ -4,14 +4,16 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using ComputeSharp.__Internals;
+using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.SyntaxRewriters;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 using static ComputeSharp.SourceGenerators.Helpers.SyntaxFactoryHelper;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 #pragma warning disable CS0618
 
@@ -42,34 +44,53 @@ namespace ComputeSharp.SourceGenerators
                 SemanticModel semanticModel = context.Compilation.GetSemanticModel(methodDeclaration.SyntaxTree);
                 IMethodSymbol methodDeclarationSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration)!;
 
-                // We need to sets to track all discovered custom types and static methods
-                HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
-                Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
-                Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
-
-                // Explore the syntax tree and extract the processed info
-                var (invokeMethod, processedMethods) = GetProcessedMethods(context, methodDeclaration, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
-                var processedTypes = IComputeShaderSourceGenerator.GetProcessedTypes(discoveredTypes).ToArray();
-                var processedConstants = IComputeShaderSourceGenerator.GetProcessedConstants(constantDefinitions);
-
-                // Create the compilation unit with the source attribute
-                var source =
-                    CompilationUnit().AddAttributeLists(
-                    AttributeList(SingletonSeparatedList(
-                        Attribute(IdentifierName(typeof(ShaderMethodSourceAttribute).FullName)).AddArgumentListArguments(
-                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(methodDeclarationSymbol.GetFullMetadataName(true)))),
-                            AttributeArgument(ArrayExpression(processedTypes)),
-                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(invokeMethod))),
-                            AttributeArgument(ArrayExpression(processedMethods)),
-                            AttributeArgument(NestedArrayExpression(processedConstants)))))
-                    .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
-                    .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
-                    .NormalizeWhitespace()
-                    .ToFullString();
-
-                // Add the method source attribute
-                context.AddSource(methodDeclarationSymbol.GetGeneratedFileName<ShaderMethodSourceAttribute>(), SourceText.From(source, Encoding.UTF8));
+                try
+                {
+                    OnExecute(context, methodDeclaration, semanticModel, methodDeclarationSymbol);
+                }
+                catch
+                {
+                    context.ReportDiagnostic(ShaderMethodSourceGeneratorError, methodDeclaration, methodDeclarationSymbol);
+                }
             }
+        }
+
+        /// <summary>
+        /// Processes a given target method.
+        /// </summary>
+        /// <param name="context">The input <see cref="GeneratorExecutionContext"/> instance to use.</param>
+        /// <param name="methodDeclaration">The <see cref="MethodDeclarationSyntax"/> node to process.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/> with metadata on the types being processed.</param>
+        /// <param name="methodDeclarationSymbol">The <see cref="IMethodSymbol"/> for <paramref name="methodDeclaration"/>.</param>
+        private static void OnExecute(GeneratorExecutionContext context, MethodDeclarationSyntax methodDeclaration, SemanticModel semanticModel, IMethodSymbol methodDeclarationSymbol)
+        {
+            // We need to sets to track all discovered custom types and static methods
+            HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
+            Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
+            Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
+
+            // Explore the syntax tree and extract the processed info
+            var (invokeMethod, processedMethods) = GetProcessedMethods(context, methodDeclaration, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
+            var processedTypes = IComputeShaderSourceGenerator.GetProcessedTypes(discoveredTypes).ToArray();
+            var processedConstants = IComputeShaderSourceGenerator.GetProcessedConstants(constantDefinitions);
+
+            // Create the compilation unit with the source attribute
+            var source =
+                CompilationUnit().AddAttributeLists(
+                AttributeList(SingletonSeparatedList(
+                    Attribute(IdentifierName(typeof(ShaderMethodSourceAttribute).FullName)).AddArgumentListArguments(
+                        AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(methodDeclarationSymbol.GetFullMetadataName(true)))),
+                        AttributeArgument(ArrayExpression(processedTypes)),
+                        AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(invokeMethod))),
+                        AttributeArgument(ArrayExpression(processedMethods)),
+                        AttributeArgument(NestedArrayExpression(processedConstants)))))
+                .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
+                .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
+                .NormalizeWhitespace()
+                .ToFullString();
+
+            // Add the method source attribute
+            context.AddSource(methodDeclarationSymbol.GetGeneratedFileName<ShaderMethodSourceAttribute>(), SourceText.From(source, Encoding.UTF8));
         }
 
         /// <summary>

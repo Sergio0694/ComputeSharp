@@ -12,9 +12,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static ComputeSharp.SourceGenerators.Helpers.SyntaxFactoryHelper;
 using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 #pragma warning disable CS0618
 
@@ -42,43 +42,62 @@ namespace ComputeSharp.SourceGenerators
                 SemanticModel semanticModel = context.Compilation.GetSemanticModel(structDeclaration.SyntaxTree);
                 INamedTypeSymbol structDeclarationSymbol = semanticModel.GetDeclaredSymbol(structDeclaration)!;
 
-                // Only process compute shader types
-                if (!structDeclarationSymbol.Interfaces.Any(static interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) continue;
-
-                // We need to sets to track all discovered custom types and static methods
-                HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
-                Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
-                Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
-
-                // Explore the syntax tree and extract the processed info
-                var processedMembers = GetProcessedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
-                var sharedBuffers = GetGroupSharedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
-                var (entryPoint, localFunctions) = GetProcessedMethods(context, structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
-                var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
-                var processedMethods = localFunctions.Concat(staticMethods.Values).Select(static method => method.NormalizeWhitespace().ToFullString()).ToArray();
-                var processedConstants = GetProcessedConstants(constantDefinitions);
-
-                // Create the compilation unit with the source attribute
-                var source =
-                    CompilationUnit().AddUsings(
-                    UsingDirective(IdentifierName("ComputeSharp.__Internals"))).AddAttributeLists(
-                    AttributeList(SingletonSeparatedList(
-                        Attribute(IdentifierName(typeof(IComputeShaderSourceAttribute).FullName)).AddArgumentListArguments(
-                            AttributeArgument(TypeOfExpression(IdentifierName(structDeclarationSymbol.ToDisplayString()))),
-                            AttributeArgument(ArrayExpression(processedTypes)),
-                            AttributeArgument(NestedArrayExpression(processedMembers)),
-                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(entryPoint))),
-                            AttributeArgument(ArrayExpression(processedMethods)),
-                            AttributeArgument(NestedArrayExpression(processedConstants)),
-                            AttributeArgument(NestedArrayExpression(sharedBuffers)))))
-                    .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
-                    .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
-                    .NormalizeWhitespace()
-                    .ToFullString();
-
-                // Add the method source attribute
-                context.AddSource(structDeclarationSymbol.GetGeneratedFileName<IComputeShaderSourceGenerator>(), SourceText.From(source, Encoding.UTF8));
+                try
+                {
+                    OnExecute(context, structDeclaration, semanticModel, structDeclarationSymbol);
+                }
+                catch
+                {
+                    context.ReportDiagnostic(IComputeShaderSourceGeneratorError, structDeclaration, structDeclarationSymbol);
+                }
             }
+        }
+
+        /// <summary>
+        /// Processes a given target type.
+        /// </summary>
+        /// <param name="context">The input <see cref="GeneratorExecutionContext"/> instance to use.</param>
+        /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> node to process.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/> with metadata on the types being processed.</param>
+        /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
+        private static void OnExecute(GeneratorExecutionContext context, StructDeclarationSyntax structDeclaration, SemanticModel semanticModel, INamedTypeSymbol structDeclarationSymbol)
+        {
+            // Only process compute shader types
+            if (!structDeclarationSymbol.Interfaces.Any(static interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) return;
+
+            // We need to sets to track all discovered custom types and static methods
+            HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
+            Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
+            Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
+
+            // Explore the syntax tree and extract the processed info
+            var processedMembers = GetProcessedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
+            var sharedBuffers = GetGroupSharedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
+            var (entryPoint, localFunctions) = GetProcessedMethods(context, structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
+            var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
+            var processedMethods = localFunctions.Concat(staticMethods.Values).Select(static method => method.NormalizeWhitespace().ToFullString()).ToArray();
+            var processedConstants = GetProcessedConstants(constantDefinitions);
+
+            // Create the compilation unit with the source attribute
+            var source =
+                CompilationUnit().AddUsings(
+                UsingDirective(IdentifierName("ComputeSharp.__Internals"))).AddAttributeLists(
+                AttributeList(SingletonSeparatedList(
+                    Attribute(IdentifierName(typeof(IComputeShaderSourceAttribute).FullName)).AddArgumentListArguments(
+                        AttributeArgument(TypeOfExpression(IdentifierName(structDeclarationSymbol.ToDisplayString()))),
+                        AttributeArgument(ArrayExpression(processedTypes)),
+                        AttributeArgument(NestedArrayExpression(processedMembers)),
+                        AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(entryPoint))),
+                        AttributeArgument(ArrayExpression(processedMethods)),
+                        AttributeArgument(NestedArrayExpression(processedConstants)),
+                        AttributeArgument(NestedArrayExpression(sharedBuffers)))))
+                .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
+                .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
+                .NormalizeWhitespace()
+                .ToFullString();
+
+            // Add the method source attribute
+            context.AddSource(structDeclarationSymbol.GetGeneratedFileName<IComputeShaderSourceGenerator>(), SourceText.From(source, Encoding.UTF8));
         }
 
         /// <summary>
