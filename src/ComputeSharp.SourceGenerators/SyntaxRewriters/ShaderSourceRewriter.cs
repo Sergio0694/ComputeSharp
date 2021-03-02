@@ -392,7 +392,9 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 this.semanticModel.GetOperation(node) is IMemberReferenceOperation operation)
             {
                 // If the member access is a constant, track it and replace the tree with the processed constant name
-                if (operation is IFieldReferenceOperation fieldOperation && fieldOperation.Field.IsConst)
+                if (operation is IFieldReferenceOperation fieldOperation &&
+                    fieldOperation.Field.IsConst &&
+                    fieldOperation.Type.TypeKind != TypeKind.Enum)
                 {
                     this.constantDefinitions[fieldOperation.Field] = ((IFormattable)fieldOperation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
 
@@ -638,7 +640,9 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (IdentifierNameSyntax)base.VisitIdentifierName(node)!;
 
-            if (this.semanticModel.GetOperation(node) is IFieldReferenceOperation operation && operation.Field.IsConst)
+            if (this.semanticModel.GetOperation(node) is IFieldReferenceOperation operation &&
+                operation.Field.IsConst &&
+                operation.Type.TypeKind != TypeKind.Enum)
             {
                 this.constantDefinitions[operation.Field] = ((IFormattable)operation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
 
