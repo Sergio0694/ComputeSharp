@@ -45,6 +45,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Bool4.tt</DependentUpon>
     </Compile>
+    <Compile Update="Core\Primitives\Bool\BoolMxN.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BoolMxN.tt</DependentUpon>
+    </Compile>
     <Compile Update="Core\Primitives\Double\Double2.g.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -59,6 +64,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Double4.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Core\Primitives\Double\DoubleMxN.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DoubleMxN.tt</DependentUpon>
     </Compile>
     <Compile Update="Core\Primitives\Float\Float2.g.cs">
       <DesignTime>True</DesignTime>
@@ -75,7 +85,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Float4.tt</DependentUpon>
     </Compile>
-    <Compile Update="Core\Primitives\Float\Matrix\FloatMxN.g.cs">
+    <Compile Update="Core\Primitives\Float\FloatMxN.g.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>FloatMxN.tt</DependentUpon>
@@ -95,6 +105,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Int4.tt</DependentUpon>
     </Compile>
+    <Compile Update="Core\Primitives\Int\IntMxN.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IntMxN.tt</DependentUpon>
+    </Compile>
     <Compile Update="Core\Primitives\UInt\UInt2.g.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -109,6 +124,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>UInt4.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Core\Primitives\UInt\UIntMxN.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UIntMxN.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -125,6 +145,10 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Bool4.g.cs</LastGenOutput>
     </None>
+    <None Update="Core\Primitives\Bool\BoolMxN.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>BoolMxN.g.cs</LastGenOutput>
+    </None>
     <None Update="Core\Primitives\Double\Double2.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Double2.g.cs</LastGenOutput>
@@ -136,6 +160,10 @@
     <None Update="Core\Primitives\Double\Double4.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Double4.g.cs</LastGenOutput>
+    </None>
+    <None Update="Core\Primitives\Double\DoubleMxN.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DoubleMxN.g.cs</LastGenOutput>
     </None>
     <None Update="Core\Primitives\Float\Float2.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -149,7 +177,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Float4.g.cs</LastGenOutput>
     </None>
-    <None Update="Core\Primitives\Float\Matrix\FloatMxN.tt">
+    <None Update="Core\Primitives\Float\FloatMxN.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>FloatMxN.g.cs</LastGenOutput>
     </None>
@@ -165,6 +193,10 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Int4.g.cs</LastGenOutput>
     </None>
+    <None Update="Core\Primitives\Int\IntMxN.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IntMxN.g.cs</LastGenOutput>
+    </None>
     <None Update="Core\Primitives\UInt\UInt2.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>UInt2.g.cs</LastGenOutput>
@@ -176,6 +208,10 @@
     <None Update="Core\Primitives\UInt\UInt4.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>UInt4.g.cs</LastGenOutput>
+    </None>
+    <None Update="Core\Primitives\UInt\UIntMxN.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>UIntMxN.g.cs</LastGenOutput>
     </None>
   </ItemGroup>
 
