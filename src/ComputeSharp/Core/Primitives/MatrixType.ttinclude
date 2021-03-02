@@ -55,7 +55,7 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
         fieldNames.Add($"m{i}{j}");
     }
 
-    // Generate the constructors
+    // Generate the elementwise constructor
     WriteLine("/// <summary>");
     WriteLine($"/// Creates a new <see cref=\"{fullTypeName}\"/> instance with the specified parameters.");
     WriteLine("/// </summary>");
@@ -78,6 +78,41 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
     PopIndent();
     WriteLine("}");
     WriteLine("");
+
+    // Generate the row-wise constructor, if needed
+    if (rows > 1 && columns > 1)
+    {
+        WriteLine("/// <summary>");
+        WriteLine($"/// Creates a new <see cref=\"{fullTypeName}\"/> instance with the specified parameters.");
+        WriteLine("/// </summary>");
+
+        for (int i = 1; i <= rows; i++)
+        {
+            WriteLine($"/// <param name=\"row{i}\">The value to assign to the row at position [{i}].</param>");
+        }
+
+        Write($"public {fullTypeName}(");
+
+        for (int i = 1; i <= rows; i++)
+        {
+            if (i > 1) Write(", ");
+            Write($"{rowTypeName} row{i}");
+        }
+
+        WriteLine(")");
+        WriteLine("{");
+        PushIndent("    ");
+
+        for (int i = 1; i <= rows; i++)
+        for (int j = 1; j <= columns; j++)
+        {
+            WriteLine($"this.m{i}{j} = row{i}.{"XYZW"[j - 1]};");
+        }
+
+        PopIndent();
+        WriteLine("}");
+        WriteLine("");
+    }
 
     PopIndent();
     PopIndent();

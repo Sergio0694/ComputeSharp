@@ -475,6 +475,19 @@ namespace ComputeSharp
         }
 
         /// <summary>
+        /// Creates a new <see cref="Float2x2"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="row1">The value to assign to the row at position [1].</param>
+        /// <param name="row2">The value to assign to the row at position [2].</param>
+        public Float2x2(Float2 row1, Float2 row2)
+        {
+            this.m11 = row1.X;
+            this.m12 = row1.Y;
+            this.m21 = row2.X;
+            this.m22 = row2.Y;
+        }
+
+        /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float2x2"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
@@ -578,6 +591,21 @@ namespace ComputeSharp
             this.m21 = m21;
             this.m22 = m22;
             this.m23 = m23;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Float2x3"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="row1">The value to assign to the row at position [1].</param>
+        /// <param name="row2">The value to assign to the row at position [2].</param>
+        public Float2x3(Float3 row1, Float3 row2)
+        {
+            this.m11 = row1.X;
+            this.m12 = row1.Y;
+            this.m13 = row1.Z;
+            this.m21 = row2.X;
+            this.m22 = row2.Y;
+            this.m23 = row2.Z;
         }
 
         /// <summary>
@@ -694,6 +722,23 @@ namespace ComputeSharp
             this.m22 = m22;
             this.m23 = m23;
             this.m24 = m24;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Float2x4"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="row1">The value to assign to the row at position [1].</param>
+        /// <param name="row2">The value to assign to the row at position [2].</param>
+        public Float2x4(Float4 row1, Float4 row2)
+        {
+            this.m11 = row1.X;
+            this.m12 = row1.Y;
+            this.m13 = row1.Z;
+            this.m14 = row1.W;
+            this.m21 = row2.X;
+            this.m22 = row2.Y;
+            this.m23 = row2.Z;
+            this.m24 = row2.W;
         }
 
         /// <summary>
@@ -894,6 +939,22 @@ namespace ComputeSharp
         }
 
         /// <summary>
+        /// Creates a new <see cref="Float3x2"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="row1">The value to assign to the row at position [1].</param>
+        /// <param name="row2">The value to assign to the row at position [2].</param>
+        /// <param name="row3">The value to assign to the row at position [3].</param>
+        public Float3x2(Float2 row1, Float2 row2, Float2 row3)
+        {
+            this.m11 = row1.X;
+            this.m12 = row1.Y;
+            this.m21 = row2.X;
+            this.m22 = row2.Y;
+            this.m31 = row3.X;
+            this.m32 = row3.Y;
+        }
+
+        /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float3x2"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
@@ -1012,6 +1073,25 @@ namespace ComputeSharp
             this.m31 = m31;
             this.m32 = m32;
             this.m33 = m33;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Float3x3"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="row1">The value to assign to the row at position [1].</param>
+        /// <param name="row2">The value to assign to the row at position [2].</param>
+        /// <param name="row3">The value to assign to the row at position [3].</param>
+        public Float3x3(Float3 row1, Float3 row2, Float3 row3)
+        {
+            this.m11 = row1.X;
+            this.m12 = row1.Y;
+            this.m13 = row1.Z;
+            this.m21 = row2.X;
+            this.m22 = row2.Y;
+            this.m23 = row2.Z;
+            this.m31 = row3.X;
+            this.m32 = row3.Y;
+            this.m33 = row3.Z;
         }
 
         /// <summary>
@@ -1148,6 +1228,28 @@ namespace ComputeSharp
             this.m32 = m32;
             this.m33 = m33;
             this.m34 = m34;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Float3x4"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="row1">The value to assign to the row at position [1].</param>
+        /// <param name="row2">The value to assign to the row at position [2].</param>
+        /// <param name="row3">The value to assign to the row at position [3].</param>
+        public Float3x4(Float4 row1, Float4 row2, Float4 row3)
+        {
+            this.m11 = row1.X;
+            this.m12 = row1.Y;
+            this.m13 = row1.Z;
+            this.m14 = row1.W;
+            this.m21 = row2.X;
+            this.m22 = row2.Y;
+            this.m23 = row2.Z;
+            this.m24 = row2.W;
+            this.m31 = row3.X;
+            this.m32 = row3.Y;
+            this.m33 = row3.Z;
+            this.m34 = row3.W;
         }
 
         /// <summary>
@@ -1363,6 +1465,25 @@ namespace ComputeSharp
         }
 
         /// <summary>
+        /// Creates a new <see cref="Float4x2"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="row1">The value to assign to the row at position [1].</param>
+        /// <param name="row2">The value to assign to the row at position [2].</param>
+        /// <param name="row3">The value to assign to the row at position [3].</param>
+        /// <param name="row4">The value to assign to the row at position [4].</param>
+        public Float4x2(Float2 row1, Float2 row2, Float2 row3, Float2 row4)
+        {
+            this.m11 = row1.X;
+            this.m12 = row1.Y;
+            this.m21 = row2.X;
+            this.m22 = row2.Y;
+            this.m31 = row3.X;
+            this.m32 = row3.Y;
+            this.m41 = row4.X;
+            this.m42 = row4.Y;
+        }
+
+        /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float4x2"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
@@ -1496,6 +1617,29 @@ namespace ComputeSharp
             this.m41 = m41;
             this.m42 = m42;
             this.m43 = m43;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Float4x3"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="row1">The value to assign to the row at position [1].</param>
+        /// <param name="row2">The value to assign to the row at position [2].</param>
+        /// <param name="row3">The value to assign to the row at position [3].</param>
+        /// <param name="row4">The value to assign to the row at position [4].</param>
+        public Float4x3(Float3 row1, Float3 row2, Float3 row3, Float3 row4)
+        {
+            this.m11 = row1.X;
+            this.m12 = row1.Y;
+            this.m13 = row1.Z;
+            this.m21 = row2.X;
+            this.m22 = row2.Y;
+            this.m23 = row2.Z;
+            this.m31 = row3.X;
+            this.m32 = row3.Y;
+            this.m33 = row3.Z;
+            this.m41 = row4.X;
+            this.m42 = row4.Y;
+            this.m43 = row4.Z;
         }
 
         /// <summary>
@@ -1652,6 +1796,33 @@ namespace ComputeSharp
             this.m42 = m42;
             this.m43 = m43;
             this.m44 = m44;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Float4x4"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="row1">The value to assign to the row at position [1].</param>
+        /// <param name="row2">The value to assign to the row at position [2].</param>
+        /// <param name="row3">The value to assign to the row at position [3].</param>
+        /// <param name="row4">The value to assign to the row at position [4].</param>
+        public Float4x4(Float4 row1, Float4 row2, Float4 row3, Float4 row4)
+        {
+            this.m11 = row1.X;
+            this.m12 = row1.Y;
+            this.m13 = row1.Z;
+            this.m14 = row1.W;
+            this.m21 = row2.X;
+            this.m22 = row2.Y;
+            this.m23 = row2.Z;
+            this.m24 = row2.W;
+            this.m31 = row3.X;
+            this.m32 = row3.Y;
+            this.m33 = row3.Z;
+            this.m34 = row3.W;
+            this.m41 = row4.X;
+            this.m42 = row4.Y;
+            this.m43 = row4.Z;
+            this.m44 = row4.W;
         }
 
         /// <summary>
