@@ -17,6 +17,54 @@ namespace ComputeSharp
         public ref float this[int row] => throw new InvalidExecutionContextException($"{nameof(Float1x1)}[int]");
 
         /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1] => throw new InvalidExecutionContextException($"{nameof(Float1x1)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2] => throw new InvalidExecutionContextException($"{nameof(Float1x1)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2, MatrixIndexAsBase0 xy3] => throw new InvalidExecutionContextException($"{nameof(Float1x1)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1] => throw new InvalidExecutionContextException($"{nameof(Float1x1)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2] => throw new InvalidExecutionContextException($"{nameof(Float1x1)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2, MatrixIndexAsBase1 xy3] => throw new InvalidExecutionContextException($"{nameof(Float1x1)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+
+        /// <summary>
         /// Negates a <see cref="Float1x1"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Float1x1"/> value to negate.</param>
@@ -66,6 +114,54 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         public ref Float2 this[int row] => throw new InvalidExecutionContextException($"{nameof(Float1x2)}[int]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1] => throw new InvalidExecutionContextException($"{nameof(Float1x2)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2] => throw new InvalidExecutionContextException($"{nameof(Float1x2)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2, MatrixIndexAsBase0 xy3] => throw new InvalidExecutionContextException($"{nameof(Float1x2)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1] => throw new InvalidExecutionContextException($"{nameof(Float1x2)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2] => throw new InvalidExecutionContextException($"{nameof(Float1x2)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2, MatrixIndexAsBase1 xy3] => throw new InvalidExecutionContextException($"{nameof(Float1x2)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
 
         /// <summary>
         /// Negates a <see cref="Float1x2"/> value.
@@ -120,6 +216,54 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         public ref Float3 this[int row] => throw new InvalidExecutionContextException($"{nameof(Float1x3)}[int]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1] => throw new InvalidExecutionContextException($"{nameof(Float1x3)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2] => throw new InvalidExecutionContextException($"{nameof(Float1x3)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2, MatrixIndexAsBase0 xy3] => throw new InvalidExecutionContextException($"{nameof(Float1x3)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1] => throw new InvalidExecutionContextException($"{nameof(Float1x3)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2] => throw new InvalidExecutionContextException($"{nameof(Float1x3)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2, MatrixIndexAsBase1 xy3] => throw new InvalidExecutionContextException($"{nameof(Float1x3)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
 
         /// <summary>
         /// Negates a <see cref="Float1x3"/> value.
@@ -179,6 +323,54 @@ namespace ComputeSharp
         public ref Float4 this[int row] => throw new InvalidExecutionContextException($"{nameof(Float1x4)}[int]");
 
         /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1] => throw new InvalidExecutionContextException($"{nameof(Float1x4)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2] => throw new InvalidExecutionContextException($"{nameof(Float1x4)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2, MatrixIndexAsBase0 xy3] => throw new InvalidExecutionContextException($"{nameof(Float1x4)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1] => throw new InvalidExecutionContextException($"{nameof(Float1x4)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2] => throw new InvalidExecutionContextException($"{nameof(Float1x4)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float1x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2, MatrixIndexAsBase1 xy3] => throw new InvalidExecutionContextException($"{nameof(Float1x4)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+
+        /// <summary>
         /// Negates a <see cref="Float1x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Float1x4"/> value to negate.</param>
@@ -228,6 +420,54 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         public ref float this[int row] => throw new InvalidExecutionContextException($"{nameof(Float2x1)}[int]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1] => throw new InvalidExecutionContextException($"{nameof(Float2x1)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2] => throw new InvalidExecutionContextException($"{nameof(Float2x1)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2, MatrixIndexAsBase0 xy3] => throw new InvalidExecutionContextException($"{nameof(Float2x1)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1] => throw new InvalidExecutionContextException($"{nameof(Float2x1)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2] => throw new InvalidExecutionContextException($"{nameof(Float2x1)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2, MatrixIndexAsBase1 xy3] => throw new InvalidExecutionContextException($"{nameof(Float2x1)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
 
         /// <summary>
         /// Negates a <see cref="Float2x1"/> value.
@@ -285,6 +525,54 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         public ref Float2 this[int row] => throw new InvalidExecutionContextException($"{nameof(Float2x2)}[int]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1] => throw new InvalidExecutionContextException($"{nameof(Float2x2)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2] => throw new InvalidExecutionContextException($"{nameof(Float2x2)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2, MatrixIndexAsBase0 xy3] => throw new InvalidExecutionContextException($"{nameof(Float2x2)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1] => throw new InvalidExecutionContextException($"{nameof(Float2x2)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2] => throw new InvalidExecutionContextException($"{nameof(Float2x2)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2, MatrixIndexAsBase1 xy3] => throw new InvalidExecutionContextException($"{nameof(Float2x2)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
 
         /// <summary>
         /// Negates a <see cref="Float2x2"/> value.
@@ -348,6 +636,54 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         public ref Float3 this[int row] => throw new InvalidExecutionContextException($"{nameof(Float2x3)}[int]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1] => throw new InvalidExecutionContextException($"{nameof(Float2x3)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2] => throw new InvalidExecutionContextException($"{nameof(Float2x3)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2, MatrixIndexAsBase0 xy3] => throw new InvalidExecutionContextException($"{nameof(Float2x3)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1] => throw new InvalidExecutionContextException($"{nameof(Float2x3)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2] => throw new InvalidExecutionContextException($"{nameof(Float2x3)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2, MatrixIndexAsBase1 xy3] => throw new InvalidExecutionContextException($"{nameof(Float2x3)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
 
         /// <summary>
         /// Negates a <see cref="Float2x3"/> value.
@@ -419,6 +755,54 @@ namespace ComputeSharp
         public ref Float4 this[int row] => throw new InvalidExecutionContextException($"{nameof(Float2x4)}[int]");
 
         /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1] => throw new InvalidExecutionContextException($"{nameof(Float2x4)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2] => throw new InvalidExecutionContextException($"{nameof(Float2x4)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2, MatrixIndexAsBase0 xy3] => throw new InvalidExecutionContextException($"{nameof(Float2x4)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1] => throw new InvalidExecutionContextException($"{nameof(Float2x4)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2] => throw new InvalidExecutionContextException($"{nameof(Float2x4)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float2x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2, MatrixIndexAsBase1 xy3] => throw new InvalidExecutionContextException($"{nameof(Float2x4)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+
+        /// <summary>
         /// Negates a <see cref="Float2x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Float2x4"/> value to negate.</param>
@@ -471,6 +855,54 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         public ref float this[int row] => throw new InvalidExecutionContextException($"{nameof(Float3x1)}[int]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1] => throw new InvalidExecutionContextException($"{nameof(Float3x1)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2] => throw new InvalidExecutionContextException($"{nameof(Float3x1)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2, MatrixIndexAsBase0 xy3] => throw new InvalidExecutionContextException($"{nameof(Float3x1)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1] => throw new InvalidExecutionContextException($"{nameof(Float3x1)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2] => throw new InvalidExecutionContextException($"{nameof(Float3x1)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2, MatrixIndexAsBase1 xy3] => throw new InvalidExecutionContextException($"{nameof(Float3x1)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
 
         /// <summary>
         /// Negates a <see cref="Float3x1"/> value.
@@ -534,6 +966,54 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         public ref Float2 this[int row] => throw new InvalidExecutionContextException($"{nameof(Float3x2)}[int]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1] => throw new InvalidExecutionContextException($"{nameof(Float3x2)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2] => throw new InvalidExecutionContextException($"{nameof(Float3x2)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2, MatrixIndexAsBase0 xy3] => throw new InvalidExecutionContextException($"{nameof(Float3x2)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1] => throw new InvalidExecutionContextException($"{nameof(Float3x2)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2] => throw new InvalidExecutionContextException($"{nameof(Float3x2)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2, MatrixIndexAsBase1 xy3] => throw new InvalidExecutionContextException($"{nameof(Float3x2)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
 
         /// <summary>
         /// Negates a <see cref="Float3x2"/> value.
@@ -606,6 +1086,54 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         public ref Float3 this[int row] => throw new InvalidExecutionContextException($"{nameof(Float3x3)}[int]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1] => throw new InvalidExecutionContextException($"{nameof(Float3x3)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2] => throw new InvalidExecutionContextException($"{nameof(Float3x3)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2, MatrixIndexAsBase0 xy3] => throw new InvalidExecutionContextException($"{nameof(Float3x3)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1] => throw new InvalidExecutionContextException($"{nameof(Float3x3)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2] => throw new InvalidExecutionContextException($"{nameof(Float3x3)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2, MatrixIndexAsBase1 xy3] => throw new InvalidExecutionContextException($"{nameof(Float3x3)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
 
         /// <summary>
         /// Negates a <see cref="Float3x3"/> value.
@@ -689,6 +1217,54 @@ namespace ComputeSharp
         public ref Float4 this[int row] => throw new InvalidExecutionContextException($"{nameof(Float3x4)}[int]");
 
         /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1] => throw new InvalidExecutionContextException($"{nameof(Float3x4)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2] => throw new InvalidExecutionContextException($"{nameof(Float3x4)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2, MatrixIndexAsBase0 xy3] => throw new InvalidExecutionContextException($"{nameof(Float3x4)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1] => throw new InvalidExecutionContextException($"{nameof(Float3x4)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2] => throw new InvalidExecutionContextException($"{nameof(Float3x4)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float3x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2, MatrixIndexAsBase1 xy3] => throw new InvalidExecutionContextException($"{nameof(Float3x4)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+
+        /// <summary>
         /// Negates a <see cref="Float3x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Float3x4"/> value to negate.</param>
@@ -744,6 +1320,54 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         public ref float this[int row] => throw new InvalidExecutionContextException($"{nameof(Float4x1)}[int]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1] => throw new InvalidExecutionContextException($"{nameof(Float4x1)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2] => throw new InvalidExecutionContextException($"{nameof(Float4x1)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2, MatrixIndexAsBase0 xy3] => throw new InvalidExecutionContextException($"{nameof(Float4x1)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1] => throw new InvalidExecutionContextException($"{nameof(Float4x1)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2] => throw new InvalidExecutionContextException($"{nameof(Float4x1)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x1"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2, MatrixIndexAsBase1 xy3] => throw new InvalidExecutionContextException($"{nameof(Float4x1)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
 
         /// <summary>
         /// Negates a <see cref="Float4x1"/> value.
@@ -813,6 +1437,54 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         public ref Float2 this[int row] => throw new InvalidExecutionContextException($"{nameof(Float4x2)}[int]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1] => throw new InvalidExecutionContextException($"{nameof(Float4x2)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2] => throw new InvalidExecutionContextException($"{nameof(Float4x2)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2, MatrixIndexAsBase0 xy3] => throw new InvalidExecutionContextException($"{nameof(Float4x2)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1] => throw new InvalidExecutionContextException($"{nameof(Float4x2)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2] => throw new InvalidExecutionContextException($"{nameof(Float4x2)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x2"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2, MatrixIndexAsBase1 xy3] => throw new InvalidExecutionContextException($"{nameof(Float4x2)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
 
         /// <summary>
         /// Negates a <see cref="Float4x2"/> value.
@@ -894,6 +1566,54 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         public ref Float3 this[int row] => throw new InvalidExecutionContextException($"{nameof(Float4x3)}[int]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1] => throw new InvalidExecutionContextException($"{nameof(Float4x3)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2] => throw new InvalidExecutionContextException($"{nameof(Float4x3)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2, MatrixIndexAsBase0 xy3] => throw new InvalidExecutionContextException($"{nameof(Float4x3)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1] => throw new InvalidExecutionContextException($"{nameof(Float4x3)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2] => throw new InvalidExecutionContextException($"{nameof(Float4x3)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x3"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2, MatrixIndexAsBase1 xy3] => throw new InvalidExecutionContextException($"{nameof(Float4x3)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
 
         /// <summary>
         /// Negates a <see cref="Float4x3"/> value.
@@ -987,6 +1707,54 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         public ref Float4 this[int row] => throw new InvalidExecutionContextException($"{nameof(Float4x4)}[int]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1] => throw new InvalidExecutionContextException($"{nameof(Float4x4)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2] => throw new InvalidExecutionContextException($"{nameof(Float4x4)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2, MatrixIndexAsBase0 xy3] => throw new InvalidExecutionContextException($"{nameof(Float4x4)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        public ref Float2 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1] => throw new InvalidExecutionContextException($"{nameof(Float4x4)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        public ref Float3 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2] => throw new InvalidExecutionContextException($"{nameof(Float4x4)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        
+        /// <summary>
+        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Float4x4"/> instance.
+        /// </summary>
+        /// <param name="xy0">The identifier of the first item to index.</param>
+        /// <param name="xy1">The identifier of the second item to index.</param>
+        /// <param name="xy2">The identifier of the third item to index.</param>
+        /// <param name="xy3">The identifier of the fourth item to index.</param>
+        public ref Float4 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2, MatrixIndexAsBase1 xy3] => throw new InvalidExecutionContextException($"{nameof(Float4x4)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
 
         /// <summary>
         /// Negates a <see cref="Float4x4"/> value.
