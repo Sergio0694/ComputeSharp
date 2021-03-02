@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using ComputeSharp.SourceGenerators.Extensions;
 using Microsoft.CodeAnalysis;
 
@@ -16,33 +18,38 @@ namespace ComputeSharp.SourceGenerators.Mappings
         /// <summary>
         /// The mapping of supported known types to HLSL types.
         /// </summary>
-        private static readonly IReadOnlyDictionary<string, string> KnownTypes = new Dictionary<string, string>
+        private static readonly IReadOnlyDictionary<string, string> KnownTypes = BuildKnownTypes();
+
+        /// <summary>
+        /// Builds the mapping of known primitive types.
+        /// </summary>
+        [Pure]
+        private static IReadOnlyDictionary<string, string> BuildKnownTypes()
         {
-            [typeof(bool).FullName] = "bool",
-            [typeof(Bool).FullName] = "bool",
-            [typeof(Bool2).FullName] = "bool2",
-            [typeof(Bool3).FullName] = "bool3",
-            [typeof(Bool4).FullName] = "bool4",
-            [typeof(int).FullName] = "int",
-            [typeof(Int2).FullName] = "int2",
-            [typeof(Int3).FullName] = "int3",
-            [typeof(Int4).FullName] = "int4",
-            [typeof(uint).FullName] = "uint",
-            [typeof(UInt2).FullName] = "uint2",
-            [typeof(UInt3).FullName] = "uint3",
-            [typeof(UInt4).FullName] = "uint4",
-            [typeof(float).FullName] = "float",
-            [typeof(Float2).FullName] = "float2",
-            [typeof(Float3).FullName] = "float3",
-            [typeof(Float4).FullName] = "float4",
-            [typeof(Vector2).FullName] = "float2",
-            [typeof(Vector3).FullName] = "float3",
-            [typeof(Vector4).FullName] = "float4",
-            [typeof(double).FullName] = "double",
-            [typeof(Double2).FullName] = "double2",
-            [typeof(Double3).FullName] = "double3",
-            [typeof(Double4).FullName] = "double4"
-        };
+            Dictionary<string, string> knownTypes = new()
+            {
+                [typeof(bool).FullName] = "bool",
+                [typeof(int).FullName] = "int",
+                [typeof(uint).FullName] = "uint",
+                [typeof(float).FullName] = "float",
+                [typeof(Vector2).FullName] = "float2",
+                [typeof(Vector3).FullName] = "float3",
+                [typeof(Vector4).FullName] = "float4",
+                [typeof(double).FullName] = "double"
+            };
+
+            // Add all the mapped vector and matrix types
+            foreach (
+                var type in
+                from type in Assembly.GetExecutingAssembly().ExportedTypes
+                where Regex.IsMatch(type.FullName, @"^ComputeSharp\.(Bool|Double|Float|Int|UInt)")
+                select type)
+            {
+                knownTypes.Add(type.FullName, type.Name.ToLower());
+            }
+
+            return knownTypes;
+        }
 
         /// <summary>
         /// Gets the known HLSL vector types available as mapped types.

@@ -574,13 +574,35 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 // the property access to the corresponding HLSL syntax. For instance, m[M11, M12] will become m._m00_m01.
                 if (HlslKnownMembers.IsKnownMatrixIndexer(propertyName))
                 {
+                    bool isValid = true;
+
+                    // Validate the arguments
                     foreach (ArgumentSyntax argument in node.ArgumentList.Arguments)
                     {
                         if (this.semanticModel.GetOperation(argument.Expression) is not IFieldReferenceOperation fieldReference ||
                             !HlslKnownMembers.IsKnownMatrixIndex(fieldReference.Field.GetFullMetadataName()))
                         {
                             this.context.ReportDiagnostic(NonConstantMatrixSwizzledIndex, argument);
+
+                            isValid = false;
                         }
+                    }
+
+                    if (isValid)
+                    {
+                        // Rewrite the indexer as a property access
+                        string hlslPropertyName = string.Join("",
+                            from argument in node.ArgumentList.Arguments
+                            let fieldReference = (IFieldReferenceOperation)this.semanticModel.GetOperation(argument.Expression)!
+                            let fieldName = fieldReference.Field.Name
+                            let coordinate = int.Parse(fieldName.Substring(1)) - 11
+                            let indices = coordinate > 0 ? coordinate.ToString() : "00"
+                            select $"_m{indices}");
+
+                        return MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            updatedNode.Expression,
+                            IdentifierName(hlslPropertyName));
                     }
                 }
             }
