@@ -1,0 +1,115 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".g.cs"#>
+<#
+// Generates all matrix members and types for a given HLSL type
+void GenerateAllMatrixProperties(string typeName, int elementSize)
+{
+#>
+using System.Runtime.InteropServices;
+using ComputeSharp.Exceptions;
+
+namespace ComputeSharp
+{
+<#
+    for (int rows = 1; rows <= 4; rows++)
+    for (int columns = 1; columns <= 4; columns++)
+    {
+        if (rows > 1 || columns > 1) WriteLine("");
+
+        GenerateMatrixProperties(typeName, rows, columns, elementSize);
+    }
+#>
+}
+<#
+}
+
+// Generates all vector access properties for a specified type
+void GenerateMatrixProperties(string typeName, int rows, int columns, int elementSize)
+{
+    string elementTypeName = typeName.ToLower();
+    string fullTypeName = $"{typeName}{rows}x{columns}";
+    string rowTypeName = columns > 1 ? $"{typeName}{columns}" : elementTypeName;
+#>
+    /// <inheritdoc cref="<#=fullTypeName#>"/>
+    [StructLayout(LayoutKind.Explicit, Size = <#=(elementSize * rows * columns)#>)]
+    public partial struct <#=fullTypeName#>
+    {
+<#
+    PushIndent("    ");
+    PushIndent("    ");
+
+    // Generate the private fields
+    for (int i = 0; i < rows; i++)
+    for (int j = 0; j < columns; j++)
+    {
+        WriteLine($"[FieldOffset({(i * columns + j) * elementSize})]");
+        WriteLine($"private {elementTypeName} m{i}{j};");
+        WriteLine("");
+    }
+
+    PopIndent();
+    PopIndent();
+#>
+        /// <summary>
+        /// Gets a reference to a specific row in the current <see cref="<#=fullTypeName#>"/> instance.
+        /// </summary>
+        /// <param name="row">The row to access.</param>
+        public ref <#=rowTypeName#> this[int row] => throw new InvalidExecutionContextException($"{nameof(<#=fullTypeName#>)}[int]");
+<#
+    // Generate the negation operator
+    if (elementTypeName != "Bool" && elementTypeName != "UInt")
+    {
+        WriteLine("");
+#>
+        /// <summary>
+        /// Negates a <see cref="<#=fullTypeName#>"/> value.
+        /// </summary>
+        /// <param name="matrix">The <see cref="<#=fullTypeName#>"/> value to negate.</param>
+        public static <#=fullTypeName#> operator -(<#=fullTypeName#> matrix) => throw new InvalidExecutionContextException($"{nameof(<#=fullTypeName#>)}.-");
+<#
+    }
+
+    // Generate the numerical operators
+    if (elementTypeName != "Bool")
+    {
+        WriteLine("");
+#>
+        /// <summary>
+        /// Sums two <see cref="<#=fullTypeName#>"/> values.
+        /// </summary>
+        /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to sum.</param>
+        /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to sum.</param>
+        public static <#=fullTypeName#> operator +(<#=fullTypeName#> left, <#=fullTypeName#> right) => throw new InvalidExecutionContextException($"{nameof(<#=fullTypeName#>)}.+");
+
+        /// <summary>
+        /// Divides two <see cref="<#=fullTypeName#>"/> values (elementwise division).
+        /// </summary>
+        /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to divide.</param>
+        /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to divide.</param>
+        public static <#=fullTypeName#> operator /(<#=fullTypeName#> left, <#=fullTypeName#> right) => throw new InvalidExecutionContextException($"{nameof(<#=fullTypeName#>)}./");
+
+        /// <summary>
+        /// Multiplies two <see cref="<#=fullTypeName#>"/> values (elementwise product).
+        /// </summary>
+        /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to multiply.</param>
+        /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to multiply.</param>
+        public static <#=fullTypeName#> operator *(<#=fullTypeName#> left, <#=fullTypeName#> right) => throw new InvalidExecutionContextException($"{nameof(<#=fullTypeName#>)}.*");
+
+        /// <summary>
+        /// Subtracts two <see cref="<#=fullTypeName#>"/> values.
+        /// </summary>
+        /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to subtract.</param>
+        /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to subtract.</param>
+        public static <#=fullTypeName#> operator -(<#=fullTypeName#> left, <#=fullTypeName#> right) => throw new InvalidExecutionContextException($"{nameof(<#=fullTypeName#>)}.-");
+<#
+    }
+#>
+    }
+<#
+}
+#>

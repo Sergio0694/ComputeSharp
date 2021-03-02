@@ -75,6 +75,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Float4.tt</DependentUpon>
     </Compile>
+    <Compile Update="Core\Primitives\Float\Matrix\FloatMxN.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FloatMxN.tt</DependentUpon>
+    </Compile>
     <Compile Update="Core\Primitives\Int\Int2.g.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -143,6 +148,10 @@
     <None Update="Core\Primitives\Float\Float4.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Float4.g.cs</LastGenOutput>
+    </None>
+    <None Update="Core\Primitives\Float\Matrix\FloatMxN.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>FloatMxN.g.cs</LastGenOutput>
     </None>
     <None Update="Core\Primitives\Int\Int2.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
