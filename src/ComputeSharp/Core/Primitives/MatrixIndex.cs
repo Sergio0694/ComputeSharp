@@ -1,97 +1,97 @@
 ﻿namespace ComputeSharp
 {
     /// <summary>
-    /// A type indicating a base-0 index into a matrix type. This can be used to extract references to swizzled vectors within a given matrix value.
+    /// A type indicating a base-1 index into a matrix type. This can be used to extract references to swizzled vectors within a given matrix value.
     /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-per-component-math"/>.
-    /// <para>This type is meant to be used within a <see langword="using statuc"/> directive to simplify the code:</para>
+    /// <para>This type is meant to be used within a <see langword="using static"/> directive to simplify the code:</para>
     /// <para>
     /// <c>
-    /// using static ComputeSharp.MatrixIndexAsBase0;
+    /// using static ComputeSharp.MatrixIndex;
     /// Float2x2 matrix = 0;
-    /// Float2 row = matrix[M11, M01];
+    /// Float2 row = matrix[M11, M12];
     /// </c>
     /// </para>
     /// </summary>
-    public enum MatrixIndexAsBase0
+    public enum MatrixIndex
     {
         /// <summary>
         /// The first item in the first row.
         /// </summary>
-        M00,
+        M11,
 
         /// <summary>
         /// The second item in the first row.
         /// </summary>
-        M01,
+        M12,
 
         /// <summary>
         /// The third item in the first row.
         /// </summary>
-        M02,
+        M13,
 
         /// <summary>
         /// The fourth item in the first row.
         /// </summary>
-        M03,
+        M14,
 
         /// <summary>
         /// The first item in the second row.
         /// </summary>
-        M10,
+        M21,
 
         /// <summary>
         /// The second item in the second row.
         /// </summary>
-        M11,
+        M22,
 
         /// <summary>
         /// The third item in the second row.
         /// </summary>
-        M12,
+        M23,
 
         /// <summary>
         /// The fourth item in the second row.
         /// </summary>
-        M13,
+        M24,
 
         /// <summary>
         /// The first item in the third row.
         /// </summary>
-        M20,
+        M31,
 
         /// <summary>
         /// The second item in the third row.
         /// </summary>
-        M21,
+        M32,
 
         /// <summary>
         /// The third item in the third row.
         /// </summary>
-        M22,
+        M33,
 
         /// <summary>
         /// The fourth item in the third row.
         /// </summary>
-        M23,
+        M34,
 
         /// <summary>
         /// The first item in the fourth row.
         /// </summary>
-        M30,
+        M41,
 
         /// <summary>
         /// The second item in the fourth row.
         /// </summary>
-        M31,
+        M42,
 
         /// <summary>
         /// The third item in the fourth row.
         /// </summary>
-        M32,
+        M43,
 
         /// <summary>
         /// The fourth item in the fourth row.
         /// </summary>
-        M33
+        M44
     }
 }

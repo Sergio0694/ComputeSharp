@@ -66,7 +66,7 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref <#=typeName#>2 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1] => throw new InvalidExecutionContextException($"{nameof(<#=fullTypeName#>)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
+        public ref <#=typeName#>2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(<#=fullTypeName#>)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
@@ -74,31 +74,7 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref <#=typeName#>3 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2] => throw new InvalidExecutionContextException($"{nameof(<#=fullTypeName#>)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
-        
-        /// <summary>
-        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
-        /// </summary>
-        /// <param name="xy0">The identifier of the first item to index.</param>
-        /// <param name="xy1">The identifier of the second item to index.</param>
-        /// <param name="xy2">The identifier of the third item to index.</param>
-        /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref <#=typeName#>4 this[MatrixIndexAsBase0 xy0, MatrixIndexAsBase0 xy1, MatrixIndexAsBase0 xy2, MatrixIndexAsBase0 xy3] => throw new InvalidExecutionContextException($"{nameof(<#=fullTypeName#>)}[{nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}, {nameof(MatrixIndexAsBase0)}]");
-
-        /// <summary>
-        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
-        /// </summary>
-        /// <param name="xy0">The identifier of the first item to index.</param>
-        /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref <#=typeName#>2 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1] => throw new InvalidExecutionContextException($"{nameof(<#=fullTypeName#>)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
-        
-        /// <summary>
-        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
-        /// </summary>
-        /// <param name="xy0">The identifier of the first item to index.</param>
-        /// <param name="xy1">The identifier of the second item to index.</param>
-        /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref <#=typeName#>3 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2] => throw new InvalidExecutionContextException($"{nameof(<#=fullTypeName#>)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        public ref <#=typeName#>3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(<#=fullTypeName#>)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
@@ -107,7 +83,7 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref <#=typeName#>4 this[MatrixIndexAsBase1 xy0, MatrixIndexAsBase1 xy1, MatrixIndexAsBase1 xy2, MatrixIndexAsBase1 xy3] => throw new InvalidExecutionContextException($"{nameof(<#=fullTypeName#>)}[{nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}, {nameof(MatrixIndexAsBase1)}]");
+        public ref <#=typeName#>4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(<#=fullTypeName#>)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
 <#
     // Generate the negation operator
     if (elementTypeName != "Bool" && elementTypeName != "UInt")
