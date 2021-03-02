@@ -34,6 +34,7 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
     string elementTypeName = typeName.ToLower();
     string fullTypeName = $"{typeName}{rows}x{columns}";
     string rowTypeName = columns > 1 ? $"{typeName}{columns}" : elementTypeName;
+    List<string> fieldNames = new List<string>();
 #>
     /// <inheritdoc cref="<#=fullTypeName#>"/>
     [StructLayout(LayoutKind.Explicit, Size = <#=(elementSize * rows * columns)#>)]
@@ -44,13 +45,39 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
     PushIndent("    ");
 
     // Generate the private fields
-    for (int i = 0; i < rows; i++)
-    for (int j = 0; j < columns; j++)
+    for (int i = 1; i <= rows; i++)
+    for (int j = 1; j <= columns; j++)
     {
-        WriteLine($"[FieldOffset({(i * columns + j) * elementSize})]");
+        WriteLine($"[FieldOffset({((i - 1) * columns + j - 1) * elementSize})]");
         WriteLine($"private {elementTypeName} m{i}{j};");
         WriteLine("");
+
+        fieldNames.Add($"m{i}{j}");
     }
+
+    // Generate the constructors
+    WriteLine("/// <summary>");
+    WriteLine($"/// Creates a new <see cref=\"{fullTypeName}\"/> instance with the specified parameters.");
+    WriteLine("/// </summary>");
+
+    for (int i = 1; i <= rows; i++)
+    for (int j = 1; j <= columns; j++)
+    {
+        WriteLine($"/// <param name=\"m{i}{j}\">The value to assign to the component at position [{i}, {j}].</param>");
+    }
+
+    WriteLine($"public {fullTypeName}({string.Join(", ", fieldNames.Select(n => $"{elementTypeName} {n}"))})");
+    WriteLine("{");
+    PushIndent("    ");
+
+    foreach (string fieldName in fieldNames)
+    {
+        WriteLine($"this.{fieldName} = {fieldName};");
+    }
+
+    PopIndent();
+    WriteLine("}");
+    WriteLine("");
 
     PopIndent();
     PopIndent();

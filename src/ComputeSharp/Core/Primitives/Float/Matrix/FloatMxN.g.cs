@@ -8,7 +8,16 @@ namespace ComputeSharp
     public partial struct Float1x1
     {
         [FieldOffset(0)]
-        private float m00;
+        private float m11;
+
+        /// <summary>
+        /// Creates a new <see cref="Float1x1"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="m11">The value to assign to the component at position [1, 1].</param>
+        public Float1x1(float m11)
+        {
+            this.m11 = m11;
+        }
 
         /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float1x1"/> instance.
@@ -80,10 +89,21 @@ namespace ComputeSharp
     public partial struct Float1x2
     {
         [FieldOffset(0)]
-        private float m00;
+        private float m11;
 
         [FieldOffset(4)]
-        private float m01;
+        private float m12;
+
+        /// <summary>
+        /// Creates a new <see cref="Float1x2"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="m11">The value to assign to the component at position [1, 1].</param>
+        /// <param name="m12">The value to assign to the component at position [1, 2].</param>
+        public Float1x2(float m11, float m12)
+        {
+            this.m11 = m11;
+            this.m12 = m12;
+        }
 
         /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float1x2"/> instance.
@@ -155,13 +175,26 @@ namespace ComputeSharp
     public partial struct Float1x3
     {
         [FieldOffset(0)]
-        private float m00;
+        private float m11;
 
         [FieldOffset(4)]
-        private float m01;
+        private float m12;
 
         [FieldOffset(8)]
-        private float m02;
+        private float m13;
+
+        /// <summary>
+        /// Creates a new <see cref="Float1x3"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="m11">The value to assign to the component at position [1, 1].</param>
+        /// <param name="m12">The value to assign to the component at position [1, 2].</param>
+        /// <param name="m13">The value to assign to the component at position [1, 3].</param>
+        public Float1x3(float m11, float m12, float m13)
+        {
+            this.m11 = m11;
+            this.m12 = m12;
+            this.m13 = m13;
+        }
 
         /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float1x3"/> instance.
@@ -233,16 +266,31 @@ namespace ComputeSharp
     public partial struct Float1x4
     {
         [FieldOffset(0)]
-        private float m00;
+        private float m11;
 
         [FieldOffset(4)]
-        private float m01;
+        private float m12;
 
         [FieldOffset(8)]
-        private float m02;
+        private float m13;
 
         [FieldOffset(12)]
-        private float m03;
+        private float m14;
+
+        /// <summary>
+        /// Creates a new <see cref="Float1x4"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="m11">The value to assign to the component at position [1, 1].</param>
+        /// <param name="m12">The value to assign to the component at position [1, 2].</param>
+        /// <param name="m13">The value to assign to the component at position [1, 3].</param>
+        /// <param name="m14">The value to assign to the component at position [1, 4].</param>
+        public Float1x4(float m11, float m12, float m13, float m14)
+        {
+            this.m11 = m11;
+            this.m12 = m12;
+            this.m13 = m13;
+            this.m14 = m14;
+        }
 
         /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float1x4"/> instance.
@@ -314,10 +362,21 @@ namespace ComputeSharp
     public partial struct Float2x1
     {
         [FieldOffset(0)]
-        private float m00;
+        private float m11;
 
         [FieldOffset(4)]
-        private float m10;
+        private float m21;
+
+        /// <summary>
+        /// Creates a new <see cref="Float2x1"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="m11">The value to assign to the component at position [1, 1].</param>
+        /// <param name="m21">The value to assign to the component at position [2, 1].</param>
+        public Float2x1(float m11, float m21)
+        {
+            this.m11 = m11;
+            this.m21 = m21;
+        }
 
         /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float2x1"/> instance.
@@ -389,16 +448,31 @@ namespace ComputeSharp
     public partial struct Float2x2
     {
         [FieldOffset(0)]
-        private float m00;
+        private float m11;
 
         [FieldOffset(4)]
-        private float m01;
+        private float m12;
 
         [FieldOffset(8)]
-        private float m10;
+        private float m21;
 
         [FieldOffset(12)]
-        private float m11;
+        private float m22;
+
+        /// <summary>
+        /// Creates a new <see cref="Float2x2"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="m11">The value to assign to the component at position [1, 1].</param>
+        /// <param name="m12">The value to assign to the component at position [1, 2].</param>
+        /// <param name="m21">The value to assign to the component at position [2, 1].</param>
+        /// <param name="m22">The value to assign to the component at position [2, 2].</param>
+        public Float2x2(float m11, float m12, float m21, float m22)
+        {
+            this.m11 = m11;
+            this.m12 = m12;
+            this.m21 = m21;
+            this.m22 = m22;
+        }
 
         /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float2x2"/> instance.
@@ -470,22 +544,41 @@ namespace ComputeSharp
     public partial struct Float2x3
     {
         [FieldOffset(0)]
-        private float m00;
-
-        [FieldOffset(4)]
-        private float m01;
-
-        [FieldOffset(8)]
-        private float m02;
-
-        [FieldOffset(12)]
-        private float m10;
-
-        [FieldOffset(16)]
         private float m11;
 
-        [FieldOffset(20)]
+        [FieldOffset(4)]
         private float m12;
+
+        [FieldOffset(8)]
+        private float m13;
+
+        [FieldOffset(12)]
+        private float m21;
+
+        [FieldOffset(16)]
+        private float m22;
+
+        [FieldOffset(20)]
+        private float m23;
+
+        /// <summary>
+        /// Creates a new <see cref="Float2x3"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="m11">The value to assign to the component at position [1, 1].</param>
+        /// <param name="m12">The value to assign to the component at position [1, 2].</param>
+        /// <param name="m13">The value to assign to the component at position [1, 3].</param>
+        /// <param name="m21">The value to assign to the component at position [2, 1].</param>
+        /// <param name="m22">The value to assign to the component at position [2, 2].</param>
+        /// <param name="m23">The value to assign to the component at position [2, 3].</param>
+        public Float2x3(float m11, float m12, float m13, float m21, float m22, float m23)
+        {
+            this.m11 = m11;
+            this.m12 = m12;
+            this.m13 = m13;
+            this.m21 = m21;
+            this.m22 = m22;
+            this.m23 = m23;
+        }
 
         /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float2x3"/> instance.
@@ -557,28 +650,51 @@ namespace ComputeSharp
     public partial struct Float2x4
     {
         [FieldOffset(0)]
-        private float m00;
-
-        [FieldOffset(4)]
-        private float m01;
-
-        [FieldOffset(8)]
-        private float m02;
-
-        [FieldOffset(12)]
-        private float m03;
-
-        [FieldOffset(16)]
-        private float m10;
-
-        [FieldOffset(20)]
         private float m11;
 
-        [FieldOffset(24)]
+        [FieldOffset(4)]
         private float m12;
 
-        [FieldOffset(28)]
+        [FieldOffset(8)]
         private float m13;
+
+        [FieldOffset(12)]
+        private float m14;
+
+        [FieldOffset(16)]
+        private float m21;
+
+        [FieldOffset(20)]
+        private float m22;
+
+        [FieldOffset(24)]
+        private float m23;
+
+        [FieldOffset(28)]
+        private float m24;
+
+        /// <summary>
+        /// Creates a new <see cref="Float2x4"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="m11">The value to assign to the component at position [1, 1].</param>
+        /// <param name="m12">The value to assign to the component at position [1, 2].</param>
+        /// <param name="m13">The value to assign to the component at position [1, 3].</param>
+        /// <param name="m14">The value to assign to the component at position [1, 4].</param>
+        /// <param name="m21">The value to assign to the component at position [2, 1].</param>
+        /// <param name="m22">The value to assign to the component at position [2, 2].</param>
+        /// <param name="m23">The value to assign to the component at position [2, 3].</param>
+        /// <param name="m24">The value to assign to the component at position [2, 4].</param>
+        public Float2x4(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24)
+        {
+            this.m11 = m11;
+            this.m12 = m12;
+            this.m13 = m13;
+            this.m14 = m14;
+            this.m21 = m21;
+            this.m22 = m22;
+            this.m23 = m23;
+            this.m24 = m24;
+        }
 
         /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float2x4"/> instance.
@@ -650,13 +766,26 @@ namespace ComputeSharp
     public partial struct Float3x1
     {
         [FieldOffset(0)]
-        private float m00;
+        private float m11;
 
         [FieldOffset(4)]
-        private float m10;
+        private float m21;
 
         [FieldOffset(8)]
-        private float m20;
+        private float m31;
+
+        /// <summary>
+        /// Creates a new <see cref="Float3x1"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="m11">The value to assign to the component at position [1, 1].</param>
+        /// <param name="m21">The value to assign to the component at position [2, 1].</param>
+        /// <param name="m31">The value to assign to the component at position [3, 1].</param>
+        public Float3x1(float m11, float m21, float m31)
+        {
+            this.m11 = m11;
+            this.m21 = m21;
+            this.m31 = m31;
+        }
 
         /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float3x1"/> instance.
@@ -728,22 +857,41 @@ namespace ComputeSharp
     public partial struct Float3x2
     {
         [FieldOffset(0)]
-        private float m00;
-
-        [FieldOffset(4)]
-        private float m01;
-
-        [FieldOffset(8)]
-        private float m10;
-
-        [FieldOffset(12)]
         private float m11;
 
+        [FieldOffset(4)]
+        private float m12;
+
+        [FieldOffset(8)]
+        private float m21;
+
+        [FieldOffset(12)]
+        private float m22;
+
         [FieldOffset(16)]
-        private float m20;
+        private float m31;
 
         [FieldOffset(20)]
-        private float m21;
+        private float m32;
+
+        /// <summary>
+        /// Creates a new <see cref="Float3x2"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="m11">The value to assign to the component at position [1, 1].</param>
+        /// <param name="m12">The value to assign to the component at position [1, 2].</param>
+        /// <param name="m21">The value to assign to the component at position [2, 1].</param>
+        /// <param name="m22">The value to assign to the component at position [2, 2].</param>
+        /// <param name="m31">The value to assign to the component at position [3, 1].</param>
+        /// <param name="m32">The value to assign to the component at position [3, 2].</param>
+        public Float3x2(float m11, float m12, float m21, float m22, float m31, float m32)
+        {
+            this.m11 = m11;
+            this.m12 = m12;
+            this.m21 = m21;
+            this.m22 = m22;
+            this.m31 = m31;
+            this.m32 = m32;
+        }
 
         /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float3x2"/> instance.
@@ -815,31 +963,56 @@ namespace ComputeSharp
     public partial struct Float3x3
     {
         [FieldOffset(0)]
-        private float m00;
-
-        [FieldOffset(4)]
-        private float m01;
-
-        [FieldOffset(8)]
-        private float m02;
-
-        [FieldOffset(12)]
-        private float m10;
-
-        [FieldOffset(16)]
         private float m11;
 
-        [FieldOffset(20)]
+        [FieldOffset(4)]
         private float m12;
 
-        [FieldOffset(24)]
-        private float m20;
+        [FieldOffset(8)]
+        private float m13;
 
-        [FieldOffset(28)]
+        [FieldOffset(12)]
         private float m21;
 
-        [FieldOffset(32)]
+        [FieldOffset(16)]
         private float m22;
+
+        [FieldOffset(20)]
+        private float m23;
+
+        [FieldOffset(24)]
+        private float m31;
+
+        [FieldOffset(28)]
+        private float m32;
+
+        [FieldOffset(32)]
+        private float m33;
+
+        /// <summary>
+        /// Creates a new <see cref="Float3x3"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="m11">The value to assign to the component at position [1, 1].</param>
+        /// <param name="m12">The value to assign to the component at position [1, 2].</param>
+        /// <param name="m13">The value to assign to the component at position [1, 3].</param>
+        /// <param name="m21">The value to assign to the component at position [2, 1].</param>
+        /// <param name="m22">The value to assign to the component at position [2, 2].</param>
+        /// <param name="m23">The value to assign to the component at position [2, 3].</param>
+        /// <param name="m31">The value to assign to the component at position [3, 1].</param>
+        /// <param name="m32">The value to assign to the component at position [3, 2].</param>
+        /// <param name="m33">The value to assign to the component at position [3, 3].</param>
+        public Float3x3(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33)
+        {
+            this.m11 = m11;
+            this.m12 = m12;
+            this.m13 = m13;
+            this.m21 = m21;
+            this.m22 = m22;
+            this.m23 = m23;
+            this.m31 = m31;
+            this.m32 = m32;
+            this.m33 = m33;
+        }
 
         /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float3x3"/> instance.
@@ -911,40 +1084,71 @@ namespace ComputeSharp
     public partial struct Float3x4
     {
         [FieldOffset(0)]
-        private float m00;
-
-        [FieldOffset(4)]
-        private float m01;
-
-        [FieldOffset(8)]
-        private float m02;
-
-        [FieldOffset(12)]
-        private float m03;
-
-        [FieldOffset(16)]
-        private float m10;
-
-        [FieldOffset(20)]
         private float m11;
 
-        [FieldOffset(24)]
+        [FieldOffset(4)]
         private float m12;
 
-        [FieldOffset(28)]
+        [FieldOffset(8)]
         private float m13;
 
-        [FieldOffset(32)]
-        private float m20;
+        [FieldOffset(12)]
+        private float m14;
 
-        [FieldOffset(36)]
+        [FieldOffset(16)]
         private float m21;
 
-        [FieldOffset(40)]
+        [FieldOffset(20)]
         private float m22;
 
-        [FieldOffset(44)]
+        [FieldOffset(24)]
         private float m23;
+
+        [FieldOffset(28)]
+        private float m24;
+
+        [FieldOffset(32)]
+        private float m31;
+
+        [FieldOffset(36)]
+        private float m32;
+
+        [FieldOffset(40)]
+        private float m33;
+
+        [FieldOffset(44)]
+        private float m34;
+
+        /// <summary>
+        /// Creates a new <see cref="Float3x4"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="m11">The value to assign to the component at position [1, 1].</param>
+        /// <param name="m12">The value to assign to the component at position [1, 2].</param>
+        /// <param name="m13">The value to assign to the component at position [1, 3].</param>
+        /// <param name="m14">The value to assign to the component at position [1, 4].</param>
+        /// <param name="m21">The value to assign to the component at position [2, 1].</param>
+        /// <param name="m22">The value to assign to the component at position [2, 2].</param>
+        /// <param name="m23">The value to assign to the component at position [2, 3].</param>
+        /// <param name="m24">The value to assign to the component at position [2, 4].</param>
+        /// <param name="m31">The value to assign to the component at position [3, 1].</param>
+        /// <param name="m32">The value to assign to the component at position [3, 2].</param>
+        /// <param name="m33">The value to assign to the component at position [3, 3].</param>
+        /// <param name="m34">The value to assign to the component at position [3, 4].</param>
+        public Float3x4(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24, float m31, float m32, float m33, float m34)
+        {
+            this.m11 = m11;
+            this.m12 = m12;
+            this.m13 = m13;
+            this.m14 = m14;
+            this.m21 = m21;
+            this.m22 = m22;
+            this.m23 = m23;
+            this.m24 = m24;
+            this.m31 = m31;
+            this.m32 = m32;
+            this.m33 = m33;
+            this.m34 = m34;
+        }
 
         /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float3x4"/> instance.
@@ -1016,16 +1220,31 @@ namespace ComputeSharp
     public partial struct Float4x1
     {
         [FieldOffset(0)]
-        private float m00;
+        private float m11;
 
         [FieldOffset(4)]
-        private float m10;
+        private float m21;
 
         [FieldOffset(8)]
-        private float m20;
+        private float m31;
 
         [FieldOffset(12)]
-        private float m30;
+        private float m41;
+
+        /// <summary>
+        /// Creates a new <see cref="Float4x1"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="m11">The value to assign to the component at position [1, 1].</param>
+        /// <param name="m21">The value to assign to the component at position [2, 1].</param>
+        /// <param name="m31">The value to assign to the component at position [3, 1].</param>
+        /// <param name="m41">The value to assign to the component at position [4, 1].</param>
+        public Float4x1(float m11, float m21, float m31, float m41)
+        {
+            this.m11 = m11;
+            this.m21 = m21;
+            this.m31 = m31;
+            this.m41 = m41;
+        }
 
         /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float4x1"/> instance.
@@ -1097,28 +1316,51 @@ namespace ComputeSharp
     public partial struct Float4x2
     {
         [FieldOffset(0)]
-        private float m00;
-
-        [FieldOffset(4)]
-        private float m01;
-
-        [FieldOffset(8)]
-        private float m10;
-
-        [FieldOffset(12)]
         private float m11;
 
-        [FieldOffset(16)]
-        private float m20;
+        [FieldOffset(4)]
+        private float m12;
 
-        [FieldOffset(20)]
+        [FieldOffset(8)]
         private float m21;
 
+        [FieldOffset(12)]
+        private float m22;
+
+        [FieldOffset(16)]
+        private float m31;
+
+        [FieldOffset(20)]
+        private float m32;
+
         [FieldOffset(24)]
-        private float m30;
+        private float m41;
 
         [FieldOffset(28)]
-        private float m31;
+        private float m42;
+
+        /// <summary>
+        /// Creates a new <see cref="Float4x2"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="m11">The value to assign to the component at position [1, 1].</param>
+        /// <param name="m12">The value to assign to the component at position [1, 2].</param>
+        /// <param name="m21">The value to assign to the component at position [2, 1].</param>
+        /// <param name="m22">The value to assign to the component at position [2, 2].</param>
+        /// <param name="m31">The value to assign to the component at position [3, 1].</param>
+        /// <param name="m32">The value to assign to the component at position [3, 2].</param>
+        /// <param name="m41">The value to assign to the component at position [4, 1].</param>
+        /// <param name="m42">The value to assign to the component at position [4, 2].</param>
+        public Float4x2(float m11, float m12, float m21, float m22, float m31, float m32, float m41, float m42)
+        {
+            this.m11 = m11;
+            this.m12 = m12;
+            this.m21 = m21;
+            this.m22 = m22;
+            this.m31 = m31;
+            this.m32 = m32;
+            this.m41 = m41;
+            this.m42 = m42;
+        }
 
         /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float4x2"/> instance.
@@ -1190,40 +1432,71 @@ namespace ComputeSharp
     public partial struct Float4x3
     {
         [FieldOffset(0)]
-        private float m00;
-
-        [FieldOffset(4)]
-        private float m01;
-
-        [FieldOffset(8)]
-        private float m02;
-
-        [FieldOffset(12)]
-        private float m10;
-
-        [FieldOffset(16)]
         private float m11;
 
-        [FieldOffset(20)]
+        [FieldOffset(4)]
         private float m12;
 
-        [FieldOffset(24)]
-        private float m20;
+        [FieldOffset(8)]
+        private float m13;
 
-        [FieldOffset(28)]
+        [FieldOffset(12)]
         private float m21;
 
-        [FieldOffset(32)]
+        [FieldOffset(16)]
         private float m22;
 
-        [FieldOffset(36)]
-        private float m30;
+        [FieldOffset(20)]
+        private float m23;
 
-        [FieldOffset(40)]
+        [FieldOffset(24)]
         private float m31;
 
-        [FieldOffset(44)]
+        [FieldOffset(28)]
         private float m32;
+
+        [FieldOffset(32)]
+        private float m33;
+
+        [FieldOffset(36)]
+        private float m41;
+
+        [FieldOffset(40)]
+        private float m42;
+
+        [FieldOffset(44)]
+        private float m43;
+
+        /// <summary>
+        /// Creates a new <see cref="Float4x3"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="m11">The value to assign to the component at position [1, 1].</param>
+        /// <param name="m12">The value to assign to the component at position [1, 2].</param>
+        /// <param name="m13">The value to assign to the component at position [1, 3].</param>
+        /// <param name="m21">The value to assign to the component at position [2, 1].</param>
+        /// <param name="m22">The value to assign to the component at position [2, 2].</param>
+        /// <param name="m23">The value to assign to the component at position [2, 3].</param>
+        /// <param name="m31">The value to assign to the component at position [3, 1].</param>
+        /// <param name="m32">The value to assign to the component at position [3, 2].</param>
+        /// <param name="m33">The value to assign to the component at position [3, 3].</param>
+        /// <param name="m41">The value to assign to the component at position [4, 1].</param>
+        /// <param name="m42">The value to assign to the component at position [4, 2].</param>
+        /// <param name="m43">The value to assign to the component at position [4, 3].</param>
+        public Float4x3(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33, float m41, float m42, float m43)
+        {
+            this.m11 = m11;
+            this.m12 = m12;
+            this.m13 = m13;
+            this.m21 = m21;
+            this.m22 = m22;
+            this.m23 = m23;
+            this.m31 = m31;
+            this.m32 = m32;
+            this.m33 = m33;
+            this.m41 = m41;
+            this.m42 = m42;
+            this.m43 = m43;
+        }
 
         /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float4x3"/> instance.
@@ -1295,52 +1568,91 @@ namespace ComputeSharp
     public partial struct Float4x4
     {
         [FieldOffset(0)]
-        private float m00;
-
-        [FieldOffset(4)]
-        private float m01;
-
-        [FieldOffset(8)]
-        private float m02;
-
-        [FieldOffset(12)]
-        private float m03;
-
-        [FieldOffset(16)]
-        private float m10;
-
-        [FieldOffset(20)]
         private float m11;
 
-        [FieldOffset(24)]
+        [FieldOffset(4)]
         private float m12;
 
-        [FieldOffset(28)]
+        [FieldOffset(8)]
         private float m13;
 
-        [FieldOffset(32)]
-        private float m20;
+        [FieldOffset(12)]
+        private float m14;
 
-        [FieldOffset(36)]
+        [FieldOffset(16)]
         private float m21;
 
-        [FieldOffset(40)]
+        [FieldOffset(20)]
         private float m22;
 
-        [FieldOffset(44)]
+        [FieldOffset(24)]
         private float m23;
 
-        [FieldOffset(48)]
-        private float m30;
+        [FieldOffset(28)]
+        private float m24;
 
-        [FieldOffset(52)]
+        [FieldOffset(32)]
         private float m31;
 
-        [FieldOffset(56)]
+        [FieldOffset(36)]
         private float m32;
 
-        [FieldOffset(60)]
+        [FieldOffset(40)]
         private float m33;
+
+        [FieldOffset(44)]
+        private float m34;
+
+        [FieldOffset(48)]
+        private float m41;
+
+        [FieldOffset(52)]
+        private float m42;
+
+        [FieldOffset(56)]
+        private float m43;
+
+        [FieldOffset(60)]
+        private float m44;
+
+        /// <summary>
+        /// Creates a new <see cref="Float4x4"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="m11">The value to assign to the component at position [1, 1].</param>
+        /// <param name="m12">The value to assign to the component at position [1, 2].</param>
+        /// <param name="m13">The value to assign to the component at position [1, 3].</param>
+        /// <param name="m14">The value to assign to the component at position [1, 4].</param>
+        /// <param name="m21">The value to assign to the component at position [2, 1].</param>
+        /// <param name="m22">The value to assign to the component at position [2, 2].</param>
+        /// <param name="m23">The value to assign to the component at position [2, 3].</param>
+        /// <param name="m24">The value to assign to the component at position [2, 4].</param>
+        /// <param name="m31">The value to assign to the component at position [3, 1].</param>
+        /// <param name="m32">The value to assign to the component at position [3, 2].</param>
+        /// <param name="m33">The value to assign to the component at position [3, 3].</param>
+        /// <param name="m34">The value to assign to the component at position [3, 4].</param>
+        /// <param name="m41">The value to assign to the component at position [4, 1].</param>
+        /// <param name="m42">The value to assign to the component at position [4, 2].</param>
+        /// <param name="m43">The value to assign to the component at position [4, 3].</param>
+        /// <param name="m44">The value to assign to the component at position [4, 4].</param>
+        public Float4x4(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24, float m31, float m32, float m33, float m34, float m41, float m42, float m43, float m44)
+        {
+            this.m11 = m11;
+            this.m12 = m12;
+            this.m13 = m13;
+            this.m14 = m14;
+            this.m21 = m21;
+            this.m22 = m22;
+            this.m23 = m23;
+            this.m24 = m24;
+            this.m31 = m31;
+            this.m32 = m32;
+            this.m33 = m33;
+            this.m34 = m34;
+            this.m41 = m41;
+            this.m42 = m42;
+            this.m43 = m43;
+            this.m44 = m44;
+        }
 
         /// <summary>
         /// Gets a reference to a specific row in the current <see cref="Float4x4"/> instance.
