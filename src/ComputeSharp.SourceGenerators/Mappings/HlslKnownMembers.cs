@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace ComputeSharp.SourceGenerators.Mappings
 {
@@ -13,9 +15,9 @@ namespace ComputeSharp.SourceGenerators.Mappings
     internal static class HlslKnownMembers
     {
         /// <summary>
-        /// The mapping of supported known indexers to HLSL vector type names.
+        /// The mapping of supported known indexers to HLSL resource type names.
         /// </summary>
-        private static readonly IReadOnlyDictionary<string, string> KnownIndexers = new Dictionary<string, string>
+        private static readonly IReadOnlyDictionary<string, string> KnownResourceIndexers = new Dictionary<string, string>
         {
             [$"ComputeSharp.ReadOnlyTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
             [$"ComputeSharp.ReadOnlyTexture2D`2.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
@@ -237,6 +239,66 @@ namespace ComputeSharp.SourceGenerators.Mappings
         }
 
         /// <summary>
+        /// The mapping of supported known members to HLSL names.
+        /// </summary>
+        private static readonly IReadOnlyCollection<string> KnownMatrixIndexers = BuildKnownMatrixIndexers();
+
+        /// <summary>
+        /// Builds the mapping of swizzled matrix indexer properties.
+        /// </summary>
+        [Pure]
+        private static IReadOnlyCollection<string> BuildKnownMatrixIndexers()
+        {
+            return (
+                from type in Assembly.GetExecutingAssembly().ExportedTypes
+                where Regex.IsMatch(type.FullName, @"ComputeSharp\.(Bool|Double|Float|Int|UInt)[1-4]x[1-4]")
+                from property in type.GetProperties()
+                let indices = property.GetIndexParameters()
+                where indices.Length > 0 &&
+                      indices.All(static index => index.ParameterType == typeof(MatrixIndex))
+                let metadataName = $"{type.FullName}.this[{string.Join(", ", indices.Select(index => index.ParameterType))}]"
+                select metadataName).ToImmutableHashSet();
+        }
+
+        /// <summary>
+        /// The mapping of supported known members to HLSL names.
+        /// </summary>
+        private static readonly IReadOnlyCollection<string> KnownMatrixIndices = BuildKnownMatrixIndices();
+
+        /// <summary>
+        /// Builds the mapping of swizzled matrix indices.
+        /// </summary>
+        [Pure]
+        private static IReadOnlyCollection<string> BuildKnownMatrixIndices()
+        {
+            return (
+                from name in Enum.GetNames(typeof(MatrixIndex))
+                select $"{typeof(MatrixIndex).FullName}.{name}").ToImmutableHashSet();
+        }
+
+        /// <summary>
+        /// Checks whether or not a given property fullname matches a matrix swizzled indexer.
+        /// </summary>
+        /// <param name="name">The input fully qualified member name.</param>
+        /// <returns>Whether or not <paramref name="name"/> is a matrix swizzled indexer.</returns>
+        [Pure]
+        public static bool IsKnownMatrixIndexer(string name)
+        {
+            return KnownMatrixIndexers.Contains(name);
+        }
+
+        /// <summary>
+        /// Checks whether or not a given property fullname matches a matrix swizzled index.
+        /// </summary>
+        /// <param name="name">The input fully qualified member name.</param>
+        /// <returns>Whether or not <paramref name="name"/> is a matrix swizzled index.</returns>
+        [Pure]
+        public static bool IsKnownMatrixIndex(string name)
+        {
+            return KnownMatrixIndices.Contains(name);
+        }
+
+        /// <summary>
         /// Tries to get the mapped HLSL-compatible member name for the input member name.
         /// </summary>
         /// <param name="name">The input fully qualified member name.</param>
@@ -249,15 +311,15 @@ namespace ComputeSharp.SourceGenerators.Mappings
         }
 
         /// <summary>
-        /// Tries to get the mapped HLSL-compatible indexer vector type name for the input indexer name.
+        /// Tries to get the mapped HLSL-compatible indexer resource type name for the input indexer name.
         /// </summary>
         /// <param name="name">The input fully qualified indexer name.</param>
         /// <param name="mapped">The mapped type name, if one is found.</param>
         /// <returns>The HLSL-compatible type name that can be used in an HLSL shader for the given indexer.</returns>
         [Pure]
-        public static bool TryGetMappedIndexerTypeName(string name, out string? mapped)
+        public static bool TryGetMappedResourceIndexerTypeName(string name, out string? mapped)
         {
-            return KnownIndexers.TryGetValue(name, out mapped);
+            return KnownResourceIndexers.TryGetValue(name, out mapped);
         }
 
         /// <summary>

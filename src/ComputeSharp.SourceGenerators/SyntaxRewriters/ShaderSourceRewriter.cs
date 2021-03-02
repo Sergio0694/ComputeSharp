@@ -557,12 +557,32 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (ElementAccessExpressionSyntax)base.VisitElementAccessExpression(node)!;
 
-            if (this.semanticModel.GetOperation(node) is IPropertyReferenceOperation operation &&
-                HlslKnownMembers.TryGetMappedIndexerTypeName(operation.Property.GetFullMetadataName(), out string? mapping))
+            if (this.semanticModel.GetOperation(node) is IPropertyReferenceOperation operation)
             {
-                var index = InvocationExpression(IdentifierName(mapping!), ArgumentList(updatedNode.ArgumentList.Arguments));
+                string propertyName = operation.Property.GetFullMetadataName();
 
-                return updatedNode.WithArgumentList(BracketedArgumentList(SingletonSeparatedList(Argument(index))));
+                // Rewrite texture resource indices taking vectors into individual indices as per HLSL spec.
+                // For instance: texture[ThreadIds.XY] will be rewritten as texture[ThreadIds.X, ThreadIds.Y].
+                if (HlslKnownMembers.TryGetMappedResourceIndexerTypeName(propertyName, out string? mapping))
+                {
+                    var index = InvocationExpression(IdentifierName(mapping!), ArgumentList(updatedNode.ArgumentList.Arguments));
+
+                    return updatedNode.WithArgumentList(BracketedArgumentList(SingletonSeparatedList(Argument(index))));
+                }
+
+                // If the current property is a swizzled matrix indexer, ensure all the arguments are constants, and rewrite
+                // the property access to the corresponding HLSL syntax. For instance, m[M11, M12] will become m._m00_m01.
+                if (HlslKnownMembers.IsKnownMatrixIndexer(propertyName))
+                {
+                    foreach (ArgumentSyntax argument in node.ArgumentList.Arguments)
+                    {
+                        if (this.semanticModel.GetOperation(argument.Expression) is not IFieldReferenceOperation fieldReference ||
+                            !HlslKnownMembers.IsKnownMatrixIndex(fieldReference.Field.GetFullMetadataName()))
+                        {
+                            this.context.ReportDiagnostic(NonConstantMatrixSwizzledIndex, argument);
+                        }
+                    }
+                }
             }
 
             return updatedNode;

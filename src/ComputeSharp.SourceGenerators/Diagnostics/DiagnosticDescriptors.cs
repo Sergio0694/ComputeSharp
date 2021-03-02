@@ -587,5 +587,18 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
             isEnabledByDefault: true,
             description: $"The {nameof(ShaderMethodSourceGenerator)} generator encountered an error while processing a method, and using it in a shader might result in a runtime crash. Please report this issue at https://github.com/Sergio0694/ComputeSharp/issues.",
             helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an incorrect matrix swizzling property argument.
+        /// </summary>
+        public static readonly DiagnosticDescriptor NonConstantMatrixSwizzledIndex = new(
+            id: "CMPS0042",
+            title: "Non constant matrix swizzled property argument",
+            messageFormat: "The arguments in a swizzled indexer for a matrix type must be compile-time constants",
+            category: typeof(ShaderMethodSourceGenerator).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "The arguments in a swizzled indexer for a matrix type must be compile-time constants.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
     }
 }

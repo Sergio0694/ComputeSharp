@@ -95,6 +95,17 @@ namespace ComputeSharp.SourceGenerators.Extensions
         }
 
         /// <summary>
+        /// Gets the full metadata name for a given <see cref="IFieldSymbol"/> instance.
+        /// </summary>
+        /// <param name="symbol">The input <see cref="IFieldSymbol"/> instance.</param>
+        /// <returns>The full metadata name for <paramref name="symbol"/>.</returns>
+        [Pure]
+        public static string GetFullMetadataName(this IFieldSymbol symbol)
+        {
+            return $"{symbol.ContainingType.GetFullMetadataName()}.{symbol.Name}";
+        }
+
+        /// <summary>
         /// Gets a valid filename for a target symbol and generator type.
         /// </summary>
         /// <typeparam name="TGenerator">The generator type processing the input symbol.</typeparam>
