@@ -240,7 +240,22 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 return CastExpression(updatedNode.Type, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)));
             }
 
-            return InvocationExpression(updatedNode.Type, updatedNode.ArgumentList);
+            // Add explicit casts for matrix constructors to help the overload resolution
+            if (this.semanticModel.GetTypeInfo(node).Type is ITypeSymbol matrixType &&
+                HlslKnownTypes.IsMatrixType(matrixType.GetFullMetadataName()))
+            {
+                for (int i = 0; i < node.ArgumentList!.Arguments.Count; i++)
+                {
+                    IArgumentOperation argumentOperation = (IArgumentOperation)this.semanticModel.GetOperation(node.ArgumentList.Arguments[i])!;
+                    INamedTypeSymbol elementType = (INamedTypeSymbol)argumentOperation.Parameter.Type;
+
+                    updatedNode = updatedNode.ReplaceNode(
+                        updatedNode.ArgumentList!.Arguments[i].Expression,
+                        CastExpression(IdentifierName(HlslKnownTypes.GetMappedName(elementType)), updatedNode.ArgumentList.Arguments[i].Expression));
+                }
+            }
+
+            return InvocationExpression(updatedNode.Type, updatedNode.ArgumentList!);
         }
 
         /// <inheritdoc/>
@@ -269,6 +284,21 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             if (updatedNode.ArgumentList!.Arguments.Count == 0)
             {
                 return CastExpression(explicitType, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)));
+            }
+
+            // Add explicit casts like with the explicit object creation expressions above
+            if (this.semanticModel.GetTypeInfo(node).Type is ITypeSymbol matrixType &&
+                HlslKnownTypes.IsMatrixType(matrixType.GetFullMetadataName()))
+            {
+                for (int i = 0; i < node.ArgumentList.Arguments.Count; i++)
+                {
+                    IArgumentOperation argumentOperation = (IArgumentOperation)this.semanticModel.GetOperation(node.ArgumentList.Arguments[i])!;
+                    INamedTypeSymbol elementType = (INamedTypeSymbol)argumentOperation.Parameter.Type;
+
+                    updatedNode = updatedNode.ReplaceNode(
+                        updatedNode.ArgumentList.Arguments[i].Expression,
+                        CastExpression(IdentifierName(HlslKnownTypes.GetMappedName(elementType)), updatedNode.ArgumentList.Arguments[i].Expression));
+                }
             }
 
             return InvocationExpression(explicitType, updatedNode.ArgumentList);

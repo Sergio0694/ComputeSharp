@@ -16,6 +16,23 @@ namespace ComputeSharp.SourceGenerators.Mappings
     internal static class HlslKnownTypes
     {
         /// <summary>
+        /// The collection of known matrix types.
+        /// </summary>
+        private static readonly IReadOnlyCollection<Type> KnownMatrixTypes = BuildKnownMatrixTypes();
+
+        /// <summary>
+        /// Builds the mapping of known matrix types.
+        /// </summary>
+        [Pure]
+        private static IReadOnlyCollection<Type> BuildKnownMatrixTypes()
+        {
+            return (
+                from type in Assembly.GetExecutingAssembly().ExportedTypes
+                where Regex.IsMatch(type.FullName, @"^ComputeSharp\.(Bool|Double|Float|Int|UInt)")
+                select type).ToArray();
+        }
+
+        /// <summary>
         /// The mapping of supported known types to HLSL types.
         /// </summary>
         private static readonly IReadOnlyDictionary<string, string> KnownTypes = BuildKnownTypes();
@@ -39,11 +56,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
             };
 
             // Add all the mapped vector and matrix types
-            foreach (
-                var type in
-                from type in Assembly.GetExecutingAssembly().ExportedTypes
-                where Regex.IsMatch(type.FullName, @"^ComputeSharp\.(Bool|Double|Float|Int|UInt)")
-                select type)
+            foreach (var type in KnownMatrixTypes)
             {
                 knownTypes.Add(type.FullName, type.Name.ToLower());
             }
@@ -120,13 +133,33 @@ namespace ComputeSharp.SourceGenerators.Mappings
         }
 
         /// <summary>
-        /// Checks whether or not a given type name matches a typed resource type.
+        /// Checks whether or not a given type name matches a scalar or vector type.
         /// </summary>
         /// <param name="typeName">The input type name to check.</param>
-        /// <returns>Whether or not <paramref name="typeName"/> represents a typed resource type.</returns>
+        /// <returns>Whether or not <paramref name="typeName"/> represents a scalar or vector.</returns>
         public static bool IsScalarOrVectorType(string typeName)
         {
             return KnownTypes.ContainsKey(typeName);
+        }
+
+        /// <summary>
+        /// Checks whether or not a given type name matches a vector type.
+        /// </summary>
+        /// <param name="typeName">The input type name to check.</param>
+        /// <returns>Whether or not <paramref name="typeName"/> represents a vector type.</returns>
+        public static bool IsVectorType(string typeName)
+        {
+            return HlslMappedVectorTypes.Any(type => type.FullName == typeName);
+        }
+
+        /// <summary>
+        /// Checks whether or not a given type name matches a matrix type.
+        /// </summary>
+        /// <param name="typeName">The input type name to check.</param>
+        /// <returns>Whether or not <paramref name="typeName"/> represents a matrix type.</returns>
+        public static bool IsMatrixType(string typeName)
+        {
+            return KnownMatrixTypes.Any(type => type.FullName == typeName);
         }
 
         /// <summary>
