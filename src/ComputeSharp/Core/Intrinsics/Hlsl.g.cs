@@ -5900,7 +5900,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static float Frexp(float x, float exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(float)}, {typeof(float)})");
+        public static float Frexp(float x, out float exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(float)}, {typeof(float)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -5909,7 +5909,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float2 Frexp(Float2 x, Float2 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float2)}, {typeof(Float2)})");
+        public static Float2 Frexp(Float2 x, out Float2 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float2)}, {typeof(Float2)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -5918,7 +5918,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float3 Frexp(Float3 x, Float3 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float3)}, {typeof(Float3)})");
+        public static Float3 Frexp(Float3 x, out Float3 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float3)}, {typeof(Float3)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -5927,7 +5927,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float4 Frexp(Float4 x, Float4 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float4)}, {typeof(Float4)})");
+        public static Float4 Frexp(Float4 x, out Float4 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float4)}, {typeof(Float4)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -5936,7 +5936,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float1x1 Frexp(Float1x1 x, Float1x1 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float1x1)}, {typeof(Float1x1)})");
+        public static Float1x1 Frexp(Float1x1 x, out Float1x1 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float1x1)}, {typeof(Float1x1)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -5945,7 +5945,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float1x2 Frexp(Float1x2 x, Float1x2 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float1x2)}, {typeof(Float1x2)})");
+        public static Float1x2 Frexp(Float1x2 x, out Float1x2 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float1x2)}, {typeof(Float1x2)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -5954,7 +5954,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float1x3 Frexp(Float1x3 x, Float1x3 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float1x3)}, {typeof(Float1x3)})");
+        public static Float1x3 Frexp(Float1x3 x, out Float1x3 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float1x3)}, {typeof(Float1x3)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -5963,7 +5963,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float1x4 Frexp(Float1x4 x, Float1x4 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float1x4)}, {typeof(Float1x4)})");
+        public static Float1x4 Frexp(Float1x4 x, out Float1x4 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float1x4)}, {typeof(Float1x4)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -5972,7 +5972,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float2x1 Frexp(Float2x1 x, Float2x1 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float2x1)}, {typeof(Float2x1)})");
+        public static Float2x1 Frexp(Float2x1 x, out Float2x1 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float2x1)}, {typeof(Float2x1)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -5981,7 +5981,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float2x2 Frexp(Float2x2 x, Float2x2 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float2x2)}, {typeof(Float2x2)})");
+        public static Float2x2 Frexp(Float2x2 x, out Float2x2 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float2x2)}, {typeof(Float2x2)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -5990,7 +5990,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float2x3 Frexp(Float2x3 x, Float2x3 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float2x3)}, {typeof(Float2x3)})");
+        public static Float2x3 Frexp(Float2x3 x, out Float2x3 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float2x3)}, {typeof(Float2x3)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -5999,7 +5999,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float2x4 Frexp(Float2x4 x, Float2x4 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float2x4)}, {typeof(Float2x4)})");
+        public static Float2x4 Frexp(Float2x4 x, out Float2x4 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float2x4)}, {typeof(Float2x4)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -6008,7 +6008,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float3x1 Frexp(Float3x1 x, Float3x1 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float3x1)}, {typeof(Float3x1)})");
+        public static Float3x1 Frexp(Float3x1 x, out Float3x1 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float3x1)}, {typeof(Float3x1)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -6017,7 +6017,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float3x2 Frexp(Float3x2 x, Float3x2 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float3x2)}, {typeof(Float3x2)})");
+        public static Float3x2 Frexp(Float3x2 x, out Float3x2 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float3x2)}, {typeof(Float3x2)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -6026,7 +6026,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float3x3 Frexp(Float3x3 x, Float3x3 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float3x3)}, {typeof(Float3x3)})");
+        public static Float3x3 Frexp(Float3x3 x, out Float3x3 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float3x3)}, {typeof(Float3x3)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -6035,7 +6035,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float3x4 Frexp(Float3x4 x, Float3x4 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float3x4)}, {typeof(Float3x4)})");
+        public static Float3x4 Frexp(Float3x4 x, out Float3x4 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float3x4)}, {typeof(Float3x4)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -6044,7 +6044,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float4x1 Frexp(Float4x1 x, Float4x1 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float4x1)}, {typeof(Float4x1)})");
+        public static Float4x1 Frexp(Float4x1 x, out Float4x1 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float4x1)}, {typeof(Float4x1)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -6053,7 +6053,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float4x2 Frexp(Float4x2 x, Float4x2 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float4x2)}, {typeof(Float4x2)})");
+        public static Float4x2 Frexp(Float4x2 x, out Float4x2 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float4x2)}, {typeof(Float4x2)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -6062,7 +6062,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float4x3 Frexp(Float4x3 x, Float4x3 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float4x3)}, {typeof(Float4x3)})");
+        public static Float4x3 Frexp(Float4x3 x, out Float4x3 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float4x3)}, {typeof(Float4x3)})");
 
         /// <summary>
         /// Returns the mantissa and exponent of the specified floating-point value.
@@ -6071,7 +6071,7 @@ namespace ComputeSharp
         /// <param name="exp">The returned exponent of the input parameter.</param>
         /// <returns>The mantissa of the <paramref name="x"/> parameter.</returns>
         [HlslIntrinsicName("frexp")]
-        public static Float4x4 Frexp(Float4x4 x, Float4x4 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float4x4)}, {typeof(Float4x4)})");
+        public static Float4x4 Frexp(Float4x4 x, out Float4x4 exp) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Frexp)}({typeof(Float4x4)}, {typeof(Float4x4)})");
 
         /// <summary>
         /// Determines if the specified floating-point value is finite.
@@ -8408,7 +8408,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static float Modf(float x, float y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(float)}, {typeof(float)})");
+        public static float Modf(float x, out float y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(float)}, {typeof(float)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8418,7 +8418,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float2 Modf(Float2 x, Float2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float2)}, {typeof(Float2)})");
+        public static Float2 Modf(Float2 x, out Float2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float2)}, {typeof(Float2)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8428,7 +8428,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float3 Modf(Float3 x, Float3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float3)}, {typeof(Float3)})");
+        public static Float3 Modf(Float3 x, out Float3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float3)}, {typeof(Float3)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8438,7 +8438,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float4 Modf(Float4 x, Float4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float4)}, {typeof(Float4)})");
+        public static Float4 Modf(Float4 x, out Float4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float4)}, {typeof(Float4)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8448,7 +8448,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float1x1 Modf(Float1x1 x, Float1x1 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float1x1)}, {typeof(Float1x1)})");
+        public static Float1x1 Modf(Float1x1 x, out Float1x1 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float1x1)}, {typeof(Float1x1)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8458,7 +8458,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float1x2 Modf(Float1x2 x, Float1x2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float1x2)}, {typeof(Float1x2)})");
+        public static Float1x2 Modf(Float1x2 x, out Float1x2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float1x2)}, {typeof(Float1x2)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8468,7 +8468,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float1x3 Modf(Float1x3 x, Float1x3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float1x3)}, {typeof(Float1x3)})");
+        public static Float1x3 Modf(Float1x3 x, out Float1x3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float1x3)}, {typeof(Float1x3)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8478,7 +8478,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float1x4 Modf(Float1x4 x, Float1x4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float1x4)}, {typeof(Float1x4)})");
+        public static Float1x4 Modf(Float1x4 x, out Float1x4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float1x4)}, {typeof(Float1x4)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8488,7 +8488,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float2x1 Modf(Float2x1 x, Float2x1 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float2x1)}, {typeof(Float2x1)})");
+        public static Float2x1 Modf(Float2x1 x, out Float2x1 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float2x1)}, {typeof(Float2x1)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8498,7 +8498,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float2x2 Modf(Float2x2 x, Float2x2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float2x2)}, {typeof(Float2x2)})");
+        public static Float2x2 Modf(Float2x2 x, out Float2x2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float2x2)}, {typeof(Float2x2)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8508,7 +8508,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float2x3 Modf(Float2x3 x, Float2x3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float2x3)}, {typeof(Float2x3)})");
+        public static Float2x3 Modf(Float2x3 x, out Float2x3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float2x3)}, {typeof(Float2x3)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8518,7 +8518,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float2x4 Modf(Float2x4 x, Float2x4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float2x4)}, {typeof(Float2x4)})");
+        public static Float2x4 Modf(Float2x4 x, out Float2x4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float2x4)}, {typeof(Float2x4)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8528,7 +8528,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float3x1 Modf(Float3x1 x, Float3x1 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float3x1)}, {typeof(Float3x1)})");
+        public static Float3x1 Modf(Float3x1 x, out Float3x1 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float3x1)}, {typeof(Float3x1)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8538,7 +8538,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float3x2 Modf(Float3x2 x, Float3x2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float3x2)}, {typeof(Float3x2)})");
+        public static Float3x2 Modf(Float3x2 x, out Float3x2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float3x2)}, {typeof(Float3x2)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8548,7 +8548,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float3x3 Modf(Float3x3 x, Float3x3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float3x3)}, {typeof(Float3x3)})");
+        public static Float3x3 Modf(Float3x3 x, out Float3x3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float3x3)}, {typeof(Float3x3)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8558,7 +8558,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float3x4 Modf(Float3x4 x, Float3x4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float3x4)}, {typeof(Float3x4)})");
+        public static Float3x4 Modf(Float3x4 x, out Float3x4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float3x4)}, {typeof(Float3x4)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8568,7 +8568,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float4x1 Modf(Float4x1 x, Float4x1 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float4x1)}, {typeof(Float4x1)})");
+        public static Float4x1 Modf(Float4x1 x, out Float4x1 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float4x1)}, {typeof(Float4x1)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8578,7 +8578,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float4x2 Modf(Float4x2 x, Float4x2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float4x2)}, {typeof(Float4x2)})");
+        public static Float4x2 Modf(Float4x2 x, out Float4x2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float4x2)}, {typeof(Float4x2)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8588,7 +8588,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float4x3 Modf(Float4x3 x, Float4x3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float4x3)}, {typeof(Float4x3)})");
+        public static Float4x3 Modf(Float4x3 x, out Float4x3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float4x3)}, {typeof(Float4x3)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8598,7 +8598,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Float4x4 Modf(Float4x4 x, Float4x4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float4x4)}, {typeof(Float4x4)})");
+        public static Float4x4 Modf(Float4x4 x, out Float4x4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Float4x4)}, {typeof(Float4x4)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8608,7 +8608,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static int Modf(int x, int y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(int)}, {typeof(int)})");
+        public static int Modf(int x, out int y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(int)}, {typeof(int)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8618,7 +8618,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int2 Modf(Int2 x, Int2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int2)}, {typeof(Int2)})");
+        public static Int2 Modf(Int2 x, out Int2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int2)}, {typeof(Int2)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8628,7 +8628,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int3 Modf(Int3 x, Int3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int3)}, {typeof(Int3)})");
+        public static Int3 Modf(Int3 x, out Int3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int3)}, {typeof(Int3)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8638,7 +8638,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int4 Modf(Int4 x, Int4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int4)}, {typeof(Int4)})");
+        public static Int4 Modf(Int4 x, out Int4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int4)}, {typeof(Int4)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8648,7 +8648,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int1x1 Modf(Int1x1 x, Int1x1 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int1x1)}, {typeof(Int1x1)})");
+        public static Int1x1 Modf(Int1x1 x, out Int1x1 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int1x1)}, {typeof(Int1x1)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8658,7 +8658,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int1x2 Modf(Int1x2 x, Int1x2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int1x2)}, {typeof(Int1x2)})");
+        public static Int1x2 Modf(Int1x2 x, out Int1x2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int1x2)}, {typeof(Int1x2)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8668,7 +8668,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int1x3 Modf(Int1x3 x, Int1x3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int1x3)}, {typeof(Int1x3)})");
+        public static Int1x3 Modf(Int1x3 x, out Int1x3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int1x3)}, {typeof(Int1x3)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8678,7 +8678,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int1x4 Modf(Int1x4 x, Int1x4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int1x4)}, {typeof(Int1x4)})");
+        public static Int1x4 Modf(Int1x4 x, out Int1x4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int1x4)}, {typeof(Int1x4)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8688,7 +8688,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int2x1 Modf(Int2x1 x, Int2x1 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int2x1)}, {typeof(Int2x1)})");
+        public static Int2x1 Modf(Int2x1 x, out Int2x1 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int2x1)}, {typeof(Int2x1)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8698,7 +8698,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int2x2 Modf(Int2x2 x, Int2x2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int2x2)}, {typeof(Int2x2)})");
+        public static Int2x2 Modf(Int2x2 x, out Int2x2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int2x2)}, {typeof(Int2x2)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8708,7 +8708,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int2x3 Modf(Int2x3 x, Int2x3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int2x3)}, {typeof(Int2x3)})");
+        public static Int2x3 Modf(Int2x3 x, out Int2x3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int2x3)}, {typeof(Int2x3)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8718,7 +8718,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int2x4 Modf(Int2x4 x, Int2x4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int2x4)}, {typeof(Int2x4)})");
+        public static Int2x4 Modf(Int2x4 x, out Int2x4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int2x4)}, {typeof(Int2x4)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8728,7 +8728,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int3x1 Modf(Int3x1 x, Int3x1 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int3x1)}, {typeof(Int3x1)})");
+        public static Int3x1 Modf(Int3x1 x, out Int3x1 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int3x1)}, {typeof(Int3x1)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8738,7 +8738,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int3x2 Modf(Int3x2 x, Int3x2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int3x2)}, {typeof(Int3x2)})");
+        public static Int3x2 Modf(Int3x2 x, out Int3x2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int3x2)}, {typeof(Int3x2)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8748,7 +8748,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int3x3 Modf(Int3x3 x, Int3x3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int3x3)}, {typeof(Int3x3)})");
+        public static Int3x3 Modf(Int3x3 x, out Int3x3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int3x3)}, {typeof(Int3x3)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8758,7 +8758,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int3x4 Modf(Int3x4 x, Int3x4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int3x4)}, {typeof(Int3x4)})");
+        public static Int3x4 Modf(Int3x4 x, out Int3x4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int3x4)}, {typeof(Int3x4)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8768,7 +8768,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int4x1 Modf(Int4x1 x, Int4x1 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int4x1)}, {typeof(Int4x1)})");
+        public static Int4x1 Modf(Int4x1 x, out Int4x1 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int4x1)}, {typeof(Int4x1)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8778,7 +8778,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int4x2 Modf(Int4x2 x, Int4x2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int4x2)}, {typeof(Int4x2)})");
+        public static Int4x2 Modf(Int4x2 x, out Int4x2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int4x2)}, {typeof(Int4x2)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8788,7 +8788,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int4x3 Modf(Int4x3 x, Int4x3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int4x3)}, {typeof(Int4x3)})");
+        public static Int4x3 Modf(Int4x3 x, out Int4x3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int4x3)}, {typeof(Int4x3)})");
 
         /// <summary>
         /// Splits a value into fractional and integer parts, each with the same sign as the input value.
@@ -8798,7 +8798,7 @@ namespace ComputeSharp
         /// <returns>The signed-fractional portion of <paramref name="x"/>.</returns>
         [Pure]
         [HlslIntrinsicName("modf")]
-        public static Int4x4 Modf(Int4x4 x, Int4x4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int4x4)}, {typeof(Int4x4)})");
+        public static Int4x4 Modf(Int4x4 x, out Int4x4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Modf)}({typeof(Int4x4)}, {typeof(Int4x4)})");
 
         /// <summary>
         /// Multiplies two values using matrix math.
@@ -13318,7 +13318,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(float x, float sin, float cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(float)}, {typeof(float)}, {typeof(float)})");
+        public static void SinCos(float x, out float sin, out float cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(float)}, {typeof(float)}, {typeof(float)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13328,7 +13328,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float2 x, Float2 sin, Float2 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float2)}, {typeof(Float2)}, {typeof(Float2)})");
+        public static void SinCos(Float2 x, out Float2 sin, out Float2 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float2)}, {typeof(Float2)}, {typeof(Float2)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13338,7 +13338,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float3 x, Float3 sin, Float3 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float3)}, {typeof(Float3)}, {typeof(Float3)})");
+        public static void SinCos(Float3 x, out Float3 sin, out Float3 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float3)}, {typeof(Float3)}, {typeof(Float3)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13348,7 +13348,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float4 x, Float4 sin, Float4 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float4)}, {typeof(Float4)}, {typeof(Float4)})");
+        public static void SinCos(Float4 x, out Float4 sin, out Float4 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float4)}, {typeof(Float4)}, {typeof(Float4)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13358,7 +13358,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float1x1 x, Float1x1 sin, Float1x1 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float1x1)}, {typeof(Float1x1)}, {typeof(Float1x1)})");
+        public static void SinCos(Float1x1 x, out Float1x1 sin, out Float1x1 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float1x1)}, {typeof(Float1x1)}, {typeof(Float1x1)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13368,7 +13368,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float1x2 x, Float1x2 sin, Float1x2 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float1x2)}, {typeof(Float1x2)}, {typeof(Float1x2)})");
+        public static void SinCos(Float1x2 x, out Float1x2 sin, out Float1x2 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float1x2)}, {typeof(Float1x2)}, {typeof(Float1x2)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13378,7 +13378,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float1x3 x, Float1x3 sin, Float1x3 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float1x3)}, {typeof(Float1x3)}, {typeof(Float1x3)})");
+        public static void SinCos(Float1x3 x, out Float1x3 sin, out Float1x3 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float1x3)}, {typeof(Float1x3)}, {typeof(Float1x3)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13388,7 +13388,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float1x4 x, Float1x4 sin, Float1x4 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float1x4)}, {typeof(Float1x4)}, {typeof(Float1x4)})");
+        public static void SinCos(Float1x4 x, out Float1x4 sin, out Float1x4 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float1x4)}, {typeof(Float1x4)}, {typeof(Float1x4)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13398,7 +13398,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float2x1 x, Float2x1 sin, Float2x1 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float2x1)}, {typeof(Float2x1)}, {typeof(Float2x1)})");
+        public static void SinCos(Float2x1 x, out Float2x1 sin, out Float2x1 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float2x1)}, {typeof(Float2x1)}, {typeof(Float2x1)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13408,7 +13408,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float2x2 x, Float2x2 sin, Float2x2 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float2x2)}, {typeof(Float2x2)}, {typeof(Float2x2)})");
+        public static void SinCos(Float2x2 x, out Float2x2 sin, out Float2x2 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float2x2)}, {typeof(Float2x2)}, {typeof(Float2x2)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13418,7 +13418,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float2x3 x, Float2x3 sin, Float2x3 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float2x3)}, {typeof(Float2x3)}, {typeof(Float2x3)})");
+        public static void SinCos(Float2x3 x, out Float2x3 sin, out Float2x3 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float2x3)}, {typeof(Float2x3)}, {typeof(Float2x3)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13428,7 +13428,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float2x4 x, Float2x4 sin, Float2x4 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float2x4)}, {typeof(Float2x4)}, {typeof(Float2x4)})");
+        public static void SinCos(Float2x4 x, out Float2x4 sin, out Float2x4 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float2x4)}, {typeof(Float2x4)}, {typeof(Float2x4)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13438,7 +13438,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float3x1 x, Float3x1 sin, Float3x1 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float3x1)}, {typeof(Float3x1)}, {typeof(Float3x1)})");
+        public static void SinCos(Float3x1 x, out Float3x1 sin, out Float3x1 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float3x1)}, {typeof(Float3x1)}, {typeof(Float3x1)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13448,7 +13448,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float3x2 x, Float3x2 sin, Float3x2 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float3x2)}, {typeof(Float3x2)}, {typeof(Float3x2)})");
+        public static void SinCos(Float3x2 x, out Float3x2 sin, out Float3x2 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float3x2)}, {typeof(Float3x2)}, {typeof(Float3x2)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13458,7 +13458,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float3x3 x, Float3x3 sin, Float3x3 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float3x3)}, {typeof(Float3x3)}, {typeof(Float3x3)})");
+        public static void SinCos(Float3x3 x, out Float3x3 sin, out Float3x3 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float3x3)}, {typeof(Float3x3)}, {typeof(Float3x3)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13468,7 +13468,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float3x4 x, Float3x4 sin, Float3x4 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float3x4)}, {typeof(Float3x4)}, {typeof(Float3x4)})");
+        public static void SinCos(Float3x4 x, out Float3x4 sin, out Float3x4 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float3x4)}, {typeof(Float3x4)}, {typeof(Float3x4)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13478,7 +13478,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float4x1 x, Float4x1 sin, Float4x1 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float4x1)}, {typeof(Float4x1)}, {typeof(Float4x1)})");
+        public static void SinCos(Float4x1 x, out Float4x1 sin, out Float4x1 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float4x1)}, {typeof(Float4x1)}, {typeof(Float4x1)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13488,7 +13488,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float4x2 x, Float4x2 sin, Float4x2 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float4x2)}, {typeof(Float4x2)}, {typeof(Float4x2)})");
+        public static void SinCos(Float4x2 x, out Float4x2 sin, out Float4x2 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float4x2)}, {typeof(Float4x2)}, {typeof(Float4x2)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13498,7 +13498,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float4x3 x, Float4x3 sin, Float4x3 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float4x3)}, {typeof(Float4x3)}, {typeof(Float4x3)})");
+        public static void SinCos(Float4x3 x, out Float4x3 sin, out Float4x3 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float4x3)}, {typeof(Float4x3)}, {typeof(Float4x3)})");
 
         /// <summary>
         /// Returns the sine and cosine of a specified value.
@@ -13508,7 +13508,7 @@ namespace ComputeSharp
         /// <param name="cos">The resulting cosine.</param>
         [Pure]
         [HlslIntrinsicName("sincos")]
-        public static void SinCos(Float4x4 x, Float4x4 sin, Float4x4 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float4x4)}, {typeof(Float4x4)}, {typeof(Float4x4)})");
+        public static void SinCos(Float4x4 x, out Float4x4 sin, out Float4x4 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float4x4)}, {typeof(Float4x4)}, {typeof(Float4x4)})");
 
         /// <summary>
         /// Returns the hyperbolic sine of the specified value.

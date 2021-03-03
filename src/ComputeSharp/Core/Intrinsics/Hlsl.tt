@@ -36,7 +36,7 @@ foreach (var intrinsic in Intrinsics)
         WriteLine($"[HlslIntrinsicName(\"{intrinsic.HlslName}\")]");
 
         Write($"public static {overload.Return} {intrinsic.Name}(");
-        Write(string.Join(", ", intrinsic.Parameters.Zip(overload.Params, (a, b) => $"{b} {a.Name}")));
+        Write(string.Join(", ", intrinsic.Parameters.Zip(overload.Params, (a, b) => $"{(a.IsOut ? "out " : "")}{b} {a.Name}")));
         Write(") => throw new InvalidExecutionContextException(");
 
         var parameters = string.Join(", ", overload.Params.Select(t => $"{{typeof({t})}}"));
