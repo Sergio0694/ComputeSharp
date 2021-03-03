@@ -12,10 +12,15 @@ namespace ComputeSharp
 PushIndent("    ");
 PushIndent("    ");
 
+bool isFirst = true;
+
 foreach (var intrinsic in Intrinsics)
 {
     foreach (var overload in intrinsic.Overloads)
     {
+        if (isFirst) isFirst = false;
+        else WriteLine("");
+
         WriteLine("/// <summary>");
         WriteLine($"/// {intrinsic.Summary}");
         WriteLine("/// </summary>");
@@ -42,8 +47,6 @@ foreach (var intrinsic in Intrinsics)
         var parameters = string.Join(", ", overload.Params.Select(t => $"{{typeof({t})}}"));
 
         WriteLine($"$\"{{typeof(Hlsl)}}.{{nameof({intrinsic.Name})}}({parameters})\");");
-
-        WriteLine("");
     }
 }
 

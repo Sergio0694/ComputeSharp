@@ -15163,6 +15163,5 @@ namespace ComputeSharp
         [Pure]
         [HlslIntrinsicName("trunc")]
         public static Float4x4 Trunc(Float4x4 x) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Trunc)}({typeof(Float4x4)})");
-
     }
 }
