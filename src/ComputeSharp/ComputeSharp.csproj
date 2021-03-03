@@ -30,6 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Core\Intrinsics\Hlsl.g.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Hlsl.tt</DependentUpon>
+    </Compile>
     <Compile Update="Core\Primitives\Bool\Bool2.g.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -133,6 +138,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Core\Intrinsics\Hlsl.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Hlsl.g.cs</LastGenOutput>
+    </None>
     <None Update="Core\Primitives\Bool\Bool2.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Bool2.g.cs</LastGenOutput>
