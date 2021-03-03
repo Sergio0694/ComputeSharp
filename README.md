@@ -11,6 +11,7 @@
 - [Quick start](#quick-start)
   - [Capturing variables](#capturing-variables)
   - [GPU resource types](#gpu-resource-types)
+  - [HLSL vector and matrix types](#hlsl-vector-and-matrix-types)
   - [HLSL intrinsics](#hlsl-intrinsics)
   - [Working with images](#working-with-images)
   - [Shader metaprogramming](#shader-metaprogramming)
@@ -83,6 +84,8 @@ Shaders can store either GPU resources or custom values in their fields, so that
 
 ✅ HLSL types: `Bool`, `Bool2`, `Bool3`, `Bool4`, `Float2`, `Float3`, `Float4`, `Int2`, `Int3`, `Int4`, `UInt2`, `Uint3`, etc.
 
+✅ HLSL matrix types: `Float2x2`, `Float3x3`, `Float3x4`, `Float4x4`, `Float1x4`, `Float4x`, etc.
+
 ✅ Custom `struct` types containing any of the types above, as well as other valid custom `struct` types
 
 ## GPU resource types
@@ -101,6 +104,27 @@ There are a number of extension APIs for the `GraphicsDevice` class that can be 
 - `UploadTexture2D<T>`, `UploadTexture3D<T>`, `ReadBackTexture2D<T>` and `ReadBackTexture3D<T>`: these types are conceptually similar to `UploadBuffer<T>` and `ReadBackBuffer<T>`, with the main difference being that they can be used to copy data back and forth from 2D and 3D textures respectively.
 
 > **NOTE:** although the various APIs to allocate buffers are simply generic methods with a `T : unmanaged` constrain, they should only be used with C# types that are supported (see notes above). Additionally, the `bool` type should not be used in buffers due to C#/HLSL differences: use the `Bool` type instead (or just an `int` buffer).
+
+## HLSL vector and matrix types
+
+As mentioned in the [Capturing variables](#capturing-variables) paragraph, **ComputeSharp** also exposes matrix types that can be used in compute shaders. These values store individual component values in row-major order (for consistency with .NET arrays) and can be indexed in several ways just like with HLSL vector types. One noticeable difference compared to HLSL vector types though is the lack of explicit properties to extract swizzled vectors (eg. `Float4.XZY` returns a `Float3` value with the `X`, `Z` and `Y` components). Due to the number of possible combinations being simply too high in the case of matrix types (eg. `Float4x4` alone would have had over 160k properties), the ability to extract swizzled vectors ([see here](https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-per-component-math)) can be achieved through the use of a special indexer property and values from the `MatrixIndex` type. Here is how it can be used:
+
+```csharp
+Float4x4 matrix = default;
+
+// Standard indexer for rows and individual items
+Float4 row = matrix[0];
+float item = matrix[0][1];
+
+// Swizzled indexers, which can be made less verbose to
+// write by adding this using static directive to the file
+using static ComputeSharp.MatrixIndex;
+
+Float4 diagonal = matrix[M11, M22, M33, M44];
+Float4 vertices = matrix[M11, M14, M44, M41];
+```
+
+Matrix types also include a number of built-in operators to work with vector types, and the `Hlsl` class detailed below (see [HLSL intrinsics](#hlsl-intrinsics)) also includes several overloads for the available methods to work on both matrix and vector types at the same time (eg. for row/matrix multiplication).
 
 ## HLSL intrinsics
 
