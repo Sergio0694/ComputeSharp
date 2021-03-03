@@ -26,8 +26,9 @@
     <Compile Include="..\ComputeSharp\Core\Extensions\MethodInfoExtensions.cs" Link="Core\Extensions\MethodInfoExtensions.cs" />
     <Compile Include="..\ComputeSharp\Core\Helpers\AlignmentHelper.cs" Link="Core\Helpers\AlignmentHelper.cs" />
     <Compile Include="..\ComputeSharp\Core\Interfaces\IComputeShader.cs" Link="Core\Interfaces\IComputeShader.cs" />
-    <Compile Include="..\ComputeSharp\Core\Intrinsics\Attributes\PreserveMemberNameAttribute.cs" Link="Core\Intrinsics\Attributes\PreserveMemberNameAttribute.cs" />
+    <Compile Include="..\ComputeSharp\Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" Link="Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" />
     <Compile Include="..\ComputeSharp\Core\Intrinsics\Hlsl.cs" Link="Core\Intrinsics\Hlsl.cs" />
+    <Compile Include="..\ComputeSharp\Core\Intrinsics\Hlsl.g.cs" Link="Core\Intrinsics\Hlsl.g.cs" />
     <Compile Include="..\ComputeSharp\Core\Primitives\Bool\Bool.cs" Link="Core\Primitives\Bool\Bool.cs" />
     <Compile Include="..\ComputeSharp\Core\Primitives\Bool\Bool2.cs" Link="Core\Primitives\Bool\Bool2.cs" />
     <Compile Include="..\ComputeSharp\Core\Primitives\Bool\Bool3.cs" Link="Core\Primitives\Bool\Bool3.cs" />
