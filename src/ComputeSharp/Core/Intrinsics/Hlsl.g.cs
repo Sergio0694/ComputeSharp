@@ -4304,6 +4304,16 @@ namespace ComputeSharp
         public static UInt4 CountBits(UInt4 x) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(CountBits)}({typeof(UInt4)})");
 
         /// <summary>
+        /// Returns the cross product of two floating-point, 3D vectors.
+        /// </summary>
+        /// <param name="x">The first floating-point, 3D vector.</param>
+        /// <param name="y">The second floating-point, 3D vector.</param>
+        /// <returns>The number of bits.</returns>
+        [Pure]
+        [HlslIntrinsicName("cross")]
+        public static Float3 Cross(Float3 x, Float3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Cross)}({typeof(Float3)}, {typeof(Float3)})");
+
+        /// <summary>
         /// Converts the specified value from radians to degrees.
         /// </summary>
         /// <param name="x">The specified value.</param>

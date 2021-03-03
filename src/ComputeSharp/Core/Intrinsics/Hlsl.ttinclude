@@ -720,6 +720,23 @@ var Intrinsics = new[]
     },
     new
     {
+        Name = "Cross",
+        HlslName = "cross",
+        Summary = "Returns the cross product of two floating-point, 3D vectors.",
+        Parameters = new[]
+        {
+            new { IsOut = false, Name = "x", Info = "The first floating-point, 3D vector." },
+            new { IsOut = false, Name = "y", Info = "The second floating-point, 3D vector." }
+        },
+        Returns = "The number of bits.",
+        Overloads = new[]
+        {
+            new { Return = "Float3", Params = new[] { "Float3", "Float3" } }
+        },
+        IsPure = true
+    },
+    new
+    {
         Name = "Degrees",
         HlslName = "degrees",
         Summary = "Converts the specified value from radians to degrees.",
