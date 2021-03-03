@@ -13316,7 +13316,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(float x, float sin, float cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(float)}, {typeof(float)}, {typeof(float)})");
@@ -13327,7 +13326,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float2 x, Float2 sin, Float2 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float2)}, {typeof(Float2)}, {typeof(Float2)})");
@@ -13338,7 +13336,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float3 x, Float3 sin, Float3 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float3)}, {typeof(Float3)}, {typeof(Float3)})");
@@ -13349,7 +13346,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float4 x, Float4 sin, Float4 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float4)}, {typeof(Float4)}, {typeof(Float4)})");
@@ -13360,7 +13356,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float1x1 x, Float1x1 sin, Float1x1 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float1x1)}, {typeof(Float1x1)}, {typeof(Float1x1)})");
@@ -13371,7 +13366,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float1x2 x, Float1x2 sin, Float1x2 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float1x2)}, {typeof(Float1x2)}, {typeof(Float1x2)})");
@@ -13382,7 +13376,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float1x3 x, Float1x3 sin, Float1x3 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float1x3)}, {typeof(Float1x3)}, {typeof(Float1x3)})");
@@ -13393,7 +13386,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float1x4 x, Float1x4 sin, Float1x4 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float1x4)}, {typeof(Float1x4)}, {typeof(Float1x4)})");
@@ -13404,7 +13396,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float2x1 x, Float2x1 sin, Float2x1 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float2x1)}, {typeof(Float2x1)}, {typeof(Float2x1)})");
@@ -13415,7 +13406,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float2x2 x, Float2x2 sin, Float2x2 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float2x2)}, {typeof(Float2x2)}, {typeof(Float2x2)})");
@@ -13426,7 +13416,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float2x3 x, Float2x3 sin, Float2x3 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float2x3)}, {typeof(Float2x3)}, {typeof(Float2x3)})");
@@ -13437,7 +13426,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float2x4 x, Float2x4 sin, Float2x4 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float2x4)}, {typeof(Float2x4)}, {typeof(Float2x4)})");
@@ -13448,7 +13436,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float3x1 x, Float3x1 sin, Float3x1 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float3x1)}, {typeof(Float3x1)}, {typeof(Float3x1)})");
@@ -13459,7 +13446,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float3x2 x, Float3x2 sin, Float3x2 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float3x2)}, {typeof(Float3x2)}, {typeof(Float3x2)})");
@@ -13470,7 +13456,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float3x3 x, Float3x3 sin, Float3x3 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float3x3)}, {typeof(Float3x3)}, {typeof(Float3x3)})");
@@ -13481,7 +13466,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float3x4 x, Float3x4 sin, Float3x4 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float3x4)}, {typeof(Float3x4)}, {typeof(Float3x4)})");
@@ -13492,7 +13476,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float4x1 x, Float4x1 sin, Float4x1 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float4x1)}, {typeof(Float4x1)}, {typeof(Float4x1)})");
@@ -13503,7 +13486,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float4x2 x, Float4x2 sin, Float4x2 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float4x2)}, {typeof(Float4x2)}, {typeof(Float4x2)})");
@@ -13514,7 +13496,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float4x3 x, Float4x3 sin, Float4x3 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float4x3)}, {typeof(Float4x3)}, {typeof(Float4x3)})");
@@ -13525,7 +13506,6 @@ namespace ComputeSharp
         /// <param name="x">The specified value, in radians.</param>
         /// <param name="sin">The resulting sine.</param>
         /// <param name="cos">The resulting cosine.</param>
-        /// <returns></returns>
         [Pure]
         [HlslIntrinsicName("sincos")]
         public static void SinCos(Float4x4 x, Float4x4 sin, Float4x4 cos) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(SinCos)}({typeof(Float4x4)}, {typeof(Float4x4)}, {typeof(Float4x4)})");
