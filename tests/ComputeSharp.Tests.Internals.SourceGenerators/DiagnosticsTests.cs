@@ -1097,6 +1097,47 @@ namespace ComputeSharp.Tests.Internals
             VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0036");
         }
 
+        [TestMethod]
+        public void NonConstantMatrixSwizzledIndex()
+        {
+            string source = @"
+            using ComputeSharp;
+            using static ComputeSharp.MatrixIndex;
+
+            namespace ComputeSharp
+            {
+                public class ReadWriteBuffer<T> { }
+                public enum MatrixIndex
+                {
+                    M11,
+                    M12,
+                    M13
+                },
+                public struct Float4 { }
+                public struct Float4x4
+                {
+                    public Float4 this[MatrixIndex m0, MatrixIndex m1, MatrixIndex m2, MatrixIndex m3] => default;
+                }
+            }
+
+            namespace MyFancyApp.Sample
+            {
+                public struct MyShader : IComputeShader
+                {
+                    public ReadWriteBuffer<float> buffer;
+
+                    public void Execute()
+                    {
+                        Float4x4 m = default;
+                        MatrixIndex index = M12;
+                        Float4 = m[M11, index, M13, M11];
+                    }
+                }
+            }";
+
+            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0042");
+        }
+
         /// <summary>
         /// Verifies the output of a source generator.
         /// </summary>
