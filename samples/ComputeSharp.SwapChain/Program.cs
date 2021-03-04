@@ -15,7 +15,8 @@ namespace ComputeSharp.SwapChain
             new SwapChainApplication<FractalTiling>(static (texture, time) => new(texture, (float)time.TotalSeconds)),
             new SwapChainApplication<TwoTiledTruchet>(static (texture, time) => new(texture, (float)time.TotalSeconds)),
             new SwapChainApplication<MengerJourney>(static (texture, time) => new(texture, (float)time.TotalSeconds)),
-            new SwapChainApplication<Octagrams>(static (texture, time) => new(texture, (float)time.TotalSeconds))
+            new SwapChainApplication<Octagrams>(static (texture, time) => new(texture, (float)time.TotalSeconds)),
+            new SwapChainApplication<ProteanClouds>(static (texture, time) => new(texture, (float)time.TotalSeconds))
         };
 
         static void Main()
