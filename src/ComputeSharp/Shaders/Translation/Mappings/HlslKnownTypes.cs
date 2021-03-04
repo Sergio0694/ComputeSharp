@@ -10,13 +10,43 @@ namespace ComputeSharp.Shaders.Mappings
     /// </summary>
     internal static class HlslKnownTypes
     {
-        private static HashSet<Type> _HlslMappedVectorTypes { get; } = new HashSet<Type>(new[]
+        /// <summary>
+        /// The set of HLSL vector types.
+        /// </summary>
+        private static HashSet<Type> HlslMappedVectorTypes { get; } = new(new[]
         {
             typeof(Bool2), typeof(Bool3), typeof(Bool4),
             typeof(Int2), typeof(Int3), typeof(Int4),
             typeof(UInt2), typeof(UInt3), typeof(UInt4),
             typeof(Float2), typeof(Float3), typeof(Float4),
             typeof(Double2), typeof(Double3), typeof(Double4)
+        });
+
+        /// <summary>
+        /// The set of HLSL matrix types.
+        /// </summary>
+        private static HashSet<Type> HlslMappedMatrixTypes { get; } = new(new[]
+        {
+            typeof(Bool1x1), typeof(Bool1x2), typeof(Bool1x3), typeof(Bool1x4),
+            typeof(Bool2x1), typeof(Bool2x2), typeof(Bool2x3), typeof(Bool2x4),
+            typeof(Bool3x1), typeof(Bool3x2), typeof(Bool3x3), typeof(Bool3x4),
+            typeof(Bool4x1), typeof(Bool4x2), typeof(Bool4x3), typeof(Bool4x4),
+            typeof(Int1x1), typeof(Int1x2), typeof(Int1x3), typeof(Int1x4),
+            typeof(Int2x1), typeof(Int2x2), typeof(Int2x3), typeof(Int2x4),
+            typeof(Int3x1), typeof(Int3x2), typeof(Int3x3), typeof(Int3x4),
+            typeof(Int4x1), typeof(Int4x2), typeof(Int4x3), typeof(Int4x4),
+            typeof(UInt1x1), typeof(UInt1x2), typeof(UInt1x3), typeof(UInt1x4),
+            typeof(UInt2x1), typeof(UInt2x2), typeof(UInt2x3), typeof(UInt2x4),
+            typeof(UInt3x1), typeof(UInt3x2), typeof(UInt3x3), typeof(UInt3x4),
+            typeof(UInt4x1), typeof(UInt4x2), typeof(UInt4x3), typeof(UInt4x4),
+            typeof(Float1x1), typeof(Float1x2), typeof(Float1x3), typeof(Float1x4),
+            typeof(Float2x1), typeof(Float2x2), typeof(Float2x3), typeof(Float2x4),
+            typeof(Float3x1), typeof(Float3x2), typeof(Float3x3), typeof(Float3x4),
+            typeof(Float4x1), typeof(Float4x2), typeof(Float4x3), typeof(Float4x4),
+            typeof(Double1x1), typeof(Double1x2), typeof(Double1x3), typeof(Double1x4),
+            typeof(Double2x1), typeof(Double2x2), typeof(Double2x3), typeof(Double2x4),
+            typeof(Double3x1), typeof(Double3x2), typeof(Double3x3), typeof(Double3x4),
+            typeof(Double4x1), typeof(Double4x2), typeof(Double4x3), typeof(Double4x4)
         });
 
         /// <summary>
@@ -38,10 +68,18 @@ namespace ComputeSharp.Shaders.Mappings
         /// <param name="type">The input <see cref="Type"/> instance to check.</param>
         /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a known HLSL vector type.</returns>
         [Pure]
-        public static bool IsKnownVectorType(Type type) => _HlslMappedVectorTypes.Contains(type) ||
+        public static bool IsKnownVectorType(Type type) => HlslMappedVectorTypes.Contains(type) ||
                                                            type == typeof(Vector2) ||
                                                            type == typeof(Vector3) ||
                                                            type == typeof(Vector4);
+
+        /// <summary>
+        /// Checks whether or not the input type is a known matrix type.
+        /// </summary>
+        /// <param name="type">The input <see cref="Type"/> instance to check.</param>
+        /// <returns>A <see langword="bool"/> indicating whether the input <see cref="Type"/> is in fact a known HLSL matrix type.</returns>
+        [Pure]
+        public static bool IsKnownMatrixType(Type type) => HlslMappedMatrixTypes.Contains(type);
 
         /// <summary>
         /// Checks whether or not the input type is a known buffer type.
