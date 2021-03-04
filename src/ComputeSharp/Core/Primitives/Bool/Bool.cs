@@ -7,7 +7,7 @@ namespace ComputeSharp
     /// A <see langword="struct"/> that can be used in place of the <see cref="bool"/> type in HLSL shaders.
     /// </summary>
     [DebuggerDisplay("{Value}")]
-    [StructLayout(LayoutKind.Explicit, Size = sizeof(int))]
+    [StructLayout(LayoutKind.Explicit, Size = sizeof(int), Pack = 4)]
     public readonly struct Bool
     {
         /// <summary>

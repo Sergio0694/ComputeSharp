@@ -37,7 +37,7 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
     List<string> fieldNames = new List<string>();
 #>
     /// <inheritdoc cref="<#=fullTypeName#>"/>
-    [StructLayout(LayoutKind.Explicit, Size = <#=(elementSize * rows * columns)#>)]
+    [StructLayout(LayoutKind.Explicit, Size = <#=(elementSize * rows * columns)#>, Pack = <#=elementSize#>)]
     public partial struct <#=fullTypeName#>
     {
 <#

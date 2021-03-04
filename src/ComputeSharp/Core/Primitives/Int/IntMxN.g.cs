@@ -4,7 +4,7 @@ using ComputeSharp.Exceptions;
 namespace ComputeSharp
 {
     /// <inheritdoc cref="Int1x1"/>
-    [StructLayout(LayoutKind.Explicit, Size = 4)]
+    [StructLayout(LayoutKind.Explicit, Size = 4, Pack = 4)]
     public partial struct Int1x1
     {
         [FieldOffset(0)]
@@ -98,7 +98,7 @@ namespace ComputeSharp
     }
 
     /// <inheritdoc cref="Int1x2"/>
-    [StructLayout(LayoutKind.Explicit, Size = 8)]
+    [StructLayout(LayoutKind.Explicit, Size = 8, Pack = 4)]
     public partial struct Int1x2
     {
         [FieldOffset(0)]
@@ -204,7 +204,7 @@ namespace ComputeSharp
     }
 
     /// <inheritdoc cref="Int1x3"/>
-    [StructLayout(LayoutKind.Explicit, Size = 12)]
+    [StructLayout(LayoutKind.Explicit, Size = 12, Pack = 4)]
     public partial struct Int1x3
     {
         [FieldOffset(0)]
@@ -316,7 +316,7 @@ namespace ComputeSharp
     }
 
     /// <inheritdoc cref="Int1x4"/>
-    [StructLayout(LayoutKind.Explicit, Size = 16)]
+    [StructLayout(LayoutKind.Explicit, Size = 16, Pack = 4)]
     public partial struct Int1x4
     {
         [FieldOffset(0)]
@@ -434,7 +434,7 @@ namespace ComputeSharp
     }
 
     /// <inheritdoc cref="Int2x1"/>
-    [StructLayout(LayoutKind.Explicit, Size = 8)]
+    [StructLayout(LayoutKind.Explicit, Size = 8, Pack = 4)]
     public partial struct Int2x1
     {
         [FieldOffset(0)]
@@ -540,7 +540,7 @@ namespace ComputeSharp
     }
 
     /// <inheritdoc cref="Int2x2"/>
-    [StructLayout(LayoutKind.Explicit, Size = 16)]
+    [StructLayout(LayoutKind.Explicit, Size = 16, Pack = 4)]
     public partial struct Int2x2
     {
         [FieldOffset(0)]
@@ -665,7 +665,7 @@ namespace ComputeSharp
     }
 
     /// <inheritdoc cref="Int2x3"/>
-    [StructLayout(LayoutKind.Explicit, Size = 24)]
+    [StructLayout(LayoutKind.Explicit, Size = 24, Pack = 4)]
     public partial struct Int2x3
     {
         [FieldOffset(0)]
@@ -804,7 +804,7 @@ namespace ComputeSharp
     }
 
     /// <inheritdoc cref="Int2x4"/>
-    [StructLayout(LayoutKind.Explicit, Size = 32)]
+    [StructLayout(LayoutKind.Explicit, Size = 32, Pack = 4)]
     public partial struct Int2x4
     {
         [FieldOffset(0)]
@@ -957,7 +957,7 @@ namespace ComputeSharp
     }
 
     /// <inheritdoc cref="Int3x1"/>
-    [StructLayout(LayoutKind.Explicit, Size = 12)]
+    [StructLayout(LayoutKind.Explicit, Size = 12, Pack = 4)]
     public partial struct Int3x1
     {
         [FieldOffset(0)]
@@ -1069,7 +1069,7 @@ namespace ComputeSharp
     }
 
     /// <inheritdoc cref="Int3x2"/>
-    [StructLayout(LayoutKind.Explicit, Size = 24)]
+    [StructLayout(LayoutKind.Explicit, Size = 24, Pack = 4)]
     public partial struct Int3x2
     {
         [FieldOffset(0)]
@@ -1209,7 +1209,7 @@ namespace ComputeSharp
     }
 
     /// <inheritdoc cref="Int3x3"/>
-    [StructLayout(LayoutKind.Explicit, Size = 36)]
+    [StructLayout(LayoutKind.Explicit, Size = 36, Pack = 4)]
     public partial struct Int3x3
     {
         [FieldOffset(0)]
@@ -1370,7 +1370,7 @@ namespace ComputeSharp
     }
 
     /// <inheritdoc cref="Int3x4"/>
-    [StructLayout(LayoutKind.Explicit, Size = 48)]
+    [StructLayout(LayoutKind.Explicit, Size = 48, Pack = 4)]
     public partial struct Int3x4
     {
         [FieldOffset(0)]
@@ -1552,7 +1552,7 @@ namespace ComputeSharp
     }
 
     /// <inheritdoc cref="Int4x1"/>
-    [StructLayout(LayoutKind.Explicit, Size = 16)]
+    [StructLayout(LayoutKind.Explicit, Size = 16, Pack = 4)]
     public partial struct Int4x1
     {
         [FieldOffset(0)]
@@ -1670,7 +1670,7 @@ namespace ComputeSharp
     }
 
     /// <inheritdoc cref="Int4x2"/>
-    [StructLayout(LayoutKind.Explicit, Size = 32)]
+    [StructLayout(LayoutKind.Explicit, Size = 32, Pack = 4)]
     public partial struct Int4x2
     {
         [FieldOffset(0)]
@@ -1825,7 +1825,7 @@ namespace ComputeSharp
     }
 
     /// <inheritdoc cref="Int4x3"/>
-    [StructLayout(LayoutKind.Explicit, Size = 48)]
+    [StructLayout(LayoutKind.Explicit, Size = 48, Pack = 4)]
     public partial struct Int4x3
     {
         [FieldOffset(0)]
@@ -2008,7 +2008,7 @@ namespace ComputeSharp
     }
 
     /// <inheritdoc cref="Int4x4"/>
-    [StructLayout(LayoutKind.Explicit, Size = 64)]
+    [StructLayout(LayoutKind.Explicit, Size = 64, Pack = 4)]
     public partial struct Int4x4
     {
         [FieldOffset(0)]
