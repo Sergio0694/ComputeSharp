@@ -50,6 +50,19 @@ namespace ComputeSharp
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt1x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
 
         /// <summary>
+        /// Creates a new <see cref="UInt1x1"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="UInt1x1"/> instance.</param>
+        public static implicit operator UInt1x1(uint x)
+        {
+            UInt1x1 matrix;
+
+            matrix.m11 = x;
+
+            return matrix;
+        }
+
+        /// <summary>
         /// Negates a <see cref="UInt1x1"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt1x1"/> value to negate.</param>
@@ -134,6 +147,20 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt1x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="UInt1x2"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="UInt1x2"/> instance.</param>
+        public static implicit operator UInt1x2(uint x)
+        {
+            UInt1x2 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="UInt1x2"/> value.
@@ -231,6 +258,21 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt1x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="UInt1x3"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="UInt1x3"/> instance.</param>
+        public static implicit operator UInt1x3(uint x)
+        {
+            UInt1x3 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m13 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="UInt1x3"/> value.
@@ -335,6 +377,22 @@ namespace ComputeSharp
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt1x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
 
         /// <summary>
+        /// Creates a new <see cref="UInt1x4"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="UInt1x4"/> instance.</param>
+        public static implicit operator UInt1x4(uint x)
+        {
+            UInt1x4 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m13 = x;
+            matrix.m14 = x;
+
+            return matrix;
+        }
+
+        /// <summary>
         /// Negates a <see cref="UInt1x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt1x4"/> value to negate.</param>
@@ -425,6 +483,20 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt2x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="UInt2x1"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="UInt2x1"/> instance.</param>
+        public static implicit operator UInt2x1(uint x)
+        {
+            UInt2x1 matrix;
+
+            matrix.m11 = x;
+            matrix.m21 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="UInt2x1"/> value.
@@ -540,6 +612,22 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt2x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="UInt2x2"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="UInt2x2"/> instance.</param>
+        public static implicit operator UInt2x2(uint x)
+        {
+            UInt2x2 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m21 = x;
+            matrix.m22 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="UInt2x2"/> value.
@@ -661,6 +749,24 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt2x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="UInt2x3"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="UInt2x3"/> instance.</param>
+        public static implicit operator UInt2x3(uint x)
+        {
+            UInt2x3 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m13 = x;
+            matrix.m21 = x;
+            matrix.m22 = x;
+            matrix.m23 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="UInt2x3"/> value.
@@ -796,6 +902,26 @@ namespace ComputeSharp
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt2x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
 
         /// <summary>
+        /// Creates a new <see cref="UInt2x4"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="UInt2x4"/> instance.</param>
+        public static implicit operator UInt2x4(uint x)
+        {
+            UInt2x4 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m13 = x;
+            matrix.m14 = x;
+            matrix.m21 = x;
+            matrix.m22 = x;
+            matrix.m23 = x;
+            matrix.m24 = x;
+
+            return matrix;
+        }
+
+        /// <summary>
         /// Negates a <see cref="UInt2x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt2x4"/> value to negate.</param>
@@ -885,6 +1011,21 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt3x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="UInt3x1"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="UInt3x1"/> instance.</param>
+        public static implicit operator UInt3x1(uint x)
+        {
+            UInt3x1 matrix;
+
+            matrix.m11 = x;
+            matrix.m21 = x;
+            matrix.m31 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="UInt3x1"/> value.
@@ -1013,6 +1154,24 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt3x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="UInt3x2"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="UInt3x2"/> instance.</param>
+        public static implicit operator UInt3x2(uint x)
+        {
+            UInt3x2 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m21 = x;
+            matrix.m22 = x;
+            matrix.m31 = x;
+            matrix.m32 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="UInt3x2"/> value.
@@ -1153,6 +1312,27 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt3x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="UInt3x3"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="UInt3x3"/> instance.</param>
+        public static implicit operator UInt3x3(uint x)
+        {
+            UInt3x3 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m13 = x;
+            matrix.m21 = x;
+            matrix.m22 = x;
+            matrix.m23 = x;
+            matrix.m31 = x;
+            matrix.m32 = x;
+            matrix.m33 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="UInt3x3"/> value.
@@ -1313,6 +1493,30 @@ namespace ComputeSharp
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt3x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
 
         /// <summary>
+        /// Creates a new <see cref="UInt3x4"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="UInt3x4"/> instance.</param>
+        public static implicit operator UInt3x4(uint x)
+        {
+            UInt3x4 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m13 = x;
+            matrix.m14 = x;
+            matrix.m21 = x;
+            matrix.m22 = x;
+            matrix.m23 = x;
+            matrix.m24 = x;
+            matrix.m31 = x;
+            matrix.m32 = x;
+            matrix.m33 = x;
+            matrix.m34 = x;
+
+            return matrix;
+        }
+
+        /// <summary>
         /// Negates a <see cref="UInt3x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt3x4"/> value to negate.</param>
@@ -1407,6 +1611,22 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt4x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="UInt4x1"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="UInt4x1"/> instance.</param>
+        public static implicit operator UInt4x1(uint x)
+        {
+            UInt4x1 matrix;
+
+            matrix.m11 = x;
+            matrix.m21 = x;
+            matrix.m31 = x;
+            matrix.m41 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="UInt4x1"/> value.
@@ -1548,6 +1768,26 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt4x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="UInt4x2"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="UInt4x2"/> instance.</param>
+        public static implicit operator UInt4x2(uint x)
+        {
+            UInt4x2 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m21 = x;
+            matrix.m22 = x;
+            matrix.m31 = x;
+            matrix.m32 = x;
+            matrix.m41 = x;
+            matrix.m42 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="UInt4x2"/> value.
@@ -1707,6 +1947,30 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt4x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="UInt4x3"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="UInt4x3"/> instance.</param>
+        public static implicit operator UInt4x3(uint x)
+        {
+            UInt4x3 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m13 = x;
+            matrix.m21 = x;
+            matrix.m22 = x;
+            matrix.m23 = x;
+            matrix.m31 = x;
+            matrix.m32 = x;
+            matrix.m33 = x;
+            matrix.m41 = x;
+            matrix.m42 = x;
+            matrix.m43 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="UInt4x3"/> value.
@@ -1890,6 +2154,34 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt4x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="UInt4x4"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="UInt4x4"/> instance.</param>
+        public static implicit operator UInt4x4(uint x)
+        {
+            UInt4x4 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m13 = x;
+            matrix.m14 = x;
+            matrix.m21 = x;
+            matrix.m22 = x;
+            matrix.m23 = x;
+            matrix.m24 = x;
+            matrix.m31 = x;
+            matrix.m32 = x;
+            matrix.m33 = x;
+            matrix.m34 = x;
+            matrix.m41 = x;
+            matrix.m42 = x;
+            matrix.m43 = x;
+            matrix.m44 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="UInt4x4"/> value.

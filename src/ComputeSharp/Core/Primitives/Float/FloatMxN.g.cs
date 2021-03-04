@@ -50,6 +50,19 @@ namespace ComputeSharp
         public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Float1x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
 
         /// <summary>
+        /// Creates a new <see cref="Float1x1"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="Float1x1"/> instance.</param>
+        public static implicit operator Float1x1(float x)
+        {
+            Float1x1 matrix;
+
+            matrix.m11 = x;
+
+            return matrix;
+        }
+
+        /// <summary>
         /// Negates a <see cref="Float1x1"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Float1x1"/> value to negate.</param>
@@ -134,6 +147,20 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Float1x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="Float1x2"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="Float1x2"/> instance.</param>
+        public static implicit operator Float1x2(float x)
+        {
+            Float1x2 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="Float1x2"/> value.
@@ -231,6 +258,21 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Float1x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="Float1x3"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="Float1x3"/> instance.</param>
+        public static implicit operator Float1x3(float x)
+        {
+            Float1x3 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m13 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="Float1x3"/> value.
@@ -335,6 +377,22 @@ namespace ComputeSharp
         public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Float1x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
 
         /// <summary>
+        /// Creates a new <see cref="Float1x4"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="Float1x4"/> instance.</param>
+        public static implicit operator Float1x4(float x)
+        {
+            Float1x4 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m13 = x;
+            matrix.m14 = x;
+
+            return matrix;
+        }
+
+        /// <summary>
         /// Negates a <see cref="Float1x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Float1x4"/> value to negate.</param>
@@ -425,6 +483,20 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Float2x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="Float2x1"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="Float2x1"/> instance.</param>
+        public static implicit operator Float2x1(float x)
+        {
+            Float2x1 matrix;
+
+            matrix.m11 = x;
+            matrix.m21 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="Float2x1"/> value.
@@ -540,6 +612,22 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Float2x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="Float2x2"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="Float2x2"/> instance.</param>
+        public static implicit operator Float2x2(float x)
+        {
+            Float2x2 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m21 = x;
+            matrix.m22 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="Float2x2"/> value.
@@ -661,6 +749,24 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Float2x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="Float2x3"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="Float2x3"/> instance.</param>
+        public static implicit operator Float2x3(float x)
+        {
+            Float2x3 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m13 = x;
+            matrix.m21 = x;
+            matrix.m22 = x;
+            matrix.m23 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="Float2x3"/> value.
@@ -796,6 +902,26 @@ namespace ComputeSharp
         public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Float2x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
 
         /// <summary>
+        /// Creates a new <see cref="Float2x4"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="Float2x4"/> instance.</param>
+        public static implicit operator Float2x4(float x)
+        {
+            Float2x4 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m13 = x;
+            matrix.m14 = x;
+            matrix.m21 = x;
+            matrix.m22 = x;
+            matrix.m23 = x;
+            matrix.m24 = x;
+
+            return matrix;
+        }
+
+        /// <summary>
         /// Negates a <see cref="Float2x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Float2x4"/> value to negate.</param>
@@ -885,6 +1011,21 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Float3x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="Float3x1"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="Float3x1"/> instance.</param>
+        public static implicit operator Float3x1(float x)
+        {
+            Float3x1 matrix;
+
+            matrix.m11 = x;
+            matrix.m21 = x;
+            matrix.m31 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="Float3x1"/> value.
@@ -1013,6 +1154,24 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Float3x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="Float3x2"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="Float3x2"/> instance.</param>
+        public static implicit operator Float3x2(float x)
+        {
+            Float3x2 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m21 = x;
+            matrix.m22 = x;
+            matrix.m31 = x;
+            matrix.m32 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="Float3x2"/> value.
@@ -1153,6 +1312,27 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Float3x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="Float3x3"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="Float3x3"/> instance.</param>
+        public static implicit operator Float3x3(float x)
+        {
+            Float3x3 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m13 = x;
+            matrix.m21 = x;
+            matrix.m22 = x;
+            matrix.m23 = x;
+            matrix.m31 = x;
+            matrix.m32 = x;
+            matrix.m33 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="Float3x3"/> value.
@@ -1313,6 +1493,30 @@ namespace ComputeSharp
         public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Float3x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
 
         /// <summary>
+        /// Creates a new <see cref="Float3x4"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="Float3x4"/> instance.</param>
+        public static implicit operator Float3x4(float x)
+        {
+            Float3x4 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m13 = x;
+            matrix.m14 = x;
+            matrix.m21 = x;
+            matrix.m22 = x;
+            matrix.m23 = x;
+            matrix.m24 = x;
+            matrix.m31 = x;
+            matrix.m32 = x;
+            matrix.m33 = x;
+            matrix.m34 = x;
+
+            return matrix;
+        }
+
+        /// <summary>
         /// Negates a <see cref="Float3x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Float3x4"/> value to negate.</param>
@@ -1407,6 +1611,22 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Float4x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="Float4x1"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="Float4x1"/> instance.</param>
+        public static implicit operator Float4x1(float x)
+        {
+            Float4x1 matrix;
+
+            matrix.m11 = x;
+            matrix.m21 = x;
+            matrix.m31 = x;
+            matrix.m41 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="Float4x1"/> value.
@@ -1548,6 +1768,26 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Float4x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="Float4x2"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="Float4x2"/> instance.</param>
+        public static implicit operator Float4x2(float x)
+        {
+            Float4x2 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m21 = x;
+            matrix.m22 = x;
+            matrix.m31 = x;
+            matrix.m32 = x;
+            matrix.m41 = x;
+            matrix.m42 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="Float4x2"/> value.
@@ -1707,6 +1947,30 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Float4x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="Float4x3"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="Float4x3"/> instance.</param>
+        public static implicit operator Float4x3(float x)
+        {
+            Float4x3 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m13 = x;
+            matrix.m21 = x;
+            matrix.m22 = x;
+            matrix.m23 = x;
+            matrix.m31 = x;
+            matrix.m32 = x;
+            matrix.m33 = x;
+            matrix.m41 = x;
+            matrix.m42 = x;
+            matrix.m43 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="Float4x3"/> value.
@@ -1890,6 +2154,34 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Float4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Float4x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="Float4x4"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="Float4x4"/> instance.</param>
+        public static implicit operator Float4x4(float x)
+        {
+            Float4x4 matrix;
+
+            matrix.m11 = x;
+            matrix.m12 = x;
+            matrix.m13 = x;
+            matrix.m14 = x;
+            matrix.m21 = x;
+            matrix.m22 = x;
+            matrix.m23 = x;
+            matrix.m24 = x;
+            matrix.m31 = x;
+            matrix.m32 = x;
+            matrix.m33 = x;
+            matrix.m34 = x;
+            matrix.m41 = x;
+            matrix.m42 = x;
+            matrix.m43 = x;
+            matrix.m44 = x;
+
+            return matrix;
+        }
 
         /// <summary>
         /// Negates a <see cref="Float4x4"/> value.

@@ -146,7 +146,35 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref <#=typeName#>4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(<#=fullTypeName#>)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Creates a new <see cref="<#=fullTypeName#>"/> value with the same value for all its components.
+        /// </summary>
+        /// <param name="x">The value to use for the components of the new <see cref="<#=fullTypeName#>"/> instance.</param>
+        public static implicit operator <#=fullTypeName#>(<#=elementTypeName#> x)
 <#
+    // Complete the conversion operator above
+    PushIndent("    ");
+    PushIndent("    ");
+    WriteLine("{");
+    PushIndent("    ");
+    WriteLine($"{fullTypeName} matrix;");
+    WriteLine("");
+
+    for (int i = 1; i <= rows; i++)
+    for (int j = 1; j <= columns; j++)
+    {
+        WriteLine($"matrix.m{i}{j} = x;");
+    }
+
+    WriteLine("");
+    WriteLine("return matrix;");
+
+    PopIndent();
+    WriteLine("}");
+    PopIndent();
+    PopIndent();
+
     // Generate the negation operator
     if (elementTypeName != "Bool" && elementTypeName != "UInt")
     {
