@@ -31,6 +31,7 @@
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\FractalTiling.cs" Link="Shaders\FractalTiling.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\MengerJourney.cs" Link="Shaders\MengerJourney.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\TwoTiledTruchet.cs" Link="Shaders\TwoTiledTruchet.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\Octagrams.cs" Link="Shaders\Octagrams.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,8 +48,14 @@
     <None Update="Assets\MengerJourney.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Octagrams.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\TwoTiledTruchet.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Octagrams.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Texture2DTests.Pixels.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
