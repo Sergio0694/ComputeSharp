@@ -627,9 +627,9 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                             from argument in node.ArgumentList.Arguments
                             let fieldReference = (IFieldReferenceOperation)this.semanticModel.GetOperation(argument.Expression)!
                             let fieldName = fieldReference.Field.Name
-                            let coordinate = int.Parse(fieldName.Substring(1)) - 11
-                            let indices = coordinate > 0 ? coordinate.ToString() : "00"
-                            select $"_m{indices}");
+                            let row = (char)(fieldName[1] - 1)
+                            let column = (char)(fieldName[2] - 1)
+                            select $"_m{row}{column}");
 
                         return MemberAccessExpression(
                             SyntaxKind.SimpleMemberAccessExpression,
