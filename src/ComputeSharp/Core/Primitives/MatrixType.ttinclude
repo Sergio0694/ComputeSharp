@@ -194,6 +194,31 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
         public static <#=fullTypeName#> operator -(<#=fullTypeName#> left, <#=fullTypeName#> right) => throw new InvalidExecutionContextException($"{nameof(<#=fullTypeName#>)}.-");
 <#
     }
+
+    // Generate the casting operators for row/column vectors
+    if (rows == 1 && columns > 1)
+    {
+        WriteLine("");
+#>
+        /// <summary>
+        /// Casts a <see cref="<#=typeName#><#=columns#>"/> value to a <see cref="<#=fullTypeName#>"/> one.
+        /// </summary>
+        /// <param name="vector">The input <see cref="<#=typeName#><#=columns#>"/> value to cast.</param>
+        public static implicit operator <#=fullTypeName#>(<#=typeName#><#=columns#> vector) => throw new InvalidExecutionContextException($"{typeof(<#=fullTypeName#>)}.{nameof(<#=fullTypeName#>)}({nameof(<#=typeName#><#=columns#>)})");
+<#
+    }
+
+    if (columns == 1 && rows > 1)
+    {
+        WriteLine("");
+#>
+        /// <summary>
+        /// Casts a <see cref="<#=fullTypeName#>"/> value to a <see cref="<#=typeName#><#=rows#>"/> one.
+        /// </summary>
+        /// <param name="matrix">The input <see cref="<#=fullTypeName#>"/> value to cast.</param>
+        public static implicit operator <#=typeName#><#=rows#>(<#=fullTypeName#> matrix) => throw new InvalidExecutionContextException($"{typeof(<#=fullTypeName#>)}.{nameof(<#=typeName#><#=rows#>)}({nameof(<#=fullTypeName#>)})");
+<#
+    }
 #>
     }
 <#

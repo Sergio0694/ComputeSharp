@@ -168,6 +168,12 @@ namespace ComputeSharp
         /// <param name="left">The first <see cref="Double1x2"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double1x2"/> value to subtract.</param>
         public static Double1x2 operator -(Double1x2 left, Double1x2 right) => throw new InvalidExecutionContextException($"{nameof(Double1x2)}.-");
+
+        /// <summary>
+        /// Casts a <see cref="Double2"/> value to a <see cref="Double1x2"/> one.
+        /// </summary>
+        /// <param name="vector">The input <see cref="Double2"/> value to cast.</param>
+        public static implicit operator Double1x2(Double2 vector) => throw new InvalidExecutionContextException($"{typeof(Double1x2)}.{nameof(Double1x2)}({nameof(Double2)})");
     }
 
     /// <inheritdoc cref="Double1x3"/>
@@ -259,6 +265,12 @@ namespace ComputeSharp
         /// <param name="left">The first <see cref="Double1x3"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double1x3"/> value to subtract.</param>
         public static Double1x3 operator -(Double1x3 left, Double1x3 right) => throw new InvalidExecutionContextException($"{nameof(Double1x3)}.-");
+
+        /// <summary>
+        /// Casts a <see cref="Double3"/> value to a <see cref="Double1x3"/> one.
+        /// </summary>
+        /// <param name="vector">The input <see cref="Double3"/> value to cast.</param>
+        public static implicit operator Double1x3(Double3 vector) => throw new InvalidExecutionContextException($"{typeof(Double1x3)}.{nameof(Double1x3)}({nameof(Double3)})");
     }
 
     /// <inheritdoc cref="Double1x4"/>
@@ -355,6 +367,12 @@ namespace ComputeSharp
         /// <param name="left">The first <see cref="Double1x4"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double1x4"/> value to subtract.</param>
         public static Double1x4 operator -(Double1x4 left, Double1x4 right) => throw new InvalidExecutionContextException($"{nameof(Double1x4)}.-");
+
+        /// <summary>
+        /// Casts a <see cref="Double4"/> value to a <see cref="Double1x4"/> one.
+        /// </summary>
+        /// <param name="vector">The input <see cref="Double4"/> value to cast.</param>
+        public static implicit operator Double1x4(Double4 vector) => throw new InvalidExecutionContextException($"{typeof(Double1x4)}.{nameof(Double1x4)}({nameof(Double4)})");
     }
 
     /// <inheritdoc cref="Double2x1"/>
@@ -441,6 +459,12 @@ namespace ComputeSharp
         /// <param name="left">The first <see cref="Double2x1"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double2x1"/> value to subtract.</param>
         public static Double2x1 operator -(Double2x1 left, Double2x1 right) => throw new InvalidExecutionContextException($"{nameof(Double2x1)}.-");
+
+        /// <summary>
+        /// Casts a <see cref="Double2x1"/> value to a <see cref="Double2"/> one.
+        /// </summary>
+        /// <param name="matrix">The input <see cref="Double2x1"/> value to cast.</param>
+        public static implicit operator Double2(Double2x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Double2x1)}.{nameof(Double2)}({nameof(Double2x1)})");
     }
 
     /// <inheritdoc cref="Double2x2"/>
@@ -895,6 +919,12 @@ namespace ComputeSharp
         /// <param name="left">The first <see cref="Double3x1"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double3x1"/> value to subtract.</param>
         public static Double3x1 operator -(Double3x1 left, Double3x1 right) => throw new InvalidExecutionContextException($"{nameof(Double3x1)}.-");
+
+        /// <summary>
+        /// Casts a <see cref="Double3x1"/> value to a <see cref="Double3"/> one.
+        /// </summary>
+        /// <param name="matrix">The input <see cref="Double3x1"/> value to cast.</param>
+        public static implicit operator Double3(Double3x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Double3x1)}.{nameof(Double3)}({nameof(Double3x1)})");
     }
 
     /// <inheritdoc cref="Double3x2"/>
@@ -1411,6 +1441,12 @@ namespace ComputeSharp
         /// <param name="left">The first <see cref="Double4x1"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double4x1"/> value to subtract.</param>
         public static Double4x1 operator -(Double4x1 left, Double4x1 right) => throw new InvalidExecutionContextException($"{nameof(Double4x1)}.-");
+
+        /// <summary>
+        /// Casts a <see cref="Double4x1"/> value to a <see cref="Double4"/> one.
+        /// </summary>
+        /// <param name="matrix">The input <see cref="Double4x1"/> value to cast.</param>
+        public static implicit operator Double4(Double4x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Double4x1)}.{nameof(Double4)}({nameof(Double4x1)})");
     }
 
     /// <inheritdoc cref="Double4x2"/>

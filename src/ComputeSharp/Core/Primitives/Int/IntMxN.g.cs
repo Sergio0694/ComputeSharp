@@ -168,6 +168,12 @@ namespace ComputeSharp
         /// <param name="left">The first <see cref="Int1x2"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Int1x2"/> value to subtract.</param>
         public static Int1x2 operator -(Int1x2 left, Int1x2 right) => throw new InvalidExecutionContextException($"{nameof(Int1x2)}.-");
+
+        /// <summary>
+        /// Casts a <see cref="Int2"/> value to a <see cref="Int1x2"/> one.
+        /// </summary>
+        /// <param name="vector">The input <see cref="Int2"/> value to cast.</param>
+        public static implicit operator Int1x2(Int2 vector) => throw new InvalidExecutionContextException($"{typeof(Int1x2)}.{nameof(Int1x2)}({nameof(Int2)})");
     }
 
     /// <inheritdoc cref="Int1x3"/>
@@ -259,6 +265,12 @@ namespace ComputeSharp
         /// <param name="left">The first <see cref="Int1x3"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Int1x3"/> value to subtract.</param>
         public static Int1x3 operator -(Int1x3 left, Int1x3 right) => throw new InvalidExecutionContextException($"{nameof(Int1x3)}.-");
+
+        /// <summary>
+        /// Casts a <see cref="Int3"/> value to a <see cref="Int1x3"/> one.
+        /// </summary>
+        /// <param name="vector">The input <see cref="Int3"/> value to cast.</param>
+        public static implicit operator Int1x3(Int3 vector) => throw new InvalidExecutionContextException($"{typeof(Int1x3)}.{nameof(Int1x3)}({nameof(Int3)})");
     }
 
     /// <inheritdoc cref="Int1x4"/>
@@ -355,6 +367,12 @@ namespace ComputeSharp
         /// <param name="left">The first <see cref="Int1x4"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Int1x4"/> value to subtract.</param>
         public static Int1x4 operator -(Int1x4 left, Int1x4 right) => throw new InvalidExecutionContextException($"{nameof(Int1x4)}.-");
+
+        /// <summary>
+        /// Casts a <see cref="Int4"/> value to a <see cref="Int1x4"/> one.
+        /// </summary>
+        /// <param name="vector">The input <see cref="Int4"/> value to cast.</param>
+        public static implicit operator Int1x4(Int4 vector) => throw new InvalidExecutionContextException($"{typeof(Int1x4)}.{nameof(Int1x4)}({nameof(Int4)})");
     }
 
     /// <inheritdoc cref="Int2x1"/>
@@ -441,6 +459,12 @@ namespace ComputeSharp
         /// <param name="left">The first <see cref="Int2x1"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Int2x1"/> value to subtract.</param>
         public static Int2x1 operator -(Int2x1 left, Int2x1 right) => throw new InvalidExecutionContextException($"{nameof(Int2x1)}.-");
+
+        /// <summary>
+        /// Casts a <see cref="Int2x1"/> value to a <see cref="Int2"/> one.
+        /// </summary>
+        /// <param name="matrix">The input <see cref="Int2x1"/> value to cast.</param>
+        public static implicit operator Int2(Int2x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Int2x1)}.{nameof(Int2)}({nameof(Int2x1)})");
     }
 
     /// <inheritdoc cref="Int2x2"/>
@@ -895,6 +919,12 @@ namespace ComputeSharp
         /// <param name="left">The first <see cref="Int3x1"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Int3x1"/> value to subtract.</param>
         public static Int3x1 operator -(Int3x1 left, Int3x1 right) => throw new InvalidExecutionContextException($"{nameof(Int3x1)}.-");
+
+        /// <summary>
+        /// Casts a <see cref="Int3x1"/> value to a <see cref="Int3"/> one.
+        /// </summary>
+        /// <param name="matrix">The input <see cref="Int3x1"/> value to cast.</param>
+        public static implicit operator Int3(Int3x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Int3x1)}.{nameof(Int3)}({nameof(Int3x1)})");
     }
 
     /// <inheritdoc cref="Int3x2"/>
@@ -1411,6 +1441,12 @@ namespace ComputeSharp
         /// <param name="left">The first <see cref="Int4x1"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Int4x1"/> value to subtract.</param>
         public static Int4x1 operator -(Int4x1 left, Int4x1 right) => throw new InvalidExecutionContextException($"{nameof(Int4x1)}.-");
+
+        /// <summary>
+        /// Casts a <see cref="Int4x1"/> value to a <see cref="Int4"/> one.
+        /// </summary>
+        /// <param name="matrix">The input <see cref="Int4x1"/> value to cast.</param>
+        public static implicit operator Int4(Int4x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Int4x1)}.{nameof(Int4)}({nameof(Int4x1)})");
     }
 
     /// <inheritdoc cref="Int4x2"/>
