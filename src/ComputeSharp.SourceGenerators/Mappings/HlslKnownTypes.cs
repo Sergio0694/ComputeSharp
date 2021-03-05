@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Numerics;
+using System.Text.RegularExpressions;
 using ComputeSharp.SourceGenerators.Extensions;
 using Microsoft.CodeAnalysis;
 
@@ -174,6 +175,37 @@ namespace ComputeSharp.SourceGenerators.Mappings
         public static bool IsMatrixType(string typeName)
         {
             return KnownMatrixTypes.Any(type => type.FullName == typeName);
+        }
+
+        /// <summary>
+        /// Checks whether or not a given type name is a non linear matrix type.
+        /// That is, a matrix type with more than a single row (which affects the constant buffer alignment).
+        /// </summary>
+        /// <param name="typeName">The input type name to check.</param>
+        /// <param name="elementName">The element name of the matrix type.</param>
+        /// <param name="rows">The number of rows in the matrix type.</param>
+        /// <param name="columns">The number of columns in the matrix type.</param>
+        /// <returns>Whether or not <paramref name="typeName"/> represents a non linear matrix type.</returns>
+        public static bool IsNonLinearMatrixType(string typeName, out string? elementName, out int rows, out int columns)
+        {
+            if (KnownMatrixTypes.Any(type => type.FullName == typeName))
+            {
+                var match = Regex.Match(typeName, @"^ComputeSharp\.(Bool|Int|UInt|Float|Double)([2-4])x([1-4])$");
+
+                if (match.Success)
+                {
+                    elementName = match.Groups[1].Value;
+                    rows = int.Parse(match.Groups[2].Value);
+                    columns = int.Parse(match.Groups[3].Value);
+
+                    return true;
+                }
+            }
+
+            elementName = null;
+            rows = columns = 0;
+
+            return false;
         }
 
         /// <summary>
