@@ -160,14 +160,14 @@ namespace ComputeSharp.SourceGenerators
                 resourceOffset = 0,
                 rawDataOffset = sizeof(int) * 3;
 
-            foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
+            foreach (
+                IFieldSymbol fieldSymbol in
+                from fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>()
+                where fieldSymbol.Type is INamedTypeSymbol { IsStatic: false } &&
+                      !fieldSymbol.IsConst
+                select fieldSymbol)
             {
-                if (fieldSymbol.Type is not INamedTypeSymbol { IsStatic: false } typeSymbol)
-                {
-                    continue;
-                }
-
-                string typeName = typeSymbol.GetFullMetadataName();
+                string typeName = fieldSymbol.Type.GetFullMetadataName();
 
                 if (HlslKnownTypes.IsTypedResourceType(typeName))
                 {
@@ -179,8 +179,6 @@ namespace ComputeSharp.SourceGenerators
                 }
                 else if (HlslKnownTypes.IsKnownHlslType(typeName))
                 {
-                    if (fieldSymbol.IsConst) continue;
-
                     // For scalar, vector and linear matrix types, serialize the value normally.
                     // Only the initial alignment needs to be considered, while data is packed.
                     var (fieldSize, fieldPack) = HlslKnownSizes.GetTypeInfo(typeName);
@@ -190,19 +188,25 @@ namespace ComputeSharp.SourceGenerators
                     // each row needs to be at a multiple of 16 bytes (a float4 register).
                     if (HlslKnownTypes.IsNonLinearMatrixType(typeName, out string? elementName, out int rows, out int columns))
                     {
-                        rawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
-
                         string
                             rowTypeName = $"ComputeSharp.{elementName}{columns}",
                             rowLocalName = $"__{fieldSymbol.Name}__row0";
 
                         statements.Add(ParseStatement($"ref {rowTypeName} {rowLocalName} = ref Unsafe.As<{typeName}, {rowTypeName}>(ref Unsafe.AsRef(in shader.{fieldSymbol.Name}));"));
 
-                        for (int i = 0; i < rows; i++)
+                        // Generate the loading code for each individual row, with proper alignment.
+                        // This will result in the following (assuming Float2x3 m):
+                        //
+                        // ref Float3 __m__row0 = ref Unsafe.As<Float2x3, Float3>(ref Unsafe.AsRef(in shader.m));
+                        // Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, rawDataOffset), Unsafe.Add(ref __m__row0, 0));
+                        // Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, rawDataOffset + 16), Unsafe.Add(ref __m__row0, 1));
+                        for (int j = 0; j < rows; j++)
                         {
-                            statements.Add(ParseStatement($"Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, {rawDataOffset}), Unsafe.Add(ref {rowLocalName}, {i}));"));
+                            rawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
 
-                            rawDataOffset += Math.Max(fieldPack * columns, 16);
+                            statements.Add(ParseStatement($"Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, {rawDataOffset}), Unsafe.Add(ref {rowLocalName}, {j}));"));
+
+                            rawDataOffset += fieldPack * columns;
                         }
                     }
                     else
