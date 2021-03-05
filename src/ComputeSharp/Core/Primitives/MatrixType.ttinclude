@@ -146,7 +146,21 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref <#=typeName#>4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(<#=fullTypeName#>)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+<#
+    for (int i = 1; i <= rows; i++)
+    for (int j = 1; j <= columns; j++)
+    {
+        WriteLine("");
+#>
+        /// <summary>
+        /// Gets a reference to the <see cref="<#=elementTypeName#>"/> value representing the component at position [<#=i#>, <#=j#>].
+        /// </summary>
+        public ref <#=elementTypeName#> M<#=i#><#=j#> => throw new InvalidExecutionContextException($"{typeof(<#=fullTypeName#>)}.M<#=i#><#=j#>");
+<#
+    }
 
+    WriteLine("");
+#>
         /// <summary>
         /// Creates a new <see cref="<#=fullTypeName#>"/> value with the same value for all its components.
         /// </summary>

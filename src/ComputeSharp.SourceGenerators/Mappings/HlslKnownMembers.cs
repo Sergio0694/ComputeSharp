@@ -192,6 +192,20 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 knownMembers.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"{item.Property.Name.ToLower()}");
             }
 
+            // Load mappings for the matrix properties as well
+            foreach (var item in
+                from type in HlslKnownTypes.KnownMatrixTypes
+                from property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                where Regex.IsMatch(property.Name, "^M[1-4]{2}$")
+                select (Type: type, Property: property))
+            {
+                char
+                    row = (char)(item.Property.Name[1] - 1),
+                    column = (char)(item.Property.Name[2] - 1);
+
+                knownMembers.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"_m{row}{column}");
+            }
+
             // Store GroupIds.Index for a quicker comparison afterwards
             PropertyInfo groupindexProperty = typeof(GroupIds).GetProperty(nameof(GroupIds.Index), BindingFlags.Static | BindingFlags.Public);
 

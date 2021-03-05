@@ -50,6 +50,11 @@ namespace ComputeSharp
         public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Double1x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
 
         /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double1x1)}.M11");
+
+        /// <summary>
         /// Creates a new <see cref="Double1x1"/> value with the same value for all its components.
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="Double1x1"/> instance.</param>
@@ -147,6 +152,16 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Double1x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double1x2)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double1x2)}.M12");
 
         /// <summary>
         /// Creates a new <see cref="Double1x2"/> value with the same value for all its components.
@@ -258,6 +273,21 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Double1x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double1x3)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double1x3)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
+        /// </summary>
+        public ref double M13 => throw new InvalidExecutionContextException($"{typeof(Double1x3)}.M13");
 
         /// <summary>
         /// Creates a new <see cref="Double1x3"/> value with the same value for all its components.
@@ -377,6 +407,26 @@ namespace ComputeSharp
         public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Double1x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
 
         /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double1x4)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double1x4)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
+        /// </summary>
+        public ref double M13 => throw new InvalidExecutionContextException($"{typeof(Double1x4)}.M13");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 4].
+        /// </summary>
+        public ref double M14 => throw new InvalidExecutionContextException($"{typeof(Double1x4)}.M14");
+
+        /// <summary>
         /// Creates a new <see cref="Double1x4"/> value with the same value for all its components.
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="Double1x4"/> instance.</param>
@@ -483,6 +533,16 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Double2x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double2x1)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double2x1)}.M21");
 
         /// <summary>
         /// Creates a new <see cref="Double2x1"/> value with the same value for all its components.
@@ -612,6 +672,26 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Double2x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double2x2)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double2x2)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double2x2)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
+        /// </summary>
+        public ref double M22 => throw new InvalidExecutionContextException($"{typeof(Double2x2)}.M22");
 
         /// <summary>
         /// Creates a new <see cref="Double2x2"/> value with the same value for all its components.
@@ -749,6 +829,36 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Double2x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double2x3)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double2x3)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
+        /// </summary>
+        public ref double M13 => throw new InvalidExecutionContextException($"{typeof(Double2x3)}.M13");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double2x3)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
+        /// </summary>
+        public ref double M22 => throw new InvalidExecutionContextException($"{typeof(Double2x3)}.M22");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 3].
+        /// </summary>
+        public ref double M23 => throw new InvalidExecutionContextException($"{typeof(Double2x3)}.M23");
 
         /// <summary>
         /// Creates a new <see cref="Double2x3"/> value with the same value for all its components.
@@ -902,6 +1012,46 @@ namespace ComputeSharp
         public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Double2x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
 
         /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
+        /// </summary>
+        public ref double M13 => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.M13");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 4].
+        /// </summary>
+        public ref double M14 => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.M14");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
+        /// </summary>
+        public ref double M22 => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.M22");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 3].
+        /// </summary>
+        public ref double M23 => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.M23");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 4].
+        /// </summary>
+        public ref double M24 => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.M24");
+
+        /// <summary>
         /// Creates a new <see cref="Double2x4"/> value with the same value for all its components.
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="Double2x4"/> instance.</param>
@@ -1011,6 +1161,21 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Double3x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double3x1)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double3x1)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
+        /// </summary>
+        public ref double M31 => throw new InvalidExecutionContextException($"{typeof(Double3x1)}.M31");
 
         /// <summary>
         /// Creates a new <see cref="Double3x1"/> value with the same value for all its components.
@@ -1154,6 +1319,36 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Double3x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double3x2)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double3x2)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double3x2)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
+        /// </summary>
+        public ref double M22 => throw new InvalidExecutionContextException($"{typeof(Double3x2)}.M22");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
+        /// </summary>
+        public ref double M31 => throw new InvalidExecutionContextException($"{typeof(Double3x2)}.M31");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 2].
+        /// </summary>
+        public ref double M32 => throw new InvalidExecutionContextException($"{typeof(Double3x2)}.M32");
 
         /// <summary>
         /// Creates a new <see cref="Double3x2"/> value with the same value for all its components.
@@ -1312,6 +1507,51 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Double3x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
+        /// </summary>
+        public ref double M13 => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.M13");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
+        /// </summary>
+        public ref double M22 => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.M22");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 3].
+        /// </summary>
+        public ref double M23 => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.M23");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
+        /// </summary>
+        public ref double M31 => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.M31");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 2].
+        /// </summary>
+        public ref double M32 => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.M32");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 3].
+        /// </summary>
+        public ref double M33 => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.M33");
 
         /// <summary>
         /// Creates a new <see cref="Double3x3"/> value with the same value for all its components.
@@ -1493,6 +1733,66 @@ namespace ComputeSharp
         public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Double3x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
 
         /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
+        /// </summary>
+        public ref double M13 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M13");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 4].
+        /// </summary>
+        public ref double M14 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M14");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
+        /// </summary>
+        public ref double M22 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M22");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 3].
+        /// </summary>
+        public ref double M23 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M23");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 4].
+        /// </summary>
+        public ref double M24 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M24");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
+        /// </summary>
+        public ref double M31 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M31");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 2].
+        /// </summary>
+        public ref double M32 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M32");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 3].
+        /// </summary>
+        public ref double M33 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M33");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 4].
+        /// </summary>
+        public ref double M34 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M34");
+
+        /// <summary>
         /// Creates a new <see cref="Double3x4"/> value with the same value for all its components.
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="Double3x4"/> instance.</param>
@@ -1611,6 +1911,26 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Double4x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double4x1)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double4x1)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
+        /// </summary>
+        public ref double M31 => throw new InvalidExecutionContextException($"{typeof(Double4x1)}.M31");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 1].
+        /// </summary>
+        public ref double M41 => throw new InvalidExecutionContextException($"{typeof(Double4x1)}.M41");
 
         /// <summary>
         /// Creates a new <see cref="Double4x1"/> value with the same value for all its components.
@@ -1768,6 +2088,46 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Double4x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
+        /// </summary>
+        public ref double M22 => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.M22");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
+        /// </summary>
+        public ref double M31 => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.M31");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 2].
+        /// </summary>
+        public ref double M32 => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.M32");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 1].
+        /// </summary>
+        public ref double M41 => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.M41");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 2].
+        /// </summary>
+        public ref double M42 => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.M42");
 
         /// <summary>
         /// Creates a new <see cref="Double4x2"/> value with the same value for all its components.
@@ -1947,6 +2307,66 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Double4x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
+        /// </summary>
+        public ref double M13 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M13");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
+        /// </summary>
+        public ref double M22 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M22");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 3].
+        /// </summary>
+        public ref double M23 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M23");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
+        /// </summary>
+        public ref double M31 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M31");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 2].
+        /// </summary>
+        public ref double M32 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M32");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 3].
+        /// </summary>
+        public ref double M33 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M33");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 1].
+        /// </summary>
+        public ref double M41 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M41");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 2].
+        /// </summary>
+        public ref double M42 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M42");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 3].
+        /// </summary>
+        public ref double M43 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M43");
 
         /// <summary>
         /// Creates a new <see cref="Double4x3"/> value with the same value for all its components.
@@ -2154,6 +2574,86 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Double4x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
+        /// </summary>
+        public ref double M13 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M13");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 4].
+        /// </summary>
+        public ref double M14 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M14");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
+        /// </summary>
+        public ref double M22 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M22");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 3].
+        /// </summary>
+        public ref double M23 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M23");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 4].
+        /// </summary>
+        public ref double M24 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M24");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
+        /// </summary>
+        public ref double M31 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M31");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 2].
+        /// </summary>
+        public ref double M32 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M32");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 3].
+        /// </summary>
+        public ref double M33 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M33");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 4].
+        /// </summary>
+        public ref double M34 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M34");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 1].
+        /// </summary>
+        public ref double M41 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M41");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 2].
+        /// </summary>
+        public ref double M42 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M42");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 3].
+        /// </summary>
+        public ref double M43 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M43");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 4].
+        /// </summary>
+        public ref double M44 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M44");
 
         /// <summary>
         /// Creates a new <see cref="Double4x4"/> value with the same value for all its components.

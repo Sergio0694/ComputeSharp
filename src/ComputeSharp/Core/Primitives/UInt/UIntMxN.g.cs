@@ -50,6 +50,11 @@ namespace ComputeSharp
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt1x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
 
         /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref uint M11 => throw new InvalidExecutionContextException($"{typeof(UInt1x1)}.M11");
+
+        /// <summary>
         /// Creates a new <see cref="UInt1x1"/> value with the same value for all its components.
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="UInt1x1"/> instance.</param>
@@ -147,6 +152,16 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt1x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref uint M11 => throw new InvalidExecutionContextException($"{typeof(UInt1x2)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref uint M12 => throw new InvalidExecutionContextException($"{typeof(UInt1x2)}.M12");
 
         /// <summary>
         /// Creates a new <see cref="UInt1x2"/> value with the same value for all its components.
@@ -258,6 +273,21 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt1x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref uint M11 => throw new InvalidExecutionContextException($"{typeof(UInt1x3)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref uint M12 => throw new InvalidExecutionContextException($"{typeof(UInt1x3)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 3].
+        /// </summary>
+        public ref uint M13 => throw new InvalidExecutionContextException($"{typeof(UInt1x3)}.M13");
 
         /// <summary>
         /// Creates a new <see cref="UInt1x3"/> value with the same value for all its components.
@@ -377,6 +407,26 @@ namespace ComputeSharp
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt1x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
 
         /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref uint M11 => throw new InvalidExecutionContextException($"{typeof(UInt1x4)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref uint M12 => throw new InvalidExecutionContextException($"{typeof(UInt1x4)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 3].
+        /// </summary>
+        public ref uint M13 => throw new InvalidExecutionContextException($"{typeof(UInt1x4)}.M13");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 4].
+        /// </summary>
+        public ref uint M14 => throw new InvalidExecutionContextException($"{typeof(UInt1x4)}.M14");
+
+        /// <summary>
         /// Creates a new <see cref="UInt1x4"/> value with the same value for all its components.
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="UInt1x4"/> instance.</param>
@@ -483,6 +533,16 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt2x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref uint M11 => throw new InvalidExecutionContextException($"{typeof(UInt2x1)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref uint M21 => throw new InvalidExecutionContextException($"{typeof(UInt2x1)}.M21");
 
         /// <summary>
         /// Creates a new <see cref="UInt2x1"/> value with the same value for all its components.
@@ -612,6 +672,26 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt2x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref uint M11 => throw new InvalidExecutionContextException($"{typeof(UInt2x2)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref uint M12 => throw new InvalidExecutionContextException($"{typeof(UInt2x2)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref uint M21 => throw new InvalidExecutionContextException($"{typeof(UInt2x2)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 2].
+        /// </summary>
+        public ref uint M22 => throw new InvalidExecutionContextException($"{typeof(UInt2x2)}.M22");
 
         /// <summary>
         /// Creates a new <see cref="UInt2x2"/> value with the same value for all its components.
@@ -749,6 +829,36 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt2x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref uint M11 => throw new InvalidExecutionContextException($"{typeof(UInt2x3)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref uint M12 => throw new InvalidExecutionContextException($"{typeof(UInt2x3)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 3].
+        /// </summary>
+        public ref uint M13 => throw new InvalidExecutionContextException($"{typeof(UInt2x3)}.M13");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref uint M21 => throw new InvalidExecutionContextException($"{typeof(UInt2x3)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 2].
+        /// </summary>
+        public ref uint M22 => throw new InvalidExecutionContextException($"{typeof(UInt2x3)}.M22");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 3].
+        /// </summary>
+        public ref uint M23 => throw new InvalidExecutionContextException($"{typeof(UInt2x3)}.M23");
 
         /// <summary>
         /// Creates a new <see cref="UInt2x3"/> value with the same value for all its components.
@@ -902,6 +1012,46 @@ namespace ComputeSharp
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt2x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
 
         /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref uint M11 => throw new InvalidExecutionContextException($"{typeof(UInt2x4)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref uint M12 => throw new InvalidExecutionContextException($"{typeof(UInt2x4)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 3].
+        /// </summary>
+        public ref uint M13 => throw new InvalidExecutionContextException($"{typeof(UInt2x4)}.M13");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 4].
+        /// </summary>
+        public ref uint M14 => throw new InvalidExecutionContextException($"{typeof(UInt2x4)}.M14");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref uint M21 => throw new InvalidExecutionContextException($"{typeof(UInt2x4)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 2].
+        /// </summary>
+        public ref uint M22 => throw new InvalidExecutionContextException($"{typeof(UInt2x4)}.M22");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 3].
+        /// </summary>
+        public ref uint M23 => throw new InvalidExecutionContextException($"{typeof(UInt2x4)}.M23");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 4].
+        /// </summary>
+        public ref uint M24 => throw new InvalidExecutionContextException($"{typeof(UInt2x4)}.M24");
+
+        /// <summary>
         /// Creates a new <see cref="UInt2x4"/> value with the same value for all its components.
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="UInt2x4"/> instance.</param>
@@ -1011,6 +1161,21 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt3x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref uint M11 => throw new InvalidExecutionContextException($"{typeof(UInt3x1)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref uint M21 => throw new InvalidExecutionContextException($"{typeof(UInt3x1)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 1].
+        /// </summary>
+        public ref uint M31 => throw new InvalidExecutionContextException($"{typeof(UInt3x1)}.M31");
 
         /// <summary>
         /// Creates a new <see cref="UInt3x1"/> value with the same value for all its components.
@@ -1154,6 +1319,36 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt3x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref uint M11 => throw new InvalidExecutionContextException($"{typeof(UInt3x2)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref uint M12 => throw new InvalidExecutionContextException($"{typeof(UInt3x2)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref uint M21 => throw new InvalidExecutionContextException($"{typeof(UInt3x2)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 2].
+        /// </summary>
+        public ref uint M22 => throw new InvalidExecutionContextException($"{typeof(UInt3x2)}.M22");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 1].
+        /// </summary>
+        public ref uint M31 => throw new InvalidExecutionContextException($"{typeof(UInt3x2)}.M31");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 2].
+        /// </summary>
+        public ref uint M32 => throw new InvalidExecutionContextException($"{typeof(UInt3x2)}.M32");
 
         /// <summary>
         /// Creates a new <see cref="UInt3x2"/> value with the same value for all its components.
@@ -1312,6 +1507,51 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt3x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref uint M11 => throw new InvalidExecutionContextException($"{typeof(UInt3x3)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref uint M12 => throw new InvalidExecutionContextException($"{typeof(UInt3x3)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 3].
+        /// </summary>
+        public ref uint M13 => throw new InvalidExecutionContextException($"{typeof(UInt3x3)}.M13");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref uint M21 => throw new InvalidExecutionContextException($"{typeof(UInt3x3)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 2].
+        /// </summary>
+        public ref uint M22 => throw new InvalidExecutionContextException($"{typeof(UInt3x3)}.M22");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 3].
+        /// </summary>
+        public ref uint M23 => throw new InvalidExecutionContextException($"{typeof(UInt3x3)}.M23");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 1].
+        /// </summary>
+        public ref uint M31 => throw new InvalidExecutionContextException($"{typeof(UInt3x3)}.M31");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 2].
+        /// </summary>
+        public ref uint M32 => throw new InvalidExecutionContextException($"{typeof(UInt3x3)}.M32");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 3].
+        /// </summary>
+        public ref uint M33 => throw new InvalidExecutionContextException($"{typeof(UInt3x3)}.M33");
 
         /// <summary>
         /// Creates a new <see cref="UInt3x3"/> value with the same value for all its components.
@@ -1493,6 +1733,66 @@ namespace ComputeSharp
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt3x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
 
         /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref uint M11 => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref uint M12 => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 3].
+        /// </summary>
+        public ref uint M13 => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}.M13");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 4].
+        /// </summary>
+        public ref uint M14 => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}.M14");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref uint M21 => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 2].
+        /// </summary>
+        public ref uint M22 => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}.M22");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 3].
+        /// </summary>
+        public ref uint M23 => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}.M23");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 4].
+        /// </summary>
+        public ref uint M24 => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}.M24");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 1].
+        /// </summary>
+        public ref uint M31 => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}.M31");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 2].
+        /// </summary>
+        public ref uint M32 => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}.M32");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 3].
+        /// </summary>
+        public ref uint M33 => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}.M33");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 4].
+        /// </summary>
+        public ref uint M34 => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}.M34");
+
+        /// <summary>
         /// Creates a new <see cref="UInt3x4"/> value with the same value for all its components.
         /// </summary>
         /// <param name="x">The value to use for the components of the new <see cref="UInt3x4"/> instance.</param>
@@ -1611,6 +1911,26 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt4x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref uint M11 => throw new InvalidExecutionContextException($"{typeof(UInt4x1)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref uint M21 => throw new InvalidExecutionContextException($"{typeof(UInt4x1)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 1].
+        /// </summary>
+        public ref uint M31 => throw new InvalidExecutionContextException($"{typeof(UInt4x1)}.M31");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [4, 1].
+        /// </summary>
+        public ref uint M41 => throw new InvalidExecutionContextException($"{typeof(UInt4x1)}.M41");
 
         /// <summary>
         /// Creates a new <see cref="UInt4x1"/> value with the same value for all its components.
@@ -1768,6 +2088,46 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt4x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref uint M11 => throw new InvalidExecutionContextException($"{typeof(UInt4x2)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref uint M12 => throw new InvalidExecutionContextException($"{typeof(UInt4x2)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref uint M21 => throw new InvalidExecutionContextException($"{typeof(UInt4x2)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 2].
+        /// </summary>
+        public ref uint M22 => throw new InvalidExecutionContextException($"{typeof(UInt4x2)}.M22");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 1].
+        /// </summary>
+        public ref uint M31 => throw new InvalidExecutionContextException($"{typeof(UInt4x2)}.M31");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 2].
+        /// </summary>
+        public ref uint M32 => throw new InvalidExecutionContextException($"{typeof(UInt4x2)}.M32");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [4, 1].
+        /// </summary>
+        public ref uint M41 => throw new InvalidExecutionContextException($"{typeof(UInt4x2)}.M41");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [4, 2].
+        /// </summary>
+        public ref uint M42 => throw new InvalidExecutionContextException($"{typeof(UInt4x2)}.M42");
 
         /// <summary>
         /// Creates a new <see cref="UInt4x2"/> value with the same value for all its components.
@@ -1947,6 +2307,66 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt4x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref uint M11 => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref uint M12 => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 3].
+        /// </summary>
+        public ref uint M13 => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}.M13");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref uint M21 => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 2].
+        /// </summary>
+        public ref uint M22 => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}.M22");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 3].
+        /// </summary>
+        public ref uint M23 => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}.M23");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 1].
+        /// </summary>
+        public ref uint M31 => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}.M31");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 2].
+        /// </summary>
+        public ref uint M32 => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}.M32");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 3].
+        /// </summary>
+        public ref uint M33 => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}.M33");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [4, 1].
+        /// </summary>
+        public ref uint M41 => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}.M41");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [4, 2].
+        /// </summary>
+        public ref uint M42 => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}.M42");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [4, 3].
+        /// </summary>
+        public ref uint M43 => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}.M43");
 
         /// <summary>
         /// Creates a new <see cref="UInt4x3"/> value with the same value for all its components.
@@ -2154,6 +2574,86 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt4x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
+        /// </summary>
+        public ref uint M11 => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.M11");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 2].
+        /// </summary>
+        public ref uint M12 => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.M12");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 3].
+        /// </summary>
+        public ref uint M13 => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.M13");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 4].
+        /// </summary>
+        public ref uint M14 => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.M14");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 1].
+        /// </summary>
+        public ref uint M21 => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.M21");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 2].
+        /// </summary>
+        public ref uint M22 => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.M22");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 3].
+        /// </summary>
+        public ref uint M23 => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.M23");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [2, 4].
+        /// </summary>
+        public ref uint M24 => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.M24");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 1].
+        /// </summary>
+        public ref uint M31 => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.M31");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 2].
+        /// </summary>
+        public ref uint M32 => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.M32");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 3].
+        /// </summary>
+        public ref uint M33 => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.M33");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [3, 4].
+        /// </summary>
+        public ref uint M34 => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.M34");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [4, 1].
+        /// </summary>
+        public ref uint M41 => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.M41");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [4, 2].
+        /// </summary>
+        public ref uint M42 => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.M42");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [4, 3].
+        /// </summary>
+        public ref uint M43 => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.M43");
+
+        /// <summary>
+        /// Gets a reference to the <see cref="uint"/> value representing the component at position [4, 4].
+        /// </summary>
+        public ref uint M44 => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.M44");
 
         /// <summary>
         /// Creates a new <see cref="UInt4x4"/> value with the same value for all its components.
