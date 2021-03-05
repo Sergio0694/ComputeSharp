@@ -160,14 +160,14 @@ namespace ComputeSharp.SourceGenerators
                 resourceOffset = 0,
                 rawDataOffset = sizeof(int) * 3;
 
-            foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
+            foreach (
+                IFieldSymbol fieldSymbol in
+                from fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>()
+                where fieldSymbol.Type is INamedTypeSymbol { IsStatic: false } &&
+                      !fieldSymbol.IsConst
+                select fieldSymbol)
             {
-                if (fieldSymbol.Type is not INamedTypeSymbol { IsStatic: false } typeSymbol)
-                {
-                    continue;
-                }
-
-                string typeName = typeSymbol.GetFullMetadataName();
+                string typeName = fieldSymbol.Type.GetFullMetadataName();
 
                 if (HlslKnownTypes.IsTypedResourceType(typeName))
                 {
@@ -177,25 +177,53 @@ namespace ComputeSharp.SourceGenerators
                             ParseExpression($"Unsafe.Add(ref r0, {resourceOffset++})"),
                             ParseExpression($"GraphicsResourceHelper.ValidateAndGetGpuDescriptorHandle(shader.{fieldSymbol.Name}, device)"))));
                 }
-                else if (HlslKnownTypes.IsScalarOrVectorType(typeName))
+                else if (HlslKnownTypes.IsKnownHlslType(typeName))
                 {
-                    if (fieldSymbol.IsConst) continue;
-
+                    // For scalar, vector and linear matrix types, serialize the value normally.
+                    // Only the initial alignment needs to be considered, while data is packed.
                     var (fieldSize, fieldPack) = HlslKnownSizes.GetTypeInfo(typeName);
 
-                    // Calculate the right offset with 16-bytes padding (HLSL constant buffer).
-                    // Since we're in a constant buffer, we need to both pad the starting offset
-                    // to be aligned to the packing size of the type, and also to align the initial
-                    // offset to ensure that values do not cross 16 bytes boundaries either.
-                    rawDataOffset = AlignmentHelper.AlignToBoundary(
-                        AlignmentHelper.Pad(rawDataOffset, fieldPack),
-                        fieldSize,
-                        16);
+                    // Check if the current type is a matrix type with more than one row. In this
+                    // case, each row is aligned as if it was a separate array, so the start of
+                    // each row needs to be at a multiple of 16 bytes (a float4 register).
+                    if (HlslKnownTypes.IsNonLinearMatrixType(typeName, out string? elementName, out int rows, out int columns))
+                    {
+                        string
+                            rowTypeName = $"ComputeSharp.{elementName}{columns}",
+                            rowLocalName = $"__{fieldSymbol.Name}__row0";
 
-                    statements.Add(ExpressionStatement(
-                        ParseExpression($"Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, {rawDataOffset}), shader.{fieldSymbol.Name})")));
+                        statements.Add(ParseStatement($"ref {rowTypeName} {rowLocalName} = ref Unsafe.As<{typeName}, {rowTypeName}>(ref Unsafe.AsRef(in shader.{fieldSymbol.Name}));"));
 
-                    rawDataOffset += fieldSize;
+                        // Generate the loading code for each individual row, with proper alignment.
+                        // This will result in the following (assuming Float2x3 m):
+                        //
+                        // ref Float3 __m__row0 = ref Unsafe.As<Float2x3, Float3>(ref Unsafe.AsRef(in shader.m));
+                        // Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, rawDataOffset), Unsafe.Add(ref __m__row0, 0));
+                        // Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, rawDataOffset + 16), Unsafe.Add(ref __m__row0, 1));
+                        for (int j = 0; j < rows; j++)
+                        {
+                            rawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
+
+                            statements.Add(ParseStatement($"Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, {rawDataOffset}), Unsafe.Add(ref {rowLocalName}, {j}));"));
+
+                            rawDataOffset += fieldPack * columns;
+                        }
+                    }
+                    else
+                    {
+                        // Calculate the right offset with 16-bytes padding (HLSL constant buffer).
+                        // Since we're in a constant buffer, we need to both pad the starting offset
+                        // to be aligned to the packing size of the type, and also to align the initial
+                        // offset to ensure that values do not cross 16 bytes boundaries either.
+                        rawDataOffset = AlignmentHelper.AlignToBoundary(
+                            AlignmentHelper.Pad(rawDataOffset, fieldPack),
+                            fieldSize,
+                            16);
+
+                        statements.Add(ParseStatement($"Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, {rawDataOffset}), shader.{fieldSymbol.Name});"));
+
+                        rawDataOffset += fieldSize;
+                    }
                 }
             }
 

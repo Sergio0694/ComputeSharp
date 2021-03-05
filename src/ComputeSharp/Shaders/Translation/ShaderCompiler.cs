@@ -104,14 +104,17 @@ namespace ComputeSharp.Shaders.Translation
             fixed (char* entryPoint = nameof(IComputeShader.Execute))
             fixed (char* shaderProfile = "cs_6_0")
             fixed (char* optimization = "-O3")
+            fixed (char* rowMajor = "-Zpr")
             {
+                char** arguments = stackalloc char*[2] { optimization, rowMajor };
+
                 DxcCompiler.Get()->Compile(
                     (IDxcBlob*)dxcBlobEncoding.Get(),
                     (ushort*)shaderName,
                     (ushort*)entryPoint,
                     (ushort*)shaderProfile,
-                    (ushort**)&optimization,
-                    1,
+                    (ushort**)arguments,
+                    2,
                     null,
                     0,
                     DxcIncludeHandler.Get(),

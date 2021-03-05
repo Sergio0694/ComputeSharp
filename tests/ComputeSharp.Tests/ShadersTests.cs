@@ -43,6 +43,20 @@ namespace ComputeSharp.Tests
             RunAndCompareShader(device, static texture => new TwoTiledTruchet(texture, 0), 0.00033f);
         }
 
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void Octagrams(Device device)
+        {
+            RunAndCompareShader(device, static texture => new Octagrams(texture, 0), 0.00000586f);
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void ProteanClouds(Device device)
+        {
+            RunAndCompareShader(device, static texture => new ProteanClouds(texture, 0), 0.00000107f);
+        }
+
         /// <summary>
         /// Executes a given test for a specified shader.
         /// </summary>

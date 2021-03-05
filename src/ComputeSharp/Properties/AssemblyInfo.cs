@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("ComputeSharp.SourceGenerators")]
+[module: SkipLocalsInit]
+
 [assembly: InternalsVisibleTo("ComputeSharp.Tests.Internals")]

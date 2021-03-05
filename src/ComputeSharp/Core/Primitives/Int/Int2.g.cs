@@ -4,7 +4,7 @@ using ComputeSharp.Exceptions;
 namespace ComputeSharp
 {
     /// <inheritdoc cref="Int2"/>
-    [StructLayout(LayoutKind.Explicit, Size = 8)]
+    [StructLayout(LayoutKind.Explicit, Size = 8, Pack = 4)]
     public partial struct Int2
     {
         [FieldOffset(0)]

@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Numerics;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace ComputeSharp.SourceGenerators.Mappings
 {
@@ -12,38 +15,38 @@ namespace ComputeSharp.SourceGenerators.Mappings
         /// <summary>
         /// The mapping of supported known sizes to HLSL type names.
         /// </summary>
-        private static IReadOnlyDictionary<string, (int, int)> KnownSizes = new Dictionary<string, (int, int)>
+        private static IReadOnlyDictionary<string, (int, int)> KnownSizes = BuildKnownSizesMap();
+
+        /// <summary>
+        /// Builds the mapping of known type sizes and alignments.
+        /// </summary>
+        [Pure]
+        private static IReadOnlyDictionary<string, (int, int)> BuildKnownSizesMap()
         {
-            [typeof(bool).FullName] = (4, 4),
-            [typeof(int).FullName] = (4, 4),
-            [typeof(int).FullName] = (4, 4),
-            [typeof(float).FullName] = (4, 4),
-            [typeof(double).FullName] = (8, 8),
+            Dictionary<string, (int, int)> knownSizes = new()
+            {
+                [typeof(bool).FullName] = (4, 4),
+                [typeof(int).FullName] = (4, 4),
+                [typeof(int).FullName] = (4, 4),
+                [typeof(float).FullName] = (4, 4),
+                [typeof(double).FullName] = (8, 8),
 
-            [typeof(Vector2).FullName] = (8, 4),
-            [typeof(Vector3).FullName] = (12, 4),
-            [typeof(Vector4).FullName] = (16, 4),
+                [typeof(Vector2).FullName] = (8, 4),
+                [typeof(Vector3).FullName] = (12, 4),
+                [typeof(Vector4).FullName] = (16, 4)
+            };
 
-            [typeof(Bool2).FullName] = (8, 4),
-            [typeof(Bool3).FullName] = (12, 4),
-            [typeof(Bool4).FullName] = (16, 4),
+            foreach (
+                var type in
+                from type in Assembly.GetExecutingAssembly().ExportedTypes
+                where Regex.IsMatch(type.FullName, @"^ComputeSharp\.(Bool|Double|Float|Int|UInt)")
+                select type)
+            {
+                knownSizes.Add(type.FullName, (type.StructLayoutAttribute.Size, type.StructLayoutAttribute.Pack));
+            }
 
-            [typeof(Int2).FullName] = (8, 4),
-            [typeof(Int3).FullName] = (12, 4),
-            [typeof(Int4).FullName] = (16, 4),
-
-            [typeof(UInt2).FullName] = (8, 4),
-            [typeof(UInt3).FullName] = (12, 4),
-            [typeof(UInt4).FullName] = (16, 4),
-
-            [typeof(Float2).FullName] = (8, 4),
-            [typeof(Float3).FullName] = (12, 4),
-            [typeof(Float4).FullName] = (16, 4),
-
-            [typeof(Double2).FullName] = (16, 8),
-            [typeof(Double3).FullName] = (24, 8),
-            [typeof(Double3).FullName] = (32, 8)
-        };
+            return knownSizes;
+        }
 
         /// <summary>
         /// Gets the size and alignment info for a specified primitive type.

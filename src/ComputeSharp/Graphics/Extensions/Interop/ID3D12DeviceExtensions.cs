@@ -558,7 +558,7 @@ namespace ComputeSharp.Graphics.Extensions
         public static unsafe TFeature CheckFeatureSupport<TFeature>(this ref ID3D12Device d3D12Device, D3D12_FEATURE d3D12Feature)
             where TFeature : unmanaged
         {
-            TFeature feature;
+            TFeature feature = default;
 
             d3D12Device.CheckFeatureSupport(d3D12Feature, &feature, (uint)sizeof(TFeature)).Assert();
 

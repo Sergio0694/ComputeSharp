@@ -1,0 +1,57 @@
+﻿<#@include file="Hlsl.ttinclude" #>
+using System.Diagnostics.Contracts;
+using ComputeSharp.Core.Intrinsics.Attributes;
+using ComputeSharp.Exceptions;
+
+namespace ComputeSharp
+{
+    /// <inheritdoc cref="Hlsl"/>
+    public static partial class Hlsl
+    {
+<#
+PushIndent("    ");
+PushIndent("    ");
+
+bool isFirst = true;
+
+foreach (var intrinsic in Intrinsics)
+{
+    foreach (var overload in intrinsic.Overloads)
+    {
+        if (isFirst) isFirst = false;
+        else WriteLine("");
+
+        WriteLine("/// <summary>");
+        WriteLine($"/// {intrinsic.Summary}");
+        WriteLine("/// </summary>");
+
+        foreach (var param in intrinsic.Parameters)
+        {
+            WriteLine($"/// <param name=\"{param.Name}\">{param.Info}</param>");
+        }
+
+        if (intrinsic.Returns.Length > 0)
+        {
+            var returns = Regex.Replace(intrinsic.Returns, @"{(\w+)}", m => $"<paramref name=\"{m.Groups[1].Value}\"/>");
+
+            WriteLine($"/// <returns>{returns}</returns>");
+        }
+
+        if (intrinsic.IsPure) WriteLine("[Pure]");
+        WriteLine($"[HlslIntrinsicName(\"{intrinsic.HlslName}\")]");
+
+        Write($"public static {overload.Return} {intrinsic.Name}(");
+        Write(string.Join(", ", intrinsic.Parameters.Zip(overload.Params, (a, b) => $"{(a.IsOut ? "out " : "")}{b} {a.Name}")));
+        Write(") => throw new InvalidExecutionContextException(");
+
+        var parameters = string.Join(", ", overload.Params.Select(t => $"{{typeof({t})}}"));
+
+        WriteLine($"$\"{{typeof(Hlsl)}}.{{nameof({intrinsic.Name})}}({parameters})\");");
+    }
+}
+
+PopIndent();
+PopIndent();
+#>
+    }
+}

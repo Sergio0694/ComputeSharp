@@ -217,7 +217,7 @@ namespace ComputeSharp.Shaders.Translation
                 this.hlslResourceInfo.Add(new HlslResourceInfo.ReadWrite(hlslType, hlslName, (int)this.readWriteBuffersCount++));
                 this.totalResourceCount++;
             }
-            else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType))
+            else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType) || HlslKnownTypes.IsKnownMatrixType(fieldType))
             {
                 this.capturedFields.Add(fieldInfo);
                 this.fieldsInfo.Add(new CapturedFieldInfo(hlslType, hlslName));

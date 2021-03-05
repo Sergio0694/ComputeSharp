@@ -107,14 +107,12 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 from method in typeof(Hlsl).GetMethods(BindingFlags.Public | BindingFlags.Static)
                 group method by method.Name
                 into groups
-                select (Name: groups.Key, MethodInfo: groups.First()))
+                select groups.First())
             {
                 // Check whether the current method should be translated with the original name
                 // or with the lowercase version. This is needed because all C# methods are exposed
                 // with the upper camel case format, while HLSL intrinsics use multiple different formats.
-                string hlslName = method.MethodInfo.GetCustomAttribute<PreserveMemberNameAttribute>() != null
-                    ? method.Name
-                    : method.Name.ToLowerInvariant();
+                string hlslName = method.GetCustomAttribute<HlslIntrinsicNameAttribute>()?.Name ?? method.Name;
 
                 knownMethods.Add($"{typeof(Hlsl).FullName}{Type.Delimiter}{method.Name}", hlslName);
             }

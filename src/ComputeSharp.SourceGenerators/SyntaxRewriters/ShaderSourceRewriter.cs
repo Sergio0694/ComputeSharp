@@ -240,7 +240,22 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 return CastExpression(updatedNode.Type, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)));
             }
 
-            return InvocationExpression(updatedNode.Type, updatedNode.ArgumentList);
+            // Add explicit casts for matrix constructors to help the overload resolution
+            if (this.semanticModel.GetTypeInfo(node).Type is ITypeSymbol matrixType &&
+                HlslKnownTypes.IsMatrixType(matrixType.GetFullMetadataName()))
+            {
+                for (int i = 0; i < node.ArgumentList!.Arguments.Count; i++)
+                {
+                    IArgumentOperation argumentOperation = (IArgumentOperation)this.semanticModel.GetOperation(node.ArgumentList.Arguments[i])!;
+                    INamedTypeSymbol elementType = (INamedTypeSymbol)argumentOperation.Parameter.Type;
+
+                    updatedNode = updatedNode.ReplaceNode(
+                        updatedNode.ArgumentList!.Arguments[i].Expression,
+                        CastExpression(IdentifierName(HlslKnownTypes.GetMappedName(elementType)), updatedNode.ArgumentList.Arguments[i].Expression));
+                }
+            }
+
+            return InvocationExpression(updatedNode.Type, updatedNode.ArgumentList!);
         }
 
         /// <inheritdoc/>
@@ -269,6 +284,21 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             if (updatedNode.ArgumentList!.Arguments.Count == 0)
             {
                 return CastExpression(explicitType, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)));
+            }
+
+            // Add explicit casts like with the explicit object creation expressions above
+            if (this.semanticModel.GetTypeInfo(node).Type is ITypeSymbol matrixType &&
+                HlslKnownTypes.IsMatrixType(matrixType.GetFullMetadataName()))
+            {
+                for (int i = 0; i < node.ArgumentList.Arguments.Count; i++)
+                {
+                    IArgumentOperation argumentOperation = (IArgumentOperation)this.semanticModel.GetOperation(node.ArgumentList.Arguments[i])!;
+                    INamedTypeSymbol elementType = (INamedTypeSymbol)argumentOperation.Parameter.Type;
+
+                    updatedNode = updatedNode.ReplaceNode(
+                        updatedNode.ArgumentList.Arguments[i].Expression,
+                        CastExpression(IdentifierName(HlslKnownTypes.GetMappedName(elementType)), updatedNode.ArgumentList.Arguments[i].Expression));
+                }
             }
 
             return InvocationExpression(explicitType, updatedNode.ArgumentList);
@@ -392,7 +422,9 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 this.semanticModel.GetOperation(node) is IMemberReferenceOperation operation)
             {
                 // If the member access is a constant, track it and replace the tree with the processed constant name
-                if (operation is IFieldReferenceOperation fieldOperation && fieldOperation.Field.IsConst)
+                if (operation is IFieldReferenceOperation fieldOperation &&
+                    fieldOperation.Field.IsConst &&
+                    fieldOperation.Type.TypeKind != TypeKind.Enum)
                 {
                     this.constantDefinitions[fieldOperation.Field] = ((IFormattable)fieldOperation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
 
@@ -557,12 +589,54 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (ElementAccessExpressionSyntax)base.VisitElementAccessExpression(node)!;
 
-            if (this.semanticModel.GetOperation(node) is IPropertyReferenceOperation operation &&
-                HlslKnownMembers.TryGetMappedIndexerTypeName(operation.Property.GetFullMetadataName(), out string? mapping))
+            if (this.semanticModel.GetOperation(node) is IPropertyReferenceOperation operation)
             {
-                var index = InvocationExpression(IdentifierName(mapping!), ArgumentList(updatedNode.ArgumentList.Arguments));
+                string propertyName = operation.Property.GetFullMetadataName();
 
-                return updatedNode.WithArgumentList(BracketedArgumentList(SingletonSeparatedList(Argument(index))));
+                // Rewrite texture resource indices taking vectors into individual indices as per HLSL spec.
+                // For instance: texture[ThreadIds.XY] will be rewritten as texture[ThreadIds.X, ThreadIds.Y].
+                if (HlslKnownMembers.TryGetMappedResourceIndexerTypeName(propertyName, out string? mapping))
+                {
+                    var index = InvocationExpression(IdentifierName(mapping!), ArgumentList(updatedNode.ArgumentList.Arguments));
+
+                    return updatedNode.WithArgumentList(BracketedArgumentList(SingletonSeparatedList(Argument(index))));
+                }
+
+                // If the current property is a swizzled matrix indexer, ensure all the arguments are constants, and rewrite
+                // the property access to the corresponding HLSL syntax. For instance, m[M11, M12] will become m._m00_m01.
+                if (HlslKnownMembers.IsKnownMatrixIndexer(propertyName))
+                {
+                    bool isValid = true;
+
+                    // Validate the arguments
+                    foreach (ArgumentSyntax argument in node.ArgumentList.Arguments)
+                    {
+                        if (this.semanticModel.GetOperation(argument.Expression) is not IFieldReferenceOperation fieldReference ||
+                            !HlslKnownMembers.IsKnownMatrixIndex(fieldReference.Field.GetFullMetadataName()))
+                        {
+                            this.context.ReportDiagnostic(NonConstantMatrixSwizzledIndex, argument);
+
+                            isValid = false;
+                        }
+                    }
+
+                    if (isValid)
+                    {
+                        // Rewrite the indexer as a property access
+                        string hlslPropertyName = string.Join("",
+                            from argument in node.ArgumentList.Arguments
+                            let fieldReference = (IFieldReferenceOperation)this.semanticModel.GetOperation(argument.Expression)!
+                            let fieldName = fieldReference.Field.Name
+                            let row = (char)(fieldName[1] - 1)
+                            let column = (char)(fieldName[2] - 1)
+                            select $"_m{row}{column}");
+
+                        return MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            updatedNode.Expression,
+                            IdentifierName(hlslPropertyName));
+                    }
+                }
             }
 
             return updatedNode;
@@ -596,7 +670,9 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (IdentifierNameSyntax)base.VisitIdentifierName(node)!;
 
-            if (this.semanticModel.GetOperation(node) is IFieldReferenceOperation operation && operation.Field.IsConst)
+            if (this.semanticModel.GetOperation(node) is IFieldReferenceOperation operation &&
+                operation.Field.IsConst &&
+                operation.Type.TypeKind != TypeKind.Enum)
             {
                 this.constantDefinitions[operation.Field] = ((IFormattable)operation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
 

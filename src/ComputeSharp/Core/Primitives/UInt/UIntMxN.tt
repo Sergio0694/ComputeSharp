@@ -1,0 +1,4 @@
+﻿<#@include file="..\MatrixType.ttinclude" #>
+<#
+GenerateAllMatrixProperties("UInt", sizeof(uint));
+#>
