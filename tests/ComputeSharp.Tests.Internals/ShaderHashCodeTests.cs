@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests.Internals
 {
     [TestClass]
-    [TestCategory("ShaderHashCodes")]
+    [TestCategory("ShaderHashCode")]
     public class ShaderHashCodeTests
     {
         public struct Shader1 : IComputeShader
