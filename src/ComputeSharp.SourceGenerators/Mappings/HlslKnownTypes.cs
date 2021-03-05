@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Numerics;
-using System.Reflection;
-using System.Text.RegularExpressions;
 using ComputeSharp.SourceGenerators.Extensions;
 using Microsoft.CodeAnalysis;
 
@@ -16,32 +14,64 @@ namespace ComputeSharp.SourceGenerators.Mappings
     internal static class HlslKnownTypes
     {
         /// <summary>
-        /// The collection of known matrix types.
+        /// Gets the known HLSL dispatch types.
         /// </summary>
-        private static readonly IReadOnlyCollection<Type> KnownMatrixTypes = BuildKnownMatrixTypes();
+        public static IReadOnlyCollection<Type> HlslDispatchTypes { get; } = new[]
+        {
+            typeof(ThreadIds),
+            typeof(GroupIds),
+            typeof(WarpIds)
+        };
 
         /// <summary>
-        /// Builds the mapping of known matrix types.
+        /// Gets the set of HLSL vector types.
         /// </summary>
-        [Pure]
-        private static IReadOnlyCollection<Type> BuildKnownMatrixTypes()
+        public static IReadOnlyCollection<Type> KnownVectorTypes { get; } = new[]
         {
-            return (
-                from type in Assembly.GetExecutingAssembly().ExportedTypes
-                where Regex.IsMatch(type.FullName, @"^ComputeSharp\.(Bool|Double|Float|Int|UInt)")
-                select type).ToArray();
-        }
+            typeof(Bool2), typeof(Bool3), typeof(Bool4),
+            typeof(Int2), typeof(Int3), typeof(Int4),
+            typeof(UInt2), typeof(UInt3), typeof(UInt4),
+            typeof(Float2), typeof(Float3), typeof(Float4),
+            typeof(Double2), typeof(Double3), typeof(Double4)
+        };
+
+        /// <summary>
+        /// Gets the set of HLSL matrix types.
+        /// </summary>
+        public static IReadOnlyCollection<Type> KnownMatrixTypes { get; } = new[]
+        {
+            typeof(Bool1x1), typeof(Bool1x2), typeof(Bool1x3), typeof(Bool1x4),
+            typeof(Bool2x1), typeof(Bool2x2), typeof(Bool2x3), typeof(Bool2x4),
+            typeof(Bool3x1), typeof(Bool3x2), typeof(Bool3x3), typeof(Bool3x4),
+            typeof(Bool4x1), typeof(Bool4x2), typeof(Bool4x3), typeof(Bool4x4),
+            typeof(Int1x1), typeof(Int1x2), typeof(Int1x3), typeof(Int1x4),
+            typeof(Int2x1), typeof(Int2x2), typeof(Int2x3), typeof(Int2x4),
+            typeof(Int3x1), typeof(Int3x2), typeof(Int3x3), typeof(Int3x4),
+            typeof(Int4x1), typeof(Int4x2), typeof(Int4x3), typeof(Int4x4),
+            typeof(UInt1x1), typeof(UInt1x2), typeof(UInt1x3), typeof(UInt1x4),
+            typeof(UInt2x1), typeof(UInt2x2), typeof(UInt2x3), typeof(UInt2x4),
+            typeof(UInt3x1), typeof(UInt3x2), typeof(UInt3x3), typeof(UInt3x4),
+            typeof(UInt4x1), typeof(UInt4x2), typeof(UInt4x3), typeof(UInt4x4),
+            typeof(Float1x1), typeof(Float1x2), typeof(Float1x3), typeof(Float1x4),
+            typeof(Float2x1), typeof(Float2x2), typeof(Float2x3), typeof(Float2x4),
+            typeof(Float3x1), typeof(Float3x2), typeof(Float3x3), typeof(Float3x4),
+            typeof(Float4x1), typeof(Float4x2), typeof(Float4x3), typeof(Float4x4),
+            typeof(Double1x1), typeof(Double1x2), typeof(Double1x3), typeof(Double1x4),
+            typeof(Double2x1), typeof(Double2x2), typeof(Double2x3), typeof(Double2x4),
+            typeof(Double3x1), typeof(Double3x2), typeof(Double3x3), typeof(Double3x4),
+            typeof(Double4x1), typeof(Double4x2), typeof(Double4x3), typeof(Double4x4)
+        };
 
         /// <summary>
         /// The mapping of supported known types to HLSL types.
         /// </summary>
-        private static readonly IReadOnlyDictionary<string, string> KnownTypes = BuildKnownTypes();
+        private static readonly IReadOnlyDictionary<string, string> KnownHlslTypes = BuildKnownHlslTypes();
 
         /// <summary>
         /// Builds the mapping of known primitive types.
         /// </summary>
         [Pure]
-        private static IReadOnlyDictionary<string, string> BuildKnownTypes()
+        private static IReadOnlyDictionary<string, string> BuildKnownHlslTypes()
         {
             Dictionary<string, string> knownTypes = new()
             {
@@ -55,7 +85,13 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 [typeof(double).FullName] = "double"
             };
 
-            // Add all the mapped vector and matrix types
+            // Add all the vector types
+            foreach (var type in KnownVectorTypes)
+            {
+                knownTypes.Add(type.FullName, type.Name.ToLower());
+            }
+
+            // Add all the matrix types
             foreach (var type in KnownMatrixTypes)
             {
                 knownTypes.Add(type.FullName, type.Name.ToLower());
@@ -63,28 +99,6 @@ namespace ComputeSharp.SourceGenerators.Mappings
 
             return knownTypes;
         }
-
-        /// <summary>
-        /// Gets the known HLSL vector types available as mapped types.
-        /// </summary>
-        public static IReadOnlyCollection<Type> HlslMappedVectorTypes { get; } = new[]
-        {
-            typeof(Bool2), typeof(Bool3), typeof(Bool4),
-            typeof(Int2), typeof(Int3), typeof(Int4),
-            typeof(UInt2), typeof(UInt3), typeof(UInt4),
-            typeof(Float2), typeof(Float3), typeof(Float4),
-            typeof(Double2), typeof(Double3), typeof(Double4)
-        };
-
-        /// <summary>
-        /// Gets the known HLSL dispatch types.
-        /// </summary>
-        public static IReadOnlyCollection<Type> HlslDispatchTypes { get; } = new[]
-        {
-            typeof(ThreadIds),
-            typeof(GroupIds),
-            typeof(WarpIds)
-        };
 
         /// <summary>
         /// Checks whether or not a given type name matches a structured buffer type.
@@ -133,13 +147,13 @@ namespace ComputeSharp.SourceGenerators.Mappings
         }
 
         /// <summary>
-        /// Checks whether or not a given type name matches a scalar or vector type.
+        /// Checks whether or not a given type name matches a known HLSL primitive type (scalar, vector or matrix).
         /// </summary>
         /// <param name="typeName">The input type name to check.</param>
-        /// <returns>Whether or not <paramref name="typeName"/> represents a scalar or vector.</returns>
-        public static bool IsScalarOrVectorType(string typeName)
+        /// <returns>Whether or not <paramref name="typeName"/> represents a scalar, vector or matrix type.</returns>
+        public static bool IsKnownHlslType(string typeName)
         {
-            return KnownTypes.ContainsKey(typeName);
+            return KnownHlslTypes.ContainsKey(typeName);
         }
 
         /// <summary>
@@ -149,7 +163,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
         /// <returns>Whether or not <paramref name="typeName"/> represents a vector type.</returns>
         public static bool IsVectorType(string typeName)
         {
-            return HlslMappedVectorTypes.Any(type => type.FullName == typeName);
+            return KnownVectorTypes.Any(type => type.FullName == typeName);
         }
 
         /// <summary>
@@ -182,7 +196,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments.Last()).GetFullMetadataName();
 
                 // If the current type is a custom type, format it as needed
-                if (!KnownTypes.TryGetValue(genericArgumentName, out string? mapped))
+                if (!KnownHlslTypes.TryGetValue(genericArgumentName, out string? mapped))
                 {
                     mapped = genericArgumentName.Replace(".", "__");
                 }
@@ -209,7 +223,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 };
             }
 
-            return KnownTypes[typeName];
+            return KnownHlslTypes[typeName];
         }
 
         /// <summary>
@@ -222,7 +236,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
         {
             string elementTypeName = ((INamedTypeSymbol)typeSymbol.ElementType).GetFullMetadataName();
 
-            if (KnownTypes.TryGetValue(elementTypeName, out string? mapped))
+            if (KnownHlslTypes.TryGetValue(elementTypeName, out string? mapped))
             {
                 return mapped;
             }
@@ -237,7 +251,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
         /// <returns>The HLSL-compatible type name that can be used in an HLSL shader.</returns>
         public static bool TryGetMappedName(string originalName, out string? mappedName)
         {
-            return KnownTypes.TryGetValue(originalName, out mappedName);
+            return KnownHlslTypes.TryGetValue(originalName, out mappedName);
         }
 
         /// <summary>
@@ -250,7 +264,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
             // Local function to recursively gather nested types
             static void ExploreTypes(INamedTypeSymbol type, HashSet<INamedTypeSymbol> customTypes)
             {
-                if (KnownTypes.ContainsKey(type.GetFullMetadataName())) return;
+                if (KnownHlslTypes.ContainsKey(type.GetFullMetadataName())) return;
 
                 if (!customTypes.Add(type)) return;
 
@@ -301,7 +315,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
 
                     INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
 
-                    if (!KnownTypes.ContainsKey(fieldType.GetFullMetadataName()))
+                    if (!KnownHlslTypes.ContainsKey(fieldType.GetFullMetadataName()))
                     {
                         _ = dependencies.Add(fieldType);
                     }

@@ -185,7 +185,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
 
             // Programmatically load mappings for the instance members of the HLSL vector types
             foreach (var item in
-                from type in HlslKnownTypes.HlslMappedVectorTypes
+                from type in HlslKnownTypes.KnownVectorTypes
                 from property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 select (Type: type, Property: property))
             {

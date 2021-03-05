@@ -177,7 +177,7 @@ namespace ComputeSharp.SourceGenerators
                             ParseExpression($"Unsafe.Add(ref r0, {resourceOffset++})"),
                             ParseExpression($"GraphicsResourceHelper.ValidateAndGetGpuDescriptorHandle(shader.{fieldSymbol.Name}, device)"))));
                 }
-                else if (HlslKnownTypes.IsScalarOrVectorType(typeName))
+                else if (HlslKnownTypes.IsKnownHlslType(typeName))
                 {
                     if (fieldSymbol.IsConst) continue;
 
