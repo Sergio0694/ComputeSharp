@@ -57,10 +57,10 @@ namespace ComputeSharp.Resources
         private readonly D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint;
 
         /// <summary>
-        /// The <see cref="Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>, if any.
+        /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>, if any.
         /// </summary>
         /// <remarks>This will be <see langword="null"/> if the owning device has <see cref="GraphicsDevice.IsCacheCoherentUMA"/> set.</remarks>
-        private UniquePtr<Allocation> allocation;
+        private UniquePtr<D3D12MA_Allocation> allocation;
 
         /// <summary>
         /// Creates a new <see cref="Texture3D{T}"/> instance with the specified parameters.
@@ -109,6 +109,7 @@ namespace ComputeSharp.Resources
                     (uint)height,
                     (ushort)depth,
                     out this.d3D12ResourceState);
+
                 this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
             }
 
@@ -202,7 +203,7 @@ namespace ComputeSharp.Resources
                 out ulong rowSizeInBytes,
                 out ulong totalSizeInBytes);
 
-            using UniquePtr<Allocation> allocation = default;
+            using UniquePtr<D3D12MA_Allocation> allocation = default;
             using ComPtr<ID3D12Resource> d3D12Resource = default;
 
             if (GraphicsDevice.IsCacheCoherentUMA)
@@ -369,7 +370,7 @@ namespace ComputeSharp.Resources
                 out ulong rowSizeInBytes,
                 out ulong totalSizeInBytes);
 
-            using UniquePtr<Allocation> allocation = default;
+            using UniquePtr<D3D12MA_Allocation> allocation = default;
             using ComPtr<ID3D12Resource> d3D12Resource = default;
 
             if (GraphicsDevice.IsCacheCoherentUMA)

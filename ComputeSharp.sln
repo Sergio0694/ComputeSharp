@@ -43,8 +43,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Tests.NativeLi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.SwapChain", "samples\ComputeSharp.SwapChain\ComputeSharp.SwapChain.csproj", "{E7C9247D-016B-4819-AF9F-0E9B3591E04B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TerraFX.Interop.D3D12MemoryAllocator", "..\terrafx.interop.d3d12memoryallocator\sources\Interop\D3D12MemoryAllocator\TerraFX.Interop.D3D12MemoryAllocator.csproj", "{DB64E751-125D-44E2-8EA9-F5B085714007}"
-EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		samples\ComputeSharp.Sample.Shared\ComputeSharp.Sample.Shared.projitems*{7048deea-0a6f-46a0-b951-b682a8f1cb75}*SharedItemsImports = 5
@@ -154,14 +152,6 @@ Global
 		{E7C9247D-016B-4819-AF9F-0E9B3591E04B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E7C9247D-016B-4819-AF9F-0E9B3591E04B}.Release|x64.ActiveCfg = Release|Any CPU
 		{E7C9247D-016B-4819-AF9F-0E9B3591E04B}.Release|x64.Build.0 = Release|Any CPU
-		{DB64E751-125D-44E2-8EA9-F5B085714007}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DB64E751-125D-44E2-8EA9-F5B085714007}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DB64E751-125D-44E2-8EA9-F5B085714007}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{DB64E751-125D-44E2-8EA9-F5B085714007}.Debug|x64.Build.0 = Debug|Any CPU
-		{DB64E751-125D-44E2-8EA9-F5B085714007}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DB64E751-125D-44E2-8EA9-F5B085714007}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DB64E751-125D-44E2-8EA9-F5B085714007}.Release|x64.ActiveCfg = Release|Any CPU
-		{DB64E751-125D-44E2-8EA9-F5B085714007}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

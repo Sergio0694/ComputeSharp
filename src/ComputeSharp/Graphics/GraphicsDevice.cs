@@ -73,9 +73,9 @@ namespace ComputeSharp
         private ulong nextD3D12CopyFenceValue = 1;
 
         /// <summary>
-        /// The <see cref="Allocator"/> in use associated to the current device.
+        /// The <see cref="D3D12MA_Allocator"/> in use associated to the current device.
         /// </summary>
-        private UniquePtr<Allocator> allocator;
+        private UniquePtr<D3D12MA_Allocator> allocator;
 
         /// <summary>
         /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="ID3D12Device"/>.
@@ -110,15 +110,15 @@ namespace ComputeSharp
 
             IsCacheCoherentUMA = d3D12Architecture1Data.CacheCoherentUMA != 0;
 
-            ALLOCATOR_DESC allocatorDesc = default;
+            D3D12MA_ALLOCATOR_DESC allocatorDesc = default;
             allocatorDesc.pDevice = d3D12Device;
             allocatorDesc.pAdapter = dxgiAdapter;
 
             if (!IsCacheCoherentUMA)
             {
-                fixed (Allocator** allocator = this.allocator)
+                fixed (D3D12MA_Allocator** allocator = this.allocator)
                 {
-                    D3D12MemoryAllocator.CreateAllocator(&allocatorDesc, allocator).Assert();
+                    D3D12MemAlloc.D3D12MA_CreateAllocator(&allocatorDesc, allocator).Assert();
                 }
             }
         }
@@ -165,9 +165,9 @@ namespace ComputeSharp
         internal ID3D12Device* D3D12Device => this.d3D12Device;
 
         /// <summary>
-        /// Gets the underlying <see cref="Allocator"/> wrapped by the current instance.
+        /// Gets the underlying <see cref="D3D12MA_Allocator"/> wrapped by the current instance.
         /// </summary>
-        internal Allocator* Allocator => this.allocator;
+        internal D3D12MA_Allocator* Allocator => this.allocator;
 
         /// <summary>
         /// Gets whether or not the current device has a cache coherent UMA architecture.

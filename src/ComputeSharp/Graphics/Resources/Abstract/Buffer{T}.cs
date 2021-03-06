@@ -39,10 +39,10 @@ namespace ComputeSharp.Resources
         protected readonly nint SizeInBytes;
 
         /// <summary>
-        /// The <see cref="Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>, if any.
+        /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>, if any.
         /// </summary>
         /// <remarks>This will be <see langword="null"/> if the owning device has <see cref="GraphicsDevice.IsCacheCoherentUMA"/> set.</remarks>
-        private UniquePtr<Allocation> allocation;
+        private UniquePtr<D3D12MA_Allocation> allocation;
 
         /// <summary>
         /// Creates a new <see cref="Buffer{T}"/> instance with the specified parameters.

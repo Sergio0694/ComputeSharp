@@ -7,9 +7,9 @@ using TerraFX.Interop;
 namespace ComputeSharp.Interop
 {
     /// <summary>
-    /// A <see cref="ComPtr{T}"/>-equivalent type to safely work with pointers to public <see cref="D3D12MemoryAllocator"/> APIs.
+    /// A <see cref="ComPtr{T}"/>-equivalent type to safely work with pointers to public <see cref="D3D12MemAlloc"/> APIs.
     /// </summary>
-    /// <typeparam name="T">Must be either <see cref="Allocator"/>, <see cref="Allocation"/>, <see cref="Pool"/> or <see cref="VirtualBlock"/>.</typeparam>
+    /// <typeparam name="T">Must be either <see cref="D3D12MA_Allocator"/>, <see cref="D3D12MA_Allocation"/>, <see cref="D3D12MA_Pool"/> or <see cref="D3D12MA_VirtualBlock"/>.</typeparam>
     /// <remarks>
     /// This type is not marked as <see langword="ref"/> so that it can also be used in fields, so make sure to
     /// avoid copying it and disposing it multiple times, as that would lead to a access violation exceptions.
@@ -51,10 +51,10 @@ namespace ComputeSharp.Interop
             {
                 this.pointer = null;
 
-                if (typeof(T) == typeof(Allocator)) ((Allocator*)pointer)->Release();
-                else if (typeof(T) == typeof(Allocation)) ((Allocation*)pointer)->Release();
-                else if (typeof(T) == typeof(Pool)) ((Pool*)pointer)->Release();
-                else if (typeof(T) == typeof(VirtualBlock)) ((VirtualBlock*)pointer)->Release();
+                if (typeof(T) == typeof(D3D12MA_Allocator)) ((D3D12MA_Allocator*)pointer)->Release();
+                else if (typeof(T) == typeof(D3D12MA_Allocation)) ((D3D12MA_Allocation*)pointer)->Release();
+                else if (typeof(T) == typeof(D3D12MA_Pool)) ((D3D12MA_Pool*)pointer)->Release();
+                else if (typeof(T) == typeof(D3D12MA_VirtualBlock)) ((D3D12MA_VirtualBlock*)pointer)->Release();
                 else throw new ArgumentException("Invalid pointer type");
             }
         }
