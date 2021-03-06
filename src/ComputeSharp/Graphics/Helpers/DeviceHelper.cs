@@ -33,7 +33,7 @@ namespace ComputeSharp.Graphics.Helpers
         {
             DXGI_ADAPTER_DESC1 dxgiDescription1;
 
-            return TryGetDefaultDevice(null, &dxgiDescription1) || TryGetWarpDevice(null, &dxgiDescription1);
+            return TryGetDefaultDevice(null, null, &dxgiDescription1) || TryGetWarpDevice(null, null, &dxgiDescription1);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace ComputeSharp.Graphics.Helpers
         {
             DXGI_ADAPTER_DESC1 dxgiDescription1;
 
-            _ = TryGetDefaultDevice(null, &dxgiDescription1) || TryGetWarpDevice(null, &dxgiDescription1);
+            _ = TryGetDefaultDevice(null, null, &dxgiDescription1) || TryGetWarpDevice(null, null, &dxgiDescription1);
 
             return Luid.FromLUID(dxgiDescription1.AdapterLuid);
         }
@@ -59,13 +59,14 @@ namespace ComputeSharp.Graphics.Helpers
         public static unsafe GraphicsDevice GetDefaultDevice()
         {
             using ComPtr<ID3D12Device> d3D12Device = default;
+            using ComPtr<IDXGIAdapter> dxgiAdapter = default;
 
             DXGI_ADAPTER_DESC1 dxgiDescription1;
 
-            if (TryGetDefaultDevice(d3D12Device.GetAddressOf(), &dxgiDescription1) ||
-                TryGetWarpDevice(d3D12Device.GetAddressOf(), &dxgiDescription1))
+            if (TryGetDefaultDevice(d3D12Device.GetAddressOf(), dxgiAdapter.GetAddressOf(), &dxgiDescription1) ||
+                TryGetWarpDevice(d3D12Device.GetAddressOf(), dxgiAdapter.GetAddressOf(), &dxgiDescription1))
             {
-                return GetOrCreateDevice(d3D12Device.Move(), &dxgiDescription1);
+                return GetOrCreateDevice(d3D12Device.Get(), dxgiAdapter.Get(), &dxgiDescription1);
             }
 
             return ThrowHelper.ThrowNotSupportedException<GraphicsDevice>("There isn't a supported GPU device on the current machine");
@@ -75,9 +76,10 @@ namespace ComputeSharp.Graphics.Helpers
         /// Tries to check or create a default <see cref="ID3D12Device"/> object.
         /// </summary>
         /// <param name="d3D12Device">A pointer to the <see cref="ID3D12Device"/> object to create, or <see langword="null"/>.</param>
+        /// <param name="dxgiAdapter">A pointer to the <see cref="IDXGIAdapter"/> object used to create <paramref name="d3D12Device"/>, or <see langword="null"/>.</param>
         /// <param name="dxgiDescription1">A pointer to the <see cref="DXGI_ADAPTER_DESC1"/> value for the device found.</param>
         /// <returns>Whether a default device was found with the requested feature level.</returns>
-        private static unsafe bool TryGetDefaultDevice(ID3D12Device** d3D12Device, DXGI_ADAPTER_DESC1* dxgiDescription1)
+        private static unsafe bool TryGetDefaultDevice(ID3D12Device** d3D12Device, IDXGIAdapter** dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1)
         {
             using ComPtr<IDXGIFactory4> dxgiFactory4 = default;
 
@@ -116,6 +118,8 @@ namespace ComputeSharp.Graphics.Helpers
 
                 if (FX.SUCCEEDED(createDeviceResult))
                 {
+                    dxgiAdapter1.CopyTo(dxgiAdapter);
+
                     return true;
                 }
             }
@@ -125,9 +129,10 @@ namespace ComputeSharp.Graphics.Helpers
         /// Tries to check or create a warp <see cref="ID3D12Device"/> object.
         /// </summary>
         /// <param name="d3D12Device">A pointer to the <see cref="ID3D12Device"/> object to create, or <see langword="null"/>.</param>
+        /// <param name="dxgiAdapter">A pointer to the <see cref="IDXGIAdapter"/> object used to create <paramref name="d3D12Device"/>, or <see langword="null"/>.</param>
         /// <param name="dxgiDescription1">A pointer to the <see cref="DXGI_ADAPTER_DESC1"/> value for the device found.</param>
         /// <returns>Whether a warp device was created successfully.</returns>
-        private static unsafe bool TryGetWarpDevice(ID3D12Device** d3D12Device, DXGI_ADAPTER_DESC1* dxgiDescription1)
+        private static unsafe bool TryGetWarpDevice(ID3D12Device** d3D12Device, IDXGIAdapter** dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1)
         {
             using ComPtr<IDXGIFactory4> dxgiFactory4 = default;
 
@@ -146,6 +151,8 @@ namespace ComputeSharp.Graphics.Helpers
                 D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_11_0,
                 FX.__uuidof<ID3D12Device>(),
                 (void**)d3D12Device);
+
+            dxgiAdapter1.CopyTo(dxgiAdapter);
 
             return FX.SUCCEEDED(createDeviceResult);
         }

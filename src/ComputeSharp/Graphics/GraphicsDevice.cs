@@ -73,17 +73,23 @@ namespace ComputeSharp
         private ulong nextD3D12CopyFenceValue = 1;
 
         /// <summary>
+        /// The <see cref="D3D12MA_Allocator"/> in use associated to the current device.
+        /// </summary>
+        private UniquePtr<D3D12MA_Allocator> allocator;
+
+        /// <summary>
         /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="ID3D12Device"/>.
         /// </summary>
         /// <param name="d3D12Device">The <see cref="ID3D12Device"/> to use for the new <see cref="GraphicsDevice"/> instance.</param>
+        /// <param name="dxgiAdapter">The <see cref="IDXGIAdapter"/> that <paramref name="d3D12Device"/> was created from.</param>
         /// <param name="dxgiDescription1">The available info for the new <see cref="GraphicsDevice"/> instance.</param>
-        internal GraphicsDevice(ComPtr<ID3D12Device> d3D12Device, DXGI_ADAPTER_DESC1* dxgiDescription1)
+        internal GraphicsDevice(ID3D12Device* d3D12Device, IDXGIAdapter* dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1)
         {
-            this.d3D12Device = d3D12Device;
-            this.d3D12ComputeCommandQueue = d3D12Device.Get()->CreateCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE);
-            this.d3D12CopyCommandQueue = d3D12Device.Get()->CreateCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY);
-            this.d3D12ComputeFence = d3D12Device.Get()->CreateFence();
-            this.d3D12CopyFence = d3D12Device.Get()->CreateFence();
+            this.d3D12Device = new ComPtr<ID3D12Device>(d3D12Device);
+            this.d3D12ComputeCommandQueue = d3D12Device->CreateCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE);
+            this.d3D12CopyCommandQueue = d3D12Device->CreateCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY);
+            this.d3D12ComputeFence = d3D12Device->CreateFence();
+            this.d3D12CopyFence = d3D12Device->CreateFence();
 
             this.computeCommandAllocatorPool = new ID3D12CommandAllocatorPool(D3D12_COMMAND_LIST_TYPE_COMPUTE);
             this.copyCommandAllocatorPool = new ID3D12CommandAllocatorPool(D3D12_COMMAND_LIST_TYPE_COPY);
@@ -95,14 +101,26 @@ namespace ComputeSharp
             SharedMemorySize = dxgiDescription1->SharedSystemMemory;
             IsHardwareAccelerated = (dxgiDescription1->Flags & (uint)DXGI_ADAPTER_FLAG_SOFTWARE) == 0;
 
-            var d3D12Options1Data = d3D12Device.Get()->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS1>(D3D12_FEATURE_D3D12_OPTIONS1);
+            var d3D12Options1Data = d3D12Device->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS1>(D3D12_FEATURE_D3D12_OPTIONS1);
 
             ComputeUnits = d3D12Options1Data.TotalLaneCount;
             WavefrontSize = d3D12Options1Data.WaveLaneCountMin;
 
-            var d3D12Architecture1Data = d3D12Device.Get()->CheckFeatureSupport<D3D12_FEATURE_DATA_ARCHITECTURE1>(D3D12_FEATURE_ARCHITECTURE1);
+            var d3D12Architecture1Data = d3D12Device->CheckFeatureSupport<D3D12_FEATURE_DATA_ARCHITECTURE1>(D3D12_FEATURE_ARCHITECTURE1);
 
             IsCacheCoherentUMA = d3D12Architecture1Data.CacheCoherentUMA != 0;
+
+            D3D12MA_ALLOCATOR_DESC allocatorDesc = default;
+            allocatorDesc.pDevice = d3D12Device;
+            allocatorDesc.pAdapter = dxgiAdapter;
+
+            if (!IsCacheCoherentUMA)
+            {
+                fixed (D3D12MA_Allocator** allocator = this.allocator)
+                {
+                    D3D12MemAlloc.D3D12MA_CreateAllocator(&allocatorDesc, allocator).Assert();
+                }
+            }
         }
 
         /// <summary>
@@ -145,6 +163,11 @@ namespace ComputeSharp
         /// Gets the underlying <see cref="ID3D12Device"/> wrapped by the current instance.
         /// </summary>
         internal ID3D12Device* D3D12Device => this.d3D12Device;
+
+        /// <summary>
+        /// Gets the underlying <see cref="D3D12MA_Allocator"/> wrapped by the current instance.
+        /// </summary>
+        internal D3D12MA_Allocator* Allocator => this.allocator;
 
         /// <summary>
         /// Gets whether or not the current device has a cache coherent UMA architecture.
@@ -316,6 +339,7 @@ namespace ComputeSharp
             this.computeCommandAllocatorPool.Dispose();
             this.copyCommandAllocatorPool.Dispose();
             this.shaderResourceViewDescriptorAllocator.Dispose();
+            this.allocator.Dispose();
 
             return true;
         }

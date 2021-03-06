@@ -2,6 +2,7 @@
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Graphics.Resources.Interop;
+using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
@@ -58,15 +59,15 @@ namespace ComputeSharp.Resources
                     byteOffset = (nint)offset * sizeof(T),
                     byteLength = length * sizeof(T);
 
-                using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.ReadBack, AllocationMode.Default, (ulong)byteLength, false);
+                using UniquePtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(ResourceType.ReadBack, AllocationMode.Default, (ulong)byteLength);
 
                 using (CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY))
                 {
-                    copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(d3D12Resource.Get(), 0, D3D12Resource, (ulong)byteOffset, (ulong)byteLength);
+                    copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(allocation.Get()->GetResource(), 0, D3D12Resource, (ulong)byteOffset, (ulong)byteLength);
                     copyCommandList.ExecuteAndWaitForCompletion();
                 }
 
-                using ID3D12ResourceMap resource = d3D12Resource.Get()->Map();
+                using ID3D12ResourceMap resource = allocation.Get()->GetResource()->Map();
 
                 fixed (void* destinationPointer = &destination)
                 {
@@ -156,9 +157,9 @@ namespace ComputeSharp.Resources
                     byteOffset = (nint)offset * sizeof(T),
                     byteLength = length * sizeof(T);
 
-                using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(ResourceType.Upload, AllocationMode.Default, (ulong)byteLength, false);
+                using UniquePtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(ResourceType.Upload, AllocationMode.Default, (ulong)byteLength);
 
-                using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
+                using (ID3D12ResourceMap resource = allocation.Get()->GetResource()->Map())
                 fixed (void* sourcePointer = &source)
                 {
                     MemoryHelper.Copy(
@@ -171,7 +172,7 @@ namespace ComputeSharp.Resources
 
                 using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
-                copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(D3D12Resource, (ulong)byteOffset, d3D12Resource.Get(), 0, (ulong)byteLength);
+                copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(D3D12Resource, (ulong)byteOffset, allocation.Get()->GetResource(), 0, (ulong)byteLength);
                 copyCommandList.ExecuteAndWaitForCompletion();
             }
         }
