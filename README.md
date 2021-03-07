@@ -13,6 +13,7 @@
   - [GPU resource types](#gpu-resource-types)
   - [HLSL vector and matrix types](#hlsl-vector-and-matrix-types)
   - [HLSL intrinsics](#hlsl-intrinsics)
+  - [Shader constants](#shader-constants)
   - [Working with images](#working-with-images)
   - [Shader metaprogramming](#shader-metaprogramming)
 - [Requirements](#requirements)
@@ -139,12 +140,34 @@ public readonly struct SoftmaxActivation : IComputeShader
     public readonly ReadWriteBuffer<float> buffer;
     public readonly float k;
 
-    public void Execute(ThreadIds ids)
+    public void Execute()
     {
         float exp = Hlsl.Exp(k * buffer[ThreadIds.X]);
         float log = Hlsl.Log(1 + exp);
 
         buffer[ThreadIds.X] = log / k;
+    }
+}
+```
+
+## Shader constants
+
+One common approach to make shaders easier to modify and experiment with is to separate the parameters being used from the code using them, by defining them as constants. **ComputeSharp** has special handling for this, and will rewrite static readonly properties as static constants in the generated shaders, which are optimized by the compiler for frequent access during execution. The advantage of using constants is that they're directly embedded into a compiled shader, so they don't need to be loaded in memory whenever a shader is dispatched. Constant properties can be of any of the supported HLSL primitive types, including vector and matrix types. Furthermore, the initialization of these constants can also use any of the available HLSL intrinsics. If the same result is being used multiple times while a shader is executed, moving values to a shader constant is a good way to avoid repeatedly computing the same value over and over for each invocation.
+
+Here is an example of how shader constants can be declared and used:
+
+```csharp
+[AutoConstructor]
+public readonly struct SampleShaderWithConstants : IComputeShader
+{
+    public readonly ReadWriteBuffer<float> buffer;
+
+    private static float Pi => 3.14f;
+    private static Float2 SinCosPi => new(Hlsl.Sin(Pi), Hlsl.Cos(Pi));
+
+    public void Execute()
+    {
+        buffer[ThreadIds.X] = Pi + SinCosPi.X * SinCosPi.Y;
     }
 }
 ```
