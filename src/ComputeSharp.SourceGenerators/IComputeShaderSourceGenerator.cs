@@ -196,8 +196,17 @@ namespace ComputeSharp.SourceGenerators
             {
                 IPropertySymbol propertySymbol = semanticModel.GetDeclaredSymbol(propertyDeclaration)!;
 
-                if (!propertySymbol.IsStatic || !propertySymbol.IsReadOnly)
+                if (!propertySymbol.IsStatic)
                 {
+                    context.ReportDiagnostic(InstanceShaderPropertyDeclaration, propertyDeclaration, structDeclarationSymbol, propertySymbol.Name);
+
+                    continue;
+                }
+
+                if (!propertySymbol.IsReadOnly)
+                {
+                    context.ReportDiagnostic(NonReadonlyShaderPropertyDeclaration, propertyDeclaration, structDeclarationSymbol, propertySymbol.Name);
+
                     continue;
                 }
 
