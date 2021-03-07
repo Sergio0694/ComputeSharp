@@ -1138,6 +1138,149 @@ namespace ComputeSharp.Tests.Internals
             VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0042");
         }
 
+        [TestMethod]
+        public void InvalidShaderConstantPropertyType()
+        {
+            string source = @"
+            using ComputeSharp;
+
+            namespace ComputeSharp
+            {
+                public class ReadWriteBuffer<T> { }
+            }
+
+            namespace MyFancyApp.Sample
+            {
+                public struct MyShader : IComputeShader
+                {
+                    public ReadWriteBuffer<float> buffer;
+
+                    private static string Pi => ""Hello"";
+
+                    public void Execute()
+                    {
+                    }
+                }
+            }";
+
+            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0043");
+        }
+
+        [TestMethod]
+        public void InvalidShaderConstantPropertyDeclaration_AutoProp()
+        {
+            string source = @"
+            using ComputeSharp;
+
+            namespace ComputeSharp
+            {
+                public class ReadWriteBuffer<T> { }
+            }
+
+            namespace MyFancyApp.Sample
+            {
+                public struct MyShader : IComputeShader
+                {
+                    public ReadWriteBuffer<float> buffer;
+
+                    private static float Pi { get; } = 3.14f;
+
+                    public void Execute()
+                    {
+                    }
+                }
+            }";
+
+            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0044");
+        }
+
+        [TestMethod]
+        public void InvalidShaderConstantPropertyDeclaration_GetterBlock()
+        {
+            string source = @"
+            using ComputeSharp;
+
+            namespace ComputeSharp
+            {
+                public class ReadWriteBuffer<T> { }
+            }
+
+            namespace MyFancyApp.Sample
+            {
+                public struct MyShader : IComputeShader
+                {
+                    public ReadWriteBuffer<float> buffer;
+
+                    private static float Pi
+                    {
+                        get => 3.14f;
+                    }
+
+                    public void Execute()
+                    {
+                    }
+                }
+            }";
+
+            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0044");
+        }
+
+        [TestMethod]
+        public void NonReadonlyShaderPropertyDeclaration()
+        {
+            string source = @"
+            using ComputeSharp;
+
+            namespace ComputeSharp
+            {
+                public class ReadWriteBuffer<T> { }
+            }
+
+            namespace MyFancyApp.Sample
+            {
+                public struct MyShader : IComputeShader
+                {
+                    public ReadWriteBuffer<float> buffer;
+
+                    private static float Pi { get; set; } = 3.14f;
+
+                    public void Execute()
+                    {
+                    }
+                }
+            }";
+
+            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0045");
+        }
+
+        [TestMethod]
+        public void InstanceShaderPropertyDeclaration()
+        {
+            string source = @"
+            using ComputeSharp;
+
+            namespace ComputeSharp
+            {
+                public class ReadWriteBuffer<T> { }
+            }
+
+            namespace MyFancyApp.Sample
+            {
+                public struct MyShader : IComputeShader
+                {
+                    public ReadWriteBuffer<float> buffer;
+
+                    private float Pi => 3.14f;
+
+                    public void Execute()
+                    {
+                    }
+                }
+            }";
+
+            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0046");
+        }
+
         /// <summary>
         /// Verifies the output of a source generator.
         /// </summary>
