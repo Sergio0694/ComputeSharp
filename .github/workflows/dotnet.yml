@@ -43,8 +43,8 @@ jobs:
     - name: Run ComputeSharp.Tests.Internals
       run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
-    - name: Run ComputeSharp.Tests.Internals.SourceGenerators
-      run: dotnet test tests\ComputeSharp.Tests.Internals.SourceGenerators\ComputeSharp.Tests.Internals.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
+    - name: Run ComputeSharp.Tests.SourceGenerators
+      run: dotnet test tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
 
   # Run all the local samples to ensure they build and run with no errors.

@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ComputeSharp.Tests.Internals
+namespace ComputeSharp.Tests.SourceGenerators
 {
     [TestClass]
     [TestCategory("AutoConstructorGenerator")]

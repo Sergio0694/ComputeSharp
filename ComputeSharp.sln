@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Sample.NuGet",
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.Sample.Shared", "samples\ComputeSharp.Sample.Shared\ComputeSharp.Sample.Shared.shproj", "{8CEFC324-CA6C-4845-9AD9-70B92BD87057}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Tests.Internals.SourceGenerators", "tests\ComputeSharp.Tests.Internals.SourceGenerators\ComputeSharp.Tests.Internals.SourceGenerators.csproj", "{BBBD0ADD-F2F9-49A3-BD5E-D223F0735D8B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Tests.SourceGenerators", "tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj", "{BBBD0ADD-F2F9-49A3-BD5E-D223F0735D8B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Tests.NativeLibrariesResolver", "tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj", "{BF52326F-E415-49E6-8595-62762216762B}"
 EndProject
