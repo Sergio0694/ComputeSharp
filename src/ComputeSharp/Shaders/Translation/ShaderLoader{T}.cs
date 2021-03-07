@@ -66,9 +66,9 @@ namespace ComputeSharp.Shaders.Translation
         private readonly List<string> methodsInfo = new();
 
         /// <summary>
-        /// The <see cref="Dictionary{TKey,TValue}"/> with the discovered constants for the shader.
+        /// The <see cref="Dictionary{TKey,TValue}"/> with the discovered define declarations for the shader.
         /// </summary>
-        private readonly Dictionary<string, string> constantsInfo = new();
+        private readonly Dictionary<string, string> definesInfo = new();
 
         /// <summary>
         /// The <see cref="List{T}"/> with the collected declared types for the shader.
@@ -108,10 +108,13 @@ namespace ComputeSharp.Shaders.Translation
         public IReadOnlyCollection<string> MethodsInfo => this.methodsInfo;
 
         /// <inheritdoc/>
-        public IReadOnlyDictionary<string, string> ConstantsInfo => this.constantsInfo;
+        public IReadOnlyDictionary<string, string> DefinesInfo => this.definesInfo;
 
         /// <inheritdoc/>
         public IReadOnlyCollection<string> DeclaredTypes => this.declaredTypes;
+
+        /// <inheritdoc/>
+        public IReadOnlyDictionary<string, (string Type, string Assignment)> ConstantsInfo { get; private set; }
 
         /// <inheritdoc/>
         public IReadOnlyDictionary<string, (string Type, int? Count)> SharedBuffers { get; private set; }
@@ -143,14 +146,15 @@ namespace ComputeSharp.Shaders.Translation
         private void LoadMethodMetadata()
         {
             EntryPoint = Attribute.ExecuteMethod;
+            ConstantsInfo = Attribute.Constants;
             SharedBuffers = Attribute.SharedBuffers;
 
             this.declaredTypes.AddRange(Attribute.Types);
             this.methodsInfo.AddRange(Attribute.Methods);
 
-            foreach (var pair in Attribute.Constants)
+            foreach (var pair in Attribute.Defines)
             {
-                this.constantsInfo.Add(pair.Key, pair.Value);
+                this.definesInfo.Add(pair.Key, pair.Value);
             }
         }
 
@@ -233,7 +237,7 @@ namespace ComputeSharp.Shaders.Translation
 
                 foreach (var pair in methodSource.Constants)
                 {
-                    this.constantsInfo[pair.Key] = pair.Value;
+                    this.definesInfo[pair.Key] = pair.Value;
                 }
             }
             else ThrowHelper.ThrowArgumentException("Invalid captured variable");

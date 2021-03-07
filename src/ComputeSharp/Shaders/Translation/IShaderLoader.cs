@@ -29,9 +29,14 @@ namespace ComputeSharp.Shaders.Translation
         IReadOnlyCollection<string> MethodsInfo { get; }
 
         /// <summary>
-        /// Gets the collection of constants to be declared in the shader.
+        /// Gets the collection of define declarations to be added to the shader.
         /// </summary>
-        IReadOnlyDictionary<string, string> ConstantsInfo { get; }
+        IReadOnlyDictionary<string, string> DefinesInfo { get; }
+
+        /// <summary>
+        /// Gets the collection of discovered constants.
+        /// </summary>
+        IReadOnlyDictionary<string, (string Type, string Assignment)> ConstantsInfo { get; }
 
         /// <summary>
         /// Gets the collection of declared types for the shader.
@@ -39,7 +44,7 @@ namespace ComputeSharp.Shaders.Translation
         IReadOnlyCollection<string> DeclaredTypes { get; }
 
         /// <summary>
-        /// Gets the collection of discovered constants.
+        /// Gets the collection of discovered group shared buffers.
         /// </summary>
         IReadOnlyDictionary<string, (string Type, int? Count)> SharedBuffers { get; }
     }
