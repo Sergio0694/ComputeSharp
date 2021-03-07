@@ -127,16 +127,16 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
             helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
         /// <summary>
-        /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid <see cref="WarpIds"/> usage.
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid <see cref="GridIds"/> usage.
         /// </summary>
-        public static readonly DiagnosticDescriptor InvalidWarpIdsUsage = new(
+        public static readonly DiagnosticDescriptor InvalidGridIdsUsage = new(
             id: "CMPS0009",
-            title: "Invalid WarpIds usage",
-            messageFormat: "The WarpIds type can only be used within the main body of a compute shader",
+            title: "Invalid GridIds usage",
+            messageFormat: "The GridIds type can only be used within the main body of a compute shader",
             category: typeof(IComputeShader).FullName,
             defaultSeverity: DiagnosticSeverity.Error,
             isEnabledByDefault: true,
-            description: "The WarpIds type can only be used within the main body of a compute shader.",
+            description: "The GridIds type can only be used within the main body of a compute shader.",
             helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
         /// <summary>

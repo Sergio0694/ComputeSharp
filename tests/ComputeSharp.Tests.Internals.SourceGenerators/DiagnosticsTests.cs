@@ -141,7 +141,7 @@ namespace ComputeSharp.Tests.Internals
         [DataRow(nameof(ThreadIds), "CMPS0006")]
         [DataRow(nameof(GroupIds), "CMPS0007")]
         [DataRow(nameof(GroupSize), "CMPS0008")]
-        [DataRow(nameof(WarpIds), "CMPS0009")]
+        [DataRow(nameof(GridIds), "CMPS0009")]
         public void InvalidDispatchInfoUsage_LocalFunction(string typeName, string diagnosticsId)
         {
             string source = $@"
@@ -175,7 +175,7 @@ namespace ComputeSharp.Tests.Internals
         [DataRow(nameof(ThreadIds), "CMPS0006")]
         [DataRow(nameof(GroupIds), "CMPS0007")]
         [DataRow(nameof(GroupSize), "CMPS0008")]
-        [DataRow(nameof(WarpIds), "CMPS0009")]
+        [DataRow(nameof(GridIds), "CMPS0009")]
         public void InvalidDispatchInfoUsage_StaticMethod(string typeName, string diagnosticsId)
         {
             string source = $@"

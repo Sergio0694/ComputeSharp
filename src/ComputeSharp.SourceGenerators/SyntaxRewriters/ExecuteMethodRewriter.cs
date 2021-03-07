@@ -48,9 +48,9 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 updatedNode = updatedNode.AddParameters(Parameter(Identifier($"uint __{nameof(GroupIds)}__get_Index : SV_GroupIndex")));
             }
 
-            if (this.shaderSourceRewriter.IsWarpIdsUsed)
+            if (this.shaderSourceRewriter.IsGridIdsUsed)
             {
-                updatedNode = updatedNode.AddParameters(Parameter(Identifier($"uint3 {nameof(WarpIds)} : SV_GroupID")));
+                updatedNode = updatedNode.AddParameters(Parameter(Identifier($"uint3 {nameof(GridIds)} : SV_GroupID")));
             }
 
             return updatedNode;

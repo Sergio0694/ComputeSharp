@@ -21,7 +21,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
         {
             typeof(ThreadIds),
             typeof(GroupIds),
-            typeof(WarpIds)
+            typeof(GridIds)
         };
 
         /// <summary>

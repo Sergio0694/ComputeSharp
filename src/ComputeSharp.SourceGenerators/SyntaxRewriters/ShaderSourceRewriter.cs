@@ -118,9 +118,9 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         public bool IsGroupIdsIndexUsed { get; private set; }
 
         /// <summary>
-        /// Gets whether or not the shader uses <see cref="WarpIds"/> at least once.
+        /// Gets whether or not the shader uses <see cref="GridIds"/> at least once.
         /// </summary>
-        public bool IsWarpIdsUsed { get; set; }
+        public bool IsGridIdsUsed { get; set; }
 
         /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
         public MethodDeclarationSyntax? Visit(MethodDeclarationSyntax? node)
@@ -277,7 +277,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
                         if (mapping == $"__{nameof(GroupIds)}__get_Index") IsGroupIdsIndexUsed = true;
                         else if (typeName == typeof(GroupIds).FullName) IsGroupIdsUsed = true;
-                        else if (typeName == typeof(WarpIds).FullName) IsWarpIdsUsed = true;
+                        else if (typeName == typeof(GridIds).FullName) IsGridIdsUsed = true;
 
                         // Check that the dispatch info types are only used from the main shader body
                         if (!this.isEntryPoint || this.localFunctionDepth > 0)
@@ -287,7 +287,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                                 _ when typeName == typeof(ThreadIds).FullName => InvalidThreadIdsUsage,
                                 _ when typeName == typeof(GroupIds).FullName => InvalidGroupIdsUsage,
                                 _ when typeName == typeof(GroupSize).FullName => InvalidGroupSizeUsage,
-                                _ when typeName == typeof(WarpIds).FullName => InvalidWarpIdsUsage,
+                                _ when typeName == typeof(GridIds).FullName => InvalidGridIdsUsage,
                                 _ => null
                             };
 
