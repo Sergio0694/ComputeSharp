@@ -1,0 +1,194 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".g.cs"#>
+<#
+IEnumerable<string> EnumeratePropertyNames(string source)
+{
+    // Creates a comparison for a string based on indices of each character in a key
+    static int CompareBy(string text, string key)
+    {
+        return text.Select(c => key.IndexOf(c)).Aggregate(0, (r, i) => (r << 4) + i);
+    }
+
+    // Returns all combinations from an input string
+    static IEnumerable<string> Combinations(string text)
+    {
+        if (text.Length > 1)
+        {
+            for (int i = text.Length - 1; i >= 0; i--)
+            {
+                var characters = text.ToList();
+
+                characters.RemoveAt(i);
+
+                string substring = string.Join("", characters);
+
+                foreach (var combination in Combinations(substring))
+                {
+                    yield return combination;
+                }
+            }
+        }
+
+        yield return text;
+    }
+
+    // Returns all permutations (with repetition) of a given string
+    static IEnumerable<string> Permutations(string text)
+    {
+        static IEnumerable<string> EnumeratePermutations(string text, int length)
+        {
+            if (length == 1) return text.Select(c => c.ToString());
+
+            return EnumeratePermutations(text, length - 1).SelectMany(s => text, (s1, s2) => s1 + s2);
+        }
+
+        return EnumeratePermutations(text, text.Length);
+    }
+
+    return
+        Combinations(source)
+        .Distinct()
+        .SelectMany(Permutations)
+        .OrderBy(s => s.Length)
+        .ThenBy(s => CompareBy(s, source))
+        .Distinct();
+}
+
+// Generates all vector access properties for a specified type
+void GenerateVectorProperties(string typeName, int elementSize)
+{
+    string elementTypeName = Regex.Match(typeName, @"^[A-Za-z]+").Value;
+    string hlslElementTypeName = elementTypeName.ToLower();
+    int i = int.Parse(Regex.Match(typeName, @"\d+$").Value);
+#>
+using System.Runtime.InteropServices;
+using ComputeSharp.Exceptions;
+
+namespace ComputeSharp
+{
+    /// <inheritdoc cref="<#=typeName#>"/>
+    [StructLayout(LayoutKind.Explicit, Size = <#=(elementSize * i)#>, Pack = <#=elementSize#>)]
+    public partial struct <#=typeName#>
+    {
+<#
+    PushIndent("    ");
+    PushIndent("    ");
+
+    // Generate the private fields
+    foreach (char name in "xyzw".Substring(0, i))
+    {
+        WriteLine($"[FieldOffset({"xyzw".IndexOf(name) * elementSize})]");
+        WriteLine($"private {hlslElementTypeName} {name};");
+        WriteLine("");
+    }
+
+    PopIndent();
+    PopIndent();
+#>
+        /// <summary>
+        /// Gets a reference to a specific component in the current <see cref="<#=typeName#>"/> instance.
+        /// </summary>
+        /// <param name="i">The index of the component to access.</param>
+        public ref <#=hlslElementTypeName#> this[int i] => throw new InvalidExecutionContextException($"{nameof(<#=typeName#>)}[int]");
+<#
+    PushIndent("    ");
+    PushIndent("    ");
+
+    // Generate the combinatorial swizzling properties
+    foreach (
+        var propertyName in
+        from source in new[] { "XYZW", "RGBA" }
+        from name in EnumeratePropertyNames(source)
+        where name.Length <= i
+        select name)
+    {
+        WriteLine("");
+
+        string propertyType = propertyName.Length == 1 ? hlslElementTypeName : $"{elementTypeName}{propertyName.Length}";
+        bool isReadonly = propertyName.Distinct().Count() < propertyName.Length;
+        string refType = isReadonly ? "ref readonly" : "ref";
+
+        // XML docs
+        WriteLine("/// <summary>");
+        if (propertyName.Length == 1)
+        {
+            WriteLine($"/// Gets a reference to the <see cref=\"{propertyType}\"/> value representing the <c>{propertyName}</c> component.");
+        }
+        else
+        {
+            Write("/// Gets a ");
+            if (isReadonly) Write("readonly ");
+            Write($"reference to the <see cref=\"{propertyType}\"/> value with the components ");
+            Write(string.Join(", ", propertyName.Select(c => $"<see cref=\"{c}\"/>")));
+            WriteLine(".");           
+        }
+        WriteLine("/// </summary>");
+
+        // Property
+        Write($"public {refType} {propertyType} {propertyName} ");
+        WriteLine($"=> throw new InvalidExecutionContextException($\"{{nameof({typeName})}}.{{nameof({propertyName})}}\");");
+    }
+
+    PopIndent();
+    PopIndent();
+
+    // Generate the negation operator
+    if (elementTypeName != "Bool" && elementTypeName != "UInt")
+    {
+        WriteLine("");
+
+        string argumentName = "xyzw".Substring(0, i);
+#>
+        /// <summary>
+        /// Negates a <see cref="<#=typeName#>"/> value.
+        /// </summary>
+        /// <param name="<#=argumentName#>">The <see cref="<#=typeName#>"/> value to negate.</param>
+        public static <#=typeName#> operator -(<#=typeName#> <#=argumentName#>) => throw new InvalidExecutionContextException($"{nameof(<#=typeName#>)}.-");
+<#
+    }
+
+    // Generate the numerical operators
+    if (elementTypeName != "Bool")
+    {
+        WriteLine("");
+#>
+        /// <summary>
+        /// Sums two <see cref="<#=typeName#>"/> values.
+        /// </summary>
+        /// <param name="left">The first <see cref="<#=typeName#>"/> value to sum.</param>
+        /// <param name="right">The second <see cref="<#=typeName#>"/> value to sum.</param>
+        public static <#=typeName#> operator +(<#=typeName#> left, <#=typeName#> right) => throw new InvalidExecutionContextException($"{nameof(<#=typeName#>)}.+");
+
+        /// <summary>
+        /// Divides two <see cref="<#=typeName#>"/> values.
+        /// </summary>
+        /// <param name="left">The first <see cref="<#=typeName#>"/> value to divide.</param>
+        /// <param name="right">The second <see cref="<#=typeName#>"/> value to divide.</param>
+        public static <#=typeName#> operator /(<#=typeName#> left, <#=typeName#> right) => throw new InvalidExecutionContextException($"{nameof(<#=typeName#>)}./");
+
+        /// <summary>
+        /// Multiplies two <see cref="<#=typeName#>"/> values.
+        /// </summary>
+        /// <param name="left">The first <see cref="<#=typeName#>"/> value to multiply.</param>
+        /// <param name="right">The second <see cref="<#=typeName#>"/> value to multiply.</param>
+        public static <#=typeName#> operator *(<#=typeName#> left, <#=typeName#> right) => throw new InvalidExecutionContextException($"{nameof(<#=typeName#>)}.*");
+
+        /// <summary>
+        /// Subtracts two <see cref="<#=typeName#>"/> values.
+        /// </summary>
+        /// <param name="left">The first <see cref="<#=typeName#>"/> value to subtract.</param>
+        /// <param name="right">The second <see cref="<#=typeName#>"/> value to subtract.</param>
+        public static <#=typeName#> operator -(<#=typeName#> left, <#=typeName#> right) => throw new InvalidExecutionContextException($"{nameof(<#=typeName#>)}.-");
+<#
+    }
+#>
+    }
+}
+<#
+}
+#>

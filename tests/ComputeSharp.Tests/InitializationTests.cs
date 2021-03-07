@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using ComputeSharp.Graphics;
+using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -8,43 +8,82 @@ namespace ComputeSharp.Tests
 {
     [TestClass]
     [TestCategory("Initialization")]
-    public class InitializationTests
+    public partial class InitializationTests
     {
         [TestMethod]
-        public void CheckIsSupportedAndGetDefaultDevice()
+        public void IsSupported()
         {
-            if (Gpu.IsSupported) Assert.IsNotNull(Gpu.Default);
-            else Assert.ThrowsException<NotSupportedException>(() => Gpu.Default);
+            Assert.IsTrue(Gpu.IsSupported);
         }
 
-        private struct RunShaderOnAllDevicesShader : IComputeShader
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void DeviceInfo(Device device)
         {
-            public ReadWriteBuffer<float> B;
+            GraphicsDevice gpu = device.Get();
 
-            public void Execute(ThreadIds ids)
+            Assert.IsTrue(gpu.Luid != default);
+            Assert.IsTrue(gpu.Name is { Length: > 0 });
+            Assert.IsTrue(gpu.ComputeUnits != 0);
+            Assert.IsTrue(gpu.WavefrontSize != 0);
+        }
+
+        [TestMethod]
+        public void DisposeDefault()
+        {
+            using var before = Gpu.Default.AllocateReadOnlyBuffer<float>(128);
+
+            Gpu.Default.Dispose();
+
+            using var after = Gpu.Default.AllocateReadOnlyBuffer<float>(128);
+        }
+
+        [TestMethod]
+        public void EnumerateDevices()
+        {
+            int i = 0;
+
+            foreach (GraphicsDevice device in Gpu.EnumerateDevices())
             {
-                B[ids.X] = ids.X;
+                if (i++ == 0) Assert.AreSame(Gpu.Default, device);
+
+                using ReadWriteBuffer<int> buffer = device.AllocateReadWriteBuffer<int>(128);
+
+                device.For(128, new SampleShader(buffer));
+
+                int[] data = buffer.ToArray();
+
+                Assert.IsTrue(data.SequenceEqual(Enumerable.Range(0, 128)));
             }
         }
 
         [TestMethod]
-        public void RunShaderOnAllDevices()
+        public void QueryDevices()
         {
-            foreach (GraphicsDevice gpu in Gpu.EnumerateDevices())
+            int i = 0;
+
+            foreach (GraphicsDevice device in Gpu.QueryDevices(info => info.DedicatedMemorySize >= 1024))
             {
-                using (ReadWriteBuffer<float> buffer = gpu.AllocateReadWriteBuffer<float>(100))
-                {
-                    var shader = new RunShaderOnAllDevicesShader { B = buffer };
+                if (i++ == 0) Assert.AreSame(Gpu.Default, device);
 
-                    gpu.For(100, shader);
+                using ReadWriteBuffer<int> buffer = device.AllocateReadWriteBuffer<int>(128);
 
-                    float[] array = buffer.GetData();
-                    float[] expected = Enumerable.Range(0, 100).Select(i => (float)i).ToArray();
+                device.For(128, new SampleShader(buffer));
 
-                    Assert.IsTrue(array.AsSpan().ContentEquals(expected));
-                }
+                int[] data = buffer.ToArray();
 
-                gpu.Dispose();
+                Assert.IsTrue(data.SequenceEqual(Enumerable.Range(0, 128)));
+            }
+        }
+
+        [AutoConstructor]
+        internal readonly partial struct SampleShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<int> buffer;
+
+            public void Execute()
+            {
+                buffer[ThreadIds.X] = ThreadIds.X;
             }
         }
     }

@@ -1,0 +1,155 @@
+name: .NET
+
+on: [push, pull_request]
+
+jobs:
+
+  # Build the ComputeSharp project directly. This is the project that
+  # would be built when running any of the local samples or unit tests.
+  build-project:
+    runs-on: windows-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Create local NuGet feed
+      run: mkdir src\ComputeSharp.Package\bin\Release
+      shell: cmd
+    - name: Build
+      run: dotnet build src\ComputeSharp\ComputeSharp.csproj -c Release
+      shell: cmd
+
+  # Run all the unit tests referencing the ComputeSharp project directly.
+  run-tests:
+    if: success()
+    needs: [build-project]
+    runs-on: windows-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Create local NuGet feed
+      run: mkdir src\ComputeSharp.Package\bin\Release
+      shell: cmd
+    - name: Run ComputeSharp.Tests
+      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.Internals
+      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.Internals.SourceGenerators
+      run: dotnet test tests\ComputeSharp.Tests.Internals.SourceGenerators\ComputeSharp.Tests.Internals.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
+      shell: cmd
+
+  # Run all the local samples to ensure they build and run with no errors.
+  run-samples:
+    if: success()
+    needs: [run-tests]
+    runs-on: windows-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Create local NuGet feed
+      run: mkdir src\ComputeSharp.Package\bin\Release
+      shell: cmd
+    - name: Build ComputeSharp.Sample.Local
+      run: dotnet build samples\ComputeSharp.Sample.Local\ComputeSharp.Sample.Local.csproj -c Release
+      shell: cmd
+    - name: Run ComputeSharp.Sample.Local
+      run: dotnet samples\ComputeSharp.Sample.Local\bin\Release\net5.0\ComputeSharp.Sample.Local.dll
+      shell: cmd
+    - name: Build ComputeSharp.ImageProcessing.csproj
+      run: dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release
+      shell: cmd
+    - name: Run ComputeSharp.ImageProcessing.csproj
+      run: dotnet samples\ComputeSharp.ImageProcessing\bin\Release\net5.0\ComputeSharp.ImageProcessing.dll
+      shell: cmd
+    - name: Build ComputeSharp.Benchmark.csproj
+      run: dotnet build samples\ComputeSharp.Benchmark\ComputeSharp.Benchmark.csproj -c Release
+      shell: cmd
+    - name: Build ComputeSharp.SwapChain.csproj
+      run: dotnet build samples\ComputeSharp.SwapChain\ComputeSharp.SwapChain.csproj -c Release
+      shell: cmd
+
+  # Buils the .msbuildproj project to generate the NuGet package.
+  # This workflow also uploads the resulting package as an artifact.
+  build-package:
+    runs-on: windows-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Create local NuGet feed
+      run: mkdir src\ComputeSharp.Package\bin\Release
+      shell: cmd
+    - name: Build
+      run: dotnet build src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj -c Release
+      shell: cmd
+    - name: Upload package artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ComputeSharp.nupkg
+        path: src\ComputeSharp.Package\bin\Release\*.nupkg
+
+  # Download the NuGet package generated in the previous job and use it
+  # to build and run the sample project referencing it. This is used as
+  # a test to ensure the NuGet package works in a consuming project.
+  verify-package:
+    if: success()
+    needs: [build-package]
+    runs-on: windows-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Create local NuGet feed
+      run: mkdir src\ComputeSharp.Package\bin\Release
+      shell: cmd
+    - name: Download package artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: ComputeSharp.nupkg
+        path: src\ComputeSharp.Package\bin\Release\ComputeSharp.nupkg
+    - name: Build ComputeSharp.Sample.NuGet
+      run: dotnet build samples\ComputeSharp.Sample.NuGet\ComputeSharp.Sample.NuGet.csproj -c Release
+      shell: cmd
+    - name: Run ComputeSharp.Sample.NuGet
+      run: dotnet samples\ComputeSharp.Sample.NuGet\bin\Release\net5.0\ComputeSharp.Sample.NuGet.dll
+      shell: cmd
+
+  # Run the extra tests to validate a number of build and publishing configurations.
+  # This is used to ensure the native dependencies can always be loaded correctly
+  # regardless of whether the app is shipping with R2R, self-contained, etc.
+  verify-libs:
+    if: success()
+    needs: [verify-package]
+    runs-on: windows-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Create local NuGet feed
+      run: mkdir src\ComputeSharp.Package\bin\Release
+      shell: cmd
+    - name: Run ComputeSharp.Tests.NativeLibrariesResolver
+      run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj -v n -l "console;verbosity=detailed"
+      shell: cmd

@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NuGetizer" Version="0.6.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Import Project="..\Directory.Build.props" />
+</Project>

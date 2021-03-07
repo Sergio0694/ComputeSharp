@@ -1,148 +1,273 @@
 using System;
 using System.Linq;
+using ComputeSharp.Resources;
+using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests
 {
     [TestClass]
-    [TestCategory("Buffers")]
-    public class BufferTests
+    [TestCategory("Buffer")]
+    public partial class BufferTests
     {
-        [TestMethod]
-        public void ReadWriteBufferGetSetDataFromArray()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ConstantBuffer<>))]
+        [Resource(typeof(ReadOnlyBuffer<>))]
+        [Resource(typeof(ReadWriteBuffer<>))]
+        public void Allocate_Uninitialized_Ok(Device device, Type bufferType)
         {
-            float[] array = Enumerable.Range(0, 4096).Select(i => (float)i).ToArray();
+            using Buffer<float> buffer = device.Get().AllocateBuffer<float>(bufferType, 128);
 
-            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer(array);
-            float[] result = buffer.GetData();
-
-            Assert.IsTrue(array.AsSpan().ContentEquals(result));
+            Assert.IsNotNull(buffer);
+            Assert.AreEqual(buffer.Length, 128);
+            Assert.AreSame(buffer.GraphicsDevice, device.Get());
         }
 
-        [TestMethod]
-        public void ReadOnlyBufferGetSetDataFromArray()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ConstantBuffer<>))]
+        [Resource(typeof(ReadOnlyBuffer<>))]
+        [Resource(typeof(ReadWriteBuffer<>))]
+        [Data(-247824)]
+        [Data(-1)]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void Allocate_Uninitialized_Fail(Device device, Type bufferType, int length)
         {
-            float[] array = Enumerable.Range(0, 4096).Select(i => (float)i).ToArray();
-
-            using ConstantBuffer<float> buffer = Gpu.Default.AllocateConstantBuffer(array);
-            float[] result = buffer.GetData();
-
-            Assert.IsTrue(array.AsSpan().ContentEquals(result));
+            using Buffer<float> buffer = device.Get().AllocateBuffer<float>(bufferType, length);
         }
 
-        [TestMethod]
-        public void ReadWriteBufferGetSetDataFromReadWriteBuffer()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ConstantBuffer<>))]
+        [Resource(typeof(ReadOnlyBuffer<>))]
+        [Resource(typeof(ReadWriteBuffer<>))]
+        public void Allocate_FromArray(Device device, Type bufferType)
         {
-            float[] array = Enumerable.Range(0, 100).Select(i => (float)i).ToArray();
+            float[] data = Enumerable.Range(0, 128).Select(static i => (float)i).ToArray();
 
-            using ReadWriteBuffer<float> sourceBuffer = Gpu.Default.AllocateReadWriteBuffer(array);
-            using ReadWriteBuffer<float> destinationBuffer = Gpu.Default.AllocateReadWriteBuffer(sourceBuffer);
+            using Buffer<float> buffer = device.Get().AllocateBuffer(bufferType, data);
 
-            float[] sourceResult = sourceBuffer.GetData();
-            float[] destinationResult = destinationBuffer.GetData();
+            Assert.IsNotNull(buffer);
+            Assert.AreEqual(buffer.Length, 128);
+            Assert.AreSame(buffer.GraphicsDevice, device.Get());
 
-            Assert.IsTrue(array.AsSpan().ContentEquals(sourceResult));
-            Assert.IsTrue(array.AsSpan().ContentEquals(destinationResult));
+            float[] result = buffer.ToArray();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(data.Length, result.Length);
+            Assert.IsTrue(data.SequenceEqual(result));
         }
 
-        [TestMethod]
-        public void ReadWriteBufferGetSetDataFromReadOnlyBuffer()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ConstantBuffer<>))]
+        [Resource(typeof(ReadOnlyBuffer<>))]
+        [Resource(typeof(ReadWriteBuffer<>))]
+        [Data(typeof(ConstantBuffer<>))]
+        [Data(typeof(ReadOnlyBuffer<>))]
+        [Data(typeof(ReadWriteBuffer<>))]
+        public void Allocate_FromBuffer(Device device, Type sourceType, Type destinationType)
         {
-            float[] array = Enumerable.Range(0, 4096).Select(i => (float)i).ToArray();
+            float[] data = Enumerable.Range(0, 128).Select(static i => (float)i).ToArray();
 
-            using ConstantBuffer<float> sourceBuffer = Gpu.Default.AllocateConstantBuffer(array);
-            using ReadWriteBuffer<float> destinationBuffer = Gpu.Default.AllocateReadWriteBuffer(sourceBuffer);
+            using Buffer<float> source = device.Get().AllocateBuffer(sourceType, data);
+            using Buffer<float> destination = device.Get().AllocateBuffer(destinationType, source);
 
-            float[] sourceResult = sourceBuffer.GetData();
-            float[] destinationResult = destinationBuffer.GetData();
+            Assert.IsNotNull(destination);
+            Assert.AreEqual(destination.Length, 128);
+            Assert.AreSame(destination.GraphicsDevice, device.Get());
 
-            Assert.IsTrue(array.AsSpan().ContentEquals(sourceResult));
-            Assert.IsTrue(array.AsSpan().ContentEquals(destinationResult));
+            float[] result = destination.ToArray();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(data.Length, result.Length);
+            Assert.IsTrue(data.SequenceEqual(result));
         }
 
-        [TestMethod]
-        public void ReadOnlyBufferGetSetDataFromReadWriteBuffer()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ConstantBuffer<>))]
+        [Resource(typeof(ReadOnlyBuffer<>))]
+        [Resource(typeof(ReadWriteBuffer<>))]
+        [ExpectedException(typeof(ObjectDisposedException))]
+        public void UsageAfterDispose(Device device, Type bufferType)
         {
-            float[] array = Enumerable.Range(0, 4096).Select(i => (float)i).ToArray();
+            using Buffer<float> buffer = device.Get().AllocateBuffer<float>(bufferType, 128);
 
-            using ReadWriteBuffer<float> sourceBuffer = Gpu.Default.AllocateReadWriteBuffer(array);
-            using ConstantBuffer<float> destinationBuffer = Gpu.Default.AllocateConstantBuffer(sourceBuffer);
+            buffer.Dispose();
 
-            float[] sourceResult = sourceBuffer.GetData();
-            float[] destinationResult = destinationBuffer.GetData();
-
-            Assert.IsTrue(array.AsSpan().ContentEquals(sourceResult));
-            Assert.IsTrue(array.AsSpan().ContentEquals(destinationResult));
+            _ = buffer.ToArray();
         }
 
-        [TestMethod]
-        public void ReadOnlyBufferGetSetDataFromReadOnlyBuffer()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ConstantBuffer<>))]
+        [Resource(typeof(ReadOnlyBuffer<>))]
+        [Resource(typeof(ReadWriteBuffer<>))]
+        [Data(0, 4096)]
+        [Data(128, 512)]
+        [Data(2048, 2048)]
+        public void CopyTo_RangeToArray_Ok(Device device, Type bufferType, int offset, int count)
         {
-            float[] array = Enumerable.Range(0, 4096).Select(i => (float)i).ToArray();
+            float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
 
-            using ConstantBuffer<float> sourceBuffer = Gpu.Default.AllocateConstantBuffer(array);
-            using ConstantBuffer<float> destinationBuffer = Gpu.Default.AllocateConstantBuffer(sourceBuffer);
+            using Buffer<float> buffer = device.Get().AllocateBuffer(bufferType, array);
 
-            float[] sourceResult = sourceBuffer.GetData();
-            float[] destinationResult = destinationBuffer.GetData();
+            float[] result = buffer.ToArray(offset, count);
 
-            Assert.IsTrue(array.AsSpan().ContentEquals(sourceResult));
-            Assert.IsTrue(array.AsSpan().ContentEquals(destinationResult));
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.Length, count);
+            Assert.IsTrue(array.AsSpan(offset, count).SequenceEqual(result));
         }
 
-        [TestMethod]
-        public void ConstantBufferGetRangeData()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ConstantBuffer<>))]
+        [Resource(typeof(ReadOnlyBuffer<>))]
+        [Resource(typeof(ReadWriteBuffer<>))]
+        [Data(-1, 128)]
+        [Data(8192, 128)]
+        [Data(512, 4096)]
+        [Data(512, -128)]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void CopyTo_RangeToArray_Fail(Device device, Type bufferType, int offset, int count)
         {
-            float[] array = Enumerable.Range(0, 4096).Select(i => (float)i).ToArray();
+            float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
 
-            using ConstantBuffer<float> sourceBuffer = Gpu.Default.AllocateConstantBuffer(array);
+            using Buffer<float> buffer = device.Get().AllocateBuffer(bufferType, array);
 
-            float[] sourceResult = sourceBuffer.GetData(128, 100);
-
-            Assert.IsTrue(array.AsSpan(128, 100).ContentEquals(sourceResult));
+            _ = buffer.ToArray(offset, count);
         }
 
-        [TestMethod]
-        public void ConstantBufferSetRangeData()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ConstantBuffer<>))]
+        [Resource(typeof(ReadOnlyBuffer<>))]
+        [Resource(typeof(ReadWriteBuffer<>))]
+        [Data(0, 0, 4096)]
+        [Data(512, 0, 2048)]
+        [Data(0, 512, 2048)]
+        [Data(127, 1024, 587)]
+        public void CopyTo_RangeToVoid_Ok(Device device, Type bufferType, int destinationOffset, int bufferOffset, int count)
         {
-            float[] array = Enumerable.Range(0, 256).Select(i => (float)i).ToArray();
+            float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
 
-            using ConstantBuffer<float> sourceBuffer = Gpu.Default.AllocateConstantBuffer(array);
+            using Buffer<float> buffer = device.Get().AllocateBuffer(bufferType, array);
 
-            array.AsSpan(56, 100).Clear();
-            sourceBuffer.SetData(new float[100], 56, 100);
+            float[] result = new float[4096];
 
-            float[] sourceResult = sourceBuffer.GetData();
+            buffer.CopyTo(result, destinationOffset, bufferOffset, count);
 
-            Assert.IsTrue(array.AsSpan().ContentEquals(sourceResult));
+            Assert.IsTrue(array.AsSpan(bufferOffset, count).SequenceEqual(result.AsSpan(destinationOffset, count)));
         }
 
-        [TestMethod]
-        public void ReadWriteBufferGetRangeData()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ConstantBuffer<>))]
+        [Resource(typeof(ReadOnlyBuffer<>))]
+        [Resource(typeof(ReadWriteBuffer<>))]
+        [Data(0, 0, 8196)]
+        [Data(-12, 0, 1024)]
+        [Data(0, -56, 1024)]
+        [Data(512, 0, 4096)]
+        [Data(12, 1024, 3600)]
+        [Data(12, 1024, -2096)]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void CopyTo_RangeToVoid_Fail(Device device, Type bufferType, int destinationOffset, int bufferOffset, int count)
         {
-            float[] array = Enumerable.Range(0, 4096).Select(i => (float)i).ToArray();
+            float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
 
-            using ReadWriteBuffer<float> sourceBuffer = Gpu.Default.AllocateReadWriteBuffer(array);
+            using Buffer<float> buffer = device.Get().AllocateBuffer(bufferType, array);
 
-            float[] sourceResult = sourceBuffer.GetData(128, 100);
+            float[] result = new float[4096];
 
-            Assert.IsTrue(array.AsSpan(128, 100).ContentEquals(sourceResult));
+            buffer.CopyTo(result, destinationOffset, bufferOffset, count);
         }
 
-        [TestMethod]
-        public void ReadWriteBufferSetRangeData()
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void Dispatch_ConstantBuffer(Device device)
         {
-            float[] array = Enumerable.Range(0, 256).Select(i => (float)i).ToArray();
+            int[] data = Enumerable.Range(0, 1024).ToArray();
 
-            using ReadWriteBuffer<float> sourceBuffer = Gpu.Default.AllocateReadWriteBuffer(array);
+            using ConstantBuffer<int> source = device.Get().AllocateConstantBuffer(data);
+            using ReadWriteBuffer<int> destination = device.Get().AllocateReadWriteBuffer<int>(data.Length);
 
-            array.AsSpan(56, 100).Clear();
-            sourceBuffer.SetData(new float[100], 56, 100);
+            device.Get().For(source.Length, new ConstantBufferKernel(source, destination));
 
-            float[] sourceResult = sourceBuffer.GetData();
+            int[] result = destination.ToArray();
 
-            Assert.IsTrue(array.AsSpan().ContentEquals(sourceResult));
+            CollectionAssert.AreEqual(data, result);
+        }
+
+        [AutoConstructor]
+        internal readonly partial struct ConstantBufferKernel : IComputeShader
+        {
+            public readonly ConstantBuffer<int> source;
+            public readonly ReadWriteBuffer<int> destination;
+
+            public void Execute()
+            {
+                destination[ThreadIds.X] = source[ThreadIds.X];
+            }
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void Dispatch_ReadOnlyBuffer(Device device)
+        {
+            int[] data = Enumerable.Range(0, 1024).ToArray();
+
+            using ReadOnlyBuffer<int> source = device.Get().AllocateReadOnlyBuffer(data);
+            using ReadWriteBuffer<int> destination = device.Get().AllocateReadWriteBuffer<int>(data.Length);
+
+            device.Get().For(source.Length, new ReadOnlyBufferKernel(source, destination));
+
+            int[] result = destination.ToArray();
+
+            CollectionAssert.AreEqual(data, result);
+        }
+
+        [AutoConstructor]
+        internal readonly partial struct ReadOnlyBufferKernel : IComputeShader
+        {
+            public readonly ReadOnlyBuffer<int> source;
+            public readonly ReadWriteBuffer<int> destination;
+
+            public void Execute()
+            {
+                destination[ThreadIds.X] = source[ThreadIds.X];
+            }
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void Dispatch_ReadWriteBuffer(Device device)
+        {
+            int[] data = Enumerable.Range(0, 1024).ToArray();
+
+            using ReadWriteBuffer<int> source = device.Get().AllocateReadWriteBuffer(data);
+            using ReadWriteBuffer<int> destination = device.Get().AllocateReadWriteBuffer<int>(data.Length);
+
+            device.Get().For(source.Length, new ReadWriteBufferKernel(source, destination));
+
+            int[] result = destination.ToArray();
+
+            CollectionAssert.AreEqual(data, result);
+        }
+
+        [AutoConstructor]
+        internal readonly partial struct ReadWriteBufferKernel : IComputeShader
+        {
+            public readonly ReadWriteBuffer<int> source;
+            public readonly ReadWriteBuffer<int> destination;
+
+            public void Execute()
+            {
+                destination[ThreadIds.X] = source[ThreadIds.X];
+            }
         }
     }
 }

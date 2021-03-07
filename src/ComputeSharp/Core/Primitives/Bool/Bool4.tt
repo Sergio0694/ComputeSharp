@@ -1,0 +1,4 @@
+﻿<#@include file="..\VectorType.ttinclude" #>
+<#
+GenerateVectorProperties("Bool4", sizeof(int));
+#>

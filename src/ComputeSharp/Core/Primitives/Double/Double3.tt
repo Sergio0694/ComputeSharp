@@ -1,0 +1,4 @@
+﻿<#@include file="..\VectorType.ttinclude" #>
+<#
+GenerateVectorProperties("Double3", sizeof(double));
+#>

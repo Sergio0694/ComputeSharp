@@ -1,0 +1,83 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".g.cs"#>
+<#
+var typesMap = new Dictionary<string, string[]>
+{
+    ["Bgra32"] = new[] { "Vector4", "Float4" },
+    ["R16"] = new[] { "float" },
+    ["R8"] = new[] { "float" },
+    ["Rg16"] = new[] { "Vector2", "Float2" },
+    ["Rg32"] = new[] { "Vector2", "Float2" },
+    ["Rgba32"] = new[] { "Vector4", "Float4" },
+    ["Rgba64"] = new[] { "Vector4", "Float4" }
+};
+
+IEnumerable<(string T, string TPixel)> EnumerateTypes()
+{
+    foreach (var pair in typesMap)
+        foreach (var tPixel in pair.Value)
+            yield return (pair.Key, tPixel);
+}
+#>
+using System;
+using System.Numerics;
+using ComputeSharp.Tests.Attributes;
+using ComputeSharp.Tests.Extensions;
+
+namespace ComputeSharp.Tests
+{
+    public partial class Texture2DTests
+    {
+        [CombinatorialTestMethod]
+        [AllDevices]
+<#
+foreach (var (t, tPixel) in EnumerateTypes())
+{
+#>
+        [Data(typeof(<#=t#>), typeof(<#=tPixel#>))]
+<#
+}
+#>
+        public void Dispatch_NormalizedTexture2D(Device device, Type t, Type tPixel)
+        {
+<#
+foreach (var (t, tPixel) in EnumerateTypes())
+{
+#>
+            if (t == typeof(<#=t#>) && tPixel == typeof(<#=tPixel#>))
+            {
+                using ReadOnlyTexture2D<<#=t#>, <#=tPixel#>> source = device.Get().AllocateReadOnlyTexture2D<<#=t#>, <#=tPixel#>>(128, 128);
+                using ReadWriteTexture2D<<#=t#>, <#=tPixel#>> destination = device.Get().AllocateReadWriteTexture2D<<#=t#>, <#=tPixel#>>(128, 128);
+
+                device.Get().For(128, 128, new Shader_Unorm_<#=t#>_<#=tPixel#>(source, destination));
+            }
+<#
+}
+#>
+        }
+<#
+
+foreach (var (t, tPixel) in EnumerateTypes())
+{
+#>
+
+        [AutoConstructor]
+        internal readonly partial struct Shader_Unorm_<#=t#>_<#=tPixel#> : IComputeShader
+        {
+            public readonly ReadOnlyTexture2D<<#=t#>, <#=tPixel#>> source;
+            public readonly ReadWriteTexture2D<<#=t#>, <#=tPixel#>> destination;
+
+            public void Execute()
+            {
+                destination[ThreadIds.XY] = (source[ThreadIds.XY] + destination[ThreadIds.XY]) / 2;
+            }
+        }
+<#
+}
+#>
+    }
+}

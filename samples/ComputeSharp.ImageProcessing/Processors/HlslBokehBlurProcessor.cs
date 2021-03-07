@@ -1,67 +1,85 @@
-﻿using SixLabors.ImageSharp;
+﻿using System.Runtime.CompilerServices;
+using Microsoft.Toolkit.Diagnostics;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing.Processors;
+using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
 namespace ComputeSharp.BokehBlur.Processors
 {
     /// <summary>
-    /// Applies bokeh blur processing to the image
+    /// Applies bokeh blur processing to the image.
     /// </summary>
-    public sealed class HlslBokehBlurProcessor : IImageProcessor
+    public sealed partial class HlslBokehBlurProcessor : IImageProcessor
     {
         /// <summary>
-        /// The default radius used by the parameterless constructor
+        /// The default radius used by the parameterless constructor.
         /// </summary>
         public const int DefaultRadius = 32;
 
         /// <summary>
-        /// The default component count used by the parameterless constructor
+        /// The default component count used by the parameterless constructor.
         /// </summary>
         public const int DefaultComponents = 2;
 
         /// <summary>
-        /// The default gamma used by the parameterless constructor
+        /// Initializes a new instance of the <see cref="HlslBokehBlurProcessor"/> class.
         /// </summary>
-        public const float DefaultGamma = 3f;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HlslBokehBlurProcessor"/> class
-        /// </summary>
-        public HlslBokehBlurProcessor() : this(DefaultRadius, DefaultComponents, DefaultGamma) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HlslBokehBlurProcessor"/> class
-        /// </summary>
-        /// <param name="radius">The size of the area to sample</param>
-        /// <param name="components">The number of components to use to approximate the original 2D bokeh blur convolution kernel</param>
-        /// <param name="gamma">The gamma highlight factor to use to further process the image</param>
-        public HlslBokehBlurProcessor(int radius, int components, float gamma)
+        public HlslBokehBlurProcessor()
+            : this(Gpu.Default, DefaultRadius, DefaultComponents)
         {
-            Radius = radius;
-            Components = components;
-            Gamma = gamma;
         }
 
         /// <summary>
-        /// Gets the radius
+        /// Initializes a new instance of the <see cref="HlslBokehBlurProcessor"/> class.
+        /// </summary>
+        /// <param name="radius">The size of the area to sample.</param>
+        /// <param name="components">The number of components to use to approximate the original 2D bokeh blur convolution kernel.</param>
+        public HlslBokehBlurProcessor(int radius, int components)
+            : this(Gpu.Default, radius, components)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HlslBokehBlurProcessor"/> class.
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
+        /// <param name="radius">The size of the area to sample.</param>
+        /// <param name="components">The number of components to use to approximate the original 2D bokeh blur convolution kernel.</param>
+        public HlslBokehBlurProcessor(GraphicsDevice device, int radius, int components)
+        {
+            GraphicsDevice = device;
+            Radius = radius;
+            Components = components;
+        }
+
+        /// <summary>
+        /// Gets the <see cref="ComputeSharp.GraphicsDevice"/> associated with the current instance.
+        /// </summary>
+        public GraphicsDevice GraphicsDevice { get; }
+
+        /// <summary>
+        /// Gets the radius.
         /// </summary>
         public int Radius { get; }
 
         /// <summary>
-        /// Gets the number of components
+        /// Gets the number of components.
         /// </summary>
         public int Components { get; }
-
-        /// <summary>
-        /// Gets the gamma highlight factor to use when applying the effect
-        /// </summary>
-        public float Gamma { get; }
 
         /// <inheritdoc/>
         public IImageProcessor<TPixel> CreatePixelSpecificProcessor<TPixel>(Configuration configuration, Image<TPixel> source, Rectangle sourceRectangle)
             where TPixel : unmanaged, IPixel<TPixel>
         {
-            return new HlslBokehBlurProcessor<TPixel>(this, configuration, source, sourceRectangle);
+            if (typeof(TPixel) != typeof(ImageSharpRgba32))
+            {
+                ThrowHelper.ThrowInvalidOperationException("This processor only supports the RGBA32 pixel format");
+            }
+
+            var processor = new Implementation(this, configuration, Unsafe.As<Image<ImageSharpRgba32>>(source), sourceRectangle);
+
+            return Unsafe.As<IImageProcessor<TPixel>>(processor);
         }
     }
 }
