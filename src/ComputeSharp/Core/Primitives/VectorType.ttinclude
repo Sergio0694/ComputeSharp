@@ -103,7 +103,8 @@ namespace ComputeSharp
     foreach (
         var propertyName in
         from source in new[] { "XYZW", "RGBA" }
-        from name in EnumeratePropertyNames(source)
+        let range = source.Substring(0, i)
+        from name in EnumeratePropertyNames(range)
         where name.Length <= i
         select name)
     {
