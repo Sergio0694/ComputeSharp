@@ -10,201 +10,201 @@ namespace ComputeSharp
         /// <summary>
         /// Gets the total size of the current thread group.
         /// </summary>
-        public static int Count => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(Count)}");
+        public static int Count => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(Count)}");
 
         /// <summary>
         /// Gets the size of the X axis of the current thread group.
         /// </summary>
-        public static int X => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(X)}");
+        public static int X => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(X)}");
 
         /// <summary>
         /// Gets the size of the Y axis of the current thread group.
         /// </summary>
-        public static int Y => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(Y)}");
+        public static int Y => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(Y)}");
 
         /// <summary>
         /// Gets the size of the Z axis of the current thread group.
         /// </summary>
-        public static int Z => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(Z)}");
+        public static int Z => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(Z)}");
 
         /// <summary>
-        /// Gets an <see cref="Int2"/> value with the <see cref="X"/> value for all components.
+        /// Gets a <see cref="Int2"/> value with the components <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public static Int2 XX => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(XX)}");
+        public static Int2 XX => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(XX)}");
 
         /// <summary>
-        /// Gets or sets an <see cref="Int2"/> value with the <see cref="X"/> and <see cref="Y"/> values.
+        /// Gets a <see cref="Int2"/> value with the components <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public static Int2 XY => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(XY)}");
+        public static Int2 XY => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(XY)}");
 
         /// <summary>
-        /// Gets or sets an <see cref="Int2"/> value with the <see cref="X"/> and <see cref="Z"/> values.
+        /// Gets a <see cref="Int2"/> value with the components <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public static Int2 XZ => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(XZ)}");
+        public static Int2 XZ => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(XZ)}");
 
         /// <summary>
-        /// Gets or sets an <see cref="Int2"/> value with the <see cref="Y"/> and <see cref="X"/> values.
+        /// Gets a <see cref="Int2"/> value with the components <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public static Int2 YX => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(YX)}");
+        public static Int2 YX => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(YX)}");
 
         /// <summary>
-        /// Gets an <see cref="Int2"/> value with the <see cref="Y"/> value for all components.
+        /// Gets a <see cref="Int2"/> value with the components <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public static Int2 YY => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(YY)}");
+        public static Int2 YY => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(YY)}");
 
         /// <summary>
-        /// Gets or sets an <see cref="Int2"/> value with the <see cref="Y"/> and <see cref="Z"/> values.
+        /// Gets a <see cref="Int2"/> value with the components <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public static Int2 YZ => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(YZ)}");
+        public static Int2 YZ => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(YZ)}");
 
         /// <summary>
-        /// Gets or sets an <see cref="Int2"/> value with the <see cref="Z"/> and <see cref="X"/> values.
+        /// Gets a <see cref="Int2"/> value with the components <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public static Int2 ZX => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(ZX)}");
+        public static Int2 ZX => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(ZX)}");
 
         /// <summary>
-        /// Gets or sets an <see cref="Int2"/> value with the <see cref="Z"/> and <see cref="Y"/> values.
+        /// Gets a <see cref="Int2"/> value with the components <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public static Int2 ZY => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(ZY)}");
+        public static Int2 ZY => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(ZY)}");
 
         /// <summary>
-        /// Gets an <see cref="Int2"/> value with the <see cref="Z"/> value for all components.
+        /// Gets a <see cref="Int2"/> value with the components <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public static Int2 ZZ => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(ZZ)}");
+        public static Int2 ZZ => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(ZZ)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="X"/> value for all components.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public static Int3 XXX => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(XXX)}");
+        public static Int3 XXX => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(XXX)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="X"/>, <see cref="X"/> and <see cref="Y"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public static Int3 XXY => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(XXY)}");
+        public static Int3 XXY => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(XXY)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="X"/>, <see cref="X"/> and <see cref="Z"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public static Int3 XXZ => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(XXZ)}");
+        public static Int3 XXZ => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(XXZ)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="X"/>, <see cref="Y"/> and <see cref="X"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public static Int3 XYX => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(XYX)}");
+        public static Int3 XYX => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(XYX)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="X"/>, <see cref="Y"/> and <see cref="Y"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public static Int3 XYY => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(XYY)}");
+        public static Int3 XYY => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(XYY)}");
 
         /// <summary>
-        /// Gets or sets an <see cref="Int3"/> value with the <see cref="X"/>, <see cref="Y"/> and <see cref="Z"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public static Int3 XYZ => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(XYZ)}");
+        public static Int3 XYZ => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(XYZ)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="X"/>, <see cref="Z"/> and <see cref="X"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public static Int3 XZX => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(XZX)}");
+        public static Int3 XZX => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(XZX)}");
 
         /// <summary>
-        /// Gets or sets an <see cref="Int3"/> value with the <see cref="X"/>, <see cref="Z"/> and <see cref="Y"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public static Int3 XZY => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(XZY)}");
+        public static Int3 XZY => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(XZY)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="X"/>, <see cref="Z"/> and <see cref="Z"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public static Int3 XZZ => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(XZZ)}");
+        public static Int3 XZZ => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(XZZ)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="Y"/>, <see cref="X"/> and <see cref="X"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public static Int3 YXX => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(YXX)}");
+        public static Int3 YXX => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(YXX)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="Y"/>, <see cref="X"/> and <see cref="Y"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public static Int3 YXY => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(YXY)}");
+        public static Int3 YXY => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(YXY)}");
 
         /// <summary>
-        /// Gets or sets an <see cref="Int3"/> value with the <see cref="Y"/>, <see cref="X"/> and <see cref="Z"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public static Int3 YXZ => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(YXZ)}");
+        public static Int3 YXZ => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(YXZ)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="Y"/>, <see cref="Y"/> and <see cref="X"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public static Int3 YYX => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(YYX)}");
+        public static Int3 YYX => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(YYX)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="Y"/> value for all components.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public static Int3 YYY => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(YYY)}");
+        public static Int3 YYY => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(YYY)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="Y"/>, <see cref="Y"/> and <see cref="Z"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public static Int3 YYZ => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(YYZ)}");
+        public static Int3 YYZ => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(YYZ)}");
 
         /// <summary>
-        /// Gets or sets an <see cref="Int3"/> value with the <see cref="Y"/>, <see cref="Z"/> and <see cref="X"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public static Int3 YZX => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(YZX)}");
+        public static Int3 YZX => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(YZX)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="Y"/>, <see cref="Z"/> and <see cref="Y"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public static Int3 YZY => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(YZY)}");
+        public static Int3 YZY => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(YZY)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="Y"/>, <see cref="Z"/> and <see cref="Z"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public static Int3 YZZ => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(YZZ)}");
+        public static Int3 YZZ => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(YZZ)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="Z"/>, <see cref="Z"/> and <see cref="Z"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public static Int3 ZXX => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(ZXX)}");
+        public static Int3 ZXX => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(ZXX)}");
 
         /// <summary>
-        /// Gets or sets an <see cref="Int3"/> value with the <see cref="Z"/>, <see cref="X"/> and <see cref="Y"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public static Int3 ZXY => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(ZXY)}");
+        public static Int3 ZXY => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(ZXY)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="Z"/>, <see cref="X"/> and <see cref="Z"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public static Int3 ZXZ => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(ZXZ)}");
+        public static Int3 ZXZ => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(ZXZ)}");
 
         /// <summary>
-        /// Gets or sets an <see cref="Int3"/> value with the <see cref="Z"/>, <see cref="Y"/> and <see cref="X"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public static Int3 ZYX => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(ZYX)}");
+        public static Int3 ZYX => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(ZYX)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="Z"/>, <see cref="Y"/> and <see cref="Y"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public static Int3 ZYY => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(ZYY)}");
+        public static Int3 ZYY => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(ZYY)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="Z"/>, <see cref="Y"/> and <see cref="Z"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public static Int3 ZYZ => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(ZYZ)}");
+        public static Int3 ZYZ => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(ZYZ)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="Z"/>, <see cref="Z"/> and <see cref="X"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public static Int3 ZZX => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(ZZX)}");
+        public static Int3 ZZX => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(ZZX)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="Z"/>, <see cref="Z"/> and <see cref="Y"/> values.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public static Int3 ZZY => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(ZZY)}");
+        public static Int3 ZZY => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(ZZY)}");
 
         /// <summary>
-        /// Gets an <see cref="Int3"/> value with the <see cref="Z"/> value for all components.
+        /// Gets a <see cref="Int3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public static Int3 ZZZ => throw new InvalidExecutionContextException($"{nameof(GroupSize)}.{nameof(ZZZ)}");
+        public static Int3 ZZZ => throw new InvalidExecutionContextException($"{typeof(GroupSize)}.{nameof(ZZZ)}");
     }
 }
