@@ -35,10 +35,10 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        public ref TPixel this[int x, int y, int z] => throw new InvalidExecutionContextException($"{nameof(ReadWriteTexture3D<T, TPixel>)}<T>[int,int,int]");
+        public ref TPixel this[int x, int y, int z] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T, TPixel>)}[{typeof(int)}, {typeof(int)}, {typeof(int)}]");
 
         /// <inheritdoc/>
-        public ref TPixel this[Int3 xyz] => throw new InvalidExecutionContextException($"{nameof(ReadWriteTexture3D<T, TPixel>)}<T>[Int3]");
+        public ref TPixel this[Int3 xyz] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T, TPixel>)}[{typeof(Int3)}]");
 
         /// <inheritdoc/>
         public override string ToString()

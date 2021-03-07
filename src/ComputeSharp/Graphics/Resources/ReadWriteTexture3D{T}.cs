@@ -36,14 +36,14 @@ namespace ComputeSharp
         /// <param name="y">The vertical offset of the value to get.</param>
         /// <param name="z">The depthwise offset of the value to get.</param>
         /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
-        public ref T this[int x, int y, int z] => throw new InvalidExecutionContextException($"{nameof(ReadWriteTexture3D<T>)}<T>[int,int,int]");
+        public ref T this[int x, int y, int z] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T>)}[{typeof(int)}, {typeof(int)}, {typeof(int)}]");
 
         /// <summary>
         /// Gets a single <typeparamref name="T"/> value from the current writeable texture.
         /// </summary>
         /// <param name="xyz">The coordinates of the value to get.</param>
         /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
-        public ref T this[Int3 xyz] => throw new InvalidExecutionContextException($"{nameof(ReadWriteTexture3D<T>)}<T>[Int3]");
+        public ref T this[Int3 xyz] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T>)}[{typeof(Int3)}]");
 
         /// <inheritdoc/>
         public override string ToString()

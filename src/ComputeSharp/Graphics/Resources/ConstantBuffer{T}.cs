@@ -44,7 +44,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="i">The index of the value to get.</param>
         /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
-        public T this[int i] => throw new InvalidExecutionContextException($"{nameof(ConstantBuffer<T>)}<T>[int]");
+        public T this[int i] => throw new InvalidExecutionContextException($"{typeof(ConstantBuffer<T>)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets the right padded size for <typeparamref name="T"/> elements to store in the current instance.

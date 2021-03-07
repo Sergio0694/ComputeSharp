@@ -23,14 +23,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Bool1x1"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref bool this[int row] => throw new InvalidExecutionContextException($"{nameof(Bool1x1)}[int]");
+        public ref bool this[int row] => throw new InvalidExecutionContextException($"{typeof(Bool1x1)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x1"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(Bool1x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Bool1x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x1"/> instance.
@@ -38,7 +38,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(Bool1x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Bool1x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x1"/> instance.
@@ -47,7 +47,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Bool1x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Bool1x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -71,35 +71,35 @@ namespace ComputeSharp
         /// Negates a <see cref="Bool1x1"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Bool1x1"/> value to negate.</param>
-        public static Bool1x1 operator -(Bool1x1 matrix) => throw new InvalidExecutionContextException($"{nameof(Bool1x1)}.-");
+        public static Bool1x1 operator -(Bool1x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool1x1)}.-");
 
         /// <summary>
         /// Sums two <see cref="Bool1x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool1x1"/> value to sum.</param>
         /// <param name="right">The second <see cref="Bool1x1"/> value to sum.</param>
-        public static Bool1x1 operator +(Bool1x1 left, Bool1x1 right) => throw new InvalidExecutionContextException($"{nameof(Bool1x1)}.+");
+        public static Bool1x1 operator +(Bool1x1 left, Bool1x1 right) => throw new InvalidExecutionContextException($"{typeof(Bool1x1)}.+");
 
         /// <summary>
         /// Divides two <see cref="Bool1x1"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Bool1x1"/> value to divide.</param>
         /// <param name="right">The second <see cref="Bool1x1"/> value to divide.</param>
-        public static Bool1x1 operator /(Bool1x1 left, Bool1x1 right) => throw new InvalidExecutionContextException($"{nameof(Bool1x1)}./");
+        public static Bool1x1 operator /(Bool1x1 left, Bool1x1 right) => throw new InvalidExecutionContextException($"{typeof(Bool1x1)}./");
 
         /// <summary>
         /// Multiplies two <see cref="Bool1x1"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Bool1x1"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Bool1x1"/> value to multiply.</param>
-        public static Bool1x1 operator *(Bool1x1 left, Bool1x1 right) => throw new InvalidExecutionContextException($"{nameof(Bool1x1)}.*");
+        public static Bool1x1 operator *(Bool1x1 left, Bool1x1 right) => throw new InvalidExecutionContextException($"{typeof(Bool1x1)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="Bool1x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool1x1"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Bool1x1"/> value to subtract.</param>
-        public static Bool1x1 operator -(Bool1x1 left, Bool1x1 right) => throw new InvalidExecutionContextException($"{nameof(Bool1x1)}.-");
+        public static Bool1x1 operator -(Bool1x1 left, Bool1x1 right) => throw new InvalidExecutionContextException($"{typeof(Bool1x1)}.-");
     }
 
     /// <inheritdoc cref="Bool1x2"/>
@@ -127,14 +127,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Bool1x2"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Bool2 this[int row] => throw new InvalidExecutionContextException($"{nameof(Bool1x2)}[int]");
+        public ref Bool2 this[int row] => throw new InvalidExecutionContextException($"{typeof(Bool1x2)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x2"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(Bool1x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Bool1x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x2"/> instance.
@@ -142,7 +142,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(Bool1x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Bool1x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x2"/> instance.
@@ -151,7 +151,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Bool1x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Bool1x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -181,41 +181,41 @@ namespace ComputeSharp
         /// Negates a <see cref="Bool1x2"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Bool1x2"/> value to negate.</param>
-        public static Bool1x2 operator -(Bool1x2 matrix) => throw new InvalidExecutionContextException($"{nameof(Bool1x2)}.-");
+        public static Bool1x2 operator -(Bool1x2 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool1x2)}.-");
 
         /// <summary>
         /// Sums two <see cref="Bool1x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool1x2"/> value to sum.</param>
         /// <param name="right">The second <see cref="Bool1x2"/> value to sum.</param>
-        public static Bool1x2 operator +(Bool1x2 left, Bool1x2 right) => throw new InvalidExecutionContextException($"{nameof(Bool1x2)}.+");
+        public static Bool1x2 operator +(Bool1x2 left, Bool1x2 right) => throw new InvalidExecutionContextException($"{typeof(Bool1x2)}.+");
 
         /// <summary>
         /// Divides two <see cref="Bool1x2"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Bool1x2"/> value to divide.</param>
         /// <param name="right">The second <see cref="Bool1x2"/> value to divide.</param>
-        public static Bool1x2 operator /(Bool1x2 left, Bool1x2 right) => throw new InvalidExecutionContextException($"{nameof(Bool1x2)}./");
+        public static Bool1x2 operator /(Bool1x2 left, Bool1x2 right) => throw new InvalidExecutionContextException($"{typeof(Bool1x2)}./");
 
         /// <summary>
         /// Multiplies two <see cref="Bool1x2"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Bool1x2"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Bool1x2"/> value to multiply.</param>
-        public static Bool1x2 operator *(Bool1x2 left, Bool1x2 right) => throw new InvalidExecutionContextException($"{nameof(Bool1x2)}.*");
+        public static Bool1x2 operator *(Bool1x2 left, Bool1x2 right) => throw new InvalidExecutionContextException($"{typeof(Bool1x2)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="Bool1x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool1x2"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Bool1x2"/> value to subtract.</param>
-        public static Bool1x2 operator -(Bool1x2 left, Bool1x2 right) => throw new InvalidExecutionContextException($"{nameof(Bool1x2)}.-");
+        public static Bool1x2 operator -(Bool1x2 left, Bool1x2 right) => throw new InvalidExecutionContextException($"{typeof(Bool1x2)}.-");
 
         /// <summary>
         /// Casts a <see cref="Bool2"/> value to a <see cref="Bool1x2"/> one.
         /// </summary>
         /// <param name="vector">The input <see cref="Bool2"/> value to cast.</param>
-        public static implicit operator Bool1x2(Bool2 vector) => throw new InvalidExecutionContextException($"{typeof(Bool1x2)}.{nameof(Bool1x2)}({nameof(Bool2)})");
+        public static implicit operator Bool1x2(Bool2 vector) => throw new InvalidExecutionContextException($"{typeof(Bool1x2)}.{typeof(Bool1x2)}({typeof(Bool2)})");
     }
 
     /// <inheritdoc cref="Bool1x3"/>
@@ -248,14 +248,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Bool1x3"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Bool3 this[int row] => throw new InvalidExecutionContextException($"{nameof(Bool1x3)}[int]");
+        public ref Bool3 this[int row] => throw new InvalidExecutionContextException($"{typeof(Bool1x3)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x3"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(Bool1x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Bool1x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x3"/> instance.
@@ -263,7 +263,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(Bool1x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Bool1x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x3"/> instance.
@@ -272,7 +272,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Bool1x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Bool1x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -308,41 +308,41 @@ namespace ComputeSharp
         /// Negates a <see cref="Bool1x3"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Bool1x3"/> value to negate.</param>
-        public static Bool1x3 operator -(Bool1x3 matrix) => throw new InvalidExecutionContextException($"{nameof(Bool1x3)}.-");
+        public static Bool1x3 operator -(Bool1x3 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool1x3)}.-");
 
         /// <summary>
         /// Sums two <see cref="Bool1x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool1x3"/> value to sum.</param>
         /// <param name="right">The second <see cref="Bool1x3"/> value to sum.</param>
-        public static Bool1x3 operator +(Bool1x3 left, Bool1x3 right) => throw new InvalidExecutionContextException($"{nameof(Bool1x3)}.+");
+        public static Bool1x3 operator +(Bool1x3 left, Bool1x3 right) => throw new InvalidExecutionContextException($"{typeof(Bool1x3)}.+");
 
         /// <summary>
         /// Divides two <see cref="Bool1x3"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Bool1x3"/> value to divide.</param>
         /// <param name="right">The second <see cref="Bool1x3"/> value to divide.</param>
-        public static Bool1x3 operator /(Bool1x3 left, Bool1x3 right) => throw new InvalidExecutionContextException($"{nameof(Bool1x3)}./");
+        public static Bool1x3 operator /(Bool1x3 left, Bool1x3 right) => throw new InvalidExecutionContextException($"{typeof(Bool1x3)}./");
 
         /// <summary>
         /// Multiplies two <see cref="Bool1x3"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Bool1x3"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Bool1x3"/> value to multiply.</param>
-        public static Bool1x3 operator *(Bool1x3 left, Bool1x3 right) => throw new InvalidExecutionContextException($"{nameof(Bool1x3)}.*");
+        public static Bool1x3 operator *(Bool1x3 left, Bool1x3 right) => throw new InvalidExecutionContextException($"{typeof(Bool1x3)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="Bool1x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool1x3"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Bool1x3"/> value to subtract.</param>
-        public static Bool1x3 operator -(Bool1x3 left, Bool1x3 right) => throw new InvalidExecutionContextException($"{nameof(Bool1x3)}.-");
+        public static Bool1x3 operator -(Bool1x3 left, Bool1x3 right) => throw new InvalidExecutionContextException($"{typeof(Bool1x3)}.-");
 
         /// <summary>
         /// Casts a <see cref="Bool3"/> value to a <see cref="Bool1x3"/> one.
         /// </summary>
         /// <param name="vector">The input <see cref="Bool3"/> value to cast.</param>
-        public static implicit operator Bool1x3(Bool3 vector) => throw new InvalidExecutionContextException($"{typeof(Bool1x3)}.{nameof(Bool1x3)}({nameof(Bool3)})");
+        public static implicit operator Bool1x3(Bool3 vector) => throw new InvalidExecutionContextException($"{typeof(Bool1x3)}.{typeof(Bool1x3)}({typeof(Bool3)})");
     }
 
     /// <inheritdoc cref="Bool1x4"/>
@@ -380,14 +380,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Bool1x4"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Bool4 this[int row] => throw new InvalidExecutionContextException($"{nameof(Bool1x4)}[int]");
+        public ref Bool4 this[int row] => throw new InvalidExecutionContextException($"{typeof(Bool1x4)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x4"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(Bool1x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Bool1x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x4"/> instance.
@@ -395,7 +395,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(Bool1x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Bool1x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool1x4"/> instance.
@@ -404,7 +404,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Bool1x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Bool1x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -446,41 +446,41 @@ namespace ComputeSharp
         /// Negates a <see cref="Bool1x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Bool1x4"/> value to negate.</param>
-        public static Bool1x4 operator -(Bool1x4 matrix) => throw new InvalidExecutionContextException($"{nameof(Bool1x4)}.-");
+        public static Bool1x4 operator -(Bool1x4 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool1x4)}.-");
 
         /// <summary>
         /// Sums two <see cref="Bool1x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool1x4"/> value to sum.</param>
         /// <param name="right">The second <see cref="Bool1x4"/> value to sum.</param>
-        public static Bool1x4 operator +(Bool1x4 left, Bool1x4 right) => throw new InvalidExecutionContextException($"{nameof(Bool1x4)}.+");
+        public static Bool1x4 operator +(Bool1x4 left, Bool1x4 right) => throw new InvalidExecutionContextException($"{typeof(Bool1x4)}.+");
 
         /// <summary>
         /// Divides two <see cref="Bool1x4"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Bool1x4"/> value to divide.</param>
         /// <param name="right">The second <see cref="Bool1x4"/> value to divide.</param>
-        public static Bool1x4 operator /(Bool1x4 left, Bool1x4 right) => throw new InvalidExecutionContextException($"{nameof(Bool1x4)}./");
+        public static Bool1x4 operator /(Bool1x4 left, Bool1x4 right) => throw new InvalidExecutionContextException($"{typeof(Bool1x4)}./");
 
         /// <summary>
         /// Multiplies two <see cref="Bool1x4"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Bool1x4"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Bool1x4"/> value to multiply.</param>
-        public static Bool1x4 operator *(Bool1x4 left, Bool1x4 right) => throw new InvalidExecutionContextException($"{nameof(Bool1x4)}.*");
+        public static Bool1x4 operator *(Bool1x4 left, Bool1x4 right) => throw new InvalidExecutionContextException($"{typeof(Bool1x4)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="Bool1x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool1x4"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Bool1x4"/> value to subtract.</param>
-        public static Bool1x4 operator -(Bool1x4 left, Bool1x4 right) => throw new InvalidExecutionContextException($"{nameof(Bool1x4)}.-");
+        public static Bool1x4 operator -(Bool1x4 left, Bool1x4 right) => throw new InvalidExecutionContextException($"{typeof(Bool1x4)}.-");
 
         /// <summary>
         /// Casts a <see cref="Bool4"/> value to a <see cref="Bool1x4"/> one.
         /// </summary>
         /// <param name="vector">The input <see cref="Bool4"/> value to cast.</param>
-        public static implicit operator Bool1x4(Bool4 vector) => throw new InvalidExecutionContextException($"{typeof(Bool1x4)}.{nameof(Bool1x4)}({nameof(Bool4)})");
+        public static implicit operator Bool1x4(Bool4 vector) => throw new InvalidExecutionContextException($"{typeof(Bool1x4)}.{typeof(Bool1x4)}({typeof(Bool4)})");
     }
 
     /// <inheritdoc cref="Bool2x1"/>
@@ -508,14 +508,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Bool2x1"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref bool this[int row] => throw new InvalidExecutionContextException($"{nameof(Bool2x1)}[int]");
+        public ref bool this[int row] => throw new InvalidExecutionContextException($"{typeof(Bool2x1)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x1"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(Bool2x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Bool2x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x1"/> instance.
@@ -523,7 +523,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(Bool2x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Bool2x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x1"/> instance.
@@ -532,7 +532,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Bool2x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Bool2x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -562,41 +562,41 @@ namespace ComputeSharp
         /// Negates a <see cref="Bool2x1"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Bool2x1"/> value to negate.</param>
-        public static Bool2x1 operator -(Bool2x1 matrix) => throw new InvalidExecutionContextException($"{nameof(Bool2x1)}.-");
+        public static Bool2x1 operator -(Bool2x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool2x1)}.-");
 
         /// <summary>
         /// Sums two <see cref="Bool2x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool2x1"/> value to sum.</param>
         /// <param name="right">The second <see cref="Bool2x1"/> value to sum.</param>
-        public static Bool2x1 operator +(Bool2x1 left, Bool2x1 right) => throw new InvalidExecutionContextException($"{nameof(Bool2x1)}.+");
+        public static Bool2x1 operator +(Bool2x1 left, Bool2x1 right) => throw new InvalidExecutionContextException($"{typeof(Bool2x1)}.+");
 
         /// <summary>
         /// Divides two <see cref="Bool2x1"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Bool2x1"/> value to divide.</param>
         /// <param name="right">The second <see cref="Bool2x1"/> value to divide.</param>
-        public static Bool2x1 operator /(Bool2x1 left, Bool2x1 right) => throw new InvalidExecutionContextException($"{nameof(Bool2x1)}./");
+        public static Bool2x1 operator /(Bool2x1 left, Bool2x1 right) => throw new InvalidExecutionContextException($"{typeof(Bool2x1)}./");
 
         /// <summary>
         /// Multiplies two <see cref="Bool2x1"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Bool2x1"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Bool2x1"/> value to multiply.</param>
-        public static Bool2x1 operator *(Bool2x1 left, Bool2x1 right) => throw new InvalidExecutionContextException($"{nameof(Bool2x1)}.*");
+        public static Bool2x1 operator *(Bool2x1 left, Bool2x1 right) => throw new InvalidExecutionContextException($"{typeof(Bool2x1)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="Bool2x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool2x1"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Bool2x1"/> value to subtract.</param>
-        public static Bool2x1 operator -(Bool2x1 left, Bool2x1 right) => throw new InvalidExecutionContextException($"{nameof(Bool2x1)}.-");
+        public static Bool2x1 operator -(Bool2x1 left, Bool2x1 right) => throw new InvalidExecutionContextException($"{typeof(Bool2x1)}.-");
 
         /// <summary>
         /// Casts a <see cref="Bool2x1"/> value to a <see cref="Bool2"/> one.
         /// </summary>
         /// <param name="matrix">The input <see cref="Bool2x1"/> value to cast.</param>
-        public static implicit operator Bool2(Bool2x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool2x1)}.{nameof(Bool2)}({nameof(Bool2x1)})");
+        public static implicit operator Bool2(Bool2x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool2x1)}.{typeof(Bool2)}({typeof(Bool2x1)})");
     }
 
     /// <inheritdoc cref="Bool2x2"/>
@@ -647,14 +647,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Bool2x2"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Bool2 this[int row] => throw new InvalidExecutionContextException($"{nameof(Bool2x2)}[int]");
+        public ref Bool2 this[int row] => throw new InvalidExecutionContextException($"{typeof(Bool2x2)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x2"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(Bool2x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Bool2x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x2"/> instance.
@@ -662,7 +662,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(Bool2x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Bool2x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x2"/> instance.
@@ -671,7 +671,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Bool2x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Bool2x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -713,35 +713,35 @@ namespace ComputeSharp
         /// Negates a <see cref="Bool2x2"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Bool2x2"/> value to negate.</param>
-        public static Bool2x2 operator -(Bool2x2 matrix) => throw new InvalidExecutionContextException($"{nameof(Bool2x2)}.-");
+        public static Bool2x2 operator -(Bool2x2 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool2x2)}.-");
 
         /// <summary>
         /// Sums two <see cref="Bool2x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool2x2"/> value to sum.</param>
         /// <param name="right">The second <see cref="Bool2x2"/> value to sum.</param>
-        public static Bool2x2 operator +(Bool2x2 left, Bool2x2 right) => throw new InvalidExecutionContextException($"{nameof(Bool2x2)}.+");
+        public static Bool2x2 operator +(Bool2x2 left, Bool2x2 right) => throw new InvalidExecutionContextException($"{typeof(Bool2x2)}.+");
 
         /// <summary>
         /// Divides two <see cref="Bool2x2"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Bool2x2"/> value to divide.</param>
         /// <param name="right">The second <see cref="Bool2x2"/> value to divide.</param>
-        public static Bool2x2 operator /(Bool2x2 left, Bool2x2 right) => throw new InvalidExecutionContextException($"{nameof(Bool2x2)}./");
+        public static Bool2x2 operator /(Bool2x2 left, Bool2x2 right) => throw new InvalidExecutionContextException($"{typeof(Bool2x2)}./");
 
         /// <summary>
         /// Multiplies two <see cref="Bool2x2"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Bool2x2"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Bool2x2"/> value to multiply.</param>
-        public static Bool2x2 operator *(Bool2x2 left, Bool2x2 right) => throw new InvalidExecutionContextException($"{nameof(Bool2x2)}.*");
+        public static Bool2x2 operator *(Bool2x2 left, Bool2x2 right) => throw new InvalidExecutionContextException($"{typeof(Bool2x2)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="Bool2x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool2x2"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Bool2x2"/> value to subtract.</param>
-        public static Bool2x2 operator -(Bool2x2 left, Bool2x2 right) => throw new InvalidExecutionContextException($"{nameof(Bool2x2)}.-");
+        public static Bool2x2 operator -(Bool2x2 left, Bool2x2 right) => throw new InvalidExecutionContextException($"{typeof(Bool2x2)}.-");
     }
 
     /// <inheritdoc cref="Bool2x3"/>
@@ -804,14 +804,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Bool2x3"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Bool3 this[int row] => throw new InvalidExecutionContextException($"{nameof(Bool2x3)}[int]");
+        public ref Bool3 this[int row] => throw new InvalidExecutionContextException($"{typeof(Bool2x3)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x3"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(Bool2x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Bool2x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x3"/> instance.
@@ -819,7 +819,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(Bool2x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Bool2x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x3"/> instance.
@@ -828,7 +828,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Bool2x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Bool2x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -882,35 +882,35 @@ namespace ComputeSharp
         /// Negates a <see cref="Bool2x3"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Bool2x3"/> value to negate.</param>
-        public static Bool2x3 operator -(Bool2x3 matrix) => throw new InvalidExecutionContextException($"{nameof(Bool2x3)}.-");
+        public static Bool2x3 operator -(Bool2x3 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool2x3)}.-");
 
         /// <summary>
         /// Sums two <see cref="Bool2x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool2x3"/> value to sum.</param>
         /// <param name="right">The second <see cref="Bool2x3"/> value to sum.</param>
-        public static Bool2x3 operator +(Bool2x3 left, Bool2x3 right) => throw new InvalidExecutionContextException($"{nameof(Bool2x3)}.+");
+        public static Bool2x3 operator +(Bool2x3 left, Bool2x3 right) => throw new InvalidExecutionContextException($"{typeof(Bool2x3)}.+");
 
         /// <summary>
         /// Divides two <see cref="Bool2x3"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Bool2x3"/> value to divide.</param>
         /// <param name="right">The second <see cref="Bool2x3"/> value to divide.</param>
-        public static Bool2x3 operator /(Bool2x3 left, Bool2x3 right) => throw new InvalidExecutionContextException($"{nameof(Bool2x3)}./");
+        public static Bool2x3 operator /(Bool2x3 left, Bool2x3 right) => throw new InvalidExecutionContextException($"{typeof(Bool2x3)}./");
 
         /// <summary>
         /// Multiplies two <see cref="Bool2x3"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Bool2x3"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Bool2x3"/> value to multiply.</param>
-        public static Bool2x3 operator *(Bool2x3 left, Bool2x3 right) => throw new InvalidExecutionContextException($"{nameof(Bool2x3)}.*");
+        public static Bool2x3 operator *(Bool2x3 left, Bool2x3 right) => throw new InvalidExecutionContextException($"{typeof(Bool2x3)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="Bool2x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool2x3"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Bool2x3"/> value to subtract.</param>
-        public static Bool2x3 operator -(Bool2x3 left, Bool2x3 right) => throw new InvalidExecutionContextException($"{nameof(Bool2x3)}.-");
+        public static Bool2x3 operator -(Bool2x3 left, Bool2x3 right) => throw new InvalidExecutionContextException($"{typeof(Bool2x3)}.-");
     }
 
     /// <inheritdoc cref="Bool2x4"/>
@@ -985,14 +985,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Bool2x4"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Bool4 this[int row] => throw new InvalidExecutionContextException($"{nameof(Bool2x4)}[int]");
+        public ref Bool4 this[int row] => throw new InvalidExecutionContextException($"{typeof(Bool2x4)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x4"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(Bool2x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Bool2x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x4"/> instance.
@@ -1000,7 +1000,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(Bool2x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Bool2x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool2x4"/> instance.
@@ -1009,7 +1009,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Bool2x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Bool2x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -1075,35 +1075,35 @@ namespace ComputeSharp
         /// Negates a <see cref="Bool2x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Bool2x4"/> value to negate.</param>
-        public static Bool2x4 operator -(Bool2x4 matrix) => throw new InvalidExecutionContextException($"{nameof(Bool2x4)}.-");
+        public static Bool2x4 operator -(Bool2x4 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool2x4)}.-");
 
         /// <summary>
         /// Sums two <see cref="Bool2x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool2x4"/> value to sum.</param>
         /// <param name="right">The second <see cref="Bool2x4"/> value to sum.</param>
-        public static Bool2x4 operator +(Bool2x4 left, Bool2x4 right) => throw new InvalidExecutionContextException($"{nameof(Bool2x4)}.+");
+        public static Bool2x4 operator +(Bool2x4 left, Bool2x4 right) => throw new InvalidExecutionContextException($"{typeof(Bool2x4)}.+");
 
         /// <summary>
         /// Divides two <see cref="Bool2x4"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Bool2x4"/> value to divide.</param>
         /// <param name="right">The second <see cref="Bool2x4"/> value to divide.</param>
-        public static Bool2x4 operator /(Bool2x4 left, Bool2x4 right) => throw new InvalidExecutionContextException($"{nameof(Bool2x4)}./");
+        public static Bool2x4 operator /(Bool2x4 left, Bool2x4 right) => throw new InvalidExecutionContextException($"{typeof(Bool2x4)}./");
 
         /// <summary>
         /// Multiplies two <see cref="Bool2x4"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Bool2x4"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Bool2x4"/> value to multiply.</param>
-        public static Bool2x4 operator *(Bool2x4 left, Bool2x4 right) => throw new InvalidExecutionContextException($"{nameof(Bool2x4)}.*");
+        public static Bool2x4 operator *(Bool2x4 left, Bool2x4 right) => throw new InvalidExecutionContextException($"{typeof(Bool2x4)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="Bool2x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool2x4"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Bool2x4"/> value to subtract.</param>
-        public static Bool2x4 operator -(Bool2x4 left, Bool2x4 right) => throw new InvalidExecutionContextException($"{nameof(Bool2x4)}.-");
+        public static Bool2x4 operator -(Bool2x4 left, Bool2x4 right) => throw new InvalidExecutionContextException($"{typeof(Bool2x4)}.-");
     }
 
     /// <inheritdoc cref="Bool3x1"/>
@@ -1136,14 +1136,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Bool3x1"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref bool this[int row] => throw new InvalidExecutionContextException($"{nameof(Bool3x1)}[int]");
+        public ref bool this[int row] => throw new InvalidExecutionContextException($"{typeof(Bool3x1)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x1"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(Bool3x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Bool3x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x1"/> instance.
@@ -1151,7 +1151,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(Bool3x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Bool3x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x1"/> instance.
@@ -1160,7 +1160,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Bool3x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Bool3x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -1196,41 +1196,41 @@ namespace ComputeSharp
         /// Negates a <see cref="Bool3x1"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Bool3x1"/> value to negate.</param>
-        public static Bool3x1 operator -(Bool3x1 matrix) => throw new InvalidExecutionContextException($"{nameof(Bool3x1)}.-");
+        public static Bool3x1 operator -(Bool3x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool3x1)}.-");
 
         /// <summary>
         /// Sums two <see cref="Bool3x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool3x1"/> value to sum.</param>
         /// <param name="right">The second <see cref="Bool3x1"/> value to sum.</param>
-        public static Bool3x1 operator +(Bool3x1 left, Bool3x1 right) => throw new InvalidExecutionContextException($"{nameof(Bool3x1)}.+");
+        public static Bool3x1 operator +(Bool3x1 left, Bool3x1 right) => throw new InvalidExecutionContextException($"{typeof(Bool3x1)}.+");
 
         /// <summary>
         /// Divides two <see cref="Bool3x1"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Bool3x1"/> value to divide.</param>
         /// <param name="right">The second <see cref="Bool3x1"/> value to divide.</param>
-        public static Bool3x1 operator /(Bool3x1 left, Bool3x1 right) => throw new InvalidExecutionContextException($"{nameof(Bool3x1)}./");
+        public static Bool3x1 operator /(Bool3x1 left, Bool3x1 right) => throw new InvalidExecutionContextException($"{typeof(Bool3x1)}./");
 
         /// <summary>
         /// Multiplies two <see cref="Bool3x1"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Bool3x1"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Bool3x1"/> value to multiply.</param>
-        public static Bool3x1 operator *(Bool3x1 left, Bool3x1 right) => throw new InvalidExecutionContextException($"{nameof(Bool3x1)}.*");
+        public static Bool3x1 operator *(Bool3x1 left, Bool3x1 right) => throw new InvalidExecutionContextException($"{typeof(Bool3x1)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="Bool3x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool3x1"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Bool3x1"/> value to subtract.</param>
-        public static Bool3x1 operator -(Bool3x1 left, Bool3x1 right) => throw new InvalidExecutionContextException($"{nameof(Bool3x1)}.-");
+        public static Bool3x1 operator -(Bool3x1 left, Bool3x1 right) => throw new InvalidExecutionContextException($"{typeof(Bool3x1)}.-");
 
         /// <summary>
         /// Casts a <see cref="Bool3x1"/> value to a <see cref="Bool3"/> one.
         /// </summary>
         /// <param name="matrix">The input <see cref="Bool3x1"/> value to cast.</param>
-        public static implicit operator Bool3(Bool3x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool3x1)}.{nameof(Bool3)}({nameof(Bool3x1)})");
+        public static implicit operator Bool3(Bool3x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool3x1)}.{typeof(Bool3)}({typeof(Bool3x1)})");
     }
 
     /// <inheritdoc cref="Bool3x2"/>
@@ -1294,14 +1294,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Bool3x2"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Bool2 this[int row] => throw new InvalidExecutionContextException($"{nameof(Bool3x2)}[int]");
+        public ref Bool2 this[int row] => throw new InvalidExecutionContextException($"{typeof(Bool3x2)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x2"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(Bool3x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Bool3x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x2"/> instance.
@@ -1309,7 +1309,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(Bool3x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Bool3x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x2"/> instance.
@@ -1318,7 +1318,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Bool3x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Bool3x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -1372,35 +1372,35 @@ namespace ComputeSharp
         /// Negates a <see cref="Bool3x2"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Bool3x2"/> value to negate.</param>
-        public static Bool3x2 operator -(Bool3x2 matrix) => throw new InvalidExecutionContextException($"{nameof(Bool3x2)}.-");
+        public static Bool3x2 operator -(Bool3x2 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool3x2)}.-");
 
         /// <summary>
         /// Sums two <see cref="Bool3x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool3x2"/> value to sum.</param>
         /// <param name="right">The second <see cref="Bool3x2"/> value to sum.</param>
-        public static Bool3x2 operator +(Bool3x2 left, Bool3x2 right) => throw new InvalidExecutionContextException($"{nameof(Bool3x2)}.+");
+        public static Bool3x2 operator +(Bool3x2 left, Bool3x2 right) => throw new InvalidExecutionContextException($"{typeof(Bool3x2)}.+");
 
         /// <summary>
         /// Divides two <see cref="Bool3x2"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Bool3x2"/> value to divide.</param>
         /// <param name="right">The second <see cref="Bool3x2"/> value to divide.</param>
-        public static Bool3x2 operator /(Bool3x2 left, Bool3x2 right) => throw new InvalidExecutionContextException($"{nameof(Bool3x2)}./");
+        public static Bool3x2 operator /(Bool3x2 left, Bool3x2 right) => throw new InvalidExecutionContextException($"{typeof(Bool3x2)}./");
 
         /// <summary>
         /// Multiplies two <see cref="Bool3x2"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Bool3x2"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Bool3x2"/> value to multiply.</param>
-        public static Bool3x2 operator *(Bool3x2 left, Bool3x2 right) => throw new InvalidExecutionContextException($"{nameof(Bool3x2)}.*");
+        public static Bool3x2 operator *(Bool3x2 left, Bool3x2 right) => throw new InvalidExecutionContextException($"{typeof(Bool3x2)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="Bool3x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool3x2"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Bool3x2"/> value to subtract.</param>
-        public static Bool3x2 operator -(Bool3x2 left, Bool3x2 right) => throw new InvalidExecutionContextException($"{nameof(Bool3x2)}.-");
+        public static Bool3x2 operator -(Bool3x2 left, Bool3x2 right) => throw new InvalidExecutionContextException($"{typeof(Bool3x2)}.-");
     }
 
     /// <inheritdoc cref="Bool3x3"/>
@@ -1482,14 +1482,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Bool3x3"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Bool3 this[int row] => throw new InvalidExecutionContextException($"{nameof(Bool3x3)}[int]");
+        public ref Bool3 this[int row] => throw new InvalidExecutionContextException($"{typeof(Bool3x3)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x3"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(Bool3x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Bool3x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x3"/> instance.
@@ -1497,7 +1497,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(Bool3x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Bool3x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x3"/> instance.
@@ -1506,7 +1506,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Bool3x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Bool3x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -1578,35 +1578,35 @@ namespace ComputeSharp
         /// Negates a <see cref="Bool3x3"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Bool3x3"/> value to negate.</param>
-        public static Bool3x3 operator -(Bool3x3 matrix) => throw new InvalidExecutionContextException($"{nameof(Bool3x3)}.-");
+        public static Bool3x3 operator -(Bool3x3 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool3x3)}.-");
 
         /// <summary>
         /// Sums two <see cref="Bool3x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool3x3"/> value to sum.</param>
         /// <param name="right">The second <see cref="Bool3x3"/> value to sum.</param>
-        public static Bool3x3 operator +(Bool3x3 left, Bool3x3 right) => throw new InvalidExecutionContextException($"{nameof(Bool3x3)}.+");
+        public static Bool3x3 operator +(Bool3x3 left, Bool3x3 right) => throw new InvalidExecutionContextException($"{typeof(Bool3x3)}.+");
 
         /// <summary>
         /// Divides two <see cref="Bool3x3"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Bool3x3"/> value to divide.</param>
         /// <param name="right">The second <see cref="Bool3x3"/> value to divide.</param>
-        public static Bool3x3 operator /(Bool3x3 left, Bool3x3 right) => throw new InvalidExecutionContextException($"{nameof(Bool3x3)}./");
+        public static Bool3x3 operator /(Bool3x3 left, Bool3x3 right) => throw new InvalidExecutionContextException($"{typeof(Bool3x3)}./");
 
         /// <summary>
         /// Multiplies two <see cref="Bool3x3"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Bool3x3"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Bool3x3"/> value to multiply.</param>
-        public static Bool3x3 operator *(Bool3x3 left, Bool3x3 right) => throw new InvalidExecutionContextException($"{nameof(Bool3x3)}.*");
+        public static Bool3x3 operator *(Bool3x3 left, Bool3x3 right) => throw new InvalidExecutionContextException($"{typeof(Bool3x3)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="Bool3x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool3x3"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Bool3x3"/> value to subtract.</param>
-        public static Bool3x3 operator -(Bool3x3 left, Bool3x3 right) => throw new InvalidExecutionContextException($"{nameof(Bool3x3)}.-");
+        public static Bool3x3 operator -(Bool3x3 left, Bool3x3 right) => throw new InvalidExecutionContextException($"{typeof(Bool3x3)}.-");
     }
 
     /// <inheritdoc cref="Bool3x4"/>
@@ -1706,14 +1706,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Bool3x4"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Bool4 this[int row] => throw new InvalidExecutionContextException($"{nameof(Bool3x4)}[int]");
+        public ref Bool4 this[int row] => throw new InvalidExecutionContextException($"{typeof(Bool3x4)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x4"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(Bool3x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Bool3x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x4"/> instance.
@@ -1721,7 +1721,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(Bool3x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Bool3x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool3x4"/> instance.
@@ -1730,7 +1730,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Bool3x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Bool3x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -1820,35 +1820,35 @@ namespace ComputeSharp
         /// Negates a <see cref="Bool3x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Bool3x4"/> value to negate.</param>
-        public static Bool3x4 operator -(Bool3x4 matrix) => throw new InvalidExecutionContextException($"{nameof(Bool3x4)}.-");
+        public static Bool3x4 operator -(Bool3x4 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool3x4)}.-");
 
         /// <summary>
         /// Sums two <see cref="Bool3x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool3x4"/> value to sum.</param>
         /// <param name="right">The second <see cref="Bool3x4"/> value to sum.</param>
-        public static Bool3x4 operator +(Bool3x4 left, Bool3x4 right) => throw new InvalidExecutionContextException($"{nameof(Bool3x4)}.+");
+        public static Bool3x4 operator +(Bool3x4 left, Bool3x4 right) => throw new InvalidExecutionContextException($"{typeof(Bool3x4)}.+");
 
         /// <summary>
         /// Divides two <see cref="Bool3x4"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Bool3x4"/> value to divide.</param>
         /// <param name="right">The second <see cref="Bool3x4"/> value to divide.</param>
-        public static Bool3x4 operator /(Bool3x4 left, Bool3x4 right) => throw new InvalidExecutionContextException($"{nameof(Bool3x4)}./");
+        public static Bool3x4 operator /(Bool3x4 left, Bool3x4 right) => throw new InvalidExecutionContextException($"{typeof(Bool3x4)}./");
 
         /// <summary>
         /// Multiplies two <see cref="Bool3x4"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Bool3x4"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Bool3x4"/> value to multiply.</param>
-        public static Bool3x4 operator *(Bool3x4 left, Bool3x4 right) => throw new InvalidExecutionContextException($"{nameof(Bool3x4)}.*");
+        public static Bool3x4 operator *(Bool3x4 left, Bool3x4 right) => throw new InvalidExecutionContextException($"{typeof(Bool3x4)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="Bool3x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool3x4"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Bool3x4"/> value to subtract.</param>
-        public static Bool3x4 operator -(Bool3x4 left, Bool3x4 right) => throw new InvalidExecutionContextException($"{nameof(Bool3x4)}.-");
+        public static Bool3x4 operator -(Bool3x4 left, Bool3x4 right) => throw new InvalidExecutionContextException($"{typeof(Bool3x4)}.-");
     }
 
     /// <inheritdoc cref="Bool4x1"/>
@@ -1886,14 +1886,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Bool4x1"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref bool this[int row] => throw new InvalidExecutionContextException($"{nameof(Bool4x1)}[int]");
+        public ref bool this[int row] => throw new InvalidExecutionContextException($"{typeof(Bool4x1)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x1"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(Bool4x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Bool4x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x1"/> instance.
@@ -1901,7 +1901,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(Bool4x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Bool4x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x1"/> instance.
@@ -1910,7 +1910,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Bool4x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Bool4x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -1952,41 +1952,41 @@ namespace ComputeSharp
         /// Negates a <see cref="Bool4x1"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Bool4x1"/> value to negate.</param>
-        public static Bool4x1 operator -(Bool4x1 matrix) => throw new InvalidExecutionContextException($"{nameof(Bool4x1)}.-");
+        public static Bool4x1 operator -(Bool4x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool4x1)}.-");
 
         /// <summary>
         /// Sums two <see cref="Bool4x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool4x1"/> value to sum.</param>
         /// <param name="right">The second <see cref="Bool4x1"/> value to sum.</param>
-        public static Bool4x1 operator +(Bool4x1 left, Bool4x1 right) => throw new InvalidExecutionContextException($"{nameof(Bool4x1)}.+");
+        public static Bool4x1 operator +(Bool4x1 left, Bool4x1 right) => throw new InvalidExecutionContextException($"{typeof(Bool4x1)}.+");
 
         /// <summary>
         /// Divides two <see cref="Bool4x1"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Bool4x1"/> value to divide.</param>
         /// <param name="right">The second <see cref="Bool4x1"/> value to divide.</param>
-        public static Bool4x1 operator /(Bool4x1 left, Bool4x1 right) => throw new InvalidExecutionContextException($"{nameof(Bool4x1)}./");
+        public static Bool4x1 operator /(Bool4x1 left, Bool4x1 right) => throw new InvalidExecutionContextException($"{typeof(Bool4x1)}./");
 
         /// <summary>
         /// Multiplies two <see cref="Bool4x1"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Bool4x1"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Bool4x1"/> value to multiply.</param>
-        public static Bool4x1 operator *(Bool4x1 left, Bool4x1 right) => throw new InvalidExecutionContextException($"{nameof(Bool4x1)}.*");
+        public static Bool4x1 operator *(Bool4x1 left, Bool4x1 right) => throw new InvalidExecutionContextException($"{typeof(Bool4x1)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="Bool4x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool4x1"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Bool4x1"/> value to subtract.</param>
-        public static Bool4x1 operator -(Bool4x1 left, Bool4x1 right) => throw new InvalidExecutionContextException($"{nameof(Bool4x1)}.-");
+        public static Bool4x1 operator -(Bool4x1 left, Bool4x1 right) => throw new InvalidExecutionContextException($"{typeof(Bool4x1)}.-");
 
         /// <summary>
         /// Casts a <see cref="Bool4x1"/> value to a <see cref="Bool4"/> one.
         /// </summary>
         /// <param name="matrix">The input <see cref="Bool4x1"/> value to cast.</param>
-        public static implicit operator Bool4(Bool4x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool4x1)}.{nameof(Bool4)}({nameof(Bool4x1)})");
+        public static implicit operator Bool4(Bool4x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool4x1)}.{typeof(Bool4)}({typeof(Bool4x1)})");
     }
 
     /// <inheritdoc cref="Bool4x2"/>
@@ -2063,14 +2063,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Bool4x2"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Bool2 this[int row] => throw new InvalidExecutionContextException($"{nameof(Bool4x2)}[int]");
+        public ref Bool2 this[int row] => throw new InvalidExecutionContextException($"{typeof(Bool4x2)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x2"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(Bool4x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Bool4x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x2"/> instance.
@@ -2078,7 +2078,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(Bool4x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Bool4x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x2"/> instance.
@@ -2087,7 +2087,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Bool4x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Bool4x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -2153,35 +2153,35 @@ namespace ComputeSharp
         /// Negates a <see cref="Bool4x2"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Bool4x2"/> value to negate.</param>
-        public static Bool4x2 operator -(Bool4x2 matrix) => throw new InvalidExecutionContextException($"{nameof(Bool4x2)}.-");
+        public static Bool4x2 operator -(Bool4x2 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool4x2)}.-");
 
         /// <summary>
         /// Sums two <see cref="Bool4x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool4x2"/> value to sum.</param>
         /// <param name="right">The second <see cref="Bool4x2"/> value to sum.</param>
-        public static Bool4x2 operator +(Bool4x2 left, Bool4x2 right) => throw new InvalidExecutionContextException($"{nameof(Bool4x2)}.+");
+        public static Bool4x2 operator +(Bool4x2 left, Bool4x2 right) => throw new InvalidExecutionContextException($"{typeof(Bool4x2)}.+");
 
         /// <summary>
         /// Divides two <see cref="Bool4x2"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Bool4x2"/> value to divide.</param>
         /// <param name="right">The second <see cref="Bool4x2"/> value to divide.</param>
-        public static Bool4x2 operator /(Bool4x2 left, Bool4x2 right) => throw new InvalidExecutionContextException($"{nameof(Bool4x2)}./");
+        public static Bool4x2 operator /(Bool4x2 left, Bool4x2 right) => throw new InvalidExecutionContextException($"{typeof(Bool4x2)}./");
 
         /// <summary>
         /// Multiplies two <see cref="Bool4x2"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Bool4x2"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Bool4x2"/> value to multiply.</param>
-        public static Bool4x2 operator *(Bool4x2 left, Bool4x2 right) => throw new InvalidExecutionContextException($"{nameof(Bool4x2)}.*");
+        public static Bool4x2 operator *(Bool4x2 left, Bool4x2 right) => throw new InvalidExecutionContextException($"{typeof(Bool4x2)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="Bool4x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool4x2"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Bool4x2"/> value to subtract.</param>
-        public static Bool4x2 operator -(Bool4x2 left, Bool4x2 right) => throw new InvalidExecutionContextException($"{nameof(Bool4x2)}.-");
+        public static Bool4x2 operator -(Bool4x2 left, Bool4x2 right) => throw new InvalidExecutionContextException($"{typeof(Bool4x2)}.-");
     }
 
     /// <inheritdoc cref="Bool4x3"/>
@@ -2282,14 +2282,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Bool4x3"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Bool3 this[int row] => throw new InvalidExecutionContextException($"{nameof(Bool4x3)}[int]");
+        public ref Bool3 this[int row] => throw new InvalidExecutionContextException($"{typeof(Bool4x3)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x3"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(Bool4x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Bool4x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x3"/> instance.
@@ -2297,7 +2297,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(Bool4x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Bool4x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x3"/> instance.
@@ -2306,7 +2306,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Bool4x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Bool4x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -2396,35 +2396,35 @@ namespace ComputeSharp
         /// Negates a <see cref="Bool4x3"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Bool4x3"/> value to negate.</param>
-        public static Bool4x3 operator -(Bool4x3 matrix) => throw new InvalidExecutionContextException($"{nameof(Bool4x3)}.-");
+        public static Bool4x3 operator -(Bool4x3 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool4x3)}.-");
 
         /// <summary>
         /// Sums two <see cref="Bool4x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool4x3"/> value to sum.</param>
         /// <param name="right">The second <see cref="Bool4x3"/> value to sum.</param>
-        public static Bool4x3 operator +(Bool4x3 left, Bool4x3 right) => throw new InvalidExecutionContextException($"{nameof(Bool4x3)}.+");
+        public static Bool4x3 operator +(Bool4x3 left, Bool4x3 right) => throw new InvalidExecutionContextException($"{typeof(Bool4x3)}.+");
 
         /// <summary>
         /// Divides two <see cref="Bool4x3"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Bool4x3"/> value to divide.</param>
         /// <param name="right">The second <see cref="Bool4x3"/> value to divide.</param>
-        public static Bool4x3 operator /(Bool4x3 left, Bool4x3 right) => throw new InvalidExecutionContextException($"{nameof(Bool4x3)}./");
+        public static Bool4x3 operator /(Bool4x3 left, Bool4x3 right) => throw new InvalidExecutionContextException($"{typeof(Bool4x3)}./");
 
         /// <summary>
         /// Multiplies two <see cref="Bool4x3"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Bool4x3"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Bool4x3"/> value to multiply.</param>
-        public static Bool4x3 operator *(Bool4x3 left, Bool4x3 right) => throw new InvalidExecutionContextException($"{nameof(Bool4x3)}.*");
+        public static Bool4x3 operator *(Bool4x3 left, Bool4x3 right) => throw new InvalidExecutionContextException($"{typeof(Bool4x3)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="Bool4x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool4x3"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Bool4x3"/> value to subtract.</param>
-        public static Bool4x3 operator -(Bool4x3 left, Bool4x3 right) => throw new InvalidExecutionContextException($"{nameof(Bool4x3)}.-");
+        public static Bool4x3 operator -(Bool4x3 left, Bool4x3 right) => throw new InvalidExecutionContextException($"{typeof(Bool4x3)}.-");
     }
 
     /// <inheritdoc cref="Bool4x4"/>
@@ -2549,14 +2549,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Bool4x4"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Bool4 this[int row] => throw new InvalidExecutionContextException($"{nameof(Bool4x4)}[int]");
+        public ref Bool4 this[int row] => throw new InvalidExecutionContextException($"{typeof(Bool4x4)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x4"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(Bool4x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Bool4x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x4"/> instance.
@@ -2564,7 +2564,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(Bool4x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Bool4x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Bool4x4"/> instance.
@@ -2573,7 +2573,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(Bool4x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref Bool4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Bool4x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the component at position [1, 1].
@@ -2687,34 +2687,34 @@ namespace ComputeSharp
         /// Negates a <see cref="Bool4x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Bool4x4"/> value to negate.</param>
-        public static Bool4x4 operator -(Bool4x4 matrix) => throw new InvalidExecutionContextException($"{nameof(Bool4x4)}.-");
+        public static Bool4x4 operator -(Bool4x4 matrix) => throw new InvalidExecutionContextException($"{typeof(Bool4x4)}.-");
 
         /// <summary>
         /// Sums two <see cref="Bool4x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool4x4"/> value to sum.</param>
         /// <param name="right">The second <see cref="Bool4x4"/> value to sum.</param>
-        public static Bool4x4 operator +(Bool4x4 left, Bool4x4 right) => throw new InvalidExecutionContextException($"{nameof(Bool4x4)}.+");
+        public static Bool4x4 operator +(Bool4x4 left, Bool4x4 right) => throw new InvalidExecutionContextException($"{typeof(Bool4x4)}.+");
 
         /// <summary>
         /// Divides two <see cref="Bool4x4"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Bool4x4"/> value to divide.</param>
         /// <param name="right">The second <see cref="Bool4x4"/> value to divide.</param>
-        public static Bool4x4 operator /(Bool4x4 left, Bool4x4 right) => throw new InvalidExecutionContextException($"{nameof(Bool4x4)}./");
+        public static Bool4x4 operator /(Bool4x4 left, Bool4x4 right) => throw new InvalidExecutionContextException($"{typeof(Bool4x4)}./");
 
         /// <summary>
         /// Multiplies two <see cref="Bool4x4"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Bool4x4"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Bool4x4"/> value to multiply.</param>
-        public static Bool4x4 operator *(Bool4x4 left, Bool4x4 right) => throw new InvalidExecutionContextException($"{nameof(Bool4x4)}.*");
+        public static Bool4x4 operator *(Bool4x4 left, Bool4x4 right) => throw new InvalidExecutionContextException($"{typeof(Bool4x4)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="Bool4x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Bool4x4"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Bool4x4"/> value to subtract.</param>
-        public static Bool4x4 operator -(Bool4x4 left, Bool4x4 right) => throw new InvalidExecutionContextException($"{nameof(Bool4x4)}.-");
+        public static Bool4x4 operator -(Bool4x4 left, Bool4x4 right) => throw new InvalidExecutionContextException($"{typeof(Bool4x4)}.-");
     }
 }

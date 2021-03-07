@@ -31,7 +31,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="i">The index of the value to get or set.</param>
         /// <remarks>This API can only be used from a compute shader, and will always throw if used anywhere else.</remarks>
-        public ref T this[int i] => throw new InvalidExecutionContextException($"{nameof(ReadWriteBuffer<T>)}<T>[int]");
+        public ref T this[int i] => throw new InvalidExecutionContextException($"{typeof(ReadWriteBuffer<T>)}[{typeof(int)}]");
 
         /// <inheritdoc/>
         public override string ToString()

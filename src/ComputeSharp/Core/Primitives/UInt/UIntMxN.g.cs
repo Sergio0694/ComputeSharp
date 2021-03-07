@@ -23,14 +23,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="UInt1x1"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref uint this[int row] => throw new InvalidExecutionContextException($"{nameof(UInt1x1)}[int]");
+        public ref uint this[int row] => throw new InvalidExecutionContextException($"{typeof(UInt1x1)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt1x1"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(UInt1x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(UInt1x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt1x1"/> instance.
@@ -38,7 +38,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(UInt1x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(UInt1x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt1x1"/> instance.
@@ -47,7 +47,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt1x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(UInt1x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
@@ -71,35 +71,35 @@ namespace ComputeSharp
         /// Negates a <see cref="UInt1x1"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt1x1"/> value to negate.</param>
-        public static UInt1x1 operator -(UInt1x1 matrix) => throw new InvalidExecutionContextException($"{nameof(UInt1x1)}.-");
+        public static UInt1x1 operator -(UInt1x1 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt1x1)}.-");
 
         /// <summary>
         /// Sums two <see cref="UInt1x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt1x1"/> value to sum.</param>
         /// <param name="right">The second <see cref="UInt1x1"/> value to sum.</param>
-        public static UInt1x1 operator +(UInt1x1 left, UInt1x1 right) => throw new InvalidExecutionContextException($"{nameof(UInt1x1)}.+");
+        public static UInt1x1 operator +(UInt1x1 left, UInt1x1 right) => throw new InvalidExecutionContextException($"{typeof(UInt1x1)}.+");
 
         /// <summary>
         /// Divides two <see cref="UInt1x1"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="UInt1x1"/> value to divide.</param>
         /// <param name="right">The second <see cref="UInt1x1"/> value to divide.</param>
-        public static UInt1x1 operator /(UInt1x1 left, UInt1x1 right) => throw new InvalidExecutionContextException($"{nameof(UInt1x1)}./");
+        public static UInt1x1 operator /(UInt1x1 left, UInt1x1 right) => throw new InvalidExecutionContextException($"{typeof(UInt1x1)}./");
 
         /// <summary>
         /// Multiplies two <see cref="UInt1x1"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="UInt1x1"/> value to multiply.</param>
         /// <param name="right">The second <see cref="UInt1x1"/> value to multiply.</param>
-        public static UInt1x1 operator *(UInt1x1 left, UInt1x1 right) => throw new InvalidExecutionContextException($"{nameof(UInt1x1)}.*");
+        public static UInt1x1 operator *(UInt1x1 left, UInt1x1 right) => throw new InvalidExecutionContextException($"{typeof(UInt1x1)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="UInt1x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt1x1"/> value to subtract.</param>
         /// <param name="right">The second <see cref="UInt1x1"/> value to subtract.</param>
-        public static UInt1x1 operator -(UInt1x1 left, UInt1x1 right) => throw new InvalidExecutionContextException($"{nameof(UInt1x1)}.-");
+        public static UInt1x1 operator -(UInt1x1 left, UInt1x1 right) => throw new InvalidExecutionContextException($"{typeof(UInt1x1)}.-");
     }
 
     /// <inheritdoc cref="UInt1x2"/>
@@ -127,14 +127,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="UInt1x2"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref UInt2 this[int row] => throw new InvalidExecutionContextException($"{nameof(UInt1x2)}[int]");
+        public ref UInt2 this[int row] => throw new InvalidExecutionContextException($"{typeof(UInt1x2)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt1x2"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(UInt1x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(UInt1x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt1x2"/> instance.
@@ -142,7 +142,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(UInt1x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(UInt1x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt1x2"/> instance.
@@ -151,7 +151,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt1x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(UInt1x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
@@ -181,41 +181,41 @@ namespace ComputeSharp
         /// Negates a <see cref="UInt1x2"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt1x2"/> value to negate.</param>
-        public static UInt1x2 operator -(UInt1x2 matrix) => throw new InvalidExecutionContextException($"{nameof(UInt1x2)}.-");
+        public static UInt1x2 operator -(UInt1x2 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt1x2)}.-");
 
         /// <summary>
         /// Sums two <see cref="UInt1x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt1x2"/> value to sum.</param>
         /// <param name="right">The second <see cref="UInt1x2"/> value to sum.</param>
-        public static UInt1x2 operator +(UInt1x2 left, UInt1x2 right) => throw new InvalidExecutionContextException($"{nameof(UInt1x2)}.+");
+        public static UInt1x2 operator +(UInt1x2 left, UInt1x2 right) => throw new InvalidExecutionContextException($"{typeof(UInt1x2)}.+");
 
         /// <summary>
         /// Divides two <see cref="UInt1x2"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="UInt1x2"/> value to divide.</param>
         /// <param name="right">The second <see cref="UInt1x2"/> value to divide.</param>
-        public static UInt1x2 operator /(UInt1x2 left, UInt1x2 right) => throw new InvalidExecutionContextException($"{nameof(UInt1x2)}./");
+        public static UInt1x2 operator /(UInt1x2 left, UInt1x2 right) => throw new InvalidExecutionContextException($"{typeof(UInt1x2)}./");
 
         /// <summary>
         /// Multiplies two <see cref="UInt1x2"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="UInt1x2"/> value to multiply.</param>
         /// <param name="right">The second <see cref="UInt1x2"/> value to multiply.</param>
-        public static UInt1x2 operator *(UInt1x2 left, UInt1x2 right) => throw new InvalidExecutionContextException($"{nameof(UInt1x2)}.*");
+        public static UInt1x2 operator *(UInt1x2 left, UInt1x2 right) => throw new InvalidExecutionContextException($"{typeof(UInt1x2)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="UInt1x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt1x2"/> value to subtract.</param>
         /// <param name="right">The second <see cref="UInt1x2"/> value to subtract.</param>
-        public static UInt1x2 operator -(UInt1x2 left, UInt1x2 right) => throw new InvalidExecutionContextException($"{nameof(UInt1x2)}.-");
+        public static UInt1x2 operator -(UInt1x2 left, UInt1x2 right) => throw new InvalidExecutionContextException($"{typeof(UInt1x2)}.-");
 
         /// <summary>
         /// Casts a <see cref="UInt2"/> value to a <see cref="UInt1x2"/> one.
         /// </summary>
         /// <param name="vector">The input <see cref="UInt2"/> value to cast.</param>
-        public static implicit operator UInt1x2(UInt2 vector) => throw new InvalidExecutionContextException($"{typeof(UInt1x2)}.{nameof(UInt1x2)}({nameof(UInt2)})");
+        public static implicit operator UInt1x2(UInt2 vector) => throw new InvalidExecutionContextException($"{typeof(UInt1x2)}.{typeof(UInt1x2)}({typeof(UInt2)})");
     }
 
     /// <inheritdoc cref="UInt1x3"/>
@@ -248,14 +248,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="UInt1x3"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref UInt3 this[int row] => throw new InvalidExecutionContextException($"{nameof(UInt1x3)}[int]");
+        public ref UInt3 this[int row] => throw new InvalidExecutionContextException($"{typeof(UInt1x3)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt1x3"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(UInt1x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(UInt1x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt1x3"/> instance.
@@ -263,7 +263,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(UInt1x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(UInt1x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt1x3"/> instance.
@@ -272,7 +272,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt1x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(UInt1x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
@@ -308,41 +308,41 @@ namespace ComputeSharp
         /// Negates a <see cref="UInt1x3"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt1x3"/> value to negate.</param>
-        public static UInt1x3 operator -(UInt1x3 matrix) => throw new InvalidExecutionContextException($"{nameof(UInt1x3)}.-");
+        public static UInt1x3 operator -(UInt1x3 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt1x3)}.-");
 
         /// <summary>
         /// Sums two <see cref="UInt1x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt1x3"/> value to sum.</param>
         /// <param name="right">The second <see cref="UInt1x3"/> value to sum.</param>
-        public static UInt1x3 operator +(UInt1x3 left, UInt1x3 right) => throw new InvalidExecutionContextException($"{nameof(UInt1x3)}.+");
+        public static UInt1x3 operator +(UInt1x3 left, UInt1x3 right) => throw new InvalidExecutionContextException($"{typeof(UInt1x3)}.+");
 
         /// <summary>
         /// Divides two <see cref="UInt1x3"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="UInt1x3"/> value to divide.</param>
         /// <param name="right">The second <see cref="UInt1x3"/> value to divide.</param>
-        public static UInt1x3 operator /(UInt1x3 left, UInt1x3 right) => throw new InvalidExecutionContextException($"{nameof(UInt1x3)}./");
+        public static UInt1x3 operator /(UInt1x3 left, UInt1x3 right) => throw new InvalidExecutionContextException($"{typeof(UInt1x3)}./");
 
         /// <summary>
         /// Multiplies two <see cref="UInt1x3"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="UInt1x3"/> value to multiply.</param>
         /// <param name="right">The second <see cref="UInt1x3"/> value to multiply.</param>
-        public static UInt1x3 operator *(UInt1x3 left, UInt1x3 right) => throw new InvalidExecutionContextException($"{nameof(UInt1x3)}.*");
+        public static UInt1x3 operator *(UInt1x3 left, UInt1x3 right) => throw new InvalidExecutionContextException($"{typeof(UInt1x3)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="UInt1x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt1x3"/> value to subtract.</param>
         /// <param name="right">The second <see cref="UInt1x3"/> value to subtract.</param>
-        public static UInt1x3 operator -(UInt1x3 left, UInt1x3 right) => throw new InvalidExecutionContextException($"{nameof(UInt1x3)}.-");
+        public static UInt1x3 operator -(UInt1x3 left, UInt1x3 right) => throw new InvalidExecutionContextException($"{typeof(UInt1x3)}.-");
 
         /// <summary>
         /// Casts a <see cref="UInt3"/> value to a <see cref="UInt1x3"/> one.
         /// </summary>
         /// <param name="vector">The input <see cref="UInt3"/> value to cast.</param>
-        public static implicit operator UInt1x3(UInt3 vector) => throw new InvalidExecutionContextException($"{typeof(UInt1x3)}.{nameof(UInt1x3)}({nameof(UInt3)})");
+        public static implicit operator UInt1x3(UInt3 vector) => throw new InvalidExecutionContextException($"{typeof(UInt1x3)}.{typeof(UInt1x3)}({typeof(UInt3)})");
     }
 
     /// <inheritdoc cref="UInt1x4"/>
@@ -380,14 +380,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="UInt1x4"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref UInt4 this[int row] => throw new InvalidExecutionContextException($"{nameof(UInt1x4)}[int]");
+        public ref UInt4 this[int row] => throw new InvalidExecutionContextException($"{typeof(UInt1x4)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt1x4"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(UInt1x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(UInt1x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt1x4"/> instance.
@@ -395,7 +395,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(UInt1x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(UInt1x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt1x4"/> instance.
@@ -404,7 +404,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt1x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(UInt1x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
@@ -446,41 +446,41 @@ namespace ComputeSharp
         /// Negates a <see cref="UInt1x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt1x4"/> value to negate.</param>
-        public static UInt1x4 operator -(UInt1x4 matrix) => throw new InvalidExecutionContextException($"{nameof(UInt1x4)}.-");
+        public static UInt1x4 operator -(UInt1x4 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt1x4)}.-");
 
         /// <summary>
         /// Sums two <see cref="UInt1x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt1x4"/> value to sum.</param>
         /// <param name="right">The second <see cref="UInt1x4"/> value to sum.</param>
-        public static UInt1x4 operator +(UInt1x4 left, UInt1x4 right) => throw new InvalidExecutionContextException($"{nameof(UInt1x4)}.+");
+        public static UInt1x4 operator +(UInt1x4 left, UInt1x4 right) => throw new InvalidExecutionContextException($"{typeof(UInt1x4)}.+");
 
         /// <summary>
         /// Divides two <see cref="UInt1x4"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="UInt1x4"/> value to divide.</param>
         /// <param name="right">The second <see cref="UInt1x4"/> value to divide.</param>
-        public static UInt1x4 operator /(UInt1x4 left, UInt1x4 right) => throw new InvalidExecutionContextException($"{nameof(UInt1x4)}./");
+        public static UInt1x4 operator /(UInt1x4 left, UInt1x4 right) => throw new InvalidExecutionContextException($"{typeof(UInt1x4)}./");
 
         /// <summary>
         /// Multiplies two <see cref="UInt1x4"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="UInt1x4"/> value to multiply.</param>
         /// <param name="right">The second <see cref="UInt1x4"/> value to multiply.</param>
-        public static UInt1x4 operator *(UInt1x4 left, UInt1x4 right) => throw new InvalidExecutionContextException($"{nameof(UInt1x4)}.*");
+        public static UInt1x4 operator *(UInt1x4 left, UInt1x4 right) => throw new InvalidExecutionContextException($"{typeof(UInt1x4)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="UInt1x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt1x4"/> value to subtract.</param>
         /// <param name="right">The second <see cref="UInt1x4"/> value to subtract.</param>
-        public static UInt1x4 operator -(UInt1x4 left, UInt1x4 right) => throw new InvalidExecutionContextException($"{nameof(UInt1x4)}.-");
+        public static UInt1x4 operator -(UInt1x4 left, UInt1x4 right) => throw new InvalidExecutionContextException($"{typeof(UInt1x4)}.-");
 
         /// <summary>
         /// Casts a <see cref="UInt4"/> value to a <see cref="UInt1x4"/> one.
         /// </summary>
         /// <param name="vector">The input <see cref="UInt4"/> value to cast.</param>
-        public static implicit operator UInt1x4(UInt4 vector) => throw new InvalidExecutionContextException($"{typeof(UInt1x4)}.{nameof(UInt1x4)}({nameof(UInt4)})");
+        public static implicit operator UInt1x4(UInt4 vector) => throw new InvalidExecutionContextException($"{typeof(UInt1x4)}.{typeof(UInt1x4)}({typeof(UInt4)})");
     }
 
     /// <inheritdoc cref="UInt2x1"/>
@@ -508,14 +508,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="UInt2x1"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref uint this[int row] => throw new InvalidExecutionContextException($"{nameof(UInt2x1)}[int]");
+        public ref uint this[int row] => throw new InvalidExecutionContextException($"{typeof(UInt2x1)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt2x1"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(UInt2x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(UInt2x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt2x1"/> instance.
@@ -523,7 +523,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(UInt2x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(UInt2x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt2x1"/> instance.
@@ -532,7 +532,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt2x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(UInt2x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
@@ -562,41 +562,41 @@ namespace ComputeSharp
         /// Negates a <see cref="UInt2x1"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt2x1"/> value to negate.</param>
-        public static UInt2x1 operator -(UInt2x1 matrix) => throw new InvalidExecutionContextException($"{nameof(UInt2x1)}.-");
+        public static UInt2x1 operator -(UInt2x1 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt2x1)}.-");
 
         /// <summary>
         /// Sums two <see cref="UInt2x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt2x1"/> value to sum.</param>
         /// <param name="right">The second <see cref="UInt2x1"/> value to sum.</param>
-        public static UInt2x1 operator +(UInt2x1 left, UInt2x1 right) => throw new InvalidExecutionContextException($"{nameof(UInt2x1)}.+");
+        public static UInt2x1 operator +(UInt2x1 left, UInt2x1 right) => throw new InvalidExecutionContextException($"{typeof(UInt2x1)}.+");
 
         /// <summary>
         /// Divides two <see cref="UInt2x1"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="UInt2x1"/> value to divide.</param>
         /// <param name="right">The second <see cref="UInt2x1"/> value to divide.</param>
-        public static UInt2x1 operator /(UInt2x1 left, UInt2x1 right) => throw new InvalidExecutionContextException($"{nameof(UInt2x1)}./");
+        public static UInt2x1 operator /(UInt2x1 left, UInt2x1 right) => throw new InvalidExecutionContextException($"{typeof(UInt2x1)}./");
 
         /// <summary>
         /// Multiplies two <see cref="UInt2x1"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="UInt2x1"/> value to multiply.</param>
         /// <param name="right">The second <see cref="UInt2x1"/> value to multiply.</param>
-        public static UInt2x1 operator *(UInt2x1 left, UInt2x1 right) => throw new InvalidExecutionContextException($"{nameof(UInt2x1)}.*");
+        public static UInt2x1 operator *(UInt2x1 left, UInt2x1 right) => throw new InvalidExecutionContextException($"{typeof(UInt2x1)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="UInt2x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt2x1"/> value to subtract.</param>
         /// <param name="right">The second <see cref="UInt2x1"/> value to subtract.</param>
-        public static UInt2x1 operator -(UInt2x1 left, UInt2x1 right) => throw new InvalidExecutionContextException($"{nameof(UInt2x1)}.-");
+        public static UInt2x1 operator -(UInt2x1 left, UInt2x1 right) => throw new InvalidExecutionContextException($"{typeof(UInt2x1)}.-");
 
         /// <summary>
         /// Casts a <see cref="UInt2x1"/> value to a <see cref="UInt2"/> one.
         /// </summary>
         /// <param name="matrix">The input <see cref="UInt2x1"/> value to cast.</param>
-        public static implicit operator UInt2(UInt2x1 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt2x1)}.{nameof(UInt2)}({nameof(UInt2x1)})");
+        public static implicit operator UInt2(UInt2x1 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt2x1)}.{typeof(UInt2)}({typeof(UInt2x1)})");
     }
 
     /// <inheritdoc cref="UInt2x2"/>
@@ -647,14 +647,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="UInt2x2"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref UInt2 this[int row] => throw new InvalidExecutionContextException($"{nameof(UInt2x2)}[int]");
+        public ref UInt2 this[int row] => throw new InvalidExecutionContextException($"{typeof(UInt2x2)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt2x2"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(UInt2x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(UInt2x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt2x2"/> instance.
@@ -662,7 +662,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(UInt2x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(UInt2x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt2x2"/> instance.
@@ -671,7 +671,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt2x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(UInt2x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
@@ -713,35 +713,35 @@ namespace ComputeSharp
         /// Negates a <see cref="UInt2x2"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt2x2"/> value to negate.</param>
-        public static UInt2x2 operator -(UInt2x2 matrix) => throw new InvalidExecutionContextException($"{nameof(UInt2x2)}.-");
+        public static UInt2x2 operator -(UInt2x2 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt2x2)}.-");
 
         /// <summary>
         /// Sums two <see cref="UInt2x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt2x2"/> value to sum.</param>
         /// <param name="right">The second <see cref="UInt2x2"/> value to sum.</param>
-        public static UInt2x2 operator +(UInt2x2 left, UInt2x2 right) => throw new InvalidExecutionContextException($"{nameof(UInt2x2)}.+");
+        public static UInt2x2 operator +(UInt2x2 left, UInt2x2 right) => throw new InvalidExecutionContextException($"{typeof(UInt2x2)}.+");
 
         /// <summary>
         /// Divides two <see cref="UInt2x2"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="UInt2x2"/> value to divide.</param>
         /// <param name="right">The second <see cref="UInt2x2"/> value to divide.</param>
-        public static UInt2x2 operator /(UInt2x2 left, UInt2x2 right) => throw new InvalidExecutionContextException($"{nameof(UInt2x2)}./");
+        public static UInt2x2 operator /(UInt2x2 left, UInt2x2 right) => throw new InvalidExecutionContextException($"{typeof(UInt2x2)}./");
 
         /// <summary>
         /// Multiplies two <see cref="UInt2x2"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="UInt2x2"/> value to multiply.</param>
         /// <param name="right">The second <see cref="UInt2x2"/> value to multiply.</param>
-        public static UInt2x2 operator *(UInt2x2 left, UInt2x2 right) => throw new InvalidExecutionContextException($"{nameof(UInt2x2)}.*");
+        public static UInt2x2 operator *(UInt2x2 left, UInt2x2 right) => throw new InvalidExecutionContextException($"{typeof(UInt2x2)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="UInt2x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt2x2"/> value to subtract.</param>
         /// <param name="right">The second <see cref="UInt2x2"/> value to subtract.</param>
-        public static UInt2x2 operator -(UInt2x2 left, UInt2x2 right) => throw new InvalidExecutionContextException($"{nameof(UInt2x2)}.-");
+        public static UInt2x2 operator -(UInt2x2 left, UInt2x2 right) => throw new InvalidExecutionContextException($"{typeof(UInt2x2)}.-");
     }
 
     /// <inheritdoc cref="UInt2x3"/>
@@ -804,14 +804,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="UInt2x3"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref UInt3 this[int row] => throw new InvalidExecutionContextException($"{nameof(UInt2x3)}[int]");
+        public ref UInt3 this[int row] => throw new InvalidExecutionContextException($"{typeof(UInt2x3)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt2x3"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(UInt2x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(UInt2x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt2x3"/> instance.
@@ -819,7 +819,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(UInt2x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(UInt2x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt2x3"/> instance.
@@ -828,7 +828,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt2x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(UInt2x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
@@ -882,35 +882,35 @@ namespace ComputeSharp
         /// Negates a <see cref="UInt2x3"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt2x3"/> value to negate.</param>
-        public static UInt2x3 operator -(UInt2x3 matrix) => throw new InvalidExecutionContextException($"{nameof(UInt2x3)}.-");
+        public static UInt2x3 operator -(UInt2x3 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt2x3)}.-");
 
         /// <summary>
         /// Sums two <see cref="UInt2x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt2x3"/> value to sum.</param>
         /// <param name="right">The second <see cref="UInt2x3"/> value to sum.</param>
-        public static UInt2x3 operator +(UInt2x3 left, UInt2x3 right) => throw new InvalidExecutionContextException($"{nameof(UInt2x3)}.+");
+        public static UInt2x3 operator +(UInt2x3 left, UInt2x3 right) => throw new InvalidExecutionContextException($"{typeof(UInt2x3)}.+");
 
         /// <summary>
         /// Divides two <see cref="UInt2x3"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="UInt2x3"/> value to divide.</param>
         /// <param name="right">The second <see cref="UInt2x3"/> value to divide.</param>
-        public static UInt2x3 operator /(UInt2x3 left, UInt2x3 right) => throw new InvalidExecutionContextException($"{nameof(UInt2x3)}./");
+        public static UInt2x3 operator /(UInt2x3 left, UInt2x3 right) => throw new InvalidExecutionContextException($"{typeof(UInt2x3)}./");
 
         /// <summary>
         /// Multiplies two <see cref="UInt2x3"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="UInt2x3"/> value to multiply.</param>
         /// <param name="right">The second <see cref="UInt2x3"/> value to multiply.</param>
-        public static UInt2x3 operator *(UInt2x3 left, UInt2x3 right) => throw new InvalidExecutionContextException($"{nameof(UInt2x3)}.*");
+        public static UInt2x3 operator *(UInt2x3 left, UInt2x3 right) => throw new InvalidExecutionContextException($"{typeof(UInt2x3)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="UInt2x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt2x3"/> value to subtract.</param>
         /// <param name="right">The second <see cref="UInt2x3"/> value to subtract.</param>
-        public static UInt2x3 operator -(UInt2x3 left, UInt2x3 right) => throw new InvalidExecutionContextException($"{nameof(UInt2x3)}.-");
+        public static UInt2x3 operator -(UInt2x3 left, UInt2x3 right) => throw new InvalidExecutionContextException($"{typeof(UInt2x3)}.-");
     }
 
     /// <inheritdoc cref="UInt2x4"/>
@@ -985,14 +985,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="UInt2x4"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref UInt4 this[int row] => throw new InvalidExecutionContextException($"{nameof(UInt2x4)}[int]");
+        public ref UInt4 this[int row] => throw new InvalidExecutionContextException($"{typeof(UInt2x4)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt2x4"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(UInt2x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(UInt2x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt2x4"/> instance.
@@ -1000,7 +1000,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(UInt2x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(UInt2x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt2x4"/> instance.
@@ -1009,7 +1009,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt2x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(UInt2x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
@@ -1075,35 +1075,35 @@ namespace ComputeSharp
         /// Negates a <see cref="UInt2x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt2x4"/> value to negate.</param>
-        public static UInt2x4 operator -(UInt2x4 matrix) => throw new InvalidExecutionContextException($"{nameof(UInt2x4)}.-");
+        public static UInt2x4 operator -(UInt2x4 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt2x4)}.-");
 
         /// <summary>
         /// Sums two <see cref="UInt2x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt2x4"/> value to sum.</param>
         /// <param name="right">The second <see cref="UInt2x4"/> value to sum.</param>
-        public static UInt2x4 operator +(UInt2x4 left, UInt2x4 right) => throw new InvalidExecutionContextException($"{nameof(UInt2x4)}.+");
+        public static UInt2x4 operator +(UInt2x4 left, UInt2x4 right) => throw new InvalidExecutionContextException($"{typeof(UInt2x4)}.+");
 
         /// <summary>
         /// Divides two <see cref="UInt2x4"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="UInt2x4"/> value to divide.</param>
         /// <param name="right">The second <see cref="UInt2x4"/> value to divide.</param>
-        public static UInt2x4 operator /(UInt2x4 left, UInt2x4 right) => throw new InvalidExecutionContextException($"{nameof(UInt2x4)}./");
+        public static UInt2x4 operator /(UInt2x4 left, UInt2x4 right) => throw new InvalidExecutionContextException($"{typeof(UInt2x4)}./");
 
         /// <summary>
         /// Multiplies two <see cref="UInt2x4"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="UInt2x4"/> value to multiply.</param>
         /// <param name="right">The second <see cref="UInt2x4"/> value to multiply.</param>
-        public static UInt2x4 operator *(UInt2x4 left, UInt2x4 right) => throw new InvalidExecutionContextException($"{nameof(UInt2x4)}.*");
+        public static UInt2x4 operator *(UInt2x4 left, UInt2x4 right) => throw new InvalidExecutionContextException($"{typeof(UInt2x4)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="UInt2x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt2x4"/> value to subtract.</param>
         /// <param name="right">The second <see cref="UInt2x4"/> value to subtract.</param>
-        public static UInt2x4 operator -(UInt2x4 left, UInt2x4 right) => throw new InvalidExecutionContextException($"{nameof(UInt2x4)}.-");
+        public static UInt2x4 operator -(UInt2x4 left, UInt2x4 right) => throw new InvalidExecutionContextException($"{typeof(UInt2x4)}.-");
     }
 
     /// <inheritdoc cref="UInt3x1"/>
@@ -1136,14 +1136,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="UInt3x1"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref uint this[int row] => throw new InvalidExecutionContextException($"{nameof(UInt3x1)}[int]");
+        public ref uint this[int row] => throw new InvalidExecutionContextException($"{typeof(UInt3x1)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt3x1"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(UInt3x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(UInt3x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt3x1"/> instance.
@@ -1151,7 +1151,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(UInt3x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(UInt3x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt3x1"/> instance.
@@ -1160,7 +1160,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt3x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(UInt3x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
@@ -1196,41 +1196,41 @@ namespace ComputeSharp
         /// Negates a <see cref="UInt3x1"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt3x1"/> value to negate.</param>
-        public static UInt3x1 operator -(UInt3x1 matrix) => throw new InvalidExecutionContextException($"{nameof(UInt3x1)}.-");
+        public static UInt3x1 operator -(UInt3x1 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt3x1)}.-");
 
         /// <summary>
         /// Sums two <see cref="UInt3x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt3x1"/> value to sum.</param>
         /// <param name="right">The second <see cref="UInt3x1"/> value to sum.</param>
-        public static UInt3x1 operator +(UInt3x1 left, UInt3x1 right) => throw new InvalidExecutionContextException($"{nameof(UInt3x1)}.+");
+        public static UInt3x1 operator +(UInt3x1 left, UInt3x1 right) => throw new InvalidExecutionContextException($"{typeof(UInt3x1)}.+");
 
         /// <summary>
         /// Divides two <see cref="UInt3x1"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="UInt3x1"/> value to divide.</param>
         /// <param name="right">The second <see cref="UInt3x1"/> value to divide.</param>
-        public static UInt3x1 operator /(UInt3x1 left, UInt3x1 right) => throw new InvalidExecutionContextException($"{nameof(UInt3x1)}./");
+        public static UInt3x1 operator /(UInt3x1 left, UInt3x1 right) => throw new InvalidExecutionContextException($"{typeof(UInt3x1)}./");
 
         /// <summary>
         /// Multiplies two <see cref="UInt3x1"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="UInt3x1"/> value to multiply.</param>
         /// <param name="right">The second <see cref="UInt3x1"/> value to multiply.</param>
-        public static UInt3x1 operator *(UInt3x1 left, UInt3x1 right) => throw new InvalidExecutionContextException($"{nameof(UInt3x1)}.*");
+        public static UInt3x1 operator *(UInt3x1 left, UInt3x1 right) => throw new InvalidExecutionContextException($"{typeof(UInt3x1)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="UInt3x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt3x1"/> value to subtract.</param>
         /// <param name="right">The second <see cref="UInt3x1"/> value to subtract.</param>
-        public static UInt3x1 operator -(UInt3x1 left, UInt3x1 right) => throw new InvalidExecutionContextException($"{nameof(UInt3x1)}.-");
+        public static UInt3x1 operator -(UInt3x1 left, UInt3x1 right) => throw new InvalidExecutionContextException($"{typeof(UInt3x1)}.-");
 
         /// <summary>
         /// Casts a <see cref="UInt3x1"/> value to a <see cref="UInt3"/> one.
         /// </summary>
         /// <param name="matrix">The input <see cref="UInt3x1"/> value to cast.</param>
-        public static implicit operator UInt3(UInt3x1 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt3x1)}.{nameof(UInt3)}({nameof(UInt3x1)})");
+        public static implicit operator UInt3(UInt3x1 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt3x1)}.{typeof(UInt3)}({typeof(UInt3x1)})");
     }
 
     /// <inheritdoc cref="UInt3x2"/>
@@ -1294,14 +1294,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="UInt3x2"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref UInt2 this[int row] => throw new InvalidExecutionContextException($"{nameof(UInt3x2)}[int]");
+        public ref UInt2 this[int row] => throw new InvalidExecutionContextException($"{typeof(UInt3x2)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt3x2"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(UInt3x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(UInt3x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt3x2"/> instance.
@@ -1309,7 +1309,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(UInt3x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(UInt3x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt3x2"/> instance.
@@ -1318,7 +1318,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt3x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(UInt3x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
@@ -1372,35 +1372,35 @@ namespace ComputeSharp
         /// Negates a <see cref="UInt3x2"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt3x2"/> value to negate.</param>
-        public static UInt3x2 operator -(UInt3x2 matrix) => throw new InvalidExecutionContextException($"{nameof(UInt3x2)}.-");
+        public static UInt3x2 operator -(UInt3x2 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt3x2)}.-");
 
         /// <summary>
         /// Sums two <see cref="UInt3x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt3x2"/> value to sum.</param>
         /// <param name="right">The second <see cref="UInt3x2"/> value to sum.</param>
-        public static UInt3x2 operator +(UInt3x2 left, UInt3x2 right) => throw new InvalidExecutionContextException($"{nameof(UInt3x2)}.+");
+        public static UInt3x2 operator +(UInt3x2 left, UInt3x2 right) => throw new InvalidExecutionContextException($"{typeof(UInt3x2)}.+");
 
         /// <summary>
         /// Divides two <see cref="UInt3x2"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="UInt3x2"/> value to divide.</param>
         /// <param name="right">The second <see cref="UInt3x2"/> value to divide.</param>
-        public static UInt3x2 operator /(UInt3x2 left, UInt3x2 right) => throw new InvalidExecutionContextException($"{nameof(UInt3x2)}./");
+        public static UInt3x2 operator /(UInt3x2 left, UInt3x2 right) => throw new InvalidExecutionContextException($"{typeof(UInt3x2)}./");
 
         /// <summary>
         /// Multiplies two <see cref="UInt3x2"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="UInt3x2"/> value to multiply.</param>
         /// <param name="right">The second <see cref="UInt3x2"/> value to multiply.</param>
-        public static UInt3x2 operator *(UInt3x2 left, UInt3x2 right) => throw new InvalidExecutionContextException($"{nameof(UInt3x2)}.*");
+        public static UInt3x2 operator *(UInt3x2 left, UInt3x2 right) => throw new InvalidExecutionContextException($"{typeof(UInt3x2)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="UInt3x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt3x2"/> value to subtract.</param>
         /// <param name="right">The second <see cref="UInt3x2"/> value to subtract.</param>
-        public static UInt3x2 operator -(UInt3x2 left, UInt3x2 right) => throw new InvalidExecutionContextException($"{nameof(UInt3x2)}.-");
+        public static UInt3x2 operator -(UInt3x2 left, UInt3x2 right) => throw new InvalidExecutionContextException($"{typeof(UInt3x2)}.-");
     }
 
     /// <inheritdoc cref="UInt3x3"/>
@@ -1482,14 +1482,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="UInt3x3"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref UInt3 this[int row] => throw new InvalidExecutionContextException($"{nameof(UInt3x3)}[int]");
+        public ref UInt3 this[int row] => throw new InvalidExecutionContextException($"{typeof(UInt3x3)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt3x3"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(UInt3x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(UInt3x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt3x3"/> instance.
@@ -1497,7 +1497,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(UInt3x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(UInt3x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt3x3"/> instance.
@@ -1506,7 +1506,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt3x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(UInt3x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
@@ -1578,35 +1578,35 @@ namespace ComputeSharp
         /// Negates a <see cref="UInt3x3"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt3x3"/> value to negate.</param>
-        public static UInt3x3 operator -(UInt3x3 matrix) => throw new InvalidExecutionContextException($"{nameof(UInt3x3)}.-");
+        public static UInt3x3 operator -(UInt3x3 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt3x3)}.-");
 
         /// <summary>
         /// Sums two <see cref="UInt3x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt3x3"/> value to sum.</param>
         /// <param name="right">The second <see cref="UInt3x3"/> value to sum.</param>
-        public static UInt3x3 operator +(UInt3x3 left, UInt3x3 right) => throw new InvalidExecutionContextException($"{nameof(UInt3x3)}.+");
+        public static UInt3x3 operator +(UInt3x3 left, UInt3x3 right) => throw new InvalidExecutionContextException($"{typeof(UInt3x3)}.+");
 
         /// <summary>
         /// Divides two <see cref="UInt3x3"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="UInt3x3"/> value to divide.</param>
         /// <param name="right">The second <see cref="UInt3x3"/> value to divide.</param>
-        public static UInt3x3 operator /(UInt3x3 left, UInt3x3 right) => throw new InvalidExecutionContextException($"{nameof(UInt3x3)}./");
+        public static UInt3x3 operator /(UInt3x3 left, UInt3x3 right) => throw new InvalidExecutionContextException($"{typeof(UInt3x3)}./");
 
         /// <summary>
         /// Multiplies two <see cref="UInt3x3"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="UInt3x3"/> value to multiply.</param>
         /// <param name="right">The second <see cref="UInt3x3"/> value to multiply.</param>
-        public static UInt3x3 operator *(UInt3x3 left, UInt3x3 right) => throw new InvalidExecutionContextException($"{nameof(UInt3x3)}.*");
+        public static UInt3x3 operator *(UInt3x3 left, UInt3x3 right) => throw new InvalidExecutionContextException($"{typeof(UInt3x3)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="UInt3x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt3x3"/> value to subtract.</param>
         /// <param name="right">The second <see cref="UInt3x3"/> value to subtract.</param>
-        public static UInt3x3 operator -(UInt3x3 left, UInt3x3 right) => throw new InvalidExecutionContextException($"{nameof(UInt3x3)}.-");
+        public static UInt3x3 operator -(UInt3x3 left, UInt3x3 right) => throw new InvalidExecutionContextException($"{typeof(UInt3x3)}.-");
     }
 
     /// <inheritdoc cref="UInt3x4"/>
@@ -1706,14 +1706,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="UInt3x4"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref UInt4 this[int row] => throw new InvalidExecutionContextException($"{nameof(UInt3x4)}[int]");
+        public ref UInt4 this[int row] => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt3x4"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(UInt3x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt3x4"/> instance.
@@ -1721,7 +1721,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(UInt3x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt3x4"/> instance.
@@ -1730,7 +1730,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt3x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
@@ -1820,35 +1820,35 @@ namespace ComputeSharp
         /// Negates a <see cref="UInt3x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt3x4"/> value to negate.</param>
-        public static UInt3x4 operator -(UInt3x4 matrix) => throw new InvalidExecutionContextException($"{nameof(UInt3x4)}.-");
+        public static UInt3x4 operator -(UInt3x4 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}.-");
 
         /// <summary>
         /// Sums two <see cref="UInt3x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt3x4"/> value to sum.</param>
         /// <param name="right">The second <see cref="UInt3x4"/> value to sum.</param>
-        public static UInt3x4 operator +(UInt3x4 left, UInt3x4 right) => throw new InvalidExecutionContextException($"{nameof(UInt3x4)}.+");
+        public static UInt3x4 operator +(UInt3x4 left, UInt3x4 right) => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}.+");
 
         /// <summary>
         /// Divides two <see cref="UInt3x4"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="UInt3x4"/> value to divide.</param>
         /// <param name="right">The second <see cref="UInt3x4"/> value to divide.</param>
-        public static UInt3x4 operator /(UInt3x4 left, UInt3x4 right) => throw new InvalidExecutionContextException($"{nameof(UInt3x4)}./");
+        public static UInt3x4 operator /(UInt3x4 left, UInt3x4 right) => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}./");
 
         /// <summary>
         /// Multiplies two <see cref="UInt3x4"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="UInt3x4"/> value to multiply.</param>
         /// <param name="right">The second <see cref="UInt3x4"/> value to multiply.</param>
-        public static UInt3x4 operator *(UInt3x4 left, UInt3x4 right) => throw new InvalidExecutionContextException($"{nameof(UInt3x4)}.*");
+        public static UInt3x4 operator *(UInt3x4 left, UInt3x4 right) => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="UInt3x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt3x4"/> value to subtract.</param>
         /// <param name="right">The second <see cref="UInt3x4"/> value to subtract.</param>
-        public static UInt3x4 operator -(UInt3x4 left, UInt3x4 right) => throw new InvalidExecutionContextException($"{nameof(UInt3x4)}.-");
+        public static UInt3x4 operator -(UInt3x4 left, UInt3x4 right) => throw new InvalidExecutionContextException($"{typeof(UInt3x4)}.-");
     }
 
     /// <inheritdoc cref="UInt4x1"/>
@@ -1886,14 +1886,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="UInt4x1"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref uint this[int row] => throw new InvalidExecutionContextException($"{nameof(UInt4x1)}[int]");
+        public ref uint this[int row] => throw new InvalidExecutionContextException($"{typeof(UInt4x1)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt4x1"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(UInt4x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(UInt4x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt4x1"/> instance.
@@ -1901,7 +1901,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(UInt4x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(UInt4x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt4x1"/> instance.
@@ -1910,7 +1910,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt4x1)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(UInt4x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
@@ -1952,41 +1952,41 @@ namespace ComputeSharp
         /// Negates a <see cref="UInt4x1"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt4x1"/> value to negate.</param>
-        public static UInt4x1 operator -(UInt4x1 matrix) => throw new InvalidExecutionContextException($"{nameof(UInt4x1)}.-");
+        public static UInt4x1 operator -(UInt4x1 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt4x1)}.-");
 
         /// <summary>
         /// Sums two <see cref="UInt4x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt4x1"/> value to sum.</param>
         /// <param name="right">The second <see cref="UInt4x1"/> value to sum.</param>
-        public static UInt4x1 operator +(UInt4x1 left, UInt4x1 right) => throw new InvalidExecutionContextException($"{nameof(UInt4x1)}.+");
+        public static UInt4x1 operator +(UInt4x1 left, UInt4x1 right) => throw new InvalidExecutionContextException($"{typeof(UInt4x1)}.+");
 
         /// <summary>
         /// Divides two <see cref="UInt4x1"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="UInt4x1"/> value to divide.</param>
         /// <param name="right">The second <see cref="UInt4x1"/> value to divide.</param>
-        public static UInt4x1 operator /(UInt4x1 left, UInt4x1 right) => throw new InvalidExecutionContextException($"{nameof(UInt4x1)}./");
+        public static UInt4x1 operator /(UInt4x1 left, UInt4x1 right) => throw new InvalidExecutionContextException($"{typeof(UInt4x1)}./");
 
         /// <summary>
         /// Multiplies two <see cref="UInt4x1"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="UInt4x1"/> value to multiply.</param>
         /// <param name="right">The second <see cref="UInt4x1"/> value to multiply.</param>
-        public static UInt4x1 operator *(UInt4x1 left, UInt4x1 right) => throw new InvalidExecutionContextException($"{nameof(UInt4x1)}.*");
+        public static UInt4x1 operator *(UInt4x1 left, UInt4x1 right) => throw new InvalidExecutionContextException($"{typeof(UInt4x1)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="UInt4x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt4x1"/> value to subtract.</param>
         /// <param name="right">The second <see cref="UInt4x1"/> value to subtract.</param>
-        public static UInt4x1 operator -(UInt4x1 left, UInt4x1 right) => throw new InvalidExecutionContextException($"{nameof(UInt4x1)}.-");
+        public static UInt4x1 operator -(UInt4x1 left, UInt4x1 right) => throw new InvalidExecutionContextException($"{typeof(UInt4x1)}.-");
 
         /// <summary>
         /// Casts a <see cref="UInt4x1"/> value to a <see cref="UInt4"/> one.
         /// </summary>
         /// <param name="matrix">The input <see cref="UInt4x1"/> value to cast.</param>
-        public static implicit operator UInt4(UInt4x1 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt4x1)}.{nameof(UInt4)}({nameof(UInt4x1)})");
+        public static implicit operator UInt4(UInt4x1 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt4x1)}.{typeof(UInt4)}({typeof(UInt4x1)})");
     }
 
     /// <inheritdoc cref="UInt4x2"/>
@@ -2063,14 +2063,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="UInt4x2"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref UInt2 this[int row] => throw new InvalidExecutionContextException($"{nameof(UInt4x2)}[int]");
+        public ref UInt2 this[int row] => throw new InvalidExecutionContextException($"{typeof(UInt4x2)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt4x2"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(UInt4x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(UInt4x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt4x2"/> instance.
@@ -2078,7 +2078,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(UInt4x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(UInt4x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt4x2"/> instance.
@@ -2087,7 +2087,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt4x2)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(UInt4x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
@@ -2153,35 +2153,35 @@ namespace ComputeSharp
         /// Negates a <see cref="UInt4x2"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt4x2"/> value to negate.</param>
-        public static UInt4x2 operator -(UInt4x2 matrix) => throw new InvalidExecutionContextException($"{nameof(UInt4x2)}.-");
+        public static UInt4x2 operator -(UInt4x2 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt4x2)}.-");
 
         /// <summary>
         /// Sums two <see cref="UInt4x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt4x2"/> value to sum.</param>
         /// <param name="right">The second <see cref="UInt4x2"/> value to sum.</param>
-        public static UInt4x2 operator +(UInt4x2 left, UInt4x2 right) => throw new InvalidExecutionContextException($"{nameof(UInt4x2)}.+");
+        public static UInt4x2 operator +(UInt4x2 left, UInt4x2 right) => throw new InvalidExecutionContextException($"{typeof(UInt4x2)}.+");
 
         /// <summary>
         /// Divides two <see cref="UInt4x2"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="UInt4x2"/> value to divide.</param>
         /// <param name="right">The second <see cref="UInt4x2"/> value to divide.</param>
-        public static UInt4x2 operator /(UInt4x2 left, UInt4x2 right) => throw new InvalidExecutionContextException($"{nameof(UInt4x2)}./");
+        public static UInt4x2 operator /(UInt4x2 left, UInt4x2 right) => throw new InvalidExecutionContextException($"{typeof(UInt4x2)}./");
 
         /// <summary>
         /// Multiplies two <see cref="UInt4x2"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="UInt4x2"/> value to multiply.</param>
         /// <param name="right">The second <see cref="UInt4x2"/> value to multiply.</param>
-        public static UInt4x2 operator *(UInt4x2 left, UInt4x2 right) => throw new InvalidExecutionContextException($"{nameof(UInt4x2)}.*");
+        public static UInt4x2 operator *(UInt4x2 left, UInt4x2 right) => throw new InvalidExecutionContextException($"{typeof(UInt4x2)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="UInt4x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt4x2"/> value to subtract.</param>
         /// <param name="right">The second <see cref="UInt4x2"/> value to subtract.</param>
-        public static UInt4x2 operator -(UInt4x2 left, UInt4x2 right) => throw new InvalidExecutionContextException($"{nameof(UInt4x2)}.-");
+        public static UInt4x2 operator -(UInt4x2 left, UInt4x2 right) => throw new InvalidExecutionContextException($"{typeof(UInt4x2)}.-");
     }
 
     /// <inheritdoc cref="UInt4x3"/>
@@ -2282,14 +2282,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="UInt4x3"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref UInt3 this[int row] => throw new InvalidExecutionContextException($"{nameof(UInt4x3)}[int]");
+        public ref UInt3 this[int row] => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt4x3"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(UInt4x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt4x3"/> instance.
@@ -2297,7 +2297,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(UInt4x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt4x3"/> instance.
@@ -2306,7 +2306,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt4x3)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
@@ -2396,35 +2396,35 @@ namespace ComputeSharp
         /// Negates a <see cref="UInt4x3"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt4x3"/> value to negate.</param>
-        public static UInt4x3 operator -(UInt4x3 matrix) => throw new InvalidExecutionContextException($"{nameof(UInt4x3)}.-");
+        public static UInt4x3 operator -(UInt4x3 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}.-");
 
         /// <summary>
         /// Sums two <see cref="UInt4x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt4x3"/> value to sum.</param>
         /// <param name="right">The second <see cref="UInt4x3"/> value to sum.</param>
-        public static UInt4x3 operator +(UInt4x3 left, UInt4x3 right) => throw new InvalidExecutionContextException($"{nameof(UInt4x3)}.+");
+        public static UInt4x3 operator +(UInt4x3 left, UInt4x3 right) => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}.+");
 
         /// <summary>
         /// Divides two <see cref="UInt4x3"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="UInt4x3"/> value to divide.</param>
         /// <param name="right">The second <see cref="UInt4x3"/> value to divide.</param>
-        public static UInt4x3 operator /(UInt4x3 left, UInt4x3 right) => throw new InvalidExecutionContextException($"{nameof(UInt4x3)}./");
+        public static UInt4x3 operator /(UInt4x3 left, UInt4x3 right) => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}./");
 
         /// <summary>
         /// Multiplies two <see cref="UInt4x3"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="UInt4x3"/> value to multiply.</param>
         /// <param name="right">The second <see cref="UInt4x3"/> value to multiply.</param>
-        public static UInt4x3 operator *(UInt4x3 left, UInt4x3 right) => throw new InvalidExecutionContextException($"{nameof(UInt4x3)}.*");
+        public static UInt4x3 operator *(UInt4x3 left, UInt4x3 right) => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="UInt4x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt4x3"/> value to subtract.</param>
         /// <param name="right">The second <see cref="UInt4x3"/> value to subtract.</param>
-        public static UInt4x3 operator -(UInt4x3 left, UInt4x3 right) => throw new InvalidExecutionContextException($"{nameof(UInt4x3)}.-");
+        public static UInt4x3 operator -(UInt4x3 left, UInt4x3 right) => throw new InvalidExecutionContextException($"{typeof(UInt4x3)}.-");
     }
 
     /// <inheritdoc cref="UInt4x4"/>
@@ -2549,14 +2549,14 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="UInt4x4"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref UInt4 this[int row] => throw new InvalidExecutionContextException($"{nameof(UInt4x4)}[int]");
+        public ref UInt4 this[int row] => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}[{typeof(int)}]");
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt4x4"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{nameof(UInt4x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt4x4"/> instance.
@@ -2564,7 +2564,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{nameof(UInt4x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="UInt4x4"/> instance.
@@ -2573,7 +2573,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{nameof(UInt4x4)}[{nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}, {nameof(MatrixIndex)}]");
+        public ref UInt4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the component at position [1, 1].
@@ -2687,34 +2687,34 @@ namespace ComputeSharp
         /// Negates a <see cref="UInt4x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="UInt4x4"/> value to negate.</param>
-        public static UInt4x4 operator -(UInt4x4 matrix) => throw new InvalidExecutionContextException($"{nameof(UInt4x4)}.-");
+        public static UInt4x4 operator -(UInt4x4 matrix) => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.-");
 
         /// <summary>
         /// Sums two <see cref="UInt4x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt4x4"/> value to sum.</param>
         /// <param name="right">The second <see cref="UInt4x4"/> value to sum.</param>
-        public static UInt4x4 operator +(UInt4x4 left, UInt4x4 right) => throw new InvalidExecutionContextException($"{nameof(UInt4x4)}.+");
+        public static UInt4x4 operator +(UInt4x4 left, UInt4x4 right) => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.+");
 
         /// <summary>
         /// Divides two <see cref="UInt4x4"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="UInt4x4"/> value to divide.</param>
         /// <param name="right">The second <see cref="UInt4x4"/> value to divide.</param>
-        public static UInt4x4 operator /(UInt4x4 left, UInt4x4 right) => throw new InvalidExecutionContextException($"{nameof(UInt4x4)}./");
+        public static UInt4x4 operator /(UInt4x4 left, UInt4x4 right) => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}./");
 
         /// <summary>
         /// Multiplies two <see cref="UInt4x4"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="UInt4x4"/> value to multiply.</param>
         /// <param name="right">The second <see cref="UInt4x4"/> value to multiply.</param>
-        public static UInt4x4 operator *(UInt4x4 left, UInt4x4 right) => throw new InvalidExecutionContextException($"{nameof(UInt4x4)}.*");
+        public static UInt4x4 operator *(UInt4x4 left, UInt4x4 right) => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.*");
 
         /// <summary>
         /// Subtracts two <see cref="UInt4x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt4x4"/> value to subtract.</param>
         /// <param name="right">The second <see cref="UInt4x4"/> value to subtract.</param>
-        public static UInt4x4 operator -(UInt4x4 left, UInt4x4 right) => throw new InvalidExecutionContextException($"{nameof(UInt4x4)}.-");
+        public static UInt4x4 operator -(UInt4x4 left, UInt4x4 right) => throw new InvalidExecutionContextException($"{typeof(UInt4x4)}.-");
     }
 }

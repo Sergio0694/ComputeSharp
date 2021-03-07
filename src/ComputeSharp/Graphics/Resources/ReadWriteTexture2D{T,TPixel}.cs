@@ -34,10 +34,10 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        public ref TPixel this[int x, int y] => throw new InvalidExecutionContextException($"{nameof(ReadWriteTexture2D<T, TPixel>)}<T>[int,int]");
+        public ref TPixel this[int x, int y] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T, TPixel>)}[{typeof(int)}, {typeof(int)}]");
 
         /// <inheritdoc/>
-        public ref TPixel this[Int2 xy] => throw new InvalidExecutionContextException($"{nameof(ReadWriteTexture2D<T, TPixel>)}<T>[Int2]");
+        public ref TPixel this[Int2 xy] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T, TPixel>)}[{typeof(Int2)}]");
 
         /// <inheritdoc/>
         public override string ToString()
