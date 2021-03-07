@@ -1,6 +1,12 @@
 ![](https://user-images.githubusercontent.com/10199417/108635546-3512ea00-7480-11eb-8172-99bc59f4eb6f.png)
 ![.NET](https://github.com/Sergio0694/ComputeSharp/workflows/.NET/badge.svg) [![NuGet](https://img.shields.io/nuget/v/ComputeSharp.svg)](https://www.nuget.org/packages/ComputeSharp/) [![NuGet](https://img.shields.io/nuget/dt/ComputeSharp.svg)](https://www.nuget.org/stats/packages/ComputeSharp?groupby=Version)
 
+## Major update in the works! 🚀
+
+The currently available NuGet package refers to the `1.x` version of **ComputeSharp**, with the codebase from the `master` branch. I'm currently working on a new major update targeting .NET 5, featuring a completely rewritten backend using native DirectX bindings and the use of C# source generators to prepare the shader code. This will greatly improve the performance of the library (especially cold start performance, which is over **10x** faster already) and use much less memory at runtime. I also plan to introduce support for a number of new features, such as the ability to use custom struct types in shaders. The current status of this work can be seen from the development branches.
+
+Thank you for the support!
+
 # What is it?
 
 **ComputeSharp** is a .NET 5 library to run C# code in parallel on the GPU through DX12 and dynamically generated HLSL compute shaders. The available APIs let you access GPU devices, allocate GPU buffers and textures, move data between them and the RAM, write compute shaders entirely in C# and have them run on the GPU. The goal of this project is to make GPU computing easy to use for all .NET developers! 🚀
