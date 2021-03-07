@@ -89,9 +89,6 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
 
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid <see cref="ThreadIds"/> usage.
-        /// <para>
-        /// Format: <c>"The ThreadIds type is used in method {0} of type {1}"</c>.
-        /// </para>
         /// </summary>
         public static readonly DiagnosticDescriptor InvalidThreadIdsUsage = new(
             id: "CMPS0006",
@@ -105,9 +102,6 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
 
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid <see cref="GroupIds"/> usage.
-        /// <para>
-        /// Format: <c>"The GroupIds type is used in method {0} of type {1}"</c>.
-        /// </para>
         /// </summary>
         public static readonly DiagnosticDescriptor InvalidGroupIdsUsage = new(
             id: "CMPS0007",
@@ -121,9 +115,6 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
 
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid <see cref="GroupSize"/> usage.
-        /// <para>
-        /// Format: <c>"The GroupSize type is used in method {0} of type {1}"</c>.
-        /// </para>
         /// </summary>
         public static readonly DiagnosticDescriptor InvalidGroupSizeUsage = new(
             id: "CMPS0008",
@@ -137,9 +128,6 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
 
         /// <summary>
         /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid <see cref="WarpIds"/> usage.
-        /// <para>
-        /// Format: <c>"The WarpIds type is used in method {0} of type {1}"</c>.
-        /// </para>
         /// </summary>
         public static readonly DiagnosticDescriptor InvalidWarpIdsUsage = new(
             id: "CMPS0009",
@@ -599,6 +587,70 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
             defaultSeverity: DiagnosticSeverity.Error,
             isEnabledByDefault: true,
             description: "The arguments in a swizzled indexer for a matrix type must be compile-time constants.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid shader constant property type.
+        /// <para>
+        /// Format: <c>"The compute shader of type {0} contains a constant property \"{1}\" of an invalid type {2} (only primitive, vector and matrix types are supported)"</c>.
+        /// </para>
+        /// </summary>
+        public static readonly DiagnosticDescriptor InvalidShaderConstantPropertyType = new(
+            id: "CMPS0043",
+            title: "Invalid shader constant property type",
+            messageFormat: "The compute shader of type {0} contains a constant property \"{1}\" of an invalid type {2} (only primitive, vector and matrix types are supported)",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A type representing a compute shader contains a constant property of a type that is not supported.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid shader constant property declaration.
+        /// <para>
+        /// Format: <c>"The compute shader of type {0} contains a constant property \"{1}\" with an invalid declaration (must use a lambda expression)"</c>.
+        /// </para>
+        /// </summary>
+        public static readonly DiagnosticDescriptor InvalidShaderConstantPropertyDeclaration = new(
+            id: "CMPS0044",
+            title: "Invalid shader constant property",
+            messageFormat: "The compute shader of type {0} contains a constant property \"{1}\" with an invalid declaration (must use a lambda expression)",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A type representing a compute shader contains a constant property with an invalid declaration.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid shader constant property declaration.
+        /// <para>
+        /// Format: <c>"The compute shader of type {0} contains a mutable property \"{1}\" (only readonly properties are supported)"</c>.
+        /// </para>
+        /// </summary>
+        public static readonly DiagnosticDescriptor NonReadonlyShaderPropertyDeclaration = new(
+            id: "CMPS0045",
+            title: "Invalid shader constant property",
+            messageFormat: "The compute shader of type {0} contains a mutable property \"{1}\" (only readonly properties are supported)",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A type representing a compute shader contains a non readonly property declaration.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid shader constant property declaration.
+        /// <para>
+        /// Format: <c>"The compute shader of type {0} contains an instance property \"{1}\" (only static properties are supported)"</c>.
+        /// </para>
+        /// </summary>
+        public static readonly DiagnosticDescriptor InstanceShaderPropertyDeclaration = new(
+            id: "CMPS0046",
+            title: "Invalid shader constant property",
+            messageFormat: "The compute shader of type {0} contains an instance property \"{1}\" (only static properties are supported)",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A type representing a compute shader contains an instance property declaration.",
             helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
     }
 }

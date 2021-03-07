@@ -71,12 +71,13 @@ namespace ComputeSharp.SourceGenerators
             Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
             // Explore the syntax tree and extract the processed info
-            var processedMembers = GetProcessedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
+            var processedMembers = GetProcessedFields(context, structDeclarationSymbol, discoveredTypes).ToArray();
             var sharedBuffers = GetGroupSharedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
             var (entryPoint, localFunctions) = GetProcessedMethods(context, structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
             var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
             var processedMethods = localFunctions.Concat(staticMethods.Values).Select(static method => method.NormalizeWhitespace().ToFullString()).ToArray();
             var processedConstants = GetProcessedConstants(constantDefinitions);
+            var staticConstants = GetConstantProperties(context, semanticModel, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
 
             // Create the compilation unit with the source attribute
             var source =
@@ -90,6 +91,7 @@ namespace ComputeSharp.SourceGenerators
                         AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(entryPoint))),
                         AttributeArgument(ArrayExpression(processedMethods)),
                         AttributeArgument(NestedArrayExpression(processedConstants)),
+                        AttributeArgument(NestedArrayExpression(staticConstants)),
                         AttributeArgument(NestedArrayExpression(sharedBuffers)))))
                 .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                 .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
@@ -101,14 +103,14 @@ namespace ComputeSharp.SourceGenerators
         }
 
         /// <summary>
-        /// Gets a sequence of captured members and their mapped names.
+        /// Gets a sequence of captured fields and their mapped names.
         /// </summary>
         /// <param name="context">The current generator context in use.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="types">The collection of currently discovered types.</param>
-        /// <returns>A sequence of captured members in <paramref name="structDeclarationSymbol"/>.</returns>
+        /// <returns>A sequence of captured fields in <paramref name="structDeclarationSymbol"/>.</returns>
         [Pure]
-        private static IEnumerable<IEnumerable<string>> GetProcessedMembers(
+        private static IEnumerable<IEnumerable<string>> GetProcessedFields(
             GeneratorExecutionContext context,
             INamedTypeSymbol structDeclarationSymbol,
             ICollection<INamedTypeSymbol> types)
@@ -168,6 +170,78 @@ namespace ComputeSharp.SourceGenerators
             if (!hlslResourceFound)
             {
                 context.ReportDiagnostic(MissingShaderResources, structDeclarationSymbol, structDeclarationSymbol);
+            }
+        }
+
+        /// <summary>
+        /// Gets a sequence of shader static constant properties and their mapped names.
+        /// </summary>
+        /// <param name="context">The current generator context in use.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the type to process.</param>
+        /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> instance for the current type.</param>
+        /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
+        /// <param name="discoveredTypes">The collection of currently discovered types.</param>
+        /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+        /// <returns>A sequence of static constant properties in <paramref name="structDeclarationSymbol"/>.</returns>
+        [Pure]
+        private static IEnumerable<IEnumerable<string>> GetConstantProperties(
+            GeneratorExecutionContext context,
+            SemanticModel semanticModel,
+            StructDeclarationSyntax structDeclaration,
+            INamedTypeSymbol structDeclarationSymbol,
+            ICollection<INamedTypeSymbol> discoveredTypes,
+            IDictionary<IFieldSymbol, string> constantDefinitions)
+        {
+            foreach (var propertyDeclaration in structDeclaration.Members.OfType<PropertyDeclarationSyntax>())
+            {
+                IPropertySymbol propertySymbol = semanticModel.GetDeclaredSymbol(propertyDeclaration)!;
+
+                if (!propertySymbol.IsStatic)
+                {
+                    context.ReportDiagnostic(InstanceShaderPropertyDeclaration, propertyDeclaration, structDeclarationSymbol, propertySymbol.Name);
+
+                    continue;
+                }
+
+                if (!propertySymbol.IsReadOnly)
+                {
+                    context.ReportDiagnostic(NonReadonlyShaderPropertyDeclaration, propertyDeclaration, structDeclarationSymbol, propertySymbol.Name);
+
+                    continue;
+                }
+
+                // Constant properties must be named type symbols
+                if (propertySymbol.Type is not INamedTypeSymbol typeSymbol)
+                {
+                    context.ReportDiagnostic(InvalidShaderConstantPropertyType, propertyDeclaration, structDeclarationSymbol, propertySymbol.Name, propertySymbol.Type);
+
+                    continue;
+                }
+
+                string metadataName = typeSymbol.GetFullMetadataName();
+
+                // Constant properties must be of a primitive, vector or matrix type
+                if (!HlslKnownTypes.IsKnownHlslType(metadataName))
+                {
+                    context.ReportDiagnostic(InvalidShaderConstantPropertyType, propertyDeclaration, structDeclarationSymbol, propertySymbol.Name, propertySymbol.Type);
+
+                    continue;
+                }
+
+                ConstantPropertyRewriter constantPropertyRewriter = new(
+                    semanticModel,
+                    discoveredTypes,
+                    constantDefinitions,
+                    context);
+
+                if (constantPropertyRewriter.Visit(propertyDeclaration) is ExpressionSyntax expression)
+                {
+                    string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
+
+                    _ = HlslKnownKeywords.TryGetMappedName(propertySymbol.Name, out string? mapping);
+
+                    yield return new[] { mapping ?? propertySymbol.Name, typeName, expression.NormalizeWhitespace().ToFullString() };
+                }
             }
         }
 

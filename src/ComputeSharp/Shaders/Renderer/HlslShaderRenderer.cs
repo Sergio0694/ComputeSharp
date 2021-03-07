@@ -42,13 +42,30 @@ namespace ComputeSharp.Shaders.Renderer
             builder.Append("#define __GroupSize__get_Z ");
             builder.AppendLine(threadsZ.ToString());
 
-            // User defined onstants
-            foreach (var constant in info.ConstantsInfo)
+            // Define declarations
+            foreach (var define in info.DefinesInfo)
             {
                 builder.Append("#define ");
-                builder.Append(constant.Key);
+                builder.Append(define.Key);
                 builder.Append(' ');
-                builder.AppendLine(constant.Value);
+                builder.AppendLine(define.Value);
+            }
+
+            // Static constants
+            if (info.ConstantsInfo.Count > 0)
+            {
+                builder.AppendLine();
+
+                foreach (var constant in info.ConstantsInfo)
+                {
+                    builder.Append("static const ");
+                    builder.Append(constant.Value.Type);
+                    builder.Append(' ');
+                    builder.Append(constant.Key);
+                    builder.Append(" = ");
+                    builder.Append(constant.Value.Assignment);
+                    builder.AppendLine(";");
+                }
             }
 
             // Declared types
