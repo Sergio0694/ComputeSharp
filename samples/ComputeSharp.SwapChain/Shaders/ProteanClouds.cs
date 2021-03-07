@@ -19,6 +19,8 @@
         /// </summary>
         public readonly float time;
 
+        private static Float3x3 m3 => new Float3x3(0.33338f, 0.56034f, -0.71817f, -0.87887f, 0.32651f, -0.15323f, 0.15162f, 0.69596f, 0.61339f) * 1.93f;
+
         private static Float2x2 Rotate(in float a)
         {
             float c = Hlsl.Cos(a), s = Hlsl.Sin(a);
@@ -58,8 +60,6 @@
                 d -= Hlsl.Abs(Hlsl.Dot(Hlsl.Cos(p), Hlsl.Sin(p.YZX)) * z);
                 z *= 0.57f;
                 trk *= 1.4f;
-
-                Float3x3 m3 = new Float3x3(0.33338f, 0.56034f, -0.71817f, -0.87887f, 0.32651f, -0.15323f, 0.15162f, 0.69596f, 0.61339f) * 1.93f;
 
                 p = Hlsl.Mul(p, m3);
             }

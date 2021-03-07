@@ -30,6 +30,12 @@
         private const float Ambient = 0.32184f;
         private const float Diffuse = 0.5f;
 
+        private static Float3 LightDir => 1.0f;
+        private static Float3 LightColor => new(1.0f, 1.0f, 0.858824f);
+        private static Float3 LightDir2 => new(1.0f, -1.0f, 1.0f);
+        private static Float3 LightColor2 => new(0, 0.333333f, 1.0f);
+        private static Float3 Offset => new(0.92858f, 0.92858f, 0.32858f);
+
         /// <summary>
         /// Rotates a given <see cref="Float2"/> value by a specified amount.
         /// </summary>
@@ -44,15 +50,15 @@
         /// </summary>
         private static Float3 GetLight(in Float3 color, in Float3 normal)
         {
-            Float3 lightDir = Hlsl.Normalize((Float3)1);
+            Float3 lightDir = Hlsl.Normalize(LightDir);
             float diffuse = Hlsl.Max(0.0f, Hlsl.Dot(-normal, lightDir));
 
-            Float3 lightDir2 = Hlsl.Normalize(new Float3(1.0f, -1.0f, 1.0f));
+            Float3 lightDir2 = Hlsl.Normalize(LightDir2);
             float diffuse2 = Hlsl.Max(0.0f, Hlsl.Dot(-normal, lightDir2));
 
             return
-                (diffuse * Diffuse) * (new Float3(1.0f, 1.0f, 0.858824f) * color) +
-                (diffuse2 * Diffuse) * (new Float3(0.0f, 0.333333f, 1.0f) * color);
+                (diffuse * Diffuse) * (LightColor * color) +
+                (diffuse2 * Diffuse) * (LightColor2 * color);
         }
 
         /// <summary>
@@ -70,7 +76,6 @@
             z = Hlsl.Abs(1.0f - Mod(z, 2.0f));
 
             float d = 1000.0f;
-            Float3 Offset = new(0.92858f, 0.92858f, 0.32858f);
 
             for (int n = 0; n < Iterations; n++)
             {
