@@ -17,10 +17,11 @@
     <Compile Include="..\ComputeSharp\Core\Attributes\__Internals\ComputeRoot32BitConstantsAttribute.cs" Link="Core\Attributes\__Internals\ComputeRoot32BitConstantsAttribute.cs" />
     <Compile Include="..\ComputeSharp\Core\Attributes\__Internals\IComputeShaderSourceAttribute.cs" Link="Core\Attributes\__Internals\IComputeShaderSourceAttribute.cs" />
     <Compile Include="..\ComputeSharp\Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" Link="Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" />
+    <Compile Include="..\ComputeSharp\Core\Dispatch\DispatchSize.cs" Link="Core\Dispatch\DispatchSize.cs" />
+    <Compile Include="..\ComputeSharp\Core\Dispatch\GridIds.cs" Link="Core\Dispatch\GridIds.cs" />
     <Compile Include="..\ComputeSharp\Core\Dispatch\GroupIds.cs" Link="Core\Dispatch\GroupIds.cs" />
     <Compile Include="..\ComputeSharp\Core\Dispatch\GroupSize.cs" Link="Core\Dispatch\GroupSize.cs" />
     <Compile Include="..\ComputeSharp\Core\Dispatch\ThreadIds.cs" Link="Core\Dispatch\ThreadIds.cs" />
-    <Compile Include="..\ComputeSharp\Core\Dispatch\GridIds.cs" Link="Core\Dispatch\GridIds.cs" />
     <Compile Include="..\ComputeSharp\Core\Exceptions\InvalidExecutionContextException.cs" Link="Core\Exceptions\InvalidExecutionContextException.cs" />
     <Compile Include="..\ComputeSharp\Core\Exceptions\MissingMethodSourceException.cs" Link="Core\Exceptions\MissingMethodSourceException.cs" />
     <Compile Include="..\ComputeSharp\Core\Extensions\MethodInfoExtensions.cs" Link="Core\Extensions\MethodInfoExtensions.cs" />

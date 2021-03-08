@@ -249,6 +249,28 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 }
             }
 
+            // Programmatically load mappings for the dispatch size
+            foreach (var property in typeof(DispatchSize).GetProperties(BindingFlags.Static | BindingFlags.Public))
+            {
+                string key = $"{typeof(DispatchSize).FullName}{Type.Delimiter}{property.Name}";
+
+                switch (property.Name)
+                {
+                    case nameof(DispatchSize.Count):
+                        knownMembers.Add(key, "__x * __y * __z");
+                        break;
+                    case string name when name.Length == 1:
+                        knownMembers.Add(key, $"__{char.ToLower(name[0])}");
+                        break;
+                    case string name when name.Length == 2:
+                        knownMembers.Add(key, $"int2(__{char.ToLower(name[0])}, __{char.ToLower(name[1])})");
+                        break;
+                    case string name when name.Length == 3:
+                        knownMembers.Add(key, $"int3(__{char.ToLower(name[0])}, __{char.ToLower(name[1])}, __{char.ToLower(name[2])})");
+                        break;
+                }
+            }
+
             return knownMembers;
         }
 

@@ -1,4 +1,5 @@
 using System;
+using ComputeSharp.Interop;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -178,6 +179,42 @@ namespace ComputeSharp.Tests
             public void Execute()
             {
                 buffer[ThreadIds.X] = GridIds.X;
+            }
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void Verify_DispatchSize(Device device)
+        {
+            using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(6);
+
+            device.Get().For(11, 22, 3, new DispatchSizeShader(buffer));
+
+            ReflectionServices.GetShaderInfo<DispatchSizeShader>(out var info);
+
+            int[] data = buffer.ToArray();
+
+            Assert.AreEqual(data[0], 11 * 22 * 3);
+            Assert.AreEqual(data[1], 11);
+            Assert.AreEqual(data[2], 22);
+            Assert.AreEqual(data[3], 3);
+            Assert.AreEqual(data[4], 11 + 22);
+            Assert.AreEqual(data[5], 11 + 22 + 3);
+        }
+
+        [AutoConstructor]
+        internal readonly partial struct DispatchSizeShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<int> buffer;
+
+            public void Execute()
+            {
+                buffer[0] = DispatchSize.Count;
+                buffer[1] = DispatchSize.X;
+                buffer[2] = DispatchSize.Y;
+                buffer[3] = DispatchSize.Z;
+                buffer[4] = (int)Hlsl.Dot(DispatchSize.XY, Float2.One);
+                buffer[5] = (int)Hlsl.Dot(DispatchSize.XYZ, Float3.One);
             }
         }
     }
