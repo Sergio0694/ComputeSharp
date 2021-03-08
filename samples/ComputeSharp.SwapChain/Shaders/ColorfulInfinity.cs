@@ -51,10 +51,7 @@
         /// <inheritdoc/>
         public void Execute()
         {
-            int width = texture.Width;
-            int height = texture.Height;
-
-            Float2 uv = ((Float2)ThreadIds.XY - (Float2)(new Int2(width, height)) * 0.5f) / height;
+            Float2 uv = (ThreadIds.XY - (Float2)DispatchSize.XY * 0.5f) / DispatchSize.Y;
             Float3 col = 0;
             float t = time * 0.3f;
 
