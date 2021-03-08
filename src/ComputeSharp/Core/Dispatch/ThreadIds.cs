@@ -6,7 +6,7 @@ namespace ComputeSharp
     /// A <see langword="class"/> that indicates the ids of a given GPU thread running a compute shader.
     /// That is, it enables a shader to access info on the current iteration index along each axis.
     /// </summary>
-    public static class ThreadIds
+    public static partial class ThreadIds
     {
         /// <summary>
         /// Gets the X id of the current thread.

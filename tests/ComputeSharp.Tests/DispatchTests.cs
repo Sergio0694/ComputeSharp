@@ -67,6 +67,47 @@ namespace ComputeSharp.Tests
 
         [CombinatorialTestMethod]
         [AllDevices]
+        public unsafe void Verify_ThreadIdsNormalized(Device device)
+        {
+            using ReadWriteTexture3D<Float4> buffer = device.Get().AllocateReadWriteTexture3D<Float4>(10, 20, 30);
+
+            device.Get().For(buffer.Width, buffer.Height, buffer.Depth, new ThreadIdsNormalizedShader(buffer));
+
+            Float4[,,] data = buffer.ToArray();
+            float* value = stackalloc float[4];
+
+            for (int z = 0; z < 30; z++)
+            {
+                for (int x = 0; x < 10; x++)
+                {
+                    for (int y = 0; y < 20; y++)
+                    {
+                        *(Float4*)value = data[z, y, x];
+
+                        Assert.AreEqual(x / (float)buffer.Width, value[0], 0.000001f);
+                        Assert.AreEqual(y / (float)buffer.Height, value[1], 0.000001f);
+                        Assert.AreEqual(z / (float)buffer.Depth, value[2], 0.000001f);
+                        Assert.AreEqual(x / (float)buffer.Width, value[3], 0.000001f);
+                    }
+                }
+            }
+        }
+
+        [AutoConstructor]
+        internal readonly partial struct ThreadIdsNormalizedShader : IComputeShader
+        {
+            public readonly ReadWriteTexture3D<Float4> buffer;
+
+            public void Execute()
+            {
+                buffer[ThreadIds.XYZ].XYZ = ThreadIds.Normalized.XYZ;
+                buffer[ThreadIds.XYZ].XY = ThreadIds.Normalized.XY;
+                buffer[ThreadIds.XYZ].W = ThreadIds.Normalized.X;
+            }
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
         public unsafe void Verify_GroupIds(Device device)
         {
             using ReadWriteTexture3D<Int4> buffer = device.Get().AllocateReadWriteTexture3D<Int4>(50, 50, 50);

@@ -227,6 +227,37 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 }
             }
 
+            // Programmatically load mappings for the normalized thread ids
+            foreach (var property in typeof(ThreadIds.Normalized).GetProperties(BindingFlags.Static | BindingFlags.Public))
+            {
+                string key = $"{typeof(ThreadIds).FullName}{Type.Delimiter}{typeof(ThreadIds.Normalized).Name}{Type.Delimiter}{property.Name}";
+
+                switch (property.Name)
+                {
+                    case string name when name.Length == 1:
+                        knownMembers.Add(key, $"{typeof(ThreadIds).Name}.{char.ToLower(name[0])} / (float)__{char.ToLower(name[0])}");
+                        break;
+                    case string name when name.Length == 2:
+                    {
+                        string
+                            numerator = $"float2({typeof(ThreadIds).Name}.{char.ToLower(name[0])}, {typeof(ThreadIds).Name}.{char.ToLower(name[1])})",
+                            denominator = $"float2(__{char.ToLower(name[0])}, __{char.ToLower(name[1])})";
+
+                        knownMembers.Add(key, $"{numerator} / {denominator}");
+                        break;
+                    }
+                    case string name when name.Length == 3:
+                    {
+                        string
+                            numerator = $"float3({typeof(ThreadIds).Name}.{char.ToLower(name[0])}, {typeof(ThreadIds).Name}.{char.ToLower(name[1])}, {typeof(ThreadIds).Name}.{char.ToLower(name[2])})",
+                            denominator = $"float3(__{char.ToLower(name[0])}, __{char.ToLower(name[1])}, __{char.ToLower(name[2])})";
+
+                        knownMembers.Add(key, $"{numerator} / {denominator}");
+                        break;
+                    }
+                }
+            }
+
             // Programmatically load mappings for the group size
             foreach (var property in typeof(GroupSize).GetProperties(BindingFlags.Static | BindingFlags.Public))
             {
