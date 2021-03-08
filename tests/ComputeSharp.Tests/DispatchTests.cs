@@ -153,5 +153,32 @@ namespace ComputeSharp.Tests
                 buffer[3] = GroupSize.Count;
             }
         }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void Verify_GridIds(Device device)
+        {
+            using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(256);
+
+            device.Get().For(256, 1, 1, 32, 1, 1, new GridIdsShader(buffer));
+
+            int[] data = buffer.ToArray();
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                Assert.AreEqual(data[i], i / 32);
+            }
+        }
+
+        [AutoConstructor]
+        internal readonly partial struct GridIdsShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<int> buffer;
+
+            public void Execute()
+            {
+                buffer[ThreadIds.X] = GridIds.X;
+            }
+        }
     }
 }
