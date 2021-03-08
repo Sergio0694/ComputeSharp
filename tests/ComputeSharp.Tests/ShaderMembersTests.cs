@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,13 +19,13 @@ namespace ComputeSharp.Tests
 
             float[] results = buffer.ToArray();
 
-            Assert.IsTrue(Math.Abs(3.14f - results[0]) < 0.00001f);
-            Assert.IsTrue(Math.Abs(results[1] - results[2]) < 0.00001f);
-            Assert.IsTrue(Math.Abs(1 - results[3]) < 0.00001f);
-            Assert.IsTrue(Math.Abs(2 - results[4]) < 0.00001f);
-            Assert.IsTrue(Math.Abs(3 - results[5]) < 0.00001f);
-            Assert.IsTrue(Math.Abs(4 - results[6]) < 0.00001f);
-            Assert.IsTrue(Math.Abs(3.14f - results[7]) < 0.00001f);
+            Assert.AreEqual(3.14f, results[0], 0.00001f);
+            Assert.AreEqual(results[1], results[2], 0.00001f);
+            Assert.AreEqual(1, results[3], 0.00001f);
+            Assert.AreEqual(2, results[4], 0.00001f);
+            Assert.AreEqual(3, results[5], 0.00001f);
+            Assert.AreEqual(4, results[6], 0.00001f);
+            Assert.AreEqual(3.14f, results[7], 0.00001f);
         }
 
         [AutoConstructor]

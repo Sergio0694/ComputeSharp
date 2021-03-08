@@ -90,8 +90,7 @@
         /// <inheritdoc/>
         public void Execute()
         {
-            Int2 resolution = new(texture.Width, texture.Height);
-            Float2 p = ((Float2)ThreadIds.XY * 2.0f - resolution) / Hlsl.Min(resolution.X, resolution.Y);
+            Float2 p = ((Float2)ThreadIds.XY * 2.0f - DispatchSize.XY) / Hlsl.Min(DispatchSize.X, DispatchSize.Y);
             Float3 ro = new(0.0f, -0.2f, time * 4.0f);
             Float3 ray = Hlsl.Normalize(new Float3(p, 1.5f));
 

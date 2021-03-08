@@ -22,7 +22,7 @@
         /// <inheritdoc/>
         public void Execute()
         {
-            Float2 position = ((Float2)(256 * ThreadIds.XY)) / texture.Width + time;
+            Float2 position = ((Float2)(256 * ThreadIds.XY)) / DispatchSize.X + time;
             Float4 color = 0;
 
             for (int i = 0; i < 6; i++)

@@ -284,10 +284,11 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                         {
                             DiagnosticDescriptor? descriptor = typeName switch
                             {
-                                _ when typeName == typeof(ThreadIds).FullName => InvalidThreadIdsUsage,
+                                _ when typeName == typeof(ThreadIds).FullName || typeName == typeof(ThreadIds.Normalized).FullName => InvalidThreadIdsUsage,
                                 _ when typeName == typeof(GroupIds).FullName => InvalidGroupIdsUsage,
                                 _ when typeName == typeof(GroupSize).FullName => InvalidGroupSizeUsage,
                                 _ when typeName == typeof(GridIds).FullName => InvalidGridIdsUsage,
+                                _ when typeName == typeof(DispatchSize).FullName => InvalidDispatchSizeUsage,
                                 _ => null
                             };
 

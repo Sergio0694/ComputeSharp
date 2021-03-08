@@ -158,15 +158,14 @@
             Float3 camPos = 0.5f * time * new Float3(1.0f, 0.0f, 0.0f);
             Float3 target = camPos + new Float3(1.0f, 0.0f * Hlsl.Cos(time), 0.0f * Hlsl.Sin(0.4f * time));
             Float3 camDir = Hlsl.Normalize(target - camPos);
-            Float3 camUp = new Float3(0.0f, 1.0f, 0.0f);
+            Float3 camUp = new(0.0f, 1.0f, 0.0f);
 
             camUp = Hlsl.Normalize(camUp - Hlsl.Dot(camDir, camUp) * camDir);
 
             Float3 camRight = Hlsl.Normalize(Hlsl.Cross(camDir, camUp));
-            Float2 resolution = new(texture.Width, texture.Height);
-            Float2 coord = -1.0f + 2.0f * (Float2)ThreadIds.XY / resolution;
+            Float2 coord = -1.0f + 2.0f * (Float2)ThreadIds.XY / DispatchSize.XY;
 
-            coord.X *= resolution.X / resolution.Y;
+            coord.X *= (float)DispatchSize.X / DispatchSize.Y;
 
             Float3 rayDir = Hlsl.Normalize(camDir + (coord.X * camRight + coord.Y * camUp) * FieldOfView);
 

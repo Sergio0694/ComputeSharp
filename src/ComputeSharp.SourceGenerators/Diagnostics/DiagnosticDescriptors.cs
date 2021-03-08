@@ -652,5 +652,18 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
             isEnabledByDefault: true,
             description: "A type representing a compute shader contains an instance property declaration.",
             helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid <see cref="DispatchSize"/> usage.
+        /// </summary>
+        public static readonly DiagnosticDescriptor InvalidDispatchSizeUsage = new(
+            id: "CMPS0047",
+            title: "Invalid DispatchSize usage",
+            messageFormat: "The DispatchSize type can only be used within the main body of a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "The DispatchSize type can only be used within the main body of a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
     }
 }

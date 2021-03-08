@@ -133,10 +133,9 @@
         /// <inheritdoc/>
         public void Execute()
         {
-            Int2 resolution = new(texture.Width, texture.Height);
-            Float2 q = (Float2)ThreadIds.XY / resolution;
-            Float2 p = (ThreadIds.XY - 0.5f * (Float2)resolution) / resolution.Y;
-            Float2 bsMo = -0.5f * (Float2)resolution / resolution.Y;
+            Float2 q = (Float2)ThreadIds.XY / DispatchSize.XY;
+            Float2 p = (ThreadIds.XY - 0.5f * (Float2)DispatchSize.XY) / DispatchSize.Y;
+            Float2 bsMo = -0.5f * (Float2)DispatchSize.XY / DispatchSize.Y;
             float scaledTime = time * 3.0f;
             Float3 ro = new(0, 0, scaledTime);
 

@@ -227,6 +227,37 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 }
             }
 
+            // Programmatically load mappings for the normalized thread ids
+            foreach (var property in typeof(ThreadIds.Normalized).GetProperties(BindingFlags.Static | BindingFlags.Public))
+            {
+                string key = $"{typeof(ThreadIds).FullName}{Type.Delimiter}{typeof(ThreadIds.Normalized).Name}{Type.Delimiter}{property.Name}";
+
+                switch (property.Name)
+                {
+                    case string name when name.Length == 1:
+                        knownMembers.Add(key, $"{typeof(ThreadIds).Name}.{char.ToLower(name[0])} / (float)__{char.ToLower(name[0])}");
+                        break;
+                    case string name when name.Length == 2:
+                    {
+                        string
+                            numerator = $"float2({typeof(ThreadIds).Name}.{char.ToLower(name[0])}, {typeof(ThreadIds).Name}.{char.ToLower(name[1])})",
+                            denominator = $"float2(__{char.ToLower(name[0])}, __{char.ToLower(name[1])})";
+
+                        knownMembers.Add(key, $"{numerator} / {denominator}");
+                        break;
+                    }
+                    case string name when name.Length == 3:
+                    {
+                        string
+                            numerator = $"float3({typeof(ThreadIds).Name}.{char.ToLower(name[0])}, {typeof(ThreadIds).Name}.{char.ToLower(name[1])}, {typeof(ThreadIds).Name}.{char.ToLower(name[2])})",
+                            denominator = $"float3(__{char.ToLower(name[0])}, __{char.ToLower(name[1])}, __{char.ToLower(name[2])})";
+
+                        knownMembers.Add(key, $"{numerator} / {denominator}");
+                        break;
+                    }
+                }
+            }
+
             // Programmatically load mappings for the group size
             foreach (var property in typeof(GroupSize).GetProperties(BindingFlags.Static | BindingFlags.Public))
             {
@@ -240,11 +271,33 @@ namespace ComputeSharp.SourceGenerators.Mappings
                     case string name when name.Length == 1:
                         knownMembers.Add(key, $"__GroupSize__get_{name}");
                         break;
-                    case string name when name.Length == 1:
-                        knownMembers.Add(key, $"__GroupSize__get_{name[0]} * __GroupSize__get_{name[1]}");
+                    case string name when name.Length == 2:
+                        knownMembers.Add(key, $"int2(__GroupSize__get_{name[0]}, __GroupSize__get_{name[1]})");
+                        break;
+                    case string name when name.Length == 3:
+                        knownMembers.Add(key, $"int3(__GroupSize__get_{name[0]}, __GroupSize__get_{name[1]}, __GroupSize__get_{name[2]})");
+                        break;
+                }
+            }
+
+            // Programmatically load mappings for the dispatch size
+            foreach (var property in typeof(DispatchSize).GetProperties(BindingFlags.Static | BindingFlags.Public))
+            {
+                string key = $"{typeof(DispatchSize).FullName}{Type.Delimiter}{property.Name}";
+
+                switch (property.Name)
+                {
+                    case nameof(DispatchSize.Count):
+                        knownMembers.Add(key, "__x * __y * __z");
                         break;
                     case string name when name.Length == 1:
-                        knownMembers.Add(key, $"__GroupSize__get_{name[0]} * __GroupSize__get_{name[1]} * __GroupSize__get_{name[2]}");
+                        knownMembers.Add(key, $"__{char.ToLower(name[0])}");
+                        break;
+                    case string name when name.Length == 2:
+                        knownMembers.Add(key, $"int2(__{char.ToLower(name[0])}, __{char.ToLower(name[1])})");
+                        break;
+                    case string name when name.Length == 3:
+                        knownMembers.Add(key, $"int3(__{char.ToLower(name[0])}, __{char.ToLower(name[1])}, __{char.ToLower(name[2])})");
                         break;
                 }
             }

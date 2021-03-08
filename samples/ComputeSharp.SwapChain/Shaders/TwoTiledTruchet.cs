@@ -116,17 +116,14 @@
         /// <inheritdoc/>
         public void Execute()
         {
-            int width = texture.Width;
-            int height = texture.Height;
-
-            Float2 uv = ((Float2)ThreadIds.XY - (Float2)(new Int2(width, height)) * 0.5f) / height;
+            Float2 uv = (ThreadIds.XY - (Float2)DispatchSize.XY * 0.5f) / DispatchSize.Y;
             float gSc = 7.0f;
             Float2 p = uv * gSc - new Float2(-1, -0.5f) * time / 2.0f;
-            float sf = 2.0f / height * gSc;
+            float sf = 2.0f / DispatchSize.Y * gSc;
             float lSc = 6.0f;
             float lw = 1.0f / lSc / gSc;
             Float2 d = DistanceField(p, out Float2 ang) - 2.5f / lSc;
-            Float3 col = new Float3(1.0f, 0.9f, 0.8f);
+            Float3 col = new(1.0f, 0.9f, 0.8f);
 
             for (int i = 0; i < 2; i++)
             {
