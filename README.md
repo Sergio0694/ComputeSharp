@@ -14,6 +14,7 @@
   - [HLSL vector and matrix types](#hlsl-vector-and-matrix-types)
   - [HLSL intrinsics](#hlsl-intrinsics)
   - [Shader constants](#shader-constants)
+  - [Dispatch info](#dispatch-info)
   - [Working with images](#working-with-images)
   - [Shader metaprogramming](#shader-metaprogramming)
 - [Requirements](#requirements)
@@ -172,6 +173,19 @@ public readonly struct SampleShaderWithConstants : IComputeShader
 }
 ```
 
+## Dispatch info
+
+As shown in the [Quick start](#quick-start) paragraph, **ComputeSharp** includes a number of special types that allow shaders to access a number of useful dispatch info values, such as the current iteration coordinate or the target dispatch range. Here is a list of all the available types in this category:
+
+- `ThreadIds`: indicates the ids of a given GPU thread running a compute shader. That is, it enables a shader to access info on the current iteration index along each axis.
+- `ThreadIds.Normalized`: indicates the normalized ids of a given GPU thread running a compute shader. These ids represent equivalent info to those from `ThreadIds`, but normalized in the [0, 1] range. The range used for the normalization is the one given by the target dispatch size.
+- `DispatchSize`: indicates the size of the current shader dispatch being executed. That is, it enables a shader to access info on the targeted number of invocations along each axis.
+- `GroupIds`: indicates the ids of a given GPU thread running a compute shader within a dispatch group. That is, it enables a shader to access info on the index of the current thread with respect to the currently running group.
+- `GroupSize`: indicates the size info of a given GPU thread group running a compute shader. That is, it enables a shader to access info on the size of the thread groups being used.
+- `GridIds`: indicates the ids of the current thread group within the dispatch grid. That is, it enables a shader to access info on the index of the current thread group with respect to the dispatch grid.
+
+For more info on how all these values relate to the corresponding HLSL inputs, see the `[numthreads]` docs [here](https://docs.microsoft.com/windows/win32/direct3dhlsl/sm5-attributes-numthreads). Note that `ThreadIds`, `GroupIds` and `GridIds` map to `SV_DispatchThreadID`, `SV_GroupThreadID` and `SV_GroupID` respectively, and the `GroupIds.Index` property maps to `SV_GroupIndex`.
+
 ## Working with images
 
 As mentioned in the [GPU resource types](#gpu-resource-types) paragraph, there are several texture types that are specialized to work on image pixels, such as `ReadWriteTexture2D<T, TPixel>`. Let's imagine we want to write a compute shader that applies some image processing filter: we will need to load an image (eg. using [ImageSharp](https://github.com/SixLabors/ImageSharp), or just the `System.Drawing` APIs) and then process it on the GPU, but without spending time on the CPU to convert pixels from a format such as RGBA32 to the normalized `float` values we want our shader to work on. We can do this by utilizing the `ReadWriteTexture2D<T, TPixel>` type as follows:
@@ -194,7 +208,7 @@ try
     using var texture = Gpu.Default.AllocateReadWriteTexture2D<Bgra32, Float4>(bitmapSpan, bitmap.Width, bitmap.Height);
 
     // Run our shader on the texture we just created
-    Gpu.Default.For(bitmap.Width, bitmap.Height, new GaussianBlur(texture));
+    Gpu.Default.For(bitmap.Width, bitmap.Height, new GrayscaleEffect(texture));
 
     // When the shader has completed, copy the processed texture back
     texture.CopyTo(bitmapSpan);
@@ -211,7 +225,7 @@ With the compute shader being like this:
 
 ```csharp
 [AutoConstructor]
-public readonly partial struct GaussianBlur : IComputeShader
+public readonly partial struct GrayscaleEffect : IComputeShader
 {
     public readonly IReadWriteTexture2D<Float4> texture;
 
