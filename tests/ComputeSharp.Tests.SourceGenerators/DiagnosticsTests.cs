@@ -142,6 +142,7 @@ namespace ComputeSharp.Tests.SourceGenerators
         [DataRow(nameof(GroupIds), "CMPS0007")]
         [DataRow(nameof(GroupSize), "CMPS0008")]
         [DataRow(nameof(GridIds), "CMPS0009")]
+        [DataRow(nameof(DispatchSize), "CMPS0047")]
         public void InvalidDispatchInfoUsage_LocalFunction(string typeName, string diagnosticsId)
         {
             string source = $@"
@@ -176,6 +177,7 @@ namespace ComputeSharp.Tests.SourceGenerators
         [DataRow(nameof(GroupIds), "CMPS0007")]
         [DataRow(nameof(GroupSize), "CMPS0008")]
         [DataRow(nameof(GridIds), "CMPS0009")]
+        [DataRow(nameof(DispatchSize), "CMPS0047")]
         public void InvalidDispatchInfoUsage_StaticMethod(string typeName, string diagnosticsId)
         {
             string source = $@"
@@ -196,6 +198,41 @@ namespace ComputeSharp.Tests.SourceGenerators
                     public static int Fail() => {typeName}.X;
 
                     public void Execute() => Fail();
+                }}
+            }}";
+
+            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, diagnosticsId);
+        }
+
+        [TestMethod]
+        [DataRow(nameof(ThreadIds), "CMPS0006")]
+        [DataRow(nameof(GroupIds), "CMPS0007")]
+        [DataRow(nameof(GroupSize), "CMPS0008")]
+        [DataRow(nameof(GridIds), "CMPS0009")]
+        [DataRow(nameof(DispatchSize), "CMPS0047")]
+        public void InvalidDispatchInfoUsage_ConstantProperty(string typeName, string diagnosticsId)
+        {
+            string source = $@"
+            using ComputeSharp;
+
+            namespace ComputeSharp
+            {{
+                public class ReadWriteBuffer<T> {{ }}
+                public static class {typeName} {{ public static int X => 0; }}
+            }}
+
+            namespace MyFancyApp.Sample
+            {{
+                public struct MyShader : IComputeShader
+                {{
+                    public ReadWriteBuffer<float> buffer;
+
+                    private static int Foo => {typeName}.X;
+
+                    public void Execute()
+                    {{
+                        buffer[0] = Foo;
+                    }}
                 }}
             }}";
 

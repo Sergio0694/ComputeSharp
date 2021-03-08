@@ -87,6 +87,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                             _ when typeName == typeof(GroupIds).FullName => InvalidGroupIdsUsage,
                             _ when typeName == typeof(GroupSize).FullName => InvalidGroupSizeUsage,
                             _ when typeName == typeof(GridIds).FullName => InvalidGridIdsUsage,
+                            _ when typeName == typeof(DispatchSize).FullName => InvalidDispatchSizeUsage,
                             _ => null
                         };
 
