@@ -240,11 +240,11 @@ namespace ComputeSharp.SourceGenerators.Mappings
                     case string name when name.Length == 1:
                         knownMembers.Add(key, $"__GroupSize__get_{name}");
                         break;
-                    case string name when name.Length == 1:
-                        knownMembers.Add(key, $"__GroupSize__get_{name[0]} * __GroupSize__get_{name[1]}");
+                    case string name when name.Length == 2:
+                        knownMembers.Add(key, $"int2(__GroupSize__get_{name[0]}, __GroupSize__get_{name[1]})");
                         break;
-                    case string name when name.Length == 1:
-                        knownMembers.Add(key, $"__GroupSize__get_{name[0]} * __GroupSize__get_{name[1]} * __GroupSize__get_{name[2]}");
+                    case string name when name.Length == 3:
+                        knownMembers.Add(key, $"int3(__GroupSize__get_{name[0]}, __GroupSize__get_{name[1]}, __GroupSize__get_{name[2]})");
                         break;
                 }
             }

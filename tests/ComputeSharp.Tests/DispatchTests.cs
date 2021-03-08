@@ -139,6 +139,8 @@ namespace ComputeSharp.Tests
             Assert.AreEqual(15, data[1]);
             Assert.AreEqual(7, data[2]);
             Assert.AreEqual(4 * 15 * 7, data[3]);
+            Assert.AreEqual(4 + 15, data[4]);
+            Assert.AreEqual(4 + 15 + 7, data[5]);
         }
 
         [AutoConstructor]
@@ -152,6 +154,8 @@ namespace ComputeSharp.Tests
                 buffer[1] = GroupSize.Y;
                 buffer[2] = GroupSize.Z;
                 buffer[3] = GroupSize.Count;
+                buffer[4] = (int)Hlsl.Dot(GroupSize.XY, Float2.One);
+                buffer[5] = (int)Hlsl.Dot(GroupSize.XYZ, Float3.One);
             }
         }
 
