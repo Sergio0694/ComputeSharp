@@ -240,6 +240,36 @@ namespace ComputeSharp.Tests.SourceGenerators
         }
 
         [TestMethod]
+        public void InvalidThreadIdsNormalizedUsage()
+        {
+            string source = $@"
+            using ComputeSharp;
+
+            namespace ComputeSharp
+            {{
+                public class ReadWriteBuffer<T> {{ }}
+                public static class ThreadIds {{ public static class Normalized {{ public static int X => 0; }} }}
+            }}
+
+            namespace MyFancyApp.Sample
+            {{
+                public struct MyShader : IComputeShader
+                {{
+                    public ReadWriteBuffer<float> buffer;
+
+                    private static int Foo => ThreadIds.Normalized.X;
+
+                    public void Execute()
+                    {{
+                        buffer[0] = Foo;
+                    }}
+                }}
+            }}";
+
+            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0006");
+        }
+
+        [TestMethod]
         public void InvalidObjectCreationExpression_Explicit()
         {
             string source = @"
