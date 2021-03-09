@@ -30,11 +30,6 @@ namespace ComputeSharp.SwapChain.Backend
         private static HWND hwnd;
 
         /// <summary>
-        /// A <see cref="Stopwatch"/> instance used to track the elapsed time for the application.
-        /// </summary>
-        private static Stopwatch stopwatch = null!;
-
-        /// <summary>
         /// The application being run.
         /// </summary>
         private static Win32Application application = null!;
@@ -116,25 +111,33 @@ namespace ComputeSharp.SwapChain.Backend
             // Display the window
             _ = FX.ShowWindow(hwnd, FX.SW_SHOWDEFAULT);
 
-            // Start the timer
-            stopwatch = Stopwatch.StartNew();
-
             MSG msg = default;
 
             // Setup the render thread that enables smooth resizing of the window
             renderThread = new Thread(static args =>
             {
-                (Win32Application application, Stopwatch stopwatch, CancellationToken token) = ((Win32Application, Stopwatch, CancellationToken))args!;
+                (Win32Application application, CancellationToken token) = ((Win32Application, CancellationToken))args!;
+
+                Stopwatch
+                    startStopwatch = Stopwatch.StartNew(),
+                    frameStopwatch = Stopwatch.StartNew();
+
+                const long targetFrameTimeInTicksFor60fps = 166666;
 
                 while (!token.IsCancellationRequested)
                 {
-                    application.OnUpdate(stopwatch.Elapsed);
+                    if (frameStopwatch.ElapsedTicks >= targetFrameTimeInTicksFor60fps)
+                    {
+                        frameStopwatch.Restart();
+
+                        application.OnUpdate(startStopwatch.Elapsed);
+                    }
                 }
             });
 
             CancellationTokenSource tokenSource = new();
 
-            renderThread.Start((application, stopwatch, tokenSource.Token));
+            renderThread.Start((application, tokenSource.Token));
 
             // Process any messages in the queue
             while (msg.message != FX.WM_QUIT)
