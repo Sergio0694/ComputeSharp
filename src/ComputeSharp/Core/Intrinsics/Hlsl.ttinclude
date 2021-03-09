@@ -824,9 +824,9 @@ var Intrinsics = new[]
             new { Return = "float", Params = new[] { "Float2", "Float2" } },
             new { Return = "float", Params = new[] { "Float3", "Float3" } },
             new { Return = "float", Params = new[] { "Float4", "Float4" } },
-            new { Return = "float", Params = new[] { "Int2", "Int2" } },
-            new { Return = "float", Params = new[] { "Int3", "Int3" } },
-            new { Return = "float", Params = new[] { "Int4", "Int4" } }
+            new { Return = "int", Params = new[] { "Int2", "Int2" } },
+            new { Return = "int", Params = new[] { "Int3", "Int3" } },
+            new { Return = "int", Params = new[] { "Int4", "Int4" } }
         },
         IsPure = true
     },

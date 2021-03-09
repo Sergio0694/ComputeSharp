@@ -4597,7 +4597,7 @@ namespace ComputeSharp
         /// <returns>The dot product of the <paramref name="x"/> parameter and the <paramref name="y"/> parameter.</returns>
         [Pure]
         [HlslIntrinsicName("dot")]
-        public static float Dot(Int2 x, Int2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Dot)}({typeof(Int2)}, {typeof(Int2)})");
+        public static int Dot(Int2 x, Int2 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Dot)}({typeof(Int2)}, {typeof(Int2)})");
 
         /// <summary>
         /// Returns the dot product of two vectors.
@@ -4607,7 +4607,7 @@ namespace ComputeSharp
         /// <returns>The dot product of the <paramref name="x"/> parameter and the <paramref name="y"/> parameter.</returns>
         [Pure]
         [HlslIntrinsicName("dot")]
-        public static float Dot(Int3 x, Int3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Dot)}({typeof(Int3)}, {typeof(Int3)})");
+        public static int Dot(Int3 x, Int3 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Dot)}({typeof(Int3)}, {typeof(Int3)})");
 
         /// <summary>
         /// Returns the dot product of two vectors.
@@ -4617,7 +4617,7 @@ namespace ComputeSharp
         /// <returns>The dot product of the <paramref name="x"/> parameter and the <paramref name="y"/> parameter.</returns>
         [Pure]
         [HlslIntrinsicName("dot")]
-        public static float Dot(Int4 x, Int4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Dot)}({typeof(Int4)}, {typeof(Int4)})");
+        public static int Dot(Int4 x, Int4 y) => throw new InvalidExecutionContextException($"{typeof(Hlsl)}.{nameof(Dot)}({typeof(Int4)}, {typeof(Int4)})");
 
         /// <summary>
         /// Returns the base-e exponential of the specified value.
