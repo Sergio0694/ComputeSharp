@@ -44,7 +44,7 @@ int[] array = Enumerable.Range(0, 100).ToArray();
 // Allocate a GPU buffer and copy the data to it.
 // We want the shader to modify the items in-place, so we
 // can allocate a single read-write buffer to work on.
-using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer(array);
+using ReadWriteBuffer<int> buffer = Gpu.Default.AllocateReadWriteBuffer(array);
 ```
 
 The `AllocateReadWriteBuffer` extension takes care of creating a `ReadWriteBuffer<T>` instance with the same size as the input array and copying its contents to the allocated GPU buffer. There are a number of overloads available as well, to create buffers of different types and with custom length.
@@ -53,9 +53,9 @@ Next, we need to define the GPU shader to run. To do this, we'll need to define 
 
 ```C#
 [AutoConstructor]
-public readonly struct MultiplyByTwo : IComputeShader
+public readonly partial struct MultiplyByTwo : IComputeShader
 {
-    public readonly ReadWriteBuffer<float> buffer;
+    public readonly ReadWriteBuffer<int> buffer;
 
     public void Execute()
     {
@@ -70,7 +70,7 @@ We can now finally run the GPU shader and copy the data back to our array:
 
 ```csharp
 // Launch the shader
-Gpu.Default.For(buffer.Length, new MyShader(buffer));
+Gpu.Default.For(buffer.Length, new MultiplyByTwo(buffer));
 
 // Get the data back
 buffer.CopyTo(array);
@@ -136,7 +136,7 @@ Here's an example of a shader that applies the [softmax function](https://en.wik
 
 ```csharp
 [AutoConstructor]
-public readonly struct SoftmaxActivation : IComputeShader
+public readonly partial struct SoftmaxActivation : IComputeShader
 {
     public readonly ReadWriteBuffer<float> buffer;
     public readonly float k;
@@ -159,7 +159,7 @@ Here is an example of how shader constants can be declared and used:
 
 ```csharp
 [AutoConstructor]
-public readonly struct SampleShaderWithConstants : IComputeShader
+public readonly partial struct SampleShaderWithConstants : IComputeShader
 {
     public readonly ReadWriteBuffer<float> buffer;
 
@@ -256,7 +256,7 @@ One of the reasons why **ComputeSharp** compiles shaders at runtime is that it a
 public static float Square(float x) => x * x;
 
 [AutoConstructor]
-public readonly struct ApplyFunction : IComputeShader
+public readonly partial struct ApplyFunction : IComputeShader
 {
     public readonly ReadWriteBuffer<float> buffer;
     public readonly Func<float, float> function;
