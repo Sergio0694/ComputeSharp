@@ -30,11 +30,6 @@ namespace ComputeSharp.SwapChain.Backend
         private static HWND hwnd;
 
         /// <summary>
-        /// The current size of the application window.
-        /// </summary>
-        private static Size windowSize;
-
-        /// <summary>
         /// A <see cref="Stopwatch"/> instance used to track the elapsed time for the application.
         /// </summary>
         private static Stopwatch stopwatch = null!;
@@ -45,14 +40,9 @@ namespace ComputeSharp.SwapChain.Backend
         private static Win32Application application = null!;
 
         /// <summary>
-        /// The number of elapsed milliseconds since the window title was last updated.
+        /// The thread running the render loop.
         /// </summary>
-        private static long elapsedMillisecondsForLastTitleUpdate;
-
-        /// <summary>
-        /// The number of elapsed frames since the window title was last updated.
-        /// </summary>
-        private static int elapsedFramesSinceLastTitleUpdate;
+        private static Thread renderThread = null!;
 
         /// <summary>
         /// Runs a specified application and starts the main loop to update its state.
@@ -68,11 +58,9 @@ namespace ComputeSharp.SwapChain.Backend
             Win32ApplicationRunner.application = application;
 
             IntPtr hInstance = FX.GetModuleHandleW(null);
-            uint width = 1280;
-            uint height = 720;
 
             fixed (char* name = Assembly.GetExecutingAssembly().FullName)
-            fixed (char* windowTitle = application.Title)
+            fixed (char* windowTitle = application.GetType().ToString())
             {
                 // Initialize the window class
                 WNDCLASSEXW windowClassEx = new()
@@ -88,13 +76,14 @@ namespace ComputeSharp.SwapChain.Backend
                 // Register the window class
                 _ = FX.RegisterClassExW(&windowClassEx);
 
-                Rectangle windowRect = new(0, 0, (int)width, (int)height);
+                Rectangle windowRect = new(0, 0, 1280, 720);
 
                 // Set the target window size
                 _ = FX.AdjustWindowRect((RECT*)&windowRect, FX.WS_OVERLAPPEDWINDOW, FX.FALSE);
 
-                height = (uint)(windowRect.Bottom - windowRect.Top);
-                width = (uint)(windowRect.Right - windowRect.Left);
+                uint
+                    height = (uint)(windowRect.Bottom - windowRect.Top),
+                    width = (uint)(windowRect.Right - windowRect.Left);
 
                 // Create the window and store a handle to it
                 hwnd = FX.CreateWindowExW(
@@ -121,10 +110,8 @@ namespace ComputeSharp.SwapChain.Backend
                 _ = FX.DwmExtendFrameIntoClientArea(hwnd, &margins);
             }
 
-            windowSize = new Size((int)height, (int)width);
-
             // Initialize the application
-            application.OnInitialize(windowSize, hwnd);
+            application.OnInitialize(hwnd);
 
             // Display the window
             _ = FX.ShowWindow(hwnd, FX.SW_SHOWDEFAULT);
@@ -134,6 +121,21 @@ namespace ComputeSharp.SwapChain.Backend
 
             MSG msg = default;
 
+            // Setup the render thread that enables smooth resizing of the window
+            renderThread = new Thread(static args =>
+            {
+                (Win32Application application, Stopwatch stopwatch, CancellationToken token) = ((Win32Application, Stopwatch, CancellationToken))args!;
+
+                while (!token.IsCancellationRequested)
+                {
+                    application.OnUpdate(stopwatch.Elapsed);
+                }
+            });
+
+            CancellationTokenSource tokenSource = new();
+
+            renderThread.Start((application, stopwatch, tokenSource.Token));
+
             // Process any messages in the queue
             while (msg.message != FX.WM_QUIT)
             {
@@ -142,47 +144,18 @@ namespace ComputeSharp.SwapChain.Backend
                     _ = FX.TranslateMessage(&msg);
                     _ = FX.DispatchMessageW(&msg);
                 }
-                else if (!isPaused || true)
-                {
-                    RunApp();
-                }
-                else
+                else if (isPaused)
                 {
                     Thread.Sleep(100);
                 }
             }
 
+            tokenSource.Cancel();
+
+            renderThread.Join();
+
             // Return this part of the WM_QUIT message to Windows
             return (int)msg.wParam;
-        }
-
-        /// <summary>
-        /// The application state update method that is invoked within the main application loop.
-        /// </summary>
-        private static void RunApp()
-        {
-            // Update window title approx every second
-            if (stopwatch.ElapsedMilliseconds - elapsedMillisecondsForLastTitleUpdate >= 1000)
-            {
-                string title = isPaused switch
-                {
-                    true => $"{application.Title} - Paused",
-                    false => $"{application.Title} - FPS: {elapsedFramesSinceLastTitleUpdate}"
-                };
-
-                fixed (char* pTitle = title)
-                {
-                    _ = FX.SetWindowTextW(hwnd, (ushort*)pTitle);
-                }
-
-                elapsedMillisecondsForLastTitleUpdate = stopwatch.ElapsedMilliseconds;
-                elapsedFramesSinceLastTitleUpdate = 0;
-            }
-
-            // Update the application state
-            application.OnUpdate(stopwatch.Elapsed);
-
-            elapsedFramesSinceLastTitleUpdate++;
         }
 
         /// <summary>
@@ -245,7 +218,7 @@ namespace ComputeSharp.SwapChain.Backend
                 case FX.WM_EXITSIZEMOVE:
                 {
                     isResizing = false;
-                    application.OnResize(windowSize);
+                    application.OnResize();
 
                     return 0;
                 }
@@ -253,13 +226,9 @@ namespace ComputeSharp.SwapChain.Backend
                 // Size update
                 case FX.WM_SIZE:
                 {
-                    uint size = (uint)lParam;
-
-                    windowSize = new Size(FX.LOWORD(size), FX.HIWORD(size));
-
                     if (!isResizing && wParam != FX.SIZE_MINIMIZED)
                     {
-                        application.OnResize(windowSize);
+                        application.OnResize();
                     }
 
                     return 0;

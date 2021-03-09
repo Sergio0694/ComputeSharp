@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using ComputeSharp.Interop;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
@@ -70,6 +69,11 @@ namespace ComputeSharp.SwapChain.Backend
         private ReadWriteTexture2D<Rgba32, Float4>? texture;
 
         /// <summary>
+        /// Whether or not the window has been resized and requires the buffers to be updated.
+        /// </summary>
+        private bool isResizePending;
+
+        /// <summary>
         /// Creates a new <see cref="SwapChainApplication"/> instance with the specified parameters.
         /// </summary>
         /// <param name="shaderFactory">The <see cref="Func{T1, T2, TResult}"/> instance used to create shaders to run.</param>
@@ -79,10 +83,7 @@ namespace ComputeSharp.SwapChain.Backend
         }
 
         /// <inheritdoc/>
-        public override string Title => default(T).ToString()!;
-
-        /// <inheritdoc/>
-        public override unsafe void OnInitialize(Size size, HWND hwnd)
+        public override unsafe void OnInitialize(HWND hwnd)
         {
             // Get the underlying ID3D12Device in use
             fixed (ID3D12Device** d3D12Device = this.d3D12Device)
@@ -169,7 +170,15 @@ namespace ComputeSharp.SwapChain.Backend
         }
 
         /// <inheritdoc/>
-        public override unsafe void OnResize(Size size)
+        public override unsafe void OnResize()
+        {
+            this.isResizePending = true;
+        }
+
+        /// <summary>
+        /// Applies the actual resize logic that was scheduled from <see cref="OnResize"/>.
+        /// </summary>
+        private unsafe void ApplyResize()
         {
             this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), this.nextD3D12FenceValue);
 
@@ -214,6 +223,13 @@ namespace ComputeSharp.SwapChain.Backend
         /// <inheritdoc/>
         public override unsafe void OnUpdate(TimeSpan time)
         {
+            if (this.isResizePending)
+            {
+                ApplyResize();
+
+                this.isResizePending = false;
+            }
+
             // Generate the new frame
             Gpu.Default.For(this.texture!.Width, this.texture.Height, this.shaderFactory(this.texture, time));
 

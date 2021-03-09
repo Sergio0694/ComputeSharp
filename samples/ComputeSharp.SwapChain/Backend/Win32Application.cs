@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using TerraFX.Interop;
 
 namespace ComputeSharp.SwapChain.Backend
@@ -10,22 +9,15 @@ namespace ComputeSharp.SwapChain.Backend
     internal abstract class Win32Application
     {
         /// <summary>
-        /// Gets the title of the current application.
-        /// </summary>
-        public abstract string Title { get; }
-
-        /// <summary>
         /// Initializes the current application.
         /// </summary>
-        /// <param name="size">The window size.</param>
         /// <param name="hwnd">The handle for the window.</param>
-        public abstract void OnInitialize(Size size, HWND hwnd);
+        public abstract void OnInitialize(HWND hwnd);
 
         /// <summary>
         /// Resizes the current application.
         /// </summary>
-        /// <param name="size">The new window size.</param>
-        public abstract void OnResize(Size size);
+        public abstract void OnResize();
 
         /// <summary>
         /// Updates the current application.
