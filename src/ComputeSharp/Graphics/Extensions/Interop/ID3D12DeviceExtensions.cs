@@ -582,5 +582,22 @@ namespace ComputeSharp.Graphics.Extensions
 
             return (d3D12FeatureDataFormatSupport.Support1 & d3D12FormatSupport1) == d3D12FormatSupport1;
         }
+
+        /// <summary>
+        /// Checks whether or not a given shader model is supported.
+        /// </summary>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to check features for.</param>
+        /// <param name="d3DShaderModel">The <see cref="D3D_SHADER_MODEL"/> value to check support for.</param>
+        /// <returns>Whether or not the input device supports the requested shader model.</returns>
+        [Pure]
+        public static unsafe bool IsShaderModelSupported(this ref ID3D12Device d3D12Device, D3D_SHADER_MODEL d3DShaderModel)
+        {
+            D3D12_FEATURE_DATA_SHADER_MODEL d3D12ShaderModel = default;
+            d3D12ShaderModel.HighestShaderModel = d3DShaderModel;
+
+            d3D12Device.CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &d3D12ShaderModel, (uint)sizeof(D3D12_FEATURE_DATA_SHADER_MODEL)).Assert();
+
+            return d3D12ShaderModel.HighestShaderModel == d3DShaderModel;
+        }
     }
 }

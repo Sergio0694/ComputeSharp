@@ -2,10 +2,13 @@
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using ComputeSharp.Core.Extensions;
+using ComputeSharp.Graphics.Extensions;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
 using HRESULT = System.Int32;
+using static TerraFX.Interop.D3D_FEATURE_LEVEL;
+using static TerraFX.Interop.D3D_SHADER_MODEL;
 
 namespace ComputeSharp.Graphics.Helpers
 {
@@ -98,17 +101,54 @@ namespace ComputeSharp.Graphics.Helpers
                     continue;
                 }
 
-                HRESULT createDeviceResult = FX.D3D12CreateDevice(
-                    dxgiAdapter1.AsIUnknown().Get(),
-                    D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_11_0,
-                    FX.__uuidof<ID3D12Device>(),
-                    (void**)d3D12Device);
-
-                if (FX.SUCCEEDED(createDeviceResult))
+                // Explicit paths for when a device is being retrieved or not, with special handling
+                // for the additional check that is required for the SM6 level. This can't be checked
+                // without creating a device first, so the path for when the target device pointer is
+                // null is useful to do an initial filtering using D3D12CreateDevice to avoid creating
+                // a device for adapters that would've failed at the FL11 check already.
+                if (d3D12Device == null)
                 {
-                    dxgiAdapter1.CopyTo(dxgiAdapter);
+                    HRESULT createDeviceResult = FX.D3D12CreateDevice(
+                        dxgiAdapter1.AsIUnknown().Get(),
+                        D3D_FEATURE_LEVEL_11_0,
+                        FX.__uuidof<ID3D12Device>(),
+                        null);
 
-                    return true;
+                    if (FX.SUCCEEDED(createDeviceResult))
+                    {
+                        using ComPtr<ID3D12Device> d3D12DeviceCandidate = default;
+
+                        createDeviceResult = FX.D3D12CreateDevice(
+                            dxgiAdapter1.AsIUnknown().Get(),
+                            D3D_FEATURE_LEVEL_11_0,
+                            FX.__uuidof<ID3D12Device>(),
+                            d3D12DeviceCandidate.GetVoidAddressOf());
+
+                        if (FX.SUCCEEDED(createDeviceResult) &&
+                            d3D12DeviceCandidate.Get()->IsShaderModelSupported(D3D_SHADER_MODEL_6_0))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                else
+                {
+                    using ComPtr<ID3D12Device> d3D12DeviceCandidate = default;
+
+                    HRESULT createDeviceResult = FX.D3D12CreateDevice(
+                        dxgiAdapter1.AsIUnknown().Get(),
+                        D3D_FEATURE_LEVEL_11_0,
+                        FX.__uuidof<ID3D12Device>(),
+                        d3D12DeviceCandidate.GetVoidAddressOf());
+
+                    if (FX.SUCCEEDED(createDeviceResult) &&
+                        d3D12DeviceCandidate.Get()->IsShaderModelSupported(D3D_SHADER_MODEL_6_0))
+                    {
+                        d3D12DeviceCandidate.CopyTo(d3D12Device);
+                        dxgiAdapter1.CopyTo(dxgiAdapter);
+
+                        return true;
+                    }
                 }
             }
         }
@@ -136,7 +176,7 @@ namespace ComputeSharp.Graphics.Helpers
 
             HRESULT createDeviceResult = FX.D3D12CreateDevice(
                 dxgiAdapter1.AsIUnknown().Get(),
-                D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_11_0,
+                D3D_FEATURE_LEVEL_11_0,
                 FX.__uuidof<ID3D12Device>(),
                 (void**)d3D12Device);
 

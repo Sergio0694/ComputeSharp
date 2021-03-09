@@ -2,10 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using ComputeSharp.Core.Extensions;
+using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Interop;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
 using HRESULT = System.Int32;
+using static TerraFX.Interop.D3D_FEATURE_LEVEL;
+using static TerraFX.Interop.D3D_SHADER_MODEL;
 
 namespace ComputeSharp.Graphics.Helpers
 {
@@ -126,7 +129,7 @@ namespace ComputeSharp.Graphics.Helpers
 
                             HRESULT createDeviceResult = FX.D3D12CreateDevice(
                                 dxgiAdapter1.AsIUnknown().Get(),
-                                D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_11_0,
+                                D3D_FEATURE_LEVEL_11_0,
                                 FX.__uuidof<ID3D12Device>(),
                                 null);
 
@@ -137,7 +140,7 @@ namespace ComputeSharp.Graphics.Helpers
 
                                 FX.D3D12CreateDevice(
                                     dxgiAdapter1.AsIUnknown().Get(),
-                                    D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_11_0,
+                                    D3D_FEATURE_LEVEL_11_0,
                                     FX.__uuidof<ID3D12Device>(),
                                     d3D12Device.GetVoidAddressOf()).Assert();
 
@@ -167,7 +170,7 @@ namespace ComputeSharp.Graphics.Helpers
 
                             HRESULT createDeviceResult = FX.D3D12CreateDevice(
                                 dxgiAdapter1.AsIUnknown().Get(),
-                                D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_11_0,
+                                D3D_FEATURE_LEVEL_11_0,
                                 FX.__uuidof<ID3D12Device>(),
                                 null);
 
@@ -178,13 +181,16 @@ namespace ComputeSharp.Graphics.Helpers
 
                                 FX.D3D12CreateDevice(
                                     dxgiAdapter1.AsIUnknown().Get(),
-                                    D3D_FEATURE_LEVEL.D3D_FEATURE_LEVEL_11_0,
+                                    D3D_FEATURE_LEVEL_11_0,
                                     FX.__uuidof<ID3D12Device>(),
                                     d3D12Device.GetVoidAddressOf()).Assert();
 
-                                this.graphicsDevice = GetOrCreateDevice(d3D12Device.Get(), (IDXGIAdapter*)dxgiAdapter1.Get(), &dxgiDescription1);
+                                if (d3D12Device.Get()->IsShaderModelSupported(D3D_SHADER_MODEL_6_0))
+                                {
+                                    this.graphicsDevice = GetOrCreateDevice(d3D12Device.Get(), (IDXGIAdapter*)dxgiAdapter1.Get(), &dxgiDescription1);
 
-                                return true;
+                                    return true;
+                                }
                             }
                         }
                     }
