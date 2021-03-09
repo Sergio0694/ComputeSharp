@@ -17,7 +17,7 @@ using static TerraFX.Interop.DXGI_ADAPTER_FLAG;
 namespace ComputeSharp
 {
     /// <summary>
-    /// A <see langword="class"/> that represents a DX12-compatible GPU device that can be used to run compute shaders.
+    /// A <see langword="class"/> that represents an <see cref="ID3D12Device"/> instance that can be used to run compute shaders.
     /// </summary>
     [DebuggerDisplay("{ToString(),raw}")]
     public sealed unsafe class GraphicsDevice : NativeObject

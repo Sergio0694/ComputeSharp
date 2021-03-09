@@ -30,7 +30,7 @@ namespace ComputeSharp.Graphics.Helpers
         /// <summary>
         /// Gets the <see cref="Luid"/> of the default device.
         /// </summary>
-        /// <returns>The <see cref="Luid"/> of the default device supporting at least DX12.0.</returns>
+        /// <returns>The <see cref="Luid"/> of the default device supporting <see cref="D3D_FEATURE_LEVEL_11_0"/> and <see cref="D3D_SHADER_MODEL_6_0"/>.</returns>
         /// <remarks>This methods assumes that a default device is available.</remarks>
         [Pure]
         public static unsafe Luid GetDefaultDeviceLuid()
@@ -45,7 +45,7 @@ namespace ComputeSharp.Graphics.Helpers
         /// <summary>
         /// Gets the default <see cref="GraphicsDevice"/> instance.
         /// </summary>
-        /// <returns>The default <see cref="GraphicsDevice"/> instance supporting at least DX12.0.</returns>
+        /// <returns>The default <see cref="GraphicsDevice"/> instance supporting <see cref="D3D_FEATURE_LEVEL_11_0"/> and <see cref="D3D_SHADER_MODEL_6_0"/>.</returns>
         /// <exception cref="NotSupportedException">Thrown when a default device is not available.</exception>
         public static unsafe GraphicsDevice GetDefaultDevice()
         {

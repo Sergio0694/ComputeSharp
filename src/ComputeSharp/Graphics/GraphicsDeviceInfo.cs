@@ -4,7 +4,7 @@ using static TerraFX.Interop.DXGI_ADAPTER_FLAG;
 namespace ComputeSharp
 {
     /// <summary>
-    /// A type containing info on a given DX12.0 device that can be used.
+    /// A type containing info on a given device that can be used.
     /// </summary>
     public readonly struct GraphicsDeviceInfo
     {
