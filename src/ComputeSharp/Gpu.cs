@@ -16,18 +16,15 @@ namespace ComputeSharp
         private static readonly Lazy<GraphicsDevice> DefaultFactory = new(DeviceHelper.GetDefaultDevice);
 
         /// <summary>
-        /// Gets whether or not the <see cref="Gpu"/> APIs can be used on the
-        /// current machine (ie. if there is at least a supported GPU device).
-        /// </summary>
-        public static bool IsSupported => DeviceHelper.IsDefaultDeviceAvailable();
-
-        /// <summary>
         /// Gets the default <see cref="GraphicsDevice"/> instance for the current machine.
         /// This instance cannot be manually disposed - attempting to do so is safe and it will
         /// not cause an exception, but it will simply do nothing and not dispose the device.
         /// </summary>
-        /// <exception cref="NotSupportedException">Thrown when a default device is not available.</exception>
-        /// <remarks>Make sure to check <see cref="IsSupported"/> before accessing this property.</remarks>
+        /// <remarks>
+        /// This device will always be available, even when there isn't a compatible physical GPU
+        /// or integrated GPU in the system in use. In that case, the WARP device will be used.
+        /// For more info, see <see href="https://docs.microsoft.com/windows/win32/direct3darticles/directx-warp"/>.
+        /// </remarks>
         public static GraphicsDevice Default => DefaultFactory.Value;
 
         /// <summary>

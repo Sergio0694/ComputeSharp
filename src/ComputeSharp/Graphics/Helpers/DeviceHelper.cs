@@ -25,18 +25,6 @@ namespace ComputeSharp.Graphics.Helpers
         private const uint WarpDeviceId = 0x8C;
 
         /// <summary>
-        /// Gets whether or not there is a default device available, without creating it.
-        /// </summary>
-        /// <returns>Whether or not there is a device supporting at least DX12.0.</returns>   
-        [Pure]
-        public static unsafe bool IsDefaultDeviceAvailable()
-        {
-            DXGI_ADAPTER_DESC1 dxgiDescription1;
-
-            return TryGetDefaultDevice(null, null, &dxgiDescription1) || TryGetWarpDevice(null, null, &dxgiDescription1);
-        }
-
-        /// <summary>
         /// Gets the <see cref="Luid"/> of the default device.
         /// </summary>
         /// <returns>The <see cref="Luid"/> of the default device supporting at least DX12.0.</returns>
@@ -69,7 +57,7 @@ namespace ComputeSharp.Graphics.Helpers
                 return GetOrCreateDevice(d3D12Device.Get(), dxgiAdapter.Get(), &dxgiDescription1);
             }
 
-            return ThrowHelper.ThrowNotSupportedException<GraphicsDevice>("There isn't a supported GPU device on the current machine");
+            return ThrowHelper.ThrowNotSupportedException<GraphicsDevice>("Failed to retrieve the default device.");
         }
 
         /// <summary>

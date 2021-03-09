@@ -13,7 +13,7 @@ namespace ComputeSharp.Tests
         [TestMethod]
         public void IsSupported()
         {
-            Assert.IsTrue(Gpu.IsSupported);
+            Assert.IsTrue(Gpu.Default is not null);
         }
 
         [CombinatorialTestMethod]
