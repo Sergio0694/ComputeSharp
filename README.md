@@ -18,6 +18,7 @@
   - [Working with images](#working-with-images)
   - [Shader metaprogramming](#shader-metaprogramming)
 - [Requirements](#requirements)
+- [F# support](#f-support)
 - [Sponsors](#sponsors)
 - [Special thanks](#special-thanks)
 
@@ -291,6 +292,31 @@ The **ComputeSharp** library has the following requirements:
 
 Additionally, in order to compile the library or a project using it, you need a recent build of Visual Studio 2019 or another IDE that has support for Roslyn source generators, as **ComputeSharp** relies on this feature to create the HLSL shader sources and to extract other shader metadata that is necessary to setup and execute the code at runtime. You can learn more about source generators [here](https://devblogs.microsoft.com/dotnet/introducing-c-source-generators/).
 
+# F# support
+
+If you're wondering whether it is possible to use **ComputeSharp** from an F# project, it is!
+
+There is a caveat though: since the HLSL shader rewriter specifically works on C# syntax, it is necessary to write the actual shaders in C#. A simple way to do this is to have a small C# project with just the shader types, and then reference it from an F# project that will contain all the actual logic: every API to create GPU devices, allocate buffers and invoke shaders will work perfectly fine from F# as well.
+
+Assuming we had the `MultiplyByTwo` shader defined in the [Quick start](#quick-start) paragraph referenced from a C# project, here is how we can actually use it directly from our F# project, with the same sample described above:
+
+```fsharp
+let array = [| for i in 0 .. 99 -> (float32)i |]
+
+// Create the graphics buffer
+use buffer = Gpu.Default.AllocateReadWriteBuffer(array)
+
+let shader = new MultiplyByTwo(buffer)
+
+// Run the shader (passed by reference)
+Gpu.Default.For(100, &shader)
+
+// Get the data back
+buffer.CopyTo array
+```
+
+For a complete example, check out the F# sample [here](https://github.com/Sergio0694/ComputeSharp/blob/main/samples/ComputeSharp.Sample.FSharp/Program.fs).
+
 # Sponsors
 
 Huge thanks to these sponsors for directly supporting my work on **ComputeSharp**, it means a lot! 🙌
@@ -301,7 +327,7 @@ Huge thanks to these sponsors for directly supporting my work on **ComputeSharp*
 
 # Special thanks
 
-The **ComputeSharp** library was originally based on some of the code from the [DX12GameEngine](https://github.com/Aminator/DirectX12GameEngine) repository by [Amin Delavar](https://github.com/Aminator).
+**ComputeSharp** was originally based on some of the code from the [DX12GameEngine](https://github.com/Aminator/DirectX12GameEngine) project by [Amin Delavar](https://github.com/Aminator).
 
 Additionally, **ComputeSharp** uses NuGet packages from the following repositories:
 
