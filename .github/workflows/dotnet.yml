@@ -68,6 +68,12 @@ jobs:
     - name: Run ComputeSharp.Sample.Local
       run: dotnet samples\ComputeSharp.Sample.Local\bin\Release\net5.0\ComputeSharp.Sample.Local.dll
       shell: cmd
+    - name: Build ComputeSharp.Sample.FSharp
+      run: dotnet build samples\ComputeSharp.Sample.FSharp\ComputeSharp.Sample.FSharp.fsproj -c Release
+      shell: cmd
+    - name: Run ComputeSharp.Sample.FSharp
+      run: dotnet samples\ComputeSharp.Sample.FSharp\bin\Release\net5.0\ComputeSharp.Sample.FSharp.dll
+      shell: cmd
     - name: Build ComputeSharp.ImageProcessing.csproj
       run: dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release
       shell: cmd
