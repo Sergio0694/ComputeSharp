@@ -27,7 +27,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
             {
                 [typeof(bool).FullName] = (4, 4),
                 [typeof(int).FullName] = (4, 4),
-                [typeof(int).FullName] = (4, 4),
+                [typeof(uint).FullName] = (4, 4),
                 [typeof(float).FullName] = (4, 4),
                 [typeof(double).FullName] = (8, 8),
 
