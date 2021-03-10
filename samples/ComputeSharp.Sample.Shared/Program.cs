@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace ComputeSharp.Sample
 {
@@ -9,28 +8,22 @@ namespace ComputeSharp.Sample
     {
         static void Main()
         {
-            // Create the graphics buffer
-            int width = 10;
-            int height = 10;
-            float[] array = new float[width * height];
-            for (int i = 0; i < array.Length; i++)
-            {
-                array[i] = i + 1;
-            }
+            float[] array = Enumerable.Range(1, 100).Select(static i => (float)i).ToArray();
 
+            // Create the graphics buffer
             using ReadWriteBuffer<float> gpuBuffer = Gpu.Default.AllocateReadWriteBuffer(array);
 
             // Run the shader
             Gpu.Default.For(100, new MainKernel(gpuBuffer));
 
             // Print the initial matrix
-            PrintMatrix(array, width, height, "BEFORE");
+            PrintMatrix(array, 10, 10, "BEFORE");
 
             // Get the data back
             gpuBuffer.CopyTo(array);
 
             // Print the updated matrix
-            PrintMatrix(array, width, height, "AFTER");
+            PrintMatrix(array, 10, 10, "AFTER");
         }
 
         /// <summary>
@@ -62,17 +55,14 @@ namespace ComputeSharp.Sample
 
             Console.WriteLine(title);
 
-            int length = width * height;
-            int numberWidth = array.Max().ToString(CultureInfo.InvariantCulture).Length;
-            ref float r = ref array[0];
+            int numberWidth = Math.Max(array.Max().ToString(CultureInfo.InvariantCulture).Length, 4);
 
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < height; i++)
             {
-                Console.Write(r.ToString(CultureInfo.InvariantCulture).PadLeft(numberWidth));
-                r = ref Unsafe.Add(ref r, 1);
+                var row = array[(i * width)..((i + 1) * width)];
+                var text = string.Join(",", row.Select(x => x.ToString(CultureInfo.InvariantCulture).PadLeft(numberWidth)));
 
-                if (i < length - 1) Console.Write(", ");
-                if (i > 0 && (i + 1) % width == 0) Console.WriteLine();
+                Console.WriteLine(text);
             }
 
             Console.WriteLine(new string('=', 50));

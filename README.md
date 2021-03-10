@@ -40,7 +40,7 @@ Let's suppose we want to run a simple compute shader that multiplies all items i
 
 ```csharp
 // Get some sample data
-int[] array = Enumerable.Range(0, 100).ToArray();
+int[] array = Enumerable.Range(1, 100).ToArray();
 
 // Allocate a GPU buffer and copy the data to it.
 // We want the shader to modify the items in-place, so we
@@ -301,7 +301,7 @@ There is a caveat though: since the HLSL shader rewriter specifically works on C
 Assuming we had the `MultiplyByTwo` shader defined in the [Quick start](#quick-start) paragraph referenced from a C# project, here is how we can actually use it directly from our F# project, with the same sample described above:
 
 ```fsharp
-let array = [| for i in 0 .. 99 -> (float32)i |]
+let array = [| for i in 1 .. 100 -> (float32)i |]
 
 // Create the graphics buffer
 use buffer = Gpu.Default.AllocateReadWriteBuffer(array)

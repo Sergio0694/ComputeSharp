@@ -29,7 +29,7 @@ let printMatrix (array : float32[]) width height (name : string) =
 [<EntryPoint>]
 let main _ =
 
-    let array = [| for i in 0 .. 99 -> (float32)i |]
+    let array = [| for i in 1 .. 100 -> (float32)i |]
 
     // Create the graphics buffer
     use buffer = Gpu.Default.AllocateReadWriteBuffer(array)
