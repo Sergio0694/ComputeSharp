@@ -75,7 +75,7 @@ namespace ComputeSharp.SourceGenerators.Extensions
                 return node.ReplaceNode(targetType, newType);
             }
 
-            return node.ReplaceNode(targetType, ParseTypeName(typeName.Replace(".", "__")));
+            return node.ReplaceNode(targetType, ParseTypeName(typeName.ToHlslIdentifierName()));
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace ComputeSharp.SourceGenerators.Extensions
                 return ParseTypeName(mappedName!);
             }
 
-            return ParseTypeName(typeName.Replace(".", "__"));
+            return ParseTypeName(typeName.ToHlslIdentifierName());
         }
 
         /// <summary>

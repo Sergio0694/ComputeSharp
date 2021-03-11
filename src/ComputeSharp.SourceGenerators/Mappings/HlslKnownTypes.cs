@@ -230,7 +230,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 // If the current type is a custom type, format it as needed
                 if (!KnownHlslTypes.TryGetValue(genericArgumentName, out string? mappedElementType))
                 {
-                    mappedElementType = genericArgumentName.Replace(".", "__");
+                    mappedElementType = genericArgumentName.ToHlslIdentifierName();
                 }
 
                 // Construct the HLSL type name
@@ -262,7 +262,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
             }
 
             // The captured field is of a custom struct type
-            return typeName.Replace(".", "__");
+            return typeName.ToHlslIdentifierName();
         }
 
         /// <summary>
@@ -280,7 +280,7 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 return mapped;
             }
 
-            return elementTypeName.Replace(".", "__");
+            return elementTypeName.ToHlslIdentifierName();
         }
 
         /// <summary>

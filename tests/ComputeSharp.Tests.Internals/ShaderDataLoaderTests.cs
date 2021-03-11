@@ -178,6 +178,19 @@ namespace ComputeSharp.Tests.Internals
         }
 
         [AutoConstructor]
+        public partial struct SimpleTypes
+        {
+            public Float2x3 f2x3;
+            public int a;
+            public Int1x3 i1x3;
+            public Double2 d2;
+            public int c;
+            public Int1x2 i1x2;
+            public Int2x2 i2x2;
+            public int d;
+        }
+
+        [AutoConstructor]
         public partial struct FlatCustomTypeShader : IComputeShader
         {
             public ReadWriteBuffer<float> _0;
@@ -234,6 +247,31 @@ namespace ComputeSharp.Tests.Internals
             Assert.AreEqual(33, *(int*)&p1[112]);
             Assert.AreEqual(44, *(int*)&p1[116]);
             Assert.AreEqual(9999, *(int*)&p1[120]);
+        }
+
+        [AutoConstructor]
+        public partial struct CustomType1
+        {
+            public Float3 a;
+            public SimpleTypes b;
+            public int c;
+            public CustomType2 d;
+            public CustomType3 e;
+        }
+
+        [AutoConstructor]
+        public partial struct CustomType2
+        {
+            public int a;
+            public Float2 b;
+            public CustomType3 c;
+        }
+
+        [AutoConstructor]
+        public partial struct CustomType3
+        {
+            public int a;
+            public Float2 b;
         }
 
         [AutoConstructor]
@@ -319,43 +357,5 @@ namespace ComputeSharp.Tests.Internals
             Assert.AreEqual(333.3f, *(float*)&p1[180]);
             Assert.AreEqual(444.4f, *(float*)&p1[184]);
         }
-    }
-
-    [AutoConstructor]
-    public partial struct SimpleTypes
-    {
-        public Float2x3 f2x3;
-        public int a;
-        public Int1x3 i1x3;
-        public Double2 d2;
-        public int c;
-        public Int1x2 i1x2;
-        public Int2x2 i2x2;
-        public int d;
-    }
-
-    [AutoConstructor]
-    public partial struct CustomType1
-    {
-        public Float3 a;
-        public SimpleTypes b;
-        public int c;
-        public CustomType2 d;
-        public CustomType3 e;
-    }
-
-    [AutoConstructor]
-    public partial struct CustomType2
-    {
-        public int a;
-        public Float2 b;
-        public CustomType3 c;
-    }
-
-    [AutoConstructor]
-    public partial struct CustomType3
-    {
-        public int a;
-        public Float2 b;
     }
 }

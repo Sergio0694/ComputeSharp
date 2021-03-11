@@ -11,11 +11,11 @@ namespace ComputeSharp.Tests
         [TestMethod]
         public void ReservedKeywords()
         {
-            ReflectionServices.GetShaderInfo<ReservedKeywords_Kernel>(out _);
+            ReflectionServices.GetShaderInfo<ReservedKeywordsShader>(out _);
         }
 
         [AutoConstructor]
-        public readonly partial struct ReservedKeywords_Kernel : IComputeShader
+        public readonly partial struct ReservedKeywordsShader : IComputeShader
         {
             public readonly ReadWriteBuffer<float> row_major;
             public readonly float dword;
@@ -32,11 +32,11 @@ namespace ComputeSharp.Tests
         [TestMethod]
         public void SpecialTypeAsReturnType()
         {
-            ReflectionServices.GetShaderInfo<SpecialTypeAsReturnType_Kernel>(out _);
+            ReflectionServices.GetShaderInfo<SpecialTypeAsReturnTypeShader>(out _);
         }
 
         [AutoConstructor]
-        public readonly partial struct SpecialTypeAsReturnType_Kernel : IComputeShader
+        public readonly partial struct SpecialTypeAsReturnTypeShader : IComputeShader
         {
             public readonly ReadWriteBuffer<Float2> buffer;
 
@@ -53,11 +53,11 @@ namespace ComputeSharp.Tests
         [TestMethod]
         public void LocalFunctionInExternalMethods()
         {
-            ReflectionServices.GetShaderInfo<LocalFunctionInExternalMethods_Kernel>(out _);
+            ReflectionServices.GetShaderInfo<LocalFunctionInExternalMethodsShader>(out _);
         }
 
         [AutoConstructor]
-        public readonly partial struct LocalFunctionInExternalMethods_Kernel : IComputeShader
+        public readonly partial struct LocalFunctionInExternalMethodsShader : IComputeShader
         {
             public readonly ReadWriteBuffer<Float2> buffer;
 
@@ -71,6 +71,32 @@ namespace ComputeSharp.Tests
             public void Execute()
             {
                 buffer[ThreadIds.X] = Foo(ThreadIds.X);
+            }
+        }
+
+        [TestMethod]
+        public void CapturedNestedStructType()
+        {
+            ReflectionServices.GetShaderInfo<CapturedNestedStructTypeShader>(out _);
+        }
+
+        [AutoConstructor]
+        public partial struct CustomStructType
+        {
+            public Float2 a;
+            public int b;
+        }
+
+        [AutoConstructor]
+        public readonly partial struct CapturedNestedStructTypeShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<float> buffer;
+            public readonly CustomStructType foo;
+
+            /// <inheritdoc/>
+            public void Execute()
+            {
+                buffer[ThreadIds.X] *= foo.a.X + foo.b;
             }
         }
     }

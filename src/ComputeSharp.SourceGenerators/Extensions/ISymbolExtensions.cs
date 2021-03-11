@@ -155,7 +155,7 @@ namespace ComputeSharp.SourceGenerators.Extensions
                 return ParseTypeName(mappedName!);
             }
 
-            return ParseTypeName(typeName.Replace(".", "__"));
+            return ParseTypeName(typeName.ToHlslIdentifierName());
         }
     }
 }

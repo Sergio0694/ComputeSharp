@@ -60,7 +60,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 {
                     ConstantDefinitions[fieldOperation.Field] = ((IFormattable)fieldOperation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
 
-                    var ownerTypeName = ((INamedTypeSymbol)fieldOperation.Field.ContainingSymbol).ToDisplayString().Replace(".", "__");
+                    var ownerTypeName = ((INamedTypeSymbol)fieldOperation.Field.ContainingSymbol).ToDisplayString().ToHlslIdentifierName();
                     var constantName = $"__{ownerTypeName}__{fieldOperation.Field.Name}";
 
                     return IdentifierName(constantName);
