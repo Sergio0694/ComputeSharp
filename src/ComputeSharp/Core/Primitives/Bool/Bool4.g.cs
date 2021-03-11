@@ -1,12 +1,17 @@
-﻿using System.Runtime.InteropServices;
-using ComputeSharp.Exceptions;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace ComputeSharp
 {
     /// <inheritdoc cref="Bool4"/>
     [StructLayout(LayoutKind.Explicit, Size = 16, Pack = 4)]
-    public partial struct Bool4
+    public unsafe partial struct Bool4
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool4), sizeof(Bool4));
+
         [FieldOffset(0)]
         private bool x;
 
@@ -23,3406 +28,4079 @@ namespace ComputeSharp
         /// Gets a reference to a specific component in the current <see cref="Bool4"/> instance.
         /// </summary>
         /// <param name="i">The index of the component to access.</param>
-        public ref bool this[int i] => throw new InvalidExecutionContextException($"{typeof(Bool4)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref bool this[int i] => ref *(bool*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the <c>X</c> component.
         /// </summary>
-        public ref bool X => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(X)}");
+        public ref bool X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.x, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the <c>Y</c> component.
         /// </summary>
-        public ref bool Y => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(Y)}");
+        public ref bool Y => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.y, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the <c>Z</c> component.
         /// </summary>
-        public ref bool Z => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(Z)}");
+        public ref bool Z => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.z, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the <c>W</c> component.
         /// </summary>
-        public ref bool W => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(W)}");
+        public ref bool W => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.w, 1));
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool2"/> value with the components <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool2 XX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool2 XX => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Bool2 XY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 XY => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Bool2 XZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 XZ => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref Bool2 XW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 XW => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref Bool2 YX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 YX => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool2"/> value with the components <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool2 YY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool2 YY => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Bool2 YZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 YZ => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref Bool2 YW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 YW => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref Bool2 ZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 ZX => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Bool2 ZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 ZY => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool2"/> value with the components <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool2 ZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool2 ZZ => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref Bool2 ZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 ZW => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref Bool2 WX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 WX => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Bool2 WY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 WY => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Bool2 WZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 WZ => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool2"/> value with the components <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool2 WW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool2 WW => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool3 XXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 XXX => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool3 XXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 XXY => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool3 XXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 XXZ => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool3 XXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 XXW => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool3 XYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 XYX => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool3 XYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 XYY => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Bool3 XYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 XYZ => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref Bool3 XYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 XYW => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool3 XZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 XZX => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Bool3 XZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 XZY => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool3 XZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 XZZ => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref Bool3 XZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 XZW => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool3 XWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 XWX => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Bool3 XWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 XWY => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Bool3 XWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 XWZ => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool3 XWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 XWW => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool3 YXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 YXX => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool3 YXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 YXY => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Bool3 YXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 YXZ => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref Bool3 YXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 YXW => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool3 YYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 YYX => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool3 YYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 YYY => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool3 YYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 YYZ => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool3 YYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 YYW => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref Bool3 YZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 YZX => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool3 YZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 YZY => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool3 YZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 YZZ => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref Bool3 YZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 YZW => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref Bool3 YWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 YWX => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool3 YWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 YWY => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Bool3 YWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 YWZ => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool3 YWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 YWW => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool3 ZXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 ZXX => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Bool3 ZXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 ZXY => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool3 ZXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 ZXZ => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref Bool3 ZXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 ZXW => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref Bool3 ZYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 ZYX => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool3 ZYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 ZYY => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool3 ZYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 ZYZ => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref Bool3 ZYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 ZYW => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool3 ZZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 ZZX => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool3 ZZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 ZZY => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool3 ZZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 ZZZ => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool3 ZZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 ZZW => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref Bool3 ZWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 ZWX => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Bool3 ZWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 ZWY => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool3 ZWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 ZWZ => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool3 ZWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 ZWW => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool3 WXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 WXX => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Bool3 WXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 WXY => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Bool3 WXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 WXZ => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool3 WXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 WXW => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref Bool3 WYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 WYX => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool3 WYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 WYY => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Bool3 WYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 WYZ => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool3 WYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 WYW => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref Bool3 WZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 WZX => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Bool3 WZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 WZY => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool3 WZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 WZZ => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool3 WZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 WZW => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool3 WWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 WWX => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool3 WWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 WWY => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool3 WWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 WWZ => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool3 WWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 WWW => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 XXXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XXXX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 XXXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XXXY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 XXXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XXXZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 XXXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XXXW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 XXYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XXYX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 XXYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XXYY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 XXYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XXYZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 XXYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XXYW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 XXZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XXZX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 XXZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XXZY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 XXZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XXZZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 XXZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XXZW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 XXWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XXWX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 XXWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XXWY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 XXWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XXWZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 XXWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XXWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XXWW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 XYXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XYXX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 XYXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XYXY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 XYXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XYXZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 XYXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XYXW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 XYYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XYYX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 XYYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XYYY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 XYYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XYYZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 XYYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XYYW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 XYZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XYZX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 XYZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XYZY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 XYZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XYZZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref Bool4 XYZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 XYZW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 XYWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XYWX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 XYWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XYWY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Bool4 XYWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 XYWZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 XYWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XYWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XYWW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 XZXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XZXX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 XZXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XZXY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 XZXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XZXZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 XZXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XZXW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 XZYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XZYX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 XZYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XZYY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 XZYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XZYZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref Bool4 XZYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 XZYW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 XZZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XZZX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 XZZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XZZY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 XZZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XZZZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 XZZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XZZW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 XZWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XZWX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Bool4 XZWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 XZWY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 XZWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XZWZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 XZWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XZWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XZWW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 XWXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XWXX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 XWXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XWXY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 XWXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XWXZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 XWXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XWXW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 XWYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XWYX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 XWYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XWYY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Bool4 XWYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 XWYZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 XWYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XWYW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 XWZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XWZX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Bool4 XWZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 XWZY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 XWZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XWZZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 XWZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XWZW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 XWWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XWWX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 XWWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XWWY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 XWWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XWWZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 XWWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(XWWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 XWWW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 YXXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YXXX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 YXXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YXXY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 YXXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YXXZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 YXXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YXXW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 YXYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YXYX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 YXYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YXYY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 YXYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YXYZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 YXYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YXYW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 YXZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YXZX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 YXZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YXZY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 YXZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YXZZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref Bool4 YXZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 YXZW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 YXWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YXWX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 YXWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YXWY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Bool4 YXWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 YXWZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 YXWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YXWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YXWW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 YYXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YYXX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 YYXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YYXY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 YYXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YYXZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 YYXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YYXW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 YYYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YYYX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 YYYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YYYY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 YYYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YYYZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 YYYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YYYW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 YYZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YYZX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 YYZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YYZY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 YYZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YYZZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 YYZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YYZW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 YYWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YYWX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 YYWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YYWY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 YYWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YYWZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 YYWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YYWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YYWW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 YZXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YZXX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 YZXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YZXY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 YZXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YZXZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref Bool4 YZXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 YZXW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 YZYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YZYX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 YZYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YZYY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 YZYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YZYZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 YZYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YZYW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 YZZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YZZX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 YZZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YZZY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 YZZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YZZZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 YZZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YZZW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref Bool4 YZWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 YZWX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 YZWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YZWY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 YZWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YZWZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 YZWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YZWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YZWW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 YWXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YWXX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 YWXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YWXY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Bool4 YWXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 YWXZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 YWXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YWXW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 YWYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YWYX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 YWYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YWYY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 YWYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YWYZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 YWYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YWYW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref Bool4 YWZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 YWZX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 YWZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YWZY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 YWZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YWZZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 YWZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YWZW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 YWWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YWWX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 YWWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YWWY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 YWWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YWWZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 YWWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(YWWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 YWWW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 ZXXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZXXX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 ZXXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZXXY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 ZXXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZXXZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 ZXXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZXXW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 ZXYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZXYX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 ZXYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZXYY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 ZXYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZXYZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref Bool4 ZXYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 ZXYW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 ZXZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZXZX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 ZXZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZXZY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 ZXZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZXZZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 ZXZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZXZW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 ZXWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZXWX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Bool4 ZXWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 ZXWY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 ZXWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZXWZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 ZXWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZXWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZXWW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 ZYXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZYXX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 ZYXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZYXY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 ZYXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZYXZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref Bool4 ZYXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 ZYXW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 ZYYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZYYX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 ZYYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZYYY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 ZYYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZYYZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 ZYYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZYYW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 ZYZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZYZX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 ZYZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZYZY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 ZYZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZYZZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 ZYZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZYZW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref Bool4 ZYWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 ZYWX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 ZYWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZYWY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 ZYWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZYWZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 ZYWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZYWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZYWW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 ZZXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZZXX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 ZZXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZZXY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 ZZXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZZXZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 ZZXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZZXW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 ZZYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZZYX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 ZZYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZZYY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 ZZYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZZYZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 ZZYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZZYW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 ZZZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZZZX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 ZZZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZZZY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 ZZZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZZZZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 ZZZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZZZW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 ZZWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZZWX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 ZZWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZZWY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 ZZWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZZWZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 ZZWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZZWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZZWW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 ZWXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZWXX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Bool4 ZWXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 ZWXY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 ZWXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZWXZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 ZWXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZWXW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref Bool4 ZWYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 ZWYX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 ZWYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZWYY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 ZWYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZWYZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 ZWYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZWYW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 ZWZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZWZX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 ZWZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZWZY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 ZWZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZWZZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 ZWZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZWZW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 ZWWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZWWX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 ZWWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZWWY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 ZWWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZWWZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 ZWWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ZWWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ZWWW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 WXXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WXXX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 WXXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WXXY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 WXXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WXXZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 WXXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WXXW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 WXYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WXYX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 WXYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WXYY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Bool4 WXYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 WXYZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 WXYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WXYW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 WXZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WXZX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Bool4 WXZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 WXZY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 WXZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WXZZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 WXZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WXZW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 WXWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WXWX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 WXWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WXWY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 WXWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WXWZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 WXWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WXWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WXWW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 WYXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WYXX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 WYXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WYXY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Bool4 WYXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 WYXZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 WYXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WYXW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 WYYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WYYX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 WYYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WYYY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 WYYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WYYZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 WYYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WYYW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref Bool4 WYZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 WYZX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 WYZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WYZY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 WYZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WYZZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 WYZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WYZW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 WYWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WYWX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 WYWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WYWY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 WYWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WYWZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 WYWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WYWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WYWW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 WZXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WZXX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Bool4 WZXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 WZXY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 WZXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WZXZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 WZXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WZXW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref Bool4 WZYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 WZYX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 WZYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WZYY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 WZYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WZYZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 WZYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WZYW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 WZZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WZZX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 WZZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WZZY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 WZZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WZZZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 WZZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WZZW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 WZWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WZWX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 WZWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WZWY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 WZWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WZWZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 WZWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WZWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WZWW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 WWXX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WWXX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 WWXY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WWXY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 WWXZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WWXZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 WWXW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WWXW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 WWYX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WWYX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 WWYY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WWYY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 WWYZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WWYZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 WWYW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WWYW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 WWZX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WWZX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 WWZY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WWZY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 WWZZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WWZZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 WWZW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WWZW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Bool4 WWWX => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WWWX => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Bool4 WWWY => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WWWY => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Bool4 WWWZ => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WWWZ => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly Bool4 WWWW => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(WWWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 WWWW => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the <c>R</c> component.
         /// </summary>
-        public ref bool R => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(R)}");
+        public ref bool R => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.x, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the <c>G</c> component.
         /// </summary>
-        public ref bool G => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(G)}");
+        public ref bool G => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.y, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the <c>B</c> component.
         /// </summary>
-        public ref bool B => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(B)}");
+        public ref bool B => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.z, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the <c>A</c> component.
         /// </summary>
-        public ref bool A => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(A)}");
+        public ref bool A => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.w, 1));
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool2"/> value with the components <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool2 RR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool2 RR => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref Bool2 RG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 RG => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref Bool2 RB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 RB => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref Bool2 RA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 RA => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref Bool2 GR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 GR => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool2"/> value with the components <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool2 GG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool2 GG => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref Bool2 GB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 GB => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref Bool2 GA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 GA => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref Bool2 BR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 BR => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref Bool2 BG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 BG => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool2"/> value with the components <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool2 BB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool2 BB => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref Bool2 BA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 BA => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref Bool2 AR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 AR => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref Bool2 AG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 AG => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool2"/> value with the components <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref Bool2 AB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool2 AB => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool2"/> value with the components <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool2 AA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool2 AA => ref *(Bool2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool3 RRR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 RRR => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool3 RRG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 RRG => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool3 RRB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 RRB => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool3 RRA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 RRA => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool3 RGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 RGR => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool3 RGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 RGG => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref Bool3 RGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 RGB => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref Bool3 RGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 RGA => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool3 RBR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 RBR => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref Bool3 RBG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 RBG => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool3 RBB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 RBB => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref Bool3 RBA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 RBA => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool3 RAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 RAR => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref Bool3 RAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 RAG => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref Bool3 RAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 RAB => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool3 RAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 RAA => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool3 GRR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 GRR => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool3 GRG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 GRG => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref Bool3 GRB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 GRB => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref Bool3 GRA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 GRA => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool3 GGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 GGR => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool3 GGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 GGG => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool3 GGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 GGB => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool3 GGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 GGA => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref Bool3 GBR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 GBR => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool3 GBG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 GBG => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool3 GBB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 GBB => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref Bool3 GBA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 GBA => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref Bool3 GAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 GAR => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool3 GAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 GAG => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref Bool3 GAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 GAB => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool3 GAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 GAA => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool3 BRR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 BRR => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref Bool3 BRG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 BRG => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool3 BRB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 BRB => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref Bool3 BRA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 BRA => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref Bool3 BGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 BGR => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool3 BGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 BGG => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool3 BGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 BGB => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref Bool3 BGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 BGA => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool3 BBR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 BBR => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool3 BBG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 BBG => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool3 BBB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 BBB => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool3 BBA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 BBA => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref Bool3 BAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 BAR => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref Bool3 BAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 BAG => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool3 BAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 BAB => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool3 BAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 BAA => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool3 ARR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 ARR => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref Bool3 ARG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 ARG => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref Bool3 ARB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 ARB => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool3 ARA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 ARA => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref Bool3 AGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 AGR => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool3 AGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 AGG => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref Bool3 AGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 AGB => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool3 AGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 AGA => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref Bool3 ABR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 ABR => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool3"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref Bool3 ABG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool3 ABG => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool3 ABB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 ABB => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool3 ABA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 ABA => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool3 AAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 AAR => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool3 AAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 AAG => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool3 AAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 AAB => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool3"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool3 AAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool3 AAA => ref *(Bool3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 RRRR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RRRR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 RRRG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RRRG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 RRRB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RRRB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 RRRA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RRRA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 RRGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RRGR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 RRGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RRGG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 RRGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RRGB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 RRGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RRGA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 RRBR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RRBR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 RRBG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RRBG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 RRBB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RRBB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 RRBA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RRBA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 RRAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RRAR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 RRAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RRAG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 RRAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RRAB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 RRAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RRAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RRAA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 RGRR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RGRR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 RGRG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RGRG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 RGRB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RGRB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 RGRA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RGRA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 RGGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RGGR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 RGGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RGGG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 RGGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RGGB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 RGGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RGGA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 RGBR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RGBR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 RGBG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RGBG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 RGBB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RGBB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref Bool4 RGBA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 RGBA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 RGAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RGAR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 RGAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RGAG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref Bool4 RGAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 RGAB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 RGAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RGAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RGAA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 RBRR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RBRR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 RBRG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RBRG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 RBRB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RBRB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 RBRA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RBRA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 RBGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RBGR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 RBGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RBGG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 RBGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RBGB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref Bool4 RBGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 RBGA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 RBBR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RBBR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 RBBG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RBBG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 RBBB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RBBB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 RBBA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RBBA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 RBAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RBAR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref Bool4 RBAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 RBAG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 RBAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RBAB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 RBAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RBAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RBAA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 RARR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RARR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RARR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 RARG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RARG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RARG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 RARB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RARB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RARB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 RARA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RARA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RARA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 RAGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RAGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RAGR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 RAGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RAGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RAGG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref Bool4 RAGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RAGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 RAGB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 RAGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RAGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RAGA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 RABR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RABR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RABR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref Bool4 RABG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RABG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 RABG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 RABB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RABB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RABB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 RABA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RABA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RABA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 RAAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RAAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RAAR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 RAAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RAAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RAAG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 RAAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RAAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RAAB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 RAAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(RAAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 RAAA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 GRRR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GRRR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 GRRG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GRRG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 GRRB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GRRB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 GRRA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GRRA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 GRGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GRGR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 GRGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GRGG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 GRGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GRGB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 GRGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GRGA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 GRBR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GRBR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 GRBG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GRBG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 GRBB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GRBB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref Bool4 GRBA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 GRBA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 GRAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GRAR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 GRAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GRAG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref Bool4 GRAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 GRAB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 GRAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GRAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GRAA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 GGRR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GGRR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 GGRG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GGRG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 GGRB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GGRB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 GGRA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GGRA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 GGGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GGGR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 GGGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GGGG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 GGGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GGGB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 GGGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GGGA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 GGBR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GGBR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 GGBG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GGBG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 GGBB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GGBB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 GGBA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GGBA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 GGAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GGAR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 GGAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GGAG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 GGAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GGAB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 GGAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GGAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GGAA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 GBRR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GBRR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 GBRG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GBRG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 GBRB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GBRB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref Bool4 GBRA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 GBRA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 GBGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GBGR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 GBGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GBGG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 GBGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GBGB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 GBGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GBGA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 GBBR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GBBR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 GBBG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GBBG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 GBBB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GBBB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 GBBA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GBBA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref Bool4 GBAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 GBAR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 GBAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GBAG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 GBAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GBAB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 GBAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GBAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GBAA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 GARR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GARR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GARR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 GARG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GARG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GARG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref Bool4 GARB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GARB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 GARB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 GARA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GARA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GARA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 GAGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GAGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GAGR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 GAGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GAGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GAGG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 GAGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GAGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GAGB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 GAGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GAGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GAGA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref Bool4 GABR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GABR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 GABR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 GABG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GABG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GABG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 GABB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GABB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GABB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 GABA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GABA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GABA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 GAAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GAAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GAAR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 GAAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GAAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GAAG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 GAAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GAAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GAAB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 GAAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(GAAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 GAAA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 BRRR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BRRR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 BRRG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BRRG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 BRRB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BRRB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 BRRA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BRRA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 BRGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BRGR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 BRGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BRGG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 BRGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BRGB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref Bool4 BRGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 BRGA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 BRBR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BRBR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 BRBG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BRBG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 BRBB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BRBB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 BRBA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BRBA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 BRAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BRAR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref Bool4 BRAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 BRAG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 BRAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BRAB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 BRAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BRAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BRAA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 BGRR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BGRR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 BGRG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BGRG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 BGRB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BGRB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref Bool4 BGRA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 BGRA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 BGGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BGGR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 BGGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BGGG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 BGGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BGGB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 BGGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BGGA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 BGBR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BGBR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 BGBG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BGBG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 BGBB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BGBB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 BGBA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BGBA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref Bool4 BGAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 BGAR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 BGAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BGAG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 BGAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BGAB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 BGAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BGAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BGAA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 BBRR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BBRR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 BBRG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BBRG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 BBRB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BBRB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 BBRA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BBRA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 BBGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BBGR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 BBGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BBGG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 BBGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BBGB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 BBGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BBGA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 BBBR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BBBR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 BBBG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BBBG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 BBBB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BBBB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 BBBA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BBBA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 BBAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BBAR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 BBAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BBAG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 BBAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BBAB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 BBAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BBAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BBAA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 BARR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BARR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BARR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref Bool4 BARG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BARG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 BARG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 BARB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BARB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BARB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 BARA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BARA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BARA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref Bool4 BAGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BAGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 BAGR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 BAGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BAGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BAGG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 BAGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BAGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BAGB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 BAGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BAGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BAGA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 BABR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BABR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BABR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 BABG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BABG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BABG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 BABB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BABB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BABB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 BABA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BABA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BABA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 BAAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BAAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BAAR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 BAAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BAAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BAAG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 BAAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BAAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BAAB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 BAAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(BAAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 BAAA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 ARRR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ARRR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 ARRG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ARRG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 ARRB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ARRB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 ARRA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ARRA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 ARGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ARGR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 ARGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ARGG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref Bool4 ARGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 ARGB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 ARGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ARGA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 ARBR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ARBR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref Bool4 ARBG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 ARBG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 ARBB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ARBB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 ARBA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ARBA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 ARAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ARAR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 ARAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ARAG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 ARAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ARAB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 ARAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ARAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ARAA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 AGRR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AGRR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 AGRG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AGRG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref Bool4 AGRB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 AGRB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 AGRA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AGRA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 AGGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AGGR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 AGGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AGGG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 AGGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AGGB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 AGGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AGGA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref Bool4 AGBR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 AGBR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 AGBG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AGBG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 AGBB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AGBB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 AGBA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AGBA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 AGAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AGAR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 AGAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AGAG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 AGAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AGAB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 AGAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AGAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AGAA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 ABRR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ABRR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref Bool4 ABRG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 ABRG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 ABRB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ABRB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 ABRA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ABRA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref Bool4 ABGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Bool4 ABGR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 ABGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ABGG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 ABGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ABGB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 ABGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ABGA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 ABBR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ABBR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 ABBG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ABBG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 ABBB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ABBB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 ABBA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ABBA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 ABAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ABAR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 ABAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ABAG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 ABAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ABAB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 ABAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(ABAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 ABAA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 AARR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AARR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AARR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 AARG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AARG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AARG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 AARB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AARB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AARB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 AARA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AARA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AARA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 AAGR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AAGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AAGR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 AAGG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AAGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AAGG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 AAGB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AAGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AAGB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 AAGA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AAGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AAGA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 AABR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AABR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AABR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 AABG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AABG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AABG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 AABB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AABB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AABB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 AABA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AABA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AABA => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Bool4 AAAR => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AAAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AAAR => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Bool4 AAAG => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AAAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AAAG => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Bool4 AAAB => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AAAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AAAB => ref *(Bool4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly Bool4 AAAA => throw new InvalidExecutionContextException($"{typeof(Bool4)}.{nameof(AAAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Bool4 AAAA => ref *(Bool4*)UndefinedData;
     }
 }

@@ -131,18 +131,21 @@ namespace ComputeSharp
         /// Casts a <see cref="Double4"/> value to a <see cref="Int4"/> one.
         /// </summary>
         /// <param name="xyzw">The input <see cref="Double4"/> value to cast.</param>
-        public static explicit operator Int4(Double4 xyzw) => throw new InvalidExecutionContextException($"{nameof(Double4)}.({nameof(Int4)})");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static explicit operator Int4(Double4 xyzw) => default;
 
         /// <summary>
         /// Casts a <see cref="Double4"/> value to a <see cref="UInt4"/> one.
         /// </summary>
         /// <param name="xyzw">The input <see cref="Double4"/> value to cast.</param>
-        public static explicit operator UInt4(Double4 xyzw) => throw new InvalidExecutionContextException($"{nameof(Double4)}.({nameof(UInt4)})");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static explicit operator UInt4(Double4 xyzw) => default;
 
         /// <summary>
         /// Casts a <see cref="Double4"/> value to a <see cref="Float4"/> one.
         /// </summary>
         /// <param name="xyzw">The input <see cref="Double4"/> value to cast.</param>
-        public static explicit operator Float4(Double4 xyzw) => throw new InvalidExecutionContextException($"{nameof(Double4)}.({nameof(Float4)})");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static explicit operator Float4(Double4 xyzw) => default;
     }
 }

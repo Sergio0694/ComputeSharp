@@ -50,18 +50,21 @@ namespace ComputeSharp
         /// Casts a <see cref="UInt2"/> value to a <see cref="Int2"/> one.
         /// </summary>
         /// <param name="xy">The input <see cref="UInt2"/> value to cast.</param>
-        public static explicit operator Int2(UInt2 xy) => throw new InvalidExecutionContextException($"{nameof(UInt2)}.({nameof(Int2)})");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static explicit operator Int2(UInt2 xy) => default;
 
         /// <summary>
         /// Casts a <see cref="UInt2"/> value to a <see cref="Float2"/> one.
         /// </summary>
         /// <param name="xy">The input <see cref="UInt2"/> value to cast.</param>
-        public static implicit operator Float2(UInt2 xy) => throw new InvalidExecutionContextException($"{nameof(UInt2)}.({nameof(Float2)})");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static implicit operator Float2(UInt2 xy) => default;
 
         /// <summary>
         /// Casts a <see cref="UInt2"/> value to a <see cref="Double2"/> one.
         /// </summary>
         /// <param name="xy">The input <see cref="UInt2"/> value to cast.</param>
-        public static implicit operator Double2(UInt2 xy) => throw new InvalidExecutionContextException($"{nameof(UInt2)}.({nameof(Double2)})");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static implicit operator Double2(UInt2 xy) => default;
     }
 }

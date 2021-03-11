@@ -1,12 +1,17 @@
-﻿using System.Runtime.InteropServices;
-using ComputeSharp.Exceptions;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace ComputeSharp
 {
     /// <inheritdoc cref="UInt4"/>
     [StructLayout(LayoutKind.Explicit, Size = 16, Pack = 4)]
-    public partial struct UInt4
+    public unsafe partial struct UInt4
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(UInt4), sizeof(UInt4));
+
         [FieldOffset(0)]
         private uint x;
 
@@ -23,3434 +28,4111 @@ namespace ComputeSharp
         /// Gets a reference to a specific component in the current <see cref="UInt4"/> instance.
         /// </summary>
         /// <param name="i">The index of the component to access.</param>
-        public ref uint this[int i] => throw new InvalidExecutionContextException($"{typeof(UInt4)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref uint this[int i] => ref *(uint*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the <c>X</c> component.
         /// </summary>
-        public ref uint X => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(X)}");
+        public ref uint X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.x, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the <c>Y</c> component.
         /// </summary>
-        public ref uint Y => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(Y)}");
+        public ref uint Y => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.y, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the <c>Z</c> component.
         /// </summary>
-        public ref uint Z => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(Z)}");
+        public ref uint Z => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.z, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the <c>W</c> component.
         /// </summary>
-        public ref uint W => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(W)}");
+        public ref uint W => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.w, 1));
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt2"/> value with the components <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt2 XX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt2 XX => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref UInt2 XY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 XY => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref UInt2 XZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 XZ => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref UInt2 XW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 XW => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref UInt2 YX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 YX => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt2"/> value with the components <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt2 YY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt2 YY => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref UInt2 YZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 YZ => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref UInt2 YW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 YW => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref UInt2 ZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 ZX => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref UInt2 ZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 ZY => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt2"/> value with the components <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt2 ZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt2 ZZ => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref UInt2 ZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 ZW => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref UInt2 WX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 WX => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref UInt2 WY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 WY => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref UInt2 WZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 WZ => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt2"/> value with the components <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt2 WW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt2 WW => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt3 XXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 XXX => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt3 XXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 XXY => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt3 XXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 XXZ => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt3 XXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 XXW => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt3 XYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 XYX => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt3 XYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 XYY => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref UInt3 XYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 XYZ => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref UInt3 XYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 XYW => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt3 XZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 XZX => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref UInt3 XZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 XZY => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt3 XZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 XZZ => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref UInt3 XZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 XZW => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt3 XWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 XWX => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref UInt3 XWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 XWY => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref UInt3 XWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 XWZ => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt3 XWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 XWW => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt3 YXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 YXX => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt3 YXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 YXY => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref UInt3 YXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 YXZ => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref UInt3 YXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 YXW => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt3 YYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 YYX => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt3 YYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 YYY => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt3 YYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 YYZ => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt3 YYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 YYW => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref UInt3 YZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 YZX => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt3 YZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 YZY => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt3 YZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 YZZ => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref UInt3 YZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 YZW => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref UInt3 YWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 YWX => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt3 YWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 YWY => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref UInt3 YWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 YWZ => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt3 YWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 YWW => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt3 ZXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 ZXX => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref UInt3 ZXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 ZXY => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt3 ZXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 ZXZ => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref UInt3 ZXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 ZXW => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref UInt3 ZYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 ZYX => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt3 ZYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 ZYY => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt3 ZYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 ZYZ => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref UInt3 ZYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 ZYW => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt3 ZZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 ZZX => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt3 ZZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 ZZY => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt3 ZZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 ZZZ => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt3 ZZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 ZZW => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref UInt3 ZWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 ZWX => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref UInt3 ZWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 ZWY => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt3 ZWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 ZWZ => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt3 ZWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 ZWW => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt3 WXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 WXX => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref UInt3 WXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 WXY => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref UInt3 WXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 WXZ => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt3 WXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 WXW => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref UInt3 WYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 WYX => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt3 WYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 WYY => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref UInt3 WYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 WYZ => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt3 WYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 WYW => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref UInt3 WZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 WZX => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref UInt3 WZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 WZY => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt3 WZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 WZZ => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt3 WZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 WZW => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt3 WWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 WWX => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt3 WWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 WWY => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt3 WWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 WWZ => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt3 WWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 WWW => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 XXXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XXXX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 XXXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XXXY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 XXXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XXXZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 XXXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XXXW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 XXYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XXYX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 XXYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XXYY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 XXYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XXYZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 XXYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XXYW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 XXZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XXZX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 XXZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XXZY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 XXZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XXZZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 XXZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XXZW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 XXWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XXWX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 XXWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XXWY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 XXWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XXWZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 XXWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XXWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XXWW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 XYXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XYXX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 XYXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XYXY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 XYXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XYXZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 XYXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XYXW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 XYYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XYYX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 XYYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XYYY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 XYYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XYYZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 XYYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XYYW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 XYZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XYZX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 XYZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XYZY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 XYZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XYZZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref UInt4 XYZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 XYZW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 XYWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XYWX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 XYWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XYWY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref UInt4 XYWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 XYWZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 XYWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XYWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XYWW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 XZXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XZXX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 XZXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XZXY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 XZXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XZXZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 XZXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XZXW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 XZYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XZYX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 XZYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XZYY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 XZYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XZYZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref UInt4 XZYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 XZYW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 XZZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XZZX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 XZZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XZZY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 XZZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XZZZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 XZZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XZZW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 XZWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XZWX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref UInt4 XZWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 XZWY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 XZWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XZWZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 XZWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XZWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XZWW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 XWXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XWXX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 XWXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XWXY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 XWXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XWXZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 XWXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XWXW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 XWYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XWYX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 XWYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XWYY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref UInt4 XWYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 XWYZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 XWYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XWYW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 XWZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XWZX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref UInt4 XWZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 XWZY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 XWZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XWZZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 XWZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XWZW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 XWWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XWWX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 XWWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XWWY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 XWWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XWWZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="X"/>, <see cref="W"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 XWWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(XWWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 XWWW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 YXXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YXXX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 YXXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YXXY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 YXXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YXXZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 YXXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YXXW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 YXYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YXYX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 YXYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YXYY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 YXYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YXYZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 YXYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YXYW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 YXZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YXZX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 YXZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YXZY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 YXZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YXZZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref UInt4 YXZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 YXZW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 YXWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YXWX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 YXWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YXWY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref UInt4 YXWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 YXWZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 YXWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YXWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YXWW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 YYXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YYXX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 YYXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YYXY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 YYXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YYXZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 YYXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YYXW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 YYYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YYYX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 YYYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YYYY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 YYYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YYYZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 YYYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YYYW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 YYZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YYZX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 YYZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YYZY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 YYZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YYZZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 YYZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YYZW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 YYWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YYWX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 YYWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YYWY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 YYWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YYWZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 YYWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YYWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YYWW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 YZXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YZXX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 YZXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YZXY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 YZXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YZXZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref UInt4 YZXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 YZXW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 YZYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YZYX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 YZYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YZYY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 YZYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YZYZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 YZYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YZYW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 YZZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YZZX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 YZZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YZZY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 YZZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YZZZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 YZZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YZZW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref UInt4 YZWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 YZWX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 YZWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YZWY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 YZWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YZWZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 YZWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YZWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YZWW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 YWXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YWXX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 YWXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YWXY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref UInt4 YWXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 YWXZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 YWXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YWXW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 YWYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YWYX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 YWYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YWYY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 YWYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YWYZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 YWYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YWYW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref UInt4 YWZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 YWZX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 YWZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YWZY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 YWZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YWZZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 YWZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YWZW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 YWWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YWWX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 YWWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YWWY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 YWWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YWWZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 YWWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(YWWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 YWWW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 ZXXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZXXX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 ZXXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZXXY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 ZXXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZXXZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 ZXXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZXXW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 ZXYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZXYX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 ZXYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZXYY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 ZXYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZXYZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref UInt4 ZXYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 ZXYW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 ZXZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZXZX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 ZXZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZXZY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 ZXZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZXZZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 ZXZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZXZW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 ZXWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZXWX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref UInt4 ZXWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 ZXWY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 ZXWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZXWZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 ZXWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZXWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZXWW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 ZYXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZYXX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 ZYXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZYXY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 ZYXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZYXZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref UInt4 ZYXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 ZYXW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 ZYYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZYYX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 ZYYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZYYY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 ZYYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZYYZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 ZYYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZYYW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 ZYZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZYZX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 ZYZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZYZY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 ZYZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZYZZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 ZYZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZYZW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref UInt4 ZYWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 ZYWX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 ZYWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZYWY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 ZYWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZYWZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 ZYWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZYWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZYWW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 ZZXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZZXX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 ZZXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZZXY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 ZZXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZZXZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 ZZXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZZXW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 ZZYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZZYX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 ZZYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZZYY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 ZZYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZZYZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 ZZYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZZYW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 ZZZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZZZX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 ZZZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZZZY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 ZZZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZZZZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 ZZZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZZZW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 ZZWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZZWX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 ZZWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZZWY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 ZZWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZZWZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 ZZWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZZWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZZWW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 ZWXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZWXX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref UInt4 ZWXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 ZWXY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 ZWXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZWXZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 ZWXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZWXW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref UInt4 ZWYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 ZWYX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 ZWYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZWYY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 ZWYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZWYZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 ZWYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZWYW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 ZWZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZWZX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 ZWZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZWZY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 ZWZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZWZZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 ZWZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZWZW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 ZWWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZWWX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 ZWWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZWWY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 ZWWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZWWZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 ZWWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ZWWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ZWWW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 WXXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WXXX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 WXXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WXXY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 WXXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WXXZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 WXXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WXXW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 WXYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WXYX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 WXYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WXYY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref UInt4 WXYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 WXYZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 WXYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WXYW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 WXZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WXZX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref UInt4 WXZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 WXZY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 WXZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WXZZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 WXZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WXZW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 WXWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WXWX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 WXWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WXWY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 WXWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WXWZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="X"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 WXWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WXWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WXWW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 WYXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WYXX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 WYXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WYXY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref UInt4 WYXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 WYXZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 WYXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WYXW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 WYYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WYYX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 WYYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WYYY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 WYYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WYYZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 WYYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WYYW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref UInt4 WYZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 WYZX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 WYZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WYZY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 WYZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WYZZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 WYZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WYZW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 WYWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WYWX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 WYWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WYWY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 WYWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WYWZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 WYWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WYWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WYWW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 WZXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WZXX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref UInt4 WZXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 WZXY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 WZXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WZXZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 WZXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WZXW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref UInt4 WZYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 WZYX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 WZYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WZYY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 WZYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WZYZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 WZYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WZYW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 WZZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WZZX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 WZZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WZZY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 WZZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WZZZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 WZZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WZZW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 WZWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WZWX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 WZWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WZWY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 WZWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WZWZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 WZWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WZWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WZWW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 WWXX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WWXX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 WWXY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WWXY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 WWXZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WWXZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="X"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 WWXW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWXW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WWXW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 WWYX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WWYX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 WWYY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WWYY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 WWYZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WWYZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 WWYW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWYW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WWYW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 WWZX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WWZX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 WWZY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WWZY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 WWZZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WWZZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 WWZW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWZW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WWZW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="W"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly UInt4 WWWX => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWWX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WWWX => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly UInt4 WWWY => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWWY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WWWY => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="W"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly UInt4 WWWZ => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWWZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WWWZ => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="W"/>, <see cref="W"/>, <see cref="W"/>, <see cref="W"/>.
         /// </summary>
-        public ref readonly UInt4 WWWW => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(WWWW)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 WWWW => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the <c>R</c> component.
         /// </summary>
-        public ref uint R => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(R)}");
+        public ref uint R => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.x, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the <c>G</c> component.
         /// </summary>
-        public ref uint G => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(G)}");
+        public ref uint G => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.y, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the <c>B</c> component.
         /// </summary>
-        public ref uint B => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(B)}");
+        public ref uint B => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.z, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="uint"/> value representing the <c>A</c> component.
         /// </summary>
-        public ref uint A => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(A)}");
+        public ref uint A => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.w, 1));
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt2"/> value with the components <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt2 RR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt2 RR => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref UInt2 RG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 RG => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref UInt2 RB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 RB => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref UInt2 RA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 RA => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref UInt2 GR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 GR => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt2"/> value with the components <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt2 GG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt2 GG => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref UInt2 GB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 GB => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref UInt2 GA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 GA => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref UInt2 BR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 BR => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref UInt2 BG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 BG => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt2"/> value with the components <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt2 BB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt2 BB => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref UInt2 BA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 BA => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref UInt2 AR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 AR => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref UInt2 AG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 AG => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt2"/> value with the components <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref UInt2 AB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt2 AB => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt2"/> value with the components <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt2 AA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt2 AA => ref *(UInt2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt3 RRR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 RRR => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt3 RRG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 RRG => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt3 RRB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 RRB => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt3 RRA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 RRA => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt3 RGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 RGR => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt3 RGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 RGG => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref UInt3 RGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 RGB => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref UInt3 RGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 RGA => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt3 RBR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 RBR => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref UInt3 RBG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 RBG => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt3 RBB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 RBB => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref UInt3 RBA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 RBA => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt3 RAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 RAR => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref UInt3 RAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 RAG => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref UInt3 RAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 RAB => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt3 RAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 RAA => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt3 GRR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 GRR => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt3 GRG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 GRG => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref UInt3 GRB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 GRB => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref UInt3 GRA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 GRA => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt3 GGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 GGR => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt3 GGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 GGG => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt3 GGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 GGB => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt3 GGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 GGA => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref UInt3 GBR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 GBR => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt3 GBG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 GBG => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt3 GBB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 GBB => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref UInt3 GBA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 GBA => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref UInt3 GAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 GAR => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt3 GAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 GAG => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref UInt3 GAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 GAB => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt3 GAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 GAA => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt3 BRR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 BRR => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref UInt3 BRG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 BRG => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt3 BRB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 BRB => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref UInt3 BRA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 BRA => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref UInt3 BGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 BGR => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt3 BGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 BGG => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt3 BGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 BGB => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref UInt3 BGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 BGA => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt3 BBR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 BBR => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt3 BBG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 BBG => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt3 BBB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 BBB => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt3 BBA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 BBA => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref UInt3 BAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 BAR => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref UInt3 BAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 BAG => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt3 BAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 BAB => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt3 BAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 BAA => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt3 ARR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 ARR => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref UInt3 ARG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 ARG => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref UInt3 ARB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 ARB => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt3 ARA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 ARA => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref UInt3 AGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 AGR => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt3 AGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 AGG => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref UInt3 AGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 AGB => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt3 AGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 AGA => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref UInt3 ABR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 ABR => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt3"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref UInt3 ABG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt3 ABG => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt3 ABB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 ABB => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt3 ABA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 ABA => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt3 AAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 AAR => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt3 AAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 AAG => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt3 AAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 AAB => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt3"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt3 AAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt3 AAA => ref *(UInt3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 RRRR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RRRR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 RRRG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RRRG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 RRRB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RRRB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 RRRA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RRRA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 RRGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RRGR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 RRGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RRGG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 RRGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RRGB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 RRGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RRGA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 RRBR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RRBR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 RRBG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RRBG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 RRBB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RRBB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 RRBA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RRBA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 RRAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RRAR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 RRAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RRAG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 RRAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RRAB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 RRAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RRAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RRAA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 RGRR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RGRR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 RGRG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RGRG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 RGRB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RGRB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 RGRA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RGRA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 RGGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RGGR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 RGGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RGGG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 RGGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RGGB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 RGGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RGGA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 RGBR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RGBR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 RGBG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RGBG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 RGBB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RGBB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref UInt4 RGBA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 RGBA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 RGAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RGAR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 RGAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RGAG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref UInt4 RGAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 RGAB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 RGAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RGAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RGAA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 RBRR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RBRR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 RBRG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RBRG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 RBRB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RBRB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 RBRA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RBRA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 RBGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RBGR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 RBGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RBGG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 RBGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RBGB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref UInt4 RBGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 RBGA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 RBBR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RBBR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 RBBG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RBBG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 RBBB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RBBB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 RBBA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RBBA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 RBAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RBAR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref UInt4 RBAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 RBAG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 RBAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RBAB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 RBAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RBAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RBAA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 RARR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RARR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RARR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 RARG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RARG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RARG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 RARB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RARB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RARB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 RARA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RARA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RARA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 RAGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RAGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RAGR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 RAGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RAGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RAGG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref UInt4 RAGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RAGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 RAGB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 RAGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RAGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RAGA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 RABR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RABR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RABR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref UInt4 RABG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RABG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 RABG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 RABB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RABB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RABB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 RABA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RABA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RABA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 RAAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RAAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RAAR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 RAAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RAAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RAAG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 RAAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RAAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RAAB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="R"/>, <see cref="A"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 RAAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(RAAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 RAAA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 GRRR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GRRR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 GRRG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GRRG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 GRRB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GRRB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 GRRA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GRRA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 GRGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GRGR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 GRGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GRGG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 GRGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GRGB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 GRGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GRGA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 GRBR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GRBR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 GRBG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GRBG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 GRBB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GRBB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref UInt4 GRBA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 GRBA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 GRAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GRAR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 GRAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GRAG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref UInt4 GRAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 GRAB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 GRAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GRAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GRAA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 GGRR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GGRR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 GGRG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GGRG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 GGRB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GGRB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 GGRA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GGRA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 GGGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GGGR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 GGGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GGGG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 GGGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GGGB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 GGGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GGGA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 GGBR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GGBR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 GGBG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GGBG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 GGBB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GGBB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 GGBA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GGBA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 GGAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GGAR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 GGAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GGAG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 GGAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GGAB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 GGAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GGAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GGAA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 GBRR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GBRR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 GBRG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GBRG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 GBRB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GBRB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref UInt4 GBRA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 GBRA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 GBGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GBGR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 GBGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GBGG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 GBGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GBGB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 GBGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GBGA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 GBBR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GBBR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 GBBG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GBBG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 GBBB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GBBB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 GBBA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GBBA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref UInt4 GBAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 GBAR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 GBAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GBAG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 GBAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GBAB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 GBAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GBAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GBAA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 GARR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GARR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GARR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 GARG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GARG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GARG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref UInt4 GARB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GARB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 GARB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 GARA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GARA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GARA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 GAGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GAGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GAGR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 GAGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GAGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GAGG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 GAGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GAGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GAGB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 GAGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GAGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GAGA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref UInt4 GABR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GABR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 GABR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 GABG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GABG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GABG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 GABB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GABB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GABB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 GABA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GABA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GABA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 GAAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GAAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GAAR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 GAAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GAAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GAAG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 GAAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GAAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GAAB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="G"/>, <see cref="A"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 GAAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(GAAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 GAAA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 BRRR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BRRR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 BRRG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BRRG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 BRRB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BRRB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 BRRA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BRRA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 BRGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BRGR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 BRGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BRGG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 BRGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BRGB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref UInt4 BRGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 BRGA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 BRBR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BRBR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 BRBG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BRBG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 BRBB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BRBB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 BRBA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BRBA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 BRAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BRAR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref UInt4 BRAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 BRAG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 BRAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BRAB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 BRAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BRAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BRAA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 BGRR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BGRR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 BGRG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BGRG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 BGRB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BGRB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref UInt4 BGRA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 BGRA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 BGGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BGGR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 BGGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BGGG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 BGGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BGGB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 BGGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BGGA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 BGBR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BGBR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 BGBG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BGBG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 BGBB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BGBB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 BGBA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BGBA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref UInt4 BGAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 BGAR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 BGAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BGAG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 BGAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BGAB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 BGAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BGAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BGAA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 BBRR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BBRR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 BBRG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BBRG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 BBRB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BBRB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 BBRA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BBRA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 BBGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BBGR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 BBGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BBGG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 BBGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BBGB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 BBGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BBGA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 BBBR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BBBR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 BBBG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BBBG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 BBBB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BBBB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 BBBA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BBBA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 BBAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BBAR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 BBAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BBAG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 BBAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BBAB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 BBAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BBAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BBAA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 BARR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BARR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BARR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref UInt4 BARG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BARG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 BARG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 BARB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BARB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BARB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 BARA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BARA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BARA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref UInt4 BAGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BAGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 BAGR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 BAGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BAGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BAGG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 BAGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BAGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BAGB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 BAGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BAGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BAGA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 BABR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BABR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BABR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 BABG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BABG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BABG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 BABB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BABB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BABB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 BABA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BABA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BABA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 BAAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BAAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BAAR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 BAAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BAAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BAAG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 BAAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BAAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BAAB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="B"/>, <see cref="A"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 BAAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(BAAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 BAAA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 ARRR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ARRR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 ARRG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ARRG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 ARRB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ARRB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 ARRA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ARRA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 ARGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ARGR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 ARGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ARGG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref UInt4 ARGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 ARGB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 ARGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ARGA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 ARBR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ARBR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref UInt4 ARBG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 ARBG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 ARBB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ARBB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 ARBA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ARBA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 ARAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ARAR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 ARAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ARAG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 ARAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ARAB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="R"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 ARAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ARAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ARAA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 AGRR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AGRR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 AGRG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AGRG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref UInt4 AGRB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 AGRB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 AGRA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AGRA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 AGGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AGGR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 AGGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AGGG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 AGGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AGGB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 AGGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AGGA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref UInt4 AGBR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 AGBR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 AGBG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AGBG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 AGBB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AGBB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 AGBA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AGBA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 AGAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AGAR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 AGAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AGAG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 AGAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AGAB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="G"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 AGAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AGAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AGAA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 ABRR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ABRR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref UInt4 ABRG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 ABRG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 ABRB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ABRB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 ABRA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABRA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ABRA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref UInt4 ABGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref UInt4 ABGR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 ABGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ABGG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 ABGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ABGB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 ABGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ABGA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 ABBR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ABBR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 ABBG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ABBG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 ABBB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ABBB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 ABBA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABBA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ABBA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 ABAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ABAR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 ABAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ABAG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 ABAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ABAB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="B"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 ABAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(ABAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 ABAA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 AARR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AARR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AARR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 AARG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AARG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AARG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 AARB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AARB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AARB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="R"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 AARA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AARA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AARA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 AAGR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AAGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AAGR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 AAGG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AAGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AAGG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 AAGB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AAGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AAGB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="G"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 AAGA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AAGA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AAGA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 AABR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AABR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AABR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 AABG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AABG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AABG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 AABB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AABB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AABB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="B"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 AABA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AABA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AABA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="A"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly UInt4 AAAR => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AAAR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AAAR => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="A"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly UInt4 AAAG => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AAAG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AAAG => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="A"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly UInt4 AAAB => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AAAB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AAAB => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="UInt4"/> value with the components <see cref="A"/>, <see cref="A"/>, <see cref="A"/>, <see cref="A"/>.
         /// </summary>
-        public ref readonly UInt4 AAAA => throw new InvalidExecutionContextException($"{typeof(UInt4)}.{nameof(AAAA)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly UInt4 AAAA => ref *(UInt4*)UndefinedData;
 
         /// <summary>
         /// Sums two <see cref="UInt4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt4"/> value to sum.</param>
         /// <param name="right">The second <see cref="UInt4"/> value to sum.</param>
-        public static UInt4 operator +(UInt4 left, UInt4 right) => throw new InvalidExecutionContextException($"{typeof(UInt4)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static UInt4 operator +(UInt4 left, UInt4 right) => default;
 
         /// <summary>
         /// Divides two <see cref="UInt4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt4"/> value to divide.</param>
         /// <param name="right">The second <see cref="UInt4"/> value to divide.</param>
-        public static UInt4 operator /(UInt4 left, UInt4 right) => throw new InvalidExecutionContextException($"{typeof(UInt4)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static UInt4 operator /(UInt4 left, UInt4 right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="UInt4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt4"/> value to multiply.</param>
         /// <param name="right">The second <see cref="UInt4"/> value to multiply.</param>
-        public static UInt4 operator *(UInt4 left, UInt4 right) => throw new InvalidExecutionContextException($"{typeof(UInt4)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static UInt4 operator *(UInt4 left, UInt4 right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="UInt4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt4"/> value to subtract.</param>
         /// <param name="right">The second <see cref="UInt4"/> value to subtract.</param>
-        public static UInt4 operator -(UInt4 left, UInt4 right) => throw new InvalidExecutionContextException($"{typeof(UInt4)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static UInt4 operator -(UInt4 left, UInt4 right) => default;
     }
 }

@@ -94,18 +94,21 @@ namespace ComputeSharp
         /// Casts a <see cref="Float3"/> value to a <see cref="Double3"/> one.
         /// </summary>
         /// <param name="xyz">The input <see cref="Float3"/> value to cast.</param>
-        public static implicit operator Double3(Float3 xyz) => throw new InvalidExecutionContextException($"{nameof(Float3)}.({nameof(Double3)})");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static implicit operator Double3(Float3 xyz) => default;
 
         /// <summary>
         /// Casts a <see cref="Float3"/> value to a <see cref="Int3"/> one.
         /// </summary>
         /// <param name="xyz">The input <see cref="Float3"/> value to cast.</param>
-        public static explicit operator Int3(Float3 xyz) => throw new InvalidExecutionContextException($"{nameof(Float3)}.({nameof(Int3)})");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static explicit operator Int3(Float3 xyz) => default;
 
         /// <summary>
         /// Casts a <see cref="Float3"/> value to a <see cref="UInt3"/> one.
         /// </summary>
         /// <param name="xyz">The input <see cref="Float3"/> value to cast.</param>
-        public static explicit operator UInt3(Float3 xyz) => throw new InvalidExecutionContextException($"{nameof(Float3)}.({nameof(UInt3)})");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static explicit operator UInt3(Float3 xyz) => default;
     }
 }
