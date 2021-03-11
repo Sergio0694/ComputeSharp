@@ -160,12 +160,37 @@ namespace ComputeSharp.SourceGenerators
                 resourceOffset = 0,
                 rawDataOffset = sizeof(int) * 3;
 
+            AppendFields(structDeclarationSymbol, Array.Empty<string>(), ref resourceOffset, ref rawDataOffset, statements);
+
+            // After all the captured fields have been processed, ansure the reported byte size for
+            // the local variables is padded to a multiple of a 32 bit value. This is necessary to
+            // enable loading all the dispatch data after reinterpreting it to a sequence of values
+            // of size 32 bits (via SetComputeRoot32BitConstants), without reading out of bounds.
+            rawDataOffset = AlignmentHelper.Pad(rawDataOffset, sizeof(int));
+
+            statements.Add(ReturnStatement(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(rawDataOffset))));
+
+            count = rawDataOffset / sizeof(int);
+
+            return statements;
+        }
+
+        /// <summary>
+        /// Explores a given type hierarchy and generates statements to load fields.
+        /// </summary>
+        /// <param name="currentTypeSymbol">The current type being explored.</param>
+        /// <param name="fieldPath">The current path of the field with respect to the shader instance.</param>
+        /// <param name="resourceOffset">The current offset in the root table of loaded resources.</param>
+        /// <param name="rawDataOffset">The current offset within the loaded data buffer.</param>
+        /// <param name="statements">The target list of statements being generated.</param>
+        private static void AppendFields(ITypeSymbol currentTypeSymbol, IEnumerable<string> fieldPath, ref int resourceOffset, ref int rawDataOffset, ICollection<StatementSyntax> statements)
+        {
             foreach (
-                IFieldSymbol fieldSymbol in
-                from fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>()
-                where fieldSymbol.Type is INamedTypeSymbol { IsStatic: false } &&
-                      !fieldSymbol.IsConst && !fieldSymbol.IsStatic
-                select fieldSymbol)
+               IFieldSymbol fieldSymbol in
+               from fieldSymbol in currentTypeSymbol.GetMembers().OfType<IFieldSymbol>()
+               where fieldSymbol.Type is INamedTypeSymbol { IsStatic: false } &&
+                     !fieldSymbol.IsConst && !fieldSymbol.IsStatic
+               select fieldSymbol)
             {
                 string typeName = fieldSymbol.Type.GetFullMetadataName();
 
@@ -179,65 +204,70 @@ namespace ComputeSharp.SourceGenerators
                 }
                 else if (HlslKnownTypes.IsKnownHlslType(typeName))
                 {
-                    // For scalar, vector and linear matrix types, serialize the value normally.
-                    // Only the initial alignment needs to be considered, while data is packed.
-                    var (fieldSize, fieldPack) = HlslKnownSizes.GetTypeInfo(typeName);
-
-                    // Check if the current type is a matrix type with more than one row. In this
-                    // case, each row is aligned as if it was a separate array, so the start of
-                    // each row needs to be at a multiple of 16 bytes (a float4 register).
-                    if (HlslKnownTypes.IsNonLinearMatrixType(typeName, out string? elementName, out int rows, out int columns))
-                    {
-                        string
-                            rowTypeName = $"ComputeSharp.{elementName}{columns}",
-                            rowLocalName = $"__{fieldSymbol.Name}__row0";
-
-                        statements.Add(ParseStatement($"ref {rowTypeName} {rowLocalName} = ref Unsafe.As<{typeName}, {rowTypeName}>(ref Unsafe.AsRef(in shader.{fieldSymbol.Name}));"));
-
-                        // Generate the loading code for each individual row, with proper alignment.
-                        // This will result in the following (assuming Float2x3 m):
-                        //
-                        // ref Float3 __m__row0 = ref Unsafe.As<Float2x3, Float3>(ref Unsafe.AsRef(in shader.m));
-                        // Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, rawDataOffset), Unsafe.Add(ref __m__row0, 0));
-                        // Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, rawDataOffset + 16), Unsafe.Add(ref __m__row0, 1));
-                        for (int j = 0; j < rows; j++)
-                        {
-                            rawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
-
-                            statements.Add(ParseStatement($"Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, {rawDataOffset}), Unsafe.Add(ref {rowLocalName}, {j}));"));
-
-                            rawDataOffset += fieldPack * columns;
-                        }
-                    }
-                    else
-                    {
-                        // Calculate the right offset with 16-bytes padding (HLSL constant buffer).
-                        // Since we're in a constant buffer, we need to both pad the starting offset
-                        // to be aligned to the packing size of the type, and also to align the initial
-                        // offset to ensure that values do not cross 16 bytes boundaries either.
-                        rawDataOffset = AlignmentHelper.AlignToBoundary(
-                            AlignmentHelper.Pad(rawDataOffset, fieldPack),
-                            fieldSize,
-                            16);
-
-                        statements.Add(ParseStatement($"Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, {rawDataOffset}), shader.{fieldSymbol.Name});"));
-
-                        rawDataOffset += fieldSize;
-                    }
+                    AppendHlslKnownTypeField(fieldPath.Concat(new[] { fieldSymbol.Name }), typeName, ref rawDataOffset, statements);
+                }
+                else if (fieldSymbol.Type.IsUnmanagedType)
+                {
+                    // Custom struct type defined by the user
+                    AppendFields(fieldSymbol.Type, fieldPath.Concat(new[] { fieldSymbol.Name }), ref resourceOffset, ref rawDataOffset, statements);
                 }
             }
+        }
 
-            // After all the captured fields have been processed, ansure the reported byte size for
-            // the local variables is padded to a multiple of a 32 bit value. This is necessary to
-            // enable loading all the dispatch data after reinterpreting it to a sequence of values
-            // of size 32 bits (via SetComputeRoot32BitConstants), without reading out of bounds.
-            rawDataOffset = AlignmentHelper.Pad(rawDataOffset, sizeof(int));
+        /// <summary>
+        /// Generates a loading statement for a known HLSL primitive type field (scalar, vector or matrix).
+        /// </summary>
+        /// <param name="fieldPath">The current path of the field with respect to the shader instance.</param>
+        /// <param name="typeName">The type name currently being read.</param>
+        /// <param name="rawDataOffset">The current offset within the loaded data buffer.</param>
+        /// <param name="statements">The target list of statements being generated.</param>
+        private static void AppendHlslKnownTypeField(IEnumerable<string> fieldPath, string typeName, ref int rawDataOffset, ICollection<StatementSyntax> statements)
+        {
+            // For scalar, vector and linear matrix types, serialize the value normally.
+            // Only the initial alignment needs to be considered, while data is packed.
+            var (fieldSize, fieldPack) = HlslKnownSizes.GetTypeInfo(typeName);
 
-            statements.Add(ReturnStatement(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(rawDataOffset))));
+            // Check if the current type is a matrix type with more than one row. In this
+            // case, each row is aligned as if it was a separate array, so the start of
+            // each row needs to be at a multiple of 16 bytes (a float4 register).
+            if (HlslKnownTypes.IsNonLinearMatrixType(typeName, out string? elementName, out int rows, out int columns))
+            {
+                string
+                    rowTypeName = $"ComputeSharp.{elementName}{columns}",
+                    rowLocalName = $"__{string.Join("_", fieldPath)}__row0";
 
-            count = rawDataOffset / sizeof(int);
+                statements.Add(ParseStatement($"ref {rowTypeName} {rowLocalName} = ref Unsafe.As<{typeName}, {rowTypeName}>(ref Unsafe.AsRef(in shader.{string.Join(".", fieldPath)}));"));
 
-            return statements;
+                // Generate the loading code for each individual row, with proper alignment.
+                // This will result in the following (assuming Float2x3 m):
+                //
+                // ref Float3 __m__row0 = ref Unsafe.As<Float2x3, Float3>(ref Unsafe.AsRef(in shader.m));
+                // Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, rawDataOffset), Unsafe.Add(ref __m__row0, 0));
+                // Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, rawDataOffset + 16), Unsafe.Add(ref __m__row0, 1));
+                for (int j = 0; j < rows; j++)
+                {
+                    rawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
+
+                    statements.Add(ParseStatement($"Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, {rawDataOffset}), Unsafe.Add(ref {rowLocalName}, {j}));"));
+
+                    rawDataOffset += fieldPack * columns;
+                }
+            }
+            else
+            {
+                // Calculate the right offset with 16-bytes padding (HLSL constant buffer).
+                // Since we're in a constant buffer, we need to both pad the starting offset
+                // to be aligned to the packing size of the type, and also to align the initial
+                // offset to ensure that values do not cross 16 bytes boundaries either.
+                rawDataOffset = AlignmentHelper.AlignToBoundary(
+                    AlignmentHelper.Pad(rawDataOffset, fieldPack),
+                    fieldSize,
+                    16);
+
+                statements.Add(ParseStatement($"Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, {rawDataOffset}), shader.{string.Join(".", fieldPath)});"));
+
+                rawDataOffset += fieldSize;
+            }
         }
     }
 }
