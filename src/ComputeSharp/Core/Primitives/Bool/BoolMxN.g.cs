@@ -1,5 +1,10 @@
-﻿using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
+#if NET5_0
+using System.Runtime.CompilerServices;
+#else
+using RuntimeHelpers = ComputeSharp.SourceGenerators.Helpers.RuntimeHelpers;
+using MemoryMarshal = ComputeSharp.SourceGenerators.Helpers.MemoryMarshal;
+#endif
 
 namespace ComputeSharp
 {
