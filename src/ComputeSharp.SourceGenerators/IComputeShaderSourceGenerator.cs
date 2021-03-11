@@ -206,6 +206,10 @@ namespace ComputeSharp.SourceGenerators
                         continue;
                     }
 
+                    AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass is { Name: nameof(GroupSharedAttribute) });
+
+                    if (attribute is not null) continue;
+
                     // Constant properties must be of a primitive, vector or matrix type
                     if (fieldSymbol.Type is not INamedTypeSymbol typeSymbol ||
                         !HlslKnownTypes.IsKnownHlslType(typeSymbol.GetFullMetadataName()))
