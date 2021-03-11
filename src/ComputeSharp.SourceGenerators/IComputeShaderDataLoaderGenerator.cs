@@ -183,8 +183,10 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="resourceOffset">The current offset in the root table of loaded resources.</param>
         /// <param name="rawDataOffset">The current offset within the loaded data buffer.</param>
         /// <param name="statements">The target list of statements being generated.</param>
-        private static void AppendFields(ITypeSymbol currentTypeSymbol, IEnumerable<string> fieldPath, ref int resourceOffset, ref int rawDataOffset, ICollection<StatementSyntax> statements)
+        private static void AppendFields(ITypeSymbol currentTypeSymbol, IReadOnlyCollection<string> fieldPath, ref int resourceOffset, ref int rawDataOffset, ICollection<StatementSyntax> statements)
         {
+            bool isFirstField = true;
+
             foreach (
                IFieldSymbol fieldSymbol in
                from fieldSymbol in currentTypeSymbol.GetMembers().OfType<IFieldSymbol>()
@@ -193,6 +195,14 @@ namespace ComputeSharp.SourceGenerators
                select fieldSymbol)
             {
                 string typeName = fieldSymbol.Type.GetFullMetadataName();
+
+                // The first item in each nested struct needs to be aligned to 16 bytes
+                if (isFirstField && fieldPath.Count > 0)
+                {
+                    rawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
+
+                    isFirstField = false;
+                }
 
                 if (HlslKnownTypes.IsTypedResourceType(typeName))
                 {
@@ -209,7 +219,7 @@ namespace ComputeSharp.SourceGenerators
                 else if (fieldSymbol.Type.IsUnmanagedType)
                 {
                     // Custom struct type defined by the user
-                    AppendFields(fieldSymbol.Type, fieldPath.Concat(new[] { fieldSymbol.Name }), ref resourceOffset, ref rawDataOffset, statements);
+                    AppendFields(fieldSymbol.Type, fieldPath.Concat(new[] { fieldSymbol.Name }).ToArray(), ref resourceOffset, ref rawDataOffset, statements);
                 }
             }
         }
