@@ -28,6 +28,11 @@ namespace ComputeSharp.Graphics.Helpers
         private const uint WarpDeviceId = 0x8C;
 
         /// <summary>
+        /// The <see cref="Lazy{T}"/> instance used to produce the default <see cref="GraphicsDevice"/> instance.
+        /// </summary>
+        public static readonly Lazy<GraphicsDevice> DefaultFactory = new(GetDefaultDevice);
+
+        /// <summary>
         /// Gets the <see cref="Luid"/> of the default device.
         /// </summary>
         /// <returns>The <see cref="Luid"/> of the default device supporting <see cref="D3D_FEATURE_LEVEL_11_0"/> and <see cref="D3D_SHADER_MODEL_6_0"/>.</returns>
@@ -35,6 +40,11 @@ namespace ComputeSharp.Graphics.Helpers
         [Pure]
         public static unsafe Luid GetDefaultDeviceLuid()
         {
+            if (DefaultFactory.IsValueCreated)
+            {
+                return DefaultFactory.Value.Luid;
+            }
+
             DXGI_ADAPTER_DESC1 dxgiDescription1;
 
             _ = TryGetDefaultDevice(null, null, &dxgiDescription1) || TryGetWarpDevice(null, null, &dxgiDescription1);
@@ -47,7 +57,7 @@ namespace ComputeSharp.Graphics.Helpers
         /// </summary>
         /// <returns>The default <see cref="GraphicsDevice"/> instance supporting <see cref="D3D_FEATURE_LEVEL_11_0"/> and <see cref="D3D_SHADER_MODEL_6_0"/>.</returns>
         /// <exception cref="NotSupportedException">Thrown when a default device is not available.</exception>
-        public static unsafe GraphicsDevice GetDefaultDevice()
+        private static unsafe GraphicsDevice GetDefaultDevice()
         {
             using ComPtr<ID3D12Device> d3D12Device = default;
             using ComPtr<IDXGIAdapter> dxgiAdapter = default;
