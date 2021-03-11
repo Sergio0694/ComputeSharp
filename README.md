@@ -13,7 +13,7 @@
   - [GPU resource types](#gpu-resource-types)
   - [HLSL vector and matrix types](#hlsl-vector-and-matrix-types)
   - [HLSL intrinsics](#hlsl-intrinsics)
-  - [Shader constants](#shader-constants)
+  - [Shader constants and globals](#shader-constants-and-globals)
   - [Dispatch info](#dispatch-info)
   - [Working with images](#working-with-images)
   - [Shader metaprogramming](#shader-metaprogramming)
@@ -129,6 +129,8 @@ Float4 vertices = matrix[M11, M14, M44, M41];
 
 Matrix types also include a number of built-in operators to work with vector types, and the `Hlsl` class detailed below (see [HLSL intrinsics](#hlsl-intrinsics)) also includes several overloads for the available methods to work on both matrix and vector types at the same time (eg. for row/matrix multiplication and other common linear algebra operations).
 
+> **NOTE:** in order to make all the available properties and indexers usable when declaring shader constants and globals (see [Shader constants and globals](#shader-constants-and-globals)), they will return undefined data if used on the CPU instead of throwing an exception, and in this case their behavior is considered undefined. Refer to the XML docs for each API for further info, as properties and operators that are only meant to be used in a shader are clearly marked as undefined behavior if used on the CPU side. The only APIs guaranteed to be usable on the GPU are constructors, static properties and properties to access individual elements (eg. `Float4.X`).
+
 ## HLSL intrinsics
 
 **ComputeSharp** offers support for all HLSL intrinsics that can be used from compute shaders. These are special functions (usually representing mathematical operations) that are optimized on the GPU and can execute very efficiently. Some of them can be mapped automatically from methods in the `System.Math` type, but if you want to have direct access to all of them you can just use the methods in the `Hlsl` class from a compute shader, and **ComputeSharp** will rewrite all those calls to use the native intrinsics in the compute shaders where those are used.
@@ -152,11 +154,13 @@ public readonly partial struct SoftmaxActivation : IComputeShader
 }
 ```
 
-## Shader constants
+> **NOTE:** in order to make all the intrinsics usable when declaring shader constants and globals (see [Shader constants and globals](#shader-constants-and-globals)), most intrinsics will just return a default value if used on the CPU instead of throwing an exception, and in this case their behavior is considered undefined. Make sure to only ever use these methods in a shader, as their results will not be correct in other execution contexts.
 
-One common approach to make shaders easier to modify and experiment with is to separate the parameters being used from the code using them, by defining them as constants. **ComputeSharp** has special handling for this, and will rewrite static readonly properties as static constants in the generated shaders, which are optimized by the compiler for frequent access during execution. The advantage of using constants is that they're directly embedded into a compiled shader, so they don't need to be loaded in memory whenever a shader is dispatched. Constant properties can be of any of the supported HLSL primitive types, including vector and matrix types. Furthermore, the initialization of these constants can also use any of the available HLSL intrinsics. If the same result is being used multiple times while a shader is executed, moving values to a shader constant is a good way to avoid repeatedly computing the same value over and over for each invocation.
+## Shader constants and globals
 
-Here is an example of how shader constants can be declared and used:
+One common approach to make shaders easier to modify and experiment with is to separate the parameters being used from the code using them, by defining them as constants. **ComputeSharp** has special handling for this, and will rewrite static fields as global variables in the generated shaders (marking them as constants if needed), which are optimized by the compiler for frequent access during execution. The advantage of using constants is that they're directly embedded into a compiled shader, so they don't need to be loaded in memory whenever a shader is dispatched. Non constant shader global variables, on the other hand, can make code easier to write as they remove the need to pass multiple values around in each function that is invoked. Static fields can be of any of the supported HLSL primitive types, including vector and matrix types. Furthermore, the initialization of these constants can also use any of the available HLSL intrinsics. If the same result is being used multiple times while a shader is executed, moving values to a shader constant is a good way to avoid repeatedly computing the same value over and over.
+
+Here is an example of how shader constants and mutable globals can be declared and used:
 
 ```csharp
 [AutoConstructor]
@@ -164,15 +168,24 @@ public readonly partial struct SampleShaderWithConstants : IComputeShader
 {
     public readonly ReadWriteBuffer<float> buffer;
 
-    private static float Pi => 3.14f;
-    private static Float2 SinCosPi => new(Hlsl.Sin(Pi), Hlsl.Cos(Pi));
+    private const int iterations = 10;
+    private const float pi = 3.14f;
+    private static readonly Float2 sinCosPi = new(Hlsl.Sin(Pi), Hlsl.Cos(Pi));
+    private static float sum;
 
     public void Execute()
     {
-        buffer[ThreadIds.X] = Pi + SinCosPi.X * SinCosPi.Y;
+        for (int i = 0; i < iterations; i++)
+        {
+            sum += pi + sinCosPi.X * sinCosPi.Y;
+        }
+
+        buffer[ThreadIds.X] = sum;
     }
 }
 ```
+
+As shown above, there are two ways to declare a constant value in a shader: either by using `const` in C# (which is perfect for when a value is just a primitive scalar type initialized with a constant expression), or by using `static readonly`. The latter has the advantage that it allows the type to be of a vector and matrix type as well, and the initialization can also use any of the available HLSL intrinsics. Lastly, mutable globals can be declared by just using the `static` modifier, and they can also optionally have an initializer (otherwise their default value will be used).
 
 ## Dispatch info
 
