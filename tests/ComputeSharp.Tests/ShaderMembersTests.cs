@@ -33,10 +33,10 @@ namespace ComputeSharp.Tests
         {
             public readonly ReadWriteBuffer<float> buffer;
 
-            static float Pi => 3.14f;
-            static float SinPi => Hlsl.Sin(Pi);
-            static Int2x2 Mat => new(1, 2, 3, 4);
-            static float Combo => Hlsl.Abs(Hlsl.Clamp(Hlsl.Min(Hlsl.Max(3.14f, 2), 10), 0, 42));
+            static readonly float Pi = 3.14f;
+            static readonly float SinPi = Hlsl.Sin(Pi);
+            static readonly Int2x2 Mat = new(1, 2, 3, 4);
+            static readonly float Combo = Hlsl.Abs(Hlsl.Clamp(Hlsl.Min(Hlsl.Max(3.14f, 2), 10), 0, 42));
 
             public void Execute()
             {
@@ -48,6 +48,40 @@ namespace ComputeSharp.Tests
                 buffer[5] = Mat.M21;
                 buffer[6] = Mat.M22;
                 buffer[7] = Combo;
+            }
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void GlobalVariable(Device device)
+        {
+            using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(32);
+
+            device.Get().For(32, new GlobalVariableShader(buffer));
+
+            int[] results = buffer.ToArray();
+
+            for (int i = 0; i < results.Length; i++)
+            {
+                Assert.AreEqual(results[i], i);
+            }
+        }
+
+        [AutoConstructor]
+        internal readonly partial struct GlobalVariableShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<int> buffer;
+
+            static int total;
+
+            public void Execute()
+            {
+                for (int i = 0; i < ThreadIds.X; i++)
+                {
+                    total++;
+                }
+
+                buffer[ThreadIds.X] = total;
             }
         }
     }
