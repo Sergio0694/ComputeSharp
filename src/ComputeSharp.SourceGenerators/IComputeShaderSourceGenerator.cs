@@ -161,6 +161,11 @@ namespace ComputeSharp.SourceGenerators
 
                     continue;
                 }
+                else if (!HlslKnownTypes.IsKnownHlslType(metadataName))
+                {
+                    // Track the type if it's a custom struct
+                    types.Add(typeSymbol);
+                }
 
                 string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
 
@@ -368,7 +373,7 @@ namespace ComputeSharp.SourceGenerators
         {
             foreach (var constant in constantDefinitions)
             {
-                var ownerTypeName = ((INamedTypeSymbol)constant.Key.ContainingSymbol).ToDisplayString().Replace(".", "__");
+                var ownerTypeName = ((INamedTypeSymbol)constant.Key.ContainingSymbol).ToDisplayString().ToHlslIdentifierName();
                 var constantName = $"__{ownerTypeName}__{constant.Key.Name}";
 
                 yield return new string[] { constantName, constant.Value };
@@ -384,7 +389,7 @@ namespace ComputeSharp.SourceGenerators
         {
             foreach (var type in HlslKnownTypes.GetCustomTypes(types))
             {
-                var structType = type.GetFullMetadataName().Replace(".", "__");
+                var structType = type.GetFullMetadataName().ToHlslIdentifierName();
                 var structDeclaration = StructDeclaration(structType);
 
                 // Declare the fields of the current type
@@ -395,7 +400,7 @@ namespace ComputeSharp.SourceGenerators
                     // Convert the name to the fully qualified HLSL version
                     if (!HlslKnownTypes.TryGetMappedName(fieldType.GetFullMetadataName(), out string? mapped))
                     {
-                        mapped = fieldType.GetFullMetadataName().Replace(".", "__");
+                        mapped = fieldType.GetFullMetadataName().ToHlslIdentifierName();
                     }
 
                     structDeclaration = structDeclaration.AddMembers(

@@ -260,7 +260,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 {
                     ConstantDefinitions[fieldOperation.Field] = ((IFormattable)fieldOperation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
 
-                    var ownerTypeName = ((INamedTypeSymbol)fieldOperation.Field.ContainingSymbol).ToDisplayString().Replace(".", "__");
+                    var ownerTypeName = ((INamedTypeSymbol)fieldOperation.Field.ContainingSymbol).ToDisplayString().ToHlslIdentifierName();
                     var constantName = $"__{ownerTypeName}__{fieldOperation.Field.Name}";
 
                     return IdentifierName(constantName);
@@ -398,7 +398,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 // type as well, as they will be processed by the generator in a different path.
                 if (!SymbolEqualityComparer.Default.Equals(this.shaderType, method.ContainingType))
                 {
-                    var methodIdentifier = method.GetFullMetadataName().Replace(".", "__");
+                    var methodIdentifier = method.GetFullMetadataName().ToHlslIdentifierName();
 
                     if (!this.staticMethods.ContainsKey(method))
                     {
