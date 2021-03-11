@@ -51,19 +51,23 @@ namespace ComputeSharp.Shaders.Renderer
                 builder.AppendLine(define.Value);
             }
 
-            // Static constants
-            if (info.ConstantsInfo.Count > 0)
+            // Static fields
+            if (info.StaticFields.Count > 0)
             {
                 builder.AppendLine();
 
-                foreach (var constant in info.ConstantsInfo)
+                foreach (var constant in info.StaticFields)
                 {
-                    builder.Append("static const ");
-                    builder.Append(constant.Value.Type);
+                    builder.Append(constant.Value.TypeDeclaration);
                     builder.Append(' ');
                     builder.Append(constant.Key);
-                    builder.Append(" = ");
-                    builder.Append(constant.Value.Assignment);
+
+                    if (constant.Value.Assignment is string assignment)
+                    {
+                        builder.Append(" = ");
+                        builder.Append(assignment);
+                    }
+
                     builder.AppendLine(";");
                 }
             }
