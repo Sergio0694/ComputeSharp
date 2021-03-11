@@ -161,6 +161,11 @@ namespace ComputeSharp.SourceGenerators
 
                     continue;
                 }
+                else if (!HlslKnownTypes.IsKnownHlslType(metadataName))
+                {
+                    // Track the type if it's a custom struct
+                    types.Add(typeSymbol);
+                }
 
                 string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
 

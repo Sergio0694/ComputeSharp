@@ -222,40 +222,47 @@ namespace ComputeSharp.SourceGenerators.Mappings
 
             string typeName = typeSymbol.GetFullMetadataName();
 
-            // Special case for the structured buffer types
+            // Special case for the resource types
             if (IsTypedResourceType(typeName))
             {
                 string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments.Last()).GetFullMetadataName();
 
                 // If the current type is a custom type, format it as needed
-                if (!KnownHlslTypes.TryGetValue(genericArgumentName, out string? mapped))
+                if (!KnownHlslTypes.TryGetValue(genericArgumentName, out string? mappedElementType))
                 {
-                    mapped = genericArgumentName.Replace(".", "__");
+                    mappedElementType = genericArgumentName.Replace(".", "__");
                 }
 
                 // Construct the HLSL type name
                 return typeName switch
                 {
-                    "ComputeSharp.ConstantBuffer`1" => mapped,
-                    "ComputeSharp.ReadOnlyBuffer`1" => $"StructuredBuffer<{mapped}>",
-                    "ComputeSharp.ReadWriteBuffer`1" => $"RWStructuredBuffer<{mapped}>",
-                    "ComputeSharp.ReadOnlyTexture2D`1" => $"Texture2D<{mapped}>",
-                    "ComputeSharp.ReadOnlyTexture2D`2" => $"Texture2D<unorm {mapped}>",
-                    "ComputeSharp.ReadWriteTexture2D`1" => $"RWTexture2D<{mapped}>",
-                    "ComputeSharp.ReadWriteTexture2D`2" => $"RWTexture2D<unorm {mapped}>",
-                    "ComputeSharp.ReadOnlyTexture3D`1" => $"Texture3D<{mapped}>",
-                    "ComputeSharp.ReadOnlyTexture3D`2" => $"Texture3D<unorm {mapped}>",
-                    "ComputeSharp.ReadWriteTexture3D`1" => $"RWTexture3D<{mapped}>",
-                    "ComputeSharp.ReadWriteTexture3D`2" => $"RWTexture3D<unorm {mapped}>",
-                    "ComputeSharp.IReadOnlyTexture2D`1" => $"Texture2D<unorm {mapped}>",
-                    "ComputeSharp.IReadWriteTexture2D`1" => $"RWTexture2D<unorm {mapped}>",
-                    "ComputeSharp.IReadOnlyTexture3D`1" => $"Texture3D<unorm {mapped}>",
-                    "ComputeSharp.IReadWriteTexture3D`1" => $"RWTexture3D<unorm {mapped}>",
+                    "ComputeSharp.ConstantBuffer`1" => mappedElementType,
+                    "ComputeSharp.ReadOnlyBuffer`1" => $"StructuredBuffer<{mappedElementType}>",
+                    "ComputeSharp.ReadWriteBuffer`1" => $"RWStructuredBuffer<{mappedElementType}>",
+                    "ComputeSharp.ReadOnlyTexture2D`1" => $"Texture2D<{mappedElementType}>",
+                    "ComputeSharp.ReadOnlyTexture2D`2" => $"Texture2D<unorm {mappedElementType}>",
+                    "ComputeSharp.ReadWriteTexture2D`1" => $"RWTexture2D<{mappedElementType}>",
+                    "ComputeSharp.ReadWriteTexture2D`2" => $"RWTexture2D<unorm {mappedElementType}>",
+                    "ComputeSharp.ReadOnlyTexture3D`1" => $"Texture3D<{mappedElementType}>",
+                    "ComputeSharp.ReadOnlyTexture3D`2" => $"Texture3D<unorm {mappedElementType}>",
+                    "ComputeSharp.ReadWriteTexture3D`1" => $"RWTexture3D<{mappedElementType}>",
+                    "ComputeSharp.ReadWriteTexture3D`2" => $"RWTexture3D<unorm {mappedElementType}>",
+                    "ComputeSharp.IReadOnlyTexture2D`1" => $"Texture2D<unorm {mappedElementType}>",
+                    "ComputeSharp.IReadWriteTexture2D`1" => $"RWTexture2D<unorm {mappedElementType}>",
+                    "ComputeSharp.IReadOnlyTexture3D`1" => $"Texture3D<unorm {mappedElementType}>",
+                    "ComputeSharp.IReadWriteTexture3D`1" => $"RWTexture3D<unorm {mappedElementType}>",
                     _ => throw new ArgumentException()
                 };
             }
 
-            return KnownHlslTypes[typeName];
+            // The captured field is of an HLSL primitive type
+            if (KnownHlslTypes.TryGetValue(typeName, out string? mappedType))
+            {
+                return mappedType;
+            }
+
+            // The captured field is of a custom struct type
+            return typeName.Replace(".", "__");
         }
 
         /// <summary>

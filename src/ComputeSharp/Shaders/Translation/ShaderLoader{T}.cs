@@ -221,13 +221,10 @@ namespace ComputeSharp.Shaders.Translation
                 this.hlslResourceInfo.Add(new HlslResourceInfo.ReadWrite(hlslType, hlslName, (int)this.readWriteBuffersCount++));
                 this.totalResourceCount++;
             }
-            else if (HlslKnownTypes.IsKnownScalarType(fieldType) || HlslKnownTypes.IsKnownVectorType(fieldType) || HlslKnownTypes.IsKnownMatrixType(fieldType))
+            else if (fieldInfo.GetValue(shader) is Delegate func)
             {
-                this.capturedFields.Add(fieldInfo);
-                this.fieldsInfo.Add(new CapturedFieldInfo(hlslType, hlslName));
-            }
-            else if (fieldInfo.GetValue(shader) is Delegate { Method: { IsStatic: true } } func)
-            {
+                Guard.IsTrue(func.Method.IsStatic, fieldInfo.Name, "Captured delegates must be pointing to static methods");
+
                 // Captured static delegates with a return type
                 var methodSource = ShaderMethodSourceAttribute.GetForDelegate(func);
 
@@ -240,7 +237,11 @@ namespace ComputeSharp.Shaders.Translation
                     this.definesInfo[pair.Key] = pair.Value;
                 }
             }
-            else ThrowHelper.ThrowArgumentException("Invalid captured variable");
+            else
+            {
+                this.capturedFields.Add(fieldInfo);
+                this.fieldsInfo.Add(new CapturedFieldInfo(hlslType, hlslName));
+            }
         }
     }
 }
