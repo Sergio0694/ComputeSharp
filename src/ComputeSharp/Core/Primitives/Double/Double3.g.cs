@@ -1,12 +1,22 @@
 ﻿using System.Runtime.InteropServices;
-using ComputeSharp.Exceptions;
+#if NET5_0
+using System.Runtime.CompilerServices;
+#else
+using RuntimeHelpers = ComputeSharp.SourceGenerators.Helpers.RuntimeHelpers;
+using MemoryMarshal = ComputeSharp.SourceGenerators.Helpers.MemoryMarshal;
+#endif
 
 namespace ComputeSharp
 {
     /// <inheritdoc cref="Double3"/>
     [StructLayout(LayoutKind.Explicit, Size = 24, Pack = 8)]
-    public partial struct Double3
+    public unsafe partial struct Double3
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double3), sizeof(Double3));
+
         [FieldOffset(0)]
         private double x;
 
@@ -20,430 +30,508 @@ namespace ComputeSharp
         /// Gets a reference to a specific component in the current <see cref="Double3"/> instance.
         /// </summary>
         /// <param name="i">The index of the component to access.</param>
-        public ref double this[int i] => throw new InvalidExecutionContextException($"{typeof(Double3)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref double this[int i] => ref *(double*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the <c>X</c> component.
         /// </summary>
-        public ref double X => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(X)}");
+        public ref double X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.x, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the <c>Y</c> component.
         /// </summary>
-        public ref double Y => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(Y)}");
+        public ref double Y => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.y, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the <c>Z</c> component.
         /// </summary>
-        public ref double Z => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(Z)}");
+        public ref double Z => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.z, 1));
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double2"/> value with the components <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Double2 XX => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(XX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double2 XX => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double2"/> value with the components <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Double2 XY => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(XY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 XY => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double2"/> value with the components <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Double2 XZ => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(XZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 XZ => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double2"/> value with the components <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref Double2 YX => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(YX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 YX => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double2"/> value with the components <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Double2 YY => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(YY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double2 YY => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double2"/> value with the components <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Double2 YZ => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(YZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 YZ => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double2"/> value with the components <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref Double2 ZX => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(ZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 ZX => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double2"/> value with the components <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Double2 ZY => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(ZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 ZY => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double2"/> value with the components <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Double2 ZZ => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(ZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double2 ZZ => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Double3 XXX => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(XXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 XXX => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Double3 XXY => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(XXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 XXY => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Double3 XXZ => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(XXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 XXZ => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Double3 XYX => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(XYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 XYX => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Double3 XYY => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(XYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 XYY => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Double3 XYZ => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(XYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 XYZ => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Double3 XZX => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(XZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 XZX => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Double3 XZY => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(XZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 XZY => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Double3 XZZ => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(XZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 XZZ => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Double3 YXX => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(YXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 YXX => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Double3 YXY => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(YXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 YXY => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref Double3 YXZ => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(YXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 YXZ => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Double3 YYX => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(YYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 YYX => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Double3 YYY => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(YYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 YYY => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Double3 YYZ => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(YYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 YYZ => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref Double3 YZX => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(YZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 YZX => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Double3 YZY => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(YZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 YZY => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Double3 YZZ => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(YZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 YZZ => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Double3 ZXX => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(ZXX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 ZXX => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
-        public ref Double3 ZXY => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(ZXY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 ZXY => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Double3 ZXZ => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(ZXZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 ZXZ => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
-        public ref Double3 ZYX => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(ZYX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 ZYX => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Double3 ZYY => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(ZYY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 ZYY => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Double3 ZYZ => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(ZYZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 ZYZ => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
-        public ref readonly Double3 ZZX => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(ZZX)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 ZZX => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
-        public ref readonly Double3 ZZY => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(ZZY)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 ZZY => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
-        public ref readonly Double3 ZZZ => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(ZZZ)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 ZZZ => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the <c>R</c> component.
         /// </summary>
-        public ref double R => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(R)}");
+        public ref double R => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.x, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the <c>G</c> component.
         /// </summary>
-        public ref double G => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(G)}");
+        public ref double G => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.y, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the <c>B</c> component.
         /// </summary>
-        public ref double B => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(B)}");
+        public ref double B => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.z, 1));
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double2"/> value with the components <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Double2 RR => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(RR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double2 RR => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double2"/> value with the components <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref Double2 RG => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(RG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 RG => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double2"/> value with the components <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref Double2 RB => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(RB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 RB => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double2"/> value with the components <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref Double2 GR => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(GR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 GR => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double2"/> value with the components <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Double2 GG => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(GG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double2 GG => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double2"/> value with the components <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref Double2 GB => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(GB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 GB => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double2"/> value with the components <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref Double2 BR => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(BR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 BR => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double2"/> value with the components <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref Double2 BG => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(BG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 BG => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double2"/> value with the components <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Double2 BB => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(BB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double2 BB => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Double3 RRR => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(RRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 RRR => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Double3 RRG => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(RRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 RRG => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Double3 RRB => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(RRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 RRB => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Double3 RGR => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(RGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 RGR => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Double3 RGG => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(RGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 RGG => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref Double3 RGB => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(RGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 RGB => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Double3 RBR => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(RBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 RBR => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref Double3 RBG => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(RBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 RBG => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Double3 RBB => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(RBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 RBB => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Double3 GRR => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(GRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 GRR => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Double3 GRG => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(GRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 GRG => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref Double3 GRB => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(GRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 GRB => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Double3 GGR => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(GGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 GGR => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Double3 GGG => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(GGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 GGG => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Double3 GGB => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(GGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 GGB => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref Double3 GBR => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(GBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 GBR => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Double3 GBG => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(GBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 GBG => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Double3 GBB => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(GBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 GBB => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Double3 BRR => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(BRR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 BRR => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
-        public ref Double3 BRG => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(BRG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 BRG => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Double3 BRB => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(BRB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 BRB => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Double3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
-        public ref Double3 BGR => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(BGR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 BGR => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Double3 BGG => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(BGG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 BGG => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Double3 BGB => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(BGB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 BGB => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
-        public ref readonly Double3 BBR => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(BBR)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 BBR => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
-        public ref readonly Double3 BBG => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(BBG)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 BBG => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Double3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
-        public ref readonly Double3 BBB => throw new InvalidExecutionContextException($"{typeof(Double3)}.{nameof(BBB)}");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref readonly Double3 BBB => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Negates a <see cref="Double3"/> value.
         /// </summary>
         /// <param name="xyz">The <see cref="Double3"/> value to negate.</param>
-        public static Double3 operator -(Double3 xyz) => throw new InvalidExecutionContextException($"{typeof(Double3)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3 operator -(Double3 xyz) => default;
 
         /// <summary>
         /// Sums two <see cref="Double3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double3"/> value to sum.</param>
         /// <param name="right">The second <see cref="Double3"/> value to sum.</param>
-        public static Double3 operator +(Double3 left, Double3 right) => throw new InvalidExecutionContextException($"{typeof(Double3)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3 operator +(Double3 left, Double3 right) => default;
 
         /// <summary>
         /// Divides two <see cref="Double3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double3"/> value to divide.</param>
         /// <param name="right">The second <see cref="Double3"/> value to divide.</param>
-        public static Double3 operator /(Double3 left, Double3 right) => throw new InvalidExecutionContextException($"{typeof(Double3)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3 operator /(Double3 left, Double3 right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="Double3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double3"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Double3"/> value to multiply.</param>
-        public static Double3 operator *(Double3 left, Double3 right) => throw new InvalidExecutionContextException($"{typeof(Double3)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3 operator *(Double3 left, Double3 right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="Double3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double3"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double3"/> value to subtract.</param>
-        public static Double3 operator -(Double3 left, Double3 right) => throw new InvalidExecutionContextException($"{typeof(Double3)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3 operator -(Double3 left, Double3 right) => default;
     }
 }

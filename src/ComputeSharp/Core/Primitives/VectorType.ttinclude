@@ -67,15 +67,25 @@ void GenerateVectorProperties(string typeName, int elementSize)
     int i = int.Parse(Regex.Match(typeName, @"\d+$").Value);
 #>
 using System.Runtime.InteropServices;
-using ComputeSharp.Exceptions;
+#if NET5_0
+using System.Runtime.CompilerServices;
+#else
+using RuntimeHelpers = ComputeSharp.SourceGenerators.Helpers.RuntimeHelpers;
+using MemoryMarshal = ComputeSharp.SourceGenerators.Helpers.MemoryMarshal;
+#endif
 
 namespace ComputeSharp
 {
     /// <inheritdoc cref="<#=typeName#>"/>
     [StructLayout(LayoutKind.Explicit, Size = <#=(elementSize * i)#>, Pack = <#=elementSize#>)]
-    public partial struct <#=typeName#>
+    public unsafe partial struct <#=typeName#>
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(<#=typeName#>), sizeof(<#=typeName#>));
 <#
+    WriteLine("");
     PushIndent("    ");
     PushIndent("    ");
 
@@ -94,7 +104,8 @@ namespace ComputeSharp
         /// Gets a reference to a specific component in the current <see cref="<#=typeName#>"/> instance.
         /// </summary>
         /// <param name="i">The index of the component to access.</param>
-        public ref <#=hlslElementTypeName#> this[int i] => throw new InvalidExecutionContextException($"{typeof(<#=typeName#>)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref <#=hlslElementTypeName#> this[int i] => ref *(<#=hlslElementTypeName#>*)UndefinedData;
 <#
     PushIndent("    ");
     PushIndent("    ");
@@ -119,6 +130,13 @@ namespace ComputeSharp
         if (propertyName.Length == 1)
         {
             WriteLine($"/// Gets a reference to the <see cref=\"{propertyType}\"/> value representing the <c>{propertyName}</c> component.");
+            WriteLine("/// </summary>");
+
+            char fieldName = "xyzw"["xyzwrgba".IndexOf(propertyName.ToLower()) % 4];
+
+            // Property
+            Write($"public {refType} {propertyType} {propertyName} ");
+            WriteLine($"=> ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.{fieldName}, 1));");
         }
         else
         {
@@ -126,13 +144,14 @@ namespace ComputeSharp
             if (isReadonly) Write("readonly ");
             Write($"reference to the <see cref=\"{propertyType}\"/> value with the components ");
             Write(string.Join(", ", propertyName.Select(c => $"<see cref=\"{c}\"/>")));
-            WriteLine(".");           
-        }
-        WriteLine("/// </summary>");
+            WriteLine(".");
+            WriteLine("/// </summary>");
+            WriteLine("/// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>");
 
-        // Property
-        Write($"public {refType} {propertyType} {propertyName} ");
-        WriteLine($"=> throw new InvalidExecutionContextException($\"{{typeof({typeName})}}.{{nameof({propertyName})}}\");");
+            // Property
+            Write($"public {refType} {propertyType} {propertyName} ");
+            WriteLine($"=> ref *({propertyType}*)UndefinedData;");
+        }
     }
 
     PopIndent();
@@ -149,7 +168,8 @@ namespace ComputeSharp
         /// Negates a <see cref="<#=typeName#>"/> value.
         /// </summary>
         /// <param name="<#=argumentName#>">The <see cref="<#=typeName#>"/> value to negate.</param>
-        public static <#=typeName#> operator -(<#=typeName#> <#=argumentName#>) => throw new InvalidExecutionContextException($"{typeof(<#=typeName#>)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static <#=typeName#> operator -(<#=typeName#> <#=argumentName#>) => default;
 <#
     }
 
@@ -163,28 +183,32 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="left">The first <see cref="<#=typeName#>"/> value to sum.</param>
         /// <param name="right">The second <see cref="<#=typeName#>"/> value to sum.</param>
-        public static <#=typeName#> operator +(<#=typeName#> left, <#=typeName#> right) => throw new InvalidExecutionContextException($"{typeof(<#=typeName#>)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static <#=typeName#> operator +(<#=typeName#> left, <#=typeName#> right) => default;
 
         /// <summary>
         /// Divides two <see cref="<#=typeName#>"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="<#=typeName#>"/> value to divide.</param>
         /// <param name="right">The second <see cref="<#=typeName#>"/> value to divide.</param>
-        public static <#=typeName#> operator /(<#=typeName#> left, <#=typeName#> right) => throw new InvalidExecutionContextException($"{typeof(<#=typeName#>)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static <#=typeName#> operator /(<#=typeName#> left, <#=typeName#> right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="<#=typeName#>"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="<#=typeName#>"/> value to multiply.</param>
         /// <param name="right">The second <see cref="<#=typeName#>"/> value to multiply.</param>
-        public static <#=typeName#> operator *(<#=typeName#> left, <#=typeName#> right) => throw new InvalidExecutionContextException($"{typeof(<#=typeName#>)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static <#=typeName#> operator *(<#=typeName#> left, <#=typeName#> right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="<#=typeName#>"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="<#=typeName#>"/> value to subtract.</param>
         /// <param name="right">The second <see cref="<#=typeName#>"/> value to subtract.</param>
-        public static <#=typeName#> operator -(<#=typeName#> left, <#=typeName#> right) => throw new InvalidExecutionContextException($"{typeof(<#=typeName#>)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static <#=typeName#> operator -(<#=typeName#> left, <#=typeName#> right) => default;
 <#
     }
 #>

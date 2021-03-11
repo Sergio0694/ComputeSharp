@@ -114,7 +114,7 @@ namespace ComputeSharp.Shaders.Translation
         public IReadOnlyCollection<string> DeclaredTypes => this.declaredTypes;
 
         /// <inheritdoc/>
-        public IReadOnlyDictionary<string, (string Type, string Assignment)> ConstantsInfo { get; private set; }
+        public IReadOnlyDictionary<string, (string TypeDeclaration, string? Assignment)> StaticFields { get; private set; }
 
         /// <inheritdoc/>
         public IReadOnlyDictionary<string, (string Type, int? Count)> SharedBuffers { get; private set; }
@@ -146,7 +146,7 @@ namespace ComputeSharp.Shaders.Translation
         private void LoadMethodMetadata()
         {
             EntryPoint = Attribute.ExecuteMethod;
-            ConstantsInfo = Attribute.Constants;
+            StaticFields = Attribute.StaticFields;
             SharedBuffers = Attribute.SharedBuffers;
 
             this.declaredTypes.AddRange(Attribute.Types);

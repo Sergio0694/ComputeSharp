@@ -1,12 +1,22 @@
 ﻿using System.Runtime.InteropServices;
-using ComputeSharp.Exceptions;
+#if NET5_0
+using System.Runtime.CompilerServices;
+#else
+using RuntimeHelpers = ComputeSharp.SourceGenerators.Helpers.RuntimeHelpers;
+using MemoryMarshal = ComputeSharp.SourceGenerators.Helpers.MemoryMarshal;
+#endif
 
 namespace ComputeSharp
 {
     /// <inheritdoc cref="Double1x1"/>
     [StructLayout(LayoutKind.Explicit, Size = 8, Pack = 8)]
-    public partial struct Double1x1
+    public unsafe partial struct Double1x1
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double1x1), sizeof(Double4));
+
         [FieldOffset(0)]
         private double m11;
 
@@ -23,14 +33,16 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Double1x1"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref double this[int row] => throw new InvalidExecutionContextException($"{typeof(Double1x1)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref double this[int row] => ref *(double*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x1"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Double1x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x1"/> instance.
@@ -38,7 +50,8 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Double1x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x1"/> instance.
@@ -47,12 +60,13 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Double1x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double1x1)}.M11");
+        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
 
         /// <summary>
         /// Creates a new <see cref="Double1x1"/> value with the same value for all its components.
@@ -71,41 +85,51 @@ namespace ComputeSharp
         /// Negates a <see cref="Double1x1"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Double1x1"/> value to negate.</param>
-        public static Double1x1 operator -(Double1x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Double1x1)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x1 operator -(Double1x1 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="Double1x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double1x1"/> value to sum.</param>
         /// <param name="right">The second <see cref="Double1x1"/> value to sum.</param>
-        public static Double1x1 operator +(Double1x1 left, Double1x1 right) => throw new InvalidExecutionContextException($"{typeof(Double1x1)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x1 operator +(Double1x1 left, Double1x1 right) => default;
 
         /// <summary>
         /// Divides two <see cref="Double1x1"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Double1x1"/> value to divide.</param>
         /// <param name="right">The second <see cref="Double1x1"/> value to divide.</param>
-        public static Double1x1 operator /(Double1x1 left, Double1x1 right) => throw new InvalidExecutionContextException($"{typeof(Double1x1)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x1 operator /(Double1x1 left, Double1x1 right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="Double1x1"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Double1x1"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Double1x1"/> value to multiply.</param>
-        public static Double1x1 operator *(Double1x1 left, Double1x1 right) => throw new InvalidExecutionContextException($"{typeof(Double1x1)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x1 operator *(Double1x1 left, Double1x1 right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="Double1x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double1x1"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double1x1"/> value to subtract.</param>
-        public static Double1x1 operator -(Double1x1 left, Double1x1 right) => throw new InvalidExecutionContextException($"{typeof(Double1x1)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x1 operator -(Double1x1 left, Double1x1 right) => default;
     }
 
     /// <inheritdoc cref="Double1x2"/>
     [StructLayout(LayoutKind.Explicit, Size = 16, Pack = 8)]
-    public partial struct Double1x2
+    public unsafe partial struct Double1x2
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double1x2), sizeof(Double4));
+
         [FieldOffset(0)]
         private double m11;
 
@@ -127,14 +151,16 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Double1x2"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Double2 this[int row] => throw new InvalidExecutionContextException($"{typeof(Double1x2)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[int row] => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x2"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Double1x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x2"/> instance.
@@ -142,7 +168,8 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Double1x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x2"/> instance.
@@ -151,17 +178,18 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Double1x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double1x2)}.M11");
+        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double1x2)}.M12");
+        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
 
         /// <summary>
         /// Creates a new <see cref="Double1x2"/> value with the same value for all its components.
@@ -181,47 +209,57 @@ namespace ComputeSharp
         /// Negates a <see cref="Double1x2"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Double1x2"/> value to negate.</param>
-        public static Double1x2 operator -(Double1x2 matrix) => throw new InvalidExecutionContextException($"{typeof(Double1x2)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x2 operator -(Double1x2 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="Double1x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double1x2"/> value to sum.</param>
         /// <param name="right">The second <see cref="Double1x2"/> value to sum.</param>
-        public static Double1x2 operator +(Double1x2 left, Double1x2 right) => throw new InvalidExecutionContextException($"{typeof(Double1x2)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x2 operator +(Double1x2 left, Double1x2 right) => default;
 
         /// <summary>
         /// Divides two <see cref="Double1x2"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Double1x2"/> value to divide.</param>
         /// <param name="right">The second <see cref="Double1x2"/> value to divide.</param>
-        public static Double1x2 operator /(Double1x2 left, Double1x2 right) => throw new InvalidExecutionContextException($"{typeof(Double1x2)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x2 operator /(Double1x2 left, Double1x2 right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="Double1x2"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Double1x2"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Double1x2"/> value to multiply.</param>
-        public static Double1x2 operator *(Double1x2 left, Double1x2 right) => throw new InvalidExecutionContextException($"{typeof(Double1x2)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x2 operator *(Double1x2 left, Double1x2 right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="Double1x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double1x2"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double1x2"/> value to subtract.</param>
-        public static Double1x2 operator -(Double1x2 left, Double1x2 right) => throw new InvalidExecutionContextException($"{typeof(Double1x2)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x2 operator -(Double1x2 left, Double1x2 right) => default;
 
         /// <summary>
         /// Casts a <see cref="Double2"/> value to a <see cref="Double1x2"/> one.
         /// </summary>
         /// <param name="vector">The input <see cref="Double2"/> value to cast.</param>
-        public static implicit operator Double1x2(Double2 vector) => throw new InvalidExecutionContextException($"{typeof(Double1x2)}.{typeof(Double1x2)}({typeof(Double2)})");
+        public static implicit operator Double1x2(Double2 vector) => *(Double1x2*)&vector;
     }
 
     /// <inheritdoc cref="Double1x3"/>
     [StructLayout(LayoutKind.Explicit, Size = 24, Pack = 8)]
-    public partial struct Double1x3
+    public unsafe partial struct Double1x3
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double1x3), sizeof(Double4));
+
         [FieldOffset(0)]
         private double m11;
 
@@ -248,14 +286,16 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Double1x3"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Double3 this[int row] => throw new InvalidExecutionContextException($"{typeof(Double1x3)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[int row] => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x3"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Double1x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x3"/> instance.
@@ -263,7 +303,8 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Double1x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x3"/> instance.
@@ -272,22 +313,23 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Double1x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double1x3)}.M11");
+        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double1x3)}.M12");
+        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
         /// </summary>
-        public ref double M13 => throw new InvalidExecutionContextException($"{typeof(Double1x3)}.M13");
+        public ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m13, 1));
 
         /// <summary>
         /// Creates a new <see cref="Double1x3"/> value with the same value for all its components.
@@ -308,47 +350,57 @@ namespace ComputeSharp
         /// Negates a <see cref="Double1x3"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Double1x3"/> value to negate.</param>
-        public static Double1x3 operator -(Double1x3 matrix) => throw new InvalidExecutionContextException($"{typeof(Double1x3)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x3 operator -(Double1x3 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="Double1x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double1x3"/> value to sum.</param>
         /// <param name="right">The second <see cref="Double1x3"/> value to sum.</param>
-        public static Double1x3 operator +(Double1x3 left, Double1x3 right) => throw new InvalidExecutionContextException($"{typeof(Double1x3)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x3 operator +(Double1x3 left, Double1x3 right) => default;
 
         /// <summary>
         /// Divides two <see cref="Double1x3"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Double1x3"/> value to divide.</param>
         /// <param name="right">The second <see cref="Double1x3"/> value to divide.</param>
-        public static Double1x3 operator /(Double1x3 left, Double1x3 right) => throw new InvalidExecutionContextException($"{typeof(Double1x3)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x3 operator /(Double1x3 left, Double1x3 right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="Double1x3"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Double1x3"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Double1x3"/> value to multiply.</param>
-        public static Double1x3 operator *(Double1x3 left, Double1x3 right) => throw new InvalidExecutionContextException($"{typeof(Double1x3)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x3 operator *(Double1x3 left, Double1x3 right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="Double1x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double1x3"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double1x3"/> value to subtract.</param>
-        public static Double1x3 operator -(Double1x3 left, Double1x3 right) => throw new InvalidExecutionContextException($"{typeof(Double1x3)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x3 operator -(Double1x3 left, Double1x3 right) => default;
 
         /// <summary>
         /// Casts a <see cref="Double3"/> value to a <see cref="Double1x3"/> one.
         /// </summary>
         /// <param name="vector">The input <see cref="Double3"/> value to cast.</param>
-        public static implicit operator Double1x3(Double3 vector) => throw new InvalidExecutionContextException($"{typeof(Double1x3)}.{typeof(Double1x3)}({typeof(Double3)})");
+        public static implicit operator Double1x3(Double3 vector) => *(Double1x3*)&vector;
     }
 
     /// <inheritdoc cref="Double1x4"/>
     [StructLayout(LayoutKind.Explicit, Size = 32, Pack = 8)]
-    public partial struct Double1x4
+    public unsafe partial struct Double1x4
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double1x4), sizeof(Double4));
+
         [FieldOffset(0)]
         private double m11;
 
@@ -380,14 +432,16 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Double1x4"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Double4 this[int row] => throw new InvalidExecutionContextException($"{typeof(Double1x4)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[int row] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x4"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Double1x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x4"/> instance.
@@ -395,7 +449,8 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Double1x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x4"/> instance.
@@ -404,27 +459,28 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Double1x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double1x4)}.M11");
+        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double1x4)}.M12");
+        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
         /// </summary>
-        public ref double M13 => throw new InvalidExecutionContextException($"{typeof(Double1x4)}.M13");
+        public ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m13, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 4].
         /// </summary>
-        public ref double M14 => throw new InvalidExecutionContextException($"{typeof(Double1x4)}.M14");
+        public ref double M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m14, 1));
 
         /// <summary>
         /// Creates a new <see cref="Double1x4"/> value with the same value for all its components.
@@ -446,47 +502,57 @@ namespace ComputeSharp
         /// Negates a <see cref="Double1x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Double1x4"/> value to negate.</param>
-        public static Double1x4 operator -(Double1x4 matrix) => throw new InvalidExecutionContextException($"{typeof(Double1x4)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x4 operator -(Double1x4 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="Double1x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double1x4"/> value to sum.</param>
         /// <param name="right">The second <see cref="Double1x4"/> value to sum.</param>
-        public static Double1x4 operator +(Double1x4 left, Double1x4 right) => throw new InvalidExecutionContextException($"{typeof(Double1x4)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x4 operator +(Double1x4 left, Double1x4 right) => default;
 
         /// <summary>
         /// Divides two <see cref="Double1x4"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Double1x4"/> value to divide.</param>
         /// <param name="right">The second <see cref="Double1x4"/> value to divide.</param>
-        public static Double1x4 operator /(Double1x4 left, Double1x4 right) => throw new InvalidExecutionContextException($"{typeof(Double1x4)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x4 operator /(Double1x4 left, Double1x4 right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="Double1x4"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Double1x4"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Double1x4"/> value to multiply.</param>
-        public static Double1x4 operator *(Double1x4 left, Double1x4 right) => throw new InvalidExecutionContextException($"{typeof(Double1x4)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x4 operator *(Double1x4 left, Double1x4 right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="Double1x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double1x4"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double1x4"/> value to subtract.</param>
-        public static Double1x4 operator -(Double1x4 left, Double1x4 right) => throw new InvalidExecutionContextException($"{typeof(Double1x4)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double1x4 operator -(Double1x4 left, Double1x4 right) => default;
 
         /// <summary>
         /// Casts a <see cref="Double4"/> value to a <see cref="Double1x4"/> one.
         /// </summary>
         /// <param name="vector">The input <see cref="Double4"/> value to cast.</param>
-        public static implicit operator Double1x4(Double4 vector) => throw new InvalidExecutionContextException($"{typeof(Double1x4)}.{typeof(Double1x4)}({typeof(Double4)})");
+        public static implicit operator Double1x4(Double4 vector) => *(Double1x4*)&vector;
     }
 
     /// <inheritdoc cref="Double2x1"/>
     [StructLayout(LayoutKind.Explicit, Size = 16, Pack = 8)]
-    public partial struct Double2x1
+    public unsafe partial struct Double2x1
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double2x1), sizeof(Double4));
+
         [FieldOffset(0)]
         private double m11;
 
@@ -508,14 +574,16 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Double2x1"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref double this[int row] => throw new InvalidExecutionContextException($"{typeof(Double2x1)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref double this[int row] => ref *(double*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x1"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Double2x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x1"/> instance.
@@ -523,7 +591,8 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Double2x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x1"/> instance.
@@ -532,17 +601,18 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Double2x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double2x1)}.M11");
+        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double2x1)}.M21");
+        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
 
         /// <summary>
         /// Creates a new <see cref="Double2x1"/> value with the same value for all its components.
@@ -562,47 +632,57 @@ namespace ComputeSharp
         /// Negates a <see cref="Double2x1"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Double2x1"/> value to negate.</param>
-        public static Double2x1 operator -(Double2x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Double2x1)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x1 operator -(Double2x1 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="Double2x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double2x1"/> value to sum.</param>
         /// <param name="right">The second <see cref="Double2x1"/> value to sum.</param>
-        public static Double2x1 operator +(Double2x1 left, Double2x1 right) => throw new InvalidExecutionContextException($"{typeof(Double2x1)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x1 operator +(Double2x1 left, Double2x1 right) => default;
 
         /// <summary>
         /// Divides two <see cref="Double2x1"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Double2x1"/> value to divide.</param>
         /// <param name="right">The second <see cref="Double2x1"/> value to divide.</param>
-        public static Double2x1 operator /(Double2x1 left, Double2x1 right) => throw new InvalidExecutionContextException($"{typeof(Double2x1)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x1 operator /(Double2x1 left, Double2x1 right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="Double2x1"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Double2x1"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Double2x1"/> value to multiply.</param>
-        public static Double2x1 operator *(Double2x1 left, Double2x1 right) => throw new InvalidExecutionContextException($"{typeof(Double2x1)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x1 operator *(Double2x1 left, Double2x1 right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="Double2x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double2x1"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double2x1"/> value to subtract.</param>
-        public static Double2x1 operator -(Double2x1 left, Double2x1 right) => throw new InvalidExecutionContextException($"{typeof(Double2x1)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x1 operator -(Double2x1 left, Double2x1 right) => default;
 
         /// <summary>
         /// Casts a <see cref="Double2x1"/> value to a <see cref="Double2"/> one.
         /// </summary>
         /// <param name="matrix">The input <see cref="Double2x1"/> value to cast.</param>
-        public static implicit operator Double2(Double2x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Double2x1)}.{typeof(Double2)}({typeof(Double2x1)})");
+        public static implicit operator Double2(Double2x1 matrix) => *(Double2*)&matrix;
     }
 
     /// <inheritdoc cref="Double2x2"/>
     [StructLayout(LayoutKind.Explicit, Size = 32, Pack = 8)]
-    public partial struct Double2x2
+    public unsafe partial struct Double2x2
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double2x2), sizeof(Double4));
+
         [FieldOffset(0)]
         private double m11;
 
@@ -647,14 +727,16 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Double2x2"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Double2 this[int row] => throw new InvalidExecutionContextException($"{typeof(Double2x2)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[int row] => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x2"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Double2x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x2"/> instance.
@@ -662,7 +744,8 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Double2x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x2"/> instance.
@@ -671,27 +754,28 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Double2x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double2x2)}.M11");
+        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double2x2)}.M12");
+        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double2x2)}.M21");
+        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
         /// </summary>
-        public ref double M22 => throw new InvalidExecutionContextException($"{typeof(Double2x2)}.M22");
+        public ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m22, 1));
 
         /// <summary>
         /// Creates a new <see cref="Double2x2"/> value with the same value for all its components.
@@ -713,41 +797,51 @@ namespace ComputeSharp
         /// Negates a <see cref="Double2x2"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Double2x2"/> value to negate.</param>
-        public static Double2x2 operator -(Double2x2 matrix) => throw new InvalidExecutionContextException($"{typeof(Double2x2)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x2 operator -(Double2x2 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="Double2x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double2x2"/> value to sum.</param>
         /// <param name="right">The second <see cref="Double2x2"/> value to sum.</param>
-        public static Double2x2 operator +(Double2x2 left, Double2x2 right) => throw new InvalidExecutionContextException($"{typeof(Double2x2)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x2 operator +(Double2x2 left, Double2x2 right) => default;
 
         /// <summary>
         /// Divides two <see cref="Double2x2"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Double2x2"/> value to divide.</param>
         /// <param name="right">The second <see cref="Double2x2"/> value to divide.</param>
-        public static Double2x2 operator /(Double2x2 left, Double2x2 right) => throw new InvalidExecutionContextException($"{typeof(Double2x2)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x2 operator /(Double2x2 left, Double2x2 right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="Double2x2"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Double2x2"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Double2x2"/> value to multiply.</param>
-        public static Double2x2 operator *(Double2x2 left, Double2x2 right) => throw new InvalidExecutionContextException($"{typeof(Double2x2)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x2 operator *(Double2x2 left, Double2x2 right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="Double2x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double2x2"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double2x2"/> value to subtract.</param>
-        public static Double2x2 operator -(Double2x2 left, Double2x2 right) => throw new InvalidExecutionContextException($"{typeof(Double2x2)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x2 operator -(Double2x2 left, Double2x2 right) => default;
     }
 
     /// <inheritdoc cref="Double2x3"/>
     [StructLayout(LayoutKind.Explicit, Size = 48, Pack = 8)]
-    public partial struct Double2x3
+    public unsafe partial struct Double2x3
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double2x3), sizeof(Double4));
+
         [FieldOffset(0)]
         private double m11;
 
@@ -804,14 +898,16 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Double2x3"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Double3 this[int row] => throw new InvalidExecutionContextException($"{typeof(Double2x3)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[int row] => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x3"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Double2x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x3"/> instance.
@@ -819,7 +915,8 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Double2x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x3"/> instance.
@@ -828,37 +925,38 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Double2x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double2x3)}.M11");
+        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double2x3)}.M12");
+        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
         /// </summary>
-        public ref double M13 => throw new InvalidExecutionContextException($"{typeof(Double2x3)}.M13");
+        public ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m13, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double2x3)}.M21");
+        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
         /// </summary>
-        public ref double M22 => throw new InvalidExecutionContextException($"{typeof(Double2x3)}.M22");
+        public ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m22, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 3].
         /// </summary>
-        public ref double M23 => throw new InvalidExecutionContextException($"{typeof(Double2x3)}.M23");
+        public ref double M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m23, 1));
 
         /// <summary>
         /// Creates a new <see cref="Double2x3"/> value with the same value for all its components.
@@ -882,41 +980,51 @@ namespace ComputeSharp
         /// Negates a <see cref="Double2x3"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Double2x3"/> value to negate.</param>
-        public static Double2x3 operator -(Double2x3 matrix) => throw new InvalidExecutionContextException($"{typeof(Double2x3)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x3 operator -(Double2x3 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="Double2x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double2x3"/> value to sum.</param>
         /// <param name="right">The second <see cref="Double2x3"/> value to sum.</param>
-        public static Double2x3 operator +(Double2x3 left, Double2x3 right) => throw new InvalidExecutionContextException($"{typeof(Double2x3)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x3 operator +(Double2x3 left, Double2x3 right) => default;
 
         /// <summary>
         /// Divides two <see cref="Double2x3"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Double2x3"/> value to divide.</param>
         /// <param name="right">The second <see cref="Double2x3"/> value to divide.</param>
-        public static Double2x3 operator /(Double2x3 left, Double2x3 right) => throw new InvalidExecutionContextException($"{typeof(Double2x3)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x3 operator /(Double2x3 left, Double2x3 right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="Double2x3"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Double2x3"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Double2x3"/> value to multiply.</param>
-        public static Double2x3 operator *(Double2x3 left, Double2x3 right) => throw new InvalidExecutionContextException($"{typeof(Double2x3)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x3 operator *(Double2x3 left, Double2x3 right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="Double2x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double2x3"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double2x3"/> value to subtract.</param>
-        public static Double2x3 operator -(Double2x3 left, Double2x3 right) => throw new InvalidExecutionContextException($"{typeof(Double2x3)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x3 operator -(Double2x3 left, Double2x3 right) => default;
     }
 
     /// <inheritdoc cref="Double2x4"/>
     [StructLayout(LayoutKind.Explicit, Size = 64, Pack = 8)]
-    public partial struct Double2x4
+    public unsafe partial struct Double2x4
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double2x4), sizeof(Double4));
+
         [FieldOffset(0)]
         private double m11;
 
@@ -985,14 +1093,16 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Double2x4"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Double4 this[int row] => throw new InvalidExecutionContextException($"{typeof(Double2x4)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[int row] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x4"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Double2x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x4"/> instance.
@@ -1000,7 +1110,8 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Double2x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x4"/> instance.
@@ -1009,47 +1120,48 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Double2x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.M11");
+        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.M12");
+        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
         /// </summary>
-        public ref double M13 => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.M13");
+        public ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m13, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 4].
         /// </summary>
-        public ref double M14 => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.M14");
+        public ref double M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m14, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.M21");
+        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
         /// </summary>
-        public ref double M22 => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.M22");
+        public ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m22, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 3].
         /// </summary>
-        public ref double M23 => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.M23");
+        public ref double M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m23, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 4].
         /// </summary>
-        public ref double M24 => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.M24");
+        public ref double M24 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m24, 1));
 
         /// <summary>
         /// Creates a new <see cref="Double2x4"/> value with the same value for all its components.
@@ -1075,41 +1187,51 @@ namespace ComputeSharp
         /// Negates a <see cref="Double2x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Double2x4"/> value to negate.</param>
-        public static Double2x4 operator -(Double2x4 matrix) => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x4 operator -(Double2x4 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="Double2x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double2x4"/> value to sum.</param>
         /// <param name="right">The second <see cref="Double2x4"/> value to sum.</param>
-        public static Double2x4 operator +(Double2x4 left, Double2x4 right) => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x4 operator +(Double2x4 left, Double2x4 right) => default;
 
         /// <summary>
         /// Divides two <see cref="Double2x4"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Double2x4"/> value to divide.</param>
         /// <param name="right">The second <see cref="Double2x4"/> value to divide.</param>
-        public static Double2x4 operator /(Double2x4 left, Double2x4 right) => throw new InvalidExecutionContextException($"{typeof(Double2x4)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x4 operator /(Double2x4 left, Double2x4 right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="Double2x4"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Double2x4"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Double2x4"/> value to multiply.</param>
-        public static Double2x4 operator *(Double2x4 left, Double2x4 right) => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x4 operator *(Double2x4 left, Double2x4 right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="Double2x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double2x4"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double2x4"/> value to subtract.</param>
-        public static Double2x4 operator -(Double2x4 left, Double2x4 right) => throw new InvalidExecutionContextException($"{typeof(Double2x4)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double2x4 operator -(Double2x4 left, Double2x4 right) => default;
     }
 
     /// <inheritdoc cref="Double3x1"/>
     [StructLayout(LayoutKind.Explicit, Size = 24, Pack = 8)]
-    public partial struct Double3x1
+    public unsafe partial struct Double3x1
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double3x1), sizeof(Double4));
+
         [FieldOffset(0)]
         private double m11;
 
@@ -1136,14 +1258,16 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Double3x1"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref double this[int row] => throw new InvalidExecutionContextException($"{typeof(Double3x1)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref double this[int row] => ref *(double*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x1"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Double3x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x1"/> instance.
@@ -1151,7 +1275,8 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Double3x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x1"/> instance.
@@ -1160,22 +1285,23 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Double3x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double3x1)}.M11");
+        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double3x1)}.M21");
+        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
         /// </summary>
-        public ref double M31 => throw new InvalidExecutionContextException($"{typeof(Double3x1)}.M31");
+        public ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m31, 1));
 
         /// <summary>
         /// Creates a new <see cref="Double3x1"/> value with the same value for all its components.
@@ -1196,47 +1322,57 @@ namespace ComputeSharp
         /// Negates a <see cref="Double3x1"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Double3x1"/> value to negate.</param>
-        public static Double3x1 operator -(Double3x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Double3x1)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x1 operator -(Double3x1 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="Double3x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double3x1"/> value to sum.</param>
         /// <param name="right">The second <see cref="Double3x1"/> value to sum.</param>
-        public static Double3x1 operator +(Double3x1 left, Double3x1 right) => throw new InvalidExecutionContextException($"{typeof(Double3x1)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x1 operator +(Double3x1 left, Double3x1 right) => default;
 
         /// <summary>
         /// Divides two <see cref="Double3x1"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Double3x1"/> value to divide.</param>
         /// <param name="right">The second <see cref="Double3x1"/> value to divide.</param>
-        public static Double3x1 operator /(Double3x1 left, Double3x1 right) => throw new InvalidExecutionContextException($"{typeof(Double3x1)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x1 operator /(Double3x1 left, Double3x1 right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="Double3x1"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Double3x1"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Double3x1"/> value to multiply.</param>
-        public static Double3x1 operator *(Double3x1 left, Double3x1 right) => throw new InvalidExecutionContextException($"{typeof(Double3x1)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x1 operator *(Double3x1 left, Double3x1 right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="Double3x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double3x1"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double3x1"/> value to subtract.</param>
-        public static Double3x1 operator -(Double3x1 left, Double3x1 right) => throw new InvalidExecutionContextException($"{typeof(Double3x1)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x1 operator -(Double3x1 left, Double3x1 right) => default;
 
         /// <summary>
         /// Casts a <see cref="Double3x1"/> value to a <see cref="Double3"/> one.
         /// </summary>
         /// <param name="matrix">The input <see cref="Double3x1"/> value to cast.</param>
-        public static implicit operator Double3(Double3x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Double3x1)}.{typeof(Double3)}({typeof(Double3x1)})");
+        public static implicit operator Double3(Double3x1 matrix) => *(Double3*)&matrix;
     }
 
     /// <inheritdoc cref="Double3x2"/>
     [StructLayout(LayoutKind.Explicit, Size = 48, Pack = 8)]
-    public partial struct Double3x2
+    public unsafe partial struct Double3x2
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double3x2), sizeof(Double4));
+
         [FieldOffset(0)]
         private double m11;
 
@@ -1294,14 +1430,16 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Double3x2"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Double2 this[int row] => throw new InvalidExecutionContextException($"{typeof(Double3x2)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[int row] => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x2"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Double3x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x2"/> instance.
@@ -1309,7 +1447,8 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Double3x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x2"/> instance.
@@ -1318,37 +1457,38 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Double3x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double3x2)}.M11");
+        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double3x2)}.M12");
+        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double3x2)}.M21");
+        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
         /// </summary>
-        public ref double M22 => throw new InvalidExecutionContextException($"{typeof(Double3x2)}.M22");
+        public ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m22, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
         /// </summary>
-        public ref double M31 => throw new InvalidExecutionContextException($"{typeof(Double3x2)}.M31");
+        public ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m31, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 2].
         /// </summary>
-        public ref double M32 => throw new InvalidExecutionContextException($"{typeof(Double3x2)}.M32");
+        public ref double M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m32, 1));
 
         /// <summary>
         /// Creates a new <see cref="Double3x2"/> value with the same value for all its components.
@@ -1372,41 +1512,51 @@ namespace ComputeSharp
         /// Negates a <see cref="Double3x2"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Double3x2"/> value to negate.</param>
-        public static Double3x2 operator -(Double3x2 matrix) => throw new InvalidExecutionContextException($"{typeof(Double3x2)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x2 operator -(Double3x2 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="Double3x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double3x2"/> value to sum.</param>
         /// <param name="right">The second <see cref="Double3x2"/> value to sum.</param>
-        public static Double3x2 operator +(Double3x2 left, Double3x2 right) => throw new InvalidExecutionContextException($"{typeof(Double3x2)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x2 operator +(Double3x2 left, Double3x2 right) => default;
 
         /// <summary>
         /// Divides two <see cref="Double3x2"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Double3x2"/> value to divide.</param>
         /// <param name="right">The second <see cref="Double3x2"/> value to divide.</param>
-        public static Double3x2 operator /(Double3x2 left, Double3x2 right) => throw new InvalidExecutionContextException($"{typeof(Double3x2)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x2 operator /(Double3x2 left, Double3x2 right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="Double3x2"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Double3x2"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Double3x2"/> value to multiply.</param>
-        public static Double3x2 operator *(Double3x2 left, Double3x2 right) => throw new InvalidExecutionContextException($"{typeof(Double3x2)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x2 operator *(Double3x2 left, Double3x2 right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="Double3x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double3x2"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double3x2"/> value to subtract.</param>
-        public static Double3x2 operator -(Double3x2 left, Double3x2 right) => throw new InvalidExecutionContextException($"{typeof(Double3x2)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x2 operator -(Double3x2 left, Double3x2 right) => default;
     }
 
     /// <inheritdoc cref="Double3x3"/>
     [StructLayout(LayoutKind.Explicit, Size = 72, Pack = 8)]
-    public partial struct Double3x3
+    public unsafe partial struct Double3x3
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double3x3), sizeof(Double4));
+
         [FieldOffset(0)]
         private double m11;
 
@@ -1482,14 +1632,16 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Double3x3"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Double3 this[int row] => throw new InvalidExecutionContextException($"{typeof(Double3x3)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[int row] => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x3"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Double3x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x3"/> instance.
@@ -1497,7 +1649,8 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Double3x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x3"/> instance.
@@ -1506,52 +1659,53 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Double3x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.M11");
+        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.M12");
+        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
         /// </summary>
-        public ref double M13 => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.M13");
+        public ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m13, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.M21");
+        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
         /// </summary>
-        public ref double M22 => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.M22");
+        public ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m22, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 3].
         /// </summary>
-        public ref double M23 => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.M23");
+        public ref double M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m23, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
         /// </summary>
-        public ref double M31 => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.M31");
+        public ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m31, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 2].
         /// </summary>
-        public ref double M32 => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.M32");
+        public ref double M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m32, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 3].
         /// </summary>
-        public ref double M33 => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.M33");
+        public ref double M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m33, 1));
 
         /// <summary>
         /// Creates a new <see cref="Double3x3"/> value with the same value for all its components.
@@ -1578,41 +1732,51 @@ namespace ComputeSharp
         /// Negates a <see cref="Double3x3"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Double3x3"/> value to negate.</param>
-        public static Double3x3 operator -(Double3x3 matrix) => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x3 operator -(Double3x3 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="Double3x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double3x3"/> value to sum.</param>
         /// <param name="right">The second <see cref="Double3x3"/> value to sum.</param>
-        public static Double3x3 operator +(Double3x3 left, Double3x3 right) => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x3 operator +(Double3x3 left, Double3x3 right) => default;
 
         /// <summary>
         /// Divides two <see cref="Double3x3"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Double3x3"/> value to divide.</param>
         /// <param name="right">The second <see cref="Double3x3"/> value to divide.</param>
-        public static Double3x3 operator /(Double3x3 left, Double3x3 right) => throw new InvalidExecutionContextException($"{typeof(Double3x3)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x3 operator /(Double3x3 left, Double3x3 right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="Double3x3"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Double3x3"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Double3x3"/> value to multiply.</param>
-        public static Double3x3 operator *(Double3x3 left, Double3x3 right) => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x3 operator *(Double3x3 left, Double3x3 right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="Double3x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double3x3"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double3x3"/> value to subtract.</param>
-        public static Double3x3 operator -(Double3x3 left, Double3x3 right) => throw new InvalidExecutionContextException($"{typeof(Double3x3)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x3 operator -(Double3x3 left, Double3x3 right) => default;
     }
 
     /// <inheritdoc cref="Double3x4"/>
     [StructLayout(LayoutKind.Explicit, Size = 96, Pack = 8)]
-    public partial struct Double3x4
+    public unsafe partial struct Double3x4
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double3x4), sizeof(Double4));
+
         [FieldOffset(0)]
         private double m11;
 
@@ -1706,14 +1870,16 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Double3x4"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Double4 this[int row] => throw new InvalidExecutionContextException($"{typeof(Double3x4)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[int row] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x4"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Double3x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x4"/> instance.
@@ -1721,7 +1887,8 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Double3x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x4"/> instance.
@@ -1730,67 +1897,68 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Double3x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M11");
+        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M12");
+        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
         /// </summary>
-        public ref double M13 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M13");
+        public ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m13, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 4].
         /// </summary>
-        public ref double M14 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M14");
+        public ref double M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m14, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M21");
+        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
         /// </summary>
-        public ref double M22 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M22");
+        public ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m22, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 3].
         /// </summary>
-        public ref double M23 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M23");
+        public ref double M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m23, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 4].
         /// </summary>
-        public ref double M24 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M24");
+        public ref double M24 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m24, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
         /// </summary>
-        public ref double M31 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M31");
+        public ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m31, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 2].
         /// </summary>
-        public ref double M32 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M32");
+        public ref double M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m32, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 3].
         /// </summary>
-        public ref double M33 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M33");
+        public ref double M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m33, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 4].
         /// </summary>
-        public ref double M34 => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.M34");
+        public ref double M34 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m34, 1));
 
         /// <summary>
         /// Creates a new <see cref="Double3x4"/> value with the same value for all its components.
@@ -1820,41 +1988,51 @@ namespace ComputeSharp
         /// Negates a <see cref="Double3x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Double3x4"/> value to negate.</param>
-        public static Double3x4 operator -(Double3x4 matrix) => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x4 operator -(Double3x4 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="Double3x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double3x4"/> value to sum.</param>
         /// <param name="right">The second <see cref="Double3x4"/> value to sum.</param>
-        public static Double3x4 operator +(Double3x4 left, Double3x4 right) => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x4 operator +(Double3x4 left, Double3x4 right) => default;
 
         /// <summary>
         /// Divides two <see cref="Double3x4"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Double3x4"/> value to divide.</param>
         /// <param name="right">The second <see cref="Double3x4"/> value to divide.</param>
-        public static Double3x4 operator /(Double3x4 left, Double3x4 right) => throw new InvalidExecutionContextException($"{typeof(Double3x4)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x4 operator /(Double3x4 left, Double3x4 right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="Double3x4"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Double3x4"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Double3x4"/> value to multiply.</param>
-        public static Double3x4 operator *(Double3x4 left, Double3x4 right) => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x4 operator *(Double3x4 left, Double3x4 right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="Double3x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double3x4"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double3x4"/> value to subtract.</param>
-        public static Double3x4 operator -(Double3x4 left, Double3x4 right) => throw new InvalidExecutionContextException($"{typeof(Double3x4)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double3x4 operator -(Double3x4 left, Double3x4 right) => default;
     }
 
     /// <inheritdoc cref="Double4x1"/>
     [StructLayout(LayoutKind.Explicit, Size = 32, Pack = 8)]
-    public partial struct Double4x1
+    public unsafe partial struct Double4x1
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double4x1), sizeof(Double4));
+
         [FieldOffset(0)]
         private double m11;
 
@@ -1886,14 +2064,16 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Double4x1"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref double this[int row] => throw new InvalidExecutionContextException($"{typeof(Double4x1)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref double this[int row] => ref *(double*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x1"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Double4x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x1"/> instance.
@@ -1901,7 +2081,8 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Double4x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x1"/> instance.
@@ -1910,27 +2091,28 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Double4x1)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double4x1)}.M11");
+        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double4x1)}.M21");
+        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
         /// </summary>
-        public ref double M31 => throw new InvalidExecutionContextException($"{typeof(Double4x1)}.M31");
+        public ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m31, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 1].
         /// </summary>
-        public ref double M41 => throw new InvalidExecutionContextException($"{typeof(Double4x1)}.M41");
+        public ref double M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m41, 1));
 
         /// <summary>
         /// Creates a new <see cref="Double4x1"/> value with the same value for all its components.
@@ -1952,47 +2134,57 @@ namespace ComputeSharp
         /// Negates a <see cref="Double4x1"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Double4x1"/> value to negate.</param>
-        public static Double4x1 operator -(Double4x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Double4x1)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x1 operator -(Double4x1 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="Double4x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double4x1"/> value to sum.</param>
         /// <param name="right">The second <see cref="Double4x1"/> value to sum.</param>
-        public static Double4x1 operator +(Double4x1 left, Double4x1 right) => throw new InvalidExecutionContextException($"{typeof(Double4x1)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x1 operator +(Double4x1 left, Double4x1 right) => default;
 
         /// <summary>
         /// Divides two <see cref="Double4x1"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Double4x1"/> value to divide.</param>
         /// <param name="right">The second <see cref="Double4x1"/> value to divide.</param>
-        public static Double4x1 operator /(Double4x1 left, Double4x1 right) => throw new InvalidExecutionContextException($"{typeof(Double4x1)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x1 operator /(Double4x1 left, Double4x1 right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="Double4x1"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Double4x1"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Double4x1"/> value to multiply.</param>
-        public static Double4x1 operator *(Double4x1 left, Double4x1 right) => throw new InvalidExecutionContextException($"{typeof(Double4x1)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x1 operator *(Double4x1 left, Double4x1 right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="Double4x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double4x1"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double4x1"/> value to subtract.</param>
-        public static Double4x1 operator -(Double4x1 left, Double4x1 right) => throw new InvalidExecutionContextException($"{typeof(Double4x1)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x1 operator -(Double4x1 left, Double4x1 right) => default;
 
         /// <summary>
         /// Casts a <see cref="Double4x1"/> value to a <see cref="Double4"/> one.
         /// </summary>
         /// <param name="matrix">The input <see cref="Double4x1"/> value to cast.</param>
-        public static implicit operator Double4(Double4x1 matrix) => throw new InvalidExecutionContextException($"{typeof(Double4x1)}.{typeof(Double4)}({typeof(Double4x1)})");
+        public static implicit operator Double4(Double4x1 matrix) => *(Double4*)&matrix;
     }
 
     /// <inheritdoc cref="Double4x2"/>
     [StructLayout(LayoutKind.Explicit, Size = 64, Pack = 8)]
-    public partial struct Double4x2
+    public unsafe partial struct Double4x2
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double4x2), sizeof(Double4));
+
         [FieldOffset(0)]
         private double m11;
 
@@ -2063,14 +2255,16 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Double4x2"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Double2 this[int row] => throw new InvalidExecutionContextException($"{typeof(Double4x2)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[int row] => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x2"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Double4x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x2"/> instance.
@@ -2078,7 +2272,8 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Double4x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x2"/> instance.
@@ -2087,47 +2282,48 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Double4x2)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.M11");
+        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.M12");
+        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.M21");
+        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
         /// </summary>
-        public ref double M22 => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.M22");
+        public ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m22, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
         /// </summary>
-        public ref double M31 => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.M31");
+        public ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m31, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 2].
         /// </summary>
-        public ref double M32 => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.M32");
+        public ref double M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m32, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 1].
         /// </summary>
-        public ref double M41 => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.M41");
+        public ref double M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m41, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 2].
         /// </summary>
-        public ref double M42 => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.M42");
+        public ref double M42 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m42, 1));
 
         /// <summary>
         /// Creates a new <see cref="Double4x2"/> value with the same value for all its components.
@@ -2153,41 +2349,51 @@ namespace ComputeSharp
         /// Negates a <see cref="Double4x2"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Double4x2"/> value to negate.</param>
-        public static Double4x2 operator -(Double4x2 matrix) => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x2 operator -(Double4x2 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="Double4x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double4x2"/> value to sum.</param>
         /// <param name="right">The second <see cref="Double4x2"/> value to sum.</param>
-        public static Double4x2 operator +(Double4x2 left, Double4x2 right) => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x2 operator +(Double4x2 left, Double4x2 right) => default;
 
         /// <summary>
         /// Divides two <see cref="Double4x2"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Double4x2"/> value to divide.</param>
         /// <param name="right">The second <see cref="Double4x2"/> value to divide.</param>
-        public static Double4x2 operator /(Double4x2 left, Double4x2 right) => throw new InvalidExecutionContextException($"{typeof(Double4x2)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x2 operator /(Double4x2 left, Double4x2 right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="Double4x2"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Double4x2"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Double4x2"/> value to multiply.</param>
-        public static Double4x2 operator *(Double4x2 left, Double4x2 right) => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x2 operator *(Double4x2 left, Double4x2 right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="Double4x2"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double4x2"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double4x2"/> value to subtract.</param>
-        public static Double4x2 operator -(Double4x2 left, Double4x2 right) => throw new InvalidExecutionContextException($"{typeof(Double4x2)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x2 operator -(Double4x2 left, Double4x2 right) => default;
     }
 
     /// <inheritdoc cref="Double4x3"/>
     [StructLayout(LayoutKind.Explicit, Size = 96, Pack = 8)]
-    public partial struct Double4x3
+    public unsafe partial struct Double4x3
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double4x3), sizeof(Double4));
+
         [FieldOffset(0)]
         private double m11;
 
@@ -2282,14 +2488,16 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Double4x3"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Double3 this[int row] => throw new InvalidExecutionContextException($"{typeof(Double4x3)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[int row] => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x3"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Double4x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x3"/> instance.
@@ -2297,7 +2505,8 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Double4x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x3"/> instance.
@@ -2306,67 +2515,68 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Double4x3)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M11");
+        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M12");
+        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
         /// </summary>
-        public ref double M13 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M13");
+        public ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m13, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M21");
+        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
         /// </summary>
-        public ref double M22 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M22");
+        public ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m22, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 3].
         /// </summary>
-        public ref double M23 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M23");
+        public ref double M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m23, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
         /// </summary>
-        public ref double M31 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M31");
+        public ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m31, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 2].
         /// </summary>
-        public ref double M32 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M32");
+        public ref double M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m32, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 3].
         /// </summary>
-        public ref double M33 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M33");
+        public ref double M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m33, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 1].
         /// </summary>
-        public ref double M41 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M41");
+        public ref double M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m41, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 2].
         /// </summary>
-        public ref double M42 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M42");
+        public ref double M42 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m42, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 3].
         /// </summary>
-        public ref double M43 => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.M43");
+        public ref double M43 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m43, 1));
 
         /// <summary>
         /// Creates a new <see cref="Double4x3"/> value with the same value for all its components.
@@ -2396,41 +2606,51 @@ namespace ComputeSharp
         /// Negates a <see cref="Double4x3"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Double4x3"/> value to negate.</param>
-        public static Double4x3 operator -(Double4x3 matrix) => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x3 operator -(Double4x3 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="Double4x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double4x3"/> value to sum.</param>
         /// <param name="right">The second <see cref="Double4x3"/> value to sum.</param>
-        public static Double4x3 operator +(Double4x3 left, Double4x3 right) => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x3 operator +(Double4x3 left, Double4x3 right) => default;
 
         /// <summary>
         /// Divides two <see cref="Double4x3"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Double4x3"/> value to divide.</param>
         /// <param name="right">The second <see cref="Double4x3"/> value to divide.</param>
-        public static Double4x3 operator /(Double4x3 left, Double4x3 right) => throw new InvalidExecutionContextException($"{typeof(Double4x3)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x3 operator /(Double4x3 left, Double4x3 right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="Double4x3"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Double4x3"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Double4x3"/> value to multiply.</param>
-        public static Double4x3 operator *(Double4x3 left, Double4x3 right) => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x3 operator *(Double4x3 left, Double4x3 right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="Double4x3"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double4x3"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double4x3"/> value to subtract.</param>
-        public static Double4x3 operator -(Double4x3 left, Double4x3 right) => throw new InvalidExecutionContextException($"{typeof(Double4x3)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x3 operator -(Double4x3 left, Double4x3 right) => default;
     }
 
     /// <inheritdoc cref="Double4x4"/>
     [StructLayout(LayoutKind.Explicit, Size = 128, Pack = 8)]
-    public partial struct Double4x4
+    public unsafe partial struct Double4x4
     {
+        /// <summary>
+        /// A private buffer to which the undefined properties will point to.
+        /// </summary>
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Double4x4), sizeof(Double4));
+
         [FieldOffset(0)]
         private double m11;
 
@@ -2549,14 +2769,16 @@ namespace ComputeSharp
         /// Gets a reference to a specific row in the current <see cref="Double4x4"/> instance.
         /// </summary>
         /// <param name="row">The row to access.</param>
-        public ref Double4 this[int row] => throw new InvalidExecutionContextException($"{typeof(Double4x4)}[{typeof(int)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[int row] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x4"/> instance.
         /// </summary>
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => throw new InvalidExecutionContextException($"{typeof(Double4x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x4"/> instance.
@@ -2564,7 +2786,8 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => throw new InvalidExecutionContextException($"{typeof(Double4x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x4"/> instance.
@@ -2573,87 +2796,88 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => throw new InvalidExecutionContextException($"{typeof(Double4x4)}[{typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}, {typeof(MatrixIndex)}]");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M11");
+        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M12");
+        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
         /// </summary>
-        public ref double M13 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M13");
+        public ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m13, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 4].
         /// </summary>
-        public ref double M14 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M14");
+        public ref double M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m14, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M21");
+        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
         /// </summary>
-        public ref double M22 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M22");
+        public ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m22, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 3].
         /// </summary>
-        public ref double M23 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M23");
+        public ref double M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m23, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 4].
         /// </summary>
-        public ref double M24 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M24");
+        public ref double M24 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m24, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
         /// </summary>
-        public ref double M31 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M31");
+        public ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m31, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 2].
         /// </summary>
-        public ref double M32 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M32");
+        public ref double M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m32, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 3].
         /// </summary>
-        public ref double M33 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M33");
+        public ref double M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m33, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 4].
         /// </summary>
-        public ref double M34 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M34");
+        public ref double M34 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m34, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 1].
         /// </summary>
-        public ref double M41 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M41");
+        public ref double M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m41, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 2].
         /// </summary>
-        public ref double M42 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M42");
+        public ref double M42 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m42, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 3].
         /// </summary>
-        public ref double M43 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M43");
+        public ref double M43 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m43, 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 4].
         /// </summary>
-        public ref double M44 => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.M44");
+        public ref double M44 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m44, 1));
 
         /// <summary>
         /// Creates a new <see cref="Double4x4"/> value with the same value for all its components.
@@ -2687,34 +2911,39 @@ namespace ComputeSharp
         /// Negates a <see cref="Double4x4"/> value.
         /// </summary>
         /// <param name="matrix">The <see cref="Double4x4"/> value to negate.</param>
-        public static Double4x4 operator -(Double4x4 matrix) => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x4 operator -(Double4x4 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="Double4x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double4x4"/> value to sum.</param>
         /// <param name="right">The second <see cref="Double4x4"/> value to sum.</param>
-        public static Double4x4 operator +(Double4x4 left, Double4x4 right) => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.+");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x4 operator +(Double4x4 left, Double4x4 right) => default;
 
         /// <summary>
         /// Divides two <see cref="Double4x4"/> values (elementwise division).
         /// </summary>
         /// <param name="left">The first <see cref="Double4x4"/> value to divide.</param>
         /// <param name="right">The second <see cref="Double4x4"/> value to divide.</param>
-        public static Double4x4 operator /(Double4x4 left, Double4x4 right) => throw new InvalidExecutionContextException($"{typeof(Double4x4)}./");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x4 operator /(Double4x4 left, Double4x4 right) => default;
 
         /// <summary>
         /// Multiplies two <see cref="Double4x4"/> values (elementwise product).
         /// </summary>
         /// <param name="left">The first <see cref="Double4x4"/> value to multiply.</param>
         /// <param name="right">The second <see cref="Double4x4"/> value to multiply.</param>
-        public static Double4x4 operator *(Double4x4 left, Double4x4 right) => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.*");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x4 operator *(Double4x4 left, Double4x4 right) => default;
 
         /// <summary>
         /// Subtracts two <see cref="Double4x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="Double4x4"/> value to subtract.</param>
         /// <param name="right">The second <see cref="Double4x4"/> value to subtract.</param>
-        public static Double4x4 operator -(Double4x4 left, Double4x4 right) => throw new InvalidExecutionContextException($"{typeof(Double4x4)}.-");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Double4x4 operator -(Double4x4 left, Double4x4 right) => default;
     }
 }

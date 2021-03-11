@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
 {
@@ -50,18 +49,21 @@ namespace ComputeSharp
         /// Casts a <see cref="Int2"/> value to a <see cref="UInt2"/> one.
         /// </summary>
         /// <param name="xy">The input <see cref="Int2"/> value to cast.</param>
-        public static explicit operator UInt2(Int2 xy) => throw new InvalidExecutionContextException($"{nameof(Int2)}.({nameof(UInt2)})");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static explicit operator UInt2(Int2 xy) => default;
 
         /// <summary>
         /// Casts a <see cref="Int2"/> value to a <see cref="Float2"/> one.
         /// </summary>
         /// <param name="xy">The input <see cref="Int2"/> value to cast.</param>
-        public static implicit operator Float2(Int2 xy) => throw new InvalidExecutionContextException($"{nameof(Int2)}.({nameof(Float2)})");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static implicit operator Float2(Int2 xy) => default;
 
         /// <summary>
         /// Casts a <see cref="Int2"/> value to a <see cref="Double2"/> one.
         /// </summary>
         /// <param name="xy">The input <see cref="Int2"/> value to cast.</param>
-        public static implicit operator Double2(Int2 xy) => throw new InvalidExecutionContextException($"{nameof(Int2)}.({nameof(Double2)})");
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static implicit operator Double2(Int2 xy) => default;
     }
 }

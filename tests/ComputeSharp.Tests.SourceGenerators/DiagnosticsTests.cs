@@ -142,7 +142,7 @@ namespace ComputeSharp.Tests.SourceGenerators
         [DataRow(nameof(GroupIds), "CMPS0007")]
         [DataRow(nameof(GroupSize), "CMPS0008")]
         [DataRow(nameof(GridIds), "CMPS0009")]
-        [DataRow(nameof(DispatchSize), "CMPS0047")]
+        [DataRow(nameof(DispatchSize), "CMPS0044")]
         public void InvalidDispatchInfoUsage_LocalFunction(string typeName, string diagnosticsId)
         {
             string source = $@"
@@ -177,7 +177,7 @@ namespace ComputeSharp.Tests.SourceGenerators
         [DataRow(nameof(GroupIds), "CMPS0007")]
         [DataRow(nameof(GroupSize), "CMPS0008")]
         [DataRow(nameof(GridIds), "CMPS0009")]
-        [DataRow(nameof(DispatchSize), "CMPS0047")]
+        [DataRow(nameof(DispatchSize), "CMPS0044")]
         public void InvalidDispatchInfoUsage_StaticMethod(string typeName, string diagnosticsId)
         {
             string source = $@"
@@ -205,41 +205,6 @@ namespace ComputeSharp.Tests.SourceGenerators
         }
 
         [TestMethod]
-        [DataRow(nameof(ThreadIds), "CMPS0006")]
-        [DataRow(nameof(GroupIds), "CMPS0007")]
-        [DataRow(nameof(GroupSize), "CMPS0008")]
-        [DataRow(nameof(GridIds), "CMPS0009")]
-        [DataRow(nameof(DispatchSize), "CMPS0047")]
-        public void InvalidDispatchInfoUsage_ConstantProperty(string typeName, string diagnosticsId)
-        {
-            string source = $@"
-            using ComputeSharp;
-
-            namespace ComputeSharp
-            {{
-                public class ReadWriteBuffer<T> {{ }}
-                public static class {typeName} {{ public static int X => 0; }}
-            }}
-
-            namespace MyFancyApp.Sample
-            {{
-                public struct MyShader : IComputeShader
-                {{
-                    public ReadWriteBuffer<float> buffer;
-
-                    private static int Foo => {typeName}.X;
-
-                    public void Execute()
-                    {{
-                        buffer[0] = Foo;
-                    }}
-                }}
-            }}";
-
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, diagnosticsId);
-        }
-
-        [TestMethod]
         public void InvalidThreadIdsNormalizedUsage()
         {
             string source = $@"
@@ -257,11 +222,11 @@ namespace ComputeSharp.Tests.SourceGenerators
                 {{
                     public ReadWriteBuffer<float> buffer;
 
-                    private static int Foo => ThreadIds.Normalized.X;
+                    public static int Fail() => ThreadIds.Normalized.X;
 
                     public void Execute()
                     {{
-                        buffer[0] = Foo;
+                        buffer[0] = Fail();
                     }}
                 }}
             }}";
@@ -1206,7 +1171,7 @@ namespace ComputeSharp.Tests.SourceGenerators
         }
 
         [TestMethod]
-        public void InvalidShaderConstantPropertyType()
+        public void InvalidShaderStaticFieldType()
         {
             string source = @"
             using ComputeSharp;
@@ -1222,7 +1187,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 {
                     public ReadWriteBuffer<float> buffer;
 
-                    private static string Pi => ""Hello"";
+                    private static string Pi = ""Hello"";
 
                     public void Execute()
                     {
@@ -1234,7 +1199,7 @@ namespace ComputeSharp.Tests.SourceGenerators
         }
 
         [TestMethod]
-        public void InvalidShaderConstantPropertyDeclaration_AutoProp()
+        public void PropertyDeclaration_AutoProp()
         {
             string source = @"
             using ComputeSharp;
@@ -1258,11 +1223,11 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0044");
+            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0045");
         }
 
         [TestMethod]
-        public void InvalidShaderConstantPropertyDeclaration_GetterBlock()
+        public void PropertyDeclaration_GetterBlock()
         {
             string source = @"
             using ComputeSharp;
@@ -1289,11 +1254,11 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0044");
+            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0045");
         }
 
         [TestMethod]
-        public void NonReadonlyShaderPropertyDeclaration()
+        public void StaticPropertyDeclaration()
         {
             string source = @"
             using ComputeSharp;
@@ -1321,7 +1286,7 @@ namespace ComputeSharp.Tests.SourceGenerators
         }
 
         [TestMethod]
-        public void InstanceShaderPropertyDeclaration()
+        public void InstancePropertyDeclaration()
         {
             string source = @"
             using ComputeSharp;
@@ -1345,7 +1310,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0046");
+            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0045");
         }
 
         /// <summary>

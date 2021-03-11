@@ -34,9 +34,9 @@ namespace ComputeSharp.Shaders.Translation
         IReadOnlyDictionary<string, string> DefinesInfo { get; }
 
         /// <summary>
-        /// Gets the collection of discovered constants.
+        /// Gets the collection of discovered static fields.
         /// </summary>
-        IReadOnlyDictionary<string, (string Type, string Assignment)> ConstantsInfo { get; }
+        IReadOnlyDictionary<string, (string TypeDeclaration, string? Assignment)> StaticFields { get; }
 
         /// <summary>
         /// Gets the collection of declared types for the shader.

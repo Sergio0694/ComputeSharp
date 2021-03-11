@@ -46,7 +46,7 @@ namespace ComputeSharp.SourceGenerators.Helpers
         /// <param name="values">The input sequence of <see cref="string"/> groups.</param>
         /// <returns>An <see cref="ArrayCreationExpression"/> instance with the described contents.</returns>
         [Pure]
-        public static ArrayCreationExpressionSyntax NestedArrayExpression(IEnumerable<IEnumerable<string>> groups)
+        public static ArrayCreationExpressionSyntax NestedArrayExpression(IEnumerable<IEnumerable<string?>> groups)
         {
             return
                 ArrayCreationExpression(
@@ -55,7 +55,10 @@ namespace ComputeSharp.SourceGenerators.Helpers
                 .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
                 .AddExpressions(groups.Select(static group =>
                     ImplicitArrayCreationExpression(InitializerExpression(SyntaxKind.ArrayInitializerExpression).AddExpressions(
-                        group.Select(static item => LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(item))).ToArray()))).ToArray()));
+                        group.Select(static item => item is null
+                            ? LiteralExpression(SyntaxKind.NullLiteralExpression)
+                            : LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(item)))
+                        .ToArray()))).ToArray()));
         }
 
         /// <summary>

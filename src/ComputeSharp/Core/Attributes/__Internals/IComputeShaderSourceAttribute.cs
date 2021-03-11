@@ -25,7 +25,7 @@ namespace ComputeSharp.__Internals
         /// <param name="executeMethod">The source code for the <see cref="IComputeShader.Execute"/> method.</param>
         /// <param name="methods">The collection of processed methods.</param>
         /// <param name="defines">The collection of discovered defines.</param>
-        /// <param name="constants">The collection of discovered constants.</param>
+        /// <param name="staticFields">The collection of discovered static fields.</param>
         /// <param name="sharedBuffers">The collection of group shared buffers.</param>
         public IComputeShaderSourceAttribute(
             Type shaderType,
@@ -34,7 +34,7 @@ namespace ComputeSharp.__Internals
             string executeMethod,
             string[] methods,
             object[] defines,
-            object[] constants,
+            object[] staticFields,
             object[] sharedBuffers)
         {
             ShaderType = shaderType;
@@ -43,7 +43,7 @@ namespace ComputeSharp.__Internals
             ExecuteMethod = executeMethod;
             Methods = methods;
             Defines = defines.Cast<string[]>().ToDictionary(static c => c[0], static c => c[1]);
-            Constants = constants.Cast<string[]>().ToDictionary(static arg => arg[0], static arg => (arg[1], arg[2]));
+            StaticFields = staticFields.Cast<string?[]>().ToDictionary(static arg => arg[0]!, static arg => (arg[1]!, arg[2]));
             SharedBuffers = sharedBuffers.Cast<object[]>().ToDictionary(static t => (string)t[0], static t => ((string)t[1], (int?)t[2]));
         }
 
@@ -78,9 +78,9 @@ namespace ComputeSharp.__Internals
         internal IReadOnlyDictionary<string, string> Defines { get; }
 
         /// <summary>
-        /// Gets the collection of discovered constants.
+        /// Gets the collection of discovered static fields.
         /// </summary>
-        internal IReadOnlyDictionary<string, (string Type, string Assignment)> Constants { get; }
+        internal IReadOnlyDictionary<string, (string TypeDeclaration, string? Assignment)> StaticFields { get; }
 
         /// <summary>
         /// Gets the collection of discovered shared buffers.

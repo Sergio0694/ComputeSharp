@@ -14,18 +14,18 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 {
     /// <summary>
-    /// A custom <see cref="CSharpSyntaxRewriter"/> type that processes C# static properties to convert to HLSL static constants.
+    /// A custom <see cref="CSharpSyntaxRewriter"/> type that processes C# static field to convert to HLSL static fields (possibly constant).
     /// </summary>
-    internal sealed class ConstantPropertyRewriter : HlslSourceRewriter
+    internal sealed class StaticFieldRewriter : HlslSourceRewriter
     {
         /// <summary>
-        /// Creates a new <see cref="ConstantPropertyRewriter"/> instance with the specified parameters.
+        /// Creates a new <see cref="StaticFieldRewriter"/> instance with the specified parameters.
         /// </summary>
         /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the target syntax tree.</param>
         /// <param name="discoveredTypes">The set of discovered custom types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <param name="context">The current generator context in use.</param>
-        public ConstantPropertyRewriter(
+        public StaticFieldRewriter(
             SemanticModel semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IFieldSymbol, string> constantDefinitions,
@@ -35,22 +35,14 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         }
 
         /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
-        public ExpressionSyntax? Visit(PropertyDeclarationSyntax? node)
+        public ExpressionSyntax? Visit(VariableDeclaratorSyntax? node)
         {
-            if (node!.ExpressionBody is null)
+            if (node?.Initializer is EqualsValueClauseSyntax fieldInitializer)
             {
-                Context.ReportDiagnostic(
-                    InvalidShaderConstantPropertyDeclaration,
-                    node,
-                    SemanticModel.GetDeclaredSymbol(node.FirstAncestorOrSelf<StructDeclarationSyntax>()!)!,
-                    SemanticModel.GetDeclaredSymbol(node)!.Name);
-
-                return null;
+                return ((EqualsValueClauseSyntax)Visit(fieldInitializer))!.Value;
             }
 
-            ArrowExpressionClauseSyntax? updatedNode = (ArrowExpressionClauseSyntax?)Visit(node.ExpressionBody)!;
-
-            return updatedNode.Expression;
+            return null;
         }
 
         /// <inheritdoc/>

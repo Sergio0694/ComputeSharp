@@ -20,7 +20,7 @@
 
         private const int MaxSteps = 30;
         private const float MinimumDistance = 0.0009f;
-        private const float normalDistance = 0.0002f;
+        private const float NormalDistance = 0.0002f;
         private const int Iterations = 7;
         private const float Scale = 3.0f;
         private const float FieldOfView = 1.0f;
@@ -30,11 +30,11 @@
         private const float Ambient = 0.32184f;
         private const float Diffuse = 0.5f;
 
-        private static Float3 LightDir => 1.0f;
-        private static Float3 LightColor => new(1.0f, 1.0f, 0.858824f);
-        private static Float3 LightDir2 => new(1.0f, -1.0f, 1.0f);
-        private static Float3 LightColor2 => new(0, 0.333333f, 1.0f);
-        private static Float3 Offset => new(0.92858f, 0.92858f, 0.32858f);
+        private static readonly Float3 LightDir = 1.0f;
+        private static readonly Float3 LightColor = new(1.0f, 1.0f, 0.858824f);
+        private static readonly Float3 LightDir2 = new(1.0f, -1.0f, 1.0f);
+        private static readonly Float3 LightColor2 = new(0, 0.333333f, 1.0f);
+        private static readonly Float3 Offset = new(0.92858f, 0.92858f, 0.32858f);
 
         /// <summary>
         /// Rotates a given <see cref="Float2"/> value by a specified amount.
@@ -104,7 +104,7 @@
         /// </summary>
         private Float3 getNormal(in Float3 pos)
         {
-            Float3 e = new(0.0f, normalDistance, 0.0f);
+            Float3 e = new(0.0f, NormalDistance, 0.0f);
 
             return Hlsl.Normalize(new Float3(
                 DE(pos + e.YXX) - DE(pos - e.YXX),
@@ -143,7 +143,7 @@
 
             float smoothStep = steps + distance / MinimumDistance;
             float ao = 1.1f - smoothStep / MaxSteps;
-            Float3 normal = getNormal(pos - dir * normalDistance * 3.0f);
+            Float3 normal = getNormal(pos - dir * NormalDistance * 3.0f);
             Float3 color = 1.0f;
             Float3 light = GetLight(color, normal);
 
