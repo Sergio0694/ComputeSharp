@@ -252,13 +252,17 @@ namespace ComputeSharp.SourceGenerators
                 // This will result in the following (assuming Float2x3 m):
                 //
                 // ref Float3 __m__row0 = ref Unsafe.As<Float2x3, Float3>(ref Unsafe.AsRef(in shader.m));
-                // Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, rawDataOffset), Unsafe.Add(ref __m__row0, 0));
-                // Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, rawDataOffset + 16), Unsafe.Add(ref __m__row0, 1));
+                // Unsafe.As<byte, Float3>(ref Unsafe.Add(ref r1, rawDataOffset)) =, Unsafe.Add(ref __m__row0, 0);
+                // Unsafe.As<byte, Float3>(ref Unsafe.Add(ref r1, rawDataOffset + 16)) = Unsafe.Add(ref __m__row0, 1);
                 for (int j = 0; j < rows; j++)
                 {
                     rawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
 
-                    statements.Add(ParseStatement($"Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, {rawDataOffset}), Unsafe.Add(ref {rowLocalName}, {j}));"));
+                    statements.Add(ExpressionStatement(
+                        AssignmentExpression(
+                            SyntaxKind.SimpleAssignmentExpression,
+                            ParseExpression($"Unsafe.As<byte, {rowTypeName}>(ref Unsafe.Add(ref r1, {rawDataOffset}))"),
+                            ParseExpression($"Unsafe.Add(ref {rowLocalName}, {j})"))));
 
                     rawDataOffset += fieldPack * columns;
                 }
@@ -274,7 +278,11 @@ namespace ComputeSharp.SourceGenerators
                     fieldSize,
                     16);
 
-                statements.Add(ParseStatement($"Unsafe.WriteUnaligned(ref Unsafe.Add(ref r1, {rawDataOffset}), shader.{string.Join(".", fieldPath)});"));
+                statements.Add(ExpressionStatement(
+                    AssignmentExpression(
+                        SyntaxKind.SimpleAssignmentExpression,
+                        ParseExpression($"Unsafe.As<byte, {typeName}>(ref Unsafe.Add(ref r1, {rawDataOffset}))"),
+                        ParseExpression($"shader.{string.Join(".", fieldPath)}"))));
 
                 rawDataOffset += fieldSize;
             }
