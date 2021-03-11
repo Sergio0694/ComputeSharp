@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Numerics;
-using ComputeSharp.Exceptions;
 
 namespace ComputeSharp
 {
