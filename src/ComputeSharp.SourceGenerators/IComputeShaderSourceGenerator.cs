@@ -65,6 +65,9 @@ namespace ComputeSharp.SourceGenerators
             // Only process compute shader types
             if (!structDeclarationSymbol.Interfaces.Any(static interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) return;
 
+            // Properties are not supported
+            DetectAndReportPropertyDeclarations(context, structDeclarationSymbol);
+
             // We need to sets to track all discovered custom types and static methods
             HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
             Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
@@ -403,6 +406,19 @@ namespace ComputeSharp.SourceGenerators
                     .NormalizeWhitespace()
                     .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
                     .ToFullString();
+            }
+        }
+
+        /// <summary>
+        /// Finds and reports all declared properties in a shader.
+        /// </summary>
+        /// <param name="context">The current generator context in use.</param>
+        /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+        private static void DetectAndReportPropertyDeclarations(GeneratorExecutionContext context, INamedTypeSymbol structDeclarationSymbol)
+        {
+            foreach (var propertySymbol in structDeclarationSymbol.GetMembers().OfType<IPropertySymbol>())
+            {
+                context.ReportDiagnostic(DiagnosticDescriptors.PropertyDeclaration, propertySymbol);
             }
         }
     }

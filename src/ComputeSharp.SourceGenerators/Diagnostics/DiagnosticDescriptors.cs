@@ -617,5 +617,18 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
             isEnabledByDefault: true,
             description: "The DispatchSize type can only be used within the main body of a compute shader.",
             helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a property declaration.
+        /// </summary>
+        public static readonly DiagnosticDescriptor PropertyDeclaration = new(
+            id: "CMPS0045",
+            title: "Property declaration",
+            messageFormat: "Property declarations cannot be used in a compute shader",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "Property declarations cannot be used in a compute shader.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
     }
 }

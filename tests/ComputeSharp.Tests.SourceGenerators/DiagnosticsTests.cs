@@ -1206,34 +1206,6 @@ namespace ComputeSharp.Tests.SourceGenerators
         }
 
         [TestMethod]
-        public void InvalidShaderConstantPropertyType()
-        {
-            string source = @"
-            using ComputeSharp;
-
-            namespace ComputeSharp
-            {
-                public class ReadWriteBuffer<T> { }
-            }
-
-            namespace MyFancyApp.Sample
-            {
-                public struct MyShader : IComputeShader
-                {
-                    public ReadWriteBuffer<float> buffer;
-
-                    private static string Pi => ""Hello"";
-
-                    public void Execute()
-                    {
-                    }
-                }
-            }";
-
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0043");
-        }
-
-        [TestMethod]
         public void InvalidShaderConstantPropertyDeclaration_AutoProp()
         {
             string source = @"
@@ -1258,7 +1230,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0044");
+            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0045");
         }
 
         [TestMethod]
@@ -1289,7 +1261,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0044");
+            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0045");
         }
 
         [TestMethod]
@@ -1345,7 +1317,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0046");
+            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0045");
         }
 
         /// <summary>
