@@ -7,6 +7,7 @@ using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
 namespace ComputeSharp.Tests
@@ -19,42 +20,42 @@ namespace ComputeSharp.Tests
         [AllDevices]
         public void ColorfulInfinity(Device device)
         {
-            RunAndCompareShader(device, static texture => new ColorfulInfinity(texture, 0), 0.0000193f);
+            RunAndCompareShader(device, static texture => new ColorfulInfinity(texture, 0), 0.0000004f);
         }
 
         [CombinatorialTestMethod]
         [AllDevices]
         public void FractalTiling(Device device)
         {
-            RunAndCompareShader(device, static texture => new FractalTiling(texture, 0), 0.0000282f);
+            RunAndCompareShader(device, static texture => new FractalTiling(texture, 0), 0.0000005f);
         }
 
         [CombinatorialTestMethod]
         [AllDevices]
         public void MengerJourney(Device device)
         {
-            RunAndCompareShader(device, static texture => new MengerJourney(texture, 0), 0.0000864f);
+            RunAndCompareShader(device, static texture => new MengerJourney(texture, 0), 0.000011f);
         }
 
         [CombinatorialTestMethod]
         [AllDevices]
         public void TwoTiledTruchet(Device device)
         {
-            RunAndCompareShader(device, static texture => new TwoTiledTruchet(texture, 0), 0.00033f);
+            RunAndCompareShader(device, static texture => new TwoTiledTruchet(texture, 0), 0.00032f);
         }
 
         [CombinatorialTestMethod]
         [AllDevices]
         public void Octagrams(Device device)
         {
-            RunAndCompareShader(device, static texture => new Octagrams(texture, 0), 0.00000586f);
+            RunAndCompareShader(device, static texture => new Octagrams(texture, 0), 0.0000006f);
         }
 
         [CombinatorialTestMethod]
         [AllDevices]
         public void ProteanClouds(Device device)
         {
-            RunAndCompareShader(device, static texture => new ProteanClouds(texture, 0), 0.00000107f);
+            RunAndCompareShader(device, static texture => new ProteanClouds(texture, 0), 0.0000004f);
         }
 
         /// <summary>
@@ -69,7 +70,7 @@ namespace ComputeSharp.Tests
         {
             _ = device.Get();
 
-            string expectedPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets", $"{typeof(T).Name}.jpg");
+            string expectedPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets", $"{typeof(T).Name}.png");
 
             IImageInfo imageInfo = Image.Identify(expectedPath);
 
@@ -84,11 +85,11 @@ namespace ComputeSharp.Tests
                 texture.CopyTo(MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(span));
             }
 
-            string actualPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Shaders", $"{typeof(T).Name}.jpg");
+            string actualPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Shaders", $"{typeof(T).Name}.png");
 
             _ = Directory.CreateDirectory(Path.GetDirectoryName(actualPath)!);
 
-            image.Save(actualPath);
+            image.SaveAsPng(actualPath, new PngEncoder() { CompressionLevel = PngCompressionLevel.BestCompression, ColorType = PngColorType.Rgb });
 
             ImagingTests.TolerantImageComparer.AssertEqual(expectedPath, actualPath, delta);
         }

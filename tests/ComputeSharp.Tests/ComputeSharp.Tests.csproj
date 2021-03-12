@@ -40,25 +40,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Assets\ColorfulInfinity.jpg">
+    <None Update="Assets\ColorfulInfinity.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\FractalTiling.jpg">
+    <None Update="Assets\FractalTiling.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\MengerJourney.jpg">
+    <None Update="Assets\MengerJourney.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Octagrams.jpg">
+    <None Update="Assets\Octagrams.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\TwoTiledTruchet.jpg">
+    <None Update="Assets\TwoTiledTruchet.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\Octagrams.jpg">
+    <None Update="Assets\Octagrams.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\ProteanClouds.jpg">
+    <None Update="Assets\ProteanClouds.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Texture2DTests.Pixels.tt">
