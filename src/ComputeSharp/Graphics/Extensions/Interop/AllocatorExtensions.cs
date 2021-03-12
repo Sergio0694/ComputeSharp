@@ -2,7 +2,9 @@
 using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
+using static TerraFX.Interop.D3D12_CPU_PAGE_PROPERTY;
 using static TerraFX.Interop.D3D12_HEAP_TYPE;
+using static TerraFX.Interop.D3D12_MEMORY_POOL;
 using static TerraFX.Interop.D3D12_RESOURCE_FLAGS;
 using static TerraFX.Interop.D3D12_RESOURCE_STATES;
 using static TerraFX.Interop.D3D12MA_ALLOCATION_FLAGS;
@@ -16,15 +18,38 @@ namespace ComputeSharp.Graphics.Extensions
     internal static unsafe class AllocatorExtensions
     {
         /// <summary>
+        /// Creates a <see cref="D3D12MA_Pool"/> instance suited to be used for cache coherent UMA devices.
+        /// </summary>
+        /// <param name="allocator">The <see cref="D3D12MA_Allocator"/> instance in use.</param>
+        /// <returns>A <see cref="D3D12MA_Pool"/> instance suited to be used for cache coherent UMA devices.</returns>
+        public static UniquePtr<D3D12MA_Pool> CreatePoolForCacheCoherentUMA(this ref D3D12MA_Allocator allocator)
+        {
+            using UniquePtr<D3D12MA_Pool> pool = default;
+
+            D3D12MA_POOL_DESC poolDesc = default;
+            poolDesc.HeapProperties.CreationNodeMask = 1;
+            poolDesc.HeapProperties.VisibleNodeMask = 1;
+            poolDesc.HeapProperties.Type = D3D12_HEAP_TYPE_CUSTOM;
+            poolDesc.HeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+            poolDesc.HeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+
+            allocator.CreatePool(&poolDesc, pool.GetAddressOf()).Assert();
+
+            return pool.Move();
+        }
+
+        /// <summary>
         /// Creates a resource for a given buffer type.
         /// </summary>
         /// <param name="allocator">The <see cref="D3D12MA_Allocator"/> instance in use.</param>
+        /// <param name="pool">The <see cref="D3D12MA_Pool"/> instance to use, if any.</param>
         /// <param name="resourceType">The resource type currently in use.</param>
         /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
         /// <param name="sizeInBytes">The size in bytes of the current buffer.</param>
         /// <returns>An <see cref="UniquePtr{T}"/> reference for the current <see cref="D3D12MA_Allocation"/> object.</returns>
         public static UniquePtr<D3D12MA_Allocation> CreateResource(
             this ref D3D12MA_Allocator allocator,
+            D3D12MA_Pool* pool,
             ResourceType resourceType,
             AllocationMode allocationMode,
             ulong sizeInBytes)
@@ -49,6 +74,7 @@ namespace ComputeSharp.Graphics.Extensions
             D3D12MA_ALLOCATION_DESC allocationDesc = default;
             allocationDesc.HeapType = d3D12HeapType;
             allocationDesc.Flags = allocationFlags;
+            allocationDesc.CustomPool = pool;
 
             allocator.CreateResource(
                 &allocationDesc,
@@ -66,6 +92,7 @@ namespace ComputeSharp.Graphics.Extensions
         /// Creates a resource for a given 2D texture type.
         /// </summary>
         /// <param name="allocator">The <see cref="D3D12MA_Allocator"/> instance in use.</param>
+        /// <param name="pool">The <see cref="D3D12MA_Pool"/> instance to use, if any.</param>
         /// <param name="resourceType">The resource type currently in use.</param>
         /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
         /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
@@ -75,6 +102,7 @@ namespace ComputeSharp.Graphics.Extensions
         /// <returns>An <see cref="UniquePtr{T}"/> reference for the current <see cref="D3D12MA_Allocation"/> object.</returns>
         public static UniquePtr<D3D12MA_Allocation> CreateResource(
             this ref D3D12MA_Allocator allocator,
+            D3D12MA_Pool* pool,
             ResourceType resourceType,
             AllocationMode allocationMode,
             DXGI_FORMAT dxgiFormat,
@@ -99,6 +127,7 @@ namespace ComputeSharp.Graphics.Extensions
             D3D12MA_ALLOCATION_DESC allocationDesc = default;
             allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
             allocationDesc.Flags = allocationFlags;
+            allocationDesc.CustomPool = pool;
 
             allocator.CreateResource(
                 &allocationDesc,
@@ -116,6 +145,7 @@ namespace ComputeSharp.Graphics.Extensions
         /// Creates a resource for a given 3D texture type.
         /// </summary>
         /// <param name="allocator">The <see cref="D3D12MA_Allocator"/> instance in use.</param>
+        /// <param name="pool">The <see cref="D3D12MA_Pool"/> instance to use, if any.</param>
         /// <param name="resourceType">The resource type currently in use.</param>
         /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
         /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
@@ -126,6 +156,7 @@ namespace ComputeSharp.Graphics.Extensions
         /// <returns>An <see cref="UniquePtr{T}"/> reference for the current <see cref="D3D12MA_Allocation"/> object.</returns>
         public static UniquePtr<D3D12MA_Allocation> CreateResource(
             this ref D3D12MA_Allocator allocator,
+            D3D12MA_Pool* pool,
             ResourceType resourceType,
             AllocationMode allocationMode,
             DXGI_FORMAT dxgiFormat,
@@ -151,6 +182,7 @@ namespace ComputeSharp.Graphics.Extensions
             D3D12MA_ALLOCATION_DESC allocationDesc = default;
             allocationDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
             allocationDesc.Flags = allocationFlags;
+            allocationDesc.CustomPool = pool;
 
             allocator.CreateResource(
                 &allocationDesc,
