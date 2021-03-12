@@ -630,5 +630,21 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
             isEnabledByDefault: true,
             description: "Property declarations cannot be used in a compute shader.",
             helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a shader with a root signature that is too large.
+        /// <para>
+        /// Format: <c>"The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources"</c>.
+        /// </para>
+        /// </summary>
+        public static readonly DiagnosticDescriptor ShaderDispatchDataSizeExceeded = new(
+            id: "CMPS0046",
+            title: "Shader dispatch data size exceeded",
+            messageFormat: "The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources",
+            category: typeof(IComputeShader).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
     }
 }

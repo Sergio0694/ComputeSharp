@@ -1338,6 +1338,38 @@ namespace ComputeSharp.Tests.SourceGenerators
             VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0045");
         }
 
+        [TestMethod]
+        public void ShaderDispatchDataSizeExceeded()
+        {
+            string source = @"
+            using ComputeSharp;
+
+            namespace ComputeSharp
+            {
+                public class ReadWriteBuffer<T> { }
+                public struct Double4x4 { }
+                public struct Float4 { }
+            }
+
+            namespace MyFancyApp.Sample
+            {
+                public struct MyShader : IComputeShader
+                {
+                    public readonly ReadWriteBuffer<float> buffer;
+                    public readonly Double4x4 a;
+                    public readonly Double4x4 b;
+                    public readonly int c;
+                    public readonly Float4 d;
+
+                    public void Execute()
+                    {
+                    }
+                }
+            }";
+
+            VerifyGeneratedDiagnostics<IComputeShaderDataLoaderGenerator>(source, "CMPS0046");
+        }
+
         /// <summary>
         /// Verifies the output of a source generator.
         /// </summary>

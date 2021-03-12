@@ -79,7 +79,7 @@ namespace ComputeSharp.SourceGenerators
             if (!structDeclarationSymbol.Interfaces.Any(static interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) return;
 
             TypeSyntax shaderType = ParseTypeName(structDeclarationSymbol.ToDisplayString());
-            BlockSyntax block = Block(GetDispatchDataLoadingStatements(structDeclarationSymbol, out int root32BitConstantsCount));
+            BlockSyntax block = Block(GetDispatchDataLoadingStatements(context, structDeclarationSymbol, out int root32BitConstantsCount));
 
             // Create a static method to create the combined hashcode for a given shader type.
             // This code takes a block syntax and produces a compilation unit as follows:
@@ -148,11 +148,12 @@ namespace ComputeSharp.SourceGenerators
         /// <summary>
         /// Gets a sequence of statements to load the dispatch data for a given shader
         /// </summary>
+        /// <param name="context">The current generator context in use.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="count">The total number of 32 bit root constants to load.</param>
         /// <returns>The sequence of <see cref="StatementSyntax"/> instances to load shader dispatch data.</returns>
         [Pure]
-        private static IEnumerable<StatementSyntax> GetDispatchDataLoadingStatements(INamedTypeSymbol structDeclarationSymbol, out int count)
+        private static IEnumerable<StatementSyntax> GetDispatchDataLoadingStatements(GeneratorExecutionContext context, INamedTypeSymbol structDeclarationSymbol, out int count)
         {
             List<StatementSyntax> statements = new();
 
@@ -171,6 +172,21 @@ namespace ComputeSharp.SourceGenerators
             statements.Add(ReturnStatement(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(rawDataOffset))));
 
             count = rawDataOffset / sizeof(int);
+
+            // A shader root signature has a maximum size of 64 DWORDs, so 256 bytes.
+            // Loaded values in the root signature have the following costs:
+            //  - Root constants cost 1 DWORD each, since they are 32-bit values.
+            //  - Descriptor tables cost 1 DWORD each.
+            //  - Root descriptors (64-bit GPU virtual addresses) cost 2 DWORDs each.
+            // So here we check whether the current signature respects that constraint,
+            // and emit a build error otherwise. For more info on this, see the docs here:
+            // https://docs.microsoft.com/windows/win32/direct3d12/root-signature-limits.
+            int rootSignatureDwordSize = count + resourceOffset;
+
+            if (rootSignatureDwordSize > 64)
+            {
+                context.ReportDiagnostic(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
+            }
 
             return statements;
         }
