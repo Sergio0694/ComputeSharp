@@ -39,6 +39,31 @@ namespace ComputeSharp.Tests.SourceGenerators
         }
 
         [TestMethod]
+        public void InvalidShaderFixedField()
+        {
+            string source = @"
+            using ComputeSharp;
+
+            namespace ComputeSharp
+            {
+                public class ReadWriteBuffer<T> { }
+            }
+
+            namespace MyFancyApp.Sample
+            {
+                public unsafe struct MyShader : IComputeShader
+                {
+                    public ReadWriteBuffer<float> buffer;
+                    public fixed int text[16];
+
+                    public void Execute() { }
+                }
+            }";
+
+            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0001");
+        }
+
+        [TestMethod]
         public void InvalidGroupSharedFieldType()
         {
             string source = @"

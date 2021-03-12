@@ -191,7 +191,7 @@ namespace ComputeSharp.SourceGenerators
                IFieldSymbol fieldSymbol in
                from fieldSymbol in currentTypeSymbol.GetMembers().OfType<IFieldSymbol>()
                where fieldSymbol.Type is INamedTypeSymbol { IsStatic: false } &&
-                     !fieldSymbol.IsConst && !fieldSymbol.IsStatic
+                     !fieldSymbol.IsConst && !fieldSymbol.IsStatic && !fieldSymbol.IsFixedSizeBuffer
                select fieldSymbol)
             {
                 string typeName = fieldSymbol.Type.GetFullMetadataName();
