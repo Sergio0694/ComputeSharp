@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using ComputeSharp.Core.Extensions;
 using ComputeSharp.Resources;
 
 namespace ComputeSharp.Interop
@@ -21,6 +23,109 @@ namespace ComputeSharp.Interop
     /// </summary>
     public static unsafe class InteropServices
     {
+        /// <summary>
+        /// Gets the underlying COM object for a given device, as a specified interface. This method invokes
+        /// <see href="https://docs.microsoft.com/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void)">IUnknown::QueryInterface</see>.
+        /// </summary>
+        /// <param name="device">The input <see cref="GraphicsDevice"/> instance in use.</param>
+        /// <param name="riid">A reference to the interface identifier (IID) of the device interface being queried for.</param>
+        /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
+        /// <exception cref="Win32Exception">Thrown if the <c>IUnknown::QueryInterface</c> call doesn't return <c>S_OK</c>.</exception>
+        public static void GetID3D12Device(GraphicsDevice device, Guid* riid, void** ppvObject)
+        {
+            device.D3D12Device->QueryInterface(riid, ppvObject).Assert();
+        }
+
+        /// <summary>
+        /// Gets the underlying COM object for a given resource, as a specified interface. This method invokes
+        /// <see href="https://docs.microsoft.com/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void)">IUnknown::QueryInterface</see>.
+        /// </summary>
+        /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
+        /// <param name="buffer">The input <see cref="Buffer{T}"/> instance in use.</param>
+        /// <param name="riid">A reference to the interface identifier (IID) of the resource interface being queried for.</param>
+        /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
+        /// <exception cref="Win32Exception">Thrown if the <c>IUnknown::QueryInterface</c> call doesn't return <c>S_OK</c>.</exception>
+        public static void GetID3D12Resource<T>(Buffer<T> buffer, Guid* riid, void** ppvObject)
+            where T : unmanaged
+        {
+            buffer.D3D12Resource->QueryInterface(riid, ppvObject).Assert();
+        }
+
+        /// <summary>
+        /// Gets the underlying COM object for a given resource, as a specified interface. This method invokes
+        /// <see href="https://docs.microsoft.com/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void)">IUnknown::QueryInterface</see>.
+        /// </summary>
+        /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+        /// <param name="texture">The input <see cref="Texture2D{T}"/> instance in use.</param>
+        /// <param name="riid">A reference to the interface identifier (IID) of the resource interface being queried for.</param>
+        /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
+        /// <exception cref="Win32Exception">Thrown if the <c>IUnknown::QueryInterface</c> call doesn't return <c>S_OK</c>.</exception>
+        public static void GetID3D12Resource<T>(Texture2D<T> texture, Guid* riid, void** ppvObject)
+            where T : unmanaged
+        {
+            texture.D3D12Resource->QueryInterface(riid, ppvObject).Assert();
+        }
+
+        /// <summary>
+        /// Gets the underlying COM object for a given resource, as a specified interface. This method invokes
+        /// <see href="https://docs.microsoft.com/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void)">IUnknown::QueryInterface</see>.
+        /// </summary>
+        /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+        /// <param name="texture">The input <see cref="Texture3D{T}"/> instance in use.</param>
+        /// <param name="riid">A reference to the interface identifier (IID) of the resource interface being queried for.</param>
+        /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
+        /// <exception cref="Win32Exception">Thrown if the <c>IUnknown::QueryInterface</c> call doesn't return <c>S_OK</c>.</exception>
+        public static void GetID3D12Resource<T>(Texture3D<T> texture, Guid* riid, void** ppvObject)
+            where T : unmanaged
+        {
+            texture.D3D12Resource->QueryInterface(riid, ppvObject).Assert();
+        }
+
+        /// <summary>
+        /// Gets the underlying COM object for a given resource, as a specified interface. This method invokes
+        /// <see href="https://docs.microsoft.com/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void)">IUnknown::QueryInterface</see>.
+        /// </summary>
+        /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
+        /// <param name="buffer">The input <see cref="TransferBuffer{T}"/> instance in use.</param>
+        /// <param name="riid">A reference to the interface identifier (IID) of the resource interface being queried for.</param>
+        /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
+        /// <exception cref="Win32Exception">Thrown if the <c>IUnknown::QueryInterface</c> call doesn't return <c>S_OK</c>.</exception>
+        public static void GetID3D12Resource<T>(TransferBuffer<T> buffer, Guid* riid, void** ppvObject)
+            where T : unmanaged
+        {
+            buffer.D3D12Resource->QueryInterface(riid, ppvObject).Assert();
+        }
+
+        /// <summary>
+        /// Gets the underlying COM object for a given resource, as a specified interface. This method invokes
+        /// <see href="https://docs.microsoft.com/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void)">IUnknown::QueryInterface</see>.
+        /// </summary>
+        /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+        /// <param name="texture">The input <see cref="TransferTexture2D{T}"/> instance in use.</param>
+        /// <param name="riid">A reference to the interface identifier (IID) of the resource interface being queried for.</param>
+        /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
+        /// <exception cref="Win32Exception">Thrown if the <c>IUnknown::QueryInterface</c> call doesn't return <c>S_OK</c>.</exception>
+        public static void GetID3D12Resource<T>(TransferTexture2D<T> texture, Guid* riid, void** ppvObject)
+            where T : unmanaged
+        {
+            texture.D3D12Resource->QueryInterface(riid, ppvObject).Assert();
+        }
+
+        /// <summary>
+        /// Gets the underlying COM object for a given resource, as a specified interface. This method invokes
+        /// <see href="https://docs.microsoft.com/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void)">IUnknown::QueryInterface</see>.
+        /// </summary>
+        /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+        /// <param name="texture">The input <see cref="TransferTexture3D{T}"/> instance in use.</param>
+        /// <param name="riid">A reference to the interface identifier (IID) of the resource interface being queried for.</param>
+        /// <param name="ppvObject">The address of a pointer to an interface with the IID specified in <paramref name="riid"/>.</param>
+        /// <exception cref="Win32Exception">Thrown if the <c>IUnknown::QueryInterface</c> call doesn't return <c>S_OK</c>.</exception>
+        public static void GetID3D12Resource<T>(TransferTexture3D<T> texture, Guid* riid, void** ppvObject)
+            where T : unmanaged
+        {
+            texture.D3D12Resource->QueryInterface(riid, ppvObject).Assert();
+        }
+
         /// <summary>
         /// Tries to get the underlying COM object for a given device, as a specified interface. This method invokes
         /// <see href="https://docs.microsoft.com/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void)">IUnknown::QueryInterface</see>.
