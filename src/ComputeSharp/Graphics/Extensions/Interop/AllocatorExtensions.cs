@@ -136,7 +136,7 @@ namespace ComputeSharp.Graphics.Extensions
                 null,
                 allocation.GetAddressOf(),
                 null,
-                null);
+                null).Assert();
 
             return allocation.Move();
         }
@@ -191,7 +191,7 @@ namespace ComputeSharp.Graphics.Extensions
                 null,
                 allocation.GetAddressOf(),
                 null,
-                null);
+                null).Assert();
 
             return allocation.Move();
         }
