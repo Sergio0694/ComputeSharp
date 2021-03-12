@@ -56,7 +56,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 // Track and replace constants
                 if (operation is IFieldReferenceOperation fieldOperation &&
                     fieldOperation.Field.IsConst &&
-                    fieldOperation.Type.TypeKind != TypeKind.Enum)
+                    fieldOperation.Type!.TypeKind != TypeKind.Enum)
                 {
                     ConstantDefinitions[fieldOperation.Field] = ((IFormattable)fieldOperation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
 

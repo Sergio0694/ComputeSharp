@@ -92,7 +92,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 for (int i = 0; i < node.ArgumentList!.Arguments.Count; i++)
                 {
                     IArgumentOperation argumentOperation = (IArgumentOperation)SemanticModel.GetOperation(node.ArgumentList.Arguments[i])!;
-                    INamedTypeSymbol elementType = (INamedTypeSymbol)argumentOperation.Parameter.Type;
+                    INamedTypeSymbol elementType = (INamedTypeSymbol)argumentOperation.Parameter!.Type;
 
                     updatedNode = updatedNode.ReplaceNode(
                         updatedNode.ArgumentList!.Arguments[i].Expression,
@@ -128,7 +128,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 for (int i = 0; i < node.ArgumentList.Arguments.Count; i++)
                 {
                     IArgumentOperation argumentOperation = (IArgumentOperation)SemanticModel.GetOperation(node.ArgumentList.Arguments[i])!;
-                    INamedTypeSymbol elementType = (INamedTypeSymbol)argumentOperation.Parameter.Type;
+                    INamedTypeSymbol elementType = (INamedTypeSymbol)argumentOperation.Parameter!.Type;
 
                     updatedNode = updatedNode.ReplaceNode(
                         updatedNode.ArgumentList.Arguments[i].Expression,
@@ -256,7 +256,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
             if (SemanticModel.GetOperation(node) is IFieldReferenceOperation operation &&
                 operation.Field.IsConst &&
-                operation.Type.TypeKind != TypeKind.Enum)
+                operation.Type!.TypeKind != TypeKind.Enum)
             {
                 ConstantDefinitions[operation.Field] = ((IFormattable)operation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
 

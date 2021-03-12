@@ -256,7 +256,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 // If the member access is a constant, track it and replace the tree with the processed constant name
                 if (operation is IFieldReferenceOperation fieldOperation &&
                     fieldOperation.Field.IsConst &&
-                    fieldOperation.Type.TypeKind != TypeKind.Enum)
+                    fieldOperation.Type!.TypeKind != TypeKind.Enum)
                 {
                     ConstantDefinitions[fieldOperation.Field] = ((IFormattable)fieldOperation.Field.ConstantValue!).ToString(null, CultureInfo.InvariantCulture);
 
