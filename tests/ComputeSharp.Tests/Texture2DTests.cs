@@ -3,7 +3,7 @@ using System.Linq;
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
-using Microsoft.Toolkit.HighPerformance.Memory;
+using Microsoft.Toolkit.HighPerformance;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests
@@ -16,14 +16,24 @@ namespace ComputeSharp.Tests
         [AllDevices]
         [Resource(typeof(ReadOnlyTexture2D<>))]
         [Resource(typeof(ReadWriteTexture2D<>))]
-        public void Allocate_Uninitialized_Ok(Device device, Type textureType)
+        [Data(AllocationMode.Default)]
+        [Data(AllocationMode.Clear)]
+        public void Allocate_Uninitialized_Ok(Device device, Type textureType, AllocationMode allocationMode)
         {
-            using Texture2D<float> texture = device.Get().AllocateTexture2D<float>(textureType, 128, 128);
+            using Texture2D<float> texture = device.Get().AllocateTexture2D<float>(textureType, 128, 128, allocationMode);
 
             Assert.IsNotNull(texture);
             Assert.AreEqual(texture.Width, 128);
             Assert.AreEqual(texture.Height, 128);
             Assert.AreSame(texture.GraphicsDevice, device.Get());
+
+            if (allocationMode == AllocationMode.Clear)
+            {
+                foreach (float x in texture.ToArray())
+                {
+                    Assert.AreEqual(x, 0f);
+                }
+            }
         }
 
         [CombinatorialTestMethod]

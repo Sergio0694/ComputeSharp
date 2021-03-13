@@ -3,7 +3,7 @@ using System.Linq;
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
-using Microsoft.Toolkit.HighPerformance.Extensions;
+using Microsoft.Toolkit.HighPerformance;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests
@@ -16,16 +16,29 @@ namespace ComputeSharp.Tests
         [AllDevices]
         [Resource(typeof(UploadTexture2D<>))]
         [Resource(typeof(ReadBackTexture2D<>))]
-        public unsafe void Allocate_Uninitialized_Ok(Device device, Type bufferType)
+        [Data(AllocationMode.Default)]
+        [Data(AllocationMode.Clear)]
+        public unsafe void Allocate_Uninitialized_Ok(Device device, Type bufferType, AllocationMode allocationMode)
         {
-            using TransferTexture2D<float> buffer = device.Get().AllocateTransferTexture2D<float>(bufferType, 128, 256);
+            using TransferTexture2D<float> texture = device.Get().AllocateTransferTexture2D<float>(bufferType, 128, 256, allocationMode);
 
-            Assert.IsNotNull(buffer);
-            Assert.AreEqual(buffer.Width, 128);
-            Assert.AreEqual(buffer.Height, 256);
-            Assert.AreEqual(buffer.View.Width, 128);
-            Assert.AreEqual(buffer.View.Height, 256);
-            Assert.AreSame(buffer.GraphicsDevice, device.Get());
+            Assert.IsNotNull(texture);
+            Assert.AreEqual(texture.Width, 128);
+            Assert.AreEqual(texture.Height, 256);
+            Assert.AreEqual(texture.View.Width, 128);
+            Assert.AreEqual(texture.View.Height, 256);
+            Assert.AreSame(texture.GraphicsDevice, device.Get());
+
+            if (allocationMode == AllocationMode.Clear)
+            {
+                for (int y = 0; y < texture.Height; y++)
+                {
+                    foreach (float x in texture.View.GetRowSpan(y))
+                    {
+                        Assert.AreEqual(x, 0f);
+                    }
+                }
+            }
         }
 
         [CombinatorialTestMethod]
@@ -39,7 +52,7 @@ namespace ComputeSharp.Tests
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void Allocate_Uninitialized_Fail(Device device, Type bufferType, int width, int height)
         {
-            using TransferTexture2D<float> buffer = device.Get().AllocateTransferTexture2D<float>(bufferType, width, height);
+            using TransferTexture2D<float> texture = device.Get().AllocateTransferTexture2D<float>(bufferType, width, height);
         }
 
         [CombinatorialTestMethod]
@@ -49,11 +62,11 @@ namespace ComputeSharp.Tests
         [ExpectedException(typeof(ObjectDisposedException))]
         public void UsageAfterDispose(Device device, Type bufferType)
         {
-            using TransferTexture2D<float> buffer = device.Get().AllocateTransferTexture2D<float>(bufferType, 32, 32);
+            using TransferTexture2D<float> texture = device.Get().AllocateTransferTexture2D<float>(bufferType, 32, 32);
 
-            buffer.Dispose();
+            texture.Dispose();
 
-            _ = buffer.View;
+            _ = texture.View;
         }
 
         [CombinatorialTestMethod]

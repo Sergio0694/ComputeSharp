@@ -3,7 +3,7 @@ using System.Linq;
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
-using Microsoft.Toolkit.HighPerformance.Extensions;
+using Microsoft.Toolkit.HighPerformance;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests
@@ -16,18 +16,34 @@ namespace ComputeSharp.Tests
         [AllDevices]
         [Resource(typeof(UploadTexture3D<>))]
         [Resource(typeof(ReadBackTexture3D<>))]
-        public unsafe void Allocate_Uninitialized_Ok(Device device, Type bufferType)
+        [Data(AllocationMode.Default)]
+        [Data(AllocationMode.Clear)]
+        public unsafe void Allocate_Uninitialized_Ok(Device device, Type bufferType, AllocationMode allocationMode)
         {
-            using TransferTexture3D<float> buffer = device.Get().AllocateTransferTexture3D<float>(bufferType, 128, 256, 32);
+            using TransferTexture3D<float> texture = device.Get().AllocateTransferTexture3D<float>(bufferType, 128, 256, 32, allocationMode);
 
-            Assert.IsNotNull(buffer);
-            Assert.AreEqual(buffer.Width, 128);
-            Assert.AreEqual(buffer.Height, 256);
-            Assert.AreEqual(buffer.Depth, 32);
-            Assert.AreEqual(buffer.View.Width, 128);
-            Assert.AreEqual(buffer.View.Height, 256);
-            Assert.AreEqual(buffer.View.Depth, 32);
-            Assert.AreSame(buffer.GraphicsDevice, device.Get());
+            Assert.IsNotNull(texture);
+            Assert.AreEqual(texture.Width, 128);
+            Assert.AreEqual(texture.Height, 256);
+            Assert.AreEqual(texture.Depth, 32);
+            Assert.AreEqual(texture.View.Width, 128);
+            Assert.AreEqual(texture.View.Height, 256);
+            Assert.AreEqual(texture.View.Depth, 32);
+            Assert.AreSame(texture.GraphicsDevice, device.Get());
+
+            if (allocationMode == AllocationMode.Clear)
+            {
+                for (int z = 0; z < texture.Depth; z++)
+                {
+                    for (int y = 0; y < texture.Height; y++)
+                    {
+                        foreach (float x in texture.View.GetRowSpan(y, z))
+                        {
+                            Assert.AreEqual(x, 0f);
+                        }
+                    }
+                }
+            }
         }
 
         [CombinatorialTestMethod]
@@ -43,7 +59,7 @@ namespace ComputeSharp.Tests
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void Allocate_Uninitialized_Fail(Device device, Type bufferType, int width, int height, int depth)
         {
-            using TransferTexture3D<float> buffer = device.Get().AllocateTransferTexture3D<float>(bufferType, width, height, depth);
+            using TransferTexture3D<float> texture = device.Get().AllocateTransferTexture3D<float>(bufferType, width, height, depth);
         }
 
         [CombinatorialTestMethod]
@@ -53,11 +69,11 @@ namespace ComputeSharp.Tests
         [ExpectedException(typeof(ObjectDisposedException))]
         public void UsageAfterDispose(Device device, Type bufferType)
         {
-            using TransferTexture3D<float> buffer = device.Get().AllocateTransferTexture3D<float>(bufferType, 32, 32, 16);
+            using TransferTexture3D<float> texture = device.Get().AllocateTransferTexture3D<float>(bufferType, 32, 32, 16);
 
-            buffer.Dispose();
+            texture.Dispose();
 
-            _ = buffer.View;
+            _ = texture.View;
         }
 
         [CombinatorialTestMethod]

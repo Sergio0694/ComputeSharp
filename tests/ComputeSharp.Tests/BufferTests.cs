@@ -16,13 +16,23 @@ namespace ComputeSharp.Tests
         [Resource(typeof(ConstantBuffer<>))]
         [Resource(typeof(ReadOnlyBuffer<>))]
         [Resource(typeof(ReadWriteBuffer<>))]
-        public void Allocate_Uninitialized_Ok(Device device, Type bufferType)
+        [Data(AllocationMode.Default)]
+        [Data(AllocationMode.Clear)]
+        public void Allocate_Uninitialized_Ok(Device device, Type bufferType, AllocationMode allocationMode)
         {
-            using Buffer<float> buffer = device.Get().AllocateBuffer<float>(bufferType, 128);
+            using Buffer<float> buffer = device.Get().AllocateBuffer<float>(bufferType, 128, allocationMode);
 
             Assert.IsNotNull(buffer);
             Assert.AreEqual(buffer.Length, 128);
             Assert.AreSame(buffer.GraphicsDevice, device.Get());
+
+            if (allocationMode == AllocationMode.Clear)
+            {
+                foreach (float x in buffer.ToArray())
+                {
+                    Assert.AreEqual(x, 0f);
+                }
+            }
         }
 
         [CombinatorialTestMethod]

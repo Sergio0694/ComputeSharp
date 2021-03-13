@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
-using Microsoft.Toolkit.HighPerformance.Extensions;
+using Microsoft.Toolkit.HighPerformance;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests
@@ -17,9 +17,11 @@ namespace ComputeSharp.Tests
         [AllDevices]
         [Resource(typeof(UploadBuffer<>))]
         [Resource(typeof(ReadBackBuffer<>))]
-        public unsafe void Allocate_Uninitialized_Ok(Device device, Type bufferType)
+        [Data(AllocationMode.Default)]
+        [Data(AllocationMode.Clear)]
+        public unsafe void Allocate_Uninitialized_Ok(Device device, Type bufferType, AllocationMode allocationMode)
         {
-            using TransferBuffer<float> buffer = device.Get().AllocateTransferBuffer<float>(bufferType, 128);
+            using TransferBuffer<float> buffer = device.Get().AllocateTransferBuffer<float>(bufferType, 128, allocationMode);
 
             Assert.IsNotNull(buffer);
             Assert.AreEqual(buffer.Length, 128);
@@ -28,6 +30,14 @@ namespace ComputeSharp.Tests
             Assert.IsTrue(Unsafe.AreSame(ref buffer.Memory.Span[0], ref buffer.Span[0]));
             Assert.IsTrue(Unsafe.AreSame(ref *(float*)buffer.Memory.Pin().Pointer, ref buffer.Span[0]));
             Assert.AreSame(buffer.GraphicsDevice, device.Get());
+
+            if (allocationMode == AllocationMode.Clear)
+            {
+                foreach (float x in buffer.Span)
+                {
+                    Assert.AreEqual(x, 0f);
+                }
+            }
         }
 
         [CombinatorialTestMethod]

@@ -19,16 +19,17 @@ namespace ComputeSharp.Tests.Extensions
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance to allocate the buffer for.</param>
         /// <param name="type">The type of buffer to allocate.</param>
         /// <param name="length">The length of the buffer to create.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
         /// <returns>A <see cref="Buffer{T}"/> instance of the requested size.</returns>
         [Pure]
-        public static Buffer<T> AllocateBuffer<T>(this GraphicsDevice device, Type type, int length)
+        public static Buffer<T> AllocateBuffer<T>(this GraphicsDevice device, Type type, int length, AllocationMode allocationMode = AllocationMode.Default)
             where T : unmanaged
         {
             return type switch
             {
-                _ when type == typeof(ConstantBuffer<>) => device.AllocateConstantBuffer<T>(length),
-                _ when type == typeof(ReadOnlyBuffer<>) => device.AllocateReadOnlyBuffer<T>(length),
-                _ when type == typeof(ReadWriteBuffer<>) => device.AllocateReadWriteBuffer<T>(length),
+                _ when type == typeof(ConstantBuffer<>) => device.AllocateConstantBuffer<T>(length, allocationMode),
+                _ when type == typeof(ReadOnlyBuffer<>) => device.AllocateReadOnlyBuffer<T>(length, allocationMode),
+                _ when type == typeof(ReadWriteBuffer<>) => device.AllocateReadWriteBuffer<T>(length, allocationMode),
                 _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
             };
         }
@@ -41,15 +42,16 @@ namespace ComputeSharp.Tests.Extensions
         /// <param name="type">The type of texture to allocate.</param>
         /// <param name="width">The width of the texture to create.</param>
         /// <param name="height">The height of the texture to create.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
         /// <returns>A <see cref="Texture2D{T}"/> instance of the requested size.</returns>
         [Pure]
-        public static Texture2D<T> AllocateTexture2D<T>(this GraphicsDevice device, Type type, int width, int height)
+        public static Texture2D<T> AllocateTexture2D<T>(this GraphicsDevice device, Type type, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
             where T : unmanaged
         {
             return type switch
             {
-                _ when type == typeof(ReadOnlyTexture2D<>) => device.AllocateReadOnlyTexture2D<T>(width, height),
-                _ when type == typeof(ReadWriteTexture2D<>) => device.AllocateReadWriteTexture2D<T>(width, height),
+                _ when type == typeof(ReadOnlyTexture2D<>) => device.AllocateReadOnlyTexture2D<T>(width, height, allocationMode),
+                _ when type == typeof(ReadWriteTexture2D<>) => device.AllocateReadWriteTexture2D<T>(width, height, allocationMode),
                 _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
             };
         }
@@ -63,16 +65,17 @@ namespace ComputeSharp.Tests.Extensions
         /// <param name="type">The type of texture to allocate.</param>
         /// <param name="width">The width of the texture to create.</param>
         /// <param name="height">The height of the texture to create.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
         /// <returns>A <see cref="Texture2D{T}"/> instance of the requested size.</returns>
         [Pure]
-        public static Texture2D<T> AllocateTexture2D<T, TPixel>(this GraphicsDevice device, Type type, int width, int height)
+        public static Texture2D<T> AllocateTexture2D<T, TPixel>(this GraphicsDevice device, Type type, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
             return type switch
             {
-                _ when type == typeof(ReadOnlyTexture2D<,>) => device.AllocateReadOnlyTexture2D<T, TPixel>(width, height),
-                _ when type == typeof(ReadWriteTexture2D<,>) => device.AllocateReadWriteTexture2D<T, TPixel>(width, height),
+                _ when type == typeof(ReadOnlyTexture2D<,>) => device.AllocateReadOnlyTexture2D<T, TPixel>(width, height, allocationMode),
+                _ when type == typeof(ReadWriteTexture2D<,>) => device.AllocateReadWriteTexture2D<T, TPixel>(width, height, allocationMode),
                 _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
             };
         }
@@ -86,15 +89,16 @@ namespace ComputeSharp.Tests.Extensions
         /// <param name="width">The width of the texture to create.</param>
         /// <param name="height">The height of the texture to create.</param>
         /// <param name="depth">The depth of the texture to create.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
         /// <returns>A <see cref="Texture2D{T}"/> instance of the requested size.</returns>
         [Pure]
-        public static Texture3D<T> AllocateTexture3D<T>(this GraphicsDevice device, Type type, int width, int height, int depth)
+        public static Texture3D<T> AllocateTexture3D<T>(this GraphicsDevice device, Type type, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
             where T : unmanaged
         {
             return type switch
             {
-                _ when type == typeof(ReadOnlyTexture3D<>) => device.AllocateReadOnlyTexture3D<T>(width, height, depth),
-                _ when type == typeof(ReadWriteTexture3D<>) => device.AllocateReadWriteTexture3D<T>(width, height, depth),
+                _ when type == typeof(ReadOnlyTexture3D<>) => device.AllocateReadOnlyTexture3D<T>(width, height, depth, allocationMode),
+                _ when type == typeof(ReadWriteTexture3D<>) => device.AllocateReadWriteTexture3D<T>(width, height, depth, allocationMode),
                 _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
             };
         }
@@ -109,16 +113,17 @@ namespace ComputeSharp.Tests.Extensions
         /// <param name="width">The width of the texture to create.</param>
         /// <param name="height">The height of the texture to create.</param>
         /// <param name="depth">The depth of the texture to create.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
         /// <returns>A <see cref="Texture3D{T}"/> instance of the requested size.</returns>
         [Pure]
-        public static Texture3D<T> AllocateTexture3D<T, TPixel>(this GraphicsDevice device, Type type, int width, int height, int depth)
+        public static Texture3D<T> AllocateTexture3D<T, TPixel>(this GraphicsDevice device, Type type, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
             return type switch
             {
-                _ when type == typeof(ReadOnlyTexture3D<,>) => device.AllocateReadOnlyTexture3D<T, TPixel>(width, height, depth),
-                _ when type == typeof(ReadWriteTexture3D<,>) => device.AllocateReadWriteTexture3D<T, TPixel>(width, height, depth),
+                _ when type == typeof(ReadOnlyTexture3D<,>) => device.AllocateReadOnlyTexture3D<T, TPixel>(width, height, depth, allocationMode),
+                _ when type == typeof(ReadWriteTexture3D<,>) => device.AllocateReadWriteTexture3D<T, TPixel>(width, height, depth, allocationMode),
                 _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
             };
         }
@@ -130,15 +135,16 @@ namespace ComputeSharp.Tests.Extensions
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance to allocate the buffer for.</param>
         /// <param name="type">The type of buffer to allocate.</param>
         /// <param name="length">The length of the buffer to create.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
         /// <returns>A <see cref="TransferBuffer{T}"/> instance of the requested size.</returns>
         [Pure]
-        public static TransferBuffer<T> AllocateTransferBuffer<T>(this GraphicsDevice device, Type type, int length)
+        public static TransferBuffer<T> AllocateTransferBuffer<T>(this GraphicsDevice device, Type type, int length, AllocationMode allocationMode = AllocationMode.Default)
             where T : unmanaged
         {
             return type switch
             {
-                _ when type == typeof(UploadBuffer<>) => device.AllocateUploadBuffer<T>(length),
-                _ when type == typeof(ReadBackBuffer<>) => device.AllocateReadBackBuffer<T>(length),
+                _ when type == typeof(UploadBuffer<>) => device.AllocateUploadBuffer<T>(length, allocationMode),
+                _ when type == typeof(ReadBackBuffer<>) => device.AllocateReadBackBuffer<T>(length, allocationMode),
                 _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
             };
         }
@@ -151,15 +157,16 @@ namespace ComputeSharp.Tests.Extensions
         /// <param name="type">The type of buffer to allocate.</param>
         /// <param name="width">The width of the texture to create.</param>
         /// <param name="height">The height of the texture to create.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
         /// <returns>A <see cref="TransferTexture2D{T}"/> instance of the requested size.</returns>
         [Pure]
-        public static TransferTexture2D<T> AllocateTransferTexture2D<T>(this GraphicsDevice device, Type type, int width, int height)
+        public static TransferTexture2D<T> AllocateTransferTexture2D<T>(this GraphicsDevice device, Type type, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
             where T : unmanaged
         {
             return type switch
             {
-                _ when type == typeof(UploadTexture2D<>) => device.AllocateUploadTexture2D<T>(width, height),
-                _ when type == typeof(ReadBackTexture2D<>) => device.AllocateReadBackTexture2D<T>(width, height),
+                _ when type == typeof(UploadTexture2D<>) => device.AllocateUploadTexture2D<T>(width, height, allocationMode),
+                _ when type == typeof(ReadBackTexture2D<>) => device.AllocateReadBackTexture2D<T>(width, height, allocationMode),
                 _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
             };
         }
@@ -173,15 +180,16 @@ namespace ComputeSharp.Tests.Extensions
         /// <param name="width">The width of the texture to create.</param>
         /// <param name="height">The height of the texture to create.</param>
         /// <param name="depth">The depth of the texture to create.</param>
+        /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
         /// <returns>A <see cref="TransferTexture3D{T}"/> instance of the requested size.</returns>
         [Pure]
-        public static TransferTexture3D<T> AllocateTransferTexture3D<T>(this GraphicsDevice device, Type type, int width, int height, int depth)
+        public static TransferTexture3D<T> AllocateTransferTexture3D<T>(this GraphicsDevice device, Type type, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
             where T : unmanaged
         {
             return type switch
             {
-                _ when type == typeof(UploadTexture3D<>) => device.AllocateUploadTexture3D<T>(width, height, depth),
-                _ when type == typeof(ReadBackTexture3D<>) => device.AllocateReadBackTexture3D<T>(width, height, depth),
+                _ when type == typeof(UploadTexture3D<>) => device.AllocateUploadTexture3D<T>(width, height, depth, allocationMode),
+                _ when type == typeof(ReadBackTexture3D<>) => device.AllocateReadBackTexture3D<T>(width, height, depth, allocationMode),
                 _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
             };
         }
