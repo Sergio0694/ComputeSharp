@@ -11471,33 +11471,6 @@ namespace ComputeSharp
         [HlslIntrinsicName("mul")]
         public static Int4x4 Mul(Int4x4 x, Int4x4 y) => default;
         /// <summary>
-        /// Generates a random value using the Perlin-noise algorithm.
-        /// </summary>
-        /// <param name="x">A floating-point vector from which to generate Perlin noise.</param>
-        /// <returns>The Perlin noise value within a range between -1 and 1.</returns>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        [Pure]
-        [HlslIntrinsicName("noise")]
-        public static float Noise(Float2 x) => default;
-        /// <summary>
-        /// Generates a random value using the Perlin-noise algorithm.
-        /// </summary>
-        /// <param name="x">A floating-point vector from which to generate Perlin noise.</param>
-        /// <returns>The Perlin noise value within a range between -1 and 1.</returns>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        [Pure]
-        [HlslIntrinsicName("noise")]
-        public static float Noise(Float3 x) => default;
-        /// <summary>
-        /// Generates a random value using the Perlin-noise algorithm.
-        /// </summary>
-        /// <param name="x">A floating-point vector from which to generate Perlin noise.</param>
-        /// <returns>The Perlin noise value within a range between -1 and 1.</returns>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        [Pure]
-        [HlslIntrinsicName("noise")]
-        public static float Noise(Float4 x) => default;
-        /// <summary>
         /// Normalizes the specified floating-point vector according to x / length(x).
         /// </summary>
         /// <param name="x">The specified floating-point vector.</param>

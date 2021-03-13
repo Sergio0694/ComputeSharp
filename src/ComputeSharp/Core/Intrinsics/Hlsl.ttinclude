@@ -1889,24 +1889,6 @@ var Intrinsics = new[]
     },
     new
     {
-        Name = "Noise",
-        HlslName = "noise",
-        Summary = "Generates a random value using the Perlin-noise algorithm.",
-        Parameters = new[]
-        {
-            new { IsOut = false, Name = "x", Info = "A floating-point vector from which to generate Perlin noise." }
-        },
-        Returns = "The Perlin noise value within a range between -1 and 1.",
-        Overloads = new[]
-        {
-            new { Return = "float", Params = new[] { "Float2" } },
-            new { Return = "float", Params = new[] { "Float3" } },
-            new { Return = "float", Params = new[] { "Float4" } }
-        },
-        IsPure = true
-    },
-    new
-    {
         Name = "Normalize",
         HlslName = "normalize",
         Summary = "Normalizes the specified floating-point vector according to x / length(x).",
