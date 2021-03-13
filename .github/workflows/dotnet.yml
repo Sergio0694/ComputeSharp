@@ -15,9 +15,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-    - name: Create local NuGet feed
-      run: mkdir src\ComputeSharp.Package\bin\Release
-      shell: cmd
     - name: Build
       run: dotnet build src\ComputeSharp\ComputeSharp.csproj -c Release
       shell: cmd
@@ -34,9 +31,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-    - name: Create local NuGet feed
-      run: mkdir src\ComputeSharp.Package\bin\Release
-      shell: cmd
     - name: Run ComputeSharp.Tests
       run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
@@ -59,14 +53,11 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-    - name: Create local NuGet feed
-      run: mkdir src\ComputeSharp.Package\bin\Release
+    - name: Build ComputeSharp.Sample
+      run: dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release
       shell: cmd
-    - name: Build ComputeSharp.Sample.Local
-      run: dotnet build samples\ComputeSharp.Sample.Local\ComputeSharp.Sample.Local.csproj -c Release
-      shell: cmd
-    - name: Run ComputeSharp.Sample.Local
-      run: dotnet samples\ComputeSharp.Sample.Local\bin\Release\net5.0\ComputeSharp.Sample.Local.dll
+    - name: Run ComputeSharp.Sample
+      run: dotnet samples\ComputeSharp.Sample\bin\Release\net5.0\ComputeSharp.Sample.dll
       shell: cmd
     - name: Build ComputeSharp.Sample.FSharp
       run: dotnet build samples\ComputeSharp.Sample.FSharp\ComputeSharp.Sample.FSharp.fsproj -c Release
@@ -98,9 +89,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-    - name: Create local NuGet feed
-      run: mkdir src\ComputeSharp.Package\bin\Release
-      shell: cmd
     - name: Build
       run: dotnet build src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj -c Release
       shell: cmd
@@ -153,9 +141,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-    - name: Create local NuGet feed
-      run: mkdir src\ComputeSharp.Package\bin\Release
-      shell: cmd
     - name: Run ComputeSharp.Tests.NativeLibrariesResolver
       run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
