@@ -115,5 +115,12 @@ namespace ComputeSharp
 
             return sb.ToString();
         }
+
+        /// <summary>
+        /// Negates a <see cref="Bool2"/> value.
+        /// </summary>
+        /// <param name="xy">The <see cref="Bool2"/> value to negate.</param>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public static Bool2 operator !(Bool2 xy) => default;
     }
 }
