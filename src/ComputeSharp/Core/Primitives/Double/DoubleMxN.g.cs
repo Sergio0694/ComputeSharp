@@ -1,7 +1,6 @@
-﻿using System.Runtime.InteropServices;
-#if NET5_0
-using System.Runtime.CompilerServices;
-#else
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+#if !NET5_0
 using RuntimeHelpers = ComputeSharp.SourceGenerators.Helpers.RuntimeHelpers;
 using MemoryMarshal = ComputeSharp.SourceGenerators.Helpers.MemoryMarshal;
 #endif
@@ -34,7 +33,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref double this[int row] => ref *(double*)UndefinedData;
+        public readonly ref double this[int row] => ref *(double*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x1"/> instance.
@@ -42,7 +41,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x1"/> instance.
@@ -51,7 +50,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x1"/> instance.
@@ -61,12 +60,12 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
+        public readonly ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
 
         /// <summary>
         /// Creates a new <see cref="Double1x1"/> value with the same value for all its components.
@@ -152,7 +151,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[int row] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[int row] => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x2"/> instance.
@@ -160,7 +159,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x2"/> instance.
@@ -169,7 +168,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x2"/> instance.
@@ -179,17 +178,17 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
+        public readonly ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
+        public readonly ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
 
         /// <summary>
         /// Creates a new <see cref="Double1x2"/> value with the same value for all its components.
@@ -287,7 +286,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[int row] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[int row] => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x3"/> instance.
@@ -295,7 +294,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x3"/> instance.
@@ -304,7 +303,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x3"/> instance.
@@ -314,22 +313,22 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
+        public readonly ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
+        public readonly ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
         /// </summary>
-        public ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m13, 1));
+        public readonly ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
 
         /// <summary>
         /// Creates a new <see cref="Double1x3"/> value with the same value for all its components.
@@ -433,7 +432,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[int row] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[int row] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x4"/> instance.
@@ -441,7 +440,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x4"/> instance.
@@ -450,7 +449,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double1x4"/> instance.
@@ -460,27 +459,27 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
+        public readonly ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
+        public readonly ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
         /// </summary>
-        public ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m13, 1));
+        public readonly ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 4].
         /// </summary>
-        public ref double M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m14, 1));
+        public readonly ref double M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m14), 1));
 
         /// <summary>
         /// Creates a new <see cref="Double1x4"/> value with the same value for all its components.
@@ -575,7 +574,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref double this[int row] => ref *(double*)UndefinedData;
+        public readonly ref double this[int row] => ref *(double*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x1"/> instance.
@@ -583,7 +582,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x1"/> instance.
@@ -592,7 +591,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x1"/> instance.
@@ -602,17 +601,17 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
+        public readonly ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
+        public readonly ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
 
         /// <summary>
         /// Creates a new <see cref="Double2x1"/> value with the same value for all its components.
@@ -728,7 +727,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[int row] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[int row] => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x2"/> instance.
@@ -736,7 +735,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x2"/> instance.
@@ -745,7 +744,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x2"/> instance.
@@ -755,27 +754,27 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
+        public readonly ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
+        public readonly ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
+        public readonly ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
         /// </summary>
-        public ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m22, 1));
+        public readonly ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
 
         /// <summary>
         /// Creates a new <see cref="Double2x2"/> value with the same value for all its components.
@@ -899,7 +898,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[int row] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[int row] => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x3"/> instance.
@@ -907,7 +906,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x3"/> instance.
@@ -916,7 +915,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x3"/> instance.
@@ -926,37 +925,37 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
+        public readonly ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
+        public readonly ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
         /// </summary>
-        public ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m13, 1));
+        public readonly ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
+        public readonly ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
         /// </summary>
-        public ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m22, 1));
+        public readonly ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 3].
         /// </summary>
-        public ref double M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m23, 1));
+        public readonly ref double M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m23), 1));
 
         /// <summary>
         /// Creates a new <see cref="Double2x3"/> value with the same value for all its components.
@@ -1094,7 +1093,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[int row] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[int row] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x4"/> instance.
@@ -1102,7 +1101,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x4"/> instance.
@@ -1111,7 +1110,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double2x4"/> instance.
@@ -1121,47 +1120,47 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
+        public readonly ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
+        public readonly ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
         /// </summary>
-        public ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m13, 1));
+        public readonly ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 4].
         /// </summary>
-        public ref double M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m14, 1));
+        public readonly ref double M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m14), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
+        public readonly ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
         /// </summary>
-        public ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m22, 1));
+        public readonly ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 3].
         /// </summary>
-        public ref double M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m23, 1));
+        public readonly ref double M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m23), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 4].
         /// </summary>
-        public ref double M24 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m24, 1));
+        public readonly ref double M24 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m24), 1));
 
         /// <summary>
         /// Creates a new <see cref="Double2x4"/> value with the same value for all its components.
@@ -1259,7 +1258,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref double this[int row] => ref *(double*)UndefinedData;
+        public readonly ref double this[int row] => ref *(double*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x1"/> instance.
@@ -1267,7 +1266,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x1"/> instance.
@@ -1276,7 +1275,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x1"/> instance.
@@ -1286,22 +1285,22 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
+        public readonly ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
+        public readonly ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
         /// </summary>
-        public ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m31, 1));
+        public readonly ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
 
         /// <summary>
         /// Creates a new <see cref="Double3x1"/> value with the same value for all its components.
@@ -1431,7 +1430,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[int row] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[int row] => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x2"/> instance.
@@ -1439,7 +1438,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x2"/> instance.
@@ -1448,7 +1447,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x2"/> instance.
@@ -1458,37 +1457,37 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
+        public readonly ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
+        public readonly ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
+        public readonly ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
         /// </summary>
-        public ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m22, 1));
+        public readonly ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
         /// </summary>
-        public ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m31, 1));
+        public readonly ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 2].
         /// </summary>
-        public ref double M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m32, 1));
+        public readonly ref double M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m32), 1));
 
         /// <summary>
         /// Creates a new <see cref="Double3x2"/> value with the same value for all its components.
@@ -1633,7 +1632,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[int row] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[int row] => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x3"/> instance.
@@ -1641,7 +1640,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x3"/> instance.
@@ -1650,7 +1649,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x3"/> instance.
@@ -1660,52 +1659,52 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
+        public readonly ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
+        public readonly ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
         /// </summary>
-        public ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m13, 1));
+        public readonly ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
+        public readonly ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
         /// </summary>
-        public ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m22, 1));
+        public readonly ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 3].
         /// </summary>
-        public ref double M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m23, 1));
+        public readonly ref double M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m23), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
         /// </summary>
-        public ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m31, 1));
+        public readonly ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 2].
         /// </summary>
-        public ref double M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m32, 1));
+        public readonly ref double M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m32), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 3].
         /// </summary>
-        public ref double M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m33, 1));
+        public readonly ref double M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m33), 1));
 
         /// <summary>
         /// Creates a new <see cref="Double3x3"/> value with the same value for all its components.
@@ -1871,7 +1870,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[int row] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[int row] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x4"/> instance.
@@ -1879,7 +1878,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x4"/> instance.
@@ -1888,7 +1887,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double3x4"/> instance.
@@ -1898,67 +1897,67 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
+        public readonly ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
+        public readonly ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
         /// </summary>
-        public ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m13, 1));
+        public readonly ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 4].
         /// </summary>
-        public ref double M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m14, 1));
+        public readonly ref double M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m14), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
+        public readonly ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
         /// </summary>
-        public ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m22, 1));
+        public readonly ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 3].
         /// </summary>
-        public ref double M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m23, 1));
+        public readonly ref double M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m23), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 4].
         /// </summary>
-        public ref double M24 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m24, 1));
+        public readonly ref double M24 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m24), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
         /// </summary>
-        public ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m31, 1));
+        public readonly ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 2].
         /// </summary>
-        public ref double M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m32, 1));
+        public readonly ref double M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m32), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 3].
         /// </summary>
-        public ref double M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m33, 1));
+        public readonly ref double M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m33), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 4].
         /// </summary>
-        public ref double M34 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m34, 1));
+        public readonly ref double M34 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m34), 1));
 
         /// <summary>
         /// Creates a new <see cref="Double3x4"/> value with the same value for all its components.
@@ -2065,7 +2064,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref double this[int row] => ref *(double*)UndefinedData;
+        public readonly ref double this[int row] => ref *(double*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x1"/> instance.
@@ -2073,7 +2072,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x1"/> instance.
@@ -2082,7 +2081,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x1"/> instance.
@@ -2092,27 +2091,27 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
+        public readonly ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
+        public readonly ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
         /// </summary>
-        public ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m31, 1));
+        public readonly ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 1].
         /// </summary>
-        public ref double M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m41, 1));
+        public readonly ref double M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m41), 1));
 
         /// <summary>
         /// Creates a new <see cref="Double4x1"/> value with the same value for all its components.
@@ -2256,7 +2255,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[int row] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[int row] => ref *(Double2*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x2"/> instance.
@@ -2264,7 +2263,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x2"/> instance.
@@ -2273,7 +2272,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x2"/> instance.
@@ -2283,47 +2282,47 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
+        public readonly ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
+        public readonly ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
+        public readonly ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
         /// </summary>
-        public ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m22, 1));
+        public readonly ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
         /// </summary>
-        public ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m31, 1));
+        public readonly ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 2].
         /// </summary>
-        public ref double M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m32, 1));
+        public readonly ref double M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m32), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 1].
         /// </summary>
-        public ref double M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m41, 1));
+        public readonly ref double M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m41), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 2].
         /// </summary>
-        public ref double M42 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m42, 1));
+        public readonly ref double M42 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m42), 1));
 
         /// <summary>
         /// Creates a new <see cref="Double4x2"/> value with the same value for all its components.
@@ -2489,7 +2488,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[int row] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[int row] => ref *(Double3*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x3"/> instance.
@@ -2497,7 +2496,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x3"/> instance.
@@ -2506,7 +2505,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x3"/> instance.
@@ -2516,67 +2515,67 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
+        public readonly ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
+        public readonly ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
         /// </summary>
-        public ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m13, 1));
+        public readonly ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
+        public readonly ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
         /// </summary>
-        public ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m22, 1));
+        public readonly ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 3].
         /// </summary>
-        public ref double M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m23, 1));
+        public readonly ref double M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m23), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
         /// </summary>
-        public ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m31, 1));
+        public readonly ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 2].
         /// </summary>
-        public ref double M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m32, 1));
+        public readonly ref double M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m32), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 3].
         /// </summary>
-        public ref double M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m33, 1));
+        public readonly ref double M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m33), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 1].
         /// </summary>
-        public ref double M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m41, 1));
+        public readonly ref double M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m41), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 2].
         /// </summary>
-        public ref double M42 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m42, 1));
+        public readonly ref double M42 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m42), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 3].
         /// </summary>
-        public ref double M43 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m43, 1));
+        public readonly ref double M43 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m43), 1));
 
         /// <summary>
         /// Creates a new <see cref="Double4x3"/> value with the same value for all its components.
@@ -2770,7 +2769,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="row">The row to access.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[int row] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[int row] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x4"/> instance.
@@ -2778,7 +2777,7 @@ namespace ComputeSharp
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
+        public readonly ref Double2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(Double2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x4"/> instance.
@@ -2787,7 +2786,7 @@ namespace ComputeSharp
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
+        public readonly ref Double3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(Double3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="Double4x4"/> instance.
@@ -2797,87 +2796,87 @@ namespace ComputeSharp
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
+        public readonly ref Double4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(Double4*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 1].
         /// </summary>
-        public ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m11, 1));
+        public readonly ref double M11 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m11), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 2].
         /// </summary>
-        public ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m12, 1));
+        public readonly ref double M12 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m12), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 3].
         /// </summary>
-        public ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m13, 1));
+        public readonly ref double M13 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m13), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [1, 4].
         /// </summary>
-        public ref double M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m14, 1));
+        public readonly ref double M14 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m14), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 1].
         /// </summary>
-        public ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m21, 1));
+        public readonly ref double M21 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m21), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 2].
         /// </summary>
-        public ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m22, 1));
+        public readonly ref double M22 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m22), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 3].
         /// </summary>
-        public ref double M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m23, 1));
+        public readonly ref double M23 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m23), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [2, 4].
         /// </summary>
-        public ref double M24 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m24, 1));
+        public readonly ref double M24 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m24), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 1].
         /// </summary>
-        public ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m31, 1));
+        public readonly ref double M31 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m31), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 2].
         /// </summary>
-        public ref double M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m32, 1));
+        public readonly ref double M32 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m32), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 3].
         /// </summary>
-        public ref double M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m33, 1));
+        public readonly ref double M33 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m33), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [3, 4].
         /// </summary>
-        public ref double M34 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m34, 1));
+        public readonly ref double M34 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m34), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 1].
         /// </summary>
-        public ref double M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m41, 1));
+        public readonly ref double M41 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m41), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 2].
         /// </summary>
-        public ref double M42 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m42, 1));
+        public readonly ref double M42 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m42), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 3].
         /// </summary>
-        public ref double M43 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m43, 1));
+        public readonly ref double M43 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m43), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="double"/> value representing the component at position [4, 4].
         /// </summary>
-        public ref double M44 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m44, 1));
+        public readonly ref double M44 => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m44), 1));
 
         /// <summary>
         /// Creates a new <see cref="Double4x4"/> value with the same value for all its components.

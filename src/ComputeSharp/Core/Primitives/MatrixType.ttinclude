@@ -10,10 +10,9 @@
 void GenerateAllMatrixProperties(string typeName, int elementSize)
 {
 #>
-using System.Runtime.InteropServices;
-#if NET5_0
 using System.Runtime.CompilerServices;
-#else
+using System.Runtime.InteropServices;
+#if !NET5_0
 using RuntimeHelpers = ComputeSharp.SourceGenerators.Helpers.RuntimeHelpers;
 using MemoryMarshal = ComputeSharp.SourceGenerators.Helpers.MemoryMarshal;
 #endif
@@ -132,7 +131,7 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
         /// </summary>
         /// <param name="row">The row to access.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref <#=rowTypeName#> this[int row] => ref *(<#=rowTypeName#>*)UndefinedData;
+        public readonly ref <#=rowTypeName#> this[int row] => ref *(<#=rowTypeName#>*)UndefinedData;
 
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
@@ -140,7 +139,7 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
         /// <param name="xy0">The identifier of the first item to index.</param>
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref <#=typeName#>2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(<#=typeName#>2*)UndefinedData;
+        public readonly ref <#=typeName#>2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(<#=typeName#>2*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
@@ -149,7 +148,7 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
         /// <param name="xy1">The identifier of the second item to index.</param>
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref <#=typeName#>3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(<#=typeName#>3*)UndefinedData;
+        public readonly ref <#=typeName#>3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(<#=typeName#>3*)UndefinedData;
         
         /// <summary>
         /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
@@ -159,7 +158,7 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
         /// <param name="xy2">The identifier of the third item to index.</param>
         /// <param name="xy3">The identifier of the fourth item to index.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref <#=typeName#>4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(<#=typeName#>4*)UndefinedData;
+        public readonly ref <#=typeName#>4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(<#=typeName#>4*)UndefinedData;
 <#
     for (int i = 1; i <= rows; i++)
     for (int j = 1; j <= columns; j++)
@@ -169,7 +168,7 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
         /// <summary>
         /// Gets a reference to the <see cref="<#=elementTypeName#>"/> value representing the component at position [<#=i#>, <#=j#>].
         /// </summary>
-        public ref <#=elementTypeName#> M<#=i#><#=j#> => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.m<#=i#><#=j#>, 1));
+        public readonly ref <#=elementTypeName#> M<#=i#><#=j#> => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m<#=i#><#=j#>), 1));
 <#
     }
 

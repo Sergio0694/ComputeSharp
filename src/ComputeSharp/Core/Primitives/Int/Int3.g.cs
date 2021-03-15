@@ -1,7 +1,6 @@
-﻿using System.Runtime.InteropServices;
-#if NET5_0
-using System.Runtime.CompilerServices;
-#else
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+#if !NET5_0
 using RuntimeHelpers = ComputeSharp.SourceGenerators.Helpers.RuntimeHelpers;
 using MemoryMarshal = ComputeSharp.SourceGenerators.Helpers.MemoryMarshal;
 #endif
@@ -31,469 +30,469 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="i">The index of the component to access.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref int this[int i] => ref *(int*)UndefinedData;
+        public readonly ref int this[int i] => ref *(int*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="int"/> value representing the <c>X</c> component.
         /// </summary>
-        public ref int X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.x, 1));
+        public readonly ref int X => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.x), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="int"/> value representing the <c>Y</c> component.
         /// </summary>
-        public ref int Y => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.y, 1));
+        public readonly ref int Y => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.y), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="int"/> value representing the <c>Z</c> component.
         /// </summary>
-        public ref int Z => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.z, 1));
+        public readonly ref int Z => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.z), 1));
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int2"/> value with the components <see cref="X"/>, <see cref="X"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int2 XX => ref *(Int2*)UndefinedData;
+        public readonly ref readonly Int2 XX => ref *(Int2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int2"/> value with the components <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int2 XY => ref *(Int2*)UndefinedData;
+        public readonly ref Int2 XY => ref *(Int2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int2"/> value with the components <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int2 XZ => ref *(Int2*)UndefinedData;
+        public readonly ref Int2 XZ => ref *(Int2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int2"/> value with the components <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int2 YX => ref *(Int2*)UndefinedData;
+        public readonly ref Int2 YX => ref *(Int2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int2"/> value with the components <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int2 YY => ref *(Int2*)UndefinedData;
+        public readonly ref readonly Int2 YY => ref *(Int2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int2"/> value with the components <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int2 YZ => ref *(Int2*)UndefinedData;
+        public readonly ref Int2 YZ => ref *(Int2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int2"/> value with the components <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int2 ZX => ref *(Int2*)UndefinedData;
+        public readonly ref Int2 ZX => ref *(Int2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int2"/> value with the components <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int2 ZY => ref *(Int2*)UndefinedData;
+        public readonly ref Int2 ZY => ref *(Int2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int2"/> value with the components <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int2 ZZ => ref *(Int2*)UndefinedData;
+        public readonly ref readonly Int2 ZZ => ref *(Int2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 XXX => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 XXX => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 XXY => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 XXY => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 XXZ => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 XXZ => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 XYX => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 XYX => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 XYY => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 XYY => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int3 XYZ => ref *(Int3*)UndefinedData;
+        public readonly ref Int3 XYZ => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 XZX => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 XZX => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int3 XZY => ref *(Int3*)UndefinedData;
+        public readonly ref Int3 XZY => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 XZZ => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 XZZ => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 YXX => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 YXX => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 YXY => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 YXY => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int3 YXZ => ref *(Int3*)UndefinedData;
+        public readonly ref Int3 YXZ => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 YYX => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 YYX => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 YYY => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 YYY => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 YYZ => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 YYZ => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int3 YZX => ref *(Int3*)UndefinedData;
+        public readonly ref Int3 YZX => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 YZY => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 YZY => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 YZZ => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 YZZ => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 ZXX => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 ZXX => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int3 ZXY => ref *(Int3*)UndefinedData;
+        public readonly ref Int3 ZXY => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 ZXZ => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 ZXZ => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int3 ZYX => ref *(Int3*)UndefinedData;
+        public readonly ref Int3 ZYX => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 ZYY => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 ZYY => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 ZYZ => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 ZYZ => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 ZZX => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 ZZX => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 ZZY => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 ZZY => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 ZZZ => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 ZZZ => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="int"/> value representing the <c>R</c> component.
         /// </summary>
-        public ref int R => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.x, 1));
+        public readonly ref int R => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.x), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="int"/> value representing the <c>G</c> component.
         /// </summary>
-        public ref int G => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.y, 1));
+        public readonly ref int G => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.y), 1));
 
         /// <summary>
         /// Gets a reference to the <see cref="int"/> value representing the <c>B</c> component.
         /// </summary>
-        public ref int B => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref this.z, 1));
+        public readonly ref int B => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.z), 1));
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int2"/> value with the components <see cref="R"/>, <see cref="R"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int2 RR => ref *(Int2*)UndefinedData;
+        public readonly ref readonly Int2 RR => ref *(Int2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int2"/> value with the components <see cref="R"/>, <see cref="G"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int2 RG => ref *(Int2*)UndefinedData;
+        public readonly ref Int2 RG => ref *(Int2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int2"/> value with the components <see cref="R"/>, <see cref="B"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int2 RB => ref *(Int2*)UndefinedData;
+        public readonly ref Int2 RB => ref *(Int2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int2"/> value with the components <see cref="G"/>, <see cref="R"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int2 GR => ref *(Int2*)UndefinedData;
+        public readonly ref Int2 GR => ref *(Int2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int2"/> value with the components <see cref="G"/>, <see cref="G"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int2 GG => ref *(Int2*)UndefinedData;
+        public readonly ref readonly Int2 GG => ref *(Int2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int2"/> value with the components <see cref="G"/>, <see cref="B"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int2 GB => ref *(Int2*)UndefinedData;
+        public readonly ref Int2 GB => ref *(Int2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int2"/> value with the components <see cref="B"/>, <see cref="R"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int2 BR => ref *(Int2*)UndefinedData;
+        public readonly ref Int2 BR => ref *(Int2*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int2"/> value with the components <see cref="B"/>, <see cref="G"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int2 BG => ref *(Int2*)UndefinedData;
+        public readonly ref Int2 BG => ref *(Int2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int2"/> value with the components <see cref="B"/>, <see cref="B"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int2 BB => ref *(Int2*)UndefinedData;
+        public readonly ref readonly Int2 BB => ref *(Int2*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 RRR => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 RRR => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 RRG => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 RRG => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 RRB => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 RRB => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 RGR => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 RGR => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 RGG => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 RGG => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int3 RGB => ref *(Int3*)UndefinedData;
+        public readonly ref Int3 RGB => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 RBR => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 RBR => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int3 RBG => ref *(Int3*)UndefinedData;
+        public readonly ref Int3 RBG => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 RBB => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 RBB => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 GRR => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 GRR => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 GRG => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 GRG => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int3 GRB => ref *(Int3*)UndefinedData;
+        public readonly ref Int3 GRB => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 GGR => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 GGR => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 GGG => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 GGG => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 GGB => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 GGB => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int3 GBR => ref *(Int3*)UndefinedData;
+        public readonly ref Int3 GBR => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 GBG => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 GBG => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 GBB => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 GBB => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 BRR => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 BRR => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int3 BRG => ref *(Int3*)UndefinedData;
+        public readonly ref Int3 BRG => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 BRB => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 BRB => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a reference to the <see cref="Int3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref Int3 BGR => ref *(Int3*)UndefinedData;
+        public readonly ref Int3 BGR => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 BGG => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 BGG => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 BGB => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 BGB => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 BBR => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 BBR => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 BBG => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 BBG => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Gets a readonly reference to the <see cref="Int3"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public ref readonly Int3 BBB => ref *(Int3*)UndefinedData;
+        public readonly ref readonly Int3 BBB => ref *(Int3*)UndefinedData;
 
         /// <summary>
         /// Negates a <see cref="Int3"/> value.
