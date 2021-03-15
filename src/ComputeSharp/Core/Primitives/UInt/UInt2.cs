@@ -1,11 +1,8 @@
-﻿using System.Diagnostics;
-
-namespace ComputeSharp
+﻿namespace ComputeSharp
 {
     /// <summary>
     /// A <see langword="struct"/> that maps the <see langword="uint2"/> HLSL type.
     /// </summary>
-    [DebuggerDisplay("({X}, {Y})")]
     public partial struct UInt2
     {
         /// <summary>

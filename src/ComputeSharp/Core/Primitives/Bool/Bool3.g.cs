@@ -1,9 +1,14 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
 #if !NET5_0
 using RuntimeHelpers = ComputeSharp.SourceGenerators.Helpers.RuntimeHelpers;
 using MemoryMarshal = ComputeSharp.SourceGenerators.Helpers.MemoryMarshal;
 #endif
+
+#nullable enable
 
 namespace ComputeSharp
 {
@@ -493,5 +498,21 @@ namespace ComputeSharp
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         public readonly ref readonly Bool3 BBB => ref *(Bool3*)UndefinedData;
+
+        /// <inheritdoc/>
+        public override readonly string ToString()
+        {
+            StringBuilder sb = new();
+
+            sb.Append('<');
+            sb.Append(this.x);
+            sb.Append(", ");
+            sb.Append(this.y);
+            sb.Append(", ");
+            sb.Append(this.z);
+            sb.Append('>');
+
+            return sb.ToString();
+        }
     }
 }

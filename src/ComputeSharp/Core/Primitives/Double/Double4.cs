@@ -1,11 +1,8 @@
-﻿using System.Diagnostics;
-
-namespace ComputeSharp
+﻿namespace ComputeSharp
 {
     /// <summary>
     /// A <see langword="struct"/> that maps the <see langword="double4"/> HLSL type.
     /// </summary>
-    [DebuggerDisplay("({X}, {Y}, {Z}, {W})")]
     public partial struct Double4
     {
         /// <summary>

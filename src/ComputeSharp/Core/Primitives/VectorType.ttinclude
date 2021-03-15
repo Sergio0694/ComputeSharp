@@ -65,19 +65,25 @@ void GenerateVectorProperties(string typeName, int elementSize)
     string elementTypeName = Regex.Match(typeName, @"^[A-Za-z]+").Value;
     string hlslElementTypeName = elementTypeName.ToLower();
     int i = int.Parse(Regex.Match(typeName, @"\d+$").Value);
+    string formattable = elementTypeName == "Bool" ? "" : " : IFormattable";
 #>
+using System;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
 #if !NET5_0
 using RuntimeHelpers = ComputeSharp.SourceGenerators.Helpers.RuntimeHelpers;
 using MemoryMarshal = ComputeSharp.SourceGenerators.Helpers.MemoryMarshal;
 #endif
 
+#nullable enable
+
 namespace ComputeSharp
 {
     /// <inheritdoc cref="<#=typeName#>"/>
     [StructLayout(LayoutKind.Explicit, Size = <#=(elementSize * i)#>, Pack = <#=elementSize#>)]
-    public unsafe partial struct <#=typeName#>
+    public unsafe partial struct <#=typeName#><#=formattable#>
     {
         /// <summary>
         /// A private buffer to which the undefined properties will point to.
@@ -155,6 +161,85 @@ namespace ComputeSharp
 
     PopIndent();
     PopIndent();
+    WriteLine("");
+
+    if (elementTypeName == "Bool")
+    {
+#>
+        /// <inheritdoc/>
+        public override readonly string ToString()
+        {
+            StringBuilder sb = new();
+
+            sb.Append('<');
+<#
+        PushIndent("    ");
+        PushIndent("    ");
+        PushIndent("    ");
+
+        for (int j = 0; j < i; j++)
+        {
+            WriteLine($"sb.Append(this.{"xyzw"[j]});");
+
+            if (j < i - 1)
+            {
+                WriteLine("sb.Append(\", \");");
+            }        
+        }
+
+        PopIndent();
+        PopIndent();
+        PopIndent();
+#>
+            sb.Append('>');
+
+            return sb.ToString();
+        }
+<#
+    }
+    else
+    {
+#>
+        /// <inheritdoc/>
+        public override readonly string ToString()
+        {
+            return ToString("G", CultureInfo.CurrentCulture);
+        }
+
+        /// <inheritdoc/>
+        public readonly string ToString(string? format, IFormatProvider? formatProvider)
+        {
+            StringBuilder sb = new();
+
+            string separator = NumberFormatInfo.GetInstance(formatProvider).NumberGroupSeparator;
+
+            sb.Append('<');
+<#
+    PushIndent("    ");
+    PushIndent("    ");
+    PushIndent("    ");
+
+    for (int j = 0; j < i; j++)
+    {
+        WriteLine($"sb.Append(this.{"xyzw"[j]}.ToString(format, formatProvider));");
+
+        if (j < i - 1)
+        {
+            WriteLine("sb.Append(separator);");
+            WriteLine("sb.Append(' ');");
+        }        
+    }
+
+    PopIndent();
+    PopIndent();
+    PopIndent();
+#>
+            sb.Append('>');
+
+            return sb.ToString();
+        }
+<#
+    }
 
     // Generate the negation operator
     if (elementTypeName != "Bool" && elementTypeName != "UInt")

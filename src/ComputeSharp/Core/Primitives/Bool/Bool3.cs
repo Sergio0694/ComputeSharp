@@ -1,11 +1,8 @@
-﻿using System.Diagnostics;
-
-namespace ComputeSharp
+﻿namespace ComputeSharp
 {
     /// <summary>
     /// A <see langword="struct"/> that maps the <see langword="bool3"/> HLSL type.
     /// </summary>
-    [DebuggerDisplay("({X}, {Y}, {Z})")]
     public partial struct Bool3
     {
         /// <summary>
