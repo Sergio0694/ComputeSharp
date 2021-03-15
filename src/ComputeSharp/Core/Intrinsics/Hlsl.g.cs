@@ -368,6 +368,186 @@ namespace ComputeSharp
         [HlslIntrinsicName("abs")]
         public static Float4x4 Abs(Float4x4 x) => default;
         /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static double Abs(double x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double2 Abs(Double2 x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double3 Abs(Double3 x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double4 Abs(Double4 x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double1x1 Abs(Double1x1 x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double1x2 Abs(Double1x2 x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double1x3 Abs(Double1x3 x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double1x4 Abs(Double1x4 x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double2x1 Abs(Double2x1 x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double2x2 Abs(Double2x2 x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double2x3 Abs(Double2x3 x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double2x4 Abs(Double2x4 x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double3x1 Abs(Double3x1 x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double3x2 Abs(Double3x2 x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double3x3 Abs(Double3x3 x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double3x4 Abs(Double3x4 x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double4x1 Abs(Double4x1 x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double4x2 Abs(Double4x2 x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double4x3 Abs(Double4x3 x) => default;
+        /// <summary>
+        /// Returns the absolute value of the specified value.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The absolute value of the <paramref name="x"/> parameter.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("abs")]
+        public static Double4x4 Abs(Double4x4 x) => default;
+        /// <summary>
         /// Returns the arccosine of the specified value.
         /// </summary>
         /// <param name="x">The specified value. Each component should be a floating-point within the range [-1, 1].</param>
@@ -7839,6 +8019,206 @@ namespace ComputeSharp
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("max")]
+        public static double Max(double x, double y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double2 Max(Double2 x, Double2 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double3 Max(Double3 x, Double3 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double4 Max(Double4 x, Double4 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double1x1 Max(Double1x1 x, Double1x1 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double1x2 Max(Double1x2 x, Double1x2 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double1x3 Max(Double1x3 x, Double1x3 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double1x4 Max(Double1x4 x, Double1x4 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double2x1 Max(Double2x1 x, Double2x1 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double2x2 Max(Double2x2 x, Double2x2 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double2x3 Max(Double2x3 x, Double2x3 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double2x4 Max(Double2x4 x, Double2x4 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double3x1 Max(Double3x1 x, Double3x1 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double3x2 Max(Double3x2 x, Double3x2 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double3x3 Max(Double3x3 x, Double3x3 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double3x4 Max(Double3x4 x, Double3x4 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double4x1 Max(Double4x1 x, Double4x1 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double4x2 Max(Double4x2 x, Double4x2 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double4x3 Max(Double4x3 x, Double4x3 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
+        public static Double4x4 Max(Double4x4 x, Double4x4 y) => default;
+        /// <summary>
+        /// Selects the greater between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the largest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("max")]
         public static int Max(int x, int y) => default;
         /// <summary>
         /// Selects the greater between two inputs.
@@ -8230,6 +8610,206 @@ namespace ComputeSharp
         [Pure]
         [HlslIntrinsicName("min")]
         public static Float4x4 Min(Float4x4 x, Float4x4 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static double Min(double x, double y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double2 Min(Double2 x, Double2 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double3 Min(Double3 x, Double3 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double4 Min(Double4 x, Double4 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double1x1 Min(Double1x1 x, Double1x1 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double1x2 Min(Double1x2 x, Double1x2 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double1x3 Min(Double1x3 x, Double1x3 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double1x4 Min(Double1x4 x, Double1x4 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double2x1 Min(Double2x1 x, Double2x1 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double2x2 Min(Double2x2 x, Double2x2 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double2x3 Min(Double2x3 x, Double2x3 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double2x4 Min(Double2x4 x, Double2x4 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double3x1 Min(Double3x1 x, Double3x1 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double3x2 Min(Double3x2 x, Double3x2 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double3x3 Min(Double3x3 x, Double3x3 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double3x4 Min(Double3x4 x, Double3x4 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double4x1 Min(Double4x1 x, Double4x1 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double4x2 Min(Double4x2 x, Double4x2 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double4x3 Min(Double4x3 x, Double4x3 y) => default;
+        /// <summary>
+        /// Selects the lesser between two inputs.
+        /// </summary>
+        /// <param name="x">The first input value.</param>
+        /// <param name="y">The second input value.</param>
+        /// <returns>The <paramref name="x"/> or <paramref name="y"/> parameter, whichever is the smallest value.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("min")]
+        public static Double4x4 Min(Double4x4 x, Double4x4 y) => default;
         /// <summary>
         /// Selects the lesser between two inputs.
         /// </summary>
@@ -12813,6 +13393,186 @@ namespace ComputeSharp
         [Pure]
         [HlslIntrinsicName("saturate")]
         public static Float4x4 Saturate(Float4x4 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static double Saturate(double x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double2 Saturate(Double2 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double3 Saturate(Double3 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double4 Saturate(Double4 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double1x1 Saturate(Double1x1 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double1x2 Saturate(Double1x2 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double1x3 Saturate(Double1x3 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double1x4 Saturate(Double1x4 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double2x1 Saturate(Double2x1 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double2x2 Saturate(Double2x2 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double2x3 Saturate(Double2x3 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double2x4 Saturate(Double2x4 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double3x1 Saturate(Double3x1 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double3x2 Saturate(Double3x2 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double3x3 Saturate(Double3x3 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double3x4 Saturate(Double3x4 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double4x1 Saturate(Double4x1 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double4x2 Saturate(Double4x2 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double4x3 Saturate(Double4x3 x) => default;
+        /// <summary>
+        /// Clamps the specified value within the range of 0 to 1.
+        /// </summary>
+        /// <param name="x">The specified value.</param>
+        /// <returns>The <paramref name="x"/> parameter, clamped within the range of 0 to 1.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("saturate")]
+        public static Double4x4 Saturate(Double4x4 x) => default;
         /// <summary>
         /// Returns the sign of the input value.
         /// </summary>
