@@ -105,8 +105,9 @@ namespace ComputeSharp.Shaders.Translation
             fixed (char* shaderProfile = "cs_6_0")
             fixed (char* optimization = "-O3")
             fixed (char* rowMajor = "-Zpr")
+            fixed (char* warningsAsErrors = "-Werror")
             {
-                char** arguments = stackalloc char*[2] { optimization, rowMajor };
+                char** arguments = stackalloc char*[3] { optimization, rowMajor, warningsAsErrors };
 
                 DxcCompiler.Get()->Compile(
                     (IDxcBlob*)dxcBlobEncoding.Get(),
@@ -114,7 +115,7 @@ namespace ComputeSharp.Shaders.Translation
                     (ushort*)entryPoint,
                     (ushort*)shaderProfile,
                     (ushort**)arguments,
-                    2,
+                    3,
                     null,
                     0,
                     DxcIncludeHandler.Get(),
