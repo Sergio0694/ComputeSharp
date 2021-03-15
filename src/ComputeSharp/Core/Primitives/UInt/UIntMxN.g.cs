@@ -81,13 +81,6 @@ namespace ComputeSharp
         }
 
         /// <summary>
-        /// Negates a <see cref="UInt1x1"/> value.
-        /// </summary>
-        /// <param name="matrix">The <see cref="UInt1x1"/> value to negate.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static UInt1x1 operator -(UInt1x1 matrix) => default;
-
-        /// <summary>
         /// Sums two <see cref="UInt1x1"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt1x1"/> value to sum.</param>
@@ -203,13 +196,6 @@ namespace ComputeSharp
 
             return matrix;
         }
-
-        /// <summary>
-        /// Negates a <see cref="UInt1x2"/> value.
-        /// </summary>
-        /// <param name="matrix">The <see cref="UInt1x2"/> value to negate.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static UInt1x2 operator -(UInt1x2 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="UInt1x2"/> values.
@@ -344,13 +330,6 @@ namespace ComputeSharp
 
             return matrix;
         }
-
-        /// <summary>
-        /// Negates a <see cref="UInt1x3"/> value.
-        /// </summary>
-        /// <param name="matrix">The <see cref="UInt1x3"/> value to negate.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static UInt1x3 operator -(UInt1x3 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="UInt1x3"/> values.
@@ -498,13 +477,6 @@ namespace ComputeSharp
         }
 
         /// <summary>
-        /// Negates a <see cref="UInt1x4"/> value.
-        /// </summary>
-        /// <param name="matrix">The <see cref="UInt1x4"/> value to negate.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static UInt1x4 operator -(UInt1x4 matrix) => default;
-
-        /// <summary>
         /// Sums two <see cref="UInt1x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt1x4"/> value to sum.</param>
@@ -626,13 +598,6 @@ namespace ComputeSharp
 
             return matrix;
         }
-
-        /// <summary>
-        /// Negates a <see cref="UInt2x1"/> value.
-        /// </summary>
-        /// <param name="matrix">The <see cref="UInt2x1"/> value to negate.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static UInt2x1 operator -(UInt2x1 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="UInt2x1"/> values.
@@ -791,13 +756,6 @@ namespace ComputeSharp
 
             return matrix;
         }
-
-        /// <summary>
-        /// Negates a <see cref="UInt2x2"/> value.
-        /// </summary>
-        /// <param name="matrix">The <see cref="UInt2x2"/> value to negate.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static UInt2x2 operator -(UInt2x2 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="UInt2x2"/> values.
@@ -974,13 +932,6 @@ namespace ComputeSharp
 
             return matrix;
         }
-
-        /// <summary>
-        /// Negates a <see cref="UInt2x3"/> value.
-        /// </summary>
-        /// <param name="matrix">The <see cref="UInt2x3"/> value to negate.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static UInt2x3 operator -(UInt2x3 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="UInt2x3"/> values.
@@ -1183,13 +1134,6 @@ namespace ComputeSharp
         }
 
         /// <summary>
-        /// Negates a <see cref="UInt2x4"/> value.
-        /// </summary>
-        /// <param name="matrix">The <see cref="UInt2x4"/> value to negate.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static UInt2x4 operator -(UInt2x4 matrix) => default;
-
-        /// <summary>
         /// Sums two <see cref="UInt2x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt2x4"/> value to sum.</param>
@@ -1316,13 +1260,6 @@ namespace ComputeSharp
 
             return matrix;
         }
-
-        /// <summary>
-        /// Negates a <see cref="UInt3x1"/> value.
-        /// </summary>
-        /// <param name="matrix">The <see cref="UInt3x1"/> value to negate.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static UInt3x1 operator -(UInt3x1 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="UInt3x1"/> values.
@@ -1506,13 +1443,6 @@ namespace ComputeSharp
 
             return matrix;
         }
-
-        /// <summary>
-        /// Negates a <see cref="UInt3x2"/> value.
-        /// </summary>
-        /// <param name="matrix">The <see cref="UInt3x2"/> value to negate.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static UInt3x2 operator -(UInt3x2 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="UInt3x2"/> values.
@@ -1726,13 +1656,6 @@ namespace ComputeSharp
 
             return matrix;
         }
-
-        /// <summary>
-        /// Negates a <see cref="UInt3x3"/> value.
-        /// </summary>
-        /// <param name="matrix">The <see cref="UInt3x3"/> value to negate.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static UInt3x3 operator -(UInt3x3 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="UInt3x3"/> values.
@@ -1984,13 +1907,6 @@ namespace ComputeSharp
         }
 
         /// <summary>
-        /// Negates a <see cref="UInt3x4"/> value.
-        /// </summary>
-        /// <param name="matrix">The <see cref="UInt3x4"/> value to negate.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static UInt3x4 operator -(UInt3x4 matrix) => default;
-
-        /// <summary>
         /// Sums two <see cref="UInt3x4"/> values.
         /// </summary>
         /// <param name="left">The first <see cref="UInt3x4"/> value to sum.</param>
@@ -2128,13 +2044,6 @@ namespace ComputeSharp
 
             return matrix;
         }
-
-        /// <summary>
-        /// Negates a <see cref="UInt4x1"/> value.
-        /// </summary>
-        /// <param name="matrix">The <see cref="UInt4x1"/> value to negate.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static UInt4x1 operator -(UInt4x1 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="UInt4x1"/> values.
@@ -2343,13 +2252,6 @@ namespace ComputeSharp
 
             return matrix;
         }
-
-        /// <summary>
-        /// Negates a <see cref="UInt4x2"/> value.
-        /// </summary>
-        /// <param name="matrix">The <see cref="UInt4x2"/> value to negate.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static UInt4x2 operator -(UInt4x2 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="UInt4x2"/> values.
@@ -2600,13 +2502,6 @@ namespace ComputeSharp
 
             return matrix;
         }
-
-        /// <summary>
-        /// Negates a <see cref="UInt4x3"/> value.
-        /// </summary>
-        /// <param name="matrix">The <see cref="UInt4x3"/> value to negate.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static UInt4x3 operator -(UInt4x3 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="UInt4x3"/> values.
@@ -2905,13 +2800,6 @@ namespace ComputeSharp
 
             return matrix;
         }
-
-        /// <summary>
-        /// Negates a <see cref="UInt4x4"/> value.
-        /// </summary>
-        /// <param name="matrix">The <see cref="UInt4x4"/> value to negate.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static UInt4x4 operator -(UInt4x4 matrix) => default;
 
         /// <summary>
         /// Sums two <see cref="UInt4x4"/> values.

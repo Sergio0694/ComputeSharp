@@ -85,39 +85,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="matrix">The <see cref="Bool1x1"/> value to negate.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x1 operator -(Bool1x1 matrix) => default;
-
-        /// <summary>
-        /// Sums two <see cref="Bool1x1"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool1x1"/> value to sum.</param>
-        /// <param name="right">The second <see cref="Bool1x1"/> value to sum.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x1 operator +(Bool1x1 left, Bool1x1 right) => default;
-
-        /// <summary>
-        /// Divides two <see cref="Bool1x1"/> values (elementwise division).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool1x1"/> value to divide.</param>
-        /// <param name="right">The second <see cref="Bool1x1"/> value to divide.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x1 operator /(Bool1x1 left, Bool1x1 right) => default;
-
-        /// <summary>
-        /// Multiplies two <see cref="Bool1x1"/> values (elementwise product).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool1x1"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="Bool1x1"/> value to multiply.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x1 operator *(Bool1x1 left, Bool1x1 right) => default;
-
-        /// <summary>
-        /// Subtracts two <see cref="Bool1x1"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool1x1"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="Bool1x1"/> value to subtract.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x1 operator -(Bool1x1 left, Bool1x1 right) => default;
+        public static Bool1x1 operator !(Bool1x1 matrix) => default;
     }
 
     /// <inheritdoc cref="Bool1x2"/>
@@ -209,39 +177,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="matrix">The <see cref="Bool1x2"/> value to negate.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x2 operator -(Bool1x2 matrix) => default;
-
-        /// <summary>
-        /// Sums two <see cref="Bool1x2"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool1x2"/> value to sum.</param>
-        /// <param name="right">The second <see cref="Bool1x2"/> value to sum.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x2 operator +(Bool1x2 left, Bool1x2 right) => default;
-
-        /// <summary>
-        /// Divides two <see cref="Bool1x2"/> values (elementwise division).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool1x2"/> value to divide.</param>
-        /// <param name="right">The second <see cref="Bool1x2"/> value to divide.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x2 operator /(Bool1x2 left, Bool1x2 right) => default;
-
-        /// <summary>
-        /// Multiplies two <see cref="Bool1x2"/> values (elementwise product).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool1x2"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="Bool1x2"/> value to multiply.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x2 operator *(Bool1x2 left, Bool1x2 right) => default;
-
-        /// <summary>
-        /// Subtracts two <see cref="Bool1x2"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool1x2"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="Bool1x2"/> value to subtract.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x2 operator -(Bool1x2 left, Bool1x2 right) => default;
+        public static Bool1x2 operator !(Bool1x2 matrix) => default;
 
         /// <summary>
         /// Casts a <see cref="Bool2"/> value to a <see cref="Bool1x2"/> one.
@@ -350,39 +286,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="matrix">The <see cref="Bool1x3"/> value to negate.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x3 operator -(Bool1x3 matrix) => default;
-
-        /// <summary>
-        /// Sums two <see cref="Bool1x3"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool1x3"/> value to sum.</param>
-        /// <param name="right">The second <see cref="Bool1x3"/> value to sum.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x3 operator +(Bool1x3 left, Bool1x3 right) => default;
-
-        /// <summary>
-        /// Divides two <see cref="Bool1x3"/> values (elementwise division).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool1x3"/> value to divide.</param>
-        /// <param name="right">The second <see cref="Bool1x3"/> value to divide.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x3 operator /(Bool1x3 left, Bool1x3 right) => default;
-
-        /// <summary>
-        /// Multiplies two <see cref="Bool1x3"/> values (elementwise product).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool1x3"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="Bool1x3"/> value to multiply.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x3 operator *(Bool1x3 left, Bool1x3 right) => default;
-
-        /// <summary>
-        /// Subtracts two <see cref="Bool1x3"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool1x3"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="Bool1x3"/> value to subtract.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x3 operator -(Bool1x3 left, Bool1x3 right) => default;
+        public static Bool1x3 operator !(Bool1x3 matrix) => default;
 
         /// <summary>
         /// Casts a <see cref="Bool3"/> value to a <see cref="Bool1x3"/> one.
@@ -502,39 +406,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="matrix">The <see cref="Bool1x4"/> value to negate.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x4 operator -(Bool1x4 matrix) => default;
-
-        /// <summary>
-        /// Sums two <see cref="Bool1x4"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool1x4"/> value to sum.</param>
-        /// <param name="right">The second <see cref="Bool1x4"/> value to sum.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x4 operator +(Bool1x4 left, Bool1x4 right) => default;
-
-        /// <summary>
-        /// Divides two <see cref="Bool1x4"/> values (elementwise division).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool1x4"/> value to divide.</param>
-        /// <param name="right">The second <see cref="Bool1x4"/> value to divide.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x4 operator /(Bool1x4 left, Bool1x4 right) => default;
-
-        /// <summary>
-        /// Multiplies two <see cref="Bool1x4"/> values (elementwise product).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool1x4"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="Bool1x4"/> value to multiply.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x4 operator *(Bool1x4 left, Bool1x4 right) => default;
-
-        /// <summary>
-        /// Subtracts two <see cref="Bool1x4"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool1x4"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="Bool1x4"/> value to subtract.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool1x4 operator -(Bool1x4 left, Bool1x4 right) => default;
+        public static Bool1x4 operator !(Bool1x4 matrix) => default;
 
         /// <summary>
         /// Casts a <see cref="Bool4"/> value to a <see cref="Bool1x4"/> one.
@@ -632,39 +504,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="matrix">The <see cref="Bool2x1"/> value to negate.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x1 operator -(Bool2x1 matrix) => default;
-
-        /// <summary>
-        /// Sums two <see cref="Bool2x1"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool2x1"/> value to sum.</param>
-        /// <param name="right">The second <see cref="Bool2x1"/> value to sum.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x1 operator +(Bool2x1 left, Bool2x1 right) => default;
-
-        /// <summary>
-        /// Divides two <see cref="Bool2x1"/> values (elementwise division).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool2x1"/> value to divide.</param>
-        /// <param name="right">The second <see cref="Bool2x1"/> value to divide.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x1 operator /(Bool2x1 left, Bool2x1 right) => default;
-
-        /// <summary>
-        /// Multiplies two <see cref="Bool2x1"/> values (elementwise product).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool2x1"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="Bool2x1"/> value to multiply.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x1 operator *(Bool2x1 left, Bool2x1 right) => default;
-
-        /// <summary>
-        /// Subtracts two <see cref="Bool2x1"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool2x1"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="Bool2x1"/> value to subtract.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x1 operator -(Bool2x1 left, Bool2x1 right) => default;
+        public static Bool2x1 operator !(Bool2x1 matrix) => default;
 
         /// <summary>
         /// Casts a <see cref="Bool2x1"/> value to a <see cref="Bool2"/> one.
@@ -797,39 +637,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="matrix">The <see cref="Bool2x2"/> value to negate.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x2 operator -(Bool2x2 matrix) => default;
-
-        /// <summary>
-        /// Sums two <see cref="Bool2x2"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool2x2"/> value to sum.</param>
-        /// <param name="right">The second <see cref="Bool2x2"/> value to sum.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x2 operator +(Bool2x2 left, Bool2x2 right) => default;
-
-        /// <summary>
-        /// Divides two <see cref="Bool2x2"/> values (elementwise division).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool2x2"/> value to divide.</param>
-        /// <param name="right">The second <see cref="Bool2x2"/> value to divide.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x2 operator /(Bool2x2 left, Bool2x2 right) => default;
-
-        /// <summary>
-        /// Multiplies two <see cref="Bool2x2"/> values (elementwise product).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool2x2"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="Bool2x2"/> value to multiply.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x2 operator *(Bool2x2 left, Bool2x2 right) => default;
-
-        /// <summary>
-        /// Subtracts two <see cref="Bool2x2"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool2x2"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="Bool2x2"/> value to subtract.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x2 operator -(Bool2x2 left, Bool2x2 right) => default;
+        public static Bool2x2 operator !(Bool2x2 matrix) => default;
     }
 
     /// <inheritdoc cref="Bool2x3"/>
@@ -980,39 +788,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="matrix">The <see cref="Bool2x3"/> value to negate.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x3 operator -(Bool2x3 matrix) => default;
-
-        /// <summary>
-        /// Sums two <see cref="Bool2x3"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool2x3"/> value to sum.</param>
-        /// <param name="right">The second <see cref="Bool2x3"/> value to sum.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x3 operator +(Bool2x3 left, Bool2x3 right) => default;
-
-        /// <summary>
-        /// Divides two <see cref="Bool2x3"/> values (elementwise division).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool2x3"/> value to divide.</param>
-        /// <param name="right">The second <see cref="Bool2x3"/> value to divide.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x3 operator /(Bool2x3 left, Bool2x3 right) => default;
-
-        /// <summary>
-        /// Multiplies two <see cref="Bool2x3"/> values (elementwise product).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool2x3"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="Bool2x3"/> value to multiply.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x3 operator *(Bool2x3 left, Bool2x3 right) => default;
-
-        /// <summary>
-        /// Subtracts two <see cref="Bool2x3"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool2x3"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="Bool2x3"/> value to subtract.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x3 operator -(Bool2x3 left, Bool2x3 right) => default;
+        public static Bool2x3 operator !(Bool2x3 matrix) => default;
     }
 
     /// <inheritdoc cref="Bool2x4"/>
@@ -1187,39 +963,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="matrix">The <see cref="Bool2x4"/> value to negate.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x4 operator -(Bool2x4 matrix) => default;
-
-        /// <summary>
-        /// Sums two <see cref="Bool2x4"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool2x4"/> value to sum.</param>
-        /// <param name="right">The second <see cref="Bool2x4"/> value to sum.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x4 operator +(Bool2x4 left, Bool2x4 right) => default;
-
-        /// <summary>
-        /// Divides two <see cref="Bool2x4"/> values (elementwise division).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool2x4"/> value to divide.</param>
-        /// <param name="right">The second <see cref="Bool2x4"/> value to divide.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x4 operator /(Bool2x4 left, Bool2x4 right) => default;
-
-        /// <summary>
-        /// Multiplies two <see cref="Bool2x4"/> values (elementwise product).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool2x4"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="Bool2x4"/> value to multiply.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x4 operator *(Bool2x4 left, Bool2x4 right) => default;
-
-        /// <summary>
-        /// Subtracts two <see cref="Bool2x4"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool2x4"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="Bool2x4"/> value to subtract.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool2x4 operator -(Bool2x4 left, Bool2x4 right) => default;
+        public static Bool2x4 operator !(Bool2x4 matrix) => default;
     }
 
     /// <inheritdoc cref="Bool3x1"/>
@@ -1322,39 +1066,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="matrix">The <see cref="Bool3x1"/> value to negate.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x1 operator -(Bool3x1 matrix) => default;
-
-        /// <summary>
-        /// Sums two <see cref="Bool3x1"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool3x1"/> value to sum.</param>
-        /// <param name="right">The second <see cref="Bool3x1"/> value to sum.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x1 operator +(Bool3x1 left, Bool3x1 right) => default;
-
-        /// <summary>
-        /// Divides two <see cref="Bool3x1"/> values (elementwise division).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool3x1"/> value to divide.</param>
-        /// <param name="right">The second <see cref="Bool3x1"/> value to divide.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x1 operator /(Bool3x1 left, Bool3x1 right) => default;
-
-        /// <summary>
-        /// Multiplies two <see cref="Bool3x1"/> values (elementwise product).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool3x1"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="Bool3x1"/> value to multiply.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x1 operator *(Bool3x1 left, Bool3x1 right) => default;
-
-        /// <summary>
-        /// Subtracts two <see cref="Bool3x1"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool3x1"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="Bool3x1"/> value to subtract.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x1 operator -(Bool3x1 left, Bool3x1 right) => default;
+        public static Bool3x1 operator !(Bool3x1 matrix) => default;
 
         /// <summary>
         /// Casts a <see cref="Bool3x1"/> value to a <see cref="Bool3"/> one.
@@ -1512,39 +1224,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="matrix">The <see cref="Bool3x2"/> value to negate.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x2 operator -(Bool3x2 matrix) => default;
-
-        /// <summary>
-        /// Sums two <see cref="Bool3x2"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool3x2"/> value to sum.</param>
-        /// <param name="right">The second <see cref="Bool3x2"/> value to sum.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x2 operator +(Bool3x2 left, Bool3x2 right) => default;
-
-        /// <summary>
-        /// Divides two <see cref="Bool3x2"/> values (elementwise division).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool3x2"/> value to divide.</param>
-        /// <param name="right">The second <see cref="Bool3x2"/> value to divide.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x2 operator /(Bool3x2 left, Bool3x2 right) => default;
-
-        /// <summary>
-        /// Multiplies two <see cref="Bool3x2"/> values (elementwise product).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool3x2"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="Bool3x2"/> value to multiply.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x2 operator *(Bool3x2 left, Bool3x2 right) => default;
-
-        /// <summary>
-        /// Subtracts two <see cref="Bool3x2"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool3x2"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="Bool3x2"/> value to subtract.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x2 operator -(Bool3x2 left, Bool3x2 right) => default;
+        public static Bool3x2 operator !(Bool3x2 matrix) => default;
     }
 
     /// <inheritdoc cref="Bool3x3"/>
@@ -1732,39 +1412,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="matrix">The <see cref="Bool3x3"/> value to negate.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x3 operator -(Bool3x3 matrix) => default;
-
-        /// <summary>
-        /// Sums two <see cref="Bool3x3"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool3x3"/> value to sum.</param>
-        /// <param name="right">The second <see cref="Bool3x3"/> value to sum.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x3 operator +(Bool3x3 left, Bool3x3 right) => default;
-
-        /// <summary>
-        /// Divides two <see cref="Bool3x3"/> values (elementwise division).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool3x3"/> value to divide.</param>
-        /// <param name="right">The second <see cref="Bool3x3"/> value to divide.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x3 operator /(Bool3x3 left, Bool3x3 right) => default;
-
-        /// <summary>
-        /// Multiplies two <see cref="Bool3x3"/> values (elementwise product).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool3x3"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="Bool3x3"/> value to multiply.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x3 operator *(Bool3x3 left, Bool3x3 right) => default;
-
-        /// <summary>
-        /// Subtracts two <see cref="Bool3x3"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool3x3"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="Bool3x3"/> value to subtract.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x3 operator -(Bool3x3 left, Bool3x3 right) => default;
+        public static Bool3x3 operator !(Bool3x3 matrix) => default;
     }
 
     /// <inheritdoc cref="Bool3x4"/>
@@ -1988,39 +1636,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="matrix">The <see cref="Bool3x4"/> value to negate.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x4 operator -(Bool3x4 matrix) => default;
-
-        /// <summary>
-        /// Sums two <see cref="Bool3x4"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool3x4"/> value to sum.</param>
-        /// <param name="right">The second <see cref="Bool3x4"/> value to sum.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x4 operator +(Bool3x4 left, Bool3x4 right) => default;
-
-        /// <summary>
-        /// Divides two <see cref="Bool3x4"/> values (elementwise division).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool3x4"/> value to divide.</param>
-        /// <param name="right">The second <see cref="Bool3x4"/> value to divide.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x4 operator /(Bool3x4 left, Bool3x4 right) => default;
-
-        /// <summary>
-        /// Multiplies two <see cref="Bool3x4"/> values (elementwise product).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool3x4"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="Bool3x4"/> value to multiply.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x4 operator *(Bool3x4 left, Bool3x4 right) => default;
-
-        /// <summary>
-        /// Subtracts two <see cref="Bool3x4"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool3x4"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="Bool3x4"/> value to subtract.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool3x4 operator -(Bool3x4 left, Bool3x4 right) => default;
+        public static Bool3x4 operator !(Bool3x4 matrix) => default;
     }
 
     /// <inheritdoc cref="Bool4x1"/>
@@ -2134,39 +1750,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="matrix">The <see cref="Bool4x1"/> value to negate.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x1 operator -(Bool4x1 matrix) => default;
-
-        /// <summary>
-        /// Sums two <see cref="Bool4x1"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool4x1"/> value to sum.</param>
-        /// <param name="right">The second <see cref="Bool4x1"/> value to sum.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x1 operator +(Bool4x1 left, Bool4x1 right) => default;
-
-        /// <summary>
-        /// Divides two <see cref="Bool4x1"/> values (elementwise division).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool4x1"/> value to divide.</param>
-        /// <param name="right">The second <see cref="Bool4x1"/> value to divide.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x1 operator /(Bool4x1 left, Bool4x1 right) => default;
-
-        /// <summary>
-        /// Multiplies two <see cref="Bool4x1"/> values (elementwise product).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool4x1"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="Bool4x1"/> value to multiply.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x1 operator *(Bool4x1 left, Bool4x1 right) => default;
-
-        /// <summary>
-        /// Subtracts two <see cref="Bool4x1"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool4x1"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="Bool4x1"/> value to subtract.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x1 operator -(Bool4x1 left, Bool4x1 right) => default;
+        public static Bool4x1 operator !(Bool4x1 matrix) => default;
 
         /// <summary>
         /// Casts a <see cref="Bool4x1"/> value to a <see cref="Bool4"/> one.
@@ -2349,39 +1933,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="matrix">The <see cref="Bool4x2"/> value to negate.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x2 operator -(Bool4x2 matrix) => default;
-
-        /// <summary>
-        /// Sums two <see cref="Bool4x2"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool4x2"/> value to sum.</param>
-        /// <param name="right">The second <see cref="Bool4x2"/> value to sum.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x2 operator +(Bool4x2 left, Bool4x2 right) => default;
-
-        /// <summary>
-        /// Divides two <see cref="Bool4x2"/> values (elementwise division).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool4x2"/> value to divide.</param>
-        /// <param name="right">The second <see cref="Bool4x2"/> value to divide.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x2 operator /(Bool4x2 left, Bool4x2 right) => default;
-
-        /// <summary>
-        /// Multiplies two <see cref="Bool4x2"/> values (elementwise product).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool4x2"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="Bool4x2"/> value to multiply.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x2 operator *(Bool4x2 left, Bool4x2 right) => default;
-
-        /// <summary>
-        /// Subtracts two <see cref="Bool4x2"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool4x2"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="Bool4x2"/> value to subtract.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x2 operator -(Bool4x2 left, Bool4x2 right) => default;
+        public static Bool4x2 operator !(Bool4x2 matrix) => default;
     }
 
     /// <inheritdoc cref="Bool4x3"/>
@@ -2606,39 +2158,7 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="matrix">The <see cref="Bool4x3"/> value to negate.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x3 operator -(Bool4x3 matrix) => default;
-
-        /// <summary>
-        /// Sums two <see cref="Bool4x3"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool4x3"/> value to sum.</param>
-        /// <param name="right">The second <see cref="Bool4x3"/> value to sum.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x3 operator +(Bool4x3 left, Bool4x3 right) => default;
-
-        /// <summary>
-        /// Divides two <see cref="Bool4x3"/> values (elementwise division).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool4x3"/> value to divide.</param>
-        /// <param name="right">The second <see cref="Bool4x3"/> value to divide.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x3 operator /(Bool4x3 left, Bool4x3 right) => default;
-
-        /// <summary>
-        /// Multiplies two <see cref="Bool4x3"/> values (elementwise product).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool4x3"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="Bool4x3"/> value to multiply.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x3 operator *(Bool4x3 left, Bool4x3 right) => default;
-
-        /// <summary>
-        /// Subtracts two <see cref="Bool4x3"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool4x3"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="Bool4x3"/> value to subtract.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x3 operator -(Bool4x3 left, Bool4x3 right) => default;
+        public static Bool4x3 operator !(Bool4x3 matrix) => default;
     }
 
     /// <inheritdoc cref="Bool4x4"/>
@@ -2911,38 +2431,6 @@ namespace ComputeSharp
         /// </summary>
         /// <param name="matrix">The <see cref="Bool4x4"/> value to negate.</param>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x4 operator -(Bool4x4 matrix) => default;
-
-        /// <summary>
-        /// Sums two <see cref="Bool4x4"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool4x4"/> value to sum.</param>
-        /// <param name="right">The second <see cref="Bool4x4"/> value to sum.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x4 operator +(Bool4x4 left, Bool4x4 right) => default;
-
-        /// <summary>
-        /// Divides two <see cref="Bool4x4"/> values (elementwise division).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool4x4"/> value to divide.</param>
-        /// <param name="right">The second <see cref="Bool4x4"/> value to divide.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x4 operator /(Bool4x4 left, Bool4x4 right) => default;
-
-        /// <summary>
-        /// Multiplies two <see cref="Bool4x4"/> values (elementwise product).
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool4x4"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="Bool4x4"/> value to multiply.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x4 operator *(Bool4x4 left, Bool4x4 right) => default;
-
-        /// <summary>
-        /// Subtracts two <see cref="Bool4x4"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="Bool4x4"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="Bool4x4"/> value to subtract.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static Bool4x4 operator -(Bool4x4 left, Bool4x4 right) => default;
+        public static Bool4x4 operator !(Bool4x4 matrix) => default;
     }
 }

@@ -1,15 +1,20 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
 #if !NET5_0
 using RuntimeHelpers = ComputeSharp.SourceGenerators.Helpers.RuntimeHelpers;
 using MemoryMarshal = ComputeSharp.SourceGenerators.Helpers.MemoryMarshal;
 #endif
 
+#nullable enable
+
 namespace ComputeSharp
 {
     /// <inheritdoc cref="Float3"/>
     [StructLayout(LayoutKind.Explicit, Size = 12, Pack = 4)]
-    public unsafe partial struct Float3
+    public unsafe partial struct Float3 : IFormattable
     {
         /// <summary>
         /// A private buffer to which the undefined properties will point to.
@@ -493,6 +498,32 @@ namespace ComputeSharp
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         public readonly ref readonly Float3 BBB => ref *(Float3*)UndefinedData;
+
+        /// <inheritdoc/>
+        public override readonly string ToString()
+        {
+            return ToString("G", CultureInfo.CurrentCulture);
+        }
+
+        /// <inheritdoc/>
+        public readonly string ToString(string? format, IFormatProvider? formatProvider)
+        {
+            StringBuilder sb = new();
+
+            string separator = NumberFormatInfo.GetInstance(formatProvider).NumberGroupSeparator;
+
+            sb.Append('<');
+            sb.Append(this.x.ToString(format, formatProvider));
+            sb.Append(separator);
+            sb.Append(' ');
+            sb.Append(this.y.ToString(format, formatProvider));
+            sb.Append(separator);
+            sb.Append(' ');
+            sb.Append(this.z.ToString(format, formatProvider));
+            sb.Append('>');
+
+            return sb.ToString();
+        }
 
         /// <summary>
         /// Negates a <see cref="Float3"/> value.

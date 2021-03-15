@@ -1,12 +1,10 @@
-﻿using System.Diagnostics;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace ComputeSharp
 {
     /// <summary>
     /// A <see langword="struct"/> that maps the <see langword="float4"/> HLSL type.
     /// </summary>
-    [DebuggerDisplay("({X}, {Y}, {Z}, {W})")]
     public partial struct Float4
     {
         /// <summary>

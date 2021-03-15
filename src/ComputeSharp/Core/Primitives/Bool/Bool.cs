@@ -1,12 +1,10 @@
-﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace ComputeSharp
 {
     /// <summary>
     /// A <see langword="struct"/> that can be used in place of the <see cref="bool"/> type in HLSL shaders.
     /// </summary>
-    [DebuggerDisplay("{Value}")]
     [StructLayout(LayoutKind.Explicit, Size = sizeof(int), Pack = 4)]
     public readonly struct Bool
     {
