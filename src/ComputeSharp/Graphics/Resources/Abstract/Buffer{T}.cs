@@ -3,9 +3,11 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Extensions;
+using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
+using static TerraFX.Interop.D3D12_FEATURE;
 using FX = TerraFX.Interop.Windows;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
@@ -64,6 +66,12 @@ namespace ComputeSharp.Resources
             {
                 // The maximum length is set such that the aligned buffer size can't exceed uint.MaxValue
                 Guard.IsBetweenOrEqualTo(length, 1, (uint.MaxValue / elementSizeInBytes) & ~255, nameof(length));
+            }
+
+            if (TypeInfo<T>.IsDoubleOrContainsDoubles &&
+                device.D3D12Device->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS>(D3D12_FEATURE_D3D12_OPTIONS).DoublePrecisionFloatShaderOps == 0)
+            {
+                UnsupportedDoubleOperationsException.Throw<T>();
             }
 
             SizeInBytes = checked((nint)(length * elementSizeInBytes));
