@@ -6,57 +6,42 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".g.cs"#>
 <#
-IEnumerable<string> EnumeratePropertyNames(string source)
+IEnumerable<string> EnumeratePropertyNames(string characters)
 {
-    // Creates a comparison for a string based on indices of each character in a key
-    static int CompareBy(string text, string key)
+    static IEnumerable<string> EnumeratePropertyNames(
+        string characters,
+        StringBuilder builder,
+        int remainingCount)
     {
-        return text.Select(c => key.IndexOf(c)).Aggregate(0, (r, i) => (r << 4) + i);
-    }
-
-    // Returns all combinations from an input string
-    static IEnumerable<string> Combinations(string text)
-    {
-        if (text.Length > 1)
+        foreach (char c in characters)
         {
-            for (int i = text.Length - 1; i >= 0; i--)
+            builder.Append(c);
+
+            if (remainingCount == 1)
             {
-                var characters = text.ToList();
-
-                characters.RemoveAt(i);
-
-                string substring = string.Join("", characters);
-
-                foreach (var combination in Combinations(substring))
+                yield return builder.ToString();
+            }
+            else
+            {
+                foreach (string name in EnumeratePropertyNames(characters, builder, remainingCount - 1))
                 {
-                    yield return combination;
+                    yield return name;
                 }
             }
-        }
 
-        yield return text;
+            builder.Remove(builder.Length - 1, 1);
+        }
     }
 
-    // Returns all permutations (with repetition) of a given string
-    static IEnumerable<string> Permutations(string text)
+    StringBuilder builder = new StringBuilder(4);
+
+    for (int length = 1; length <= 4; length++)
     {
-        static IEnumerable<string> EnumeratePermutations(string text, int length)
+        foreach (string name in EnumeratePropertyNames(characters, builder, length))
         {
-            if (length == 1) return text.Select(c => c.ToString());
-
-            return EnumeratePermutations(text, length - 1).SelectMany(s => text, (s1, s2) => s1 + s2);
+            yield return name;
         }
-
-        return EnumeratePermutations(text, text.Length);
     }
-
-    return
-        Combinations(source)
-        .Distinct()
-        .SelectMany(Permutations)
-        .OrderBy(s => s.Length)
-        .ThenBy(s => CompareBy(s, source))
-        .Distinct();
 }
 
 // Generates all vector access properties for a specified type
@@ -88,7 +73,7 @@ namespace ComputeSharp
         /// <summary>
         /// A private buffer to which the undefined properties will point to.
         /// </summary>
-        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(<#=typeName#>), sizeof(<#=typeName#>));
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(<#=typeName#>), sizeof(<#=elementTypeName#>4));
 <#
     WriteLine("");
     PushIndent("    ");
@@ -121,7 +106,6 @@ namespace ComputeSharp
         from source in new[] { "XYZW", "RGBA" }
         let range = source.Substring(0, i)
         from name in EnumeratePropertyNames(range)
-        where name.Length <= i
         select name)
     {
         WriteLine("");

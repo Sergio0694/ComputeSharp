@@ -19,7 +19,7 @@ namespace ComputeSharp
         /// <summary>
         /// A private buffer to which the undefined properties will point to.
         /// </summary>
-        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Float2), sizeof(Float2));
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Float2), sizeof(Float4));
 
         [FieldOffset(0)]
         private float x;
@@ -69,6 +69,150 @@ namespace ComputeSharp
         public readonly ref readonly Float2 YY => ref *(Float2*)UndefinedData;
 
         /// <summary>
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float3 XXX => ref *(Float3*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float3 XXY => ref *(Float3*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float3 XYX => ref *(Float3*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float3 XYY => ref *(Float3*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float3 YXX => ref *(Float3*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float3 YXY => ref *(Float3*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float3 YYX => ref *(Float3*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float3 YYY => ref *(Float3*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 XXXX => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 XXXY => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 XXYX => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 XXYY => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 XYXX => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 XYXY => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 XYYX => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 XYYY => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 YXXX => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 YXXY => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 YXYX => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 YXYY => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 YYXX => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 YYXY => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 YYYX => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 YYYY => ref *(Float4*)UndefinedData;
+
+        /// <summary>
         /// Gets a reference to the <see cref="float"/> value representing the <c>R</c> component.
         /// </summary>
         public readonly ref float R => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.x), 1));
@@ -101,6 +245,150 @@ namespace ComputeSharp
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         public readonly ref readonly Float2 GG => ref *(Float2*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float3 RRR => ref *(Float3*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float3 RRG => ref *(Float3*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float3 RGR => ref *(Float3*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float3 RGG => ref *(Float3*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float3 GRR => ref *(Float3*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float3 GRG => ref *(Float3*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float3 GGR => ref *(Float3*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float3"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float3 GGG => ref *(Float3*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 RRRR => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 RRRG => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 RRGR => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 RRGG => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 RGRR => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 RGRG => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 RGGR => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 RGGG => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 GRRR => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 GRRG => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 GRGR => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 GRGG => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 GGRR => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 GGRG => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 GGGR => ref *(Float4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Float4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Float4 GGGG => ref *(Float4*)UndefinedData;
 
         /// <inheritdoc/>
         public override readonly string ToString()
