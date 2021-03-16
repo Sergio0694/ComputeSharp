@@ -51,9 +51,13 @@ void GenerateVectorProperties(string typeName, int elementSize)
     string hlslElementTypeName = elementTypeName.ToLower();
     int i = int.Parse(Regex.Match(typeName, @"\d+$").Value);
     string formattable = elementTypeName == "Bool" ? "" : " : IFormattable";
+
+    if (elementTypeName != "Bool")
+    {
+        WriteLine("using System;");
+        WriteLine("using System.Globalization;");
+    }
 #>
-using System;
-using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
