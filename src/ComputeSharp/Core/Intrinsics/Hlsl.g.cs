@@ -14100,6 +14100,466 @@ namespace ComputeSharp
         public static Double4x4 Rcp(Double4x4 x) => default;
 
         /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static float Reflect(float i, float n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float2 Reflect(Float2 i, Float2 n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float3 Reflect(Float3 i, Float3 n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float4 Reflect(Float4 i, Float4 n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float1x1 Reflect(Float1x1 i, Float1x1 n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float1x2 Reflect(Float1x2 i, Float1x2 n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float1x3 Reflect(Float1x3 i, Float1x3 n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float1x4 Reflect(Float1x4 i, Float1x4 n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float2x1 Reflect(Float2x1 i, Float2x1 n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float2x2 Reflect(Float2x2 i, Float2x2 n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float2x3 Reflect(Float2x3 i, Float2x3 n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float2x4 Reflect(Float2x4 i, Float2x4 n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float3x1 Reflect(Float3x1 i, Float3x1 n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float3x2 Reflect(Float3x2 i, Float3x2 n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float3x3 Reflect(Float3x3 i, Float3x3 n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float3x4 Reflect(Float3x4 i, Float3x4 n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float4x1 Reflect(Float4x1 i, Float4x1 n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float4x2 Reflect(Float4x2 i, Float4x2 n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float4x3 Reflect(Float4x3 i, Float4x3 n) => default;
+
+        /// <summary>
+        /// Returns a reflection vector using an incident ray and a surface normal.
+        /// </summary>
+        /// <param name="i">A floating-point, incident vector.</param>
+        /// <param name="n">A floating-point, normal vector.</param>
+        /// <returns>A floating-point, reflection vector.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("reflect")]
+        public static Float4x4 Reflect(Float4x4 i, Float4x4 n) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static float Refract(float i, float n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float2 Refract(Float2 i, Float2 n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float3 Refract(Float3 i, Float3 n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float4 Refract(Float4 i, Float4 n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float1x1 Refract(Float1x1 i, Float1x1 n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float1x2 Refract(Float1x2 i, Float1x2 n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float1x3 Refract(Float1x3 i, Float1x3 n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float1x4 Refract(Float1x4 i, Float1x4 n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float2x1 Refract(Float2x1 i, Float2x1 n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float2x2 Refract(Float2x2 i, Float2x2 n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float2x3 Refract(Float2x3 i, Float2x3 n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float2x4 Refract(Float2x4 i, Float2x4 n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float3x1 Refract(Float3x1 i, Float3x1 n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float3x2 Refract(Float3x2 i, Float3x2 n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float3x3 Refract(Float3x3 i, Float3x3 n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float3x4 Refract(Float3x4 i, Float3x4 n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float4x1 Refract(Float4x1 i, Float4x1 n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float4x2 Refract(Float4x2 i, Float4x2 n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float4x3 Refract(Float4x3 i, Float4x3 n, float f) => default;
+
+        /// <summary>
+        /// Returns a refraction vector using an entering ray, a surface normal, and a refraction index.
+        /// </summary>
+        /// <param name="i">A floating-point, ray direction vector.</param>
+        /// <param name="n">A floating-point, surface normal vector.</param>
+        /// <param name="f">A floating-point, refraction index scalar.</param>
+        /// <returns>A floating-point, refraction vector. If the angle between the entering ray <paramref name="i"/> and the surface normal <paramref name="n"/> is too great for a given refraction index <paramref name="f"/>, the return value is 0.</returns>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        [Pure]
+        [HlslIntrinsicName("refract")]
+        public static Float4x4 Refract(Float4x4 i, Float4x4 n, float f) => default;
+
+        /// <summary>
         /// Reverses the order of the bits, per component.
         /// </summary>
         /// <param name="x">The input value.</param>
