@@ -56,7 +56,7 @@ foreach (var intrinsic in Intrinsics)
         }
         else
         {
-            Write(" => default;");
+            WriteLine(" => default;");
         }        
     }
 }
