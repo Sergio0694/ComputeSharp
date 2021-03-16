@@ -58,6 +58,13 @@ namespace ComputeSharp.Tests
             RunAndCompareShader(device, static texture => new ProteanClouds(texture, 0), 0.0000004f);
         }
 
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void ExtrudedTruchetPattern(Device device)
+        {
+            RunAndCompareShader(device, static texture => new ExtrudedTruchetPattern(texture, 0), 0.00011f);
+        }
+
         /// <summary>
         /// Executes a given test for a specified shader.
         /// </summary>

@@ -28,6 +28,7 @@
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor.cs" />
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor{TPixel}.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor{TPixel}.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ColorfulInfinity.cs" Link="Shaders\ColorfulInfinity.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ExtrudedTruchetPattern.cs" Link="Shaders\ExtrudedTruchetPattern.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\FractalTiling.cs" Link="Shaders\FractalTiling.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\MengerJourney.cs" Link="Shaders\MengerJourney.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\TwoTiledTruchet.cs" Link="Shaders\TwoTiledTruchet.cs" />
@@ -41,6 +42,9 @@
 
   <ItemGroup>
     <None Update="Assets\ColorfulInfinity.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\ExtrudedTruchetPattern.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\FractalTiling.png">
