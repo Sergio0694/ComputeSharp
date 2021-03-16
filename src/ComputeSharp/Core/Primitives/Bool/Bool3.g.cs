@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 #if !NET5_0
@@ -19,7 +17,7 @@ namespace ComputeSharp
         /// <summary>
         /// A private buffer to which the undefined properties will point to.
         /// </summary>
-        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool3), sizeof(Bool3));
+        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(Bool3), sizeof(Bool4));
 
         [FieldOffset(0)]
         private bool x;
@@ -269,6 +267,492 @@ namespace ComputeSharp
         public readonly ref readonly Bool3 ZZZ => ref *(Bool3*)UndefinedData;
 
         /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XXXX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XXXY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XXXZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XXYX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XXYY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XXYZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XXZX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XXZY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XXZZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XYXX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XYXY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XYXZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XYYX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XYYY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XYYZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XYZX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XYZY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XYZZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XZXX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XZXY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XZXZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XZYX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XZYY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XZYZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XZZX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XZZY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 XZZZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YXXX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YXXY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YXXZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YXYX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YXYY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YXYZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YXZX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YXZY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YXZZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YYXX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YYXY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YYXZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YYYX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YYYY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YYYZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YYZX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YYZY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YYZZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YZXX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YZXY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YZXZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YZYX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YZYY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YZYZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YZZX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YZZY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 YZZZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZXXX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZXXY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZXXZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZXYX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZXYY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZXYZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZXZX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZXZY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZXZZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZYXX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZYXY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZYXZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZYYX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZYYY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZYYZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZYZX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZYZY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZYZZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZZXX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZZXY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZZXZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZZYX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZZYY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZZYZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="X"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZZZX => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Y"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZZZY => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>, <see cref="Z"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 ZZZZ => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
         /// Gets a reference to the <see cref="bool"/> value representing the <c>R</c> component.
         /// </summary>
         public readonly ref bool R => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.x), 1));
@@ -498,6 +982,492 @@ namespace ComputeSharp
         /// </summary>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         public readonly ref readonly Bool3 BBB => ref *(Bool3*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RRRR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RRRG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RRRB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RRGR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RRGG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RRGB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RRBR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RRBG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RRBB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RGRR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RGRG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RGRB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RGGR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RGGG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RGGB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RGBR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RGBG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RGBB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RBRR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RBRG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RBRB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RBGR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RBGG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RBGB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RBBR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RBBG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="R"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 RBBB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GRRR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GRRG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GRRB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GRGR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GRGG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GRGB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GRBR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GRBG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GRBB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GGRR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GGRG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GGRB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GGGR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GGGG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GGGB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GGBR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GGBG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GGBB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GBRR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GBRG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GBRB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GBGR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GBGG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GBGB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GBBR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GBBG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="G"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 GBBB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BRRR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BRRG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="R"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BRRB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BRGR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BRGG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="G"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BRGB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BRBR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BRBG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="R"/>, <see cref="B"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BRBB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BGRR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BGRG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="R"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BGRB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BGGR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BGGG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="G"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BGGB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BGBR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BGBG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="G"/>, <see cref="B"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BGBB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BBRR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BBRG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="R"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BBRB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BBGR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BBGG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="G"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BBGB => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="R"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BBBR => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="G"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BBBG => ref *(Bool4*)UndefinedData;
+
+        /// <summary>
+        /// Gets a readonly reference to the <see cref="Bool4"/> value with the components <see cref="B"/>, <see cref="B"/>, <see cref="B"/>, <see cref="B"/>.
+        /// </summary>
+        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+        public readonly ref readonly Bool4 BBBB => ref *(Bool4*)UndefinedData;
 
         /// <inheritdoc/>
         public override readonly string ToString()
