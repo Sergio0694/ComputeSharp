@@ -111,6 +111,7 @@ namespace ComputeSharp.Resources
                 out _,
                 out _);
 
+            device.RegisterAllocatedResource();
             device.RentShaderResourceViewDescriptorHandles(out D3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 
             switch (resourceType)
@@ -478,6 +479,8 @@ namespace ComputeSharp.Resources
         {
             this.d3D12Resource.Dispose();
             this.allocation.Dispose();
+
+            GraphicsDevice.UnregisterAllocatedResource();
 
             if (GraphicsDevice?.IsDisposed == false)
             {

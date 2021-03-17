@@ -80,6 +80,7 @@ namespace ComputeSharp.Resources
             this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, (ulong)SizeInBytes);
             this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
 
+            device.RegisterAllocatedResource();
             device.RentShaderResourceViewDescriptorHandles(out D3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 
             switch (resourceType)
@@ -171,6 +172,8 @@ namespace ComputeSharp.Resources
         {
             this.d3D12Resource.Dispose();
             this.allocation.Dispose();
+
+            GraphicsDevice.UnregisterAllocatedResource();
 
             if (GraphicsDevice?.IsDisposed == false)
             {
