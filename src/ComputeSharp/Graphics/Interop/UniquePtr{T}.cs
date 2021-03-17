@@ -28,7 +28,7 @@ namespace ComputeSharp.Interop
         /// <param name="other">The raw pointer to wrap.</param>
         public UniquePtr(T* other)
         {
-            pointer = other;
+            this.pointer = other;
         }
 
         /// <summary>
