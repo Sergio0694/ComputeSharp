@@ -178,7 +178,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
             if (node.Initializer is null &&
                 node.Parent is VariableDeclarationSyntax declaration &&
-                SemanticModel.GetTypeInfo(declaration.Type).Type is ITypeSymbol { IsUnmanagedType: false } type)
+                SemanticModel.For(node).GetTypeInfo(declaration.Type).Type is ITypeSymbol { IsUnmanagedType: false } type)
             {
                 Context.ReportDiagnostic(InvalidObjectDeclaration, node, type);
             }

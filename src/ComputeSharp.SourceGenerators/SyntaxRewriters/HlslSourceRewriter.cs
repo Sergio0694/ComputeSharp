@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
+using ComputeSharp.SourceGenerators.Helpers;
 using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -28,7 +29,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <param name="context">The current generator context in use.</param>
         protected HlslSourceRewriter(
-            SemanticModel semanticModel,
+            SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IFieldSymbol, string> constantDefinitions,
             GeneratorExecutionContext context)
@@ -40,9 +41,9 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         }
 
         /// <summary>
-        /// The <see cref="Microsoft.CodeAnalysis.SemanticModel"/> instance with semantic info on the target syntax tree.
+        /// The <see cref="SemanticModelProvider"/> instance with semantic info on the target syntax tree.
         /// </summary>
-        protected readonly SemanticModel SemanticModel;
+        protected readonly SemanticModelProvider SemanticModel;
 
         /// <summary>
         /// The collection of discovered custom types.
@@ -64,7 +65,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (CastExpressionSyntax)base.VisitCastExpression(node)!;
 
-            return updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, SemanticModel, DiscoveredTypes);
+            return updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, SemanticModel.For(node), DiscoveredTypes);
         }
 
         /// <inheritdoc/>
@@ -72,12 +73,12 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (ObjectCreationExpressionSyntax)base.VisitObjectCreationExpression(node)!;
 
-            if (SemanticModel.GetTypeInfo(node).Type is ITypeSymbol { IsUnmanagedType: false } type)
+            if (SemanticModel.For(node).GetTypeInfo(node).Type is ITypeSymbol { IsUnmanagedType: false } type)
             {
                 Context.ReportDiagnostic(InvalidObjectCreationExpression, node, type);
             }
 
-            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node, SemanticModel, DiscoveredTypes);
+            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node, SemanticModel.For(node), DiscoveredTypes);
 
             // New objects use the default HLSL cast syntax, eg. (float4)0
             if (updatedNode.ArgumentList!.Arguments.Count == 0)
@@ -86,12 +87,12 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             }
 
             // Add explicit casts for matrix constructors to help the overload resolution
-            if (SemanticModel.GetTypeInfo(node).Type is ITypeSymbol matrixType &&
+            if (SemanticModel.For(node).GetTypeInfo(node).Type is ITypeSymbol matrixType &&
                 HlslKnownTypes.IsMatrixType(matrixType.GetFullMetadataName()))
             {
                 for (int i = 0; i < node.ArgumentList!.Arguments.Count; i++)
                 {
-                    IArgumentOperation argumentOperation = (IArgumentOperation)SemanticModel.GetOperation(node.ArgumentList.Arguments[i])!;
+                    IArgumentOperation argumentOperation = (IArgumentOperation)SemanticModel.For(node).GetOperation(node.ArgumentList.Arguments[i])!;
                     INamedTypeSymbol elementType = (INamedTypeSymbol)argumentOperation.Parameter!.Type;
 
                     updatedNode = updatedNode.ReplaceNode(
@@ -108,12 +109,12 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (ImplicitObjectCreationExpressionSyntax)base.VisitImplicitObjectCreationExpression(node)!;
 
-            if (SemanticModel.GetTypeInfo(node).Type is ITypeSymbol { IsUnmanagedType: false } type)
+            if (SemanticModel.For(node).GetTypeInfo(node).Type is ITypeSymbol { IsUnmanagedType: false } type)
             {
                 Context.ReportDiagnostic(InvalidObjectCreationExpression, node, type);
             }
 
-            TypeSyntax explicitType = IdentifierName("").ReplaceAndTrackType(node, SemanticModel, DiscoveredTypes);
+            TypeSyntax explicitType = IdentifierName("").ReplaceAndTrackType(node, SemanticModel.For(node), DiscoveredTypes);
 
             // Mutate the syntax like with explicit object creation expressions
             if (updatedNode.ArgumentList!.Arguments.Count == 0)
@@ -122,12 +123,12 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             }
 
             // Add explicit casts like with the explicit object creation expressions above
-            if (SemanticModel.GetTypeInfo(node).Type is ITypeSymbol matrixType &&
+            if (SemanticModel.For(node).GetTypeInfo(node).Type is ITypeSymbol matrixType &&
                 HlslKnownTypes.IsMatrixType(matrixType.GetFullMetadataName()))
             {
                 for (int i = 0; i < node.ArgumentList.Arguments.Count; i++)
                 {
-                    IArgumentOperation argumentOperation = (IArgumentOperation)SemanticModel.GetOperation(node.ArgumentList.Arguments[i])!;
+                    IArgumentOperation argumentOperation = (IArgumentOperation)SemanticModel.For(node).GetOperation(node.ArgumentList.Arguments[i])!;
                     INamedTypeSymbol elementType = (INamedTypeSymbol)argumentOperation.Parameter!.Type;
 
                     updatedNode = updatedNode.ReplaceNode(
@@ -144,7 +145,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (DefaultExpressionSyntax)base.VisitDefaultExpression(node)!;
 
-            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, SemanticModel, DiscoveredTypes);
+            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, SemanticModel.For(node), DiscoveredTypes);
 
             // A default expression becomes (T)0 in HLSL
             return CastExpression(updatedNode.Type, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)));
@@ -157,13 +158,13 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
             if (updatedNode.IsKind(SyntaxKind.DefaultLiteralExpression))
             {
-                TypeSyntax type = node.TrackType(SemanticModel, DiscoveredTypes);
+                TypeSyntax type = node.TrackType(SemanticModel.For(node), DiscoveredTypes);
 
                 // Same HLSL-style expression in the form (T)0
                 return CastExpression(type, LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)));
             }
             else if (updatedNode.IsKind(SyntaxKind.NumericLiteralExpression) &&
-                     SemanticModel.GetOperation(node) is ILiteralOperation operation &&
+                     SemanticModel.For(node).GetOperation(node) is ILiteralOperation operation &&
                      operation.Type is INamedTypeSymbol type)
             {
                 // If the expression is a literal floating point value, we need to ensure the proper suffixes are
@@ -196,7 +197,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (ElementAccessExpressionSyntax)base.VisitElementAccessExpression(node)!;
 
-            if (SemanticModel.GetOperation(node) is IPropertyReferenceOperation operation)
+            if (SemanticModel.For(node).GetOperation(node) is IPropertyReferenceOperation operation)
             {
                 string propertyName = operation.Property.GetFullMetadataName();
 
@@ -218,7 +219,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                     // Validate the arguments
                     foreach (ArgumentSyntax argument in node.ArgumentList.Arguments)
                     {
-                        if (SemanticModel.GetOperation(argument.Expression) is not IFieldReferenceOperation fieldReference ||
+                        if (SemanticModel.For(node).GetOperation(argument.Expression) is not IFieldReferenceOperation fieldReference ||
                             !HlslKnownMembers.IsKnownMatrixIndex(fieldReference.Field.GetFullMetadataName()))
                         {
                             Context.ReportDiagnostic(NonConstantMatrixSwizzledIndex, argument);
@@ -232,7 +233,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                         // Rewrite the indexer as a property access
                         string hlslPropertyName = string.Join("",
                             from argument in node.ArgumentList.Arguments
-                            let fieldReference = (IFieldReferenceOperation)SemanticModel.GetOperation(argument.Expression)!
+                            let fieldReference = (IFieldReferenceOperation)SemanticModel.For(node).GetOperation(argument.Expression)!
                             let fieldName = fieldReference.Field.Name
                             let row = (char)(fieldName[1] - 1)
                             let column = (char)(fieldName[2] - 1)
@@ -254,7 +255,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (IdentifierNameSyntax)base.VisitIdentifierName(node)!;
 
-            if (SemanticModel.GetOperation(node) is IFieldReferenceOperation operation &&
+            if (SemanticModel.For(node).GetOperation(node) is IFieldReferenceOperation operation &&
                 operation.Field.IsConst &&
                 operation.Type!.TypeKind != TypeKind.Enum)
             {

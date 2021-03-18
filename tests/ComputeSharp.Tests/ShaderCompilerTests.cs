@@ -1,5 +1,5 @@
-using System.Threading;
 using ComputeSharp.Interop;
+using ComputeSharp.Tests.Misc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests
@@ -97,6 +97,27 @@ namespace ComputeSharp.Tests
             public void Execute()
             {
                 buffer[ThreadIds.X] *= foo.a.X + foo.b;
+            }
+        }
+
+        [TestMethod]
+        public void ExternalStructType_Ok()
+        {
+            ReflectionServices.GetShaderInfo<ExternalStructTypeShader>(out var info);
+        }
+
+        [AutoConstructor]
+        public readonly partial struct ExternalStructTypeShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<float> buffer;
+
+            /// <inheritdoc/>
+            public void Execute()
+            {
+                float value = buffer[ThreadIds.X];
+                ExternalStructType type = ExternalStructType.New((int)value, Hlsl.Abs(value));
+
+                buffer[ThreadIds.X] = ExternalStructType.Sum(type);
             }
         }
     }

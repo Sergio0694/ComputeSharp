@@ -15,6 +15,7 @@ using Microsoft.CodeAnalysis.Text;
 using static ComputeSharp.SourceGenerators.Helpers.SyntaxFactoryHelper;
 using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using ComputeSharp.SourceGenerators.Helpers;
 
 #pragma warning disable CS0618
 
@@ -39,8 +40,8 @@ namespace ComputeSharp.SourceGenerators
 
             foreach (StructDeclarationSyntax structDeclaration in structDeclarations)
             {
-                SemanticModel semanticModel = context.Compilation.GetSemanticModel(structDeclaration.SyntaxTree);
-                INamedTypeSymbol structDeclarationSymbol = semanticModel.GetDeclaredSymbol(structDeclaration)!;
+                SemanticModelProvider semanticModel = new(context.Compilation);
+                INamedTypeSymbol structDeclarationSymbol = semanticModel.For(structDeclaration).GetDeclaredSymbol(structDeclaration)!;
 
                 try
                 {
@@ -58,9 +59,9 @@ namespace ComputeSharp.SourceGenerators
         /// </summary>
         /// <param name="context">The input <see cref="GeneratorExecutionContext"/> instance to use.</param>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> node to process.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/> with metadata on the types being processed.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> with metadata on the types being processed.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
-        private static void OnExecute(GeneratorExecutionContext context, StructDeclarationSyntax structDeclaration, SemanticModel semanticModel, INamedTypeSymbol structDeclarationSymbol)
+        private static void OnExecute(GeneratorExecutionContext context, StructDeclarationSyntax structDeclaration, SemanticModelProvider semanticModel, INamedTypeSymbol structDeclarationSymbol)
         {
             // Only process compute shader types
             if (!structDeclarationSymbol.Interfaces.Any(static interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) return;
@@ -185,7 +186,7 @@ namespace ComputeSharp.SourceGenerators
         /// Gets a sequence of shader static fields and their mapped names.
         /// </summary>
         /// <param name="context">The current generator context in use.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the type to process.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the type to process.</param>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> instance for the current type.</param>
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
@@ -194,7 +195,7 @@ namespace ComputeSharp.SourceGenerators
         [Pure]
         private static IEnumerable<IEnumerable<string?>> GetStaticFields(
             GeneratorExecutionContext context,
-            SemanticModel semanticModel,
+            SemanticModelProvider semanticModel,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             ICollection<INamedTypeSymbol> discoveredTypes,
@@ -204,7 +205,7 @@ namespace ComputeSharp.SourceGenerators
             {
                 foreach (var variableDeclarator in fieldDeclaration.Declaration.Variables)
                 {
-                    IFieldSymbol fieldSymbol = (IFieldSymbol)semanticModel.GetDeclaredSymbol(variableDeclarator)!;
+                    IFieldSymbol fieldSymbol = (IFieldSymbol)semanticModel.For(variableDeclarator).GetDeclaredSymbol(variableDeclarator)!;
 
                     if (!fieldSymbol.IsStatic || fieldSymbol.IsConst)
                     {
@@ -298,7 +299,7 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="context">The current generator context in use.</param>
         /// <param name="structDeclarationSymbol">The type symbol for the shader type.</param>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> instance for the current type.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the type to process.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the type to process.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
@@ -308,7 +309,7 @@ namespace ComputeSharp.SourceGenerators
             GeneratorExecutionContext context,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
-            SemanticModel semanticModel,
+            SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
             IDictionary<IFieldSymbol, string> constantDefinitions)
@@ -324,7 +325,7 @@ namespace ComputeSharp.SourceGenerators
 
             foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
             {
-                IMethodSymbol methodDeclarationSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration)!;
+                IMethodSymbol methodDeclarationSymbol = semanticModel.For(methodDeclaration).GetDeclaredSymbol(methodDeclaration)!;
                 bool isShaderEntryPoint =
                     methodDeclarationSymbol.Name == nameof(IComputeShader.Execute) &&
                     methodDeclarationSymbol.ReturnsVoid &&

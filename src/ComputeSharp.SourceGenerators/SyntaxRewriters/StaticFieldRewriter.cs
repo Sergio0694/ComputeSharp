@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
+using ComputeSharp.SourceGenerators.Helpers;
 using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -21,12 +22,12 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <summary>
         /// Creates a new <see cref="StaticFieldRewriter"/> instance with the specified parameters.
         /// </summary>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the target syntax tree.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the target syntax tree.</param>
         /// <param name="discoveredTypes">The set of discovered custom types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <param name="context">The current generator context in use.</param>
         public StaticFieldRewriter(
-            SemanticModel semanticModel,
+            SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IFieldSymbol, string> constantDefinitions,
             GeneratorExecutionContext context)
@@ -51,7 +52,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             var updatedNode = (MemberAccessExpressionSyntax)base.VisitMemberAccessExpression(node)!;
 
             if (node.IsKind(SyntaxKind.SimpleMemberAccessExpression) &&
-                SemanticModel.GetOperation(node) is IMemberReferenceOperation operation)
+                SemanticModel.For(node).GetOperation(node) is IMemberReferenceOperation operation)
             {
                 // Track and replace constants
                 if (operation is IFieldReferenceOperation fieldOperation &&
@@ -106,7 +107,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (InvocationExpressionSyntax)base.VisitInvocationExpression(node)!;
 
-            if (SemanticModel.GetOperation(node) is IInvocationOperation operation &&
+            if (SemanticModel.For(node).GetOperation(node) is IInvocationOperation operation &&
                 operation.TargetMethod is IMethodSymbol method &&
                 method.IsStatic)
             {

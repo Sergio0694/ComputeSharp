@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
+using ComputeSharp.SourceGenerators.Helpers;
 using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -58,7 +59,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// Creates a new <see cref="ShaderSourceRewriter"/> instance with the specified parameters.
         /// </summary>
         /// <param name="shaderType">The type symbol for the shader type.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the target syntax tree.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the target syntax tree.</param>
         /// <param name="discoveredTypes">The set of discovered custom types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
@@ -66,7 +67,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <param name="isEntryPoint">Whether or not the current instance is processing a shader entry point.</param>
         public ShaderSourceRewriter(
             INamedTypeSymbol shaderType,
-            SemanticModel semanticModel,
+            SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
             IDictionary<IFieldSymbol, string> constantDefinitions,
@@ -84,13 +85,13 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         /// <summary>
         /// Creates a new <see cref="ShaderSourceRewriter"/> instance with the specified parameters.
         /// </summary>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the target syntax tree.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the target syntax tree.</param>
         /// <param name="discoveredTypes">The set of discovered custom types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <param name="context">The current generator context in use.</param>
         public ShaderSourceRewriter(
-            SemanticModel semanticModel,
+            SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
             IDictionary<IFieldSymbol, string> constantDefinitions,
@@ -129,7 +130,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
             var updatedNode = (MethodDeclarationSyntax?)base.Visit(node)!;
 
-            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.ReturnType, node!.ReturnType, SemanticModel, DiscoveredTypes);
+            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.ReturnType, node!.ReturnType, SemanticModel.For(node), DiscoveredTypes);
 
             if (node!.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword)))
             {
@@ -171,7 +172,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
             return updatedNode
                 .WithAttributeLists(default)
-                .ReplaceAndTrackType(updatedNode.Type!, node.Type!, SemanticModel, DiscoveredTypes)
+                .ReplaceAndTrackType(updatedNode.Type!, node.Type!, SemanticModel.For(node), DiscoveredTypes)
                 .WithModifiers(TokenList(modifier));
         }
 
@@ -180,12 +181,12 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = ((LocalDeclarationStatementSyntax)base.VisitLocalDeclarationStatement(node)!);
 
-            if (SemanticModel.GetOperation(node) is IOperation { Kind: OperationKind.UsingDeclaration })
+            if (SemanticModel.For(node).GetOperation(node) is IOperation { Kind: OperationKind.UsingDeclaration })
             {
                 Context.ReportDiagnostic(UsingStatementOrDeclaration, node);
             }
 
-            return updatedNode.ReplaceAndTrackType(updatedNode.Declaration.Type, node.Declaration.Type, SemanticModel, DiscoveredTypes);
+            return updatedNode.ReplaceAndTrackType(updatedNode.Declaration.Type, node.Declaration.Type, SemanticModel.For(node), DiscoveredTypes);
         }
 
         /// <inheritdoc/>
@@ -193,7 +194,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (DeclarationExpressionSyntax)base.VisitDeclarationExpression(node)!;
 
-            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, SemanticModel, DiscoveredTypes);
+            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, SemanticModel.For(node), DiscoveredTypes);
 
             // Add the variable to the list of implicit declarations
             this.implicitVariables.Add(VariableDeclaration(updatedNode.Type).AddVariables(VariableDeclarator(updatedNode.Designation.ToString())));
@@ -222,7 +223,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 .WithAttributeLists(List<AttributeListSyntax>())
                 .WithIdentifier(Identifier($"__{this.currentMethod!.Identifier.Text}__{node.Identifier.Text}"));
 
-            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.ReturnType, node!.ReturnType, SemanticModel, DiscoveredTypes);
+            updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.ReturnType, node!.ReturnType, SemanticModel.For(node), DiscoveredTypes);
 
             if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword)))
             {
@@ -251,7 +252,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             var updatedNode = (MemberAccessExpressionSyntax)base.VisitMemberAccessExpression(node)!;
             
             if (node.IsKind(SyntaxKind.SimpleMemberAccessExpression) &&
-                SemanticModel.GetOperation(node) is IMemberReferenceOperation operation)
+                SemanticModel.For(node).GetOperation(node) is IMemberReferenceOperation operation)
             {
                 // If the member access is a constant, track it and replace the tree with the processed constant name
                 if (operation is IFieldReferenceOperation fieldOperation &&
@@ -323,7 +324,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
                     if (!this.staticMethods.TryGetValue(key, out MethodDeclarationSyntax? methodSyntax))
                     {
-                        INamedTypeSymbol resourceType = (INamedTypeSymbol)SemanticModel.GetTypeInfo(node.Expression).Type!;
+                        INamedTypeSymbol resourceType = (INamedTypeSymbol)SemanticModel.For(node).GetTypeInfo(node.Expression).Type!;
                         string resourceName = HlslKnownTypes.GetMappedName(resourceType);
 
                         // Create a static method to get a specified dimension for a target resource type.
@@ -371,7 +372,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         {
             var updatedNode = (InvocationExpressionSyntax)base.VisitInvocationExpression(node)!;
 
-            if (SemanticModel.GetOperation(node) is IInvocationOperation operation &&
+            if (SemanticModel.For(node).GetOperation(node) is IInvocationOperation operation &&
                 operation.TargetMethod is IMethodSymbol method &&
                 method.IsStatic)
             {
@@ -426,7 +427,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             updatedNode = updatedNode.WithRefKindKeyword(Token(SyntaxKind.None));
 
             // Track and rewrite the discarded declaration
-            if (SemanticModel.GetOperation(node.Expression) is IDiscardOperation operation)
+            if (SemanticModel.For(node).GetOperation(node.Expression) is IDiscardOperation operation)
             {
                 TypeSyntax typeSyntax = operation.Type!.TrackType(DiscoveredTypes);
                 string identifier = $"__implicit{this.implicitVariables.Count}";

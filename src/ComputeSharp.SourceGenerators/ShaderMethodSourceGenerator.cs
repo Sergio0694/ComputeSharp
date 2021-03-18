@@ -6,6 +6,7 @@ using System.Text;
 using ComputeSharp.__Internals;
 using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
+using ComputeSharp.SourceGenerators.Helpers;
 using ComputeSharp.SourceGenerators.SyntaxRewriters;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -41,8 +42,8 @@ namespace ComputeSharp.SourceGenerators
 
             foreach (MethodDeclarationSyntax methodDeclaration in methods)
             {
-                SemanticModel semanticModel = context.Compilation.GetSemanticModel(methodDeclaration.SyntaxTree);
-                IMethodSymbol methodDeclarationSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration)!;
+                SemanticModelProvider semanticModel = new(context.Compilation);
+                IMethodSymbol methodDeclarationSymbol = semanticModel.For(methodDeclaration).GetDeclaredSymbol(methodDeclaration)!;
 
                 try
                 {
@@ -60,9 +61,9 @@ namespace ComputeSharp.SourceGenerators
         /// </summary>
         /// <param name="context">The input <see cref="GeneratorExecutionContext"/> instance to use.</param>
         /// <param name="methodDeclaration">The <see cref="MethodDeclarationSyntax"/> node to process.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/> with metadata on the types being processed.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> with metadata on the types being processed.</param>
         /// <param name="methodDeclarationSymbol">The <see cref="IMethodSymbol"/> for <paramref name="methodDeclaration"/>.</param>
-        private static void OnExecute(GeneratorExecutionContext context, MethodDeclarationSyntax methodDeclaration, SemanticModel semanticModel, IMethodSymbol methodDeclarationSymbol)
+        private static void OnExecute(GeneratorExecutionContext context, MethodDeclarationSyntax methodDeclaration, SemanticModelProvider semanticModel, IMethodSymbol methodDeclarationSymbol)
         {
             // We need to sets to track all discovered custom types and static methods
             HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
@@ -98,7 +99,7 @@ namespace ComputeSharp.SourceGenerators
         /// </summary>
         /// <param name="context">The current generator context in use.</param>
         /// <param name="methodDeclaration">The <see cref="MethodDeclarationSyntax"/> instance for the current method.</param>
-        /// <param name="semanticModel">The <see cref="SemanticModel"/> instance for the method to process.</param>
+        /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the method to process.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
@@ -107,7 +108,7 @@ namespace ComputeSharp.SourceGenerators
         private static (string InvokeMethod, IEnumerable<string> Methods) GetProcessedMethods(
             GeneratorExecutionContext context,
             MethodDeclarationSyntax methodDeclaration,
-            SemanticModel semanticModel,
+            SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
             IDictionary<IFieldSymbol, string> constantDefinitions)
