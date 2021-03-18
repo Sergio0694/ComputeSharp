@@ -1312,8 +1312,8 @@ var Intrinsics = new[]
         Parameters = new[]
         {
             new { IsOut = false, Name = "x", Info = "The first-floating point value." },
-            new { IsOut = false, Name = "min", Info = "The second-floating point value." },
-            new { IsOut = false, Name = "max", Info = "A value that linearly interpolates between the two inputs." }
+            new { IsOut = false, Name = "y", Info = "The second-floating point value." },
+            new { IsOut = false, Name = "s", Info = "A value that linearly interpolates between the two inputs." }
         },
         Returns = "The result of the linear interpolation.",
         Overloads = new[]

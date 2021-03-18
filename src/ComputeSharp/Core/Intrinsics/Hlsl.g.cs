@@ -7793,241 +7793,241 @@ namespace ComputeSharp
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static float Lerp(float x, float min, float max) => default;
+        public static float Lerp(float x, float y, float s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float2 Lerp(Float2 x, Float2 min, Float2 max) => default;
+        public static Float2 Lerp(Float2 x, Float2 y, Float2 s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float3 Lerp(Float3 x, Float3 min, Float3 max) => default;
+        public static Float3 Lerp(Float3 x, Float3 y, Float3 s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float4 Lerp(Float4 x, Float4 min, Float4 max) => default;
+        public static Float4 Lerp(Float4 x, Float4 y, Float4 s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float1x1 Lerp(Float1x1 x, Float1x1 min, Float1x1 max) => default;
+        public static Float1x1 Lerp(Float1x1 x, Float1x1 y, Float1x1 s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float1x2 Lerp(Float1x2 x, Float1x2 min, Float1x2 max) => default;
+        public static Float1x2 Lerp(Float1x2 x, Float1x2 y, Float1x2 s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float1x3 Lerp(Float1x3 x, Float1x3 min, Float1x3 max) => default;
+        public static Float1x3 Lerp(Float1x3 x, Float1x3 y, Float1x3 s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float1x4 Lerp(Float1x4 x, Float1x4 min, Float1x4 max) => default;
+        public static Float1x4 Lerp(Float1x4 x, Float1x4 y, Float1x4 s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float2x1 Lerp(Float2x1 x, Float2x1 min, Float2x1 max) => default;
+        public static Float2x1 Lerp(Float2x1 x, Float2x1 y, Float2x1 s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float2x2 Lerp(Float2x2 x, Float2x2 min, Float2x2 max) => default;
+        public static Float2x2 Lerp(Float2x2 x, Float2x2 y, Float2x2 s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float2x3 Lerp(Float2x3 x, Float2x3 min, Float2x3 max) => default;
+        public static Float2x3 Lerp(Float2x3 x, Float2x3 y, Float2x3 s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float2x4 Lerp(Float2x4 x, Float2x4 min, Float2x4 max) => default;
+        public static Float2x4 Lerp(Float2x4 x, Float2x4 y, Float2x4 s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float3x1 Lerp(Float3x1 x, Float3x1 min, Float3x1 max) => default;
+        public static Float3x1 Lerp(Float3x1 x, Float3x1 y, Float3x1 s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float3x2 Lerp(Float3x2 x, Float3x2 min, Float3x2 max) => default;
+        public static Float3x2 Lerp(Float3x2 x, Float3x2 y, Float3x2 s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float3x3 Lerp(Float3x3 x, Float3x3 min, Float3x3 max) => default;
+        public static Float3x3 Lerp(Float3x3 x, Float3x3 y, Float3x3 s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float3x4 Lerp(Float3x4 x, Float3x4 min, Float3x4 max) => default;
+        public static Float3x4 Lerp(Float3x4 x, Float3x4 y, Float3x4 s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float4x1 Lerp(Float4x1 x, Float4x1 min, Float4x1 max) => default;
+        public static Float4x1 Lerp(Float4x1 x, Float4x1 y, Float4x1 s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float4x2 Lerp(Float4x2 x, Float4x2 min, Float4x2 max) => default;
+        public static Float4x2 Lerp(Float4x2 x, Float4x2 y, Float4x2 s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float4x3 Lerp(Float4x3 x, Float4x3 min, Float4x3 max) => default;
+        public static Float4x3 Lerp(Float4x3 x, Float4x3 y, Float4x3 s) => default;
 
         /// <summary>
         /// Performs a linear interpolation.
         /// </summary>
         /// <param name="x">The first-floating point value.</param>
-        /// <param name="min">The second-floating point value.</param>
-        /// <param name="max">A value that linearly interpolates between the two inputs.</param>
+        /// <param name="y">The second-floating point value.</param>
+        /// <param name="s">A value that linearly interpolates between the two inputs.</param>
         /// <returns>The result of the linear interpolation.</returns>
         /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
         [Pure]
         [HlslIntrinsicName("lerp")]
-        public static Float4x4 Lerp(Float4x4 x, Float4x4 min, Float4x4 max) => default;
+        public static Float4x4 Lerp(Float4x4 x, Float4x4 y, Float4x4 s) => default;
 
         /// <summary>
         /// Returns the base-e logarithm of the specified value.
