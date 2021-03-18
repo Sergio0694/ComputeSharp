@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
+using ComputeSharp.Exceptions;
 
 namespace ComputeSharp.__Internals
 {
@@ -95,9 +96,15 @@ namespace ComputeSharp.__Internals
         [Pure]
         internal static IComputeShaderSourceAttribute GetForType<T>()
         {
-            Type shaderType = typeof(T);
+            IEnumerable<IComputeShaderSourceAttribute> attributes = typeof(T).Assembly.GetCustomAttributes<IComputeShaderSourceAttribute>();
+            IComputeShaderSourceAttribute? attribute = attributes.SingleOrDefault(static attribute => attribute.ShaderType == typeof(T));
 
-            return shaderType.Assembly.GetCustomAttributes<IComputeShaderSourceAttribute>().Single(attribute => attribute.ShaderType == shaderType);
+            if (attribute is null)
+            {
+                MissingShaderMetadataException.Throw<T>();
+            }
+
+            return attribute!;
         }
     }
 }
