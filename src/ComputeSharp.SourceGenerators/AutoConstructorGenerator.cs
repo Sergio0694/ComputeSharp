@@ -17,7 +17,7 @@ namespace ComputeSharp.SourceGenerators
     /// A source generator creating constructors for types annotated with <see cref="AutoConstructorAttribute"/>.
     /// </summary>
     [Generator]
-    public partial class AutoConstructorGenerator : ISourceGenerator
+    public sealed partial class AutoConstructorGenerator : ISourceGenerator
     {
         /// <inheritdoc/>
         public void Initialize(GeneratorInitializationContext context)
