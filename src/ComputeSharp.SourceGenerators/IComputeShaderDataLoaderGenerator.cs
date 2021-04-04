@@ -75,9 +75,6 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="attributes">The list of <see cref="AttributeListSyntax"/> instances to append to the first copy of the partial class being generated.</param>
         private static void OnExecute(GeneratorExecutionContext context, StructDeclarationSyntax structDeclaration, INamedTypeSymbol structDeclarationSymbol, ref AttributeListSyntax[] attributes)
         {
-            // Only process compute shader types
-            if (!structDeclarationSymbol.Interfaces.Any(static interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) return;
-
             TypeSyntax shaderType = ParseTypeName(structDeclarationSymbol.ToDisplayString());
             BlockSyntax block = Block(GetDispatchDataLoadingStatements(context, structDeclarationSymbol, out int root32BitConstantsCount));
 
