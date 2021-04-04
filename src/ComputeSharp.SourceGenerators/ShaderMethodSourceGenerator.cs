@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
@@ -20,38 +19,38 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace ComputeSharp.SourceGenerators
 {
+    /// <summary>
+    /// A source generator for processing static methods referenced from compute shaders.
+    /// </summary>
     [Generator]
-    public class ShaderMethodSourceGenerator : ISourceGenerator
+    public sealed partial class ShaderMethodSourceGenerator : ISourceGenerator
     {
         /// <inheritdoc/>
         public void Initialize(GeneratorInitializationContext context)
         {
+            context.RegisterForSyntaxNotifications(static () => new SyntaxReceiver());
         }
 
         /// <inheritdoc/>
         public void Execute(GeneratorExecutionContext context)
         {
-            // Find all the [ShaderMethod] usages and retrieve the target methods
-            ImmutableArray<MethodDeclarationSyntax> methods = (
-                from tree in context.Compilation.SyntaxTrees
-                from attribute in tree.GetRoot().DescendantNodes().OfType<AttributeSyntax>()
-                let symbol = context.Compilation.GetSemanticModel(attribute.SyntaxTree)
-                let typeInfo = symbol.GetTypeInfo(attribute)
-                where typeInfo.Type is { Name: nameof(ShaderMethodAttribute) }
-                select attribute.FirstAncestorOrSelf<MethodDeclarationSyntax>()).ToImmutableArray();
+            // Get the syntax receiver with the candidate nodes
+            if (context.SyntaxContextReceiver is not SyntaxReceiver syntaxReceiver)
+            {
+                return;
+            }
 
-            foreach (MethodDeclarationSyntax methodDeclaration in methods)
+            foreach (SyntaxReceiver.Item item in syntaxReceiver.GatheredInfo)
             {
                 SemanticModelProvider semanticModel = new(context.Compilation);
-                IMethodSymbol methodDeclarationSymbol = semanticModel.For(methodDeclaration).GetDeclaredSymbol(methodDeclaration)!;
 
                 try
                 {
-                    OnExecute(context, methodDeclaration, semanticModel, methodDeclarationSymbol);
+                    OnExecute(context, item.MethodDeclaration, semanticModel, item.MethodSymbol);
                 }
                 catch
                 {
-                    context.ReportDiagnostic(ShaderMethodSourceGeneratorError, methodDeclaration, methodDeclarationSymbol);
+                    context.ReportDiagnostic(ShaderMethodSourceGeneratorError, item.MethodDeclaration, item.MethodSymbol);
                 }
             }
         }

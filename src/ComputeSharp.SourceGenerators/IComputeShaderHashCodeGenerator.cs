@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Text;
 using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
@@ -15,22 +13,26 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace ComputeSharp.SourceGenerators
 {
+    /// <summary>
+    /// A source generator creating hash code factories for <see cref="IComputeShader"/> types.
+    /// </summary>
     [Generator]
-    public class IComputeShaderHashCodeGenerator : ISourceGenerator
+    public sealed partial class IComputeShaderHashCodeGenerator : ISourceGenerator
     {
         /// <inheritdoc/>
         public void Initialize(GeneratorInitializationContext context)
         {
+            context.RegisterForSyntaxNotifications(static () => new SyntaxReceiver());
         }
 
         /// <inheritdoc/>
         public void Execute(GeneratorExecutionContext context)
         {
-            // Find all the struct declarations
-            ImmutableArray<StructDeclarationSyntax> structDeclarations = (
-                from tree in context.Compilation.SyntaxTrees
-                from structDeclaration in tree.GetRoot().DescendantNodes().OfType<StructDeclarationSyntax>()
-                select structDeclaration).ToImmutableArray();
+            // Get the syntax receiver with the candidate nodes
+            if (context.SyntaxContextReceiver is not SyntaxReceiver syntaxReceiver)
+            {
+                return;
+            }
 
             // Type attributes
             AttributeListSyntax[] attributes = new[]
@@ -45,18 +47,15 @@ namespace ComputeSharp.SourceGenerators
                         Literal("This type is not intended to be used directly by user code"))))))
             };
 
-            foreach (StructDeclarationSyntax structDeclaration in structDeclarations)
+            foreach (SyntaxReceiver.Item item in syntaxReceiver.GatheredInfo)
             {
-                SemanticModel semanticModel = context.Compilation.GetSemanticModel(structDeclaration.SyntaxTree);
-                INamedTypeSymbol structDeclarationSymbol = semanticModel.GetDeclaredSymbol(structDeclaration)!;
-
                 try
                 {
-                    OnExecute(context, structDeclaration, structDeclarationSymbol, ref attributes);
+                    OnExecute(context, item.StructDeclaration, item.StructSymbol, ref attributes);
                 }
                 catch
                 {
-                    context.ReportDiagnostic(IComputeShaderHashCodeGeneratorError, structDeclaration, structDeclarationSymbol);
+                    context.ReportDiagnostic(IComputeShaderHashCodeGeneratorError, item.StructDeclaration, item.StructSymbol);
                 }
             }
         }
@@ -70,9 +69,6 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="attributes">The list of <see cref="AttributeListSyntax"/> instances to append to the first copy of the partial class being generated.</param>
         private static void OnExecute(GeneratorExecutionContext context, StructDeclarationSyntax structDeclaration, INamedTypeSymbol structDeclarationSymbol, ref AttributeListSyntax[] attributes)
         {
-            // Only process compute shader types
-            if (!structDeclarationSymbol.Interfaces.Any(static interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) return;
-
             TypeSyntax shaderType = ParseTypeName(structDeclarationSymbol.ToDisplayString());
             BlockSyntax block = Block(GetDelegateHashCodeStatements(structDeclarationSymbol));
 

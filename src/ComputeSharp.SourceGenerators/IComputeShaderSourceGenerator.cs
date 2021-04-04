@@ -21,35 +21,38 @@ using ComputeSharp.SourceGenerators.Helpers;
 
 namespace ComputeSharp.SourceGenerators
 {
+    /// <summary>
+    /// A source generator for processing <see cref="IComputeShader"/> types.
+    /// </summary>
     [Generator]
-    public class IComputeShaderSourceGenerator : ISourceGenerator
+    public sealed partial class IComputeShaderSourceGenerator : ISourceGenerator
     {
         /// <inheritdoc/>
         public void Initialize(GeneratorInitializationContext context)
         {
+            context.RegisterForSyntaxNotifications(static () => new SyntaxReceiver());
         }
 
         /// <inheritdoc/>
         public void Execute(GeneratorExecutionContext context)
         {
-            // Find all the struct declarations
-            ImmutableArray<StructDeclarationSyntax> structDeclarations = (
-                from tree in context.Compilation.SyntaxTrees
-                from structDeclaration in tree.GetRoot().DescendantNodes().OfType<StructDeclarationSyntax>()
-                select structDeclaration).ToImmutableArray();
+            // Get the syntax receiver with the candidate nodes
+            if (context.SyntaxContextReceiver is not SyntaxReceiver syntaxReceiver)
+            {
+                return;
+            }
 
-            foreach (StructDeclarationSyntax structDeclaration in structDeclarations)
+            foreach (SyntaxReceiver.Item item in syntaxReceiver.GatheredInfo)
             {
                 SemanticModelProvider semanticModel = new(context.Compilation);
-                INamedTypeSymbol structDeclarationSymbol = semanticModel.For(structDeclaration).GetDeclaredSymbol(structDeclaration)!;
 
                 try
                 {
-                    OnExecute(context, structDeclaration, semanticModel, structDeclarationSymbol);
+                    OnExecute(context, item.StructDeclaration, semanticModel, item.StructSymbol);
                 }
                 catch
                 {
-                    context.ReportDiagnostic(IComputeShaderSourceGeneratorError, structDeclaration, structDeclarationSymbol);
+                    context.ReportDiagnostic(IComputeShaderSourceGeneratorError, item.StructDeclaration, item.StructSymbol);
                 }
             }
         }
@@ -63,9 +66,6 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
         private static void OnExecute(GeneratorExecutionContext context, StructDeclarationSyntax structDeclaration, SemanticModelProvider semanticModel, INamedTypeSymbol structDeclarationSymbol)
         {
-            // Only process compute shader types
-            if (!structDeclarationSymbol.Interfaces.Any(static interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader))) return;
-
             // Properties are not supported
             DetectAndReportPropertyDeclarations(context, structDeclarationSymbol);
 
