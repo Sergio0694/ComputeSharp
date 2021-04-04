@@ -13,39 +13,36 @@ using static Microsoft.CodeAnalysis.SymbolDisplayTypeQualificationStyle;
 
 namespace ComputeSharp.SourceGenerators
 {
+    /// <summary>
+    /// A source generator creating constructors for types annotated with <see cref="AutoConstructorAttribute"/>.
+    /// </summary>
     [Generator]
-    public class AutoConstructorGenerator : ISourceGenerator
+    public partial class AutoConstructorGenerator : ISourceGenerator
     {
         /// <inheritdoc/>
         public void Initialize(GeneratorInitializationContext context)
         {
+            context.RegisterForSyntaxNotifications(static () => new SyntaxReceiver());
         }
 
         /// <inheritdoc/>
         public void Execute(GeneratorExecutionContext context)
         {
-            // Find all the [AutoConstructor] usages
-            ImmutableArray<AttributeSyntax> attributes = (
-                from tree in context.Compilation.SyntaxTrees
-                from attribute in tree.GetRoot().DescendantNodes().OfType<AttributeSyntax>()
-                let symbol = context.Compilation.GetSemanticModel(attribute.SyntaxTree)
-                let typeInfo = symbol.GetTypeInfo(attribute)
-                where typeInfo.Type is { Name: nameof(AutoConstructorAttribute) }
-                select attribute).ToImmutableArray();
-
-            foreach (AttributeSyntax attribute in attributes)
+            // Get the syntax receiver with the candidate nodes
+            if (context.SyntaxContextReceiver is not SyntaxReceiver syntaxReceiver)
             {
-                StructDeclarationSyntax structDeclaration = attribute.FirstAncestorOrSelf<StructDeclarationSyntax>()!;
-                SemanticModel semanticModel = context.Compilation.GetSemanticModel(structDeclaration.SyntaxTree);
-                INamedTypeSymbol structDeclarationSymbol = semanticModel.GetDeclaredSymbol(structDeclaration)!;
+                return;
+            }
 
+            foreach (SyntaxReceiver.Item item in syntaxReceiver.GatheredInfo)
+            {
                 try
                 {
-                    OnExecute(context, structDeclaration, structDeclarationSymbol);
+                    OnExecute(context, item.StructDeclaration, item.StructSymbol);
                 }
                 catch
                 {
-                    context.ReportDiagnostic(AutoConstructorGeneratorError, attribute, structDeclarationSymbol);
+                    context.ReportDiagnostic(AutoConstructorGeneratorError, item.AttributeSyntax, item.StructSymbol);
                 }
             }
         }
