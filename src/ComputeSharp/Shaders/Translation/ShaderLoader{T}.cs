@@ -105,6 +105,9 @@ namespace ComputeSharp.Shaders.Translation
         public IReadOnlyList<CapturedFieldInfo> FieldsInfo => this.fieldsInfo;
 
         /// <inheritdoc/>
+        public IReadOnlyCollection<string> ForwardDeclarations { get; private set; }
+
+        /// <inheritdoc/>
         public IReadOnlyCollection<string> MethodsInfo => this.methodsInfo;
 
         /// <inheritdoc/>
@@ -145,6 +148,7 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         private void LoadMethodMetadata()
         {
+            ForwardDeclarations = Attribute.ForwardDeclarations;
             EntryPoint = Attribute.ExecuteMethod;
             StaticFields = Attribute.StaticFields;
             SharedBuffers = Attribute.SharedBuffers;

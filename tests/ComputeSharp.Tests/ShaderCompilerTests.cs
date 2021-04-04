@@ -120,5 +120,38 @@ namespace ComputeSharp.Tests
                 buffer[ThreadIds.X] = ExternalStructType.Sum(type);
             }
         }
+
+        [TestMethod]
+        public void OutOfOrderMethods_Ok()
+        {
+            ReflectionServices.GetShaderInfo<OutOfOrderMethodsShader>(out var info);
+        }
+
+        [AutoConstructor]
+        public readonly partial struct OutOfOrderMethodsShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<float> buffer;
+
+            static int A() => B();
+
+            static int B() => 1 + C();
+
+            static int C() => 1;
+
+            int D() => A() + E() + F();
+
+            int E() => 1;
+
+            static int F() => 1;
+
+            /// <inheritdoc/>
+            public void Execute()
+            {
+                float value = buffer[ThreadIds.X];
+                ExternalStructType type = ExternalStructType.New((int)value, Hlsl.Abs(value));
+
+                buffer[ThreadIds.X] = ExternalStructType.Sum(type);
+            }
+        }
     }
 }

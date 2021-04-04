@@ -102,9 +102,9 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
-        /// <returns>A sequence of processed methods in <paramref name="methodDeclaration"/>.</returns>
+        /// <returns>A sequence of processed methods in <paramref name="methodDeclaration"/> (main method and local functions).</returns>
         [Pure]
-        private static (string InvokeMethod, IEnumerable<string> Methods) GetProcessedMethods(
+        private static (string TargetMethod, IEnumerable<string> LocalFunctions) GetProcessedMethods(
             GeneratorExecutionContext context,
             MethodDeclarationSyntax methodDeclaration,
             SemanticModelProvider semanticModel,
@@ -115,22 +115,22 @@ namespace ComputeSharp.SourceGenerators
             ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, discoveredTypes, staticMethods, constantDefinitions, context);
 
             // Rewrite the method syntax tree
-            var processedMethod = shaderSourceRewriter
+            var targetMethod = shaderSourceRewriter
                 .Visit(methodDeclaration)!
                 .WithIdentifier(Identifier(ShaderMethodSourceAttribute.InvokeMethodIdentifier))
                 .WithoutTrivia()
                 .NormalizeWhitespace()
                 .ToFullString();
 
-            List<string> methods = new(shaderSourceRewriter.LocalFunctions.Count);
+            List<string> localFunctions = new(shaderSourceRewriter.LocalFunctions.Count);
 
             // Emit the extracted local functions
             foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
             {
-                methods.Add(localFunction.Value.NormalizeWhitespace().ToFullString());
+                localFunctions.Add(localFunction.Value.NormalizeWhitespace().ToFullString());
             }
 
-            return (processedMethod, methods);
+            return (targetMethod, localFunctions);
         }
     }
 }

@@ -24,6 +24,11 @@ namespace ComputeSharp.Shaders.Translation
         IReadOnlyList<CapturedFieldInfo> FieldsInfo { get; }
 
         /// <summary>
+        /// Gets the forward declarations for static methods.
+        /// </summary>
+        IReadOnlyCollection<string> ForwardDeclarations { get; }
+
+        /// <summary>
         /// Gets the collection of methods to be used in the shader.
         /// </summary>
         IReadOnlyCollection<string> MethodsInfo { get; }

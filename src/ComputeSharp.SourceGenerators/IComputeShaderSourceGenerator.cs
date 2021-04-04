@@ -77,9 +77,8 @@ namespace ComputeSharp.SourceGenerators
             // Explore the syntax tree and extract the processed info
             var processedMembers = GetProcessedFields(context, structDeclarationSymbol, discoveredTypes).ToArray();
             var sharedBuffers = GetGroupSharedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
-            var (entryPoint, localFunctions) = GetProcessedMethods(context, structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
+            var (entryPoint, processedMethods, forwardDeclarations) = GetProcessedMethods(context, structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
             var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
-            var processedMethods = localFunctions.Concat(staticMethods.Values).Select(static method => method.NormalizeWhitespace().ToFullString()).ToArray();
             var processedConstants = GetProcessedConstants(constantDefinitions);
             var staticFields = GetStaticFields(context, semanticModel, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
 
@@ -92,6 +91,7 @@ namespace ComputeSharp.SourceGenerators
                         AttributeArgument(TypeOfExpression(IdentifierName(structDeclarationSymbol.ToDisplayString()))),
                         AttributeArgument(ArrayExpression(processedTypes)),
                         AttributeArgument(NestedArrayExpression(processedMembers)),
+                        AttributeArgument(ArrayExpression(forwardDeclarations)),
                         AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(entryPoint))),
                         AttributeArgument(ArrayExpression(processedMethods)),
                         AttributeArgument(NestedArrayExpression(processedConstants)),
@@ -305,7 +305,7 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
         [Pure]
-        private static (string EntryPoint, IEnumerable<SyntaxNode> Methods) GetProcessedMethods(
+        private static (string EntryPoint, IEnumerable<string> Methods, IEnumerable<string> Declarations) GetProcessedMethods(
             GeneratorExecutionContext context,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
@@ -321,7 +321,8 @@ namespace ComputeSharp.SourceGenerators
                 select (MethodDeclarationSyntax)syntaxNode).ToImmutableArray();
 
             string? entryPoint = null;
-            List<SyntaxNode> methods = new();
+            List<string> methods = new();
+            List<string> declarations = new();
 
             foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
             {
@@ -348,7 +349,8 @@ namespace ComputeSharp.SourceGenerators
                 // Emit the extracted local functions first
                 foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
                 {
-                    methods.Add(localFunction.Value);
+                    methods.Add(localFunction.Value.NormalizeWhitespace().ToFullString());
+                    declarations.Add(localFunction.Value.AsDefinition().NormalizeWhitespace().ToFullString());
                 }
 
                 // If the method is the shader entry point, do additional processing
@@ -358,10 +360,21 @@ namespace ComputeSharp.SourceGenerators
 
                     entryPoint = processedMethod.NormalizeWhitespace().ToFullString();
                 }
-                else methods.Add(processedMethod);
+                else
+                {
+                    methods.Add(processedMethod.NormalizeWhitespace().ToFullString());
+                    declarations.Add(processedMethod.AsDefinition().NormalizeWhitespace().ToFullString());
+                }
             }
 
-            return (entryPoint!, methods);
+            // Process static methods as well
+            foreach (MethodDeclarationSyntax staticMethod in staticMethods.Values)
+            {
+                methods.Add(staticMethod.NormalizeWhitespace().ToFullString());
+                declarations.Add(staticMethod.AsDefinition().NormalizeWhitespace().ToFullString());
+            }
+
+            return (entryPoint!, methods, declarations);
         }
 
         /// <summary>

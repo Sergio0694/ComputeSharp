@@ -155,6 +155,13 @@ namespace ComputeSharp.Shaders.Renderer
                 builder.AppendLine("];");
             }
 
+            // Forward declarations
+            foreach (var declaration in info.ForwardDeclarations)
+            {
+                builder.AppendLine();
+                builder.AppendLine(declaration);
+            }
+
             // Captured methods
             foreach (var function in info.MethodsInfo)
             {

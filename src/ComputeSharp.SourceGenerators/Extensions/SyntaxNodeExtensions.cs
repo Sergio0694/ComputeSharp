@@ -127,6 +127,22 @@ namespace ComputeSharp.SourceGenerators.Extensions
         }
 
         /// <summary>
+        /// Returns a <see cref="MethodDeclarationSyntax"/> as a method definition.
+        /// </summary>
+        /// <param name="node">The input <see cref="MethodDeclarationSyntax"/> node.</param>
+        /// <returns>A node like the one in input, but just as a definition.</returns>
+        [Pure]
+        public static MethodDeclarationSyntax AsDefinition(this MethodDeclarationSyntax node)
+        {
+            if (node.ExpressionBody is ArrowExpressionClauseSyntax)
+            {
+                return node.WithExpressionBody(null).WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
+            }
+
+            return node.WithBody(null).WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
+        }
+
+        /// <summary>
         /// Returns a <see cref="LocalFunctionStatementSyntax"/> with a block body.
         /// </summary>
         /// <param name="node">The input <see cref="LocalFunctionStatementSyntax"/> node.</param>
@@ -153,6 +169,22 @@ namespace ComputeSharp.SourceGenerators.Extensions
             }
 
             return node;
+        }
+
+        /// <summary>
+        /// Returns a <see cref="LocalFunctionStatementSyntax"/> as a method definition.
+        /// </summary>
+        /// <param name="node">The input <see cref="LocalFunctionStatementSyntax"/> node.</param>
+        /// <returns>A node like the one in input, but just as a definition.</returns>
+        [Pure]
+        public static LocalFunctionStatementSyntax AsDefinition(this LocalFunctionStatementSyntax node)
+        {
+            if (node.ExpressionBody is ArrowExpressionClauseSyntax)
+            {
+                return node.WithExpressionBody(null).WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
+            }
+
+            return node.WithBody(null).WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
         }
 
         /// <summary>

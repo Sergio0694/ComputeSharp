@@ -22,7 +22,8 @@ namespace ComputeSharp.__Internals
         /// </summary>
         /// <param name="shaderType">The type of the current shader.</param>
         /// <param name="types">The collection of custom types.</param>
-        /// <param name="args">The mapped collection of shader fields.</param>
+        /// <param name="fields">The mapped collection of shader fields.</param>
+        /// <param name="forwardDeclarations">The forward declarations for static methods.</param>
         /// <param name="executeMethod">The source code for the <see cref="IComputeShader.Execute"/> method.</param>
         /// <param name="methods">The collection of processed methods.</param>
         /// <param name="defines">The collection of discovered defines.</param>
@@ -31,7 +32,8 @@ namespace ComputeSharp.__Internals
         public IComputeShaderSourceAttribute(
             Type shaderType,
             string[] types,
-            object[] args,
+            object[] fields,
+            string[] forwardDeclarations,
             string executeMethod,
             string[] methods,
             object[] defines,
@@ -40,7 +42,8 @@ namespace ComputeSharp.__Internals
         {
             ShaderType = shaderType;
             Types = types;
-            Fields = args.Cast<string[]>().ToDictionary(static arg => arg[0], static arg => (arg[1], arg[2]));
+            Fields = fields.Cast<string[]>().ToDictionary(static arg => arg[0], static arg => (arg[1], arg[2]));
+            ForwardDeclarations = forwardDeclarations;
             ExecuteMethod = executeMethod;
             Methods = methods;
             Defines = defines.Cast<string[]>().ToDictionary(static c => c[0], static c => c[1]);
@@ -62,6 +65,11 @@ namespace ComputeSharp.__Internals
         /// Gets the mapping of field names.
         /// </summary>
         internal IReadOnlyDictionary<string, (string Name, string Type)> Fields { get; }
+
+        /// <summary>
+        /// The forward declarations for static methods.
+        /// </summary>
+        internal IReadOnlyCollection<string> ForwardDeclarations { get; }
 
         /// <summary>
         /// Gets the source code for the <see cref="IComputeShader.Execute"/> method.
