@@ -48,6 +48,8 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ComputeSharp.Sample.FSharp"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Sample.FSharp.Shaders", "samples\ComputeSharp.Sample.FSharp.Shaders\ComputeSharp.Sample.FSharp.Shaders.csproj", "{1F37A704-3CDF-45BB-8114-ED9137E5F2CF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.WinUI", "src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj", "{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		samples\ComputeSharp.Sample.Shared\ComputeSharp.Sample.Shared.projitems*{7048deea-0a6f-46a0-b951-b682a8f1cb75}*SharedItemsImports = 5
@@ -156,6 +158,14 @@ Global
 		{1F37A704-3CDF-45BB-8114-ED9137E5F2CF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1F37A704-3CDF-45BB-8114-ED9137E5F2CF}.Release|x64.ActiveCfg = Release|Any CPU
 		{1F37A704-3CDF-45BB-8114-ED9137E5F2CF}.Release|x64.Build.0 = Release|Any CPU
+		{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}.Debug|x64.Build.0 = Debug|Any CPU
+		{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}.Release|x64.ActiveCfg = Release|Any CPU
+		{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
