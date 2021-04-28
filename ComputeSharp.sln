@@ -54,6 +54,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.NetStandard", 
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TerraFX.Interop.Windows", "src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.shproj", "{514FF00E-BBF0-4D55-A47C-EEEB6208ADCE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.WinUI", "src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj", "{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{314eb353-e7e3-4146-8111-685cc83ec1de}*SharedItemsImports = 5
@@ -216,6 +218,14 @@ Global
 		{1F37A704-3CDF-45BB-8114-ED9137E5F2CF}.Release|ARM64.Build.0 = Release|Any CPU
 		{1F37A704-3CDF-45BB-8114-ED9137E5F2CF}.Release|x64.ActiveCfg = Release|Any CPU
 		{1F37A704-3CDF-45BB-8114-ED9137E5F2CF}.Release|x64.Build.0 = Release|Any CPU
+		{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}.Debug|x64.Build.0 = Debug|Any CPU
+		{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}.Release|x64.ActiveCfg = Release|Any CPU
+		{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
