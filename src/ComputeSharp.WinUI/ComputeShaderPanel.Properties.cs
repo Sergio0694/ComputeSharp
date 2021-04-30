@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.Toolkit.Diagnostics;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace ComputeSharp.WinUI
@@ -23,5 +24,37 @@ namespace ComputeSharp.WinUI
             typeof(IShaderRunner),
             typeof(ComputeShaderPanel),
             new PropertyMetadata(null, static (d, e) => ((ComputeShaderPanel)d).shaderRunner = (IShaderRunner?)e.NewValue));
+
+        /// <summary>
+        /// Gets or sets the resolution scale to be used to render frames.
+        /// This can help achieve higher framerates with more complex shaders.
+        /// </summary>
+        /// <remarks>The accepted range is [0.1 and 1] (default is 1).</remarks>
+        public double ResolutionScale
+        {
+            get => (double)GetValue(ShaderFactoryProperty);
+            set => SetValue(ShaderFactoryProperty, value);
+        }
+
+        /// <summary>
+        /// The <see cref="DependencyProperty"/> backing <see cref="ResolutionScale"/>.
+        /// </summary>
+        public static readonly DependencyProperty ResolutionScaleProperty = DependencyProperty.Register(
+            nameof(ResolutionScale),
+            typeof(double),
+            typeof(ComputeShaderPanel),
+            new PropertyMetadata(1.0, static (d, e) => ((ComputeShaderPanel)d).shaderRunner = (IShaderRunner?)e.NewValue));
+
+        /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
+        private static void OnResolutionScalePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var @this = (ComputeShaderPanel)d;
+            var resolutionScale = (double)e.NewValue;
+
+            Guard.IsBetweenOrEqualTo(resolutionScale, 0.1, 1.0, nameof(resolutionScale));
+
+            @this.resolutionScale = resolutionScale;
+            @this.OnResize();
+        }
     }
 }
