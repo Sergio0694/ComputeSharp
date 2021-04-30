@@ -15,6 +15,11 @@ namespace ComputeSharp.WinUI
         private IShaderRunner? shaderRunner;
 
         /// <summary>
+        /// The resolution scale used to render frames.
+        /// </summary>
+        private double resolutionScale;
+
+        /// <summary>
         /// The <see cref="ID3D12Device"/> pointer for the device currently in use.
         /// </summary>
         private ComPtr<ID3D12Device> d3D12Device;
@@ -191,20 +196,52 @@ namespace ComputeSharp.WinUI
             // Resize the swap chain buffers
             this.dxgiSwapChain1.Get()->ResizeBuffers(0, 0, 0, DXGI_FORMAT.DXGI_FORMAT_UNKNOWN, 0);
 
+            if (this.resolutionScale == 1.0)
+            {
+                // Retrieve the back buffers for the swap chain
+                fixed (ID3D12Resource** d3D12Resource0 = this.d3D12Resource0)
+                fixed (ID3D12Resource** d3D12Resource1 = this.d3D12Resource1)
+                {
+                    _ = dxgiSwapChain1.Get()->GetBuffer(0, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0);
+                    _ = dxgiSwapChain1.Get()->GetBuffer(1, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1);
+                }
+            }
+            else
+            {
+                D3D12_RESOURCE_DESC d3D12ResourceDescription;
+
+                // This is a workaround to detect the right scaled resolution for the back buffers.
+                // First, IDXGISwapChain.Resize is called with (0, 0) as parameters for the size: this will cause
+                // it to automatically resize to a 1:1 scaling factor with the available space. Then we get the
+                // first backbuffer and use it to find the current resolution, scale it, and resize again to that.
+                using (ComPtr<ID3D12Resource> d3D12Resource = default)
+                {
+                    _ = dxgiSwapChain1.Get()->GetBuffer(0, FX.__uuidof<ID3D12Resource>(), (void**)&d3D12Resource);
+
+                    d3D12ResourceDescription = d3D12Resource.Get()->GetDesc();
+                }
+
+                uint
+                    scaledWidth = (uint)(d3D12ResourceDescription.Width * this.resolutionScale),
+                    scaledHeight = (uint)(d3D12ResourceDescription.Height * this.resolutionScale);
+
+                this.dxgiSwapChain1.Get()->ResizeBuffers(0, scaledWidth, scaledHeight, DXGI_FORMAT.DXGI_FORMAT_UNKNOWN, 0);
+
+                // Finally retrieve the scaled back buffers
+                fixed (ID3D12Resource** d3D12Resource0 = this.d3D12Resource0)
+                fixed (ID3D12Resource** d3D12Resource1 = this.d3D12Resource1)
+                {
+                    _ = dxgiSwapChain1.Get()->GetBuffer(0, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0);
+                    _ = dxgiSwapChain1.Get()->GetBuffer(1, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1);
+                }
+            }            
+
             // Get the index of the initial back buffer
             using (ComPtr<IDXGISwapChain3> dxgiSwapChain3 = default)
             {
                 _ = this.dxgiSwapChain1.CopyTo(dxgiSwapChain3.GetAddressOf());
 
                 this.currentBufferIndex = dxgiSwapChain3.Get()->GetCurrentBackBufferIndex();
-            }
-
-            // Retrieve the back buffers for the swap chain
-            fixed (ID3D12Resource** d3D12Resource0 = this.d3D12Resource0)
-            fixed (ID3D12Resource** d3D12Resource1 = this.d3D12Resource1)
-            {
-                _ = dxgiSwapChain1.Get()->GetBuffer(0, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0);
-                _ = dxgiSwapChain1.Get()->GetBuffer(1, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1);
             }
 
             this.texture?.Dispose();
