@@ -16,11 +16,13 @@ namespace ComputeSharp.SwapChain.WinUI.Views
             SetTitleBar(TitleBarRectangle);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        // Opens the shader selection panel
+        private void OpenShaderSelectionPanelButton_Click(object sender, RoutedEventArgs e)
         {
             ShaderSelectionPanel.Visibility = Visibility.Visible;
         }
 
+        // Hides the shader selection panel
         private void ShaderSelectionPanel_Tapped(object sender, TappedRoutedEventArgs e)
         {
             ShaderSelectionPanel.Visibility = Visibility.Collapsed;

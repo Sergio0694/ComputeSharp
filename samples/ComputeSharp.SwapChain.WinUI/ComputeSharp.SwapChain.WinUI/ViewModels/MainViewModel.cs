@@ -21,23 +21,37 @@ namespace ComputeSharp.SwapChain.WinUI.ViewModels
             this.selectedComputeShader = ComputeShaderOptions[0];
             this.selectedComputeShader.IsSelected = true;
 
+            SetResolutionScaleCommand = new RelayCommand<int>(SetResolutionScale);
             ToggleRenderingPausedCommand = new RelayCommand(ToggleRenderingPaused);
         }
 
         /// <summary>
         /// Gets the available resolution scaling options (as percentage values).
         /// </summary>
-        public IReadOnlyList<int> ResolutionScaleOptions { get; } = new[] { 25, 50, 75, 100 };
+        public IList<int> ResolutionScaleOptions { get; } = new[] { 25, 50, 75, 100 };
 
         private int selectedResolutionScale;
 
         /// <summary>
-        /// Gets or sets the currently selected resolution scale setting (as percentage valaue).
+        /// Gets the currently selected resolution scale setting (as percentage valaue).
         /// </summary>
         public int SelectedResolutionScale
         {
             get => this.selectedResolutionScale;
-            set => SetProperty(ref this.selectedResolutionScale, value);
+            private set => SetProperty(ref this.selectedResolutionScale, value);
+        }
+
+        /// <summary>
+        /// Gets the command that sets <see cref="SelectedResolutionScale"/>. 
+        /// </summary>
+        public IRelayCommand SetResolutionScaleCommand { get; }
+
+        /// <summary>
+        /// Sets <see cref="SelectedResolutionScale"/>.
+        /// </summary>
+        private void SetResolutionScale(int resolutionScale)
+        {
+            SelectedResolutionScale = resolutionScale;
         }
 
         /// <summary>
