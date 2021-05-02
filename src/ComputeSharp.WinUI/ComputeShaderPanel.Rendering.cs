@@ -1,4 +1,5 @@
 ﻿using System;
+using ComputeSharp.Core.Extensions;
 using ComputeSharp.Interop;
 using Microsoft.UI.Xaml.Controls;
 using TerraFX.Interop;
@@ -107,7 +108,7 @@ namespace ComputeSharp.WinUI
             // Get the underlying ID3D12Device in use
             fixed (ID3D12Device** d3D12Device = this.d3D12Device)
             {
-                _ = InteropServices.TryGetID3D12Device(Gpu.Default, FX.__uuidof<ID3D12Device>(), (void**)d3D12Device);
+                InteropServices.TryGetID3D12Device(Gpu.Default, FX.__uuidof<ID3D12Device>(), (void**)d3D12Device).Assert();
             }
 
             // Create the direct command queue to use
@@ -119,20 +120,20 @@ namespace ComputeSharp.WinUI
                 d3D12CommandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAGS.D3D12_COMMAND_QUEUE_FLAG_NONE;
                 d3D12CommandQueueDesc.NodeMask = 0;
 
-                _ = d3D12Device.Get()->CreateCommandQueue(
+                d3D12Device.Get()->CreateCommandQueue(
                     &d3D12CommandQueueDesc,
                     FX.__uuidof<ID3D12CommandQueue>(),
-                    (void**)d3D12CommandQueue);
+                    (void**)d3D12CommandQueue).Assert();
             }
 
             // Create the direct fence
             fixed (ID3D12Fence** d3D12Fence = this.d3D12Fence)
             {
-                _ = this.d3D12Device.Get()->CreateFence(
+                this.d3D12Device.Get()->CreateFence(
                     0,
                     D3D12_FENCE_FLAGS.D3D12_FENCE_FLAG_NONE,
                     FX.__uuidof<ID3D12Fence>(),
-                    (void**)d3D12Fence);
+                    (void**)d3D12Fence).Assert();
             }
 
             // Create the swap chain to display frames
@@ -140,7 +141,7 @@ namespace ComputeSharp.WinUI
             {
                 using ComPtr<IDXGIFactory2> dxgiFactory2 = default;
 
-                _ = FX.CreateDXGIFactory2(FX.DXGI_CREATE_FACTORY_DEBUG, FX.__uuidof<IDXGIFactory2>(), (void**)dxgiFactory2.GetAddressOf());
+                FX.CreateDXGIFactory2(FX.DXGI_CREATE_FACTORY_DEBUG, FX.__uuidof<IDXGIFactory2>(), (void**)dxgiFactory2.GetAddressOf()).Assert();
 
                 DXGI_SWAP_CHAIN_DESC1 dxgiSwapChainDesc1 = default;
                 dxgiSwapChainDesc1.AlphaMode = DXGI_ALPHA_MODE.DXGI_ALPHA_MODE_IGNORE;
@@ -155,11 +156,11 @@ namespace ComputeSharp.WinUI
                 dxgiSwapChainDesc1.SwapEffect = DXGI_SWAP_EFFECT.DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
                 dxgiSwapChainDesc1.BufferUsage = FX.DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
-                int h = dxgiFactory2.Get()->CreateSwapChainForComposition(
+                dxgiFactory2.Get()->CreateSwapChainForComposition(
                     (IUnknown*)d3D12CommandQueue.Get(),
                     &dxgiSwapChainDesc1,
                     null,
-                    dxgiSwapChain1);
+                    dxgiSwapChain1).Assert();
             }
 
             // Create the command allocator to use
@@ -168,7 +169,7 @@ namespace ComputeSharp.WinUI
                 this.d3D12Device.Get()->CreateCommandAllocator(
                     D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_DIRECT,
                     FX.__uuidof<ID3D12CommandAllocator>(),
-                    (void**)d3D12CommandAllocator);
+                    (void**)d3D12CommandAllocator).Assert();
             }
 
             // Create the reusable command list to copy data to the back buffers
@@ -180,11 +181,11 @@ namespace ComputeSharp.WinUI
                     d3D12CommandAllocator,
                     null,
                     FX.__uuidof<ID3D12GraphicsCommandList>(),
-                    (void**)d3D12GraphicsCommandList);
+                    (void**)d3D12GraphicsCommandList).Assert();
             }
 
             // Close the command list to prepare it for future use
-            this.d3D12GraphicsCommandList.Get()->Close();
+            this.d3D12GraphicsCommandList.Get()->Close().Assert();
         }
 
         /// <summary>
@@ -200,10 +201,10 @@ namespace ComputeSharp.WinUI
         /// </summary>
         private unsafe void ApplyResize()
         {
-            this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), this.nextD3D12FenceValue);
+            this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), this.nextD3D12FenceValue).Assert();
 
             // Wait for the fence again to ensure there are no pending operations
-            this.d3D12Fence.Get()->SetEventOnCompletion(this.nextD3D12FenceValue, default);
+            this.d3D12Fence.Get()->SetEventOnCompletion(this.nextD3D12FenceValue, default).Assert();
 
             this.nextD3D12FenceValue++;
 
@@ -212,25 +213,25 @@ namespace ComputeSharp.WinUI
             this.d3D12Resource1.Dispose();
 
             // Resize the swap chain buffers
-            _ = this.dxgiSwapChain1.Get()->ResizeBuffers(
+            this.dxgiSwapChain1.Get()->ResizeBuffers(
                 0,
                 (uint)Math.Max(Math.Ceiling(this.width * this.compositionScaleX * this.resolutionScale), 1.0),
                 (uint)Math.Max(Math.Ceiling(this.height * this.compositionScaleY * this.resolutionScale), 1.0),
                 DXGI_FORMAT.DXGI_FORMAT_UNKNOWN,
-                0);
+                0).Assert();
 
             // Retrieve the back buffers for the swap chain
             fixed (ID3D12Resource** d3D12Resource0 = this.d3D12Resource0)
             fixed (ID3D12Resource** d3D12Resource1 = this.d3D12Resource1)
             {
-                _ = dxgiSwapChain1.Get()->GetBuffer(0, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0);
-                _ = dxgiSwapChain1.Get()->GetBuffer(1, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1);
+                dxgiSwapChain1.Get()->GetBuffer(0, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0).Assert();
+                dxgiSwapChain1.Get()->GetBuffer(1, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1).Assert();
             }
 
             // Get the index of the initial back buffer
             using (ComPtr<IDXGISwapChain3> dxgiSwapChain3 = default)
             {
-                _ = this.dxgiSwapChain1.CopyTo(dxgiSwapChain3.GetAddressOf());
+                this.dxgiSwapChain1.CopyTo(dxgiSwapChain3.GetAddressOf()).Assert();
 
                 this.currentBufferIndex = dxgiSwapChain3.Get()->GetCurrentBackBufferIndex();
             }
@@ -270,7 +271,7 @@ namespace ComputeSharp.WinUI
             using ComPtr<ID3D12Resource> d3D12Resource = default;
 
             // Get the underlying ID3D12Resource pointer for the texture
-            _ = InteropServices.TryGetID3D12Resource(this.texture!, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
+            InteropServices.TryGetID3D12Resource(this.texture!, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf()).Assert();
 
             // Get the target back buffer to update
             ID3D12Resource* d3D12ResourceBackBuffer = this.currentBufferIndex switch
@@ -283,8 +284,8 @@ namespace ComputeSharp.WinUI
             this.currentBufferIndex ^= 1;
 
             // Reset the command list and command allocator
-            this.d3D12CommandAllocator.Get()->Reset();
-            this.d3D12GraphicsCommandList.Get()->Reset(this.d3D12CommandAllocator.Get(), null);
+            this.d3D12CommandAllocator.Get()->Reset().Assert();
+            this.d3D12GraphicsCommandList.Get()->Reset(this.d3D12CommandAllocator.Get(), null).Assert();
 
             D3D12_RESOURCE_BARRIER* d3D12ResourceBarriers = stackalloc D3D12_RESOURCE_BARRIER[]
             {
@@ -299,10 +300,10 @@ namespace ComputeSharp.WinUI
             };
 
             // Transition the resources to COPY_DEST and COPY_SOURCE respectively
-            d3D12GraphicsCommandList.Get()->ResourceBarrier(2, d3D12ResourceBarriers);
+            this.d3D12GraphicsCommandList.Get()->ResourceBarrier(2, d3D12ResourceBarriers);
 
             // Copy the generated frame to the target back buffer
-            d3D12GraphicsCommandList.Get()->CopyResource(d3D12ResourceBackBuffer, d3D12Resource.Get());
+            this.d3D12GraphicsCommandList.Get()->CopyResource(d3D12ResourceBackBuffer, d3D12Resource.Get());
 
             d3D12ResourceBarriers[0] = D3D12_RESOURCE_BARRIER.InitTransition(
                 d3D12Resource.Get(),
@@ -315,20 +316,20 @@ namespace ComputeSharp.WinUI
                 D3D12_RESOURCE_STATES.D3D12_RESOURCE_STATE_COMMON);
 
             // Transition the resources back to COMMON and UNORDERED_ACCESS respectively
-            d3D12GraphicsCommandList.Get()->ResourceBarrier(2, d3D12ResourceBarriers);
+            this.d3D12GraphicsCommandList.Get()->ResourceBarrier(2, d3D12ResourceBarriers);
 
-            d3D12GraphicsCommandList.Get()->Close();
+            this.d3D12GraphicsCommandList.Get()->Close().Assert();
 
             // Execute the command list to perform the copy
-            this.d3D12CommandQueue.Get()->ExecuteCommandLists(1, (ID3D12CommandList**)d3D12GraphicsCommandList.GetAddressOf());
-            this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), this.nextD3D12FenceValue);
+            this.d3D12CommandQueue.Get()->ExecuteCommandLists(1, (ID3D12CommandList**)this.d3D12GraphicsCommandList.GetAddressOf());
+            this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), this.nextD3D12FenceValue).Assert();
 
             // Present the new frame
-            this.dxgiSwapChain1.Get()->Present(0, 0);
+            this.dxgiSwapChain1.Get()->Present(0, 0).Assert();
 
             if (this.nextD3D12FenceValue > this.d3D12Fence.Get()->GetCompletedValue())
             {
-                this.d3D12Fence.Get()->SetEventOnCompletion(this.nextD3D12FenceValue, default);
+                this.d3D12Fence.Get()->SetEventOnCompletion(this.nextD3D12FenceValue, default).Assert();
             }
 
             this.nextD3D12FenceValue++;
