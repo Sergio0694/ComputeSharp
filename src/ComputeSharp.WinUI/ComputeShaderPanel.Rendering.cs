@@ -56,7 +56,12 @@ namespace ComputeSharp.WinUI
         /// <summary>
         /// The <see cref="IDXGISwapChain1"/> instance used to display content onto the target window.
         /// </summary>
-        public ComPtr<IDXGISwapChain1> dxgiSwapChain1;
+        private ComPtr<IDXGISwapChain1> dxgiSwapChain1;
+
+        /// <summary>
+        /// The awaitable object for <see cref="IDXGISwapChain1.Present"/> calls.
+        /// </summary>
+        private IntPtr frameLatencyWaitableObject;
 
         /// <summary>
         /// The first buffer within <see cref="dxgiSwapChain1"/>.
@@ -164,7 +169,7 @@ namespace ComputeSharp.WinUI
                 DXGI_SWAP_CHAIN_DESC1 dxgiSwapChainDesc1 = default;
                 dxgiSwapChainDesc1.AlphaMode = DXGI_ALPHA_MODE.DXGI_ALPHA_MODE_IGNORE;
                 dxgiSwapChainDesc1.BufferCount = 2;
-                dxgiSwapChainDesc1.Flags = 0;
+                dxgiSwapChainDesc1.Flags = (uint)DXGI_SWAP_CHAIN_FLAG.DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT;
                 dxgiSwapChainDesc1.Format = DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM;
                 dxgiSwapChainDesc1.Width = (uint)Math.Max(Math.Ceiling(this.width * this.compositionScaleX * this.resolutionScale), 1.0);
                 dxgiSwapChainDesc1.Height = (uint)Math.Max(Math.Ceiling(this.height * this.compositionScaleY * this.resolutionScale), 1.0);
@@ -179,6 +184,14 @@ namespace ComputeSharp.WinUI
                     &dxgiSwapChainDesc1,
                     null,
                     dxgiSwapChain1).Assert();
+            }
+
+            // Get the awaitable object to synchronizize present calls
+            using (ComPtr<IDXGISwapChain2> dxgiSwapChain2 = default)
+            {
+                this.dxgiSwapChain1.CopyTo(&dxgiSwapChain2).Assert();
+
+                this.frameLatencyWaitableObject = dxgiSwapChain2.Get()->GetFrameLatencyWaitableObject();
             }
 
             // Create the command allocator to use
@@ -250,11 +263,11 @@ namespace ComputeSharp.WinUI
 
             // Resize the swap chain buffers
             this.dxgiSwapChain1.Get()->ResizeBuffers(
-                0,
+                2,
                 (uint)Math.Max(Math.Ceiling(this.width * this.compositionScaleX * this.resolutionScale), 1.0),
                 (uint)Math.Max(Math.Ceiling(this.height * this.compositionScaleY * this.resolutionScale), 1.0),
                 DXGI_FORMAT.DXGI_FORMAT_UNKNOWN,
-                0).Assert();
+                (uint)DXGI_SWAP_CHAIN_FLAG.DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT).Assert();
 
             // Retrieve the back buffers for the swap chain
             fixed (ID3D12Resource** d3D12Resource0 = this.d3D12Resource0)
@@ -379,6 +392,8 @@ namespace ComputeSharp.WinUI
         {
             static void ExecuteRenderLoop(ComputeShaderPanel @this)
             {
+                IntPtr frameLatencyWaitableObject = @this.frameLatencyWaitableObject;
+
                 Stopwatch
                     startStopwatch = @this.renderTimer ??= new(),
                     frameStopwatch = Stopwatch.StartNew();
@@ -391,11 +406,18 @@ namespace ComputeSharp.WinUI
 
                 while (!@this.isCancellationRequested)
                 {
-                    if (frameStopwatch.ElapsedTicks >= targetFrameTimeInTicksFor60fps)
-                    {
-                        frameStopwatch.Restart();
+                    _ = FX.WaitForSingleObjectEx(frameLatencyWaitableObject, 1000, 1);
 
-                        @this.OnUpdate(startStopwatch.Elapsed);
+                    while (true)
+                    {
+                        if (frameStopwatch.ElapsedTicks >= targetFrameTimeInTicksFor60fps)
+                        {
+                            frameStopwatch.Restart();
+
+                            @this.OnUpdate(startStopwatch.Elapsed);
+
+                            break;
+                        }
                     }
                 }
 
