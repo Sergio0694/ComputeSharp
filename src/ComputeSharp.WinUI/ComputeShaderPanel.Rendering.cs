@@ -114,6 +114,11 @@ namespace ComputeSharp.WinUI
         private bool isCancellationRequested;
 
         /// <summary>
+        /// The <see cref="Stopwatch"/> instance tracking time since the first rendered frame.
+        /// </summary>
+        private Stopwatch? renderTimer;
+
+        /// <summary>
         /// Initializes the current application.
         /// </summary>
         private unsafe void OnInitialize()
@@ -375,12 +380,14 @@ namespace ComputeSharp.WinUI
             static void ExecuteRenderLoop(ComputeShaderPanel @this)
             {
                 Stopwatch
-                    startStopwatch = Stopwatch.StartNew(),
+                    startStopwatch = @this.renderTimer ??= new(),
                     frameStopwatch = Stopwatch.StartNew();
 
-                const long targetFrameTimeInTicksFor60fps = 166666;
+                @this.OnUpdate(startStopwatch.Elapsed);
 
-                @this.OnUpdate(TimeSpan.Zero);
+                startStopwatch.Start();
+
+                const long targetFrameTimeInTicksFor60fps = 166666;
 
                 while (!@this.isCancellationRequested)
                 {
@@ -391,6 +398,8 @@ namespace ComputeSharp.WinUI
                         @this.OnUpdate(startStopwatch.Elapsed);
                     }
                 }
+
+                startStopwatch.Stop();
             }
 
             this.isCancellationRequested = false;
