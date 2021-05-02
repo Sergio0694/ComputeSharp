@@ -49,6 +49,35 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\..\tests\ComputeSharp.Tests\Assets\ColorfulInfinity.png">
+      <Link>Images\Shaders\ColorfulInfinity.png</Link>
+    </Content>
+    <Content Include="..\..\..\tests\ComputeSharp.Tests\Assets\ExtrudedTruchetPattern.png">
+      <Link>Images\Shaders\ExtrudedTruchetPattern.png</Link>
+    </Content>
+    <Content Include="..\..\..\tests\ComputeSharp.Tests\Assets\FractalTiling.png">
+      <Link>Images\Shaders\FractalTiling.png</Link>
+    </Content>
+    <Content Include="..\..\..\tests\ComputeSharp.Tests\Assets\MengerJourney.png">
+      <Link>Images\Shaders\MengerJourney.png</Link>
+    </Content>
+    <Content Include="..\..\..\tests\ComputeSharp.Tests\Assets\Octagrams.png">
+      <Link>Images\Shaders\Octagrams.png</Link>
+    </Content>
+    <Content Include="..\..\..\tests\ComputeSharp.Tests\Assets\ProteanClouds.png">
+      <Link>Images\Shaders\ProteanClouds.png</Link>
+    </Content>
+    <Content Include="..\..\..\tests\ComputeSharp.Tests\Assets\TwoTiledTruchet.png">
+      <Link>Images\Shaders\TwoTiledTruchet.png</Link>
+    </Content>
+    <Content Include="Images\Misc\noise_low.png" />
+    <Content Include="Images\Shaders\Blurred\ColorfulInfinity.png" />
+    <Content Include="Images\Shaders\Blurred\ExtrudedTruchetPattern.png" />
+    <Content Include="Images\Shaders\Blurred\FractalTiling.png" />
+    <Content Include="Images\Shaders\Blurred\MengerJourney.png" />
+    <Content Include="Images\Shaders\Blurred\Octagrams.png" />
+    <Content Include="Images\Shaders\Blurred\ProteanClouds.png" />
+    <Content Include="Images\Shaders\Blurred\TwoTiledTruchet.png" />
     <Content Include="Images\SplashScreen.scale-200.png" />
     <Content Include="Images\LockScreenLogo.scale-200.png" />
     <Content Include="Images\Square150x150Logo.scale-200.png" />

@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using ComputeSharp.SwapChain.WinUI.Views;
+using Microsoft.UI.Xaml;
 
 #nullable enable
 

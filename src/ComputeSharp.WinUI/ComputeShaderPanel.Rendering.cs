@@ -170,7 +170,7 @@ namespace ComputeSharp.WinUI
                 dxgiSwapChainDesc1.BufferUsage = FX.DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
                 dxgiFactory2.Get()->CreateSwapChainForComposition(
-                    (IUnknown*)d3D12CommandQueue.Get(),
+                    (IUnknown*)this.d3D12CommandQueue.Get(),
                     &dxgiSwapChainDesc1,
                     null,
                     dxgiSwapChain1).Assert();
@@ -255,8 +255,8 @@ namespace ComputeSharp.WinUI
             fixed (ID3D12Resource** d3D12Resource0 = this.d3D12Resource0)
             fixed (ID3D12Resource** d3D12Resource1 = this.d3D12Resource1)
             {
-                dxgiSwapChain1.Get()->GetBuffer(0, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0).Assert();
-                dxgiSwapChain1.Get()->GetBuffer(1, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1).Assert();
+                this.dxgiSwapChain1.Get()->GetBuffer(0, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0).Assert();
+                this.dxgiSwapChain1.Get()->GetBuffer(1, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1).Assert();
             }
 
             // Get the index of the initial back buffer
