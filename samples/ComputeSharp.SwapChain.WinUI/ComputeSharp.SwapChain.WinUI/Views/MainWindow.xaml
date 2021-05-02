@@ -24,7 +24,7 @@
             x:Name="ShaderPanel"
             Grid.Row="1"
             ShaderRunner="{x:Bind ViewModel.SelectedComputeShader.ShaderRunner, Mode=OneWay}"
-            ResolutionScale="{x:Bind ViewModel.SelectedResolutionScale, Mode=OneWay}"
+            ResolutionScale="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToScale(ViewModel.SelectedResolutionScale), Mode=OneWay}"
             IsPaused="{x:Bind ViewModel.IsRenderingPaused, Mode=OneWay}"/>
 
         <!--Invisible title bar-->
@@ -56,7 +56,7 @@
                 Padding="20"
                 CornerRadius="9999"
                 ToolTipService.ToolTip="Select shader"
-                Click="Button_Click">
+                Click="OpenShaderSelectionPanelButton_Click">
                 <SymbolIcon Symbol="Pictures"/>
             </Button>
 
@@ -66,6 +66,30 @@
                 CornerRadius="9999"
                 ToolTipService.ToolTip="Settings">
                 <SymbolIcon Symbol="Setting"/>
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <ToggleMenuFlyoutItem
+                            Text="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToFormattedString(ViewModel.ResolutionScaleOptions[0])}"
+                            Command="{x:Bind ViewModel.SetResolutionScaleCommand}"
+                            CommandParameter="{x:Bind ViewModel.ResolutionScaleOptions[0]}"
+                            IsChecked="{x:Bind ViewModel.SelectedResolutionScale.Equals(ViewModel.ResolutionScaleOptions[0]), Mode=OneWay}"/>
+                        <ToggleMenuFlyoutItem
+                            Text="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToFormattedString(ViewModel.ResolutionScaleOptions[1])}"
+                            Command="{x:Bind ViewModel.SetResolutionScaleCommand}"
+                            CommandParameter="{x:Bind ViewModel.ResolutionScaleOptions[1]}"
+                            IsChecked="{x:Bind ViewModel.SelectedResolutionScale.Equals(ViewModel.ResolutionScaleOptions[1]), Mode=OneWay}"/>
+                        <ToggleMenuFlyoutItem
+                            Text="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToFormattedString(ViewModel.ResolutionScaleOptions[2])}"
+                            Command="{x:Bind ViewModel.SetResolutionScaleCommand}"
+                            CommandParameter="{x:Bind ViewModel.ResolutionScaleOptions[2]}"
+                            IsChecked="{x:Bind ViewModel.SelectedResolutionScale.Equals(ViewModel.ResolutionScaleOptions[2]), Mode=OneWay}"/>
+                        <ToggleMenuFlyoutItem
+                            Text="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToFormattedString(ViewModel.ResolutionScaleOptions[3])}"
+                            Command="{x:Bind ViewModel.SetResolutionScaleCommand}"
+                            CommandParameter="{x:Bind ViewModel.ResolutionScaleOptions[3]}"
+                            IsChecked="{x:Bind ViewModel.SelectedResolutionScale.Equals(ViewModel.ResolutionScaleOptions[3]), Mode=OneWay}"/>
+                    </MenuFlyout>
+                </Button.Flyout>
             </Button>
         </StackPanel>
 
