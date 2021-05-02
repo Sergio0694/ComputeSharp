@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Diagnostics;
+﻿using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -29,11 +29,11 @@ namespace ComputeSharp.WinUI
         /// Gets or sets the resolution scale to be used to render frames.
         /// This can help achieve higher framerates with more complex shaders.
         /// </summary>
-        /// <remarks>The accepted range is [0.1 and 1] (default is 1).</remarks>
+        /// <remarks>The accepted range is [0.1 and 1] (default is 1, exceeding values will be clamped).</remarks>
         public double ResolutionScale
         {
             get => (double)GetValue(ResolutionScaleProperty);
-            set => SetValue(ResolutionScaleProperty, value);
+            set => SetValue(ResolutionScaleProperty, Math.Clamp(value, 0.0, 1.0));
         }
 
         /// <summary>
@@ -50,8 +50,6 @@ namespace ComputeSharp.WinUI
         {
             var @this = (ComputeShaderPanel)d;
             var resolutionScale = (double)e.NewValue;
-
-            Guard.IsBetweenOrEqualTo(resolutionScale, 0.1, 1.0, nameof(resolutionScale));
 
             @this.resolutionScale = resolutionScale;
             @this.OnResize();
