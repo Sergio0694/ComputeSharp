@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
-using System.Runtime.InteropServices;
 using System.Threading;
+using ComputeSharp.Core.Extensions;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using TerraFX.Interop;
@@ -16,8 +15,6 @@ namespace ComputeSharp.WinUI
     /// </summary>
     public sealed unsafe partial class ComputeShaderPanel : SwapChainPanel
     {
-        private readonly ISwapChainPanelNative* swapChainPanelNative;
-
         private Thread? renderThread;
 
         /// <summary>
@@ -25,24 +22,39 @@ namespace ComputeSharp.WinUI
         /// </summary>
         public ComputeShaderPanel()
         {
-            this.swapChainPanelNative = GetISwapChainPanelNative();
-
             this.Loaded += ComputeShaderPanel_Loaded;
             this.SizeChanged += ComputeShaderPanel_SizeChanged;
+            this.CompositionScaleChanged += ComputeShaderPanel_CompositionScaleChanged;
         }
 
+        // Initializes the swap chain and starts the render thread
         private void ComputeShaderPanel_Loaded(object sender, RoutedEventArgs e)
         {
-            IntPtr hwnd = XamlRoot.As<IXamlRootNative>().HostWindow;
+            this.width = ActualWidth;
+            this.height = ActualHeight;
+            this.compositionScaleX = CompositionScaleX;
+            this.compositionScaleY = CompositionScaleY;
+            this.resolutionScale = ResolutionScale;
 
-            OnInitialize(hwnd);
-            OnResize();
+            OnInitialize();
 
-            using ComPtr<IDXGISwapChain> idxgiSwapChain = default;
+            // Extract the ISwapChainPanelNative reference from the current panel, then query the
+            // IDXGISwapChain reference just created and set that as the swap chain panel to use.
+            using (ComPtr<ISwapChainPanelNative> swapChainPanelNative = default)
+            {
+                IUnknown* swapChainPanel = (IUnknown*)((IWinRTObject)this).NativeObject.ThisPtr;
+                Guid iSwapChainPanelNativeUuid = Guid.Parse("63AAD0B8-7C24-40FF-85A8-640D944CC325");
 
-            _ = this.dxgiSwapChain1.CopyTo(&idxgiSwapChain);
+                swapChainPanel->QueryInterface(
+                    &iSwapChainPanelNativeUuid,
+                    (void**)&swapChainPanelNative).Assert();
 
-            this.swapChainPanelNative->SetSwapChain(idxgiSwapChain.Get());
+                using ComPtr<IDXGISwapChain> idxgiSwapChain = default;
+
+                this.dxgiSwapChain1.CopyTo(&idxgiSwapChain).Assert();
+
+                swapChainPanelNative.Get()->SetSwapChain(idxgiSwapChain.Get()).Assert();
+            }
 
             this.renderThread = new Thread(static args =>
             {
@@ -70,44 +82,22 @@ namespace ComputeSharp.WinUI
             this.renderThread.Start(this);
         }
 
+        // Updates the background store for the frame size factors used by the render thread
         private void ComputeShaderPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            this.width = e.NewSize.Width;
+            this.height = e.NewSize.Height;
+
             OnResize();
         }
 
-        /// <summary>
-        /// Gets a pointer to the underlying <see cref="ISwapChainPanelNative"/> object.
-        /// </summary>
-        /// <returns>The <see cref="ISwapChainPanelNative"/> pointer for the object in use.</returns>
-        [Pure]
-        private ISwapChainPanelNative* GetISwapChainPanelNative()
+        // Updates the background store for the composition scale factors used by the render thread
+        private void ComputeShaderPanel_CompositionScaleChanged(SwapChainPanel sender, object args)
         {
-            IObjectReference swapChainAsIUnknown = ((IWinRTObject)this).NativeObject;
+            this.compositionScaleX = CompositionScaleX;
+            this.compositionScaleY = CompositionScaleY;
 
-            IUnknown* iUnknown = (IUnknown*)swapChainAsIUnknown.ThisPtr;
-            ISwapChainPanelNative* iSwapChainPanelNative = default;
-
-            Guid iSwapChainPanelNativeUuid = Guid.Parse("63AAD0B8-7C24-40FF-85A8-640D944CC325");
-
-            _ = iUnknown->QueryInterface(
-                &iSwapChainPanelNativeUuid,
-                (void**)&iSwapChainPanelNative);
-
-            return iSwapChainPanelNative;
-        }
-
-        /// <summary>
-        /// An interface for the COM object behind <see cref="XamlRoot"/>.
-        /// </summary>
-        [ComImport]
-        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        [Guid("4CCD7521-9C08-41AD-A5BD-B263EF64C9E7")]
-        private interface IXamlRootNative
-        {
-            /// <summary>
-            /// Gets the handle for the host window containing the current instance.
-            /// </summary>
-            IntPtr HostWindow { get; }
+            OnResize();
         }
     }
 }
