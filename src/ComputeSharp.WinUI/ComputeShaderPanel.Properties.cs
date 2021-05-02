@@ -32,8 +32,8 @@ namespace ComputeSharp.WinUI
         /// <remarks>The accepted range is [0.1 and 1] (default is 1).</remarks>
         public double ResolutionScale
         {
-            get => (double)GetValue(ShaderFactoryProperty);
-            set => SetValue(ShaderFactoryProperty, value);
+            get => (double)GetValue(ResolutionScaleProperty);
+            set => SetValue(ResolutionScaleProperty, value);
         }
 
         /// <summary>
