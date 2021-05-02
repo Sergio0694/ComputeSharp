@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Threading;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Interop;
 using Microsoft.UI.Xaml.Controls;
 using TerraFX.Interop;
+using WinRT;
 using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.WinUI
@@ -11,14 +14,14 @@ namespace ComputeSharp.WinUI
     public sealed partial class ComputeShaderPanel : SwapChainPanel
     {
         /// <summary>
+        /// The render thread in use, if any.
+        /// </summary>
+        private Thread? renderThread;
+
+        /// <summary>
         /// The <see cref="IShaderRunner"/> instance used to create shaders to run.
         /// </summary>
         private IShaderRunner? shaderRunner;
-
-        /// <summary>
-        /// The resolution scale used to render frames.
-        /// </summary>
-        private double resolutionScale;
 
         /// <summary>
         /// The <see cref="ID3D12Device"/> pointer for the device currently in use.
@@ -101,6 +104,16 @@ namespace ComputeSharp.WinUI
         private float compositionScaleY;
 
         /// <summary>
+        /// The resolution scale used to render frames.
+        /// </summary>
+        private double resolutionScale;
+
+        /// <summary>
+        /// Indicates whether or not the rendering has been canceled.
+        /// </summary>
+        private bool isCancellationRequested;
+
+        /// <summary>
         /// Initializes the current application.
         /// </summary>
         private unsafe void OnInitialize()
@@ -120,7 +133,7 @@ namespace ComputeSharp.WinUI
                 d3D12CommandQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAGS.D3D12_COMMAND_QUEUE_FLAG_NONE;
                 d3D12CommandQueueDesc.NodeMask = 0;
 
-                d3D12Device.Get()->CreateCommandQueue(
+                this.d3D12Device.Get()->CreateCommandQueue(
                     &d3D12CommandQueueDesc,
                     FX.__uuidof<ID3D12CommandQueue>(),
                     (void**)d3D12CommandQueue).Assert();
@@ -178,7 +191,7 @@ namespace ComputeSharp.WinUI
                 this.d3D12Device.Get()->CreateCommandList(
                     0,
                     D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_DIRECT,
-                    d3D12CommandAllocator,
+                    this.d3D12CommandAllocator,
                     null,
                     FX.__uuidof<ID3D12GraphicsCommandList>(),
                     (void**)d3D12GraphicsCommandList).Assert();
@@ -186,6 +199,24 @@ namespace ComputeSharp.WinUI
 
             // Close the command list to prepare it for future use
             this.d3D12GraphicsCommandList.Get()->Close().Assert();
+
+            // Extract the ISwapChainPanelNative reference from the current panel, then query the
+            // IDXGISwapChain reference just created and set that as the swap chain panel to use.
+            using (ComPtr<ISwapChainPanelNative> swapChainPanelNative = default)
+            {
+                IUnknown* swapChainPanel = (IUnknown*)((IWinRTObject)this).NativeObject.ThisPtr;
+                Guid iSwapChainPanelNativeUuid = Guid.Parse("63AAD0B8-7C24-40FF-85A8-640D944CC325");
+
+                swapChainPanel->QueryInterface(
+                    &iSwapChainPanelNativeUuid,
+                    (void**)&swapChainPanelNative).Assert();
+
+                using ComPtr<IDXGISwapChain> idxgiSwapChain = default;
+
+                this.dxgiSwapChain1.CopyTo(&idxgiSwapChain).Assert();
+
+                swapChainPanelNative.Get()->SetSwapChain(idxgiSwapChain.Get()).Assert();
+            }
         }
 
         /// <summary>
@@ -333,6 +364,46 @@ namespace ComputeSharp.WinUI
             }
 
             this.nextD3D12FenceValue++;
+        }
+
+        /// <summary>
+        /// Executes the render loop for the current panel.
+        /// </summary>
+        /// <remarks>This method assumes to be invoked from a background thread.</remarks>
+        private void OnStartRenderLoop()
+        {
+            static void ExecuteRenderLoop(ComputeShaderPanel @this)
+            {
+                Stopwatch
+                    startStopwatch = Stopwatch.StartNew(),
+                    frameStopwatch = Stopwatch.StartNew();
+
+                const long targetFrameTimeInTicksFor60fps = 166666;
+
+                @this.OnUpdate(TimeSpan.Zero);
+
+                while (!@this.isCancellationRequested)
+                {
+                    if (frameStopwatch.ElapsedTicks >= targetFrameTimeInTicksFor60fps)
+                    {
+                        frameStopwatch.Restart();
+
+                        @this.OnUpdate(startStopwatch.Elapsed);
+                    }
+                }
+            }
+
+            this.isCancellationRequested = false;
+            this.renderThread = new Thread(static args => ExecuteRenderLoop((ComputeShaderPanel)args!));
+            this.renderThread.Start(this);
+        }
+
+        /// <summary>
+        /// Stops the current render loop, if one is running.
+        /// </summary>
+        private void OnStopRenderLoop()
+        {
+            this.isCancellationRequested = true;
         }
     }
 }
