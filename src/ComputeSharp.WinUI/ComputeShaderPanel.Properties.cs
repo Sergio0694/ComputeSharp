@@ -43,7 +43,7 @@ namespace ComputeSharp.WinUI
             nameof(ResolutionScale),
             typeof(double),
             typeof(ComputeShaderPanel),
-            new PropertyMetadata(1.0, static (d, e) => ((ComputeShaderPanel)d).shaderRunner = (IShaderRunner?)e.NewValue));
+            new PropertyMetadata(1.0, OnResolutionScalePropertyChanged));
 
         /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
         private static void OnResolutionScalePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -55,6 +55,40 @@ namespace ComputeSharp.WinUI
 
             @this.resolutionScale = resolutionScale;
             @this.OnResize();
+        }
+
+        /// <summary>
+        /// Gets or sets whether or not the rendering is paused.
+        /// </summary>
+        public bool IsPaused
+        {
+            get => (bool)GetValue(IsPausedProperty);
+            set => SetValue(IsPausedProperty, value);
+        }
+
+        /// <summary>
+        /// The <see cref="DependencyProperty"/> backing <see cref="IsPaused"/>.
+        /// </summary>
+        public static readonly DependencyProperty IsPausedProperty = DependencyProperty.Register(
+            nameof(IsPaused),
+            typeof(bool),
+            typeof(ComputeShaderPanel),
+            new PropertyMetadata(false, OnIsPausedPropertyChanged));
+
+        /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
+        private static void OnIsPausedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var @this = (ComputeShaderPanel)d;
+            var isPaused = (bool)e.NewValue;
+
+            if (isPaused)
+            {
+                @this.OnStopRenderLoop();
+            }
+            else
+            {
+                @this.OnStartRenderLoop();
+            }
         }
     }
 }
