@@ -3,6 +3,7 @@ using ComputeSharp.SwapChain.Shaders;
 using ComputeSharp.WinUI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using ComputeSharp.SwapChain.WinUI.Models;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ComputeSharp.SwapChain.WinUI.ViewModels
 {
@@ -19,6 +20,8 @@ namespace ComputeSharp.SwapChain.WinUI.ViewModels
             this.selectedResolutionScale = 100;
             this.selectedComputeShader = ComputeShaderOptions[0];
             this.selectedComputeShader.IsSelected = true;
+
+            ToggleRenderingPausedCommand = new RelayCommand(ToggleRenderingPaused);
         }
 
         /// <summary>
@@ -69,6 +72,30 @@ namespace ComputeSharp.SwapChain.WinUI.ViewModels
                     value.IsSelected = true;
                 }
             }
+        }
+
+        private bool isRenderingPaused;
+
+        /// <summary>
+        /// Gets or sets whether the rendering is currently paused.
+        /// </summary>
+        public bool IsRenderingPaused
+        {
+            get => this.isRenderingPaused;
+            set => SetProperty(ref this.isRenderingPaused, value);
+        }
+
+        /// <summary>
+        /// Gets the command that toggles <see cref="IsRenderingPaused"/>. 
+        /// </summary>
+        public IRelayCommand ToggleRenderingPausedCommand { get; }
+
+        /// <summary>
+        /// Toggles <see cref="IsRenderingPaused"/>.
+        /// </summary>
+        private void ToggleRenderingPaused()
+        {
+            IsRenderingPaused = !IsRenderingPaused;
         }
     }
 }

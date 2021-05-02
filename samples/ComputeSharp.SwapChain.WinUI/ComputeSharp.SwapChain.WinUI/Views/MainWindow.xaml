@@ -24,7 +24,8 @@
             x:Name="ShaderPanel"
             Grid.Row="1"
             ShaderRunner="{x:Bind ViewModel.SelectedComputeShader.ShaderRunner, Mode=OneWay}"
-            ResolutionScale="{x:Bind ViewModel.SelectedResolutionScale, Mode=OneWay}"/>
+            ResolutionScale="{x:Bind ViewModel.SelectedResolutionScale, Mode=OneWay}"
+            IsPaused="{x:Bind ViewModel.IsRenderingPaused, Mode=OneWay}"/>
 
         <!--Invisible title bar-->
         <Rectangle
@@ -40,6 +41,15 @@
             VerticalAlignment="Bottom"
             HorizontalAlignment="Right"
             Margin="48">
+
+            <!--Shader pause button-->
+            <Button
+                Padding="20"
+                CornerRadius="9999"
+                ToolTipService.ToolTip="Select shader"
+                Command="{x:Bind ViewModel.ToggleRenderingPausedCommand}">
+                <SymbolIcon Symbol="{x:Bind converters:RenderingPauseConverter.ConvertPausedToSymbol(ViewModel.IsRenderingPaused), Mode=OneWay}"/>
+            </Button>
 
             <!--Shader selection button-->
             <Button
