@@ -20,7 +20,7 @@ jobs:
       run: dotnet build src\ComputeSharp\ComputeSharp.csproj -c Release
       shell: cmd
 
-  # Run all the unit tests referencing the ComputeSharp project directly.
+  # Run all the unit tests referencing the ComputeSharp project directly
   run-tests:
     if: success()
     needs: [build-project]
@@ -43,7 +43,7 @@ jobs:
       run: dotnet test tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
 
-  # Run all the local samples to ensure they build and run with no errors.
+  # Run all the local samples to ensure they build and run with no errors
   run-samples:
     if: success()
     needs: [run-tests]
@@ -149,4 +149,38 @@ jobs:
         include-prerelease: true
     - name: Run ComputeSharp.Tests.NativeLibrariesResolver
       run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj -v n -l "console;verbosity=detailed"
+      shell: cmd
+
+  # Build the WinUI panel project
+  build-project-winui:
+    runs-on: windows-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Build
+      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /property:Configuration=Release
+      shell: cmd
+
+  # Build all the local WinUI samples to ensure they build with no errors
+  build-samples-winui:
+    if: success()
+    needs: [build-project-winui]
+    runs-on: windows-latest
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Build ComputeSharp.Sample
+      run: msbuild samples\ComputeSharp.SwapChain.WinUI\ComputeSharp.SwapChain.WinUI\ComputeSharp.SwapChain.WinUI.csproj -t:restore /property:Configuration=Release
       shell: cmd
