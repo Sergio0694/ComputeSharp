@@ -54,9 +54,9 @@ namespace ComputeSharp.WinUI
         private ComPtr<ID3D12GraphicsCommandList> d3D12GraphicsCommandList;
 
         /// <summary>
-        /// The <see cref="IDXGISwapChain1"/> instance used to display content onto the target window.
+        /// The <see cref="IDXGISwapChain2"/> instance used to display content onto the target window.
         /// </summary>
-        private ComPtr<IDXGISwapChain1> dxgiSwapChain1;
+        private ComPtr<IDXGISwapChain2> dxgiSwapChain2;
 
         /// <summary>
         /// The awaitable object for <see cref="IDXGISwapChain1.Present"/> calls.
@@ -64,12 +64,12 @@ namespace ComputeSharp.WinUI
         private IntPtr frameLatencyWaitableObject;
 
         /// <summary>
-        /// The first buffer within <see cref="dxgiSwapChain1"/>.
+        /// The first buffer within <see cref="dxgiSwapChain2"/>.
         /// </summary>
         private ComPtr<ID3D12Resource> d3D12Resource0;
 
         /// <summary>
-        /// The second buffer within <see cref="dxgiSwapChain1"/>.
+        /// The second buffer within <see cref="dxgiSwapChain2"/>.
         /// </summary>
         private ComPtr<ID3D12Resource> d3D12Resource1;
 
@@ -160,7 +160,7 @@ namespace ComputeSharp.WinUI
             }
 
             // Create the swap chain to display frames
-            fixed (IDXGISwapChain1** dxgiSwapChain1 = this.dxgiSwapChain1)
+            using (ComPtr<IDXGISwapChain1> dxgiSwapChain1 = default)
             {
                 using ComPtr<IDXGIFactory2> dxgiFactory2 = default;
 
@@ -183,16 +183,16 @@ namespace ComputeSharp.WinUI
                     (IUnknown*)this.d3D12CommandQueue.Get(),
                     &dxgiSwapChainDesc1,
                     null,
-                    dxgiSwapChain1).Assert();
+                    (IDXGISwapChain1**)&dxgiSwapChain1).Assert();
+
+                fixed (IDXGISwapChain2** dxgiSwapChain2 = this.dxgiSwapChain2)
+                {
+                    dxgiSwapChain1.CopyTo(dxgiSwapChain2).Assert();
+                }
             }
 
             // Get the awaitable object to synchronizize present calls
-            using (ComPtr<IDXGISwapChain2> dxgiSwapChain2 = default)
-            {
-                this.dxgiSwapChain1.CopyTo(&dxgiSwapChain2).Assert();
-
-                this.frameLatencyWaitableObject = dxgiSwapChain2.Get()->GetFrameLatencyWaitableObject();
-            }
+            this.frameLatencyWaitableObject = this.dxgiSwapChain2.Get()->GetFrameLatencyWaitableObject();
 
             // Create the command allocator to use
             fixed (ID3D12CommandAllocator** d3D12CommandAllocator = this.d3D12CommandAllocator)
@@ -231,7 +231,7 @@ namespace ComputeSharp.WinUI
 
                 using ComPtr<IDXGISwapChain> idxgiSwapChain = default;
 
-                this.dxgiSwapChain1.CopyTo(&idxgiSwapChain).Assert();
+                this.dxgiSwapChain2.CopyTo(&idxgiSwapChain).Assert();
 
                 swapChainPanelNative.Get()->SetSwapChain(idxgiSwapChain.Get()).Assert();
             }
@@ -262,25 +262,32 @@ namespace ComputeSharp.WinUI
             this.d3D12Resource1.Dispose();
 
             // Resize the swap chain buffers
-            this.dxgiSwapChain1.Get()->ResizeBuffers(
+            this.dxgiSwapChain2.Get()->ResizeBuffers(
                 2,
                 (uint)Math.Max(Math.Ceiling(this.width * this.compositionScaleX * this.resolutionScale), 1.0),
                 (uint)Math.Max(Math.Ceiling(this.height * this.compositionScaleY * this.resolutionScale), 1.0),
                 DXGI_FORMAT.DXGI_FORMAT_UNKNOWN,
                 (uint)DXGI_SWAP_CHAIN_FLAG.DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT).Assert();
 
+            // Apply the necessary scale transform
+            DXGI_MATRIX_3X2_F transformMatrix = default;
+            transformMatrix._11 = (float)((1 / this.compositionScaleX) * (1 / this.resolutionScale));
+            transformMatrix._22 = (float)((1 / this.compositionScaleY) * (1 / this.resolutionScale));
+
+            this.dxgiSwapChain2.Get()->SetMatrixTransform(&transformMatrix).Assert();
+
             // Retrieve the back buffers for the swap chain
             fixed (ID3D12Resource** d3D12Resource0 = this.d3D12Resource0)
             fixed (ID3D12Resource** d3D12Resource1 = this.d3D12Resource1)
             {
-                this.dxgiSwapChain1.Get()->GetBuffer(0, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0).Assert();
-                this.dxgiSwapChain1.Get()->GetBuffer(1, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1).Assert();
+                this.dxgiSwapChain2.Get()->GetBuffer(0, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0).Assert();
+                this.dxgiSwapChain2.Get()->GetBuffer(1, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1).Assert();
             }
 
             // Get the index of the initial back buffer
             using (ComPtr<IDXGISwapChain3> dxgiSwapChain3 = default)
             {
-                this.dxgiSwapChain1.CopyTo(dxgiSwapChain3.GetAddressOf()).Assert();
+                this.dxgiSwapChain2.CopyTo(dxgiSwapChain3.GetAddressOf()).Assert();
 
                 this.currentBufferIndex = dxgiSwapChain3.Get()->GetCurrentBackBufferIndex();
             }
@@ -374,7 +381,7 @@ namespace ComputeSharp.WinUI
             this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), this.nextD3D12FenceValue).Assert();
 
             // Present the new frame
-            this.dxgiSwapChain1.Get()->Present(0, 0).Assert();
+            this.dxgiSwapChain2.Get()->Present(0, 0).Assert();
 
             if (this.nextD3D12FenceValue > this.d3D12Fence.Get()->GetCompletedValue())
             {
