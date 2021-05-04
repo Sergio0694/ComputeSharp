@@ -17,6 +17,8 @@
     <Compile Include="..\..\ComputeSharp.SwapChain\Shaders\TwoTiledTruchet.cs" Link="Shaders\TwoTiledTruchet.cs" />
     <Compile Include="..\..\ComputeSharp.SwapChain\Shaders\Octagrams.cs" Link="Shaders\Octagrams.cs" />
     <Compile Include="..\..\ComputeSharp.SwapChain\Shaders\ProteanClouds.cs" Link="Shaders\ProteanClouds.cs" />
+    <Compile Include="..\..\ComputeSharp.SwapChain\Shaders\PyramidPattern.cs" Link="Shaders\PyramidPattern.cs" />
+    <Compile Include="..\..\ComputeSharp.SwapChain\Shaders\TriangleGridContouring.cs" Link="Shaders\TriangleGridContouring.cs" />
   </ItemGroup>
 
   <ItemGroup>
