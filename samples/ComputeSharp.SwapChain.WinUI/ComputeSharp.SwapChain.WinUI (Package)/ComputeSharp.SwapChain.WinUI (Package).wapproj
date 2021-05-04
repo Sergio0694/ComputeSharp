@@ -70,6 +70,12 @@
     <Content Include="..\..\..\tests\ComputeSharp.Tests\Assets\TwoTiledTruchet.png">
       <Link>Images\Shaders\TwoTiledTruchet.png</Link>
     </Content>
+    <Content Include="..\..\..\tests\ComputeSharp.Tests\Assets\PyramidPattern.png">
+      <Link>Images\Shaders\PyramidPattern.png</Link>
+    </Content>
+    <Content Include="..\..\..\tests\ComputeSharp.Tests\Assets\TriangleGridContouring.png">
+      <Link>Images\Shaders\TriangleGridContouring.png</Link>
+    </Content>
     <Content Include="Images\Misc\noise_low.png" />
     <Content Include="Images\Shaders\Blurred\ColorfulInfinity.png" />
     <Content Include="Images\Shaders\Blurred\ExtrudedTruchetPattern.png" />
@@ -78,6 +84,8 @@
     <Content Include="Images\Shaders\Blurred\Octagrams.png" />
     <Content Include="Images\Shaders\Blurred\ProteanClouds.png" />
     <Content Include="Images\Shaders\Blurred\TwoTiledTruchet.png" />
+    <Content Include="Images\Shaders\Blurred\PyramidPattern.png" />
+    <Content Include="Images\Shaders\Blurred\TriangleGridContouring.png" />
     <Content Include="Images\SplashScreen.scale-200.png" />
     <Content Include="Images\LockScreenLogo.scale-200.png" />
     <Content Include="Images\Square150x150Logo.scale-200.png" />

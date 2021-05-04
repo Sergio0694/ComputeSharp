@@ -65,7 +65,9 @@ namespace ComputeSharp.SwapChain.WinUI.ViewModels
             new("Menger Journey", new ShaderRunner<MengerJourney>(static (texture, time) => new(texture, (float)time.TotalSeconds))),
             new("Octagrams", new ShaderRunner<Octagrams>(static (texture, time) => new(texture, (float)time.TotalSeconds))),
             new("Protean clouds", new ShaderRunner<ProteanClouds>(static (texture, time) => new(texture, (float)time.TotalSeconds))),
-            new("Two tiled truchet", new ShaderRunner<TwoTiledTruchet>(static (texture, time) => new(texture, (float)time.TotalSeconds)))
+            new("Two tiled truchet", new ShaderRunner<TwoTiledTruchet>(static (texture, time) => new(texture, (float)time.TotalSeconds))),
+            new("Pyramid pattern", new ShaderRunner<PyramidPattern>(static (texture, time) => new(texture, (float)time.TotalSeconds))),
+            new("Triangle grid contouring", new ShaderRunner<TriangleGridContouring>(static (texture, time) => new(texture, (float)time.TotalSeconds)))
         };
 
         private ComputeShader selectedComputeShader;
