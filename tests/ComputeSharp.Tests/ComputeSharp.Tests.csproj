@@ -35,6 +35,7 @@
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\Octagrams.cs" Link="Shaders\Octagrams.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ProteanClouds.cs" Link="Shaders\ProteanClouds.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\PyramidPattern.cs" Link="Shaders\PyramidPattern.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\TriangleGridContouring.cs" Link="Shaders\TriangleGridContouring.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -64,6 +65,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Assets\PyramidPattern.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\TriangleGridContouring.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
