@@ -65,6 +65,20 @@ namespace ComputeSharp.Tests
             RunAndCompareShader(device, static texture => new ExtrudedTruchetPattern(texture, 0), 0.00011f);
         }
 
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void PyramidPattern(Device device)
+        {
+            RunAndCompareShader(device, static texture => new PyramidPattern(texture, 0), 0.00021f);
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void TriangleGridContouring(Device device)
+        {
+            RunAndCompareShader(device, static texture => new TriangleGridContouring(texture, 0), 0.0006f);
+        }
+
         /// <summary>
         /// Executes a given test for a specified shader.
         /// </summary>
