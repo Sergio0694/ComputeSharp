@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using ComputeSharp.SwapChain.Shaders;
+using ComputeSharp.SwapChain.WinUI.Models;
 using ComputeSharp.WinUI;
 using CommunityToolkit.Mvvm.ComponentModel;
-using ComputeSharp.SwapChain.WinUI.Models;
 using CommunityToolkit.Mvvm.Input;
 
 namespace ComputeSharp.SwapChain.WinUI.ViewModels
@@ -59,15 +59,15 @@ namespace ComputeSharp.SwapChain.WinUI.ViewModels
         /// </summary>
         public IReadOnlyList<ComputeShader> ComputeShaderOptions { get; } = new ComputeShader[]
         {
-            new("Colorful infinity", new ShaderRunner<ColorfulInfinity>(static (texture, time) => new(texture, (float)time.TotalSeconds))),
-            new("Extruded truchet", new ShaderRunner<ExtrudedTruchetPattern>(static (texture, time) => new(texture, (float)time.TotalSeconds))),
-            new("Fractal tiling", new ShaderRunner<FractalTiling>(static (texture, time) => new(texture, (float)time.TotalSeconds))),
-            new("Menger Journey", new ShaderRunner<MengerJourney>(static (texture, time) => new(texture, (float)time.TotalSeconds))),
-            new("Octagrams", new ShaderRunner<Octagrams>(static (texture, time) => new(texture, (float)time.TotalSeconds))),
-            new("Protean clouds", new ShaderRunner<ProteanClouds>(static (texture, time) => new(texture, (float)time.TotalSeconds))),
-            new("Two tiled truchet", new ShaderRunner<TwoTiledTruchet>(static (texture, time) => new(texture, (float)time.TotalSeconds))),
-            new("Pyramid pattern", new ShaderRunner<PyramidPattern>(static (texture, time) => new(texture, (float)time.TotalSeconds))),
-            new("Triangle grid contouring", new ShaderRunner<TriangleGridContouring>(static (texture, time) => new(texture, (float)time.TotalSeconds)))
+            new("Colorful infinity", new ShaderRunner<ColorfulInfinity>(static time => new((float)time.TotalSeconds))),
+            new("Extruded truchet", new ShaderRunner<ExtrudedTruchetPattern>(static time => new((float)time.TotalSeconds))),
+            new("Fractal tiling", new ShaderRunner<FractalTiling>(static time => new((float)time.TotalSeconds))),
+            new("Menger Journey", new ShaderRunner<MengerJourney>(static time => new((float)time.TotalSeconds))),
+            new("Octagrams", new ShaderRunner<Octagrams>(static time => new((float)time.TotalSeconds))),
+            new("Protean clouds", new ShaderRunner<ProteanClouds>(static time => new((float)time.TotalSeconds))),
+            new("Two tiled truchet", new ShaderRunner<TwoTiledTruchet>(static time => new((float)time.TotalSeconds))),
+            new("Pyramid pattern", new ShaderRunner<PyramidPattern>(static time => new((float)time.TotalSeconds))),
+            new("Triangle grid contouring", new ShaderRunner<TriangleGridContouring>(static time => new((float)time.TotalSeconds)))
         };
 
         private ComputeShader selectedComputeShader;
