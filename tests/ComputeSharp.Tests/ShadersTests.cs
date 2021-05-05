@@ -17,66 +17,84 @@ namespace ComputeSharp.Tests
     public class ShadersTests
     {
         [CombinatorialTestMethod]
-        [AllDevices]
-        public void ColorfulInfinity(Device device)
+        [Device(Device.Discrete)]
+        [Data(typeof(ColorfulInfinity))]
+        [Data(typeof(SwapChain.Shaders.Compute.ColorfulInfinity))]
+        public void ColorfulInfinity(Device device, Type shaderType)
         {
-            RunAndCompareShader(device, static texture => new ColorfulInfinity(texture, 0), 0.0000004f);
+            RunAndCompareShader(device, shaderType, 0.0000004f);
         }
 
         [CombinatorialTestMethod]
         [AllDevices]
-        public void FractalTiling(Device device)
+        [Data(typeof(FractalTiling))]
+        [Data(typeof(SwapChain.Shaders.Compute.FractalTiling))]
+        public void FractalTiling(Device device, Type shaderType)
         {
-            RunAndCompareShader(device, static texture => new FractalTiling(texture, 0), 0.0000005f);
+            RunAndCompareShader(device, shaderType, 0.0000005f);
         }
 
         [CombinatorialTestMethod]
         [AllDevices]
-        public void MengerJourney(Device device)
+        [Data(typeof(MengerJourney))]
+        [Data(typeof(SwapChain.Shaders.Compute.MengerJourney))]
+        public void MengerJourney(Device device, Type shaderType)
         {
-            RunAndCompareShader(device, static texture => new MengerJourney(texture, 0), 0.000011f);
+            RunAndCompareShader(device, shaderType, 0.000011f);
         }
 
         [CombinatorialTestMethod]
         [AllDevices]
-        public void TwoTiledTruchet(Device device)
+        [Data(typeof(TwoTiledTruchet))]
+        [Data(typeof(SwapChain.Shaders.Compute.TwoTiledTruchet))]
+        public void TwoTiledTruchet(Device device, Type shaderType)
         {
-            RunAndCompareShader(device, static texture => new TwoTiledTruchet(texture, 0), 0.00032f);
+            RunAndCompareShader(device, shaderType, 0.00032f);
         }
 
         [CombinatorialTestMethod]
         [AllDevices]
-        public void Octagrams(Device device)
+        [Data(typeof(Octagrams))]
+        [Data(typeof(SwapChain.Shaders.Compute.Octagrams))]
+        public void Octagrams(Device device, Type shaderType)
         {
-            RunAndCompareShader(device, static texture => new Octagrams(texture, 0), 0.0000006f);
+            RunAndCompareShader(device, shaderType, 0.0000006f);
         }
 
         [CombinatorialTestMethod]
         [AllDevices]
-        public void ProteanClouds(Device device)
+        [Data(typeof(ProteanClouds))]
+        [Data(typeof(SwapChain.Shaders.Compute.ProteanClouds))]
+        public void ProteanClouds(Device device, Type shaderType)
         {
-            RunAndCompareShader(device, static texture => new ProteanClouds(texture, 0), 0.0000004f);
+            RunAndCompareShader(device, shaderType, 0.0000004f);
         }
 
         [CombinatorialTestMethod]
         [AllDevices]
-        public void ExtrudedTruchetPattern(Device device)
+        [Data(typeof(ExtrudedTruchetPattern))]
+        [Data(typeof(SwapChain.Shaders.Compute.ExtrudedTruchetPattern))]
+        public void ExtrudedTruchetPattern(Device device, Type shaderType)
         {
-            RunAndCompareShader(device, static texture => new ExtrudedTruchetPattern(texture, 0), 0.00011f);
+            RunAndCompareShader(device, shaderType, 0.00011f);
         }
 
         [CombinatorialTestMethod]
         [AllDevices]
-        public void PyramidPattern(Device device)
+        [Data(typeof(PyramidPattern))]
+        [Data(typeof(SwapChain.Shaders.Compute.PyramidPattern))]
+        public void PyramidPattern(Device device, Type shaderType)
         {
-            RunAndCompareShader(device, static texture => new PyramidPattern(texture, 0), 0.00021f);
+            RunAndCompareShader(device, shaderType, 0.00021f);
         }
 
         [CombinatorialTestMethod]
         [AllDevices]
-        public void TriangleGridContouring(Device device)
+        [Data(typeof(TriangleGridContouring))]
+        [Data(typeof(SwapChain.Shaders.Compute.TriangleGridContouring))]
+        public void TriangleGridContouring(Device device, Type shaderType)
         {
-            RunAndCompareShader(device, static texture => new TriangleGridContouring(texture, 0), 0.0006f);
+            RunAndCompareShader(device, shaderType, 0.0006f);
         }
 
         /// <summary>
@@ -84,14 +102,12 @@ namespace ComputeSharp.Tests
         /// </summary>
         /// <typeparam name="T">The type of shader to test.</typeparam>
         /// <param name="device">The device to use.</param>
-        /// <param name="factory">A producer to create an instance of the shader to run.</param>
         /// <param name="delta">The comparison delta.</param>
-        private static void RunAndCompareShader<T>(Device device, Func<ReadWriteTexture2D<Rgba32, Float4>, T> factory, float delta)
-            where T : struct, IComputeShader
+        private static void RunAndCompareShader(Device device, Type shaderType, float delta)
         {
             _ = device.Get();
 
-            string expectedPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets", $"{typeof(T).Name}.png");
+            string expectedPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets", $"{shaderType.Name}.png");
 
             IImageInfo imageInfo = Image.Identify(expectedPath);
 
@@ -99,14 +115,37 @@ namespace ComputeSharp.Tests
 
             using (ReadWriteTexture2D<Rgba32, Float4> texture = device.Get().AllocateReadWriteTexture2D<Rgba32, Float4>(imageInfo.Width, imageInfo.Height))
             {
-                device.Get().For(texture.Width, texture.Height, factory(texture));
+                if (shaderType.IsAssignableTo(typeof(IComputeShader)))
+                {
+                    static void RunComputeShader<T>(ReadWriteTexture2D<Rgba32, Float4> texture)
+                        where T : struct, IComputeShader
+                    {
+                        texture.GraphicsDevice.For(texture.Width, texture.Height, (T)Activator.CreateInstance(typeof(T), texture, 0f)!);
+                    }
+
+                    var action = new Action<ReadWriteTexture2D<Rgba32, Float4>>(RunComputeShader<SwapChain.Shaders.Compute.ColorfulInfinity>);
+
+                    action.Method.GetGenericMethodDefinition().MakeGenericMethod(shaderType).Invoke(null, new[] { texture });
+                }
+                else
+                {
+                    static void RunPixelShader<T>(ReadWriteTexture2D<Rgba32, Float4> texture)
+                        where T : struct, IPixelShader<Float4>
+                    {
+                        texture.GraphicsDevice.ForEach(texture, (T)Activator.CreateInstance(typeof(T), 0f)!);
+                    }
+
+                    var action = new Action<ReadWriteTexture2D<Rgba32, Float4>>(RunPixelShader<ColorfulInfinity>);
+
+                    action.Method.GetGenericMethodDefinition().MakeGenericMethod(shaderType).Invoke(null, new[] { texture });
+                }
 
                 _ = image.TryGetSinglePixelSpan(out Span<ImageSharpRgba32> span);
 
                 texture.CopyTo(MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(span));
             }
 
-            string actualPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Shaders", $"{typeof(T).Name}.png");
+            string actualPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Shaders", $"{shaderType.Name}.png");
 
             _ = Directory.CreateDirectory(Path.GetDirectoryName(actualPath)!);
 

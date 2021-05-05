@@ -27,15 +27,15 @@
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslBokehBlurProcessor{TPixel}.cs" Link="Imaging\Processors\HlslBokehBlurProcessor{TPixel}.cs" />
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor.cs" />
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor{TPixel}.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor{TPixel}.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ColorfulInfinity.cs" Link="Shaders\ColorfulInfinity.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ExtrudedTruchetPattern.cs" Link="Shaders\ExtrudedTruchetPattern.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\FractalTiling.cs" Link="Shaders\FractalTiling.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\MengerJourney.cs" Link="Shaders\MengerJourney.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\TwoTiledTruchet.cs" Link="Shaders\TwoTiledTruchet.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\Octagrams.cs" Link="Shaders\Octagrams.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ProteanClouds.cs" Link="Shaders\ProteanClouds.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\PyramidPattern.cs" Link="Shaders\PyramidPattern.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\TriangleGridContouring.cs" Link="Shaders\TriangleGridContouring.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ColorfulInfinity.cs" Link="Shaders\Pixel\ColorfulInfinity.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ExtrudedTruchetPattern.cs" Link="Shaders\Pixel\ExtrudedTruchetPattern.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\FractalTiling.cs" Link="Shaders\Pixel\FractalTiling.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\MengerJourney.cs" Link="Shaders\Pixel\MengerJourney.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\TwoTiledTruchet.cs" Link="Shaders\Pixel\TwoTiledTruchet.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\Octagrams.cs" Link="Shaders\Pixel\Octagrams.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ProteanClouds.cs" Link="Shaders\Pixel\ProteanClouds.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\PyramidPattern.cs" Link="Shaders\Pixel\PyramidPattern.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\TriangleGridContouring.cs" Link="Shaders\Pixel\TriangleGridContouring.cs" />
   </ItemGroup>
 
   <ItemGroup>
