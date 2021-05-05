@@ -15,7 +15,7 @@ namespace ComputeSharp.Shaders.Translation
         /// </summary>
         /// <typeparam name="T">The type of compute shader currently in use.</typeparam>
         private static class TypeInfo<T>
-            where T : struct, IComputeShader
+            where T : struct
         {
             /// <summary>
             /// The id of the compute shader type in use.
@@ -51,7 +51,7 @@ namespace ComputeSharp.Shaders.Translation
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int GetHashCode<T>(in T shader)
-            where T : struct, IComputeShader
+            where T : struct
         {
             int hash = TypeInfo<T>.Id;
 
@@ -70,6 +70,6 @@ namespace ComputeSharp.Shaders.Translation
         /// <param name="shader">The compute shader instance to use to compute the final hash value.</param>
         /// <returns>The final hash value for the input closure.</returns>
         private delegate int Hasher<T>(int hash, in T shader)
-            where T : struct, IComputeShader;
+            where T : struct;
     }
 }

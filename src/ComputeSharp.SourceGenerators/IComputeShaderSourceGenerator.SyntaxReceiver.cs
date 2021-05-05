@@ -29,7 +29,9 @@ namespace ComputeSharp.SourceGenerators
             {
                 if (context.Node is StructDeclarationSyntax structDeclaration &&
                     context.SemanticModel.GetDeclaredSymbol(structDeclaration) is INamedTypeSymbol structSymbol &&
-                    structSymbol.Interfaces.Any(static interfaceSymbol => interfaceSymbol.Name == nameof(IComputeShader)))
+                    structSymbol.Interfaces.Any(static interfaceSymbol =>
+                        interfaceSymbol.Name == nameof(IComputeShader) ||
+                        interfaceSymbol is { IsGenericType: true, Name: nameof(IPixelShader<byte>) }))
                 {
                     this.gatheredInfo.Add(new Item(structDeclaration, structSymbol));
                 }

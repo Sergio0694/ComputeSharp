@@ -16,12 +16,19 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         private readonly ShaderSourceRewriter shaderSourceRewriter;
 
         /// <summary>
+        /// Indicates whether or not the method belongs to a compute shader.
+        /// </summary>
+        private readonly bool isComputeShader;
+
+        /// <summary>
         /// Creates a new <see cref="ExecuteMethodRewriter"/> instance with the specified parameters.
         /// </summary>
         /// <param name="shaderSourceRewriter">The <see cref="ShaderSourceRewriter"/> instance used to process the input tree.</param>
-        public ExecuteMethodRewriter(ShaderSourceRewriter shaderSourceRewriter)
+        /// <param name="isComputeShader">Indicates whether or not the method belongs to a compute shader.</param>
+        public ExecuteMethodRewriter(ShaderSourceRewriter shaderSourceRewriter, bool isComputeShader)
         {
             this.shaderSourceRewriter = shaderSourceRewriter;
+            this.isComputeShader = isComputeShader;
         }
 
         /// <inheritdoc cref="CSharpSyntaxRewriter.Visit(SyntaxNode?)"/>
@@ -57,9 +64,40 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         }
 
         /// <inheritdoc/>
+        public override SyntaxNode? VisitReturnStatement(ReturnStatementSyntax node)
+        {
+            var updatedNode = (ReturnStatementSyntax)base.VisitReturnStatement(node)!;
+
+            if (this.isComputeShader)
+            {
+                return updatedNode;
+            }
+
+            // __outputTexture[ThreadIds.xy] = <RETURN_EXPRESSION>;
+            return
+                ExpressionStatement(
+                    AssignmentExpression(
+                        SyntaxKind.SimpleAssignmentExpression,
+                        ElementAccessExpression(IdentifierName("__outputTexture"))
+                        .AddArgumentListArguments(
+                            Argument(
+                                MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    IdentifierName("ThreadIds"),
+                                    IdentifierName("xy")))),
+                        updatedNode.Expression!));
+        }
+
+        /// <inheritdoc/>
         public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
             var updatedNode = ((MethodDeclarationSyntax)base.VisitMethodDeclaration(node)!).WithModifiers(TokenList());
+
+            // Change the return type if the current shader is a pixel shader
+            if (!this.isComputeShader)
+            {
+                updatedNode = updatedNode.WithReturnType(PredefinedType(Token(SyntaxKind.VoidKeyword)));
+            }
 
             // When we're rewriting the main compute shader method, we need to insert a range
             // check to ensure that invocation outside of the requested range are discarded.

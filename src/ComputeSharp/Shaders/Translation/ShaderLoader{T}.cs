@@ -19,7 +19,7 @@ namespace ComputeSharp.Shaders.Translation
     /// </summary>
     /// <typeparam name="T">The type of compute shader currently in use.</typeparam>
     internal sealed partial class ShaderLoader<T> : IShaderLoader
-        where T : struct, IComputeShader
+        where T : struct
     {
         /// <summary>
         /// The associated <see cref="IComputeShaderSourceAttribute"/> instance for the current shader type.
@@ -180,6 +180,23 @@ namespace ComputeSharp.Shaders.Translation
             }
 
             List<D3D12_DESCRIPTOR_RANGE1> d3D12DescriptorRanges1 = new();
+
+            // Add the implicit texture descriptor if the shader is a pixel shader
+            foreach (Type interfaceType in typeof(T).GetInterfaces())
+            {
+                if (interfaceType.IsGenericType &&
+                    interfaceType.GetGenericTypeDefinition() == typeof(IPixelShader<>))
+                {
+                    d3D12DescriptorRanges1.Add(new D3D12_DESCRIPTOR_RANGE1(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, this.readWriteBuffersCount));
+
+                    (string hlslType, string hlslName) = Attribute.ImplicitTextureField!.Value;
+
+                    this.hlslResourceInfo.Add(new HlslResourceInfo.ReadWrite(hlslType, hlslName, (int)this.readWriteBuffersCount++));
+                    this.totalResourceCount++;
+
+                    break;
+                }
+            }
 
             // Inspect the captured fields
             foreach (FieldInfo fieldInfo in shaderFields)

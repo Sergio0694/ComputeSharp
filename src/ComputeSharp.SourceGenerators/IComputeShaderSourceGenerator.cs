@@ -75,9 +75,12 @@ namespace ComputeSharp.SourceGenerators
             Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
             // Explore the syntax tree and extract the processed info
-            var processedMembers = GetProcessedFields(context, structDeclarationSymbol, discoveredTypes).ToArray();
+            var pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: nameof(IPixelShader<byte>) });
+            var isComputeShader = pixelShaderSymbol is null;
+            var implicitTextureField = isComputeShader ? default((string, string)?) : (HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!), "__outputTexture");
+            var processedMembers = GetProcessedFields(context, structDeclarationSymbol, discoveredTypes, isComputeShader).ToArray();
             var sharedBuffers = GetGroupSharedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
-            var (entryPoint, processedMethods, forwardDeclarations) = GetProcessedMethods(context, structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
+            var (entryPoint, processedMethods, forwardDeclarations) = GetProcessedMethods(context, structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions, isComputeShader);
             var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
             var processedConstants = GetProcessedConstants(constantDefinitions);
             var staticFields = GetStaticFields(context, semanticModel, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
@@ -90,6 +93,7 @@ namespace ComputeSharp.SourceGenerators
                     Attribute(IdentifierName(typeof(IComputeShaderSourceAttribute).FullName)).AddArgumentListArguments(
                         AttributeArgument(TypeOfExpression(IdentifierName(structDeclarationSymbol.ToDisplayString()))),
                         AttributeArgument(ArrayExpression(processedTypes)),
+                        AttributeArgument(ArrayExpression(implicitTextureField)),
                         AttributeArgument(NestedArrayExpression(processedMembers)),
                         AttributeArgument(ArrayExpression(forwardDeclarations)),
                         AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(entryPoint))),
@@ -112,12 +116,14 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="context">The current generator context in use.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="types">The collection of currently discovered types.</param>
+        /// <param name="isComputeShader">Indicates whether or not <paramref name="structDeclarationSymbol"/> represents a compute shader.</param>
         /// <returns>A sequence of captured fields in <paramref name="structDeclarationSymbol"/>.</returns>
         [Pure]
         private static IEnumerable<IEnumerable<string>> GetProcessedFields(
             GeneratorExecutionContext context,
             INamedTypeSymbol structDeclarationSymbol,
-            ICollection<INamedTypeSymbol> types)
+            ICollection<INamedTypeSymbol> types,
+            bool isComputeShader)
         {
             bool hlslResourceFound = false;
 
@@ -176,7 +182,8 @@ namespace ComputeSharp.SourceGenerators
                 yield return new[] { fieldSymbol.Name, mapping ?? fieldSymbol.Name, typeName };
             }
 
-            if (!hlslResourceFound)
+            // If the shader is a compute one (so no implicit output texture), it has to contain at least one resource
+            if (!hlslResourceFound && isComputeShader)
             {
                 context.ReportDiagnostic(MissingShaderResources, structDeclarationSymbol, structDeclarationSymbol);
             }
@@ -303,6 +310,7 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="staticMethods">The set of discovered and processed static methods.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
+        /// <param name="isComputeShader">Indicates whether or not <paramref name="structDeclarationSymbol"/> represents a compute shader.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
         [Pure]
         private static (string EntryPoint, IEnumerable<string> Methods, IEnumerable<string> Declarations) GetProcessedMethods(
@@ -312,7 +320,8 @@ namespace ComputeSharp.SourceGenerators
             SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
             IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
-            IDictionary<IFieldSymbol, string> constantDefinitions)
+            IDictionary<IFieldSymbol, string> constantDefinitions,
+            bool isComputeShader)
         {
             // Find all declared methods in the type
             ImmutableArray<MethodDeclarationSyntax> methodDeclarations = (
@@ -328,10 +337,16 @@ namespace ComputeSharp.SourceGenerators
             {
                 IMethodSymbol methodDeclarationSymbol = semanticModel.For(methodDeclaration).GetDeclaredSymbol(methodDeclaration)!;
                 bool isShaderEntryPoint =
-                    methodDeclarationSymbol.Name == nameof(IComputeShader.Execute) &&
-                    methodDeclarationSymbol.ReturnsVoid &&
-                    methodDeclarationSymbol.TypeParameters.Length == 0 &&
-                    methodDeclarationSymbol.Parameters.Length == 0;
+                    (isComputeShader &&
+                     methodDeclarationSymbol.Name == nameof(IComputeShader.Execute) &&
+                     methodDeclarationSymbol.ReturnsVoid &&
+                     methodDeclarationSymbol.TypeParameters.Length == 0 &&
+                     methodDeclarationSymbol.Parameters.Length == 0) ||
+                    (!isComputeShader &&
+                     methodDeclarationSymbol.Name == nameof(IPixelShader<byte>.Execute) &&
+                     methodDeclarationSymbol.ReturnType is not null && // TODO: match for pixel type
+                     methodDeclarationSymbol.TypeParameters.Length == 0 &&
+                     methodDeclarationSymbol.Parameters.Length == 0);
 
                 // Create the source rewriter for the current method
                 ShaderSourceRewriter shaderSourceRewriter = new(
@@ -356,7 +371,7 @@ namespace ComputeSharp.SourceGenerators
                 // If the method is the shader entry point, do additional processing
                 if (isShaderEntryPoint)
                 {
-                    processedMethod = new ExecuteMethodRewriter(shaderSourceRewriter).Visit(processedMethod)!;
+                    processedMethod = new ExecuteMethodRewriter(shaderSourceRewriter, isComputeShader).Visit(processedMethod)!;
 
                     entryPoint = processedMethod.NormalizeWhitespace().ToFullString();
                 }

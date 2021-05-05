@@ -266,6 +266,26 @@ namespace ComputeSharp.SourceGenerators.Mappings
         }
 
         /// <summary>
+        /// Gets the mapped HLSL-compatible type name for the output texture of a pixel shader.
+        /// </summary>
+        /// <param name="typeSymbol">The pixel shader type to map.</param>
+        /// <returns>The HLSL-compatible type name that can be used in an HLSL shader.</returns>
+        [Pure]
+        public static string GetMappedNameForPixelShaderType(INamedTypeSymbol typeSymbol)
+        {
+            string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments.First()).GetFullMetadataName();
+
+            // If the current type is a custom type, format it as needed
+            if (!KnownHlslTypes.TryGetValue(genericArgumentName, out string? mappedElementType))
+            {
+                mappedElementType = genericArgumentName.ToHlslIdentifierName();
+            }
+
+            // Construct the HLSL type name
+            return $"RWTexture2D<unorm {mappedElementType}>";
+        }
+
+        /// <summary>
         /// Gets the mapped HLSL-compatible type name for the input element type symbol.
         /// </summary>
         /// <param name="typeSymbol">The input type to map.</param>

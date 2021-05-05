@@ -22,7 +22,7 @@ namespace ComputeSharp.SourceGenerators.Helpers
         /// </para>
         /// </summary>
         /// <param name="values">The input sequence of <see cref="string"/> instances.</param>
-        /// <returns>An <see cref="ArrayCreationExpression"/> instance with the described contents.</returns>
+        /// <returns>An <see cref="ArrayCreationExpressionSyntax"/> instance with the described contents.</returns>
         [Pure]
         public static ArrayCreationExpressionSyntax ArrayExpression(IEnumerable<string> values)
         {
@@ -44,7 +44,7 @@ namespace ComputeSharp.SourceGenerators.Helpers
         /// </para>
         /// </summary>
         /// <param name="values">The input sequence of <see cref="string"/> groups.</param>
-        /// <returns>An <see cref="ArrayCreationExpression"/> instance with the described contents.</returns>
+        /// <returns>An <see cref="ArrayCreationExpressionSyntax"/> instance with the described contents.</returns>
         [Pure]
         public static ArrayCreationExpressionSyntax NestedArrayExpression(IEnumerable<IEnumerable<string?>> groups)
         {
@@ -71,7 +71,7 @@ namespace ComputeSharp.SourceGenerators.Helpers
         /// </para>
         /// </summary>
         /// <param name="values">The input sequence of <see cref="string"/> groups.</param>
-        /// <returns>An <see cref="ArrayCreationExpression"/> instance with the described contents.</returns>
+        /// <returns>An <see cref="ArrayCreationExpressionSyntax"/> instance with the described contents.</returns>
         [Pure]
         public static ArrayCreationExpressionSyntax NestedArrayExpression(IEnumerable<(string A, string B, int? C)> groups)
         {
@@ -91,6 +91,36 @@ namespace ComputeSharp.SourceGenerators.Helpers
                         group.C is int i
                             ? LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(i))
                             : LiteralExpression(SyntaxKind.NullLiteralExpression)))).ToArray()));
+        }
+
+        /// <summary>
+        /// Creates a <see cref="string"/>[]? array expression from the given tuple instance.
+        /// <para>
+        /// That it, it applies the following transformation:
+        /// <code>
+        /// null => null
+        /// ("S1", "S2") => new string[] { "S1", "S2" }
+        /// </code>
+        /// </para>
+        /// </summary>
+        /// <param name="values">The input tuple instance.</param>
+        /// <returns>An <see cref="ExpressionSyntax"/> instance with the described contents.</returns>
+        [Pure]
+        public static ExpressionSyntax ArrayExpression((string First, string Second)? values)
+        {
+            if (values is null)
+            {
+                return LiteralExpression(SyntaxKind.NullLiteralExpression);
+            }
+
+            return
+                ArrayCreationExpression(
+                ArrayType(PredefinedType(Token(SyntaxKind.StringKeyword)))
+                .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
+                .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
+                .AddExpressions(
+                    LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(values.Value.First)),
+                    LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(values.Value.Second))));
         }
     }
 }

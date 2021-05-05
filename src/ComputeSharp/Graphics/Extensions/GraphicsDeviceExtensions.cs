@@ -1131,5 +1131,34 @@ namespace ComputeSharp
         {
             ShaderRunner<T>.Run(device, x, y, z, threadsX, threadsY, threadsZ, in shader);
         }
+
+        /// <summary>
+        /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of pixel shader to run.</typeparam>
+        /// <typeparam name="TPixel">The type of pixels being processed by the shader.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
+        /// <param name="texture">The target texture to apply the pixel shader to.</param>
+        public static void ForEach<T, TPixel>(this GraphicsDevice device, IReadWriteTexture2D<TPixel> texture)
+            where T : struct, IPixelShader<TPixel>
+            where TPixel : unmanaged
+        {
+            ShaderRunner<T>.Run(device, texture, default);
+        }
+
+        /// <summary>
+        /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of pixel shader to run.</typeparam>
+        /// <typeparam name="TPixel">The type of pixels being processed by the shader.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
+        /// <param name="texture">The target texture to apply the pixel shader to.</param>
+        /// <param name="shader">The input <typeparamref name="T"/> instance representing the pixel shader to run.</param>
+        public static void ForEach<T, TPixel>(this GraphicsDevice device, IReadWriteTexture2D<TPixel> texture, in T shader)
+            where T : struct, IPixelShader<TPixel>
+            where TPixel : unmanaged
+        {
+            ShaderRunner<T>.Run(device, texture, in shader);
+        }
     }
 }

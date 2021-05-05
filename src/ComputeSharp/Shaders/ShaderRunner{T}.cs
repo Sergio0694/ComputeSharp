@@ -8,10 +8,13 @@ using ComputeSharp.Shaders.Renderer;
 using ComputeSharp.Shaders.Translation;
 using ComputeSharp.Shaders.Translation.Interop;
 using ComputeSharp.Shaders.Translation.Models;
+using ComputeSharp.__Internals;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
+
+#pragma warning disable CS0618
 
 namespace ComputeSharp.Shaders
 {
@@ -20,7 +23,7 @@ namespace ComputeSharp.Shaders
     /// </summary>
     /// <typeparam name="T">The type of compute shader to run.</typeparam>
     internal static class ShaderRunner<T>
-        where T : struct, IComputeShader
+        where T : struct
     {
         /// <summary>
         /// The mapping used to cache and reuse compiled shaders.
@@ -168,6 +171,86 @@ namespace ComputeSharp.Shaders
             {
                 // Load the captured buffers
                 commandList.D3D12GraphicsCommandList->SetComputeRootDescriptorTable((uint)i + 1, resources[i]);
+            }
+
+            // Dispatch and wait for completion
+            commandList.D3D12GraphicsCommandList->Dispatch((uint)groupsX, (uint)groupsY, (uint)groupsZ);
+            commandList.ExecuteAndWaitForCompletion();
+        }
+
+        /// <summary>
+        /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
+        /// </summary>
+        /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
+        /// <param name="texture">The target texture to invoke the pixel shader upon.</param>
+        /// <param name="shader">The input <typeparamref name="T"/> instance representing the pixel shader to run.</param>
+        public static unsafe void Run<TPixel>(GraphicsDevice device, IReadWriteTexture2D<TPixel> texture, in T shader)
+            where TPixel : unmanaged
+        {
+            device.ThrowIfDisposed();
+
+            // Calculate the dispatch values
+            int
+                x = texture.Width,
+                y = texture.Height,
+                z = 1,
+                threadsX = 8,
+                threadsY = 8,
+                threadsZ = 1,
+                groupsX = Math.DivRem(x, threadsX, out int modX) + (modX == 0 ? 0 : 1),
+                groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1),
+                groupsZ = Math.DivRem(z, threadsZ, out int modZ) + (modZ == 0 ? 0 : 1);
+
+            Guard.IsBetweenOrEqualTo(groupsX, 1, FX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
+            Guard.IsBetweenOrEqualTo(groupsY, 1, FX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
+            Guard.IsBetweenOrEqualTo(groupsZ, 1, FX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
+
+            // Create the shader key
+            ShaderKey key = new(ShaderHashCodeProvider.GetHashCode(in shader), threadsX, threadsY, threadsZ);
+            CachedShader<T> shaderData;
+            PipelineData? pipelineData;
+
+            lock (ShadersCache)
+            {
+                // Get or preload the shader
+                if (!ShadersCache.TryGetValue(key, out shaderData))
+                {
+                    LoadShader(threadsX, threadsY, threadsZ, in shader, out shaderData);
+
+                    // Cache for later use
+                    ShadersCache.Add(key, shaderData);
+                }
+
+                // Create the reusable pipeline state
+                if (!shaderData.CachedPipelines.TryGetValue(device, out pipelineData))
+                {
+                    CreatePipelineData(device, shaderData, out pipelineData);
+                }
+            }
+
+            // Create the commands list and set the pipeline state
+            using CommandList commandList = new(device, D3D12_COMMAND_LIST_TYPE_COMPUTE);
+
+            commandList.D3D12GraphicsCommandList->SetComputeRootSignature(pipelineData.D3D12RootSignature);
+            commandList.D3D12GraphicsCommandList->SetPipelineState(pipelineData.D3D12PipelineState);
+
+            // Extract the dispatch data for the shader invocation
+            using DispatchData dispatchData = shaderData.Loader.GetDispatchData(device, in shader, x, y, z);
+
+            // Initialize the loop targets and the captured values
+            commandList.D3D12GraphicsCommandList->SetComputeRoot32BitConstants(dispatchData.Variables);
+
+            // Load the implicit output texture
+            commandList.D3D12GraphicsCommandList->SetComputeRootDescriptorTable(
+                1,
+                ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuDescriptorHandle(device));
+
+            ReadOnlySpan<D3D12_GPU_DESCRIPTOR_HANDLE> resources = dispatchData.Resources;
+
+            for (int i = 1; i < resources.Length; i++)
+            {
+                // Load the captured buffers
+                commandList.D3D12GraphicsCommandList->SetComputeRootDescriptorTable((uint)i + 2, resources[i]);
             }
 
             // Dispatch and wait for completion
