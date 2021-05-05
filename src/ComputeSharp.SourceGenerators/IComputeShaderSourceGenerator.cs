@@ -377,7 +377,11 @@ namespace ComputeSharp.SourceGenerators
                 // If the method is the shader entry point, do additional processing
                 if (isShaderEntryPoint)
                 {
-                    processedMethod = new ExecuteMethodRewriter(shaderSourceRewriter, isComputeShader).Visit(processedMethod)!;
+                    processedMethod = isComputeShader switch
+                    {
+                        true => new ExecuteMethodRewriter.Compute(shaderSourceRewriter).Visit(processedMethod)!,
+                        false => new ExecuteMethodRewriter.Pixel(shaderSourceRewriter).Visit(processedMethod)!
+                    };
 
                     entryPoint = processedMethod.NormalizeWhitespace().ToFullString();
                 }
