@@ -174,11 +174,6 @@ namespace ComputeSharp.Shaders.Translation
                 BindingFlags.Public |
                 BindingFlags.NonPublic).ToArray();
 
-            if (shaderFields.Count == 0)
-            {
-                ThrowHelper.ThrowInvalidOperationException("The shader body must contain at least one field");
-            }
-
             List<D3D12_DESCRIPTOR_RANGE1> d3D12DescriptorRanges1 = new();
 
             // Add the implicit texture descriptor if the shader is a pixel shader
@@ -196,6 +191,11 @@ namespace ComputeSharp.Shaders.Translation
 
                     break;
                 }
+            }
+
+            if (shaderFields.Count == 0 && d3D12DescriptorRanges1.Count == 0)
+            {
+                ThrowHelper.ThrowInvalidOperationException("The shader body must contain at least one field");
             }
 
             // Inspect the captured fields

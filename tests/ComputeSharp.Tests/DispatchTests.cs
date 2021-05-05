@@ -262,5 +262,41 @@ namespace ComputeSharp.Tests
                 buffer[5] = (int)Hlsl.Dot(DispatchSize.XYZ, Float3.One);
             }
         }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void Verify_DispatchAsPixelShader(Device device)
+        {
+            using ReadWriteTexture2D<Rgba32, Float4> texture = device.Get().AllocateReadWriteTexture2D<Rgba32, Float4>(256, 256);
+
+            device.Get().ForEach<DispatchPixelShader, Float4>(texture);
+
+            Rgba32[,] data = texture.ToArray();
+
+            for (int y = 0; y < texture.Height; y++)
+            {
+                for (int x = 0; x < texture.Width; x++)
+                {
+                    Rgba32 pixel = data[y, x];
+
+                    Assert.AreEqual((float)pixel.R / 255, (float)x / texture.Width, 0.1f);
+                    Assert.AreEqual((float)pixel.G / 255, (float)y / texture.Height, 0.1f);
+                    Assert.AreEqual(pixel.B, 255);
+                    Assert.AreEqual(pixel.A, 255);
+                }
+            }
+        }
+
+        internal readonly partial struct DispatchPixelShader : IPixelShader<Float4>
+        {
+            public Float4 Execute()
+            {
+                return new(
+                    (float)ThreadIds.X / DispatchSize.X,
+                    (float)ThreadIds.Y / DispatchSize.Y,
+                    1,
+                    1);
+            }
+        }
     }
 }
