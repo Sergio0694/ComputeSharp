@@ -193,20 +193,16 @@ namespace ComputeSharp.Shaders
             int
                 x = texture.Width,
                 y = texture.Height,
-                z = 1,
                 threadsX = 8,
                 threadsY = 8,
-                threadsZ = 1,
                 groupsX = Math.DivRem(x, threadsX, out int modX) + (modX == 0 ? 0 : 1),
-                groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1),
-                groupsZ = Math.DivRem(z, threadsZ, out int modZ) + (modZ == 0 ? 0 : 1);
+                groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1);
 
             Guard.IsBetweenOrEqualTo(groupsX, 1, FX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
             Guard.IsBetweenOrEqualTo(groupsY, 1, FX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
-            Guard.IsBetweenOrEqualTo(groupsZ, 1, FX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
 
             // Create the shader key
-            ShaderKey key = new(ShaderHashCodeProvider.GetHashCode(in shader), threadsX, threadsY, threadsZ);
+            ShaderKey key = new(ShaderHashCodeProvider.GetHashCode(in shader), threadsX, threadsY, 1);
             CachedShader<T> shaderData;
             PipelineData? pipelineData;
 
@@ -215,7 +211,7 @@ namespace ComputeSharp.Shaders
                 // Get or preload the shader
                 if (!ShadersCache.TryGetValue(key, out shaderData))
                 {
-                    LoadShader(threadsX, threadsY, threadsZ, in shader, out shaderData);
+                    LoadShader(threadsX, threadsY, 1, in shader, out shaderData);
 
                     // Cache for later use
                     ShadersCache.Add(key, shaderData);
@@ -235,7 +231,7 @@ namespace ComputeSharp.Shaders
             commandList.D3D12GraphicsCommandList->SetPipelineState(pipelineData.D3D12PipelineState);
 
             // Extract the dispatch data for the shader invocation
-            using DispatchData dispatchData = shaderData.Loader.GetDispatchData(device, in shader, x, y, z);
+            using DispatchData dispatchData = shaderData.Loader.GetDispatchData(device, in shader, x, y, 1);
 
             // Initialize the loop targets and the captured values
             commandList.D3D12GraphicsCommandList->SetComputeRoot32BitConstants(dispatchData.Variables);
@@ -254,7 +250,7 @@ namespace ComputeSharp.Shaders
             }
 
             // Dispatch and wait for completion
-            commandList.D3D12GraphicsCommandList->Dispatch((uint)groupsX, (uint)groupsY, (uint)groupsZ);
+            commandList.D3D12GraphicsCommandList->Dispatch((uint)groupsX, (uint)groupsY, 1);
             commandList.ExecuteAndWaitForCompletion();
         }
 

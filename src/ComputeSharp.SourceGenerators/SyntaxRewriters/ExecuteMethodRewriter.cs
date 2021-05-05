@@ -172,6 +172,21 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
 
                 return updatedNode.WithBody(Block(IfStatement(rangeCheckExpression, updatedNode.Body!)));
             }
+
+            /// <inheritdoc/>
+            public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
+            {
+                IdentifierNameSyntax updatedNode = (IdentifierNameSyntax)base.VisitIdentifierName(node)!;
+
+                // Since pixel shaders are only ever executed on 2D textures, the special __z field can
+                // be removed and replaced with just numeric literal expressions, where the value is 1.
+                if (updatedNode.Identifier.Text == "__z")
+                {
+                    return LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(1));
+                }
+
+                return updatedNode;
+            }
         }
     }
 }

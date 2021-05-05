@@ -99,6 +99,9 @@ namespace ComputeSharp.Shaders.Translation
         public string EntryPoint { get; private set; }
 
         /// <inheritdoc/>
+        public bool IsComputeShader { get; private set; }
+
+        /// <inheritdoc/>
         public IReadOnlyList<HlslResourceInfo> HlslResourceInfo => this.hlslResourceInfo;
 
         /// <inheritdoc/>
@@ -193,6 +196,10 @@ namespace ComputeSharp.Shaders.Translation
                 }
             }
 
+            // Set the current shader type
+            IsComputeShader = d3D12DescriptorRanges1.Count == 0;
+
+            // Ensure the shader has a valid number of captured resources
             if (shaderFields.Count == 0 && d3D12DescriptorRanges1.Count == 0)
             {
                 ThrowHelper.ThrowInvalidOperationException("The shader body must contain at least one field");

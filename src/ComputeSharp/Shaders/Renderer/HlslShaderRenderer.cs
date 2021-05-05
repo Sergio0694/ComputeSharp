@@ -85,7 +85,11 @@ namespace ComputeSharp.Shaders.Renderer
             builder.AppendLine('{');
             builder.AppendLine("    uint __x;");
             builder.AppendLine("    uint __y;");
-            builder.AppendLine("    uint __z;");
+
+            if (info.IsComputeShader)
+            {
+                builder.AppendLine("    uint __z;");
+            }
 
             foreach (var local in info.FieldsInfo)
             {
