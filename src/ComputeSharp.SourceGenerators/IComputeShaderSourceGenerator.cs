@@ -6,6 +6,7 @@ using System.Text;
 using ComputeSharp.__Internals;
 using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
+using ComputeSharp.SourceGenerators.Helpers;
 using ComputeSharp.SourceGenerators.Mappings;
 using ComputeSharp.SourceGenerators.SyntaxRewriters;
 using Microsoft.CodeAnalysis;
@@ -15,7 +16,6 @@ using Microsoft.CodeAnalysis.Text;
 using static ComputeSharp.SourceGenerators.Helpers.SyntaxFactoryHelper;
 using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-using ComputeSharp.SourceGenerators.Helpers;
 
 #pragma warning disable CS0618
 
@@ -73,6 +73,12 @@ namespace ComputeSharp.SourceGenerators
             HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
             Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
             Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
+
+            // A given type can only represent a single shader type
+            if (structDeclarationSymbol.AllInterfaces.Count(static interfaceSymbol => interfaceSymbol is { Name: nameof(IComputeShader) } or { IsGenericType: true, Name: nameof(IPixelShader<byte>) }) > 1)
+            {
+                context.ReportDiagnostic(MultipleShaderTypesImplemented, structDeclarationSymbol, structDeclarationSymbol);
+            }
 
             // Explore the syntax tree and extract the processed info
             var pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: nameof(IPixelShader<byte>) });

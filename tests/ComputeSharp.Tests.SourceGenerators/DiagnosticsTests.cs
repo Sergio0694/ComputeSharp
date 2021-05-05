@@ -1370,6 +1370,31 @@ namespace ComputeSharp.Tests.SourceGenerators
             VerifyGeneratedDiagnostics<IComputeShaderDataLoaderGenerator>(source, "CMPS0046");
         }
 
+        [TestMethod]
+        public void MultipleShaderTypes()
+        {
+            string source = @"
+            using ComputeSharp;
+
+            namespace ComputeSharp
+            {
+                public interface IComputeShader { }
+                public interface IPixelShader<TPixel> { }
+            }
+
+            namespace MyFancyApp.Sample
+            {
+                public struct MyShader : IComputeShader, IPixelShader<Float4>
+                {
+                    public void Execute()
+                    {
+                    }
+                }
+            }";
+
+            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0047");
+        }
+
         /// <summary>
         /// Verifies the output of a source generator.
         /// </summary>

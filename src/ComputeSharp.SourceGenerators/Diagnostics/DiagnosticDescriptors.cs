@@ -646,5 +646,21 @@ namespace ComputeSharp.SourceGenerators.Diagnostics
             isEnabledByDefault: true,
             description: "The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources.",
             helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+        /// <summary>
+        /// Gets a <see cref="DiagnosticDescriptor"/> for a type implementing multiple shader interfaces.
+        /// <para>
+        /// Format: <c>"The shader of type {0} cannot implement more than one shader interface"</c>.
+        /// </para>
+        /// </summary>
+        public static readonly DiagnosticDescriptor MultipleShaderTypesImplemented = new(
+            id: "CMPS0047",
+            title: "Multiple shader implementations for type declaration",
+            messageFormat: $"The shader of type {{0}} cannot implement more than one shader interface",
+            category: typeof(IComputeShaderSourceGenerator).FullName,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "A shader type cannot implement more than one shader interface.",
+            helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
     }
 }
