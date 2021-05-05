@@ -6,13 +6,8 @@
     /// <para>Created by Syntopia.</para>
     /// </summary>
     [AutoConstructor]
-    internal readonly partial struct MengerJourney : IComputeShader
+    internal readonly partial struct MengerJourney : IPixelShader<Float4>
     {
-        /// <summary>
-        /// The target texture.
-        /// </summary>
-        public readonly IReadWriteTexture2D<Float4> texture;
-
         /// <summary>
         /// The current time since the start of the application.
         /// </summary>
@@ -153,7 +148,7 @@
         }
 
         /// <inheritdoc/>
-        public void Execute()
+        public Float4 Execute()
         {
             Float3 camPos = 0.5f * time * new Float3(1.0f, 0.0f, 0.0f);
             Float3 target = camPos + new Float3(1.0f, 0.0f * Hlsl.Cos(time), 0.0f * Hlsl.Sin(0.4f * time));
@@ -169,7 +164,7 @@
 
             Float3 rayDir = Hlsl.Normalize(camDir + (coord.X * camRight + coord.Y * camUp) * FieldOfView);
 
-            texture[ThreadIds.XY] = RayMarch(camPos, rayDir, ThreadIds.XY);
+            return RayMarch(camPos, rayDir, ThreadIds.XY);
         }
     }
 }

@@ -11,15 +11,15 @@ namespace ComputeSharp.SwapChain
         /// </summary>
         private static readonly Win32Application[] Samples = new Win32Application[]
         {
-            new SwapChainApplication<ColorfulInfinity>(static (texture, time) => new(texture, (float)time.TotalSeconds)),
-            new SwapChainApplication<FractalTiling>(static (texture, time) => new(texture, (float)time.TotalSeconds)),
-            new SwapChainApplication<TwoTiledTruchet>(static (texture, time) => new(texture, (float)time.TotalSeconds)),
-            new SwapChainApplication<MengerJourney>(static (texture, time) => new(texture, (float)time.TotalSeconds)),
-            new SwapChainApplication<Octagrams>(static (texture, time) => new(texture, (float)time.TotalSeconds)),
-            new SwapChainApplication<ProteanClouds>(static (texture, time) => new(texture, (float)time.TotalSeconds)),
-            new SwapChainApplication<ExtrudedTruchetPattern>(static (texture, time) => new(texture, (float)time.TotalSeconds)),
-            new SwapChainApplication<PyramidPattern>(static (texture, time) => new(texture, (float)time.TotalSeconds)),
-            new SwapChainApplication<TriangleGridContouring>(static (texture, time) => new(texture, (float)time.TotalSeconds))
+            new SwapChainApplication<ColorfulInfinity>(static time => new((float)time.TotalSeconds)),
+            new SwapChainApplication<FractalTiling>(static time => new((float)time.TotalSeconds)),
+            new SwapChainApplication<TwoTiledTruchet>(static time => new((float)time.TotalSeconds)),
+            new SwapChainApplication<MengerJourney>(static time => new((float)time.TotalSeconds)),
+            new SwapChainApplication<Octagrams>(static time => new((float)time.TotalSeconds)),
+            new SwapChainApplication<ProteanClouds>(static time => new((float)time.TotalSeconds)),
+            new SwapChainApplication<ExtrudedTruchetPattern>(static time => new((float)time.TotalSeconds)),
+            new SwapChainApplication<PyramidPattern>(static time => new((float)time.TotalSeconds)),
+            new SwapChainApplication<TriangleGridContouring>(static time => new((float)time.TotalSeconds))
         };
 
         static void Main()

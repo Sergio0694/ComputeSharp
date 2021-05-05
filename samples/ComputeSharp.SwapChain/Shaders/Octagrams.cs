@@ -6,13 +6,8 @@
     /// <para>Created by whisky_shusuky.</para>
     /// </summary>
     [AutoConstructor]
-    internal readonly partial struct Octagrams : IComputeShader
+    internal readonly partial struct Octagrams : IPixelShader<Float4>
     {
-        /// <summary>
-        /// The target texture.
-        /// </summary>
-        public readonly IReadWriteTexture2D<Float4> texture;
-
         /// <summary>
         /// The current time since the start of the application.
         /// </summary>
@@ -88,7 +83,7 @@
         }
 
         /// <inheritdoc/>
-        public void Execute()
+        public Float4 Execute()
         {
             Float2 p = ((Float2)ThreadIds.XY * 2.0f - DispatchSize.XY) / Hlsl.Min(DispatchSize.X, DispatchSize.Y);
             Float3 ro = new(0.0f, -0.2f, time * 4.0f);
@@ -122,7 +117,7 @@
             Float3 col = ac * 0.02f + new Float3(0.0f, 0.2f * Hlsl.Abs(Hlsl.Sin(time)), 0.5f + Hlsl.Sin(time) * 0.2f);
             Float4 color = new(col, 1.0f - t * (0.02f + 0.02f * Hlsl.Sin(time)));
 
-            texture[ThreadIds.XY] = color;
+            return color;
         }
     }
 }

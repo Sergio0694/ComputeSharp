@@ -7,13 +7,8 @@
     /// <para>License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</para>
     /// </summary>
     [AutoConstructor]
-    internal readonly partial struct ProteanClouds : IComputeShader
+    internal readonly partial struct ProteanClouds : IPixelShader<Float4>
     {
-        /// <summary>
-        /// The target texture.
-        /// </summary>
-        public readonly IReadWriteTexture2D<Float4> texture;
-
         /// <summary>
         /// The current time Hlsl.Since the start of the application.
         /// </summary>
@@ -131,7 +126,7 @@
         }
 
         /// <inheritdoc/>
-        public void Execute()
+        public Float4 Execute()
         {
             Float2 q = (Float2)ThreadIds.XY / DispatchSize.XY;
             Float2 p = (ThreadIds.XY - 0.5f * (Float2)DispatchSize.XY) / DispatchSize.Y;
@@ -167,7 +162,7 @@
             col = Hlsl.Pow(col, new Float3(0.55f, 0.65f, 0.6f)) * new Float3(1.0f, 0.97f, 0.9f);
             col *= Hlsl.Pow(16.0f * q.X * q.Y * (1.0f - q.X) * (1.0f - q.Y), 0.12f) * 0.7f + 0.3f;
 
-            texture[ThreadIds.XY] = new Float4(col, 1.0f);
+            return new(col, 1.0f);
         }
     }
 }

@@ -6,13 +6,8 @@
     /// <para>Created by Shane.</para>
     /// </summary>
     [AutoConstructor]
-    internal readonly partial struct ExtrudedTruchetPattern : IComputeShader
+    internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<Float4>
     {
-        /// <summary>
-        /// The target texture.
-        /// </summary>
-        public readonly IReadWriteTexture2D<Float4> texture;
-
         /// <summary>
         /// The current time since the start of the application.
         /// </summary>
@@ -180,7 +175,7 @@
         }
 
         /// <inheritdoc/>
-        public void Execute()
+        public Float4 Execute()
         {
             Int2 coords = new(ThreadIds.X, DispatchSize.Y - ThreadIds.Y);
             Float2 u = (coords - (Float2)DispatchSize.XY * 0.5f) / DispatchSize.Y;
@@ -292,7 +287,7 @@
 
             c = Hlsl.Sqrt(Hlsl.Max(c, 0));
 
-            texture[ThreadIds.XY] = c;
+            return c;
         }
     }
 }

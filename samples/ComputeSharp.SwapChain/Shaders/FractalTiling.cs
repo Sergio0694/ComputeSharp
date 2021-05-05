@@ -7,20 +7,15 @@
     /// <para>License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</para>
     /// </summary>
     [AutoConstructor]
-    internal readonly partial struct FractalTiling : IComputeShader
+    internal readonly partial struct FractalTiling : IPixelShader<Float4>
     {
-        /// <summary>
-        /// The target texture.
-        /// </summary>
-        public readonly IReadWriteTexture2D<Float4> texture;
-
         /// <summary>
         /// The current time since the start of the application.
         /// </summary>
         public readonly float time;
 
         /// <inheritdoc/>
-        public void Execute()
+        public Float4 Execute()
         {
             Float2 position = ((Float2)(256 * ThreadIds.XY)) / DispatchSize.X + time;
             Float4 color = 0;
@@ -45,7 +40,7 @@
             color.XYZ = Hlsl.Pow(color.XYZ, new Float3(0.7f, 0.8f, 0.5f));
             color.W = 1.0f;
 
-            texture[ThreadIds.XY] = color;
+            return color;
         }
     }
 }

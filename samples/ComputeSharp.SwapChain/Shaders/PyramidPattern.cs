@@ -7,13 +7,8 @@
     /// <para>Created by Shane.</para>
     /// </summary>
     [AutoConstructor]
-    internal readonly partial struct PyramidPattern : IComputeShader
+    internal readonly partial struct PyramidPattern : IPixelShader<Float4>
     {
-        /// <summary>
-        /// The target texture.
-        /// </summary>
-        public readonly IReadWriteTexture2D<Float4> texture;
-
         /// <summary>
         /// The current time Hlsl.Since the start of the application.
         /// </summary>
@@ -135,7 +130,7 @@
         }
 
         /// <inheritdoc/>
-        public void Execute()
+        public Float4 Execute()
         {
             Int2 coordinate = new(ThreadIds.X, DispatchSize.Y - ThreadIds.Y);
             float iRes = Hlsl.Min(DispatchSize.Y, 800.0f);
@@ -175,9 +170,7 @@
 
             col *= hatch * 0.5f + 0.7f;
 
-            Float4 color = new(Hlsl.Sqrt(Hlsl.Max(col, 0.0f)), 1);
-
-            texture[ThreadIds.XY] = color;
+            return new(Hlsl.Sqrt(Hlsl.Max(col, 0.0f)), 1);
         }
     }
 }

@@ -6,12 +6,12 @@ using FX = TerraFX.Interop.Windows;
 namespace ComputeSharp.SwapChain.Backend
 {
     internal sealed class SwapChainApplication<T> : Win32Application
-        where T : struct, IComputeShader
+        where T : struct, IPixelShader<Float4>
     {
         /// <summary>
-        /// The <see cref="Func{T1, T2, TResult}"/> instance used to create shaders to run.
+        /// The <see cref="Func{T1, TResult}"/> instance used to create shaders to run.
         /// </summary>
-        private readonly Func<IReadWriteTexture2D<Float4>, TimeSpan, T> shaderFactory;
+        private readonly Func<TimeSpan, T> shaderFactory;
 
         /// <summary>
         /// The <see cref="ID3D12Device"/> pointer for the device currently in use.
@@ -76,8 +76,8 @@ namespace ComputeSharp.SwapChain.Backend
         /// <summary>
         /// Creates a new <see cref="SwapChainApplication"/> instance with the specified parameters.
         /// </summary>
-        /// <param name="shaderFactory">The <see cref="Func{T1, T2, TResult}"/> instance used to create shaders to run.</param>
-        public SwapChainApplication(Func<IReadWriteTexture2D<Float4>, TimeSpan, T> shaderFactory)
+        /// <param name="shaderFactory">The <see cref="Func{T1, TResult}"/> instance used to create shaders to run.</param>
+        public SwapChainApplication(Func<TimeSpan, T> shaderFactory)
         {
             this.shaderFactory = shaderFactory;
         }
@@ -231,12 +231,12 @@ namespace ComputeSharp.SwapChain.Backend
             }
 
             // Generate the new frame
-            Gpu.Default.For(this.texture!.Width, this.texture.Height, this.shaderFactory(this.texture, time));
+            Gpu.Default.ForEach(this.texture!, this.shaderFactory(time));
 
             using ComPtr<ID3D12Resource> d3D12Resource = default;
 
             // Get the underlying ID3D12Resource pointer for the texture
-            _ = InteropServices.TryGetID3D12Resource(this.texture, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
+            _ = InteropServices.TryGetID3D12Resource(this.texture!, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
 
             // Get the target back buffer to update
             ID3D12Resource* d3D12ResourceBackBuffer = this.currentBufferIndex switch

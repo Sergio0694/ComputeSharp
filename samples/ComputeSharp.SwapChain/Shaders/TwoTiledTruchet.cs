@@ -6,13 +6,8 @@
     /// <para>Created by Shane.</para>
     /// </summary>
     [AutoConstructor]
-    internal readonly partial struct TwoTiledTruchet : IComputeShader
+    internal readonly partial struct TwoTiledTruchet : IPixelShader<Float4>
     {
-        /// <summary>
-        /// The target texture.
-        /// </summary>
-        public readonly IReadWriteTexture2D<Float4> texture;
-
         /// <summary>
         /// The current time since the start of the application.
         /// </summary>
@@ -114,7 +109,7 @@
         }
 
         /// <inheritdoc/>
-        public void Execute()
+        public Float4 Execute()
         {
             Float2 uv = (ThreadIds.XY - (Float2)DispatchSize.XY * 0.5f) / DispatchSize.Y;
             float gSc = 7.0f;
@@ -143,7 +138,7 @@
             Float3 rgb = Hlsl.Sqrt(Hlsl.Max(col, 0.0f));
             Float4 color = new(rgb.X, rgb.Y, rgb.Z, 1.0f);
 
-            texture[ThreadIds.XY] = color;
+            return color;
         }
     }
 }

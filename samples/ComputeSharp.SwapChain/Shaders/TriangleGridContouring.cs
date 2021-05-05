@@ -6,13 +6,8 @@
     /// <para>Created by Shane.</para>
     /// </summary>
     [AutoConstructor]
-    internal readonly partial struct TriangleGridContouring : IComputeShader
+    internal readonly partial struct TriangleGridContouring : IPixelShader<Float4>
     {
-        /// <summary>
-        /// The target texture.
-        /// </summary>
-        public readonly IReadWriteTexture2D<Float4> texture;
-
         /// <summary>
         /// The current time Hlsl.Since the start of the application.
         /// </summary>
@@ -268,7 +263,7 @@
         }
 
         /// <inheritdoc/>
-        public void Execute()
+        public Float4 Execute()
         {
             Int2 coordinate = new(ThreadIds.X, DispatchSize.Y - ThreadIds.Y);
             Float2 uv = (coordinate - (Float2)DispatchSize.XY * 0.5f) / Hlsl.Min(650.0f, DispatchSize.Y);
@@ -278,9 +273,7 @@
             uv = coordinate / (Float2)DispatchSize.XY;
             col *= Hlsl.Pow(16.0f * uv.X * uv.Y * (1.0f - uv.X) * (1.0f - uv.Y), 0.0625f) + 0.1f;
 
-            Float4 color = new(Hlsl.Sqrt(Hlsl.Max(col, 0.0f)), 1);
-
-            texture[ThreadIds.XY] = color;
+            return new(Hlsl.Sqrt(Hlsl.Max(col, 0.0f)), 1);
         }
     }
 }
