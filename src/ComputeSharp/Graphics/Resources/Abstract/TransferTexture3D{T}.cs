@@ -58,7 +58,7 @@ namespace ComputeSharp.Resources
 
             if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE3D))
             {
-                UnsupportedTextureTypeException.ThrowForTexture2D<T>();
+                UnsupportedTextureTypeException.ThrowForTexture3D<T>();
             }
 
             GraphicsDevice = device;
