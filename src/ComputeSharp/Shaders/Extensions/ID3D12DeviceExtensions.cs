@@ -1,7 +1,10 @@
 ﻿using System;
 using ComputeSharp.Core.Extensions;
 using TerraFX.Interop;
+using static TerraFX.Interop.D3D12_COMPARISON_FUNC;
+using static TerraFX.Interop.D3D12_FILTER;
 using static TerraFX.Interop.D3D12_PIPELINE_STATE_FLAGS;
+using static TerraFX.Interop.D3D12_TEXTURE_ADDRESS_MODE;
 using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Shaders.Extensions
@@ -52,8 +55,11 @@ namespace ComputeSharp.Shaders.Extensions
                     D3D12_STATIC_SAMPLER_DESC.Init(
                         out d3D12SamplerDescription,
                         shaderRegister: 0,
-                        filter: D3D12_FILTER.D3D12_FILTER_MIN_MAG_MIP_LINEAR,
-                        comparisonFunc: D3D12_COMPARISON_FUNC.D3D12_COMPARISON_FUNC_NEVER);
+                        filter: D3D12_FILTER_MIN_MAG_MIP_LINEAR,
+                        addressU: D3D12_TEXTURE_ADDRESS_MODE_MIRROR,
+                        addressV: D3D12_TEXTURE_ADDRESS_MODE_MIRROR,
+                        addressW: D3D12_TEXTURE_ADDRESS_MODE_MIRROR,
+                        comparisonFunc: D3D12_COMPARISON_FUNC_NEVER);
                 }
 
                 // Root signature description wrapping the packed collection of root parameters

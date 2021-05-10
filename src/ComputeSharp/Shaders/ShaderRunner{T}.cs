@@ -241,9 +241,13 @@ namespace ComputeSharp.Shaders
                 1,
                 ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuDescriptorHandle(device));
 
-            ReadOnlySpan<D3D12_GPU_DESCRIPTOR_HANDLE> resources = dispatchData.Resources;
+            // Skip the last (missing) resource, as the internal counter is exceeding the number of explicit
+            // resources that the shader has actually captured (since it includes the target texture too).
+            // For the same reason, the target root descriptor table index is also offset by 2, as it needs
+            // to skip not only the constant buffer with capture values, but the implicit texture as well.
+            ReadOnlySpan<D3D12_GPU_DESCRIPTOR_HANDLE> resources = dispatchData.Resources[..^1];
 
-            for (int i = 1; i < resources.Length; i++)
+            for (int i = 0; i < resources.Length; i++)
             {
                 // Load the captured buffers
                 commandList.D3D12GraphicsCommandList->SetComputeRootDescriptorTable((uint)i + 2, resources[i]);
