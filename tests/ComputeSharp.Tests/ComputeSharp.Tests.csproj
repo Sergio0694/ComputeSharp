@@ -28,6 +28,7 @@
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor.cs" />
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor{TPixel}.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor{TPixel}.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ColorfulInfinity.cs" Link="Shaders\Pixel\ColorfulInfinity.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ContouredLayers.cs" Link="Shaders\Pixel\ContouredLayers.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ExtrudedTruchetPattern.cs" Link="Shaders\Pixel\ExtrudedTruchetPattern.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\FractalTiling.cs" Link="Shaders\Pixel\FractalTiling.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\MengerJourney.cs" Link="Shaders\Pixel\MengerJourney.cs" />
@@ -39,11 +40,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\..\samples\ComputeSharp.ImageProcessing\city.jpg" Link="Imaging\city.jpg" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\samples\ComputeSharp.ImageProcessing\city.jpg" Link="Imaging\city.jpg" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\samples\ComputeSharp.SwapChain\Textures\RustyMetal.png" Link="Shaders\Textures\RustyMetal.png" CopyToOutputDirectory="PreserveNewest" />
     <None Update="Assets/CityAfter1024x1024Sampling.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\ColorfulInfinity.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\ContouredLayers.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Assets\ExtrudedTruchetPattern.png">
