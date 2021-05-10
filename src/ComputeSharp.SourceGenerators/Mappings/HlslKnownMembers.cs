@@ -41,7 +41,11 @@ namespace ComputeSharp.SourceGenerators.Mappings
             [$"ComputeSharp.ReadOnlyTexture2D`2.this[{typeof(float).FullName}, {typeof(float).FullName}]"] = "float2",
             [$"ComputeSharp.ReadOnlyTexture2D`2.this[{typeof(Float2).FullName}]"] = null,
             [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(float).FullName}, {typeof(float).FullName}]"] = "float2",
-            [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(Float2).FullName}]"] = null
+            [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(Float2).FullName}]"] = null,
+            [$"ComputeSharp.ReadOnlyTexture3D`2.this[{typeof(float).FullName}, {typeof(float).FullName}, {typeof(float).FullName}]"] = "float3",
+            [$"ComputeSharp.ReadOnlyTexture3D`2.this[{typeof(Float3).FullName}]"] = null,
+            [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(float).FullName}, {typeof(float).FullName}, {typeof(float).FullName}]"] = "float3",
+            [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(Float3).FullName}]"] = null
         };
 
         /// <summary>

@@ -41,6 +41,12 @@ namespace ComputeSharp
         public TPixel this[Int3 xyz] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T, TPixel>)}[{typeof(Int3)}]");
 
         /// <inheritdoc/>
+        public TPixel this[float u, float v, float w] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T, TPixel>)}[{typeof(float)}, {typeof(float)}, {typeof(float)}]");
+
+        /// <inheritdoc/>
+        public TPixel this[Float3 uvw] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T, TPixel>)}[{typeof(Float3)}]");
+
+        /// <inheritdoc/>
         public override string ToString()
         {
             return $"ComputeSharp.ReadOnlyTexture3D<{typeof(T)}, {nameof(TPixel)}>[{Width}, {Height}, {Depth}]";
