@@ -86,7 +86,8 @@ namespace ComputeSharp.SourceGenerators
             var implicitTextureField = isComputeShader ? default((string, string)?) : (HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!), "__outputTexture");
             var processedMembers = GetProcessedFields(context, structDeclarationSymbol, discoveredTypes, isComputeShader).ToArray();
             var sharedBuffers = GetGroupSharedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
-            var (entryPoint, processedMethods, forwardDeclarations) = GetProcessedMethods(context, structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions, isComputeShader);
+            var (entryPoint, processedMethods, forwardDeclarations, isSamplerUsed) = GetProcessedMethods(context, structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions, isComputeShader);
+            var implicitSamplerField = isSamplerUsed ? ("SamplerState", "__sampler") : default((string, string)?);
             var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
             var processedConstants = GetProcessedConstants(constantDefinitions);
             var staticFields = GetStaticFields(context, semanticModel, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
@@ -100,6 +101,7 @@ namespace ComputeSharp.SourceGenerators
                         AttributeArgument(TypeOfExpression(IdentifierName(structDeclarationSymbol.ToDisplayString()))),
                         AttributeArgument(ArrayExpression(processedTypes)),
                         AttributeArgument(ArrayExpression(implicitTextureField)),
+                        AttributeArgument(ArrayExpression(implicitSamplerField)),
                         AttributeArgument(NestedArrayExpression(processedMembers)),
                         AttributeArgument(ArrayExpression(forwardDeclarations)),
                         AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(entryPoint))),
@@ -319,7 +321,7 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="isComputeShader">Indicates whether or not <paramref name="structDeclarationSymbol"/> represents a compute shader.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
         [Pure]
-        private static (string EntryPoint, IEnumerable<string> Methods, IEnumerable<string> Declarations) GetProcessedMethods(
+        private static (string EntryPoint, IEnumerable<string> Methods, IEnumerable<string> Declarations, bool IsSamplerUser) GetProcessedMethods(
             GeneratorExecutionContext context,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
@@ -338,6 +340,7 @@ namespace ComputeSharp.SourceGenerators
             string? entryPoint = null;
             List<string> methods = new();
             List<string> declarations = new();
+            bool isSamplerUsed = false;
 
             foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
             {
@@ -366,6 +369,9 @@ namespace ComputeSharp.SourceGenerators
 
                 // Rewrite the method syntax tree
                 MethodDeclarationSyntax? processedMethod = shaderSourceRewriter.Visit(methodDeclaration)!.WithoutTrivia();
+
+                // Track the implicit sampler, if used
+                isSamplerUsed = isSamplerUsed || shaderSourceRewriter.IsSamplerUsed;
 
                 // Emit the extracted local functions first
                 foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
@@ -399,7 +405,7 @@ namespace ComputeSharp.SourceGenerators
                 declarations.Add(staticMethod.AsDefinition().NormalizeWhitespace().ToFullString());
             }
 
-            return (entryPoint!, methods, declarations);
+            return (entryPoint!, methods, declarations, isSamplerUsed);
         }
 
         /// <summary>

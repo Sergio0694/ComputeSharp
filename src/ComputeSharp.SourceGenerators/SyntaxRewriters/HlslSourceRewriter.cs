@@ -22,6 +22,26 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
     internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     {
         /// <summary>
+        /// The <see cref="SemanticModelProvider"/> instance with semantic info on the target syntax tree.
+        /// </summary>
+        protected readonly SemanticModelProvider SemanticModel;
+
+        /// <summary>
+        /// The collection of discovered custom types.
+        /// </summary>
+        protected readonly ICollection<INamedTypeSymbol> DiscoveredTypes;
+
+        /// <summary>
+        /// The collection of discovered constant definitions.
+        /// </summary>
+        protected readonly IDictionary<IFieldSymbol, string> ConstantDefinitions;
+
+        /// <summary>
+        /// The current generator context in use.
+        /// </summary>
+        protected readonly GeneratorExecutionContext Context;
+
+        /// <summary>
         /// Creates a new <see cref="HlslSourceRewriter"/> instance with the specified parameters.
         /// </summary>
         /// <param name="semanticModel">The <see cref="Microsoft.CodeAnalysis.SemanticModel"/> instance for the target syntax tree.</param>
@@ -41,24 +61,9 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         }
 
         /// <summary>
-        /// The <see cref="SemanticModelProvider"/> instance with semantic info on the target syntax tree.
+        /// Gets whether or not the shader uses a texture sampler at least once.
         /// </summary>
-        protected readonly SemanticModelProvider SemanticModel;
-
-        /// <summary>
-        /// The collection of discovered custom types.
-        /// </summary>
-        protected readonly ICollection<INamedTypeSymbol> DiscoveredTypes;
-
-        /// <summary>
-        /// The collection of discovered constant definitions.
-        /// </summary>
-        protected readonly IDictionary<IFieldSymbol, string> ConstantDefinitions;
-
-        /// <summary>
-        /// The current generator context in use.
-        /// </summary>
-        protected readonly GeneratorExecutionContext Context;
+        public bool IsSamplerUsed { get; private set; }
 
         /// <inheritdoc/>
         public override SyntaxNode VisitCastExpression(CastExpressionSyntax node)
@@ -201,13 +206,39 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
             {
                 string propertyName = operation.Property.GetFullMetadataName();
 
-                // Rewrite texture resource indices taking vectors into individual indices as per HLSL spec.
-                // For instance: texture[ThreadIds.XY] will be rewritten as texture[ThreadIds.X, ThreadIds.Y].
+                // Rewrite texture resource indices taking individual indices a vector argument, as per HLSL spec.
+                // For instance: texture[ThreadIds.X, ThreadIds.Y] will be rewritten as texture[int2(ThreadIds.X, ThreadIds.Y)].
                 if (HlslKnownMembers.TryGetMappedResourceIndexerTypeName(propertyName, out string? mapping))
                 {
                     var index = InvocationExpression(IdentifierName(mapping!), ArgumentList(updatedNode.ArgumentList.Arguments));
 
                     return updatedNode.WithArgumentList(BracketedArgumentList(SingletonSeparatedList(Argument(index))));
+                }
+
+                // Rewrite texture resource sampled accesses, if needed
+                if (HlslKnownMembers.TryGetMappedResourceSamplerAccessType(propertyName, out mapping))
+                {
+                    IsSamplerUsed = true;
+
+                    // Get the syntax for the argument syntax transformation as described above
+                    ArgumentSyntax coordinateSyntax = mapping switch
+                    {
+                        not null => Argument(InvocationExpression(IdentifierName(mapping!), ArgumentList(updatedNode.ArgumentList.Arguments))),
+                        null => updatedNode.ArgumentList.Arguments[0]
+                    };
+
+                    // Transform an indexer syntax into a sampling call with the implicit static linear sampler.
+                    // For instance: texture[uv] will be rewritten as texture.SampleLevel(__sampler, uv, 0).
+                    return
+                        InvocationExpression(
+                            MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                updatedNode.Expression,
+                                IdentifierName("SampleLevel")))
+                        .AddArgumentListArguments(
+                            Argument(IdentifierName("__sampler")),
+                            coordinateSyntax,
+                            Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0))));
                 }
 
                 // If the current property is a swizzled matrix indexer, ensure all the arguments are constants, and rewrite

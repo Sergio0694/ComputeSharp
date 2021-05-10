@@ -46,6 +46,11 @@ namespace ComputeSharp.Shaders.Translation
         private uint readWriteBuffersCount;
 
         /// <summary>
+        /// The number of samplers to define in the shader.
+        /// </summary>
+        private uint samplersCount;
+
+        /// <summary>
         /// The array of <see cref="D3D12_DESCRIPTOR_RANGE1"/> items that are required to load the captured values.
         /// </summary>
         private D3D12_DESCRIPTOR_RANGE1[] d3D12DescriptorRanges1;
@@ -100,6 +105,11 @@ namespace ComputeSharp.Shaders.Translation
 
         /// <inheritdoc/>
         public bool IsComputeShader { get; private set; }
+
+        /// <summary>
+        /// Gets whether or not the current shader requires access to a static sampler.
+        /// </summary>
+        public bool IsStaticSamplerUsed { get; private set; }
 
         /// <inheritdoc/>
         public IReadOnlyList<HlslResourceInfo> HlslResourceInfo => this.hlslResourceInfo;
@@ -203,6 +213,16 @@ namespace ComputeSharp.Shaders.Translation
             if (shaderFields.Count == 0 && d3D12DescriptorRanges1.Count == 0)
             {
                 ThrowHelper.ThrowInvalidOperationException("The shader body must contain at least one field");
+            }
+
+            // Add the implicit sampler descriptor if necessary
+            if (Attribute.ImplicitSamplerField is not null)
+            {
+                (string hlslType, string hlslName) = Attribute.ImplicitSamplerField!.Value;
+
+                this.hlslResourceInfo.Add(new HlslResourceInfo.Sampler(hlslType, hlslName, (int)this.samplersCount++));
+
+                IsStaticSamplerUsed = true;
             }
 
             // Inspect the captured fields
