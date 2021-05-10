@@ -75,11 +75,22 @@ namespace ComputeSharp.Tests
             /// <param name="expectedPath">The path to the reference image.</param>
             /// <param name="actualPath">The path to the expected image.</param>
             /// <param name="threshold">The allowed difference threshold for the normalized delta.</param>
-            public static void AssertEqual(string expectedPath, string actualPath, float threshold)                
+            public static void AssertEqual(string expectedPath, string actualPath, float threshold)
             {
                 using var expected = Image.Load<ImageSharpRgba32>(expectedPath);
                 using var actual = Image.Load<ImageSharpRgba32>(actualPath);
 
+                AssertEqual(expected, actual, threshold);
+            }
+
+            /// <summary>
+            /// Asserts that two images are equal.
+            /// </summary>
+            /// <param name="expected">The reference image.</param>
+            /// <param name="actual">The expected image.</param>
+            /// <param name="threshold">The allowed difference threshold for the normalized delta.</param>
+            public static void AssertEqual(Image<ImageSharpRgba32> expected, Image<ImageSharpRgba32> actual, float threshold)                
+            {
                 if (expected.Size() != actual.Size())
                 {
                     Assert.Fail($"The input images have different sizes: {expected.Size()} and {actual.Size()}");

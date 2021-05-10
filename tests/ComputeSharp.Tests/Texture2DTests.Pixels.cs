@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Numerics;
 using System.Reflection;
 using ComputeSharp.__Internals;
@@ -6,6 +7,8 @@ using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SixLabors.ImageSharp;
+using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
 #pragma warning disable CS0618
 
@@ -59,6 +62,71 @@ namespace ComputeSharp.Tests
             catch (TargetInvocationException e) when (e.InnerException is not null)
             {
                 throw e.InnerException;
+            }
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void SampleFromSourceTexture_ComputeShader(Device device)
+        {
+            _ = device.Get();
+
+            string imagingPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
+            string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
+
+            using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
+
+            using ReadOnlyTexture2D<Rgba32, Float4> source = device.Get().LoadTexture(Path.Combine(imagingPath, "city.jpg"));
+            using ReadWriteTexture2D<Rgba32, Float4> destination = device.Get().AllocateReadWriteTexture2D<Rgba32, Float4>(sampled.Width, sampled.Height);
+
+            device.Get().For(sampled.Width, sampled.Height, new SamplingComputeShader(source, destination));
+
+            using var processed = destination.ToImage();
+
+            ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.00000086f);
+        }
+
+        [AutoConstructor]
+        public readonly partial struct SamplingComputeShader : IComputeShader
+        {
+            public readonly IReadOnlyTexture2D<Float4> source;
+            public readonly IReadWriteTexture2D<Float4> destination;
+
+            public void Execute()
+            {
+                destination[ThreadIds.XY] = source[ThreadIds.Normalized.XY];
+            }
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void SampleFromSourceTexture_PixelShader(Device device)
+        {
+            _ = device.Get();
+
+            string imagingPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
+            string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
+
+            using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
+
+            using ReadOnlyTexture2D<Rgba32, Float4> source = device.Get().LoadTexture(Path.Combine(imagingPath, "city.jpg"));
+            using ReadWriteTexture2D<Rgba32, Float4> destination = device.Get().AllocateReadWriteTexture2D<Rgba32, Float4>(sampled.Width, sampled.Height);
+
+            device.Get().ForEach(destination, new SamplingPixelShader(source));
+
+            using var processed = destination.ToImage();
+
+            ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.00000086f);
+        }
+
+        [AutoConstructor]
+        public readonly partial struct SamplingPixelShader : IPixelShader<Float4>
+        {
+            public readonly IReadOnlyTexture2D<Float4> texture;
+
+            public Float4 Execute()
+            {
+                return texture[ThreadIds.Normalized.XY];
             }
         }
     }

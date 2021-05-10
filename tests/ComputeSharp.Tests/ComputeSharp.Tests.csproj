@@ -40,6 +40,9 @@
 
   <ItemGroup>
     <Content Include="..\..\samples\ComputeSharp.ImageProcessing\city.jpg" Link="Imaging\city.jpg" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Assets/CityAfter1024x1024Sampling.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\ColorfulInfinity.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
