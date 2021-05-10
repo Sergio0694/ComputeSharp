@@ -17,7 +17,7 @@ namespace ComputeSharp.Tests
     public class ShadersTests
     {
         [CombinatorialTestMethod]
-        [Device(Device.Discrete)]
+        [AllDevices]
         [Data(typeof(ColorfulInfinity))]
         [Data(typeof(SwapChain.Shaders.Compute.ColorfulInfinity))]
         public void ColorfulInfinity(Device device, Type shaderType)
