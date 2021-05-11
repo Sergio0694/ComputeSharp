@@ -62,10 +62,14 @@ namespace ComputeSharp.Shaders.Translation
             ref ulong r0 = ref MemoryMarshal.GetArrayDataReference(resources);
             ref byte r1 = ref MemoryMarshal.GetArrayDataReference(variables);
 
-            // Set the x, y and z counters
+            // Set the x, y and (optionally) z counters
             Unsafe.As<byte, int>(ref r1) = x;
             Unsafe.Add(ref Unsafe.As<byte, int>(ref r1), 1) = y;
-            Unsafe.Add(ref Unsafe.As<byte, int>(ref r1), 2) = z;
+
+            if (IsComputeShader)
+            {
+                Unsafe.Add(ref Unsafe.As<byte, int>(ref r1), 2) = z;
+            }
 
             // Invoke the dynamic method to extract the captured data
             int totalVariablesByteSize = this.dispatchDataLoader!(device, in shader, ref r0, ref r1);

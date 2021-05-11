@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders
+﻿namespace ComputeSharp.SwapChain.Shaders.Compute
 {
     /// <summary>
     /// Fully procedural 3D animated volume with three evaluations per step (for shading).
@@ -7,8 +7,13 @@
     /// <para>License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</para>
     /// </summary>
     [AutoConstructor]
-    internal readonly partial struct ProteanClouds : IPixelShader<Float4>
+    internal readonly partial struct ProteanClouds : IComputeShader
     {
+        /// <summary>
+        /// The target texture.
+        /// </summary>
+        public readonly IReadWriteTexture2D<Float4> texture;
+
         /// <summary>
         /// The current time Hlsl.Since the start of the application.
         /// </summary>
@@ -19,7 +24,7 @@
         private static Float2x2 Rotate(in float a)
         {
             float c = Hlsl.Cos(a), s = Hlsl.Sin(a);
-            
+
             return new(c, s, -s, c);
         }
 
@@ -126,7 +131,7 @@
         }
 
         /// <inheritdoc/>
-        public Float4 Execute()
+        public void Execute()
         {
             Float2 q = (Float2)ThreadIds.XY / DispatchSize.XY;
             Float2 p = (ThreadIds.XY - 0.5f * (Float2)DispatchSize.XY) / DispatchSize.Y;
@@ -162,7 +167,7 @@
             col = Hlsl.Pow(col, new Float3(0.55f, 0.65f, 0.6f)) * new Float3(1.0f, 0.97f, 0.9f);
             col *= Hlsl.Pow(16.0f * q.X * q.Y * (1.0f - q.X) * (1.0f - q.Y), 0.12f) * 0.7f + 0.3f;
 
-            return new(col, 1.0f);
+            texture[ThreadIds.XY] = new Float4(col, 1.0f);
         }
     }
 }

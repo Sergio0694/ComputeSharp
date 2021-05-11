@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders
+﻿namespace ComputeSharp.SwapChain.Shaders.Compute
 {
     /// <summary>
     /// A shader creating an animated two-tiles Truchet arrangement.
@@ -6,8 +6,13 @@
     /// <para>Created by Shane.</para>
     /// </summary>
     [AutoConstructor]
-    internal readonly partial struct TwoTiledTruchet : IPixelShader<Float4>
+    internal readonly partial struct TwoTiledTruchet : IComputeShader
     {
+        /// <summary>
+        /// The target texture.
+        /// </summary>
+        public readonly IReadWriteTexture2D<Float4> texture;
+
         /// <summary>
         /// The current time since the start of the application.
         /// </summary>
@@ -109,7 +114,7 @@
         }
 
         /// <inheritdoc/>
-        public Float4 Execute()
+        public void Execute()
         {
             Float2 uv = (ThreadIds.XY - (Float2)DispatchSize.XY * 0.5f) / DispatchSize.Y;
             float gSc = 7.0f;
@@ -138,7 +143,7 @@
             Float3 rgb = Hlsl.Sqrt(Hlsl.Max(col, 0.0f));
             Float4 color = new(rgb.X, rgb.Y, rgb.Z, 1.0f);
 
-            return color;
+            texture[ThreadIds.XY] = color;
         }
     }
 }

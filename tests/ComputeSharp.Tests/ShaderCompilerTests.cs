@@ -122,7 +122,7 @@ namespace ComputeSharp.Tests
         }
 
         [TestMethod]
-        public void OutOfOrderMethods_Ok()
+        public void OutOfOrderMethods()
         {
             ReflectionServices.GetShaderInfo<OutOfOrderMethodsShader>(out var info);
         }
@@ -151,6 +151,24 @@ namespace ComputeSharp.Tests
                 ExternalStructType type = ExternalStructType.New((int)value, Hlsl.Abs(value));
 
                 buffer[ThreadIds.X] = ExternalStructType.Sum(type);
+            }
+        }
+
+        [TestMethod]
+        public void PixelShader()
+        {
+            ReflectionServices.GetShaderInfo<StatelessPixelShader, Float4>(out var info);
+
+            Assert.AreEqual(info.TextureStoreInstructionCount, 1u);
+            Assert.AreEqual(info.BoundResourceCount, 2u);
+        }
+
+        public readonly partial struct StatelessPixelShader : IPixelShader<Float4>
+        {
+            /// <inheritdoc/>
+            public Float4 Execute()
+            {
+                return new(1, 1, 1, 1);
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders
+﻿namespace ComputeSharp.SwapChain.Shaders.Compute
 {
     /// <summary>
     /// A shader creating a flythrough in a Menger system.
@@ -6,8 +6,13 @@
     /// <para>Created by Syntopia.</para>
     /// </summary>
     [AutoConstructor]
-    internal readonly partial struct MengerJourney : IPixelShader<Float4>
+    internal readonly partial struct MengerJourney : IComputeShader
     {
+        /// <summary>
+        /// The target texture.
+        /// </summary>
+        public readonly IReadWriteTexture2D<Float4> texture;
+
         /// <summary>
         /// The current time since the start of the application.
         /// </summary>
@@ -148,7 +153,7 @@
         }
 
         /// <inheritdoc/>
-        public Float4 Execute()
+        public void Execute()
         {
             Float3 camPos = 0.5f * time * new Float3(1.0f, 0.0f, 0.0f);
             Float3 target = camPos + new Float3(1.0f, 0.0f * Hlsl.Cos(time), 0.0f * Hlsl.Sin(0.4f * time));
@@ -164,7 +169,7 @@
 
             Float3 rayDir = Hlsl.Normalize(camDir + (coord.X * camRight + coord.Y * camUp) * FieldOfView);
 
-            return RayMarch(camPos, rayDir, ThreadIds.XY);
+            texture[ThreadIds.XY] = RayMarch(camPos, rayDir, ThreadIds.XY);
         }
     }
 }

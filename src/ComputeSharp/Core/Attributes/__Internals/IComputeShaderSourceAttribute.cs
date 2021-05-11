@@ -22,6 +22,8 @@ namespace ComputeSharp.__Internals
         /// </summary>
         /// <param name="shaderType">The type of the current shader.</param>
         /// <param name="types">The collection of custom types.</param>
+        /// <param name="implicitTextureField">The implicit texture field info, if present.</param>
+        /// <param name="implicitSamplerFields">The implicit texture sampler field info, if present.</param>
         /// <param name="fields">The mapped collection of shader fields.</param>
         /// <param name="forwardDeclarations">The forward declarations for static methods.</param>
         /// <param name="executeMethod">The source code for the <see cref="IComputeShader.Execute"/> method.</param>
@@ -32,6 +34,8 @@ namespace ComputeSharp.__Internals
         public IComputeShaderSourceAttribute(
             Type shaderType,
             string[] types,
+            string[]? implicitTextureField,
+            string[]? implicitSamplerFields,
             object[] fields,
             string[] forwardDeclarations,
             string executeMethod,
@@ -42,6 +46,8 @@ namespace ComputeSharp.__Internals
         {
             ShaderType = shaderType;
             Types = types;
+            ImplicitTextureField = implicitTextureField is null ? null : (implicitTextureField[0], implicitTextureField[1]);
+            ImplicitSamplerField = implicitSamplerFields is null ? null : (implicitSamplerFields[0], implicitSamplerFields[1]);
             Fields = fields.Cast<string[]>().ToDictionary(static arg => arg[0], static arg => (arg[1], arg[2]));
             ForwardDeclarations = forwardDeclarations;
             ExecuteMethod = executeMethod;
@@ -60,6 +66,16 @@ namespace ComputeSharp.__Internals
         /// Gets the collection of processed custom types.
         /// </summary>
         internal IReadOnlyCollection<string> Types { get; }
+
+        /// <summary>
+        /// Gets the mapping for the implicit texture field, if the shader is a pixel shader.
+        /// </summary>
+        internal (string Name, string Type)? ImplicitTextureField { get; }
+
+        /// <summary>
+        /// Gets the mapping for the implicit sampler field, if necessary.
+        /// </summary>
+        internal (string Name, string Type)? ImplicitSamplerField { get; }
 
         /// <summary>
         /// Gets the mapping of field names.

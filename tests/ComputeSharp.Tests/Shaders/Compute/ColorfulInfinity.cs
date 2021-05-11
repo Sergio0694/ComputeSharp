@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders
+﻿namespace ComputeSharp.SwapChain.Shaders.Compute
 {
     /// <summary>
     /// A shader creating an abstract and colorful animation.
@@ -7,8 +7,13 @@
     /// <para>License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</para>
     /// </summary>
     [AutoConstructor]
-    internal readonly partial struct ColorfulInfinity : IPixelShader<Float4>
+    internal readonly partial struct ColorfulInfinity : IComputeShader
     {
+        /// <summary>
+        /// The target texture.
+        /// </summary>
+        public readonly IReadWriteTexture2D<Float4> texture;
+
         /// <summary>
         /// The current time since the start of the application.
         /// </summary>
@@ -44,7 +49,7 @@
         }
 
         /// <inheritdoc/>
-        public Float4 Execute()
+        public void Execute()
         {
             Float2 uv = (ThreadIds.XY - (Float2)DispatchSize.XY * 0.5f) / DispatchSize.Y;
             Float3 col = 0;
@@ -63,7 +68,9 @@
             col *= new Float3(2, 1.0f, 2.0f);
             col = Hlsl.Pow(col, 0.5f);
 
-            return new(col.X, col.Y, col.Z, 1.0f);
+            Float4 color = new(col.X, col.Y, col.Z, 1.0f);
+
+            texture[ThreadIds.XY] = color;
         }
     }
 }

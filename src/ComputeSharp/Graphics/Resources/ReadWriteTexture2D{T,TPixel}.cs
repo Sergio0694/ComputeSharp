@@ -42,7 +42,7 @@ namespace ComputeSharp
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"ComputeSharp.ReadWriteTexture2D<{typeof(T)},{typeof(TPixel)}>[{Width}, {Height}]";
+            return $"ComputeSharp.ReadWriteTexture2D<{typeof(T)}, {typeof(TPixel)}>[{Width}, {Height}]";
         }
     }
 }

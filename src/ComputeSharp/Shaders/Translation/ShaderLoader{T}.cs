@@ -19,7 +19,7 @@ namespace ComputeSharp.Shaders.Translation
     /// </summary>
     /// <typeparam name="T">The type of compute shader currently in use.</typeparam>
     internal sealed partial class ShaderLoader<T> : IShaderLoader
-        where T : struct, IComputeShader
+        where T : struct
     {
         /// <summary>
         /// The associated <see cref="IComputeShaderSourceAttribute"/> instance for the current shader type.
@@ -44,6 +44,11 @@ namespace ComputeSharp.Shaders.Translation
         /// The number of read write buffers to define in the shader.
         /// </summary>
         private uint readWriteBuffersCount;
+
+        /// <summary>
+        /// The number of samplers to define in the shader.
+        /// </summary>
+        private uint samplersCount;
 
         /// <summary>
         /// The array of <see cref="D3D12_DESCRIPTOR_RANGE1"/> items that are required to load the captured values.
@@ -97,6 +102,14 @@ namespace ComputeSharp.Shaders.Translation
 
         /// <inheritdoc/>
         public string EntryPoint { get; private set; }
+
+        /// <inheritdoc/>
+        public bool IsComputeShader { get; private set; }
+
+        /// <summary>
+        /// Gets whether or not the current shader requires access to a static sampler.
+        /// </summary>
+        public bool IsStaticSamplerUsed { get; private set; }
 
         /// <inheritdoc/>
         public IReadOnlyList<HlslResourceInfo> HlslResourceInfo => this.hlslResourceInfo;
@@ -174,12 +187,43 @@ namespace ComputeSharp.Shaders.Translation
                 BindingFlags.Public |
                 BindingFlags.NonPublic).ToArray();
 
-            if (shaderFields.Count == 0)
+            List<D3D12_DESCRIPTOR_RANGE1> d3D12DescriptorRanges1 = new();
+
+            // Add the implicit texture descriptor if the shader is a pixel shader
+            foreach (Type interfaceType in typeof(T).GetInterfaces())
+            {
+                if (interfaceType.IsGenericType &&
+                    interfaceType.GetGenericTypeDefinition() == typeof(IPixelShader<>))
+                {
+                    d3D12DescriptorRanges1.Add(new D3D12_DESCRIPTOR_RANGE1(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, this.readWriteBuffersCount));
+
+                    (string hlslType, string hlslName) = Attribute.ImplicitTextureField!.Value;
+
+                    this.hlslResourceInfo.Add(new HlslResourceInfo.ReadWrite(hlslType, hlslName, (int)this.readWriteBuffersCount++));
+                    this.totalResourceCount++;
+
+                    break;
+                }
+            }
+
+            // Set the current shader type
+            IsComputeShader = d3D12DescriptorRanges1.Count == 0;
+
+            // Ensure the shader has a valid number of captured resources
+            if (shaderFields.Count == 0 && d3D12DescriptorRanges1.Count == 0)
             {
                 ThrowHelper.ThrowInvalidOperationException("The shader body must contain at least one field");
             }
 
-            List<D3D12_DESCRIPTOR_RANGE1> d3D12DescriptorRanges1 = new();
+            // Add the implicit sampler descriptor if necessary
+            if (Attribute.ImplicitSamplerField is not null)
+            {
+                (string hlslType, string hlslName) = Attribute.ImplicitSamplerField!.Value;
+
+                this.hlslResourceInfo.Add(new HlslResourceInfo.Sampler(hlslType, hlslName, (int)this.samplersCount++));
+
+                IsStaticSamplerUsed = true;
+            }
 
             // Inspect the captured fields
             foreach (FieldInfo fieldInfo in shaderFields)

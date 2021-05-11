@@ -14,6 +14,11 @@ namespace ComputeSharp.Shaders.Translation
         string EntryPoint { get; }
 
         /// <summary>
+        /// Gets whether or not the current shader is a compute shader (and not a pixel shader).
+        /// </summary>
+        bool IsComputeShader { get; }
+
+        /// <summary>
         /// Gets the collection of <see cref="Renderer.Models.HlslResourceInfo"/> items for the shader fields.
         /// </summary>
         IReadOnlyList<HlslResourceInfo> HlslResourceInfo { get; }

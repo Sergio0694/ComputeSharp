@@ -1,7 +1,10 @@
 ﻿using System;
 using ComputeSharp.Core.Extensions;
 using TerraFX.Interop;
+using static TerraFX.Interop.D3D12_COMPARISON_FUNC;
+using static TerraFX.Interop.D3D12_FILTER;
 using static TerraFX.Interop.D3D12_PIPELINE_STATE_FLAGS;
+using static TerraFX.Interop.D3D12_TEXTURE_ADDRESS_MODE;
 using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Shaders.Extensions
@@ -17,12 +20,14 @@ namespace ComputeSharp.Shaders.Extensions
         /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the root signature.</param>
         /// <param name="d3D12Root32BitConstantsCount">The number of 32 bit root constants to load.</param>
         /// <param name="d3D12DescriptorRanges1">The input descriptor ranges for the signature to create.</param>
+        /// <param name="isStaticSamplerUsed">Indicates whether or not a static sampler is used.</param>
         /// <returns>A pointer to the newly allocated <see cref="ID3D12RootSignature"/> instance.</returns>
         /// <exception cref="Exception">Thrown when the creation of the root signature fails.</exception>
         public static ComPtr<ID3D12RootSignature> CreateRootSignature(
             this ref ID3D12Device d3D12Device,
             int d3D12Root32BitConstantsCount,
-            ReadOnlySpan<D3D12_DESCRIPTOR_RANGE1> d3D12DescriptorRanges1)
+            ReadOnlySpan<D3D12_DESCRIPTOR_RANGE1> d3D12DescriptorRanges1,
+            bool isStaticSamplerUsed)
         {
             using ComPtr<ID3DBlob> d3D3Blob = default;
             using ComPtr<ID3DBlob> d3D3BlobError = default;
@@ -42,11 +47,28 @@ namespace ComputeSharp.Shaders.Extensions
                     D3D12_ROOT_PARAMETER1.InitAsDescriptorTable(out d3D12RootParameters1[i + 1], 1, d3D12DescriptorRange1 + i);
                 }
 
+                D3D12_STATIC_SAMPLER_DESC d3D12SamplerDescription;
+
+                // Create the linear static sampler if needed
+                if (isStaticSamplerUsed)
+                {
+                    D3D12_STATIC_SAMPLER_DESC.Init(
+                        out d3D12SamplerDescription,
+                        shaderRegister: 0,
+                        filter: D3D12_FILTER_MIN_MAG_MIP_LINEAR,
+                        addressU: D3D12_TEXTURE_ADDRESS_MODE_MIRROR,
+                        addressV: D3D12_TEXTURE_ADDRESS_MODE_MIRROR,
+                        addressW: D3D12_TEXTURE_ADDRESS_MODE_MIRROR,
+                        comparisonFunc: D3D12_COMPARISON_FUNC_NEVER);
+                }
+
                 // Root signature description wrapping the packed collection of root parameters
                 D3D12_VERSIONED_ROOT_SIGNATURE_DESC.Init_1_1(
                     out D3D12_VERSIONED_ROOT_SIGNATURE_DESC d3D12VersionedRootSignatureDescription,
-                    (uint)d3D12DescriptorRanges1.Length + 1,
-                    d3D12RootParameters1);
+                    numParameters: (uint)d3D12DescriptorRanges1.Length + 1,
+                    _pParameters: d3D12RootParameters1,
+                    numStaticSamplers: isStaticSamplerUsed ? 1u : 0u,
+                    _pStaticSamplers: isStaticSamplerUsed ? &d3D12SamplerDescription : null);
 
                 // Serialize the root signature from the data just computed. When this is done
                 // we just work with the resulting blobs, so the input data can be unpinned.

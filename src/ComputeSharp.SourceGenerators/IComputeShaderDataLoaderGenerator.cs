@@ -154,9 +154,11 @@ namespace ComputeSharp.SourceGenerators
         {
             List<StatementSyntax> statements = new();
 
+            var pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: nameof(IPixelShader<byte>) });
+            var isComputeShader = pixelShaderSymbol is null;
             int
                 resourceOffset = 0,
-                rawDataOffset = sizeof(int) * 3;
+                rawDataOffset = sizeof(int) * (isComputeShader ? 3 : 2);
 
             AppendFields(structDeclarationSymbol, Array.Empty<string>(), ref resourceOffset, ref rawDataOffset, statements);
 

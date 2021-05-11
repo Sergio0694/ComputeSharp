@@ -34,6 +34,21 @@ namespace ComputeSharp.SourceGenerators.Mappings
         };
 
         /// <summary>
+        /// The mapping of supported known samplers to HLSL resource type names.
+        /// </summary>
+        private static readonly IReadOnlyDictionary<string, string?> KnownResourceSamplers = new Dictionary<string, string?>
+        {
+            [$"ComputeSharp.ReadOnlyTexture2D`2.this[{typeof(float).FullName}, {typeof(float).FullName}]"] = "float2",
+            [$"ComputeSharp.ReadOnlyTexture2D`2.this[{typeof(Float2).FullName}]"] = null,
+            [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(float).FullName}, {typeof(float).FullName}]"] = "float2",
+            [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(Float2).FullName}]"] = null,
+            [$"ComputeSharp.ReadOnlyTexture3D`2.this[{typeof(float).FullName}, {typeof(float).FullName}, {typeof(float).FullName}]"] = "float3",
+            [$"ComputeSharp.ReadOnlyTexture3D`2.this[{typeof(Float3).FullName}]"] = null,
+            [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(float).FullName}, {typeof(float).FullName}, {typeof(float).FullName}]"] = "float3",
+            [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(Float3).FullName}]"] = null
+        };
+
+        /// <summary>
         /// The mapping of supported known size accessors for HLSL resource types.
         /// </summary>
         private static readonly IReadOnlyDictionary<string, (int Rank, int Axis)> KnownSizeAccessors = new Dictionary<string, (int, int)>
@@ -387,6 +402,18 @@ namespace ComputeSharp.SourceGenerators.Mappings
         public static bool TryGetMappedResourceIndexerTypeName(string name, out string? mapped)
         {
             return KnownResourceIndexers.TryGetValue(name, out mapped);
+        }
+
+        /// <summary>
+        /// Tries to get the mapped HLSL-compatible sampler resource type name for the input indexer name.
+        /// </summary>
+        /// <param name="name">The input fully qualified indexer name.</param>
+        /// <param name="mapped">The mapped type name, if one is found.</param>
+        /// <returns>The HLSL-compatible type name that can be used in an HLSL shader for the given sampler.</returns>
+        [Pure]
+        public static bool TryGetMappedResourceSamplerAccessType(string name, out string? mapped)
+        {
+            return KnownResourceSamplers.TryGetValue(name, out mapped);
         }
 
         /// <summary>

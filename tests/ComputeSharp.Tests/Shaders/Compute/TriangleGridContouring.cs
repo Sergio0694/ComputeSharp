@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders
+﻿namespace ComputeSharp.SwapChain.Shaders.Compute
 {
     /// <summary>
     /// Utilizing a 2D simplex grid to construct the isolines of a noise function.
@@ -6,8 +6,13 @@
     /// <para>Created by Shane.</para>
     /// </summary>
     [AutoConstructor]
-    internal readonly partial struct TriangleGridContouring : IPixelShader<Float4>
+    internal readonly partial struct TriangleGridContouring : IComputeShader
     {
+        /// <summary>
+        /// The target texture.
+        /// </summary>
+        public readonly IReadWriteTexture2D<Float4> texture;
+
         /// <summary>
         /// The current time Hlsl.Since the start of the application.
         /// </summary>
@@ -41,7 +46,7 @@
         private float N2D3G(Float2 p)
         {
             Float2 i = Hlsl.Floor(p);
-            
+
             p -= i;
 
             Float4 v = default;
@@ -126,7 +131,7 @@
             if (iTh >= 4 && iTh <= 6)
             {
                 Float2 tmp = p0;
-                
+
                 p0 = p1;
                 p1 = tmp;
             }
@@ -134,7 +139,7 @@
             if (i == 0.0f)
             {
                 Float2 tmp = p0;
-                
+
                 p0 = p1;
                 p1 = tmp;
             }
@@ -263,7 +268,7 @@
         }
 
         /// <inheritdoc/>
-        public Float4 Execute()
+        public void Execute()
         {
             Int2 coordinate = new(ThreadIds.X, DispatchSize.Y - ThreadIds.Y);
             Float2 uv = (coordinate - (Float2)DispatchSize.XY * 0.5f) / Hlsl.Min(650.0f, DispatchSize.Y);
@@ -273,7 +278,9 @@
             uv = coordinate / (Float2)DispatchSize.XY;
             col *= Hlsl.Pow(16.0f * uv.X * uv.Y * (1.0f - uv.X) * (1.0f - uv.Y), 0.0625f) + 0.1f;
 
-            return new(Hlsl.Sqrt(Hlsl.Max(col, 0.0f)), 1);
+            Float4 color = new(Hlsl.Sqrt(Hlsl.Max(col, 0.0f)), 1);
+
+            texture[ThreadIds.XY] = color;
         }
     }
 }

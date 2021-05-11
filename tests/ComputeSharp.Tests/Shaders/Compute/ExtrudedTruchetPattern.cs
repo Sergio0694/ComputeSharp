@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders
+﻿namespace ComputeSharp.SwapChain.Shaders.Compute
 {
     /// <summary>
     /// A basic extruded square grid-based blobby Truchet pattern.
@@ -6,8 +6,13 @@
     /// <para>Created by Shane.</para>
     /// </summary>
     [AutoConstructor]
-    internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<Float4>
+    internal readonly partial struct ExtrudedTruchetPattern : IComputeShader
     {
+        /// <summary>
+        /// The target texture.
+        /// </summary>
+        public readonly IReadWriteTexture2D<Float4> texture;
+
         /// <summary>
         /// The current time since the start of the application.
         /// </summary>
@@ -175,7 +180,7 @@
         }
 
         /// <inheritdoc/>
-        public Float4 Execute()
+        public void Execute()
         {
             Int2 coords = new(ThreadIds.X, DispatchSize.Y - ThreadIds.Y);
             Float2 u = (coords - (Float2)DispatchSize.XY * 0.5f) / DispatchSize.Y;
@@ -287,7 +292,7 @@
 
             c = Hlsl.Sqrt(Hlsl.Max(c, 0));
 
-            return c;
+            texture[ThreadIds.XY] = c;
         }
     }
 }

@@ -14,13 +14,13 @@ namespace ComputeSharp.Interop
     public static class ReflectionServices
     {
         /// <summary>
-        /// Gets the shader info associated with a given shader.
+        /// Gets the shader info associated with a given compute shader.
         /// <para>
-        /// This overload can be used for simplicity when the shader being inspected does not rely on captured
+        /// This overload can be used for simplicity when the compute shader being inspected does not rely on captured
         /// objects to be processed correctly. This is the case when it does not contain any <see cref="Delegate"/>-s.
         /// </para>
         /// </summary>
-        /// <typeparam name="T">The type of shader to retrieve info for.</typeparam>
+        /// <typeparam name="T">The type of compute shader to retrieve info for.</typeparam>
         /// <param name="shaderInfo">The resulting <see cref="ShaderInfo"/> instance.</param>
         /// <remarks>
         /// The thread group sizes will always be set to (1, 1, 1) in the returned shader. This is done to
@@ -30,14 +30,14 @@ namespace ComputeSharp.Interop
         public static void GetShaderInfo<T>(out ShaderInfo shaderInfo)
             where T : struct, IComputeShader
         {
-            GetShaderInfo(default(T), out shaderInfo);
+            GetNonGenericShaderInfo(default(T), out shaderInfo);
         }
 
         /// <summary>
-        /// Gets the shader info associated with a given shader.
+        /// Gets the shader info associated with a given compute shader.
         /// </summary>
-        /// <typeparam name="T">The type of shader to retrieve info for.</typeparam>
-        /// <param name="shader">The input shader to retrieve info for.</param>
+        /// <typeparam name="T">The type of compute shader to retrieve info for.</typeparam>
+        /// <param name="shader">The input compute shader to retrieve info for.</param>
         /// <param name="shaderInfo">The resulting <see cref="ShaderInfo"/> instance.</param>
         /// <remarks>
         /// The thread group sizes will always be set to (1, 1, 1) in the returned shader. This is done to
@@ -46,6 +46,59 @@ namespace ComputeSharp.Interop
         /// </remarks>
         public static unsafe void GetShaderInfo<T>(in T shader, out ShaderInfo shaderInfo)
             where T : struct, IComputeShader
+        {
+            GetNonGenericShaderInfo(in shader, out shaderInfo);
+        }
+
+        /// <summary>
+        /// Gets the shader info associated with a given pixel shader.
+        /// <para>
+        /// This overload can be used for simplicity when the pixel shader being inspected does not rely on captured
+        /// objects to be processed correctly. This is the case when it does not contain any <see cref="Delegate"/>-s.
+        /// </para>
+        /// </summary>
+        /// <typeparam name="T">The type of pixel shader to retrieve info for.</typeparam>
+        /// <typeparam name="TPixel">The type of pixels being processed by the shader.</typeparam>
+        /// <param name="shaderInfo">The resulting <see cref="ShaderInfo"/> instance.</param>
+        /// <remarks>
+        /// The thread group sizes will always be set to (1, 1, 1) in the returned shader. This is done to
+        /// avoid having to compiler multiple shaders just to get reflection info for them. When using any of
+        /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
+        /// </remarks>
+        public static void GetShaderInfo<T, TPixel>(out ShaderInfo shaderInfo)
+            where T : struct, IPixelShader<TPixel>
+            where TPixel : unmanaged
+        {
+            GetNonGenericShaderInfo(default(T), out shaderInfo);
+        }
+
+        /// <summary>
+        /// Gets the shader info associated with a given pixel shader.
+        /// </summary>
+        /// <typeparam name="T">The type of pixel shader to retrieve info for.</typeparam>
+        /// <typeparam name="TPixel">The type of pixels being processed by the shader.</typeparam>
+        /// <param name="shader">The input pixel shader to retrieve info for.</param>
+        /// <param name="shaderInfo">The resulting <see cref="ShaderInfo"/> instance.</param>
+        /// <remarks>
+        /// The thread group sizes will always be set to (1, 1, 1) in the returned shader. This is done to
+        /// avoid having to compiler multiple shaders just to get reflection info for them. When using any of
+        /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
+        /// </remarks>
+        public static unsafe void GetShaderInfo<T, TPixel>(in T shader, out ShaderInfo shaderInfo)
+            where T : struct, IPixelShader<TPixel>
+            where TPixel : unmanaged
+        {
+            GetNonGenericShaderInfo(in shader, out shaderInfo);
+        }
+
+        /// <summary>
+        /// Gets the shader info associated with a given shader of any type.
+        /// </summary>
+        /// <typeparam name="T">The type of shader to retrieve info for.</typeparam>
+        /// <param name="shader">The input shader to retrieve info for.</param>
+        /// <param name="shaderInfo">The resulting <see cref="ShaderInfo"/> instance.</param>
+        private static unsafe void GetNonGenericShaderInfo<T>(in T shader, out ShaderInfo shaderInfo)
+            where T : struct
         {
             ShaderLoader<T> shaderLoader = ShaderLoader<T>.Load(in shader);
 

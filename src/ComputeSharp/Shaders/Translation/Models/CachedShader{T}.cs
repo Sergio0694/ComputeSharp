@@ -9,7 +9,7 @@ namespace ComputeSharp.Shaders.Translation.Models
     /// </summary>
     /// <typeparam name="T">The type of compute shader in use.</typeparam>
     internal readonly struct CachedShader<T>
-        where T : struct, IComputeShader
+        where T : struct
     {
         /// <summary>
         /// The <see cref="ShaderLoader{T}"/> instance with the shader metadata.

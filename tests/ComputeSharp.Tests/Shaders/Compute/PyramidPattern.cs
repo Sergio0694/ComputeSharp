@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.Shaders
+﻿namespace ComputeSharp.SwapChain.Shaders.Compute
 {
     /// <summary>
     /// An offset grid of square-based pyramids whose tips have been offset according to an underlying directional noise field.
@@ -7,8 +7,13 @@
     /// <para>Created by Shane.</para>
     /// </summary>
     [AutoConstructor]
-    internal readonly partial struct PyramidPattern : IPixelShader<Float4>
+    internal readonly partial struct PyramidPattern : IComputeShader
     {
+        /// <summary>
+        /// The target texture.
+        /// </summary>
+        public readonly IReadWriteTexture2D<Float4> texture;
+
         /// <summary>
         /// The current time Hlsl.Since the start of the application.
         /// </summary>
@@ -40,7 +45,7 @@
         private static float N2D3G(Float2 p)
         {
             Float2 i = Hlsl.Floor(p);
-            
+
             p -= i;
 
             Float4 v = default;
@@ -130,7 +135,7 @@
         }
 
         /// <inheritdoc/>
-        public Float4 Execute()
+        public void Execute()
         {
             Int2 coordinate = new(ThreadIds.X, DispatchSize.Y - ThreadIds.Y);
             float iRes = Hlsl.Min(DispatchSize.Y, 800.0f);
@@ -170,7 +175,9 @@
 
             col *= hatch * 0.5f + 0.7f;
 
-            return new(Hlsl.Sqrt(Hlsl.Max(col, 0.0f)), 1);
+            Float4 color = new(Hlsl.Sqrt(Hlsl.Max(col, 0.0f)), 1);
+
+            texture[ThreadIds.XY] = color;
         }
     }
 }

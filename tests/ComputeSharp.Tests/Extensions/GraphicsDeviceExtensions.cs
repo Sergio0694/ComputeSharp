@@ -8,7 +8,7 @@ using ComputeSharp.Resources;
 namespace ComputeSharp.Tests.Extensions
 {
     /// <summary>
-    /// A helper class for testing <see cref="Buffer{T}"/> APIs.
+    /// A helper class for testing resource types.
     /// </summary>
     public static class GraphicsDeviceExtensions
     {

@@ -85,7 +85,11 @@ namespace ComputeSharp.Shaders.Renderer
             builder.AppendLine('{');
             builder.AppendLine("    uint __x;");
             builder.AppendLine("    uint __y;");
-            builder.AppendLine("    uint __z;");
+
+            if (info.IsComputeShader)
+            {
+                builder.AppendLine("    uint __z;");
+            }
 
             foreach (var local in info.FieldsInfo)
             {
@@ -98,25 +102,25 @@ namespace ComputeSharp.Shaders.Renderer
 
             builder.AppendLine('}');
 
-            // Buffers
-            foreach (var buffer in info.HlslResourceInfo)
+            // Resources
+            foreach (var resource in info.HlslResourceInfo)
             {
                 builder.AppendLine();
 
-                switch (buffer)
+                switch (resource)
                 {
                     // Constant buffer go to cbuffer fields with a dummy local
                     case HlslResourceInfo.Constant _:
                         builder.Append("cbuffer _");
-                        builder.Append(buffer.FieldName);
+                        builder.Append(resource.FieldName);
                         builder.Append(" : register(b");
-                        builder.Append(buffer.BufferIndex.ToString());
+                        builder.Append(resource.RegisterIndex.ToString());
                         builder.AppendLine(')');
                         builder.AppendLine('{');
                         builder.Append("    ");
-                        builder.Append(buffer.FieldType);
+                        builder.Append(resource.FieldType);
                         builder.Append(' ');
-                        builder.Append(buffer.FieldName);
+                        builder.Append(resource.FieldName);
                         builder.AppendLine("[2];");
                         builder.AppendLine('}');
                         break;
@@ -128,12 +132,23 @@ namespace ComputeSharp.Shaders.Renderer
                     case HlslResourceInfo.ReadWrite _:
                         registerId = 'u';
                         StructuredBuffer:
-                        builder.Append(buffer.FieldType);
+                        builder.Append(resource.FieldType);
                         builder.Append(' ');
-                        builder.Append(buffer.FieldName);
+                        builder.Append(resource.FieldName);
                         builder.Append(" : register(");
                         builder.Append(registerId);
-                        builder.Append(buffer.BufferIndex.ToString());
+                        builder.Append(resource.RegisterIndex.ToString());
+                        builder.AppendLine(");");
+                        break;
+
+                    // Texture samplers
+                    case HlslResourceInfo.Sampler _:
+                        builder.Append(resource.FieldType);
+                        builder.Append(' ');
+                        builder.Append(resource.FieldName);
+                        builder.Append(" : register(");
+                        builder.Append('s');
+                        builder.Append(resource.RegisterIndex.ToString());
                         builder.AppendLine(");");
                         break;
                 }
