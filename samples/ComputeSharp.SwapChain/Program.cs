@@ -3,11 +3,8 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using ComputeSharp.SwapChain.Backend;
 using ComputeSharp.SwapChain.Shaders;
-using SixLabors.ImageSharp;
-using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
 namespace ComputeSharp.SwapChain
 {
@@ -71,15 +68,7 @@ namespace ComputeSharp.SwapChain
         {
             string filename = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Textures", $"{name}.png");
 
-            using Image<ImageSharpRgba32> image = Image.Load<ImageSharpRgba32>(filename);
-
-            ReadOnlyTexture2D<Rgba32, Float4> texture = Gpu.Default.AllocateReadOnlyTexture2D<Rgba32, Float4>(image.Width, image.Height);
-
-            image.TryGetSinglePixelSpan(out Span<ImageSharpRgba32> span);
-
-            texture.CopyFrom(MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(span));
-
-            return texture;
+            return Gpu.Default.AllocateReadOnlyTexture2D<Rgba32, Float4>(filename);
         }
     }
 }
