@@ -180,7 +180,11 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                 {
                     string literal = updatedNode.Token.ValueText;
 
-                    if (!literal.Contains('.')) literal += ".0";
+                    // If the numeric literal is neither a decimal nor an exponential, add the ".0" suffix
+                    if (literal.IndexOfAny(new[] { '.', 'E' }) == -1)
+                    {
+                        literal += ".0";
+                    }
 
                     return updatedNode.WithToken(Literal(literal, 0f));
                 }
