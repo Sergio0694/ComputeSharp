@@ -4,6 +4,7 @@ using ComputeSharp.SwapChain.WinUI.Models;
 using ComputeSharp.WinUI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ComputeSharp.SwapChain.WinUI.Shaders.Runners;
 
 namespace ComputeSharp.SwapChain.WinUI.ViewModels
 {
@@ -67,7 +68,8 @@ namespace ComputeSharp.SwapChain.WinUI.ViewModels
             new("Protean clouds", new ShaderRunner<ProteanClouds>(static time => new((float)time.TotalSeconds))),
             new("Two tiled truchet", new ShaderRunner<TwoTiledTruchet>(static time => new((float)time.TotalSeconds))),
             new("Pyramid pattern", new ShaderRunner<PyramidPattern>(static time => new((float)time.TotalSeconds))),
-            new("Triangle grid contouring", new ShaderRunner<TriangleGridContouring>(static time => new((float)time.TotalSeconds)))
+            new("Triangle grid contouring", new ShaderRunner<TriangleGridContouring>(static time => new((float)time.TotalSeconds))),
+            new("Contoured layers", new ContouredLayersRunner())
         };
 
         private ComputeShader selectedComputeShader;
