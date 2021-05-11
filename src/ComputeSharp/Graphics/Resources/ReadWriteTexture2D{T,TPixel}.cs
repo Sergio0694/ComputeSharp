@@ -22,7 +22,7 @@ namespace ComputeSharp
         where TPixel : unmanaged
     {
         /// <summary>
-        /// Creates a new <see cref="ReadWriteTexture2D{T,TPixel}"/> instance with the specified parameters.
+        /// Creates a new <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the specified parameters.
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
         /// <param name="width">The width of the texture.</param>
