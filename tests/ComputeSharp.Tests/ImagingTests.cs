@@ -9,7 +9,6 @@ using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
-using ImageSharpBgra32 = SixLabors.ImageSharp.PixelFormats.Bgra32;
 
 namespace ComputeSharp.Tests
 {
@@ -19,11 +18,27 @@ namespace ComputeSharp.Tests
     {
         [CombinatorialTestMethod]
         [AllDevices]
-        public void LoadImageAsRgba32(Device device)
+        public void LoadAsRgba32FromFile(Device device)
         {
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
 
-            using ReadOnlyTexture2D<Rgba32, Float4> texture = Gpu.Default.AllocateReadOnlyTexture2D<Rgba32, Float4>(path);
+            using ReadOnlyTexture2D<Rgba32, Float4> texture = device.Get().AllocateReadOnlyTexture2D<Rgba32, Float4>(path);
+
+            using Image<ImageSharpRgba32> loaded = texture.ToImage();
+            using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(path);
+
+            TolerantImageComparer.AssertEqual(original, loaded, 0.0000032f);
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void LoadAsRgba32FromBuffer(Device device)
+        {
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
+
+            byte[] buffer = File.ReadAllBytes(path);
+
+            using ReadOnlyTexture2D<Rgba32, Float4> texture = device.Get().AllocateReadOnlyTexture2D<Rgba32, Float4>(buffer);
 
             using Image<ImageSharpRgba32> loaded = texture.ToImage();
             using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(path);

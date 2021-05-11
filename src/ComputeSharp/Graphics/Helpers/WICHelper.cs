@@ -76,10 +76,59 @@ namespace ComputeSharp.Graphics.Helpers
                     wicBitmapDecoder.GetAddressOf()).Assert();
             }
 
+            return LoadTexture<T, TPixel>(device, wicBitmapDecoder.Get());
+        }
+
+        /// <summary>
+        /// Loads a <see cref="ReadOnlyTexture2D{T, TPixel}"/> from a specified buffer.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+        /// <param name="span">The buffer with the image data to load and decode into the texture.</param>
+        /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+        [Pure]
+        public ReadOnlyTexture2D<T, TPixel> LoadTexture<T, TPixel>(GraphicsDevice device, ReadOnlySpan<byte> span)
+            where T : unmanaged, IUnorm<TPixel>
+            where TPixel : unmanaged
+        {
+            using ComPtr<IWICBitmapDecoder> wicBitmapDecoder = default;
+            using ComPtr<IWICStream> wicStream = default;
+
+            // Get the bitmap decoder for the target buffer
+            fixed (byte* p = span)
+            {
+                this.wicImagingFactory2.Get()->CreateStream(wicStream.GetAddressOf()).Assert();
+
+                wicStream.Get()->InitializeFromMemory(p, (uint)span.Length).Assert();
+
+                this.wicImagingFactory2.Get()->CreateDecoderFromStream(
+                    (IStream*)wicStream.Get(),
+                    null,
+                    WICDecodeOptions.WICDecodeMetadataCacheOnDemand,
+                    wicBitmapDecoder.GetAddressOf()).Assert();
+
+                return LoadTexture<T, TPixel>(device, wicBitmapDecoder.Get());
+            }
+        }
+
+        /// <summary>
+        /// Loads a <see cref="ReadOnlyTexture2D{T, TPixel}"/> from a specified <see cref="IWICBitmapDecoder"/> object.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+        /// <param name="wicBitmapDecoder">The <see cref="IWICBitmapDecoder"/> object in use.</param>
+        /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+        [Pure]
+        public ReadOnlyTexture2D<T, TPixel> LoadTexture<T, TPixel>(GraphicsDevice device, IWICBitmapDecoder* wicBitmapDecoder)
+            where T : unmanaged, IUnorm<TPixel>
+            where TPixel : unmanaged
+        {
             using ComPtr<IWICBitmapFrameDecode> wicBitmapFrameDecode = default;
 
             // Get the first frame of the loaded image (if more are present, they will be ignored)
-            wicBitmapDecoder.Get()->GetFrame(0, wicBitmapFrameDecode.GetAddressOf()).Assert();
+            wicBitmapDecoder->GetFrame(0, wicBitmapFrameDecode.GetAddressOf()).Assert();
 
             using ComPtr<IWICFormatConverter> wicFormatConverter = default;
             Guid wicPixelFormatGuid = WICFormatHelper.GetForType<T>();

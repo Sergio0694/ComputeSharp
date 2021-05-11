@@ -345,6 +345,22 @@ namespace ComputeSharp
         }
 
         /// <summary>
+        /// Allocates a new readonly 2D texture with the contents of the specified buffer.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+        /// <param name="span">The buffer with the image data to load and decode into the texture.</param>
+        /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+        [Pure]
+        public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<byte> span)
+            where T : unmanaged, IUnorm<TPixel>
+            where TPixel : unmanaged
+        {
+            return WICHelper.Instance.LoadTexture<T, TPixel>(device, span);
+        }
+
+        /// <summary>
         /// Allocates a new readonly 3D texture with the specified parameters.
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
