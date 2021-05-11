@@ -52,6 +52,9 @@
     <Content Include="..\..\..\tests\ComputeSharp.Tests\Assets\ColorfulInfinity.png">
       <Link>Images\Shaders\ColorfulInfinity.png</Link>
     </Content>
+    <Content Include="..\..\..\tests\ComputeSharp.Tests\Assets\ContouredLayers.png">
+      <Link>Images\Shaders\ContouredLayers.png</Link>
+    </Content>
     <Content Include="..\..\..\tests\ComputeSharp.Tests\Assets\ExtrudedTruchetPattern.png">
       <Link>Images\Shaders\ExtrudedTruchetPattern.png</Link>
     </Content>
@@ -76,8 +79,12 @@
     <Content Include="..\..\..\tests\ComputeSharp.Tests\Assets\TriangleGridContouring.png">
       <Link>Images\Shaders\TriangleGridContouring.png</Link>
     </Content>
+    <Content Include="..\..\ComputeSharp.SwapChain\Textures\RustyMetal.png">
+      <Link>Images\Textures\RustyMetal.png</Link>
+    </Content>
     <Content Include="Images\Misc\noise_low.png" />
     <Content Include="Images\Shaders\Blurred\ColorfulInfinity.png" />
+    <Content Include="Images\Shaders\Blurred\ContouredLayers.png" />
     <Content Include="Images\Shaders\Blurred\ExtrudedTruchetPattern.png" />
     <Content Include="Images\Shaders\Blurred\FractalTiling.png" />
     <Content Include="Images\Shaders\Blurred\MengerJourney.png" />
