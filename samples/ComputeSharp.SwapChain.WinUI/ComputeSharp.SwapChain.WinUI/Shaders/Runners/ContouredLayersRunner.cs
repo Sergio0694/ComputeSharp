@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using ComputeSharp.SwapChain.Shaders;
-using ComputeSharp.SwapChain.WinUI.Extensions;
 using ComputeSharp.WinUI;
 using Windows.ApplicationModel;
 
@@ -24,7 +23,7 @@ namespace ComputeSharp.SwapChain.WinUI.Shaders.Runners
             {
                 string filename = Path.Combine(Package.Current.InstalledLocation.Path, "Images", "Textures", "RustyMetal.png");
 
-                this.texture = Gpu.Default.LoadTexture(filename);
+                this.texture = Gpu.Default.LoadReadOnlyTexture2D<Rgba32, Float4>(filename);
             }
 
             Gpu.Default.ForEach(texture, new ContouredLayers((float)timespan.TotalSeconds, this.texture));
