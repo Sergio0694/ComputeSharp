@@ -105,7 +105,7 @@ namespace ComputeSharp.Tests
         {
             string filename = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Shaders", "Textures", "RustyMetal.png");
 
-            using ReadOnlyTexture2D<Rgba32, Float4> background = device.Get().LoadTexture(filename);
+            using ReadOnlyTexture2D<Rgba32, Float4> background = device.Get().AllocateReadOnlyTexture2D<Rgba32, Float4>(filename);
 
             RunAndCompareShader(
                 device,

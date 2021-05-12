@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using ComputeSharp.__Internals;
+using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Resources;
 using ComputeSharp.Shaders;
 
@@ -239,7 +240,7 @@ namespace ComputeSharp
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
-        /// <returns>A zeroed <see cref="ReadOnlyTexture2D{T,TPixel}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>].</returns>
+        /// <returns>A zeroed <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>].</returns>
         [Pure]
         public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
             where T : unmanaged, IUnorm<TPixel>
@@ -257,7 +258,7 @@ namespace ComputeSharp
         /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
-        /// <returns>A <see cref="ReadOnlyTexture2D{T,TPixel}"/> instance with the contents of the input array.</returns>
+        /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
         public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, T[] source, int width, int height)
             where T : unmanaged, IUnorm<TPixel>
@@ -276,7 +277,7 @@ namespace ComputeSharp
         /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
-        /// <returns>A <see cref="ReadOnlyTexture2D{T,TPixel}"/> instance with the contents of the input array.</returns>
+        /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
         public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, T[] source, int offset, int width, int height)
             where T : unmanaged, IUnorm<TPixel>
@@ -292,7 +293,7 @@ namespace ComputeSharp
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
         /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <returns>A read write <see cref="ReadOnlyTexture2D{T,TPixel}"/> instance with the contents of the input array.</returns>
+        /// <returns>A read write <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
         public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, T[,] source)
             where T : unmanaged, IUnorm<TPixel>
@@ -314,7 +315,7 @@ namespace ComputeSharp
         /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
-        /// <returns>A <see cref="ReadOnlyTexture2D{T,TPixel}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
+        /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
         public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height)
             where T : unmanaged, IUnorm<TPixel>
@@ -323,6 +324,50 @@ namespace ComputeSharp
             ReadOnlyTexture2D<T, TPixel> texture = new(device, width, height, AllocationMode.Default);
 
             texture.CopyFrom(source);
+
+            return texture;
+        }
+
+        /// <summary>
+        /// Allocates a new readonly 2D texture with the contents of the specified file.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+        /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
+        /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+        [Pure]
+        public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<char> filename)
+            where T : unmanaged, IUnorm<TPixel>
+            where TPixel : unmanaged
+        {
+            using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, filename);
+
+            ReadOnlyTexture2D<T, TPixel> texture = device.AllocateReadOnlyTexture2D<T, TPixel>(upload.Width, upload.Height);
+
+            upload.CopyTo(texture);
+
+            return texture;
+        }
+
+        /// <summary>
+        /// Allocates a new readonly 2D texture with the contents of the specified buffer.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+        /// <param name="span">The buffer with the image data to load and decode into the texture.</param>
+        /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+        [Pure]
+        public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<byte> span)
+            where T : unmanaged, IUnorm<TPixel>
+            where TPixel : unmanaged
+        {
+            using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, span);
+
+            ReadOnlyTexture2D<T, TPixel> texture = device.AllocateReadOnlyTexture2D<T, TPixel>(upload.Width, upload.Height);
+
+            upload.CopyTo(texture);
 
             return texture;
         }
@@ -432,7 +477,7 @@ namespace ComputeSharp
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
         /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
-        /// <returns>A zeroed <see cref="ReadOnlyTexture3D{T,TPixel}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>, <paramref name="depth"/>].</returns>
+        /// <returns>A zeroed <see cref="ReadOnlyTexture3D{T, TPixel}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>, <paramref name="depth"/>].</returns>
         [Pure]
         public static ReadOnlyTexture3D<T, TPixel> AllocateReadOnlyTexture3D<T, TPixel>(this GraphicsDevice device, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
             where T : unmanaged, IUnorm<TPixel>
@@ -451,7 +496,7 @@ namespace ComputeSharp
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
-        /// <returns>A <see cref="ReadOnlyTexture3D{T,TPixel}"/> instance with the contents of the input array.</returns>
+        /// <returns>A <see cref="ReadOnlyTexture3D{T, TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
         public static ReadOnlyTexture3D<T, TPixel> AllocateReadOnlyTexture3D<T, TPixel>(this GraphicsDevice device, T[] source, int width, int height, int depth)
             where T : unmanaged, IUnorm<TPixel>
@@ -471,7 +516,7 @@ namespace ComputeSharp
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
-        /// <returns>A <see cref="ReadOnlyTexture3D{T,TPixel}"/> instance with the contents of the input array.</returns>
+        /// <returns>A <see cref="ReadOnlyTexture3D{T, TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
         public static ReadOnlyTexture3D<T, TPixel> AllocateReadOnlyTexture3D<T, TPixel>(this GraphicsDevice device, T[] source, int offset, int width, int height, int depth)
             where T : unmanaged, IUnorm<TPixel>
@@ -487,7 +532,7 @@ namespace ComputeSharp
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
         /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <returns>A read write <see cref="ReadOnlyTexture3D{T,TPixel}"/> instance with the contents of the input array.</returns>
+        /// <returns>A read write <see cref="ReadOnlyTexture3D{T, TPixel}"/> instance with the contents of the input array.</returns>
         /// <remarks>
         /// The source 3D array needs to have each 2D plane stacked on the depth axis.
         /// That is, the expected layout of the input array has to be [depth, height, width].
@@ -514,7 +559,7 @@ namespace ComputeSharp
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
-        /// <returns>A <see cref="ReadOnlyTexture3D{T,TPixel}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
+        /// <returns>A <see cref="ReadOnlyTexture3D{T, TPixel}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
         public static ReadOnlyTexture3D<T, TPixel> AllocateReadOnlyTexture3D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height, int depth)
             where T : unmanaged, IUnorm<TPixel>
@@ -688,7 +733,7 @@ namespace ComputeSharp
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
-        /// <returns>A zeroed <see cref="ReadWriteTexture2D{T,TPixel}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>].</returns>
+        /// <returns>A zeroed <see cref="ReadWriteTexture2D{T, TPixel}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>].</returns>
         [Pure]
         public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
             where T : unmanaged, IUnorm<TPixel>
@@ -706,7 +751,7 @@ namespace ComputeSharp
         /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
-        /// <returns>A <see cref="ReadWriteTexture2D{T,TPixel}"/> instance with the contents of the input array.</returns>
+        /// <returns>A <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
         public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, T[] source, int width, int height)
             where T : unmanaged, IUnorm<TPixel>
@@ -725,7 +770,7 @@ namespace ComputeSharp
         /// <param name="offset">The starting offset within <paramref name="source"/> to read data from.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
-        /// <returns>A <see cref="ReadWriteTexture2D{T,TPixel}"/> instance with the contents of the input array.</returns>
+        /// <returns>A <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
         public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, T[] source, int offset, int width, int height)
             where T : unmanaged, IUnorm<TPixel>
@@ -741,7 +786,7 @@ namespace ComputeSharp
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
         /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <returns>A read write <see cref="ReadWriteTexture2D{T,TPixel}"/> instance with the contents of the input array.</returns>
+        /// <returns>A read write <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
         public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, T[,] source)
             where T : unmanaged, IUnorm<TPixel>
@@ -763,7 +808,7 @@ namespace ComputeSharp
         /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated texture.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
-        /// <returns>A <see cref="ReadWriteTexture2D{T,TPixel}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
+        /// <returns>A <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
         public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height)
             where T : unmanaged, IUnorm<TPixel>
@@ -772,6 +817,50 @@ namespace ComputeSharp
             ReadWriteTexture2D<T, TPixel> texture = new(device, width, height, AllocationMode.Default);
 
             texture.CopyFrom(source);
+
+            return texture;
+        }
+
+        /// <summary>
+        /// Allocates a new writeable 2D texture with the contents of the specified file.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+        /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
+        /// <returns>A <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+        [Pure]
+        public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<char> filename)
+            where T : unmanaged, IUnorm<TPixel>
+            where TPixel : unmanaged
+        {
+            using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, filename);
+
+            ReadWriteTexture2D<T, TPixel> texture = device.AllocateReadWriteTexture2D<T, TPixel>(upload.Width, upload.Height);
+
+            upload.CopyTo(texture);
+
+            return texture;
+        }
+
+        /// <summary>
+        /// Allocates a new writeable 2D texture with the contents of the specified buffer.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+        /// <param name="span">The buffer with the image data to load and decode into the texture.</param>
+        /// <returns>A <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+        [Pure]
+        public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<byte> span)
+            where T : unmanaged, IUnorm<TPixel>
+            where TPixel : unmanaged
+        {
+            using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, span);
+
+            ReadWriteTexture2D<T, TPixel> texture = device.AllocateReadWriteTexture2D<T, TPixel>(upload.Width, upload.Height);
+
+            upload.CopyTo(texture);
 
             return texture;
         }
@@ -881,7 +970,7 @@ namespace ComputeSharp
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
         /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
-        /// <returns>A <see cref="ReadWriteTexture3D{T,TPixel}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>, <paramref name="depth"/>].</returns>
+        /// <returns>A <see cref="ReadWriteTexture3D{T, TPixel}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>, <paramref name="depth"/>].</returns>
         [Pure]
         public static ReadWriteTexture3D<T, TPixel> AllocateReadWriteTexture3D<T, TPixel>(this GraphicsDevice device, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
             where T : unmanaged, IUnorm<TPixel>
@@ -900,7 +989,7 @@ namespace ComputeSharp
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
-        /// <returns>A <see cref="ReadWriteTexture3D{T,TPixel}"/> instance with the contents of the input array.</returns>
+        /// <returns>A <see cref="ReadWriteTexture3D{T, TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
         public static ReadWriteTexture3D<T, TPixel> AllocateReadWriteTexture3D<T, TPixel>(this GraphicsDevice device, T[] source, int width, int height, int depth)
             where T : unmanaged, IUnorm<TPixel>
@@ -920,7 +1009,7 @@ namespace ComputeSharp
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
-        /// <returns>A <see cref="ReadWriteTexture3D{T,TPixel}"/> instance with the contents of the input array.</returns>
+        /// <returns>A <see cref="ReadWriteTexture3D{T, TPixel}"/> instance with the contents of the input array.</returns>
         [Pure]
         public static ReadWriteTexture3D<T, TPixel> AllocateReadWriteTexture3D<T, TPixel>(this GraphicsDevice device, T[] source, int offset, int width, int height, int depth)
             where T : unmanaged, IUnorm<TPixel>
@@ -936,7 +1025,7 @@ namespace ComputeSharp
         /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
         /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
-        /// <returns>A read write <see cref="ReadWriteTexture3D{T,TPixel}"/> instance with the contents of the input array.</returns>
+        /// <returns>A read write <see cref="ReadWriteTexture3D{T, TPixel}"/> instance with the contents of the input array.</returns>
         /// <remarks>
         /// The source 3D array needs to have each 2D plane stacked on the depth axis.
         /// That is, the expected layout of the input array has to be [depth, height, width].
@@ -963,7 +1052,7 @@ namespace ComputeSharp
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
         /// <param name="depth">The depth of the texture.</param>
-        /// <returns>A <see cref="ReadWriteTexture3D{T,TPixel}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
+        /// <returns>A <see cref="ReadWriteTexture3D{T, TPixel}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
         [Pure]
         public static ReadWriteTexture3D<T, TPixel> AllocateReadWriteTexture3D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height, int depth)
             where T : unmanaged, IUnorm<TPixel>

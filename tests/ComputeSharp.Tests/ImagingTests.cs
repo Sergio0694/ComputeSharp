@@ -4,13 +4,12 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
-using ComputeSharp.BokehBlur.Processors;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
+using ImageSharpL8 = SixLabors.ImageSharp.PixelFormats.L8;
 
 namespace ComputeSharp.Tests
 {
@@ -20,48 +19,85 @@ namespace ComputeSharp.Tests
     {
         [CombinatorialTestMethod]
         [AllDevices]
-        public void BokehBlur(Device device)
+        public void LoadAsRgba32FromFile(Device device)
         {
-            // Early test to ensure the device is available. This saves time when running the
-            // unit test if the target device is not available, as we skip the preprocessing.
-            _ = device.Get();
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
 
-            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
+            using ReadOnlyTexture2D<Rgba32, Float4> texture = device.Get().AllocateReadOnlyTexture2D<Rgba32, Float4>(path);
 
-            using var original = Image.Load<ImageSharpRgba32>(Path.Combine(path, "city.jpg"));
-            using var cpu = original.Clone(c => c.BokehBlur(80, 2, 3));
-            using var gpu = original.Clone(c => c.ApplyProcessor(new HlslBokehBlurProcessor(device.Get(), 80, 2)));
+            using Image<ImageSharpRgba32> loaded = texture.ToImage();
+            using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(path);
 
-            string
-                expectedPath = Path.Combine(path, "city_bokeh_cpu.jpg"),
-                actualPath = Path.Combine(path, "city_bokeh_gpu.jpg");
-
-            cpu.Save(expectedPath);
-            gpu.Save(actualPath);
-
-            TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.000009f);
+            TolerantImageComparer.AssertEqual(original, loaded, 0.0000032f);
         }
 
         [CombinatorialTestMethod]
         [AllDevices]
-        public void GaussianBlur(Device device)
+        public void LoadAsRgba32FromBuffer(Device device)
         {
-            _ = device.Get();
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
 
-            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
+            byte[] buffer = File.ReadAllBytes(path);
 
-            using var original = Image.Load<ImageSharpRgba32>(Path.Combine(path, "city.jpg"));
-            using var cpu = original.Clone(c => c.GaussianBlur(30f));
-            using var gpu = original.Clone(c => c.ApplyProcessor(new HlslGaussianBlurProcessor(device.Get(), 90)));
+            using ReadOnlyTexture2D<Rgba32, Float4> texture = device.Get().AllocateReadOnlyTexture2D<Rgba32, Float4>(buffer);
 
+            using Image<ImageSharpRgba32> loaded = texture.ToImage();
+            using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(path);
+
+            TolerantImageComparer.AssertEqual(original, loaded, 0.0000032f);
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void SaveRgba32AsJpeg(Device device)
+        {
             string
-                expectedPath = Path.Combine(path, "city_gaussian_cpu.jpg"),
-                actualPath = Path.Combine(path, "city_gaussian_gpu.jpg");
+                path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging"),
+                expectedPath = Path.Combine(path, "city.jpg"),
+                actualPath = Path.Combine(path, "city_rgba32_saved.jpg");
 
-            cpu.Save(expectedPath);
-            gpu.Save(actualPath);
+            using ReadOnlyTexture2D<Rgba32, Float4> texture = device.Get().AllocateReadOnlyTexture2D<Rgba32, Float4>(expectedPath);
 
-            TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.000003f);
+            texture.Save(actualPath);
+
+            TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.00001023f);
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void SaveBgra32AsJpeg(Device device)
+        {
+            string
+                path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging"),
+                expectedPath = Path.Combine(path, "city.jpg"),
+                actualPath = Path.Combine(path, "city_bgra32_saved.jpg");
+
+            using ReadOnlyTexture2D<Bgra32, Float4> texture = device.Get().AllocateReadOnlyTexture2D<Bgra32, Float4>(expectedPath);
+
+            texture.Save(actualPath);
+
+            TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.00001023f);
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void SaveR8AsJpeg(Device device)
+        {
+            string
+                path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging"),
+                sourcePath = Path.Combine(path, "city.jpg"),
+                expectedPath = Path.Combine(path, "city_r8_reference.jpg"),
+                actualPath = Path.Combine(path, "city_r8_saved.jpg");
+
+            using ReadOnlyTexture2D<R8, float> texture = device.Get().AllocateReadOnlyTexture2D<R8, float>(sourcePath);
+
+            texture.Save(actualPath);
+
+            using Image<ImageSharpL8> original = Image.Load<ImageSharpL8>(sourcePath);
+
+            original.Save(expectedPath);
+
+            TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.00004037f);
         }
 
         /// <summary>
