@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
-using ComputeSharp.__Internals;
 using ComputeSharp.Core.Extensions;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.Graphics.Helpers
 {
@@ -51,17 +48,15 @@ namespace ComputeSharp.Graphics.Helpers
         public static WICHelper Instance { get; } = new();
 
         /// <summary>
-        /// Loads a <see cref="ReadOnlyTexture2D{T, TPixel}"/> from a specified file.
+        /// Loads an <see cref="UploadTexture2D{T}"/> from a specified file.
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
-        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
         /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
-        /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+        /// <returns>An <see cref="UploadTexture2D{T}"/> instance with the contents of the specified file.</returns>
         [Pure]
-        public ReadOnlyTexture2D<T, TPixel> LoadTexture<T, TPixel>(GraphicsDevice device, ReadOnlySpan<char> filename)
-            where T : unmanaged, IUnorm<TPixel>
-            where TPixel : unmanaged
+        public UploadTexture2D<T> LoadTexture<T>(GraphicsDevice device, ReadOnlySpan<char> filename)
+            where T : unmanaged
         {
             using ComPtr<IWICBitmapDecoder> wicBitmapDecoder = default;
 
@@ -76,21 +71,19 @@ namespace ComputeSharp.Graphics.Helpers
                     wicBitmapDecoder.GetAddressOf()).Assert();
             }
 
-            return LoadTexture<T, TPixel>(device, wicBitmapDecoder.Get());
+            return LoadTexture<T>(device, wicBitmapDecoder.Get());
         }
 
         /// <summary>
-        /// Loads a <see cref="ReadOnlyTexture2D{T, TPixel}"/> from a specified buffer.
+        /// Loads an <see cref="UploadTexture2D{T}"/> from a specified buffer.
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
-        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
         /// <param name="span">The buffer with the image data to load and decode into the texture.</param>
-        /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+        /// <returns>An <see cref="UploadTexture2D{T}"/> instance with the contents of the specified file.</returns>
         [Pure]
-        public ReadOnlyTexture2D<T, TPixel> LoadTexture<T, TPixel>(GraphicsDevice device, ReadOnlySpan<byte> span)
-            where T : unmanaged, IUnorm<TPixel>
-            where TPixel : unmanaged
+        public UploadTexture2D<T> LoadTexture<T>(GraphicsDevice device, ReadOnlySpan<byte> span)
+            where T : unmanaged
         {
             using ComPtr<IWICBitmapDecoder> wicBitmapDecoder = default;
             using ComPtr<IWICStream> wicStream = default;
@@ -108,7 +101,7 @@ namespace ComputeSharp.Graphics.Helpers
                     WICDecodeOptions.WICDecodeMetadataCacheOnDemand,
                     wicBitmapDecoder.GetAddressOf()).Assert();
 
-                return LoadTexture<T, TPixel>(device, wicBitmapDecoder.Get());
+                return LoadTexture<T>(device, wicBitmapDecoder.Get());
             }
         }
 
@@ -213,17 +206,15 @@ namespace ComputeSharp.Graphics.Helpers
         }
 
         /// <summary>
-        /// Loads a <see cref="ReadOnlyTexture2D{T, TPixel}"/> from a specified <see cref="IWICBitmapDecoder"/> object.
+        /// Loads an <see cref="UploadTexture2D{T}"/> from a specified <see cref="IWICBitmapDecoder"/> object.
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
-        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
         /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
         /// <param name="wicBitmapDecoder">The <see cref="IWICBitmapDecoder"/> object in use.</param>
-        /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+        /// <returns>An <see cref="UploadTexture2D{T}"/> instance with the contents of the specified file.</returns>
         [Pure]
-        private ReadOnlyTexture2D<T, TPixel> LoadTexture<T, TPixel>(GraphicsDevice device, IWICBitmapDecoder* wicBitmapDecoder)
-            where T : unmanaged, IUnorm<TPixel>
-            where TPixel : unmanaged
+        private UploadTexture2D<T> LoadTexture<T>(GraphicsDevice device, IWICBitmapDecoder* wicBitmapDecoder)
+            where T : unmanaged
         {
             using ComPtr<IWICBitmapFrameDecode> wicBitmapFrameDecode = default;
 
@@ -250,7 +241,7 @@ namespace ComputeSharp.Graphics.Helpers
             wicFormatConverter.Get()->GetSize(&width, &height).Assert();
 
             // Allocate an upload texture to transfer the decoded pixel data
-            using UploadTexture2D<T> upload = device.AllocateUploadTexture2D<T>((int)width, (int)height);
+            UploadTexture2D<T> upload = device.AllocateUploadTexture2D<T>((int)width, (int)height);
 
             T* data = upload.View.DangerousGetAddressAndByteStride(out int strideInBytes);
 
@@ -261,12 +252,7 @@ namespace ComputeSharp.Graphics.Helpers
                 cbBufferSize: (uint)strideInBytes * height,
                 pbBuffer: (byte*)data).Assert();
 
-            // Create the final texture to return
-            ReadOnlyTexture2D<T, TPixel> texture = device.AllocateReadOnlyTexture2D<T, TPixel>((int)width, (int)height);
-
-            upload.CopyTo(texture);
-
-            return texture;
+            return upload;
         }
     }
 }
