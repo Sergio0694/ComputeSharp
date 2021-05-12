@@ -9,6 +9,7 @@ using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
+using ImageSharpL8 = SixLabors.ImageSharp.PixelFormats.L8;
 
 namespace ComputeSharp.Tests
 {
@@ -44,6 +45,59 @@ namespace ComputeSharp.Tests
             using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(path);
 
             TolerantImageComparer.AssertEqual(original, loaded, 0.0000032f);
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void SaveRgba32AsJpeg(Device device)
+        {
+            string
+                path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging"),
+                expectedPath = Path.Combine(path, "city.jpg"),
+                actualPath = Path.Combine(path, "city_rgba32_saved.jpg");
+
+            using ReadOnlyTexture2D<Rgba32, Float4> texture = device.Get().AllocateReadOnlyTexture2D<Rgba32, Float4>(expectedPath);
+
+            texture.Save(actualPath);
+
+            TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.00001023f);
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void SaveBgra32AsJpeg(Device device)
+        {
+            string
+                path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging"),
+                expectedPath = Path.Combine(path, "city.jpg"),
+                actualPath = Path.Combine(path, "city_bgra32_saved.jpg");
+
+            using ReadOnlyTexture2D<Bgra32, Float4> texture = device.Get().AllocateReadOnlyTexture2D<Bgra32, Float4>(expectedPath);
+
+            texture.Save(actualPath);
+
+            TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.00001023f);
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void SaveR8AsJpeg(Device device)
+        {
+            string
+                path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging"),
+                sourcePath = Path.Combine(path, "city.jpg"),
+                expectedPath = Path.Combine(path, "city_r8_reference.jpg"),
+                actualPath = Path.Combine(path, "city_r8_saved.jpg");
+
+            using ReadOnlyTexture2D<R8, float> texture = device.Get().AllocateReadOnlyTexture2D<R8, float>(sourcePath);
+
+            texture.Save(actualPath);
+
+            using Image<ImageSharpL8> original = Image.Load<ImageSharpL8>(sourcePath);
+
+            original.Save(expectedPath);
+
+            TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.00004037f);
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
+using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Resources;
 using Microsoft.Toolkit.Diagnostics;
 
@@ -337,6 +338,22 @@ namespace ComputeSharp
             where T : unmanaged
         {
             texture.CopyFrom(ref MemoryMarshal.GetReference(source), source.Length, x, y, width, height);
+        }
+
+        /// <summary>
+        /// Saves a texture to a specified file.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+        /// <param name="texture">The texture to save to an image.</param>
+        /// <param name="filename">The filename of the image file to save.</param>
+        public static void Save<T>(this Texture2D<T> texture, ReadOnlySpan<char> filename)
+            where T : unmanaged
+        {
+            using ReadBackTexture2D<T> readback = texture.GraphicsDevice.AllocateReadBackTexture2D<T>(texture.Width, texture.Height);
+
+            texture.CopyTo(readback);
+
+            WICHelper.Instance.SaveTexture(readback.View, filename);
         }
     }
 }

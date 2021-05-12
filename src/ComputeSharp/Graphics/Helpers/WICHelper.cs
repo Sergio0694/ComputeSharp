@@ -113,6 +113,106 @@ namespace ComputeSharp.Graphics.Helpers
         }
 
         /// <summary>
+        /// Saves a texture to a specified file.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+        /// <param name="texture">The texture data to save to an image.</param>
+        /// <param name="filename">The filename of the image file to save.</param>
+        public void SaveTexture<T>(TextureView2D<T> texture, ReadOnlySpan<char> filename)
+            where T : unmanaged
+        {
+            using ComPtr<IWICBitmapEncoder> wicBitmapEncoder = default;
+            Guid containerGuid = WICFormatHelper.GetForFilename(filename);
+
+            // Create the image encoder
+            this.wicImagingFactory2.Get()->CreateEncoder(
+                &containerGuid,
+                null,
+                wicBitmapEncoder.GetAddressOf()).Assert();
+
+            using ComPtr<IWICStream> wicStream = default;
+
+            // Create and initialize a stream to the target file
+            this.wicImagingFactory2.Get()->CreateStream(wicStream.GetAddressOf()).Assert();
+
+            fixed (char* p = filename)
+            {
+                wicStream.Get()->InitializeFromFilename(
+                    (ushort*)p,
+                    FX.GENERIC_WRITE);
+            }
+
+            // Initialize the encoder
+            wicBitmapEncoder.Get()->Initialize(
+                (IStream*)wicStream.Get(),
+                WICBitmapEncoderCacheOption.WICBitmapEncoderNoCache).Assert();
+
+            using ComPtr<IWICBitmapFrameEncode> wicBitmapFrameEncode = default;
+
+            // Create the image frame and initialize it
+            wicBitmapEncoder.Get()->CreateNewFrame(wicBitmapFrameEncode.GetAddressOf(), null).Assert();
+
+            wicBitmapFrameEncode.Get()->Initialize(null).Assert();
+            wicBitmapFrameEncode.Get()->SetSize((uint)texture.Width, (uint)texture.Height).Assert();
+
+            // Depending on the target format and the current pixel type, we need to check whether
+            // an intermediate encoding step is necessary. This is because not all pixel formats
+            // are directly supported by the native image encoders present in Windows.
+            if (WICFormatHelper.TryGetIntermediateFormatForType<T>(containerGuid, out Guid intermediateGuid))
+            {
+                T* data = texture.DangerousGetAddressAndByteStride(out int strideInBytes);
+
+                using ComPtr<IWICBitmap> wicBitmap = default;
+                Guid initialGuid = WICFormatHelper.GetForType<T>();
+
+                // Create a bitmap wrapping the input texture
+                this.wicImagingFactory2.Get()->CreateBitmapFromMemory(
+                    (uint)texture.Width,
+                    (uint)texture.Height,
+                    &initialGuid,
+                    (uint)strideInBytes,
+                    (uint)(strideInBytes * texture.Height),
+                    (byte*)data,
+                    wicBitmap.GetAddressOf()).Assert();
+
+                using ComPtr<IWICFormatConverter> wicFormatConverter = default;
+
+                this.wicImagingFactory2.Get()->CreateFormatConverter(wicFormatConverter.GetAddressOf()).Assert();
+
+                // Get a format converter to encode the pixel data
+                wicFormatConverter.Get()->Initialize(
+                    (IWICBitmapSource*)wicBitmap.Get(),
+                    &intermediateGuid,
+                    WICBitmapDitherType.WICBitmapDitherTypeNone,
+                    null,
+                    0,
+                    WICBitmapPaletteType.WICBitmapPaletteTypeMedianCut).Assert();
+
+                // Write the encoded image data to the frame
+                wicBitmapFrameEncode.Get()->SetPixelFormat(&intermediateGuid).Assert();
+                wicBitmapFrameEncode.Get()->WriteSource(
+                    (IWICBitmapSource*)wicBitmap.Get(),
+                    null).Assert();
+            }
+            else
+            {
+                T* data = texture.DangerousGetAddressAndByteStride(out int strideInBytes);
+                Guid initialGuid = WICFormatHelper.GetForType<T>();
+
+                // Write the image data to the frame
+                wicBitmapFrameEncode.Get()->SetPixelFormat(&initialGuid).Assert();
+                wicBitmapFrameEncode.Get()->WritePixels(
+                    lineCount: (uint)texture.Height,
+                    cbStride: (uint)strideInBytes,
+                    cbBufferSize: (uint)(strideInBytes * texture.Height),
+                    pbPixels: (byte*)data).Assert();
+            }            
+
+            wicBitmapFrameEncode.Get()->Commit();
+            wicBitmapEncoder.Get()->Commit();
+        }
+
+        /// <summary>
         /// Loads a <see cref="ReadOnlyTexture2D{T, TPixel}"/> from a specified <see cref="IWICBitmapDecoder"/> object.
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
@@ -121,7 +221,7 @@ namespace ComputeSharp.Graphics.Helpers
         /// <param name="wicBitmapDecoder">The <see cref="IWICBitmapDecoder"/> object in use.</param>
         /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
         [Pure]
-        public ReadOnlyTexture2D<T, TPixel> LoadTexture<T, TPixel>(GraphicsDevice device, IWICBitmapDecoder* wicBitmapDecoder)
+        private ReadOnlyTexture2D<T, TPixel> LoadTexture<T, TPixel>(GraphicsDevice device, IWICBitmapDecoder* wicBitmapDecoder)
             where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
