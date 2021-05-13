@@ -221,38 +221,65 @@ namespace ComputeSharp.Graphics.Helpers
             // Get the first frame of the loaded image (if more are present, they will be ignored)
             wicBitmapDecoder->GetFrame(0, wicBitmapFrameDecode.GetAddressOf()).Assert();
 
-            using ComPtr<IWICFormatConverter> wicFormatConverter = default;
-            Guid wicPixelFormatGuid = WICFormatHelper.GetForType<T>();
-
-            this.wicImagingFactory2.Get()->CreateFormatConverter(wicFormatConverter.GetAddressOf()).Assert();
-
-            // Get a format converter to decode the pixel data
-            wicFormatConverter.Get()->Initialize(
-                (IWICBitmapSource*)wicBitmapFrameDecode.Get(),
-                &wicPixelFormatGuid,
-                WICBitmapDitherType.WICBitmapDitherTypeNone,
-                null,
-                0,
-                WICBitmapPaletteType.WICBitmapPaletteTypeMedianCut).Assert();
-
             uint width, height;
 
             // Extract the image size info
-            wicFormatConverter.Get()->GetSize(&width, &height).Assert();
+            wicBitmapFrameDecode.Get()->GetSize(&width, &height).Assert();
 
-            // Allocate an upload texture to transfer the decoded pixel data
-            UploadTexture2D<T> upload = device.AllocateUploadTexture2D<T>((int)width, (int)height);
+            Guid
+                wicTargetPixelFormatGuid = WICFormatHelper.GetForType<T>(),
+                wicActualPixelFormatGuid;
 
-            T* data = upload.View.DangerousGetAddressAndByteStride(out int strideInBytes);
+            // Get the current and target pixel format info
+            wicBitmapFrameDecode.Get()->GetPixelFormat(&wicActualPixelFormatGuid).Assert();
 
-            // Decode the pixel data into the upload buffer
-            wicFormatConverter.Get()->CopyPixels(
-                prc: null,
-                cbStride: (uint)strideInBytes,
-                cbBufferSize: (uint)strideInBytes * height,
-                pbBuffer: (byte*)data).Assert();
+            // If the current pixel format is the same as the target one, we can just read the
+            // decoded pixel data directly. Otherwise, we need a pixel format conversion step.
+            if (wicTargetPixelFormatGuid == wicActualPixelFormatGuid)
+            {
+                // Allocate an upload texture to transfer the decoded pixel data
+                UploadTexture2D<T> upload = device.AllocateUploadTexture2D<T>((int)width, (int)height);
 
-            return upload;
+                T* data = upload.View.DangerousGetAddressAndByteStride(out int strideInBytes);
+
+                // Copy the decoded pixels directly from the loaded image
+                wicBitmapFrameDecode.Get()->CopyPixels(
+                    prc: null,
+                    cbStride: (uint)strideInBytes,
+                    cbBufferSize: (uint)strideInBytes * height,
+                    pbBuffer: (byte*)data).Assert();
+
+                return upload;
+            }
+            else
+            {
+                using ComPtr<IWICFormatConverter> wicFormatConverter = default;
+
+                this.wicImagingFactory2.Get()->CreateFormatConverter(wicFormatConverter.GetAddressOf()).Assert();
+
+                // Get a format converter to decode the pixel data
+                wicFormatConverter.Get()->Initialize(
+                    (IWICBitmapSource*)wicBitmapFrameDecode.Get(),
+                    &wicTargetPixelFormatGuid,
+                    WICBitmapDitherType.WICBitmapDitherTypeNone,
+                    null,
+                    0,
+                    WICBitmapPaletteType.WICBitmapPaletteTypeMedianCut).Assert();
+
+                // Allocate an upload texture to transfer the converted pixel data
+                UploadTexture2D<T> upload = device.AllocateUploadTexture2D<T>((int)width, (int)height);
+
+                T* data = upload.View.DangerousGetAddressAndByteStride(out int strideInBytes);
+
+                // Decode the pixel data into the upload buffer
+                wicFormatConverter.Get()->CopyPixels(
+                    prc: null,
+                    cbStride: (uint)strideInBytes,
+                    cbBufferSize: (uint)strideInBytes * height,
+                    pbBuffer: (byte*)data).Assert();
+
+                return upload;
+            }
         }
     }
 }

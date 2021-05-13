@@ -8,7 +8,10 @@ using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
+using SixLabors.ImageSharp.PixelFormats;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
+using ImageSharpBgra32 = SixLabors.ImageSharp.PixelFormats.Bgra32;
 using ImageSharpL8 = SixLabors.ImageSharp.PixelFormats.L8;
 
 namespace ComputeSharp.Tests
@@ -29,6 +32,48 @@ namespace ComputeSharp.Tests
             using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(path);
 
             TolerantImageComparer.AssertEqual(original, loaded, 0.0000032f);
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void LoadAsBgra32FromFile(Device device)
+        {
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
+
+            using ReadOnlyTexture2D<Bgra32, Float4> texture = device.Get().AllocateReadOnlyTexture2D<Bgra32, Float4>(path);
+
+            using Image<ImageSharpBgra32> loaded = texture.ToImage<Bgra32, ImageSharpBgra32>();
+            using Image<ImageSharpBgra32> original = Image.Load<ImageSharpBgra32>(path);
+
+            TolerantImageComparer.AssertEqual(original, loaded, 0.00000132f);
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void LoadAsBgra32FromFileWithSameFormat(Device device)
+        {
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets", "CityAfter1024x1024Sampling.png");
+
+            using ReadOnlyTexture2D<Bgra32, Float4> texture = device.Get().AllocateReadOnlyTexture2D<Bgra32, Float4>(path);
+
+            using Image<ImageSharpBgra32> loaded = texture.ToImage<Bgra32, ImageSharpBgra32>();
+            using Image<ImageSharpBgra32> original = Image.Load<ImageSharpBgra32>(path);
+
+            TolerantImageComparer.AssertEqual(original, loaded, 0.00000132f);
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public void LoadAsR8FromFile(Device device)
+        {
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
+
+            using ReadOnlyTexture2D<R8, float> texture = device.Get().AllocateReadOnlyTexture2D<R8, float>(path);
+
+            using Image<ImageSharpL8> loaded = texture.ToImage<R8, ImageSharpL8>();
+            using Image<ImageSharpL8> original = Image.Load<ImageSharpL8>(path);
+
+            TolerantImageComparer.AssertEqual(original, loaded, 0.000039f);
         }
 
         [CombinatorialTestMethod]
@@ -122,10 +167,12 @@ namespace ComputeSharp.Tests
             /// <summary>
             /// Asserts that two images are equal.
             /// </summary>
+            /// <typeparam name="TPixel">The type of image pixels to analyze.</typeparam>
             /// <param name="expected">The reference image.</param>
             /// <param name="actual">The expected image.</param>
             /// <param name="threshold">The allowed difference threshold for the normalized delta.</param>
-            public static void AssertEqual(Image<ImageSharpRgba32> expected, Image<ImageSharpRgba32> actual, float threshold)                
+            public static void AssertEqual<TPixel>(Image<TPixel> expected, Image<TPixel> actual, float threshold)
+                where TPixel : unmanaged, IPixel<TPixel>
             {
                 if (expected.Size() != actual.Size())
                 {
@@ -144,11 +191,16 @@ namespace ComputeSharp.Tests
                 float totalDifference = 0F;
 
                 var differences = new List<PixelDifference>(20);
+                Span<ImageSharpRgba32> aBuffer = new ImageSharpRgba32[actual.Width];
+                Span<ImageSharpRgba32> bBuffer = new ImageSharpRgba32[actual.Width];
 
                 for (int y = 0; y < actual.Height; y++)
                 {
-                    Span<ImageSharpRgba32> aSpan = expected.GetPixelRowSpan(y);
-                    Span<ImageSharpRgba32> bSpan = actual.GetPixelRowSpan(y);
+                    Span<TPixel> aSpan = expected.GetPixelRowSpan(y);
+                    Span<TPixel> bSpan = actual.GetPixelRowSpan(y);
+
+                    PixelOperations<TPixel>.Instance.ToRgba32(actual.GetConfiguration(), aSpan, aBuffer);
+                    PixelOperations<TPixel>.Instance.ToRgba32(actual.GetConfiguration(), bSpan, bBuffer);
 
                     for (int x = 0; x < width; x++)
                     {
@@ -161,13 +213,13 @@ namespace ComputeSharp.Tests
                             return Diff(a.R, b.R) + Diff(a.G, b.G) + Diff(a.B, b.B) + Diff(a.A, b.A);
                         }
 
-                        int d = GetManhattanDistanceInRgbaSpace(ref aSpan[x], ref bSpan[x]);
+                        int d = GetManhattanDistanceInRgbaSpace(ref aBuffer[x], ref bBuffer[x]);
 
                         if (d > 0)
                         {
                             if (differences.Count < 20)
                             {
-                                var diff = new PixelDifference(new Point(x, y), aSpan[x], bSpan[x]);
+                                var diff = new PixelDifference(new Point(x, y), aBuffer[x], bBuffer[x]);
                                 differences.Add(diff);
                             }
 
