@@ -68,7 +68,7 @@ namespace ComputeSharp.SwapChain
         {
             string filename = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Textures", $"{name}.png");
 
-            return Gpu.Default.AllocateReadOnlyTexture2D<Rgba32, Float4>(filename);
+            return Gpu.Default.LoadReadOnlyTexture2D<Rgba32, Float4>(filename);
         }
     }
 }

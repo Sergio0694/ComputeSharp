@@ -3,16 +3,13 @@ using System.Diagnostics.Contracts;
 using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Resources;
-using ComputeSharp.Shaders;
 
 #pragma warning disable CS0618
 
 namespace ComputeSharp
 {
-    /// <summary>
-    /// A <see langword="class"/> that contains extension methods for the <see cref="GraphicsDevice"/> type, used to run compute shaders.
-    /// </summary>
-    public static class GraphicsDeviceExtensions
+    /// <inheritdoc cref="GraphicsDeviceExtensions"/>
+    public static partial class GraphicsDeviceExtensions
     {
         /// <summary>
         /// Allocates a new constant buffer with the specified parameters.
@@ -324,50 +321,6 @@ namespace ComputeSharp
             ReadOnlyTexture2D<T, TPixel> texture = new(device, width, height, AllocationMode.Default);
 
             texture.CopyFrom(source);
-
-            return texture;
-        }
-
-        /// <summary>
-        /// Allocates a new readonly 2D texture with the contents of the specified file.
-        /// </summary>
-        /// <typeparam name="T">The type of items to store in the texture.</typeparam>
-        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
-        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
-        /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
-        [Pure]
-        public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<char> filename)
-            where T : unmanaged, IUnorm<TPixel>
-            where TPixel : unmanaged
-        {
-            using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, filename);
-
-            ReadOnlyTexture2D<T, TPixel> texture = device.AllocateReadOnlyTexture2D<T, TPixel>(upload.Width, upload.Height);
-
-            upload.CopyTo(texture);
-
-            return texture;
-        }
-
-        /// <summary>
-        /// Allocates a new readonly 2D texture with the contents of the specified buffer.
-        /// </summary>
-        /// <typeparam name="T">The type of items to store in the texture.</typeparam>
-        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
-        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="span">The buffer with the image data to load and decode into the texture.</param>
-        /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
-        [Pure]
-        public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<byte> span)
-            where T : unmanaged, IUnorm<TPixel>
-            where TPixel : unmanaged
-        {
-            using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, span);
-
-            ReadOnlyTexture2D<T, TPixel> texture = device.AllocateReadOnlyTexture2D<T, TPixel>(upload.Width, upload.Height);
-
-            upload.CopyTo(texture);
 
             return texture;
         }
@@ -822,50 +775,6 @@ namespace ComputeSharp
         }
 
         /// <summary>
-        /// Allocates a new writeable 2D texture with the contents of the specified file.
-        /// </summary>
-        /// <typeparam name="T">The type of items to store in the texture.</typeparam>
-        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
-        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
-        /// <returns>A <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
-        [Pure]
-        public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<char> filename)
-            where T : unmanaged, IUnorm<TPixel>
-            where TPixel : unmanaged
-        {
-            using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, filename);
-
-            ReadWriteTexture2D<T, TPixel> texture = device.AllocateReadWriteTexture2D<T, TPixel>(upload.Width, upload.Height);
-
-            upload.CopyTo(texture);
-
-            return texture;
-        }
-
-        /// <summary>
-        /// Allocates a new writeable 2D texture with the contents of the specified buffer.
-        /// </summary>
-        /// <typeparam name="T">The type of items to store in the texture.</typeparam>
-        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
-        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-        /// <param name="span">The buffer with the image data to load and decode into the texture.</param>
-        /// <returns>A <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
-        [Pure]
-        public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<byte> span)
-            where T : unmanaged, IUnorm<TPixel>
-            where TPixel : unmanaged
-        {
-            using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, span);
-
-            ReadWriteTexture2D<T, TPixel> texture = device.AllocateReadWriteTexture2D<T, TPixel>(upload.Width, upload.Height);
-
-            upload.CopyTo(texture);
-
-            return texture;
-        }
-
-        /// <summary>
         /// Allocates a new writeable 3D texture with the specified parameters.
         /// </summary>
         /// <typeparam name="T">The type of items to store in the texture.</typeparam>
@@ -1162,92 +1071,91 @@ namespace ComputeSharp
         }
 
         /// <summary>
-        /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
+        /// Loads a new readonly 2D texture with the contents of the specified file.
         /// </summary>
-        /// <typeparam name="T">The type of compute shader to run.</typeparam>
-        /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
-        /// <param name="x">The number of iterations to run on the X axis.</param>
-        /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-        public static void For<T>(this GraphicsDevice device, int x, in T shader)
-            where T : struct, IComputeShader
-        {
-            ShaderRunner<T>.Run(device, x, 1, 1, in shader);
-        }
-
-        /// <summary>
-        /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
-        /// </summary>
-        /// <typeparam name="T">The type of compute shader to run.</typeparam>
-        /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
-        /// <param name="x">The number of iterations to run on the X axis.</param>
-        /// <param name="y">The number of iterations to run on the Y axis.</param>
-        /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-        public static void For<T>(this GraphicsDevice device, int x, int y, in T shader)
-            where T : struct, IComputeShader
-        {
-            ShaderRunner<T>.Run(device, x, y, 1, in shader);
-        }
-
-        /// <summary>
-        /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
-        /// </summary>
-        /// <typeparam name="T">The type of compute shader to run.</typeparam>
-        /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
-        /// <param name="x">The number of iterations to run on the X axis.</param>
-        /// <param name="y">The number of iterations to run on the Y axis.</param>
-        /// <param name="z">The number of iterations to run on the Z axis.</param>
-        /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-        public static void For<T>(this GraphicsDevice device, int x, int y, int z, in T shader)
-            where T : struct, IComputeShader
-        {
-            ShaderRunner<T>.Run(device, x, y, z, in shader);
-        }
-
-        /// <summary>
-        /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
-        /// </summary>
-        /// <typeparam name="T">The type of compute shader to run.</typeparam>
-        /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
-        /// <param name="x">The number of iterations to run on the X axis.</param>
-        /// <param name="y">The number of iterations to run on the Y axis.</param>
-        /// <param name="z">The number of iterations to run on the Z axis.</param>
-        /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
-        /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
-        /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
-        /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-        public static void For<T>(this GraphicsDevice device, int x, int y, int z, int threadsX, int threadsY, int threadsZ, in T shader)
-            where T : struct, IComputeShader
-        {
-            ShaderRunner<T>.Run(device, x, y, z, threadsX, threadsY, threadsZ, in shader);
-        }
-
-        /// <summary>
-        /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
-        /// </summary>
-        /// <typeparam name="T">The type of pixel shader to run.</typeparam>
-        /// <typeparam name="TPixel">The type of pixels being processed by the shader.</typeparam>
-        /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
-        /// <param name="texture">The target texture to apply the pixel shader to.</param>
-        public static void ForEach<T, TPixel>(this GraphicsDevice device, IReadWriteTexture2D<TPixel> texture)
-            where T : struct, IPixelShader<TPixel>
+        /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+        /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
+        /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+        [Pure]
+        public static ReadOnlyTexture2D<T, TPixel> LoadReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<char> filename)
+            where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
-            ShaderRunner<T>.Run(device, texture, default);
+            using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, filename);
+
+            ReadOnlyTexture2D<T, TPixel> texture = device.AllocateReadOnlyTexture2D<T, TPixel>(upload.Width, upload.Height);
+
+            upload.CopyTo(texture);
+
+            return texture;
         }
 
         /// <summary>
-        /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
+        /// Loads a new readonly 2D texture with the contents of the specified buffer.
         /// </summary>
-        /// <typeparam name="T">The type of pixel shader to run.</typeparam>
-        /// <typeparam name="TPixel">The type of pixels being processed by the shader.</typeparam>
-        /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
-        /// <param name="texture">The target texture to apply the pixel shader to.</param>
-        /// <param name="shader">The input <typeparamref name="T"/> instance representing the pixel shader to run.</param>
-        public static void ForEach<T, TPixel>(this GraphicsDevice device, IReadWriteTexture2D<TPixel> texture, in T shader)
-            where T : struct, IPixelShader<TPixel>
+        /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+        /// <param name="span">The buffer with the image data to load and decode into the texture.</param>
+        /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+        [Pure]
+        public static ReadOnlyTexture2D<T, TPixel> LoadReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<byte> span)
+            where T : unmanaged, IUnorm<TPixel>
             where TPixel : unmanaged
         {
-            ShaderRunner<T>.Run(device, texture, in shader);
+            using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, span);
+
+            ReadOnlyTexture2D<T, TPixel> texture = device.AllocateReadOnlyTexture2D<T, TPixel>(upload.Width, upload.Height);
+
+            upload.CopyTo(texture);
+
+            return texture;
+        }
+
+        /// <summary>
+        /// Loads a new writeable 2D texture with the contents of the specified file.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+        /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
+        /// <returns>A <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+        [Pure]
+        public static ReadWriteTexture2D<T, TPixel> LoadReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<char> filename)
+            where T : unmanaged, IUnorm<TPixel>
+            where TPixel : unmanaged
+        {
+            using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, filename);
+
+            ReadWriteTexture2D<T, TPixel> texture = device.AllocateReadWriteTexture2D<T, TPixel>(upload.Width, upload.Height);
+
+            upload.CopyTo(texture);
+
+            return texture;
+        }
+
+        /// <summary>
+        /// Loads a new writeable 2D texture with the contents of the specified buffer.
+        /// </summary>
+        /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+        /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+        /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+        /// <param name="span">The buffer with the image data to load and decode into the texture.</param>
+        /// <returns>A <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+        [Pure]
+        public static ReadWriteTexture2D<T, TPixel> LoadReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<byte> span)
+            where T : unmanaged, IUnorm<TPixel>
+            where TPixel : unmanaged
+        {
+            using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, span);
+
+            ReadWriteTexture2D<T, TPixel> texture = device.AllocateReadWriteTexture2D<T, TPixel>(upload.Width, upload.Height);
+
+            upload.CopyTo(texture);
+
+            return texture;
         }
     }
 }
