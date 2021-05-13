@@ -81,7 +81,7 @@ namespace ComputeSharp.Tests
 
             device.Get().For(sampled.Width, sampled.Height, new SamplingComputeShader(source, destination));
 
-            using var processed = destination.ToImage();
+            using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
 
             ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
         }
@@ -114,7 +114,7 @@ namespace ComputeSharp.Tests
 
             device.Get().ForEach(destination, new SamplingPixelShader(source));
 
-            using var processed = destination.ToImage();
+            using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
 
             ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
         }

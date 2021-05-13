@@ -25,7 +25,7 @@ namespace ComputeSharp.Tests
 
             using ReadOnlyTexture2D<Rgba32, Float4> texture = device.Get().AllocateReadOnlyTexture2D<Rgba32, Float4>(path);
 
-            using Image<ImageSharpRgba32> loaded = texture.ToImage();
+            using Image<ImageSharpRgba32> loaded = texture.ToImage<Rgba32, ImageSharpRgba32>();
             using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(path);
 
             TolerantImageComparer.AssertEqual(original, loaded, 0.0000032f);
@@ -41,7 +41,7 @@ namespace ComputeSharp.Tests
 
             using ReadOnlyTexture2D<Rgba32, Float4> texture = device.Get().AllocateReadOnlyTexture2D<Rgba32, Float4>(buffer);
 
-            using Image<ImageSharpRgba32> loaded = texture.ToImage();
+            using Image<ImageSharpRgba32> loaded = texture.ToImage<Rgba32, ImageSharpRgba32>();
             using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(path);
 
             TolerantImageComparer.AssertEqual(original, loaded, 0.0000032f);

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
+using ComputeSharp.Resources;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
-using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace ComputeSharp.Tests.Extensions
 {
@@ -15,35 +17,22 @@ namespace ComputeSharp.Tests.Extensions
         /// <summary>
         /// Creates a new <see cref="Image{TPixel}"/> instance with the specified texture data.
         /// </summary>
-        /// <param name="texture">The source <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance to read data from.</param>
+        /// <typeparam name="TFrom">The input pixel format used in the texture.</typeparam>
+        /// <typeparam name="To">The target pixel format for the returned image.</typeparam>
+        /// <param name="texture">The source <see cref="Texture2D{T}"/> instance to read data from.</param>
         /// <returns>An image with the data from the input texture.</returns>
         [Pure]
-        public static Image<ImageSharpRgba32> ToImage(this ReadOnlyTexture2D<Rgba32, Float4> texture)
+        public static unsafe Image<TTo> ToImage<TFrom, TTo>(this Texture2D<TFrom> texture)
+            where TFrom : unmanaged
+            where TTo : unmanaged, IPixel<TTo>
         {
-            Image<ImageSharpRgba32> image = new(texture.Width, texture.Height);
+            Guard.IsEqualTo(sizeof(TTo), sizeof(TFrom), nameof(TTo));
 
-            Assert.IsTrue(image.TryGetSinglePixelSpan(out Span<ImageSharpRgba32> span));
+            Image<TTo> image = new(texture.Width, texture.Height);
 
-            Span<Rgba32> pixels = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(span);
+            Assert.IsTrue(image.TryGetSinglePixelSpan(out Span<TTo> span));
 
-            texture.CopyTo(pixels);
-
-            return image;
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="Image{TPixel}"/> instance with the specified texture data.
-        /// </summary>
-        /// <param name="texture">The source <see cref="ReadWriteTexture2D{T, TPixel}"/> instance to read data from.</param>
-        /// <returns>An image with the data from the input texture.</returns>
-        [Pure]
-        public static Image<ImageSharpRgba32> ToImage(this ReadWriteTexture2D<Rgba32, Float4> texture)
-        {
-            Image<ImageSharpRgba32> image = new(texture.Width, texture.Height);
-
-            Assert.IsTrue(image.TryGetSinglePixelSpan(out Span<ImageSharpRgba32> span));
-
-            Span<Rgba32> pixels = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(span);
+            Span<TFrom> pixels = MemoryMarshal.Cast<TTo, TFrom>(span);
 
             texture.CopyTo(pixels);
 
