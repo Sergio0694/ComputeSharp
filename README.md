@@ -204,37 +204,17 @@ For more info on how all these values relate to the corresponding HLSL inputs, s
 
 ## Working with images
 
-As mentioned in the [GPU resource types](#gpu-resource-types) paragraph, there are several texture types that are specialized to work on image pixels, such as `ReadWriteTexture2D<T, TPixel>`. Let's imagine we want to write a compute shader that applies some image processing filter: we will need to load an image (eg. using [ImageSharp](https://github.com/SixLabors/ImageSharp), or just the `System.Drawing` APIs) and then process it on the GPU, but without spending time on the CPU to convert pixels from a format such as RGBA32 to the normalized `float` values we want our shader to work on. We can do this by utilizing the `ReadWriteTexture2D<T, TPixel>` type as follows:
+As mentioned in the [GPU resource types](#gpu-resource-types) paragraph, there are several texture types that are specialized to work on image pixels, such as `ReadWriteTexture2D<T, TPixel>`. Let's imagine we want to write a compute shader that applies some image processing filter. We will need to load an image (in this example we will use the integrated APIs to do so, but external libraries such as [ImageSharp](https://github.com/SixLabors/ImageSharp) or just the `System.Drawing` can also be used) and then process it on the GPU, but without spending time on the CPU to convert pixels from a format such as BGRA32 to the normalized `float` values we want our shader to work on. We can do this by utilizing the `ReadWriteTexture2D<T, TPixel>` type as follows:
 
 ```csharp
-// Load a bitmap from a specified path and then lock the pixel data.
-// The locked pixels are in the BGRA32 format, which is the one we need.
-var bitmap = new Bitmap("myImage.jpg");
-var bitmapData = bitmap.LockBits(
-    new Rectangle(0, 0, bitmap.Width, bitmap.Height),
-    ImageLockMode.ReadWrite,
-    PixelFormat.Format32bppArgb);
+// Load a texture from a specified image, and decode it in the BGRA32 format
+using var texture = Gpu.Default.LoadReadWriteTexture2D<Bgra32, Float4>("myImage.jpg");
 
-try
-{
-    // Create a span over the locked pixel data, of type Bgra32 (from ComputeSharp)
-    var bitmapSpan = new Span<Bgra32>((Bgra32*)bitmapData.Scan0, bitmapData.Width * bitmapData.Height);
+// Run our shader on the texture we just loaded
+Gpu.Default.For(texture.Width, texture.Height, new GrayscaleEffect(texture));
 
-    // Allocate a 2D texture by directly reading from the pixel data
-    using var texture = Gpu.Default.AllocateReadWriteTexture2D<Bgra32, Float4>(bitmapSpan, bitmap.Width, bitmap.Height);
-
-    // Run our shader on the texture we just created
-    Gpu.Default.For(bitmap.Width, bitmap.Height, new GrayscaleEffect(texture));
-
-    // When the shader has completed, copy the processed texture back
-    texture.CopyTo(bitmapSpan);
-}
-finally
-{
-    bitmap.UnlockBits(bitmapData);
-}
-
-bitmap.Save("myImage.jpg");
+// Save the processed image by overwriting the original image
+texture.Save("myImage.jpg");
 ```
 
 With the compute shader being like this:
