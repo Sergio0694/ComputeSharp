@@ -28,13 +28,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="7.0.1" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Core" Version="7.0.1" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.0.1" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.0.1" />
-    <PackageReference Include="Microsoft.ProjectReunion" Version="0.5.6" />
-    <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.5.6" />
-    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.5.6" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="7.0.2" />
+    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Core" Version="7.0.2" />
+    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.0.2" />
+    <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.0.2" />
+    <PackageReference Include="Microsoft.ProjectReunion" Version="0.5.7" />
+    <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.5.7" />
+    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.5.7" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
