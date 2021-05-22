@@ -121,7 +121,7 @@ namespace ComputeSharp.WinUI
         /// <summary>
         /// The <see cref="Stopwatch"/> instance tracking time since the first rendered frame.
         /// </summary>
-        private Stopwatch? renderTimer;
+        private Stopwatch? renderStopwatch;
 
         /// <summary>
         /// Initializes the current application.
@@ -402,33 +402,32 @@ namespace ComputeSharp.WinUI
                 IntPtr frameLatencyWaitableObject = @this.frameLatencyWaitableObject;
 
                 Stopwatch
-                    startStopwatch = @this.renderTimer ??= new(),
+                    renderStopwatch = @this.renderStopwatch ??= new(),
                     frameStopwatch = Stopwatch.StartNew();
 
-                @this.OnUpdate(startStopwatch.Elapsed);
+                // Start the initial frame separately, before the timer starts. This ensures that
+                // resuming after a pause correctly renders the first frame at the right time.
+                @this.OnUpdate(renderStopwatch.Elapsed);
 
-                startStopwatch.Start();
+                renderStopwatch.Start();
 
                 const long targetFrameTimeInTicksFor60fps = 166666;
 
+                // Main render loop, until cancellation is requested
                 while (!@this.isCancellationRequested)
                 {
                     _ = FX.WaitForSingleObjectEx(frameLatencyWaitableObject, 1000, 1);
 
-                    while (true)
+                    while (frameStopwatch.ElapsedTicks < targetFrameTimeInTicksFor60fps)
                     {
-                        if (frameStopwatch.ElapsedTicks >= targetFrameTimeInTicksFor60fps)
-                        {
-                            frameStopwatch.Restart();
-
-                            @this.OnUpdate(startStopwatch.Elapsed);
-
-                            break;
-                        }
                     }
+
+                    frameStopwatch.Restart();
+
+                    @this.OnUpdate(renderStopwatch.Elapsed);
                 }
 
-                startStopwatch.Stop();
+                renderStopwatch.Stop();
             }
 
             this.isCancellationRequested = false;
