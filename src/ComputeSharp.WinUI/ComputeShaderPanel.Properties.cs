@@ -33,7 +33,7 @@ namespace ComputeSharp.WinUI
         public double ResolutionScale
         {
             get => (double)GetValue(ResolutionScaleProperty);
-            set => SetValue(ResolutionScaleProperty, Math.Clamp(value, 0.0, 1.0));
+            set => SetValue(ResolutionScaleProperty, Math.Clamp(value, 0.1, 1.0));
         }
 
         /// <summary>
