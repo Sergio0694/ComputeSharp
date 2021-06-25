@@ -32,12 +32,12 @@
   <PropertyGroup>
     <WapProjPath Condition="'$(WapProjPath)'==''">$(MSBuildExtensionsPath)\Microsoft\DesktopBridge\</WapProjPath>
     <PathToXAMLWinRTImplementations>ComputeSharp.SwapChain.WinUI\</PathToXAMLWinRTImplementations>
-    <AssetTargetFallback>net5.0-windows$(TargetPlatformVersion);$(AssetTargetFallback)</AssetTargetFallback>
   </PropertyGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
   <PropertyGroup>
     <ProjectGuid>b7131960-d3f3-4266-aba4-da068538f9e4</ProjectGuid>
     <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
+    <AssetTargetFallback>net5.0-windows$(TargetPlatformVersion);$(AssetTargetFallback)</AssetTargetFallback>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
@@ -108,10 +108,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.ProjectReunion" Version="[0.5.7]">
+    <PackageReference Include="Microsoft.ProjectReunion" Version="[0.8.0]">
       <IncludeAssets>build</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="[0.5.7]">
+    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="[0.8.0]">
       <IncludeAssets>build</IncludeAssets>
     </PackageReference>
   </ItemGroup>

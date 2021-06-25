@@ -107,7 +107,6 @@
             </animations:Implicit.HideAnimations>
             <Border.Background>
                 <media:AcrylicBrush
-                    BackgroundSource="Backdrop"
                     TintColor="#FF222222"
                     TintOpacity="0.2"
                     BlurAmount="12"
