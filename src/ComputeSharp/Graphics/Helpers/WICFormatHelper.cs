@@ -113,20 +113,20 @@ namespace ComputeSharp.Graphics.Helpers
         [Pure]
         public static Guid GetForFilename(ReadOnlySpan<char> filename)
         {
-            switch (Path.GetExtension(filename).ToString())
+            return Path.GetExtension(filename).ToString() switch
             {
-                case ".bmp": return FX.GUID_ContainerFormatBmp;
-                case ".png": return FX.GUID_ContainerFormatPng;
-                case ".jpg":
-                case ".jpeg": return FX.GUID_ContainerFormatJpeg;
-                case ".jxr":
-                case ".hdp":
-                case ".wdp":
-                case ".wmp": return FX.GUID_ContainerFormatWmp;
-                case ".tiff": return FX.GUID_ContainerFormatTiff;
-                case ".dds": return FX.GUID_ContainerFormatDds;
-                default: return ThrowHelper.ThrowArgumentException<Guid>("Invalid filename");
-            }
+                ".bmp" => FX.GUID_ContainerFormatBmp,
+                ".png" => FX.GUID_ContainerFormatPng,
+                ".jpg" or
+                ".jpeg" => FX.GUID_ContainerFormatJpeg,
+                ".jxr" or
+                ".hdp" or
+                ".wdp" or
+                ".wmp" => FX.GUID_ContainerFormatWmp,
+                ".tiff" => FX.GUID_ContainerFormatTiff,
+                ".dds" => FX.GUID_ContainerFormatDds,
+                _ => ThrowHelper.ThrowArgumentException<Guid>("Invalid filename"),
+            };
         }
     }
 }
