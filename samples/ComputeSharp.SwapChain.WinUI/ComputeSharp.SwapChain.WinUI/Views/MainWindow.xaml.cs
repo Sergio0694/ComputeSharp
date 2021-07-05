@@ -19,13 +19,14 @@ namespace ComputeSharp.SwapChain.WinUI.Views
         // Opens the shader selection panel
         private void OpenShaderSelectionPanelButton_Click(object sender, RoutedEventArgs e)
         {
-            ShaderSelectionPanel.Visibility = Visibility.Visible;
+            Root.Resources.Remove("ShaderSelectionPanel");
+            Root.Children.Add(ShaderSelectionPanel);
         }
 
         // Hides the shader selection panel
         private void ShaderSelectionPanel_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            ShaderSelectionPanel.Visibility = Visibility.Collapsed;
+            Root.Children.Remove(ShaderSelectionPanel);
         }
     }
 }
