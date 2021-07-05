@@ -31,7 +31,6 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="7.0.3" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Core" Version="7.0.3" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Layout" Version="7.0.3" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.0.3" />
     <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.0" />
     <Manifest Include="$(ApplicationManifest)" />

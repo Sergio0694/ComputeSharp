@@ -146,7 +146,7 @@
                         <ListView.Resources>
 
                             <!--Lightweight styling to remove the selection background with the accent color, and
-                                to remove the padding aand stretch the list items to occupy all the available space-->
+                                to remove the padding and stretch the list items to occupy all the available space-->
                             <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent"/>
                             <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent"/>
                             <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Transparent"/>
@@ -171,18 +171,11 @@
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"
                                     ui:UIElementExtensions.ClipToBounds="True">
-                                    <controls:ImageEx Source="{x:Bind converters:ComputeShaderConverter.ConvertComputeShaderToBackgroundUri((models:ComputeShader))}"/>
-                                    <controls:DropShadowPanel
-                                        BlurRadius="20"
-                                        HorizontalAlignment="Stretch"
-                                        HorizontalContentAlignment="Stretch"
-                                        OffsetX="32"
-                                        OffsetY="32">
-                                        <controls:ImageEx
-                                            Margin="32"
-                                            Source="{x:Bind converters:ComputeShaderConverter.ConvertComputeShaderToThumbnailUri((models:ComputeShader))}"
-                                            Stretch="Uniform" />
-                                    </controls:DropShadowPanel>
+                                    
+                                    <!--Shader preview-->
+                                    <computesharp:ComputeShaderPanel
+                                        Width="568"
+                                        ShaderRunner="{x:Bind ShaderRunner}"/>
 
                                     <!--Note: here we have a selection property to work around {x:Bind} not working correctly outside of the
                                         current template scope. Once that's fixed in WinUI 3, this can be rewritten as a multi-binding like this:
