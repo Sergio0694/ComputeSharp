@@ -475,19 +475,14 @@ namespace ComputeSharp.Resources
         }
 
         /// <inheritdoc/>
-        protected override bool OnDispose()
+        protected override void OnDispose()
         {
             this.d3D12Resource.Dispose();
             this.allocation.Dispose();
 
             GraphicsDevice.UnregisterAllocatedResource();
 
-            if (GraphicsDevice?.IsDisposed == false)
-            {
-                GraphicsDevice.ReturnShaderResourceViewDescriptorHandles(D3D12CpuDescriptorHandle, D3D12GpuDescriptorHandle);
-            }
-
-            return true;
+            GraphicsDevice.ReturnShaderResourceViewDescriptorHandles(D3D12CpuDescriptorHandle, D3D12GpuDescriptorHandle);
         }
 
         /// <summary>

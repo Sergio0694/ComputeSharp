@@ -381,11 +381,11 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        protected override bool OnDispose()
+        protected override void OnDispose()
         {
             if (DeviceHelper.GetDefaultDeviceLuid() == Luid)
             {
-                return false;
+                return;
             }
 
             DeviceHelper.NotifyDisposedDevice(this);
@@ -400,8 +400,6 @@ namespace ComputeSharp
             this.shaderResourceViewDescriptorAllocator.Dispose();
             this.pool.Dispose();
             this.allocator.Dispose();
-
-            return true;
         }
 
         /// <inheritdoc/>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace ComputeSharp.Interop
 {
@@ -9,50 +10,51 @@ namespace ComputeSharp.Interop
     public abstract class NativeObject : IDisposable
     {
         /// <summary>
+        /// Indicates whether or not the current instance has been disposed.
+        /// </summary>
+        private volatile int isDisposed;
+
+        /// <summary>
         /// Releases unmanaged resources and performs other cleanup operations.
         /// </summary>
         ~NativeObject()
         {
-            _ = CheckAndDispose();
+            CheckAndDispose();
         }
 
         /// <summary>
         /// Gets whether or not the current instance has already been disposed.
         /// </summary>
-        internal bool IsDisposed { get; private set; }
+        internal bool IsDisposed
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => this.isDisposed != 0;
+        }
 
-        /// <summary>
-        /// Releases all the native resources for the current instance.
-        /// </summary>
+        /// <inheritdoc/>
         public void Dispose()
         {
-            if (CheckAndDispose())
-            {
-                GC.SuppressFinalize(this);
-            }
+            CheckAndDispose();
+
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        private bool CheckAndDispose()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void CheckAndDispose()
         {
-            if (!IsDisposed)
+            if (Interlocked.CompareExchange(ref this.isDisposed, 1, 0) == 0)
             {
-                return IsDisposed = OnDispose();
+                OnDispose();
             }
-
-            return true;
         }
 
         /// <summary>
         /// Releases unmanaged and (optionally) managed resources.
         /// </summary>
-        /// <returns>
-        /// Whether or not the dispose has actually been executed. This is done in order to allow derived types to
-        /// optionally cancel a dispose operation, by not releasing resources and returning <see langword="false"/>.
-        /// </returns>
-        protected abstract bool OnDispose();
+        protected abstract void OnDispose();
 
         /// <summary>
         /// Throws an <see cref="ObjectDisposedException"/> if the current instance has been disposed.

@@ -35,11 +35,9 @@ namespace ComputeSharp.Shaders.Translation.Models
         public D3D12_SHADER_BYTECODE D3D12ShaderBytecode => new((ID3DBlob*)this.dxcBlobBytecode.Get());
 
         /// <inheritdoc/>
-        protected override bool OnDispose()
+        protected override void OnDispose()
         {
             this.dxcBlobBytecode.Dispose();
-
-            return true;
         }
     }
 }

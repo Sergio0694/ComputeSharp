@@ -106,14 +106,12 @@ namespace ComputeSharp.Resources
         }
 
         /// <inheritdoc/>
-        protected override bool OnDispose()
+        protected override void OnDispose()
         {
             this.d3D12Resource.Dispose();
             this.allocation.Dispose();
 
             GraphicsDevice.UnregisterAllocatedResource();
-
-            return true;
         }
 
         /// <summary>
