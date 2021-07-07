@@ -23,7 +23,7 @@ namespace ComputeSharp.Shaders
     /// </summary>
     /// <typeparam name="T">The type of compute shader to run.</typeparam>
     internal static class ShaderRunner<T>
-        where T : struct
+        where T : struct, IShader<T>
     {
         /// <summary>
         /// The mapping used to cache and reuse compiled shaders.
@@ -131,7 +131,7 @@ namespace ComputeSharp.Shaders
             Guard.IsBetweenOrEqualTo(groupsZ, 1, FX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
 
             // Create the shader key
-            ShaderKey key = new(ShaderHashCodeProvider.GetHashCode(in shader), threadsX, threadsY, threadsZ);
+            ShaderKey key = new(shader.GetDispatchId(), threadsX, threadsY, threadsZ);
             CachedShader<T> shaderData;
             PipelineData? pipelineData;
 
@@ -202,7 +202,7 @@ namespace ComputeSharp.Shaders
             Guard.IsBetweenOrEqualTo(groupsY, 1, FX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
 
             // Create the shader key
-            ShaderKey key = new(ShaderHashCodeProvider.GetHashCode(in shader), threadsX, threadsY, 1);
+            ShaderKey key = new(shader.GetDispatchId(), threadsX, threadsY, 1);
             CachedShader<T> shaderData;
             PipelineData? pipelineData;
 
