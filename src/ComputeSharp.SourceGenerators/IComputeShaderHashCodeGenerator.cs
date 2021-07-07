@@ -170,15 +170,12 @@ namespace ComputeSharp.SourceGenerators
 
             if (delegateFields.Length == 0)
             {
-                // return HashCode.Combine(typeof(T));
+                // return 0;
                 return
                     Block(ReturnStatement(
-                        InvocationExpression(
-                            MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                IdentifierName("HashCode"),
-                                IdentifierName("Combine")))
-                        .AddArgumentListArguments(Argument(TypeOfExpression(IdentifierName(structDeclarationSymbol.Name))))));
+                    LiteralExpression(
+                        SyntaxKind.NumericLiteralExpression,
+                        Literal(0))));
             }
 
             List<StatementSyntax> blockStatements = new(4);
@@ -192,15 +189,6 @@ namespace ComputeSharp.SourceGenerators
                         LiteralExpression(
                             SyntaxKind.DefaultLiteralExpression,
                             Token(SyntaxKind.DefaultKeyword)))))));
-
-            // hashCode.Add(typeof(T));
-            blockStatements.Add(ExpressionStatement(
-                InvocationExpression(
-                    MemberAccessExpression(
-                        SyntaxKind.SimpleMemberAccessExpression,
-                        IdentifierName("hashCode"),
-                        IdentifierName("Add")))
-                .AddArgumentListArguments(Argument(TypeOfExpression(IdentifierName(structDeclarationSymbol.Name))))));
 
             foreach (IFieldSymbol fieldSymbol in delegateFields)
             {
