@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Text;
 using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
@@ -10,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static Microsoft.CodeAnalysis.SymbolDisplayTypeQualificationStyle;
 
 namespace ComputeSharp.SourceGenerators
 {
@@ -34,9 +36,15 @@ namespace ComputeSharp.SourceGenerators
                 return;
             }
 
-            // Type attributes
+            // Method attributes
             AttributeListSyntax[] attributes = new[]
             {
+                AttributeList(SingletonSeparatedList(
+                    Attribute(IdentifierName("GeneratedCode")).AddArgumentListArguments(
+                        AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(IComputeShaderHashCodeGenerator).FullName))),
+                        AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(IComputeShaderHashCodeGenerator).Assembly.GetName().Version.ToString())))))),
+                AttributeList(SingletonSeparatedList(Attribute(IdentifierName("DebuggerNonUserCode")))),
+                AttributeList(SingletonSeparatedList(Attribute(IdentifierName("ExcludeFromCodeCoverage")))),
                 AttributeList(SingletonSeparatedList(
                     Attribute(IdentifierName("EditorBrowsable")).AddArgumentListArguments(
                     AttributeArgument(ParseExpression("EditorBrowsableState.Never"))))),
@@ -44,14 +52,14 @@ namespace ComputeSharp.SourceGenerators
                     Attribute(IdentifierName("Obsolete")).AddArgumentListArguments(
                     AttributeArgument(LiteralExpression(
                         SyntaxKind.StringLiteralExpression,
-                        Literal("This type is not intended to be used directly by user code"))))))
+                        Literal("This method is not intended to be used directly by user code"))))))
             };
 
             foreach (SyntaxReceiver.Item item in syntaxReceiver.GatheredInfo)
             {
                 try
                 {
-                    OnExecute(context, item.StructDeclaration, item.StructSymbol, ref attributes);
+                    OnExecute(context, item.StructDeclaration, item.StructSymbol, attributes);
                 }
                 catch
                 {
@@ -66,90 +74,159 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="context">The input <see cref="GeneratorExecutionContext"/> instance to use.</param>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> node to process.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
-        /// <param name="attributes">The list of <see cref="AttributeListSyntax"/> instances to append to the first copy of the partial class being generated.</param>
-        private static void OnExecute(GeneratorExecutionContext context, StructDeclarationSyntax structDeclaration, INamedTypeSymbol structDeclarationSymbol, ref AttributeListSyntax[] attributes)
+        /// <param name="attributes">The list of <see cref="AttributeListSyntax"/> instances to append to the generated method.</param>
+        private static void OnExecute(GeneratorExecutionContext context, StructDeclarationSyntax structDeclaration, INamedTypeSymbol structDeclarationSymbol, AttributeListSyntax[] attributes)
         {
-            TypeSyntax shaderType = ParseTypeName(structDeclarationSymbol.ToDisplayString());
-            BlockSyntax block = Block(GetDelegateHashCodeStatements(structDeclarationSymbol));
+            string namespaceName = structDeclarationSymbol.ContainingNamespace.ToDisplayString(new(typeQualificationStyle: NameAndContainingTypesAndNamespaces));
+            string structName = structDeclaration.Identifier.Text;
+            SyntaxTokenList structModifiers = structDeclaration.Modifiers;
 
-            if (block.Statements.Count == 1) return;
+            // Create the partial shader type declaration with the hashcode interface method implementation.
+            // This code produces a struct declaration as follows:
+            //
+            // public struct ShaderType : IShader<ShaderType>
+            // {
+            //     [GeneratedCode("...", "...")]
+            //     [DebuggerNonUserCode]
+            //     [ExcludeFromCodeCoverage]
+            //     [EditorBrowsable(EditorBrowsableState.Never)]
+            //     [Obsolete("This method is not intended to be called directly by user code")]
+            //     public int GetDispatchId()
+            //     {
+            //         <BODY>
+            //     }
+            // }
+            var structDeclarationSyntax =
+                StructDeclaration(structName).WithModifiers(structModifiers)
+                    .AddBaseListTypes(SimpleBaseType(
+                        GenericName(Identifier("IShader"))
+                        .AddTypeArgumentListArguments(IdentifierName(structName)))).AddMembers(
+                MethodDeclaration(
+                    PredefinedType(Token(SyntaxKind.IntKeyword)),
+                    Identifier("GetDispatchId"))
+                .AddAttributeLists(attributes)
+                .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.ReadOnlyKeyword))
+                .WithBody(GetShaderHashCodeBody(structDeclarationSymbol)));
+
+            TypeDeclarationSyntax typeDeclarationSyntax = structDeclarationSyntax;
+
+            // Add all parent types in ascending order, if any
+            foreach (var parentType in structDeclaration.Ancestors().OfType<TypeDeclarationSyntax>())
+            {
+                typeDeclarationSyntax = parentType
+                    .WithMembers(SingletonList<MemberDeclarationSyntax>(typeDeclarationSyntax))
+                    .WithConstraintClauses(List<TypeParameterConstraintClauseSyntax>())
+                    .WithBaseList(null)
+                    .WithAttributeLists(List<AttributeListSyntax>())
+                    .WithoutTrivia();
+            }
 
             // Create a static method to create the combined hashcode for a given shader type.
             // This code takes a block syntax and produces a compilation unit as follows:
             //
             // using System;
+            // using System.CodeDom.Compiler;
             // using System.ComponentModel;
+            // using System.Diagnostics;
+            // using System.Diagnostics.CodeAnalysis;
+            // using ComputeSharp.__Internals;
             //
-            // namespace ComputeSharp.__Internals
+            // #pragma warning disable
+            //
+            // namespace <SHADER_NAMESPACE>
             // {
-            //     internal static partial class HashCodeProvider
-            //     {
-            //         [System.ComponentModel.EditorBrowsable(EditorBrowsableState.Never)]
-            //         [System.Obsolete("This method is not intended to be called directly by user code")]
-            //         public static int CombineHashCode(int hash, in ShaderType shader)
-            //         {
-            //             return ...;
-            //         }
-            //     }
+            //     <SHADER_DECLARATION>
             // }
             var source =
                 CompilationUnit().AddUsings(
                 UsingDirective(IdentifierName("System")),
-                UsingDirective(IdentifierName("System.ComponentModel"))).AddMembers(
-                NamespaceDeclaration(IdentifierName("ComputeSharp.__Internals")).AddMembers(
-                ClassDeclaration("HashCodeProvider").AddModifiers(
-                    Token(SyntaxKind.InternalKeyword),
-                    Token(SyntaxKind.StaticKeyword),
-                    Token(SyntaxKind.PartialKeyword)).AddAttributeLists(attributes).AddMembers(
-                MethodDeclaration(
-                    PredefinedType(Token(SyntaxKind.IntKeyword)),
-                    Identifier("CombineHash")).AddAttributeLists(
-                    AttributeList(SingletonSeparatedList(
-                        Attribute(IdentifierName("EditorBrowsable")).AddArgumentListArguments(
-                        AttributeArgument(ParseExpression("EditorBrowsableState.Never"))))),
-                    AttributeList(SingletonSeparatedList(
-                        Attribute(IdentifierName("Obsolete")).AddArgumentListArguments(
-                        AttributeArgument(LiteralExpression(
-                            SyntaxKind.StringLiteralExpression,
-                            Literal("This method is not intended to be called directly by user code"))))))).AddModifiers(
-                    Token(SyntaxKind.PublicKeyword),
-                    Token(SyntaxKind.StaticKeyword)).AddParameterListParameters(
-                    Parameter(Identifier("hash")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
-                    Parameter(Identifier("shader")).WithModifiers(TokenList(Token(SyntaxKind.InKeyword))).WithType(shaderType))
-                    .WithBody(block))))
+                UsingDirective(IdentifierName("System.CodeDom.Compiler")),
+                UsingDirective(IdentifierName("System.ComponentModel")),
+                UsingDirective(IdentifierName("System.Diagnostics")),
+                UsingDirective(IdentifierName("System.Diagnostics.CodeAnalysis")),
+                UsingDirective(IdentifierName("ComputeSharp.__Internals"))).AddMembers(
+                NamespaceDeclaration(IdentifierName(namespaceName)).AddMembers(typeDeclarationSyntax)
+                .WithNamespaceKeyword(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.NamespaceKeyword, TriviaList())))
                 .NormalizeWhitespace()
                 .ToFullString();
-
-            // Clear the attribute list to avoid duplicates
-            attributes = Array.Empty<AttributeListSyntax>();
 
             // Add the method source attribute
             context.AddSource(structDeclarationSymbol.GetGeneratedFileName(), SourceText.From(source, Encoding.UTF8));
         }
 
         /// <summary>
-        /// Gets a sequence of statements to process the hashcode of the captured delegates.
+        /// Gets a <see cref="BlockSyntax"/> instance with the logic to compute the hashcode of a given shader type.
         /// </summary>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-        /// <returns>The sequence of <see cref="StatementSyntax"/> instances to hash the captured delegates.</returns>
+        /// <returns>The <see cref="BlockSyntax"/> instance to hash the input shader.</returns>
         [Pure]
-        private static IEnumerable<StatementSyntax> GetDelegateHashCodeStatements(INamedTypeSymbol structDeclarationSymbol)
+        private static BlockSyntax GetShaderHashCodeBody(INamedTypeSymbol structDeclarationSymbol)
         {
-            foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
+            var delegateFields = structDeclarationSymbol
+                .GetMembers()
+                .OfType<IFieldSymbol>()
+                .Where(static m => m.Type is INamedTypeSymbol { TypeKind: TypeKind.Delegate, IsStatic: false })
+                .ToImmutableArray();
+
+            if (delegateFields.Length == 0)
             {
-                if (fieldSymbol.Type is not INamedTypeSymbol { TypeKind: TypeKind.Delegate, IsStatic: false } typeSymbol)
-                {
-                    continue;
-                }
-
-                // hash += hash << 5;
-                yield return ExpressionStatement(ParseExpression($"hash += hash << 5"));
-
-                // hash += shader.Field[#i].Method.GetHashCode();
-                yield return ExpressionStatement(ParseExpression($"hash += shader.{fieldSymbol.Name}.Method.GetHashCode()"));
+                // return HashCode.Combine(typeof(T));
+                return
+                    Block(ReturnStatement(
+                        InvocationExpression(
+                            MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                IdentifierName("HashCode"),
+                                IdentifierName("Combine")))
+                        .AddArgumentListArguments(Argument(TypeOfExpression(IdentifierName(structDeclarationSymbol.Name))))));
             }
 
-            yield return ReturnStatement(IdentifierName("hash"));
+            List<StatementSyntax> blockStatements = new(4);
+
+            // HashCode hashCode = default;
+            blockStatements.Add(LocalDeclarationStatement(
+                VariableDeclaration(IdentifierName("HashCode"))
+                .AddVariables(
+                    VariableDeclarator(Identifier("hashCode"))
+                    .WithInitializer(EqualsValueClause(
+                        LiteralExpression(
+                            SyntaxKind.DefaultLiteralExpression,
+                            Token(SyntaxKind.DefaultKeyword)))))));
+
+            // hashCode.Add(typeof(T));
+            blockStatements.Add(ExpressionStatement(
+                InvocationExpression(
+                    MemberAccessExpression(
+                        SyntaxKind.SimpleMemberAccessExpression,
+                        IdentifierName("hashCode"),
+                        IdentifierName("Add")))
+                .AddArgumentListArguments(Argument(TypeOfExpression(IdentifierName(structDeclarationSymbol.Name))))));
+
+            foreach (IFieldSymbol fieldSymbol in delegateFields)
+            {
+                // hashCode.Add(delegateField.Method);
+                blockStatements.Add(ExpressionStatement(
+                    InvocationExpression(
+                        MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName("hashCode"),
+                            IdentifierName("Add")))
+                    .AddArgumentListArguments(Argument(
+                        MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName("foo"),
+                            IdentifierName("Method"))))));
+            }
+
+            // return hashCode.ToHashCode();
+            blockStatements.Add(ReturnStatement(
+                InvocationExpression(
+                    MemberAccessExpression(
+                        SyntaxKind.SimpleMemberAccessExpression,
+                        IdentifierName("hashCode"),
+                        IdentifierName("ToHashCode")))));
+
+            return Block(blockStatements);
         }
     }
 }
