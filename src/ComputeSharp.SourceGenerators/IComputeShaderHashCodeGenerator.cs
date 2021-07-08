@@ -202,7 +202,7 @@ namespace ComputeSharp.SourceGenerators
                     .AddArgumentListArguments(Argument(
                         MemberAccessExpression(
                             SyntaxKind.SimpleMemberAccessExpression,
-                            IdentifierName("foo"),
+                            IdentifierName(fieldSymbol.Name),
                             IdentifierName("Method"))))));
             }
 

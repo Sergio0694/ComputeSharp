@@ -1,4 +1,4 @@
-﻿using ComputeSharp.__Internals;
+﻿using ComputeSharp.Tests.Internals.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 #pragma warning disable CS0618
@@ -22,16 +22,19 @@ namespace ComputeSharp.Tests.Internals
         [TestMethod]
         public unsafe void CapturedResource()
         {
-            ulong* p0 = stackalloc ulong[128];
-            byte* p1 = stackalloc byte[256];
-
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(16);
 
-            int size = DispatchDataLoader.LoadDispatchData(Gpu.Default, new CapturedResourceShader(buffer), ref *p0, ref *p1);
+            DebugDispatchDataLoader dataLoader = DebugDispatchDataLoader.Create();
 
-            Assert.AreEqual(12, size);
+            new CapturedResourceShader(buffer).LoadDispatchData(in dataLoader, Gpu.Default, 111, 222, 333);
 
-            Assert.AreEqual(p0[0], buffer.D3D12GpuDescriptorHandle.ptr);
+            Assert.AreEqual(3, dataLoader.Values.Length);
+            Assert.AreEqual(1, dataLoader.Resources.Length);
+
+            Assert.AreEqual(111, (int)dataLoader.Values[0]);
+            Assert.AreEqual(222, (int)dataLoader.Values[1]);
+            Assert.AreEqual(333, (int)dataLoader.Values[2]);
+            Assert.AreEqual(buffer.D3D12GpuDescriptorHandle.ptr, dataLoader.Resources[0]);
         }
 
         [AutoConstructor]
@@ -51,22 +54,24 @@ namespace ComputeSharp.Tests.Internals
         [TestMethod]
         public unsafe void LoadMultipleResourcesAndPrimitives()
         {
-            ulong* p0 = stackalloc ulong[128];
-            byte* p1 = stackalloc byte[256];
-
             using ReadWriteBuffer<float> buffer0 = Gpu.Default.AllocateReadWriteBuffer<float>(16);
             using ReadWriteBuffer<float> buffer1 = Gpu.Default.AllocateReadWriteBuffer<float>(16);
 
-            int size = DispatchDataLoader.LoadDispatchData(Gpu.Default, new MultipleResourcesAndPrimitivesShader(buffer0, buffer1, 1, 22, 77), ref *p0, ref *p1);
+            DebugDispatchDataLoader dataLoader = DebugDispatchDataLoader.Create();
 
-            Assert.AreEqual(24, size);
+            new MultipleResourcesAndPrimitivesShader(buffer0, buffer1, 1, 22, 77).LoadDispatchData(in dataLoader, Gpu.Default, 111, 222, 333);
 
-            Assert.AreEqual(p0[0], buffer0.D3D12GpuDescriptorHandle.ptr);
-            Assert.AreEqual(p0[1], buffer1.D3D12GpuDescriptorHandle.ptr);
+            Assert.AreEqual(6, dataLoader.Values.Length);
+            Assert.AreEqual(2, dataLoader.Resources.Length);
 
-            Assert.AreEqual(1, *(int*)&p1[12]);
-            Assert.AreEqual(22, *(int*)&p1[16]);
-            Assert.AreEqual(77, *(int*)&p1[20]);
+            Assert.AreEqual(111, (int)dataLoader.Values[0]);
+            Assert.AreEqual(222, (int)dataLoader.Values[1]);
+            Assert.AreEqual(333, (int)dataLoader.Values[2]);
+            Assert.AreEqual(1, (int)dataLoader.Values[3]);
+            Assert.AreEqual(22, (int)dataLoader.Values[4]);
+            Assert.AreEqual(77, (int)dataLoader.Values[5]);
+            Assert.AreEqual(buffer0.D3D12GpuDescriptorHandle.ptr, dataLoader.Resources[0]);
+            Assert.AreEqual(buffer1.D3D12GpuDescriptorHandle.ptr, dataLoader.Resources[1]);
         }
 
         [AutoConstructor]
@@ -88,28 +93,36 @@ namespace ComputeSharp.Tests.Internals
         [TestMethod]
         public unsafe void LoadScalarAndVectorTypes()
         {
-            ulong* p0 = stackalloc ulong[128];
-            byte* p1 = stackalloc byte[256];
-
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(16);
 
+            DebugDispatchDataLoader dataLoader = DebugDispatchDataLoader.Create();
             ScalarAndVectorTypesShader shader = new(buffer, new(55, 44, 888), 22, 77, new(3.14, 6.28), 42, 9999);
 
-            int size = DispatchDataLoader.LoadDispatchData(Gpu.Default, in shader, ref *p0, ref *p1);
+            shader.LoadDispatchData(in dataLoader, Gpu.Default, 111, 222, 333);
 
-            Assert.AreEqual(72, size);
+            Assert.AreEqual(18, dataLoader.Values.Length);
+            Assert.AreEqual(1, dataLoader.Resources.Length);
 
-            Assert.AreEqual(p0[0], buffer.D3D12GpuDescriptorHandle.ptr);
+            Assert.AreEqual(111, (int)dataLoader.Values[0]);
+            Assert.AreEqual(222, (int)dataLoader.Values[1]);
+            Assert.AreEqual(333, (int)dataLoader.Values[2]);
 
-            Assert.AreEqual(55, *(float*)&p1[16]);
-            Assert.AreEqual(44, *(float*)&p1[20]);
-            Assert.AreEqual(888, *(float*)&p1[24]);
-            Assert.AreEqual(22, *(int*)&p1[28]);
-            Assert.AreEqual(77, *(int*)&p1[32]);
-            Assert.AreEqual(3.14, *(double*)&p1[48]);
-            Assert.AreEqual(6.28, *(double*)&p1[56]);
-            Assert.AreEqual(42, *(int*)&p1[64]);
-            Assert.AreEqual(9999, *(int*)&p1[68]);
+            Assert.AreEqual(buffer.D3D12GpuDescriptorHandle.ptr, dataLoader.Resources[0]);
+
+            fixed (void* p0 = &dataLoader.Values[0])
+            {
+                byte* p1 = (byte*)p0;
+
+                Assert.AreEqual(55, *(float*)&p1[16]);
+                Assert.AreEqual(44, *(float*)&p1[20]);
+                Assert.AreEqual(888, *(float*)&p1[24]);
+                Assert.AreEqual(22, *(int*)&p1[28]);
+                Assert.AreEqual(77, *(int*)&p1[32]);
+                Assert.AreEqual(3.14, *(double*)&p1[48]);
+                Assert.AreEqual(6.28, *(double*)&p1[56]);
+                Assert.AreEqual(42, *(int*)&p1[64]);
+                Assert.AreEqual(9999, *(int*)&p1[68]);
+            }
         }
 
         [AutoConstructor]
@@ -133,11 +146,9 @@ namespace ComputeSharp.Tests.Internals
         [TestMethod]
         public unsafe void LoadScalarVectorAndMatrixTypes()
         {
-            ulong* p0 = stackalloc ulong[128];
-            byte* p1 = stackalloc byte[256];
-
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(16);
 
+            DebugDispatchDataLoader dataLoader = DebugDispatchDataLoader.Create();
             ScalarVectorAndMatrixTypesShader shader = new(
                 buffer,
                 f2x3: new(55, 44, 888, 111, 222, 333),
@@ -149,32 +160,42 @@ namespace ComputeSharp.Tests.Internals
                 i2x2: new(11, 22, 33, 44),
                 d: 9999);
 
-            int size = DispatchDataLoader.LoadDispatchData(Gpu.Default, in shader, ref *p0, ref *p1);
+            shader.LoadDispatchData(in dataLoader, Gpu.Default, 111, 222, 333);
 
-            Assert.AreEqual(124, size);
+            Assert.AreEqual(31, dataLoader.Values.Length);
+            Assert.AreEqual(1, dataLoader.Resources.Length);
 
-            Assert.AreEqual(p0[0], buffer.D3D12GpuDescriptorHandle.ptr);
+            Assert.AreEqual(111, (int)dataLoader.Values[0]);
+            Assert.AreEqual(222, (int)dataLoader.Values[1]);
+            Assert.AreEqual(333, (int)dataLoader.Values[2]);
 
-            Assert.AreEqual(55, *(float*)&p1[16]);
-            Assert.AreEqual(44, *(float*)&p1[20]);
-            Assert.AreEqual(888, *(float*)&p1[24]);
-            Assert.AreEqual(111, *(float*)&p1[32]);
-            Assert.AreEqual(222, *(float*)&p1[36]);
-            Assert.AreEqual(333, *(float*)&p1[40]);
-            Assert.AreEqual(22, *(int*)&p1[44]);
-            Assert.AreEqual(1, *(int*)&p1[48]);
-            Assert.AreEqual(2, *(int*)&p1[52]);
-            Assert.AreEqual(3, *(int*)&p1[56]);
-            Assert.AreEqual(3.14, *(double*)&p1[64]);
-            Assert.AreEqual(6.28, *(double*)&p1[72]);
-            Assert.AreEqual(42, *(int*)&p1[80]);
-            Assert.AreEqual(111, *(int*)&p1[84]);
-            Assert.AreEqual(222, *(int*)&p1[88]);
-            Assert.AreEqual(11, *(int*)&p1[96]);
-            Assert.AreEqual(22, *(int*)&p1[100]);
-            Assert.AreEqual(33, *(int*)&p1[112]);
-            Assert.AreEqual(44, *(int*)&p1[116]);
-            Assert.AreEqual(9999, *(int*)&p1[120]);
+            Assert.AreEqual(buffer.D3D12GpuDescriptorHandle.ptr, dataLoader.Resources[0]);
+
+            fixed (void* p0 = &dataLoader.Values[0])
+            {
+                byte* p1 = (byte*)p0;
+
+                Assert.AreEqual(55, *(float*)&p1[16]);
+                Assert.AreEqual(44, *(float*)&p1[20]);
+                Assert.AreEqual(888, *(float*)&p1[24]);
+                Assert.AreEqual(111, *(float*)&p1[32]);
+                Assert.AreEqual(222, *(float*)&p1[36]);
+                Assert.AreEqual(333, *(float*)&p1[40]);
+                Assert.AreEqual(22, *(int*)&p1[44]);
+                Assert.AreEqual(1, *(int*)&p1[48]);
+                Assert.AreEqual(2, *(int*)&p1[52]);
+                Assert.AreEqual(3, *(int*)&p1[56]);
+                Assert.AreEqual(3.14, *(double*)&p1[64]);
+                Assert.AreEqual(6.28, *(double*)&p1[72]);
+                Assert.AreEqual(42, *(int*)&p1[80]);
+                Assert.AreEqual(111, *(int*)&p1[84]);
+                Assert.AreEqual(222, *(int*)&p1[88]);
+                Assert.AreEqual(11, *(int*)&p1[96]);
+                Assert.AreEqual(22, *(int*)&p1[100]);
+                Assert.AreEqual(33, *(int*)&p1[112]);
+                Assert.AreEqual(44, *(int*)&p1[116]);
+                Assert.AreEqual(9999, *(int*)&p1[120]);
+            }
         }
 
         [AutoConstructor]
@@ -204,11 +225,9 @@ namespace ComputeSharp.Tests.Internals
         [TestMethod]
         public unsafe void LoadFlatCustomTypeShader()
         {
-            ulong* p0 = stackalloc ulong[128];
-            byte* p1 = stackalloc byte[256];
-
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(16);
 
+            DebugDispatchDataLoader dataLoader = DebugDispatchDataLoader.Create();
             FlatCustomTypeShader shader = new(
                 buffer,
                 new SimpleTypes(
@@ -221,32 +240,42 @@ namespace ComputeSharp.Tests.Internals
                     i2x2: new(11, 22, 33, 44),
                     d: 9999));
 
-            int size = DispatchDataLoader.LoadDispatchData(Gpu.Default, in shader, ref *p0, ref *p1);
+            shader.LoadDispatchData(in dataLoader, Gpu.Default, 111, 222, 333);
 
-            Assert.AreEqual(124, size);
+            Assert.AreEqual(31, dataLoader.Values.Length);
+            Assert.AreEqual(1, dataLoader.Resources.Length);
 
-            Assert.AreEqual(p0[0], buffer.D3D12GpuDescriptorHandle.ptr);
+            Assert.AreEqual(111, (int)dataLoader.Values[0]);
+            Assert.AreEqual(222, (int)dataLoader.Values[1]);
+            Assert.AreEqual(333, (int)dataLoader.Values[2]);
 
-            Assert.AreEqual(55, *(float*)&p1[16]);
-            Assert.AreEqual(44, *(float*)&p1[20]);
-            Assert.AreEqual(888, *(float*)&p1[24]);
-            Assert.AreEqual(111, *(float*)&p1[32]);
-            Assert.AreEqual(222, *(float*)&p1[36]);
-            Assert.AreEqual(333, *(float*)&p1[40]);
-            Assert.AreEqual(22, *(int*)&p1[44]);
-            Assert.AreEqual(1, *(int*)&p1[48]);
-            Assert.AreEqual(2, *(int*)&p1[52]);
-            Assert.AreEqual(3, *(int*)&p1[56]);
-            Assert.AreEqual(3.14, *(double*)&p1[64]);
-            Assert.AreEqual(6.28, *(double*)&p1[72]);
-            Assert.AreEqual(42, *(int*)&p1[80]);
-            Assert.AreEqual(111, *(int*)&p1[84]);
-            Assert.AreEqual(222, *(int*)&p1[88]);
-            Assert.AreEqual(11, *(int*)&p1[96]);
-            Assert.AreEqual(22, *(int*)&p1[100]);
-            Assert.AreEqual(33, *(int*)&p1[112]);
-            Assert.AreEqual(44, *(int*)&p1[116]);
-            Assert.AreEqual(9999, *(int*)&p1[120]);
+            Assert.AreEqual(buffer.D3D12GpuDescriptorHandle.ptr, dataLoader.Resources[0]);
+
+            fixed (void* p0 = &dataLoader.Values[0])
+            {
+                byte* p1 = (byte*)p0;
+
+                Assert.AreEqual(55, *(float*)&p1[16]);
+                Assert.AreEqual(44, *(float*)&p1[20]);
+                Assert.AreEqual(888, *(float*)&p1[24]);
+                Assert.AreEqual(111, *(float*)&p1[32]);
+                Assert.AreEqual(222, *(float*)&p1[36]);
+                Assert.AreEqual(333, *(float*)&p1[40]);
+                Assert.AreEqual(22, *(int*)&p1[44]);
+                Assert.AreEqual(1, *(int*)&p1[48]);
+                Assert.AreEqual(2, *(int*)&p1[52]);
+                Assert.AreEqual(3, *(int*)&p1[56]);
+                Assert.AreEqual(3.14, *(double*)&p1[64]);
+                Assert.AreEqual(6.28, *(double*)&p1[72]);
+                Assert.AreEqual(42, *(int*)&p1[80]);
+                Assert.AreEqual(111, *(int*)&p1[84]);
+                Assert.AreEqual(222, *(int*)&p1[88]);
+                Assert.AreEqual(11, *(int*)&p1[96]);
+                Assert.AreEqual(22, *(int*)&p1[100]);
+                Assert.AreEqual(33, *(int*)&p1[112]);
+                Assert.AreEqual(44, *(int*)&p1[116]);
+                Assert.AreEqual(9999, *(int*)&p1[120]);
+            }
         }
 
         [AutoConstructor]
@@ -288,11 +317,9 @@ namespace ComputeSharp.Tests.Internals
         [TestMethod]
         public unsafe void LoadNestedCustomTypes()
         {
-            ulong* p0 = stackalloc ulong[128];
-            byte* p1 = stackalloc byte[256];
-
             using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(16);
 
+            DebugDispatchDataLoader dataLoader = DebugDispatchDataLoader.Create();
             NestedCustomTypesShader shader = new(
                 buffer,
                 new CustomType1(
@@ -317,45 +344,55 @@ namespace ComputeSharp.Tests.Internals
                         a: 888888,
                         b: new(333.3f, 444.4f))));
 
-            int size = DispatchDataLoader.LoadDispatchData(Gpu.Default, in shader, ref *p0, ref *p1);
+            shader.LoadDispatchData(in dataLoader, Gpu.Default, 111, 222, 333);
 
-            Assert.AreEqual(188, size);
+            Assert.AreEqual(47, dataLoader.Values.Length);
+            Assert.AreEqual(1, dataLoader.Resources.Length);
 
-            Assert.AreEqual(p0[0], buffer.D3D12GpuDescriptorHandle.ptr);
+            Assert.AreEqual(111, (int)dataLoader.Values[0]);
+            Assert.AreEqual(222, (int)dataLoader.Values[1]);
+            Assert.AreEqual(333, (int)dataLoader.Values[2]);
 
-            Assert.AreEqual(3.14f, *(float*)&p1[16]);
-            Assert.AreEqual(6.28f, *(float*)&p1[20]);
-            Assert.AreEqual(123.4f, *(float*)&p1[24]);
-            Assert.AreEqual(55, *(float*)&p1[32]);
-            Assert.AreEqual(44, *(float*)&p1[36]);
-            Assert.AreEqual(888, *(float*)&p1[40]);
-            Assert.AreEqual(111, *(float*)&p1[48]);
-            Assert.AreEqual(222, *(float*)&p1[52]);
-            Assert.AreEqual(333, *(float*)&p1[56]);
-            Assert.AreEqual(22, *(int*)&p1[60]);
-            Assert.AreEqual(1, *(int*)&p1[64]);
-            Assert.AreEqual(2, *(int*)&p1[68]);
-            Assert.AreEqual(3, *(int*)&p1[72]);
-            Assert.AreEqual(3.14, *(double*)&p1[80]);
-            Assert.AreEqual(6.28, *(double*)&p1[88]);
-            Assert.AreEqual(42, *(int*)&p1[96]);
-            Assert.AreEqual(111, *(int*)&p1[100]);
-            Assert.AreEqual(222, *(int*)&p1[104]);
-            Assert.AreEqual(11, *(int*)&p1[112]);
-            Assert.AreEqual(22, *(int*)&p1[116]);
-            Assert.AreEqual(33, *(int*)&p1[128]);
-            Assert.AreEqual(44, *(int*)&p1[132]);
-            Assert.AreEqual(9999, *(int*)&p1[136]);
-            Assert.AreEqual(42, *(int*)&p1[140]);
-            Assert.AreEqual(1234567, *(int*)&p1[144]);
-            Assert.AreEqual(44.4f, *(float*)&p1[148]);
-            Assert.AreEqual(55.5f, *(float*)&p1[152]);
-            Assert.AreEqual(7654321, *(int*)&p1[160]);
-            Assert.AreEqual(111.1f, *(float*)&p1[164]);
-            Assert.AreEqual(222.2f, *(float*)&p1[168]);
-            Assert.AreEqual(888888, *(int*)&p1[176]);
-            Assert.AreEqual(333.3f, *(float*)&p1[180]);
-            Assert.AreEqual(444.4f, *(float*)&p1[184]);
+            Assert.AreEqual(buffer.D3D12GpuDescriptorHandle.ptr, dataLoader.Resources[0]);
+
+            fixed (void* p0 = &dataLoader.Values[0])
+            {
+                byte* p1 = (byte*)p0;
+
+                Assert.AreEqual(3.14f, *(float*)&p1[16]);
+                Assert.AreEqual(6.28f, *(float*)&p1[20]);
+                Assert.AreEqual(123.4f, *(float*)&p1[24]);
+                Assert.AreEqual(55, *(float*)&p1[32]);
+                Assert.AreEqual(44, *(float*)&p1[36]);
+                Assert.AreEqual(888, *(float*)&p1[40]);
+                Assert.AreEqual(111, *(float*)&p1[48]);
+                Assert.AreEqual(222, *(float*)&p1[52]);
+                Assert.AreEqual(333, *(float*)&p1[56]);
+                Assert.AreEqual(22, *(int*)&p1[60]);
+                Assert.AreEqual(1, *(int*)&p1[64]);
+                Assert.AreEqual(2, *(int*)&p1[68]);
+                Assert.AreEqual(3, *(int*)&p1[72]);
+                Assert.AreEqual(3.14, *(double*)&p1[80]);
+                Assert.AreEqual(6.28, *(double*)&p1[88]);
+                Assert.AreEqual(42, *(int*)&p1[96]);
+                Assert.AreEqual(111, *(int*)&p1[100]);
+                Assert.AreEqual(222, *(int*)&p1[104]);
+                Assert.AreEqual(11, *(int*)&p1[112]);
+                Assert.AreEqual(22, *(int*)&p1[116]);
+                Assert.AreEqual(33, *(int*)&p1[128]);
+                Assert.AreEqual(44, *(int*)&p1[132]);
+                Assert.AreEqual(9999, *(int*)&p1[136]);
+                Assert.AreEqual(42, *(int*)&p1[140]);
+                Assert.AreEqual(1234567, *(int*)&p1[144]);
+                Assert.AreEqual(44.4f, *(float*)&p1[148]);
+                Assert.AreEqual(55.5f, *(float*)&p1[152]);
+                Assert.AreEqual(7654321, *(int*)&p1[160]);
+                Assert.AreEqual(111.1f, *(float*)&p1[164]);
+                Assert.AreEqual(222.2f, *(float*)&p1[168]);
+                Assert.AreEqual(888888, *(int*)&p1[176]);
+                Assert.AreEqual(333.3f, *(float*)&p1[180]);
+                Assert.AreEqual(444.4f, *(float*)&p1[184]);
+            }
         }
     }
 }
