@@ -362,7 +362,15 @@ namespace ComputeSharp.SourceGenerators
                      !fieldSymbol.IsConst && !fieldSymbol.IsStatic && !fieldSymbol.IsFixedSizeBuffer
                select fieldSymbol)
             {
-                string typeName = fieldSymbol.Type.GetFullMetadataName();
+                string
+                    fieldName = fieldSymbol.Name,
+                    typeName = fieldSymbol.Type.GetFullMetadataName();
+
+                // Disambiguates the name of target fields against the current input parameters
+                if (fieldName is "dataLoader" or "device" or "x" or "y" or "z")
+                {
+                    fieldName = $"this.{fieldName}";
+                }
 
                 // The first item in each nested struct needs to be aligned to 16 bytes
                 if (isFirstField && fieldPath.Count > 0)
@@ -378,16 +386,16 @@ namespace ComputeSharp.SourceGenerators
                         AssignmentExpression(
                             SyntaxKind.SimpleAssignmentExpression,
                             ParseExpression($"Unsafe.Add(ref r1, {resourceOffset++})"),
-                            ParseExpression($"GraphicsResourceHelper.ValidateAndGetGpuDescriptorHandle({fieldSymbol.Name}, device)"))));
+                            ParseExpression($"GraphicsResourceHelper.ValidateAndGetGpuDescriptorHandle({fieldName}, device)"))));
                 }
                 else if (HlslKnownTypes.IsKnownHlslType(typeName))
                 {
-                    AppendHlslKnownTypeField(fieldPath.Concat(new[] { fieldSymbol.Name }), typeName, ref rawDataOffset, statements);
+                    AppendHlslKnownTypeField(fieldPath.Concat(new[] { fieldName }), typeName, ref rawDataOffset, statements);
                 }
                 else if (fieldSymbol.Type.IsUnmanagedType)
                 {
                     // Custom struct type defined by the user
-                    AppendFields(fieldSymbol.Type, fieldPath.Concat(new[] { fieldSymbol.Name }).ToArray(), ref resourceOffset, ref rawDataOffset, statements);
+                    AppendFields(fieldSymbol.Type, fieldPath.Concat(new[] { fieldName }).ToArray(), ref resourceOffset, ref rawDataOffset, statements);
                 }
             }
         }

@@ -394,5 +394,54 @@ namespace ComputeSharp.Tests.Internals
                 Assert.AreEqual(444.4f, *(float*)&p1[184]);
             }
         }
+
+        [AutoConstructor]
+        public partial struct AmbiguousNamesShader : IComputeShader
+        {
+            public ReadWriteBuffer<float> a;
+            public ReadWriteBuffer<float> b;
+            public ReadWriteBuffer<float> c;
+            public ReadWriteBuffer<float> x;
+            public ReadWriteBuffer<float> y;
+            public ReadWriteBuffer<float> z;
+            public int dataLoader;
+            public int device;
+            public int dummy;
+
+            public void Execute()
+            {
+            }
+        }
+
+        [TestMethod]
+        public unsafe void AmbiguousNames()
+        {
+            using ReadWriteBuffer<float> a = Gpu.Default.AllocateReadWriteBuffer<float>(16);
+            using ReadWriteBuffer<float> b = Gpu.Default.AllocateReadWriteBuffer<float>(16);
+            using ReadWriteBuffer<float> c = Gpu.Default.AllocateReadWriteBuffer<float>(16);
+            using ReadWriteBuffer<float> x = Gpu.Default.AllocateReadWriteBuffer<float>(16);
+            using ReadWriteBuffer<float> y = Gpu.Default.AllocateReadWriteBuffer<float>(16);
+            using ReadWriteBuffer<float> z = Gpu.Default.AllocateReadWriteBuffer<float>(16);
+
+            DebugDispatchDataLoader dataLoader = DebugDispatchDataLoader.Create();
+
+            new AmbiguousNamesShader(a, b, c, x, y, z, 7777, 8888, 9999).LoadDispatchData(in dataLoader, Gpu.Default, 111, 222, 333);
+
+            Assert.AreEqual(6, dataLoader.Values.Length);
+            Assert.AreEqual(6, dataLoader.Resources.Length);
+
+            Assert.AreEqual(111, (int)dataLoader.Values[0]);
+            Assert.AreEqual(222, (int)dataLoader.Values[1]);
+            Assert.AreEqual(333, (int)dataLoader.Values[2]);
+            Assert.AreEqual(7777, (int)dataLoader.Values[3]);
+            Assert.AreEqual(8888, (int)dataLoader.Values[4]);
+            Assert.AreEqual(9999, (int)dataLoader.Values[5]);
+            Assert.AreEqual(a.D3D12GpuDescriptorHandle.ptr, dataLoader.Resources[0]);
+            Assert.AreEqual(b.D3D12GpuDescriptorHandle.ptr, dataLoader.Resources[1]);
+            Assert.AreEqual(c.D3D12GpuDescriptorHandle.ptr, dataLoader.Resources[2]);
+            Assert.AreEqual(x.D3D12GpuDescriptorHandle.ptr, dataLoader.Resources[3]);
+            Assert.AreEqual(y.D3D12GpuDescriptorHandle.ptr, dataLoader.Resources[4]);
+            Assert.AreEqual(z.D3D12GpuDescriptorHandle.ptr, dataLoader.Resources[5]);
+        }
     }
 }
