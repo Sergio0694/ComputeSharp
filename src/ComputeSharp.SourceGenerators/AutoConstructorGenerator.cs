@@ -105,7 +105,7 @@ namespace ComputeSharp.SourceGenerators
                 .ToFullString();
 
             // Add the partial type
-            context.AddSource(structDeclarationSymbol.GetGeneratedFileName<AutoConstructorGenerator>(), SourceText.From(source, Encoding.UTF8));
+            context.AddSource(structDeclarationSymbol.GetGeneratedFileName(), SourceText.From(source, Encoding.UTF8));
         }
     }
 }

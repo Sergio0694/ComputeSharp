@@ -90,7 +90,7 @@ namespace ComputeSharp.SourceGenerators
                 .ToFullString();
 
             // Add the method source attribute
-            context.AddSource(methodDeclarationSymbol.GetGeneratedFileName<ShaderMethodSourceAttribute>(), SourceText.From(source, Encoding.UTF8));
+            context.AddSource(methodDeclarationSymbol.GetGeneratedFileName(), SourceText.From(source, Encoding.UTF8));
         }
 
         /// <summary>

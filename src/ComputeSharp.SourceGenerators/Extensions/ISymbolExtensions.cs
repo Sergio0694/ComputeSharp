@@ -108,33 +108,23 @@ namespace ComputeSharp.SourceGenerators.Extensions
         /// <summary>
         /// Gets a valid filename for a target symbol and generator type.
         /// </summary>
-        /// <typeparam name="TGenerator">The generator type processing the input symbol.</typeparam>
         /// <param name="symbol">The symbol being processed.</param>
-        /// <returns>A filename in the form "[ComputeSharp]_[&lt;TGENERATOR&gt;]_[&lt;SYMBOL_FULLNAME&gt;]"</returns>
+        /// <returns>A filename in the form "&lt;SYMBOL_FULLNAME&gt;"</returns>
         [Pure]
-        public static string GetGeneratedFileName<TGenerator>(this INamedTypeSymbol symbol)
+        public static string GetGeneratedFileName(this INamedTypeSymbol symbol)
         {
-            string
-                metadataName = symbol.GetFullMetadataName(),
-                fixedName = metadataName.Replace('`', '-').Replace('+', '.');
-
-            return $"[{nameof(ComputeSharp)}]_[{typeof(TGenerator).Name}]_[{fixedName}]";
+            return symbol.GetFullMetadataName().Replace('`', '-').Replace('+', '.');
         }
 
         /// <summary>
         /// Gets a valid filename for a target symbol and generator type.
         /// </summary>
-        /// <typeparam name="TGenerator">The generator type processing the input symbol.</typeparam>
         /// <param name="symbol">The symbol being processed.</param>
-        /// <returns>A filename in the form "[ComputeSharp]_[&lt;TGENERATOR&gt;]_[&lt;SYMBOL_FULLNAME&gt;]"</returns>
+        /// <returns>A filename in the form "&lt;SYMBOL_FULLNAME&gt;"</returns>
         [Pure]
-        public static string GetGeneratedFileName<TGenerator>(this IMethodSymbol symbol)
+        public static string GetGeneratedFileName(this IMethodSymbol symbol)
         {
-            string
-                metadataName = symbol.GetFullMetadataName(true),
-                fixedName = metadataName.Replace('`', '-').Replace('+', '.');
-
-            return $"[{nameof(ComputeSharp)}]_[{typeof(TGenerator).Name}]_[{fixedName}]";
+            return symbol.GetFullMetadataName(true).Replace('`', '-').Replace('+', '.');
         }
 
         /// <summary>
