@@ -14,6 +14,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static Microsoft.CodeAnalysis.SymbolDisplayTypeQualificationStyle;
 
 #pragma warning disable CS0618
 
@@ -40,9 +41,15 @@ namespace ComputeSharp.SourceGenerators
                 return;
             }
 
-            // Type attributes
+            // Method attributes
             AttributeListSyntax[] attributes = new[]
             {
+                AttributeList(SingletonSeparatedList(
+                    Attribute(IdentifierName("GeneratedCode")).AddArgumentListArguments(
+                        AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(IComputeShaderDataLoaderGenerator).FullName))),
+                        AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(IComputeShaderDataLoaderGenerator).Assembly.GetName().Version.ToString())))))),
+                AttributeList(SingletonSeparatedList(Attribute(IdentifierName("DebuggerNonUserCode")))),
+                AttributeList(SingletonSeparatedList(Attribute(IdentifierName("ExcludeFromCodeCoverage")))),
                 AttributeList(SingletonSeparatedList(
                     Attribute(IdentifierName("EditorBrowsable")).AddArgumentListArguments(
                     AttributeArgument(ParseExpression("EditorBrowsableState.Never"))))),
@@ -50,14 +57,14 @@ namespace ComputeSharp.SourceGenerators
                     Attribute(IdentifierName("Obsolete")).AddArgumentListArguments(
                     AttributeArgument(LiteralExpression(
                         SyntaxKind.StringLiteralExpression,
-                        Literal("This type is not intended to be used directly by user code"))))))
+                        Literal("This method is not intended to be used directly by user code"))))))
             };
 
             foreach (SyntaxReceiver.Item item in syntaxReceiver.GatheredInfo)
             {
                 try
                 {
-                    OnExecute(context, item.StructDeclaration, item.StructSymbol, ref attributes);
+                    OnExecute(context, item.StructDeclaration, item.StructSymbol, attributes);
                 }
                 catch
                 {
@@ -72,71 +79,106 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="context">The input <see cref="GeneratorExecutionContext"/> instance to use.</param>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> node to process.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
-        /// <param name="attributes">The list of <see cref="AttributeListSyntax"/> instances to append to the first copy of the partial class being generated.</param>
-        private static void OnExecute(GeneratorExecutionContext context, StructDeclarationSyntax structDeclaration, INamedTypeSymbol structDeclarationSymbol, ref AttributeListSyntax[] attributes)
+        /// <param name="attributes">The list of <see cref="AttributeListSyntax"/> instances to append to the generated method.</param>
+        private static void OnExecute(GeneratorExecutionContext context, StructDeclarationSyntax structDeclaration, INamedTypeSymbol structDeclarationSymbol, AttributeListSyntax[] attributes)
         {
-            TypeSyntax shaderType = ParseTypeName(structDeclarationSymbol.ToDisplayString());
-            BlockSyntax block = Block(GetDispatchDataLoadingStatements(context, structDeclarationSymbol, out int root32BitConstantsCount));
+            string namespaceName = structDeclarationSymbol.ContainingNamespace.ToDisplayString(new(typeQualificationStyle: NameAndContainingTypesAndNamespaces));
+            string structName = structDeclaration.Identifier.Text;
+            SyntaxTokenList structModifiers = structDeclaration.Modifiers;
+            IEnumerable<StatementSyntax> blockStatements = GetDispatchDataLoadingStatements(context, structDeclarationSymbol, out int root32BitConstantsCount);
+
+            // Create the partial shader type declaration with the hashcode interface method implementation.
+            // This code produces a struct declaration as follows:
+            //
+            // public struct ShaderType : IShader<ShaderType>
+            // {
+            //     [GeneratedCode("...", "...")]
+            //     [DebuggerNonUserCode]
+            //     [ExcludeFromCodeCoverage]
+            //     [EditorBrowsable(EditorBrowsableState.Never)]
+            //     [Obsolete("This method is not intended to be called directly by user code")]
+            //     [return: ComputeRoot32BitConstants(42)]
+            //     public readonly void LoadDispatchData<TDataLoader>(in TDataLoader dataLoader, GraphicsDevice device, int x, int y, int z)
+            //         where TDataLoader : struct, IDispatchDataLoader
+            //     {
+            //         <BODY>
+            //     }
+            // }
+            var structDeclarationSyntax =
+                StructDeclaration(structName).WithModifiers(structModifiers)
+                    .AddBaseListTypes(SimpleBaseType(
+                        GenericName(Identifier("IShader"))
+                        .AddTypeArgumentListArguments(IdentifierName(structName)))).AddMembers(
+                MethodDeclaration(
+                    PredefinedType(Token(SyntaxKind.VoidKeyword)),
+                    Identifier("LoadDispatchData"))
+                .AddAttributeLists(attributes)
+                .AddAttributeLists(AttributeList(SingletonSeparatedList(
+                    Attribute(IdentifierName(nameof(ComputeRoot32BitConstantsAttribute).Replace("Attribute", "")))
+                    .AddArgumentListArguments(AttributeArgument(LiteralExpression(
+                        SyntaxKind.NumericLiteralExpression,
+                        Literal(root32BitConstantsCount))))))
+                    .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.ReturnKeyword))))
+                .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.ReadOnlyKeyword))
+                .AddTypeParameterListParameters(TypeParameter(Identifier("TDataLoader")))
+                .AddParameterListParameters(
+                    Parameter(Identifier("dataLoader"))
+                        .AddModifiers(Token(SyntaxKind.InKeyword))
+                        .WithType(IdentifierName("TDataLoader")),
+                    Parameter(Identifier("device")).WithType(IdentifierName("GraphicsDevice")),
+                    Parameter(Identifier("x")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
+                    Parameter(Identifier("y")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
+                    Parameter(Identifier("z")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))))
+                .AddConstraintClauses(
+                    TypeParameterConstraintClause(IdentifierName("TDataLoader"))
+                    .AddConstraints(
+                        ClassOrStructConstraint(SyntaxKind.StructConstraint),
+                        TypeConstraint(IdentifierName("IDispatchDataLoader"))))
+                .WithBody(Block(blockStatements)));
+
+            TypeDeclarationSyntax typeDeclarationSyntax = structDeclarationSyntax;
+
+            // Add all parent types in ascending order, if any
+            foreach (var parentType in structDeclaration.Ancestors().OfType<TypeDeclarationSyntax>())
+            {
+                typeDeclarationSyntax = parentType
+                    .WithMembers(SingletonList<MemberDeclarationSyntax>(typeDeclarationSyntax))
+                    .WithConstraintClauses(List<TypeParameterConstraintClauseSyntax>())
+                    .WithBaseList(null)
+                    .WithAttributeLists(List<AttributeListSyntax>())
+                    .WithoutTrivia();
+            }
 
             // Create a static method to create the combined hashcode for a given shader type.
             // This code takes a block syntax and produces a compilation unit as follows:
             //
             // using System;
+            // using System.CodeDom.Compiler;
             // using System.ComponentModel;
+            // using System.Diagnostics;
+            // using System.Diagnostics.CodeAnalysis;
+            // using System.Runtime.CompilerServices;
+            // using ComputeSharp.__Internals;
             //
-            // namespace ComputeSharp.__Internals
+            // #pragma warning disable
+            //
+            // namespace <SHADER_NAMESPACE>
             // {
-            //     internal static partial class DispatchDataLoader
-            //     {
-            //         [System.ComponentModel.EditorBrowsable(EditorBrowsableState.Never)]
-            //         [System.Obsolete("This method is not intended to be called directly by user code")]
-            //         [return: ComputeRoot32BitConstants(42)]
-            //         public static int LoadDispatchData(GraphicsDevice device, in ShaderType shader, ref ulong r0, ref byte r1)
-            //         {
-            //             ...
-            //         }
-            //     }
+            //     <SHADER_DECLARATION>
             // }
             var source =
                 CompilationUnit().AddUsings(
                 UsingDirective(IdentifierName("System")),
+                UsingDirective(IdentifierName("System.CodeDom.Compiler")),
                 UsingDirective(IdentifierName("System.ComponentModel")),
-                UsingDirective(IdentifierName("System.Runtime.CompilerServices"))).AddMembers(
-                NamespaceDeclaration(IdentifierName("ComputeSharp.__Internals")).AddMembers(
-                ClassDeclaration("DispatchDataLoader").AddModifiers(
-                    Token(SyntaxKind.InternalKeyword),
-                    Token(SyntaxKind.StaticKeyword),
-                    Token(SyntaxKind.PartialKeyword)).AddAttributeLists(attributes).AddMembers(
-                MethodDeclaration(
-                    PredefinedType(Token(SyntaxKind.IntKeyword)),
-                    Identifier("LoadDispatchData")).AddAttributeLists(
-                    AttributeList(SingletonSeparatedList(
-                        Attribute(IdentifierName("EditorBrowsable")).AddArgumentListArguments(
-                        AttributeArgument(ParseExpression("EditorBrowsableState.Never"))))),
-                    AttributeList(SingletonSeparatedList(
-                        Attribute(IdentifierName("Obsolete")).AddArgumentListArguments(
-                        AttributeArgument(LiteralExpression(
-                            SyntaxKind.StringLiteralExpression,
-                            Literal("This method is not intended to be called directly by user code")))))),
-                    AttributeList(SingletonSeparatedList(
-                        Attribute(IdentifierName(nameof(ComputeRoot32BitConstantsAttribute).Replace("Attribute", "")))
-                        .AddArgumentListArguments(AttributeArgument(LiteralExpression(
-                            SyntaxKind.NumericLiteralExpression,
-                            Literal(root32BitConstantsCount))))))
-                    .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.ReturnKeyword)))).AddModifiers(
-                    Token(SyntaxKind.PublicKeyword),
-                    Token(SyntaxKind.StaticKeyword)).AddParameterListParameters(
-                    Parameter(Identifier("device")).WithType(IdentifierName("ComputeSharp.GraphicsDevice")),
-                    Parameter(Identifier("shader")).WithModifiers(TokenList(Token(SyntaxKind.InKeyword))).WithType(shaderType),
-                    Parameter(Identifier("r0")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(PredefinedType(Token(SyntaxKind.ULongKeyword))),
-                    Parameter(Identifier("r1")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(PredefinedType(Token(SyntaxKind.ByteKeyword))))
-                    .WithBody(block)))
+                UsingDirective(IdentifierName("System.Diagnostics")),
+                UsingDirective(IdentifierName("System.Diagnostics.CodeAnalysis")),
+                UsingDirective(IdentifierName("System.Runtime.CompilerServices")),
+                UsingDirective(IdentifierName("ComputeSharp.__Internals"))).AddMembers(
+                NamespaceDeclaration(IdentifierName(namespaceName)).AddMembers(typeDeclarationSyntax)
                 .WithNamespaceKeyword(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.NamespaceKeyword, TriviaList())))
                 .NormalizeWhitespace()
                 .ToFullString();
-
-            // Clear the attribute list to avoid duplicates
-            attributes = Array.Empty<AttributeListSyntax>();
 
             // Add the method source attribute
             context.AddSource(structDeclarationSymbol.GetGeneratedFileName(), SourceText.From(source, Encoding.UTF8));
@@ -160,6 +202,39 @@ namespace ComputeSharp.SourceGenerators
                 resourceOffset = 0,
                 rawDataOffset = sizeof(int) * (isComputeShader ? 3 : 2);
 
+            // Append the statements for the dispatch ranges:
+            //
+            // span0[0] = (uint)x;
+            // span0[1] = (uint)y;
+            // span0[2] = (uint)z;
+            statements.Add(
+                ExpressionStatement(
+                    AssignmentExpression(
+                        SyntaxKind.SimpleAssignmentExpression,
+                        ElementAccessExpression(IdentifierName("span0"))
+                            .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(0)))),
+                        CastExpression(PredefinedType(Token(SyntaxKind.UIntKeyword)), IdentifierName("x")))));
+
+            statements.Add(
+                ExpressionStatement(
+                    AssignmentExpression(
+                        SyntaxKind.SimpleAssignmentExpression,
+                        ElementAccessExpression(IdentifierName("span0"))
+                            .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(1)))),
+                        CastExpression(PredefinedType(Token(SyntaxKind.UIntKeyword)), IdentifierName("y")))));
+
+            if (isComputeShader)
+            {
+                statements.Add(
+                ExpressionStatement(
+                    AssignmentExpression(
+                        SyntaxKind.SimpleAssignmentExpression,
+                        ElementAccessExpression(IdentifierName("span0"))
+                            .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(2)))),
+                        CastExpression(PredefinedType(Token(SyntaxKind.UIntKeyword)), IdentifierName("z")))));
+            }
+
+            // Append the statements to load all fields (both resources and other captured values)
             AppendFields(structDeclarationSymbol, Array.Empty<string>(), ref resourceOffset, ref rawDataOffset, statements);
 
             // After all the captured fields have been processed, ansure the reported byte size for
@@ -167,9 +242,6 @@ namespace ComputeSharp.SourceGenerators
             // enable loading all the dispatch data after reinterpreting it to a sequence of values
             // of size 32 bits (via SetComputeRoot32BitConstants), without reading out of bounds.
             rawDataOffset = AlignmentHelper.Pad(rawDataOffset, sizeof(int));
-
-            statements.Add(ReturnStatement(LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(rawDataOffset))));
-
             count = rawDataOffset / sizeof(int);
 
             // A shader root signature has a maximum size of 64 DWORDs, so 256 bytes.
@@ -185,6 +257,87 @@ namespace ComputeSharp.SourceGenerators
             if (rootSignatureDwordSize > 64)
             {
                 context.ReportDiagnostic(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
+            }
+
+            // Span<uint> span0 = stackalloc uint[<VARIABLES>];
+            statements.Insert(0,
+                LocalDeclarationStatement(
+                    VariableDeclaration(
+                        GenericName(Identifier("Span"))
+                        .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.UIntKeyword))))
+                    .AddVariables(
+                        VariableDeclarator(Identifier("span0"))
+                        .WithInitializer(EqualsValueClause(
+                            StackAllocArrayCreationExpression(
+                                ArrayType(PredefinedType(Token(SyntaxKind.UIntKeyword)))
+                                .AddRankSpecifiers(
+                                    ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(
+                                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(count)))))))))));
+
+            // ref uint r0 = ref span0[0];
+            statements.Insert(1,
+                LocalDeclarationStatement(
+                    VariableDeclaration(RefType(PredefinedType(Token(SyntaxKind.UIntKeyword))))
+                    .AddVariables(
+                        VariableDeclarator(Identifier("r0"))
+                        .WithInitializer(EqualsValueClause(
+                            RefExpression(
+                                ElementAccessExpression(IdentifierName("span0"))
+                                .AddArgumentListArguments(Argument(
+                                    LiteralExpression(
+                                        SyntaxKind.NumericLiteralExpression,
+                                        Literal(0))))))))));
+
+            // dataLoader.LoadCapturedValues(span0);
+            statements.Add(
+                ExpressionStatement(
+                    InvocationExpression(
+                        MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName("dataLoader"),
+                            IdentifierName("LoadCapturedValues")))
+                    .AddArgumentListArguments(Argument(IdentifierName("span0")))));
+
+            if (resourceOffset > 0)
+            {
+                // Span<ulong> span1 = stackalloc ulong[<RESOURCES>];
+                statements.Insert(1,
+                    LocalDeclarationStatement(
+                        VariableDeclaration(
+                            GenericName(Identifier("Span"))
+                            .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ULongKeyword))))
+                        .AddVariables(
+                            VariableDeclarator(Identifier("span1"))
+                            .WithInitializer(EqualsValueClause(
+                                StackAllocArrayCreationExpression(
+                                    ArrayType(PredefinedType(Token(SyntaxKind.ULongKeyword)))
+                                    .AddRankSpecifiers(
+                                        ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(
+                                            LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(resourceOffset)))))))))));
+
+                // ref ulong r1 = ref span1[0];
+                statements.Insert(3,
+                    LocalDeclarationStatement(
+                        VariableDeclaration(RefType(PredefinedType(Token(SyntaxKind.ULongKeyword))))
+                        .AddVariables(
+                            VariableDeclarator(Identifier("r1"))
+                            .WithInitializer(EqualsValueClause(
+                                RefExpression(
+                                    ElementAccessExpression(IdentifierName("span1"))
+                                    .AddArgumentListArguments(Argument(
+                                        LiteralExpression(
+                                            SyntaxKind.NumericLiteralExpression,
+                                            Literal(0))))))))));
+
+                // dataLoader.LoadCapturedResources(span1);
+                statements.Add(
+                    ExpressionStatement(
+                        InvocationExpression(
+                            MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                IdentifierName("dataLoader"),
+                                IdentifierName("LoadCapturedResources")))
+                        .AddArgumentListArguments(Argument(IdentifierName("span1")))));
             }
 
             return statements;
@@ -224,8 +377,8 @@ namespace ComputeSharp.SourceGenerators
                     statements.Add(ExpressionStatement(
                         AssignmentExpression(
                             SyntaxKind.SimpleAssignmentExpression,
-                            ParseExpression($"Unsafe.Add(ref r0, {resourceOffset++})"),
-                            ParseExpression($"GraphicsResourceHelper.ValidateAndGetGpuDescriptorHandle(shader.{fieldSymbol.Name}, device)"))));
+                            ParseExpression($"Unsafe.Add(ref r1, {resourceOffset++})"),
+                            ParseExpression($"GraphicsResourceHelper.ValidateAndGetGpuDescriptorHandle({fieldSymbol.Name}, device)"))));
                 }
                 else if (HlslKnownTypes.IsKnownHlslType(typeName))
                 {
@@ -261,14 +414,14 @@ namespace ComputeSharp.SourceGenerators
                     rowTypeName = $"ComputeSharp.{elementName}{columns}",
                     rowLocalName = $"__{string.Join("_", fieldPath)}__row0";
 
-                statements.Add(ParseStatement($"ref {rowTypeName} {rowLocalName} = ref Unsafe.As<{typeName}, {rowTypeName}>(ref Unsafe.AsRef(in shader.{string.Join(".", fieldPath)}));"));
+                statements.Add(ParseStatement($"ref {rowTypeName} {rowLocalName} = ref Unsafe.As<{typeName}, {rowTypeName}>(ref Unsafe.AsRef(in {string.Join(".", fieldPath)}));"));
 
                 // Generate the loading code for each individual row, with proper alignment.
                 // This will result in the following (assuming Float2x3 m):
                 //
-                // ref Float3 __m__row0 = ref Unsafe.As<Float2x3, Float3>(ref Unsafe.AsRef(in shader.m));
-                // Unsafe.As<byte, Float3>(ref Unsafe.Add(ref r1, rawDataOffset)) =, Unsafe.Add(ref __m__row0, 0);
-                // Unsafe.As<byte, Float3>(ref Unsafe.Add(ref r1, rawDataOffset + 16)) = Unsafe.Add(ref __m__row0, 1);
+                // ref Float3 __m__row0 = ref Unsafe.As<Float2x3, Float3>(ref Unsafe.AsRef(in m));
+                // Unsafe.As<uint, Float3>(ref Unsafe.AddByteOffset(ref r0, (nint)rawDataOffset)) =, Unsafe.Add(ref __m__row0, 0);
+                // Unsafe.As<uint, Float3>(ref Unsafe.AddByteOffset(ref r0, (nint)(rawDataOffset + 16))) = Unsafe.Add(ref __m__row0, 1);
                 for (int j = 0; j < rows; j++)
                 {
                     rawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
@@ -276,7 +429,7 @@ namespace ComputeSharp.SourceGenerators
                     statements.Add(ExpressionStatement(
                         AssignmentExpression(
                             SyntaxKind.SimpleAssignmentExpression,
-                            ParseExpression($"Unsafe.As<byte, {rowTypeName}>(ref Unsafe.Add(ref r1, {rawDataOffset}))"),
+                            ParseExpression($"Unsafe.As<uint, {rowTypeName}>(ref Unsafe.AddByteOffset(ref r0, (nint){rawDataOffset}))"),
                             ParseExpression($"Unsafe.Add(ref {rowLocalName}, {j})"))));
 
                     rawDataOffset += fieldPack * columns;
@@ -296,8 +449,8 @@ namespace ComputeSharp.SourceGenerators
                 statements.Add(ExpressionStatement(
                     AssignmentExpression(
                         SyntaxKind.SimpleAssignmentExpression,
-                        ParseExpression($"Unsafe.As<byte, {typeName}>(ref Unsafe.Add(ref r1, {rawDataOffset}))"),
-                        ParseExpression($"shader.{string.Join(".", fieldPath)}"))));
+                        ParseExpression($"Unsafe.As<uint, {typeName}>(ref Unsafe.AddByteOffset(ref r0, (nint){rawDataOffset}))"),
+                        ParseExpression($"{string.Join(".", fieldPath)}"))));
 
                 rawDataOffset += fieldSize;
             }

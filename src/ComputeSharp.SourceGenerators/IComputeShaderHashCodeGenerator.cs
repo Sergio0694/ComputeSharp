@@ -91,7 +91,7 @@ namespace ComputeSharp.SourceGenerators
             //     [ExcludeFromCodeCoverage]
             //     [EditorBrowsable(EditorBrowsableState.Never)]
             //     [Obsolete("This method is not intended to be called directly by user code")]
-            //     public int GetDispatchId()
+            //     public readonly int GetDispatchId()
             //     {
             //         <BODY>
             //     }
