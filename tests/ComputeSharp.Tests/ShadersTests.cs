@@ -115,7 +115,7 @@ namespace ComputeSharp.Tests
                 shaderType,
                 texture => new SwapChain.Shaders.Compute.ContouredLayers(texture, 0, background),
                 texture => new ContouredLayers(0, background),
-                0.0007f);
+                0.000703f);
         }
 
         /// <summary>

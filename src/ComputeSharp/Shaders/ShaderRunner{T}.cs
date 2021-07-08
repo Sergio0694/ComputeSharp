@@ -214,7 +214,7 @@ namespace ComputeSharp.Shaders
             commandList.D3D12GraphicsCommandList->SetComputeRootSignature(pipelineData.D3D12RootSignature);
             commandList.D3D12GraphicsCommandList->SetPipelineState(pipelineData.D3D12PipelineState);
 
-            ComputeShaderDispatchDataLoader dataLoader = new(commandList.D3D12GraphicsCommandList);
+            PixelShaderDispatchDataLoader dataLoader = new(commandList.D3D12GraphicsCommandList);
 
             shader.LoadDispatchData(in dataLoader, device, x, y, 1);
 
