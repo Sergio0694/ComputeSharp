@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Commands;
-using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Shaders.Extensions;
 using ComputeSharp.Shaders.Renderer;
 using ComputeSharp.Shaders.Translation;
@@ -189,13 +188,12 @@ namespace ComputeSharp.Shaders
 
             // Create the shader key
             ShaderKey key = new(shader.GetDispatchId(), threadsX, threadsY, 1);
-            CachedShader<T> shaderData;
             PipelineData? pipelineData;
 
             lock (ShadersCache)
             {
                 // Get or preload the shader
-                if (!ShadersCache.TryGetValue(key, out shaderData))
+                if (!ShadersCache.TryGetValue(key, out CachedShader<T> shaderData))
                 {
                     LoadShader(threadsX, threadsY, 1, in shader, out shaderData);
 
@@ -216,28 +214,14 @@ namespace ComputeSharp.Shaders
             commandList.D3D12GraphicsCommandList->SetComputeRootSignature(pipelineData.D3D12RootSignature);
             commandList.D3D12GraphicsCommandList->SetPipelineState(pipelineData.D3D12PipelineState);
 
-            // Extract the dispatch data for the shader invocation
-            using DispatchData dispatchData = shaderData.Loader.GetDispatchData(device, in shader, x, y, 1);
+            ComputeShaderDispatchDataLoader dataLoader = new(commandList.D3D12GraphicsCommandList);
 
-            // Initialize the loop targets and the captured values
-            commandList.D3D12GraphicsCommandList->SetComputeRoot32BitConstants(dispatchData.Variables);
+            shader.LoadDispatchData(in dataLoader, device, x, y, 1);
 
             // Load the implicit output texture
             commandList.D3D12GraphicsCommandList->SetComputeRootDescriptorTable(
                 1,
                 ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuDescriptorHandle(device));
-
-            // Skip the last (missing) resource, as the internal counter is exceeding the number of explicit
-            // resources that the shader has actually captured (since it includes the target texture too).
-            // For the same reason, the target root descriptor table index is also offset by 2, as it needs
-            // to skip not only the constant buffer with capture values, but the implicit texture as well.
-            ReadOnlySpan<D3D12_GPU_DESCRIPTOR_HANDLE> resources = dispatchData.Resources[..^1];
-
-            for (int i = 0; i < resources.Length; i++)
-            {
-                // Load the captured buffers
-                commandList.D3D12GraphicsCommandList->SetComputeRootDescriptorTable((uint)i + 2, resources[i]);
-            }
 
             // Dispatch and wait for completion
             commandList.D3D12GraphicsCommandList->Dispatch((uint)groupsX, (uint)groupsY, 1);

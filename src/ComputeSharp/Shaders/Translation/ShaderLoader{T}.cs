@@ -19,12 +19,17 @@ namespace ComputeSharp.Shaders.Translation
     /// </summary>
     /// <typeparam name="T">The type of compute shader currently in use.</typeparam>
     internal sealed partial class ShaderLoader<T> : IShaderLoader
-        where T : struct
+        where T : struct, IShader<T>
     {
         /// <summary>
         /// The associated <see cref="IComputeShaderSourceAttribute"/> instance for the current shader type.
         /// </summary>
         private static readonly IComputeShaderSourceAttribute Attribute = IComputeShaderSourceAttribute.GetForType<T>();
+
+        /// <summary>
+        /// The <see cref="List{T}"/> of <see cref="FieldInfo"/> instances mapping the captured variables in the current shader.
+        /// </summary>
+        private readonly List<FieldInfo> capturedFields = new();
 
         /// <summary>
         /// The number of constant buffers to define in the shader.
@@ -151,8 +156,6 @@ namespace ComputeSharp.Shaders.Translation
             // the input shader once to avoid allocating it multiple times while processing the shader.
             @this.d3D12DescriptorRanges1 = @this.LoadFieldsInfo(shader);
 
-            @this.InitializeDispatchDataLoader();
-
             return @this;
         }
 
@@ -173,6 +176,9 @@ namespace ComputeSharp.Shaders.Translation
             {
                 this.definesInfo.Add(pair.Key, pair.Value);
             }
+
+            // Extract the computed count of 32 bit root constants to load
+            D3D12Root32BitConstantsCount = ((ComputeRoot32BitConstantsAttribute)typeof(T).GetMethod(nameof(IShader<T>.LoadDispatchData))!.ReturnTypeCustomAttributes.GetCustomAttributes(false)[0]).Count;
         }
 
         /// <summary>
@@ -200,7 +206,6 @@ namespace ComputeSharp.Shaders.Translation
                     (string hlslType, string hlslName) = Attribute.ImplicitTextureField!.Value;
 
                     this.hlslResourceInfo.Add(new HlslResourceInfo.ReadWrite(hlslType, hlslName, (int)this.readWriteBuffersCount++));
-                    this.totalResourceCount++;
 
                     break;
                 }
@@ -251,7 +256,6 @@ namespace ComputeSharp.Shaders.Translation
 
                 this.capturedFields.Add(fieldInfo);
                 this.hlslResourceInfo.Add(new HlslResourceInfo.Constant(hlslType, hlslName, (int)this.constantBuffersCount++));
-                this.totalResourceCount++;
             }
             else if (HlslKnownTypes.IsReadOnlyResourceType(fieldType))
             {
@@ -259,7 +263,6 @@ namespace ComputeSharp.Shaders.Translation
 
                 this.capturedFields.Add(fieldInfo);
                 this.hlslResourceInfo.Add(new HlslResourceInfo.ReadOnly(hlslType, hlslName, (int)this.readOnlyBuffersCount++));
-                this.totalResourceCount++;
             }
             else if (HlslKnownTypes.IsReadWriteResourceType(fieldType))
             {
@@ -267,7 +270,6 @@ namespace ComputeSharp.Shaders.Translation
 
                 this.capturedFields.Add(fieldInfo);
                 this.hlslResourceInfo.Add(new HlslResourceInfo.ReadWrite(hlslType, hlslName, (int)this.readWriteBuffersCount++));
-                this.totalResourceCount++;
             }
             else if (fieldInfo.GetValue(shader) is Delegate func)
             {

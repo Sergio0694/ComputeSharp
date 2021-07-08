@@ -1,6 +1,9 @@
 ﻿using System.Runtime.CompilerServices;
+using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Shaders.Translation.Interop;
+
+#pragma warning disable CS0618
 
 namespace ComputeSharp.Shaders.Translation.Models
 {
@@ -9,7 +12,7 @@ namespace ComputeSharp.Shaders.Translation.Models
     /// </summary>
     /// <typeparam name="T">The type of compute shader in use.</typeparam>
     internal readonly struct CachedShader<T>
-        where T : struct
+        where T : struct, IShader<T>
     {
         /// <summary>
         /// The <see cref="ShaderLoader{T}"/> instance with the shader metadata.

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using ComputeSharp.__Internals;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Shaders.Renderer;
 using ComputeSharp.Shaders.Translation;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
+
+#pragma warning disable CS0618
 
 namespace ComputeSharp.Interop
 {
@@ -28,7 +31,7 @@ namespace ComputeSharp.Interop
         /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
         /// </remarks>
         public static void GetShaderInfo<T>(out ShaderInfo shaderInfo)
-            where T : struct, IComputeShader
+            where T : struct, IComputeShader, IShader<T>
         {
             GetNonGenericShaderInfo(default(T), out shaderInfo);
         }
@@ -45,7 +48,7 @@ namespace ComputeSharp.Interop
         /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
         /// </remarks>
         public static unsafe void GetShaderInfo<T>(in T shader, out ShaderInfo shaderInfo)
-            where T : struct, IComputeShader
+            where T : struct, IComputeShader, IShader<T>
         {
             GetNonGenericShaderInfo(in shader, out shaderInfo);
         }
@@ -66,7 +69,7 @@ namespace ComputeSharp.Interop
         /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
         /// </remarks>
         public static void GetShaderInfo<T, TPixel>(out ShaderInfo shaderInfo)
-            where T : struct, IPixelShader<TPixel>
+            where T : struct, IPixelShader<TPixel>, IShader<T>
             where TPixel : unmanaged
         {
             GetNonGenericShaderInfo(default(T), out shaderInfo);
@@ -85,7 +88,7 @@ namespace ComputeSharp.Interop
         /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
         /// </remarks>
         public static unsafe void GetShaderInfo<T, TPixel>(in T shader, out ShaderInfo shaderInfo)
-            where T : struct, IPixelShader<TPixel>
+            where T : struct, IPixelShader<TPixel>, IShader<T>
             where TPixel : unmanaged
         {
             GetNonGenericShaderInfo(in shader, out shaderInfo);
@@ -98,7 +101,7 @@ namespace ComputeSharp.Interop
         /// <param name="shader">The input shader to retrieve info for.</param>
         /// <param name="shaderInfo">The resulting <see cref="ShaderInfo"/> instance.</param>
         private static unsafe void GetNonGenericShaderInfo<T>(in T shader, out ShaderInfo shaderInfo)
-            where T : struct
+            where T : struct, IShader<T>
         {
             ShaderLoader<T> shaderLoader = ShaderLoader<T>.Load(in shader);
 
