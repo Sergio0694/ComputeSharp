@@ -13,6 +13,7 @@ using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
+using ComputeSharp.Shaders.Dispatching;
 
 #pragma warning disable CS0618
 
@@ -120,7 +121,6 @@ namespace ComputeSharp.Shaders
             Guard.IsBetweenOrEqualTo(threadsZ, 1, 64, nameof(threadsZ));
             Guard.IsLessThanOrEqualTo(threadsX * threadsY * threadsZ, 1024, "threadsXYZ");
 
-            // Calculate the dispatch values
             int
                 groupsX = Math.DivRem(x, threadsX, out int modX) + (modX == 0 ? 0 : 1),
                 groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1),
@@ -130,15 +130,13 @@ namespace ComputeSharp.Shaders
             Guard.IsBetweenOrEqualTo(groupsY, 1, FX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
             Guard.IsBetweenOrEqualTo(groupsZ, 1, FX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
 
-            // Create the shader key
             ShaderKey key = new(shader.GetDispatchId(), threadsX, threadsY, threadsZ);
-            CachedShader<T> shaderData;
             PipelineData? pipelineData;
 
             lock (ShadersCache)
             {
                 // Get or preload the shader
-                if (!ShadersCache.TryGetValue(key, out shaderData))
+                if (!ShadersCache.TryGetValue(key, out CachedShader<T> shaderData))
                 {
                     LoadShader(threadsX, threadsY, threadsZ, in shader, out shaderData);
 
@@ -153,27 +151,15 @@ namespace ComputeSharp.Shaders
                 }
             }
 
-            // Create the commands list and set the pipeline state
             using CommandList commandList = new(device, D3D12_COMMAND_LIST_TYPE_COMPUTE);
 
             commandList.D3D12GraphicsCommandList->SetComputeRootSignature(pipelineData.D3D12RootSignature);
             commandList.D3D12GraphicsCommandList->SetPipelineState(pipelineData.D3D12PipelineState);
 
-            // Extract the dispatch data for the shader invocation
-            using DispatchData dispatchData = shaderData.Loader.GetDispatchData(device, in shader, x, y, z);
+            ComputeShaderDispatchDataLoader dataLoader = new(commandList.D3D12GraphicsCommandList);
 
-            // Initialize the loop targets and the captured values
-            commandList.D3D12GraphicsCommandList->SetComputeRoot32BitConstants(dispatchData.Variables);
+            shader.LoadDispatchData(in dataLoader, device, x, y, z);
 
-            ReadOnlySpan<D3D12_GPU_DESCRIPTOR_HANDLE> resources = dispatchData.Resources;
-
-            for (int i = 0; i < resources.Length; i++)
-            {
-                // Load the captured buffers
-                commandList.D3D12GraphicsCommandList->SetComputeRootDescriptorTable((uint)i + 1, resources[i]);
-            }
-
-            // Dispatch and wait for completion
             commandList.D3D12GraphicsCommandList->Dispatch((uint)groupsX, (uint)groupsY, (uint)groupsZ);
             commandList.ExecuteAndWaitForCompletion();
         }
