@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -16,6 +17,7 @@ using Microsoft.CodeAnalysis.Text;
 using static ComputeSharp.SourceGenerators.Helpers.SyntaxFactoryHelper;
 using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static Microsoft.CodeAnalysis.SymbolDisplayTypeQualificationStyle;
 
 #pragma warning disable CS0618
 
@@ -83,7 +85,7 @@ namespace ComputeSharp.SourceGenerators
             // Explore the syntax tree and extract the processed info
             var pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: nameof(IPixelShader<byte>) });
             var isComputeShader = pixelShaderSymbol is null;
-            var implicitTextureField = isComputeShader ? default((string, string)?) : (HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!), "__outputTexture");
+            var implicitTextureType = isComputeShader ? null : HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!);
             var processedMembers = GetProcessedFields(context, structDeclarationSymbol, discoveredTypes, isComputeShader).ToArray();
             var sharedBuffers = GetGroupSharedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
             var (entryPoint, processedMethods, forwardDeclarations, isSamplerUsed) = GetProcessedMethods(context, structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions, isComputeShader);
@@ -92,6 +94,22 @@ namespace ComputeSharp.SourceGenerators
             var processedConstants = GetProcessedConstants(constantDefinitions);
             var staticFields = GetStaticFields(context, semanticModel, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
 
+            GenerateRenderMethod(
+                context,
+                structDeclaration,
+                structDeclarationSymbol,
+                processedConstants,
+                staticFields,
+                processedTypes,
+                isComputeShader,
+                processedMembers,
+                implicitTextureType,
+                isSamplerUsed,
+                sharedBuffers,
+                forwardDeclarations,
+                processedMethods,
+                entryPoint);
+
             // Create the compilation unit with the source attribute
             var source =
                 CompilationUnit().AddUsings(
@@ -99,16 +117,16 @@ namespace ComputeSharp.SourceGenerators
                 AttributeList(SingletonSeparatedList(
                     Attribute(IdentifierName(typeof(IComputeShaderSourceAttribute).FullName)).AddArgumentListArguments(
                         AttributeArgument(TypeOfExpression(IdentifierName(structDeclarationSymbol.ToDisplayString()))),
-                        AttributeArgument(ArrayExpression(processedTypes)),
-                        AttributeArgument(ArrayExpression(implicitTextureField)),
-                        AttributeArgument(ArrayExpression(implicitSamplerField)),
-                        AttributeArgument(NestedArrayExpression(processedMembers)),
-                        AttributeArgument(ArrayExpression(forwardDeclarations)),
-                        AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(entryPoint))),
-                        AttributeArgument(ArrayExpression(processedMethods)),
-                        AttributeArgument(NestedArrayExpression(processedConstants)),
-                        AttributeArgument(NestedArrayExpression(staticFields)),
-                        AttributeArgument(NestedArrayExpression(sharedBuffers)))))
+                        AttributeArgument(ArrayExpression(Array.Empty<string>())), // TODO
+                        AttributeArgument(ArrayExpression(Array.Empty<string>())), // TODO
+                        AttributeArgument(ArrayExpression(Array.Empty<string>())), // TODO
+                        AttributeArgument(NestedArrayExpression(Array.Empty<string[]>())), // TODO
+                        AttributeArgument(ArrayExpression(Array.Empty<string>())), // TODO
+                        AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(""))), // TODO
+                        AttributeArgument(ArrayExpression(Array.Empty<string>())), // TODO
+                        AttributeArgument(NestedArrayExpression(Array.Empty<string[]>())), // TODO
+                        AttributeArgument(NestedArrayExpression(Array.Empty<string[]>())), // TODO
+                        AttributeArgument(NestedArrayExpression(Array.Empty<string[]>()))))) // TODO
                 .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                 .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
                 .NormalizeWhitespace()
@@ -127,7 +145,7 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="isComputeShader">Indicates whether or not <paramref name="structDeclarationSymbol"/> represents a compute shader.</param>
         /// <returns>A sequence of captured fields in <paramref name="structDeclarationSymbol"/>.</returns>
         [Pure]
-        private static IEnumerable<IEnumerable<string>> GetProcessedFields(
+        private static IEnumerable<(IFieldSymbol Symbol, string HlslName, string HlslType)> GetProcessedFields(
             GeneratorExecutionContext context,
             INamedTypeSymbol structDeclarationSymbol,
             ICollection<INamedTypeSymbol> types,
@@ -176,7 +194,8 @@ namespace ComputeSharp.SourceGenerators
 
                     continue;
                 }
-                else if (!HlslKnownTypes.IsKnownHlslType(metadataName))
+                else if (typeSymbol.IsUnmanagedType &&
+                         !HlslKnownTypes.IsKnownHlslType(metadataName))
                 {
                     // Track the type if it's a custom struct
                     types.Add(typeSymbol);
@@ -187,7 +206,7 @@ namespace ComputeSharp.SourceGenerators
                 _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
 
                 // Yield back the current mapping for the name (if the name used a reserved keyword)
-                yield return new[] { fieldSymbol.Name, mapping ?? fieldSymbol.Name, typeName };
+                yield return (fieldSymbol, mapping ?? fieldSymbol.Name, typeName);
             }
 
             // If the shader is a compute one (so no implicit output texture), it has to contain at least one resource
@@ -208,7 +227,7 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <returns>A sequence of static constant fields in <paramref name="structDeclarationSymbol"/>.</returns>
         [Pure]
-        private static IEnumerable<IEnumerable<string?>> GetStaticFields(
+        private static IEnumerable<(string Name, string TypeDeclaration, string? Assignment)> GetStaticFields(
             GeneratorExecutionContext context,
             SemanticModelProvider semanticModel,
             StructDeclarationSyntax structDeclaration,
@@ -256,7 +275,7 @@ namespace ComputeSharp.SourceGenerators
 
                     string? assignment = staticFieldRewriter.Visit(variableDeclarator)?.NormalizeWhitespace().ToFullString();
 
-                    yield return new[] { mapping ?? fieldSymbol.Name, typeDeclaration, assignment };
+                    yield return (mapping ?? fieldSymbol.Name, typeDeclaration, assignment);
                 }
             }
         }
@@ -295,7 +314,7 @@ namespace ComputeSharp.SourceGenerators
 
                     continue;
                 }
-                
+
                 int? bufferSize = (int?)attribute.ConstructorArguments.FirstOrDefault().Value;
 
                 string typeName = HlslKnownTypes.GetMappedElementName(typeSymbol);
@@ -414,14 +433,14 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <returns>A sequence of discovered constants to declare in the shader.</returns>
         [Pure]
-        internal static IEnumerable<IEnumerable<string>> GetProcessedConstants(IReadOnlyDictionary<IFieldSymbol, string> constantDefinitions)
+        internal static IEnumerable<(string Name, string Value)> GetProcessedConstants(IReadOnlyDictionary<IFieldSymbol, string> constantDefinitions)
         {
             foreach (var constant in constantDefinitions)
             {
                 var ownerTypeName = ((INamedTypeSymbol)constant.Key.ContainingSymbol).ToDisplayString().ToHlslIdentifierName();
                 var constantName = $"__{ownerTypeName}__{constant.Key.Name}";
 
-                yield return new string[] { constantName, constant.Value };
+                yield return (constantName, constant.Value);
             }
         }
 
@@ -474,6 +493,300 @@ namespace ComputeSharp.SourceGenerators
             {
                 context.ReportDiagnostic(DiagnosticDescriptors.PropertyDeclaration, propertySymbol);
             }
+        }
+
+        private static void GenerateRenderMethod(
+            GeneratorExecutionContext context,
+            StructDeclarationSyntax structDeclaration,
+            INamedTypeSymbol structDeclarationSymbol,
+            IEnumerable<(string Name, string Value)> definedConstants,
+            IEnumerable<(string Name, string TypeDeclaration, string? Assignment)> staticFields,
+            IEnumerable<string> declaredTypes,
+            bool isComputeShader,
+            IEnumerable<(IFieldSymbol Symbol, string HlslName, string HlslType)> instanceFields,
+            string? implicitTextureType,
+            bool isSamplerUsed,
+            IEnumerable<(string Name, string Type, int? Count)> sharedBuffers,
+            IEnumerable<string>? forwardDeclarations,
+            IEnumerable<string> processedMethods,
+            string executeMethod)
+        {
+            string namespaceName = structDeclarationSymbol.ContainingNamespace.ToDisplayString(new(typeQualificationStyle: NameAndContainingTypesAndNamespaces));
+            string structName = structDeclaration.Identifier.Text;
+            SyntaxTokenList structModifiers = structDeclaration.Modifiers;
+            IEnumerable<StatementSyntax> bodyStatements = GenerateRenderMethodBody(
+                definedConstants,
+                staticFields,
+                declaredTypes,
+                isComputeShader,
+                instanceFields,
+                implicitTextureType,
+                isSamplerUsed,
+                sharedBuffers,
+                forwardDeclarations,
+                processedMethods,
+                executeMethod);
+
+            // Create the partial shader type declaration with the hashcode interface method implementation.
+            // This code produces a struct declaration as follows:
+            //
+            // public struct ShaderType : IShader<ShaderType>
+            // {
+            //     [GeneratedCode("...", "...")]
+            //     [DebuggerNonUserCode]
+            //     [ExcludeFromCodeCoverage]
+            //     [EditorBrowsable(EditorBrowsableState.Never)]
+            //     [Obsolete("This method is not intended to be called directly by user code")]
+            //     public readonly void BuildHlslString(ref ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ)
+            //     {
+            //         <BODY>
+            //     }
+            // }
+            var structDeclarationSyntax =
+                StructDeclaration(structName).WithModifiers(structModifiers)
+                    .AddBaseListTypes(SimpleBaseType(
+                        GenericName(Identifier("IShader"))
+                        .AddTypeArgumentListArguments(IdentifierName(structName)))).AddMembers(
+                MethodDeclaration(
+                    PredefinedType(Token(SyntaxKind.VoidKeyword)),
+                    Identifier("BuildHlslString"))
+                .AddAttributeLists(
+                    AttributeList(SingletonSeparatedList(
+                        Attribute(IdentifierName("GeneratedCode")).AddArgumentListArguments(
+                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(IComputeShaderHashCodeGenerator).FullName))),
+                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(IComputeShaderHashCodeGenerator).Assembly.GetName().Version.ToString())))))),
+                    AttributeList(SingletonSeparatedList(Attribute(IdentifierName("DebuggerNonUserCode")))),
+                    AttributeList(SingletonSeparatedList(Attribute(IdentifierName("ExcludeFromCodeCoverage")))),
+                    AttributeList(SingletonSeparatedList(
+                        Attribute(IdentifierName("EditorBrowsable")).AddArgumentListArguments(
+                        AttributeArgument(ParseExpression("EditorBrowsableState.Never"))))),
+                    AttributeList(SingletonSeparatedList(
+                        Attribute(IdentifierName("Obsolete")).AddArgumentListArguments(
+                        AttributeArgument(LiteralExpression(
+                            SyntaxKind.StringLiteralExpression,
+                            Literal("This method is not intended to be used directly by user code")))))))
+                .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.ReadOnlyKeyword))
+                .AddParameterListParameters(
+                    Parameter(Identifier("builder")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(IdentifierName("ArrayPoolStringBuilder")),
+                    Parameter(Identifier("threadsX")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
+                    Parameter(Identifier("threadsY")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
+                    Parameter(Identifier("threadsZ")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))))
+                .WithBody(Block(bodyStatements)));
+
+            TypeDeclarationSyntax typeDeclarationSyntax = structDeclarationSyntax;
+
+            // Add all parent types in ascending order, if any
+            foreach (var parentType in structDeclaration.Ancestors().OfType<TypeDeclarationSyntax>())
+            {
+                typeDeclarationSyntax = parentType
+                    .WithMembers(SingletonList<MemberDeclarationSyntax>(typeDeclarationSyntax))
+                    .WithConstraintClauses(List<TypeParameterConstraintClauseSyntax>())
+                    .WithBaseList(null)
+                    .WithAttributeLists(List<AttributeListSyntax>())
+                    .WithoutTrivia();
+            }
+
+            // Create a static method to create the combined hashcode for a given shader type.
+            // This code takes a block syntax and produces a compilation unit as follows:
+            //
+            // using System;
+            // using System.CodeDom.Compiler;
+            // using System.ComponentModel;
+            // using System.Diagnostics;
+            // using System.Diagnostics.CodeAnalysis;
+            // using ComputeSharp.__Internals;
+            //
+            // #pragma warning disable
+            //
+            // namespace <SHADER_NAMESPACE>
+            // {
+            //     <SHADER_DECLARATION>
+            // }
+            var source =
+                CompilationUnit().AddUsings(
+                UsingDirective(IdentifierName("System")),
+                UsingDirective(IdentifierName("System.CodeDom.Compiler")),
+                UsingDirective(IdentifierName("System.ComponentModel")),
+                UsingDirective(IdentifierName("System.Diagnostics")),
+                UsingDirective(IdentifierName("System.Diagnostics.CodeAnalysis")),
+                UsingDirective(IdentifierName("ComputeSharp.__Internals"))).AddMembers(
+                NamespaceDeclaration(IdentifierName(namespaceName)).AddMembers(typeDeclarationSyntax)
+                .WithNamespaceKeyword(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.NamespaceKeyword, TriviaList())))
+                .NormalizeWhitespace()
+                .ToFullString();
+
+            // Add the method source attribute
+            context.AddSource("PREVIEW" + structDeclarationSymbol.GetGeneratedFileName(), SourceText.From(source, Encoding.UTF8));
+        }
+
+        private static IEnumerable<StatementSyntax> GenerateRenderMethodBody(
+            IEnumerable<(string Name, string Value)> definedConstants,
+            IEnumerable<(string Name, string TypeDeclaration, string? Assignment)> staticFields,
+            IEnumerable<string> declaredTypes,
+            bool isComputeShader,
+            IEnumerable<(IFieldSymbol Symbol, string HlslName, string HlslType)> instanceFields,
+            string? implicitTextureType,
+            bool isSamplerUsed,
+            IEnumerable<(string Name, string Type, int? Count)> sharedBuffers,
+            IEnumerable<string>? forwardDeclarations,
+            IEnumerable<string> processedMethods,
+            string executeMethod)
+        {
+            // Header
+            yield return ParseStatement("builder.AppendLine(\"// ================================================\");");
+            yield return ParseStatement("builder.AppendLine(\"//                  AUTO GENERATED\");");
+            yield return ParseStatement("builder.AppendLine(\"// ================================================\");");
+            yield return ParseStatement("builder.AppendLine(\"// This shader was created by ComputeSharp.\");");
+            yield return ParseStatement("builder.AppendLine(\"// See: https://github.com/Sergio0694/ComputeSharp.\");");
+
+            // Group size constants
+            yield return ParseStatement("builder.AppendLine();");
+            yield return ParseStatement("builder.Append(\"#define __GroupSize__get_X \");");
+            yield return ParseStatement("builder.AppendLine(threadsX.ToString());");
+            yield return ParseStatement("builder.Append(\"#define __GroupSize__get_Y \");");
+            yield return ParseStatement("builder.AppendLine(threadsY.ToString());");
+            yield return ParseStatement("builder.Append(\"#define __GroupSize__get_Z \");");
+            yield return ParseStatement("builder.AppendLine(threadsZ.ToString());");
+
+            // Define declarations
+            foreach (var (name, value) in definedConstants)
+            {
+                yield return ParseStatement($"builder.AppendLine(\"#define {name} {value}\");");
+            }
+
+            // Static fields
+            if (staticFields.Any())
+            {
+                yield return ParseStatement("builder.AppendLine();");
+
+                foreach (var field in staticFields)
+                {
+                    if (field.Assignment is string assignment)
+                    {
+                        yield return ParseStatement($"builder.AppendLine(\"{field.TypeDeclaration} {field.Name} = {assignment};\");");
+                    }
+                    else
+                    {
+                        yield return ParseStatement($"builder.AppendLine(\"{field.TypeDeclaration} {field.Name};\");");
+                    }
+                }
+            }
+
+            // Declared types
+            foreach (var type in declaredTypes)
+            {
+                yield return ParseStatement("builder.AppendLine();");
+                yield return ParseStatement($"builder.AppendLine(\"{type}\");");
+            }
+
+            // Captured variables
+            yield return ParseStatement("builder.AppendLine();");
+            yield return ParseStatement("builder.AppendLine(\"cbuffer _ : register(b0)\");");
+            yield return ParseStatement("builder.AppendLine('{');");
+            yield return ParseStatement("builder.AppendLine(\"    uint __x;\");");
+            yield return ParseStatement("builder.AppendLine(\"    uint __y;\");");
+
+            if (isComputeShader)
+            {
+                yield return ParseStatement("builder.AppendLine(\"    uint __z;\");");
+            }
+
+            // User-defined values
+            foreach (var instanceField in instanceFields)
+            {
+                if (instanceField.Symbol.Type.IsUnmanagedType)
+                {
+                    yield return ParseStatement($"builder.AppendLine(\"    {instanceField.HlslType} {instanceField.HlslName};\");");
+                }
+            }
+
+            yield return ParseStatement("builder.AppendLine('}');");
+
+            int
+                constantBuffersCount = 0,
+                readOnlyBuffersCount = 0,
+                readWriteBuffersCount = 0;
+
+            // Optional implicit texture field
+            if (!isComputeShader)
+            {
+                yield return ParseStatement("builder.AppendLine();");
+                yield return ParseStatement($"builder.AppendLine(\"{implicitTextureType} __outputTexture : register(u{readWriteBuffersCount++});\");");
+            }
+
+            // Optional sampler field
+            if (isSamplerUsed)
+            {
+                yield return ParseStatement("builder.AppendLine();");
+                yield return ParseStatement("builder.AppendLine(\"SamplerState __sampler : register(s);\");");
+            }
+
+            // Resources
+            foreach (var instanceField in instanceFields)
+            {
+                string metadataName = instanceField.Symbol.GetFullMetadataName();
+
+                if (HlslKnownTypes.IsConstantBufferType(metadataName))
+                {
+                    yield return ParseStatement("builder.AppendLine();");
+                    yield return ParseStatement($"builder.AppendLine(\"cbuffer _{instanceField.HlslName} : register(b{constantBuffersCount++})\");");
+                    yield return ParseStatement("builder.AppendLine('{');");
+                    yield return ParseStatement($"builder.AppendLine(\"    {instanceField.HlslType} {instanceField.HlslName}[2];\");");
+                    yield return ParseStatement("builder.AppendLine('}');");
+                }
+                else if (HlslKnownTypes.IsReadOnlyTypedResourceType(metadataName))
+                {
+                    yield return ParseStatement("builder.AppendLine();");
+                    yield return ParseStatement($"builder.AppendLine(\"{instanceField.HlslType} : register(t{readOnlyBuffersCount++});\");");
+                }
+                else if (HlslKnownTypes.IsTypedResourceType(metadataName))
+                {
+                    yield return ParseStatement("builder.AppendLine();");
+                    yield return ParseStatement($"builder.AppendLine(\"{instanceField.HlslType} : register(u{readWriteBuffersCount++});\");");
+                }
+            }
+
+            // Shared buffers
+            foreach (var sharedBuffer in sharedBuffers)
+            {
+                object count = (object?)sharedBuffer.Count ?? "threadsX * threadsY * threadsZ";
+
+                yield return ParseStatement("builder.AppendLine();");
+                yield return ParseStatement($"builder.AppendLine(\"groupshared {sharedBuffer.Type} {sharedBuffer.Name} [{count}];\");");
+            }
+
+            // Forward declarations
+            if (forwardDeclarations is not null)
+            {
+                foreach (var forwardDeclaration in forwardDeclarations)
+                {
+                    yield return ParseStatement("builder.AppendLine();");
+                    yield return ParseStatement($"builder.AppendLine(\"{forwardDeclaration}\");");
+                }
+            }
+
+            // Captured methods
+            if (processedMethods is not null)
+            {
+                foreach (var method in processedMethods)
+                {
+                    yield return ParseStatement("builder.AppendLine();");
+                    yield return
+                        ExpressionStatement(
+                            InvocationExpression(
+                                MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, IdentifierName("builder"), IdentifierName("AppendLine")))
+                                .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(method)))));
+                }
+            }
+
+            // Entry point
+            yield return ParseStatement("builder.AppendLine();");
+            yield return ParseStatement("builder.AppendLine(\"[NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]\");");
+            yield return
+                ExpressionStatement(
+                    InvocationExpression(
+                        MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, IdentifierName("builder"), IdentifierName("AppendLine")))
+                        .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(executeMethod)))));
         }
     }
 }

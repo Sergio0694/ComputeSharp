@@ -17,9 +17,9 @@ namespace ComputeSharp.Shaders.Translation.Interop
         /// Creates a new <see cref="IDxcBlobObject"/> instance with the specified parameters.
         /// </summary>
         /// <param name="dxcBlob">The <see cref="IDxcBlob"/> instance to wrap.</param>
-        public IDxcBlobObject(ComPtr<IDxcBlob> dxcBlob)
+        public IDxcBlobObject(IDxcBlob* dxcBlob)
         {
-            this.dxcBlob = dxcBlob;
+            this.dxcBlob = new ComPtr<IDxcBlob>(dxcBlob);
         }
 
         /// <summary>

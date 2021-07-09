@@ -27,11 +27,6 @@ namespace ComputeSharp.Shaders.Translation
         private static readonly IComputeShaderSourceAttribute Attribute = IComputeShaderSourceAttribute.GetForType<T>();
 
         /// <summary>
-        /// The <see cref="List{T}"/> of <see cref="FieldInfo"/> instances mapping the captured variables in the current shader.
-        /// </summary>
-        private readonly List<FieldInfo> capturedFields = new();
-
-        /// <summary>
         /// The number of constant buffers to define in the shader.
         /// </summary>
         /// <remarks>
@@ -254,21 +249,18 @@ namespace ComputeSharp.Shaders.Translation
             {
                 d3D12DescriptorRanges1.Add(new D3D12_DESCRIPTOR_RANGE1(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, this.constantBuffersCount));
 
-                this.capturedFields.Add(fieldInfo);
                 this.hlslResourceInfo.Add(new HlslResourceInfo.Constant(hlslType, hlslName, (int)this.constantBuffersCount++));
             }
             else if (HlslKnownTypes.IsReadOnlyResourceType(fieldType))
             {
                 d3D12DescriptorRanges1.Add(new D3D12_DESCRIPTOR_RANGE1(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, this.readOnlyBuffersCount));
 
-                this.capturedFields.Add(fieldInfo);
                 this.hlslResourceInfo.Add(new HlslResourceInfo.ReadOnly(hlslType, hlslName, (int)this.readOnlyBuffersCount++));
             }
             else if (HlslKnownTypes.IsReadWriteResourceType(fieldType))
             {
                 d3D12DescriptorRanges1.Add(new D3D12_DESCRIPTOR_RANGE1(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, this.readWriteBuffersCount));
 
-                this.capturedFields.Add(fieldInfo);
                 this.hlslResourceInfo.Add(new HlslResourceInfo.ReadWrite(hlslType, hlslName, (int)this.readWriteBuffersCount++));
             }
             else if (fieldInfo.GetValue(shader) is Delegate func)
@@ -289,7 +281,6 @@ namespace ComputeSharp.Shaders.Translation
             }
             else
             {
-                this.capturedFields.Add(fieldInfo);
                 this.fieldsInfo.Add(new CapturedFieldInfo(hlslType, hlslName));
             }
         }

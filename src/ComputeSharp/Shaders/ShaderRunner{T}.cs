@@ -237,19 +237,19 @@ namespace ComputeSharp.Shaders
         /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
         /// <param name="shaderData">The <see cref="CachedShader{T}"/> instance to return with the cached shader data.</param>
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private static void LoadShader(int threadsX, int threadsY, int threadsZ, in T shader, out CachedShader<T> shaderData)
+        private static unsafe void LoadShader(int threadsX, int threadsY, int threadsZ, in T shader, out CachedShader<T> shaderData)
         {
-            // Load the input shader
-            ShaderLoader<T> shaderLoader = ShaderLoader<T>.Load(in shader);
+            ArrayPoolStringBuilder builder = ArrayPoolStringBuilder.Create();
 
-            // Render the loaded shader
-            using var shaderSource = HlslShaderRenderer.Render(threadsX, threadsY, threadsZ, shaderLoader);
+            shader.BuildHlslString(ref builder, threadsX, threadsY, threadsZ);
 
-            // Compile the loaded shader to HLSL bytecode
-            IDxcBlobObject shaderBytecode = new(ShaderCompiler.Instance.CompileShader(shaderSource.WrittenSpan));
+            using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.CompileShader(builder.WrittenSpan);
 
-            // Get the cached shader data
-            shaderData = new CachedShader<T>(shaderLoader, shaderBytecode);
+            builder.Dispose();
+
+            IDxcBlobObject shaderBytecode = new(dxcBlobBytecode.Get());
+
+            shaderData = new CachedShader<T>(null!, shaderBytecode); // TODO
         }
 
         /// <summary>

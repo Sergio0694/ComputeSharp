@@ -102,6 +102,16 @@ namespace ComputeSharp.SourceGenerators.Mappings
         }
 
         /// <summary>
+        /// Checks whether or not a given type name matches a constant buffer type.
+        /// </summary>
+        /// <param name="typeName">The input type name to check.</param>
+        /// <returns>Whether or not <paramref name="typeName"/> represents a constant buffer type.</returns>
+        public static bool IsConstantBufferType(string typeName)
+        {
+            return typeName == "ComputeSharp.ConstantBuffer`1";
+        }
+
+        /// <summary>
         /// Checks whether or not a given type name matches a structured buffer type.
         /// </summary>
         /// <param name="typeName">The input type name to check.</param>
@@ -113,6 +123,27 @@ namespace ComputeSharp.SourceGenerators.Mappings
                 case "ComputeSharp.ConstantBuffer`1":
                 case "ComputeSharp.ReadOnlyBuffer`1":
                 case "ComputeSharp.ReadWriteBuffer`1":
+                    return true;
+                default: return false;
+            };
+        }
+
+        /// <summary>
+        /// Checks whether or not a given type name matches a readonly typed resource type.
+        /// </summary>
+        /// <param name="typeName">The input type name to check.</param>
+        /// <returns>Whether or not <paramref name="typeName"/> represents a readonly typed resource type.</returns>
+        public static bool IsReadOnlyTypedResourceType(string typeName)
+        {
+            switch (typeName)
+            {
+                case "ComputeSharp.ReadOnlyBuffer`1":
+                case "ComputeSharp.ReadOnlyTexture2D`1":
+                case "ComputeSharp.ReadOnlyTexture2D`2":
+                case "ComputeSharp.ReadOnlyTexture3D`1":
+                case "ComputeSharp.ReadOnlyTexture3D`2":
+                case "ComputeSharp.IReadOnlyTexture2D`1":
+                case "ComputeSharp.IReadOnlyTexture3D`1":
                     return true;
                 default: return false;
             };

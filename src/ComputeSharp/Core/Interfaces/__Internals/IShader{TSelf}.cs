@@ -17,7 +17,7 @@ namespace ComputeSharp.__Internals
         /// </summary>
         /// <returns>The unique dispatch identifier for the shader.</returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("This interface is not intended to be used directly by user code")]
+        [Obsolete("This method is not intended to be used directly by user code")]
         int GetDispatchId();
 
         /// <summary>
@@ -33,5 +33,16 @@ namespace ComputeSharp.__Internals
         [Obsolete("This method is not intended to be called directly by user code")]
         void LoadDispatchData<TDataLoader>(in TDataLoader dataLoader, GraphicsDevice device, int x, int y, int z)
             where TDataLoader : struct, IDispatchDataLoader;
+
+        /// <summary>
+        /// Builds the HLSL source code for the current shader instance.
+        /// </summary>
+        /// <param name="builder">The target <see cref="ArrayPoolStringBuilder"/> instance to write the HLSL source to.</param>
+        /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
+        /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
+        /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("This method is not intended to be called directly by user code")]
+        void BuildHlslString(ref ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ);
     }
 }
