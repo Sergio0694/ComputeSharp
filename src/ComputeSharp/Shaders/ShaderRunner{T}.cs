@@ -237,9 +237,7 @@ namespace ComputeSharp.Shaders
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static unsafe void LoadShader(int threadsX, int threadsY, int threadsZ, in T shader, out CachedShader shaderData)
         {
-            ArrayPoolStringBuilder builder = ArrayPoolStringBuilder.Create();
-
-            shader.BuildHlslString(ref builder, threadsX, threadsY, threadsZ);
+            shader.BuildHlslString(out ArrayPoolStringBuilder builder, threadsX, threadsY, threadsZ);
 
             using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.CompileShader(builder.WrittenSpan);
 

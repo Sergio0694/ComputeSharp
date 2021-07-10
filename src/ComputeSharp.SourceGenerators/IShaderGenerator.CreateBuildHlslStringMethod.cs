@@ -84,7 +84,7 @@ namespace ComputeSharp.SourceGenerators
                     Identifier("BuildHlslString"))
                 .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.ReadOnlyKeyword))
                 .AddParameterListParameters(
-                    Parameter(Identifier("builder")).AddModifiers(Token(SyntaxKind.RefKeyword)).WithType(IdentifierName("ArrayPoolStringBuilder")),
+                    Parameter(Identifier("builder")).AddModifiers(Token(SyntaxKind.OutKeyword)).WithType(IdentifierName("ArrayPoolStringBuilder")),
                     Parameter(Identifier("threadsX")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
                     Parameter(Identifier("threadsY")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
                     Parameter(Identifier("threadsZ")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))))
@@ -463,6 +463,22 @@ namespace ComputeSharp.SourceGenerators
             IEnumerable<string> processedMethods,
             string executeMethod)
         {
+            // builder = ArrayPoolStringBuilder.Create(1024);
+            yield return
+                ExpressionStatement(
+                    AssignmentExpression(
+                        SyntaxKind.SimpleAssignmentExpression,
+                        IdentifierName("builder"),
+                        InvocationExpression(
+                            MemberAccessExpression(
+                                SyntaxKind.SimpleMemberAccessExpression,
+                                IdentifierName("ArrayPoolStringBuilder"),
+                                IdentifierName("Create")))
+                        .AddArgumentListArguments(
+                            Argument(LiteralExpression(
+                                SyntaxKind.NumericLiteralExpression,
+                                Literal(1024))))));
+
             // Header
             yield return ParseStatement("builder.AppendLine(\"// ================================================\");");
             yield return ParseStatement("builder.AppendLine(\"//                  AUTO GENERATED\");");

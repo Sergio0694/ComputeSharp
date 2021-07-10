@@ -48,12 +48,12 @@ namespace ComputeSharp.__Internals
         /// <summary>
         /// Builds the HLSL source code for the current shader instance.
         /// </summary>
-        /// <param name="builder">The target <see cref="ArrayPoolStringBuilder"/> instance to write the HLSL source to.</param>
+        /// <param name="builder">The resulting <see cref="ArrayPoolStringBuilder"/> instance containing the HLSL source.</param>
         /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
         /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
         /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("This method is not intended to be called directly by user code")]
-        void BuildHlslString(ref ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ);
+        void BuildHlslString(out ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ);
     }
 }

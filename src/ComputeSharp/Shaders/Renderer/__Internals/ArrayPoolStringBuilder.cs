@@ -25,13 +25,14 @@ namespace ComputeSharp.__Internals
         /// <summary>
         /// Creates a new <see cref="ArrayPoolStringBuilder"/> instance ready to use.
         /// </summary>
+        /// <param name="sizeHint">The size hint for the internal buffer to allocate.</param>
         /// <returns>A new <see cref="ArrayPoolStringBuilder"/> instance with default values.</returns>
         [Pure]
-        public static ArrayPoolStringBuilder Create()
+        public static ArrayPoolStringBuilder Create(int sizeHint)
         {
             ArrayPoolStringBuilder builder;
 
-            builder.array = ArrayPool<char>.Shared.Rent(1024);
+            builder.array = ArrayPool<char>.Shared.Rent(sizeHint);
             builder.index = 0;
 
             return builder;

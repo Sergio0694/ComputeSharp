@@ -102,11 +102,12 @@ namespace ComputeSharp.Interop
         private static unsafe void GetNonGenericShaderInfo<T>(in T shader, out ShaderInfo shaderInfo)
             where T : struct, IShader<T>
         {
-            ArrayPoolStringBuilder shaderSource = ArrayPoolStringBuilder.Create();
-
-            shader.BuildHlslString(ref shaderSource, 1, 1, 1);
+            shader.BuildHlslString(out ArrayPoolStringBuilder shaderSource, 1, 1, 1);
 
             using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.CompileShader(shaderSource.WrittenSpan);
+
+            shaderSource.Dispose();
+
             using ComPtr<IDxcUtils> dxcUtils = default;
 
             Guid dxcLibraryClsid = FX.CLSID_DxcLibrary;
