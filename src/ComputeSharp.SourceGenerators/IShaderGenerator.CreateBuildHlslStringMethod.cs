@@ -584,7 +584,7 @@ namespace ComputeSharp.SourceGenerators
             AppendCharacterAndLF('}');
 
             int
-                constantBuffersCount = 0,
+                constantBuffersCount = 1,
                 readOnlyBuffersCount = 0,
                 readWriteBuffersCount = 0;
 
