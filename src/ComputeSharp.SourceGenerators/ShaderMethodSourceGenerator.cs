@@ -72,8 +72,8 @@ namespace ComputeSharp.SourceGenerators
 
             // Explore the syntax tree and extract the processed info
             var (invokeMethod, processedMethods) = GetProcessedMethods(context, methodDeclaration, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
-            var processedTypes = IComputeShaderSourceGenerator.GetProcessedTypes(discoveredTypes).ToArray();
-            var processedConstants = IComputeShaderSourceGenerator.GetProcessedConstants(constantDefinitions);
+            var processedTypes = IShaderGenerator.GetProcessedTypes(discoveredTypes).ToArray();
+            var processedConstants = IShaderGenerator.GetProcessedConstants(constantDefinitions);
 
             // Create the compilation unit with the source attribute
             var source =

@@ -42,7 +42,7 @@ namespace ComputeSharp.SourceGenerators
                 }
                 catch
                 {
-                    context.ReportDiagnostic(IComputeShaderDataLoaderGeneratorError, item.StructDeclaration, item.StructSymbol);
+                    context.ReportDiagnostic(IShaderGeneratorError, item.StructDeclaration, item.StructSymbol);
                 }
             }
         }
@@ -76,8 +76,8 @@ namespace ComputeSharp.SourceGenerators
             {
                 AttributeList(SingletonSeparatedList(
                     Attribute(IdentifierName("GeneratedCode")).AddArgumentListArguments(
-                        AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(IComputeShaderDataLoaderGenerator).FullName))),
-                        AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(IComputeShaderDataLoaderGenerator).Assembly.GetName().Version.ToString())))))),
+                        AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(IShaderGenerator).FullName))),
+                        AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(IShaderGenerator).Assembly.GetName().Version.ToString())))))),
                 AttributeList(SingletonSeparatedList(Attribute(IdentifierName("DebuggerNonUserCode")))),
                 AttributeList(SingletonSeparatedList(Attribute(IdentifierName("ExcludeFromCodeCoverage")))),
                 AttributeList(SingletonSeparatedList(
