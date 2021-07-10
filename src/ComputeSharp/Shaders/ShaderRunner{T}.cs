@@ -157,7 +157,7 @@ namespace ComputeSharp.Shaders
 
             ComputeShaderDispatchDataLoader dataLoader = new(commandList.D3D12GraphicsCommandList);
 
-            shader.LoadDispatchData(in dataLoader, device, x, y, z);
+            shader.LoadDispatchData(ref dataLoader, device, x, y, z);
 
             commandList.D3D12GraphicsCommandList->Dispatch((uint)groupsX, (uint)groupsY, (uint)groupsZ);
             commandList.ExecuteAndWaitForCompletion();
@@ -216,7 +216,7 @@ namespace ComputeSharp.Shaders
 
             PixelShaderDispatchDataLoader dataLoader = new(commandList.D3D12GraphicsCommandList);
 
-            shader.LoadDispatchData(in dataLoader, device, x, y, 1);
+            shader.LoadDispatchData(ref dataLoader, device, x, y, 1);
 
             // Load the implicit output texture
             commandList.D3D12GraphicsCommandList->SetComputeRootDescriptorTable(

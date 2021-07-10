@@ -98,7 +98,7 @@ namespace ComputeSharp.SourceGenerators
             //     [EditorBrowsable(EditorBrowsableState.Never)]
             //     [Obsolete("This method is not intended to be called directly by user code")]
             //     [return: ComputeRoot32BitConstants(42)]
-            //     public readonly void LoadDispatchData<TDataLoader>(in TDataLoader dataLoader, GraphicsDevice device, int x, int y, int z)
+            //     public readonly void LoadDispatchData<TDataLoader>(ref TDataLoader loader, GraphicsDevice device, int x, int y, int z)
             //         where TDataLoader : struct, IDispatchDataLoader
             //     {
             //         <BODY>
@@ -122,8 +122,8 @@ namespace ComputeSharp.SourceGenerators
                 .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.ReadOnlyKeyword))
                 .AddTypeParameterListParameters(TypeParameter(Identifier("TDataLoader")))
                 .AddParameterListParameters(
-                    Parameter(Identifier("dataLoader"))
-                        .AddModifiers(Token(SyntaxKind.InKeyword))
+                    Parameter(Identifier("loader"))
+                        .AddModifiers(Token(SyntaxKind.RefKeyword))
                         .WithType(IdentifierName("TDataLoader")),
                     Parameter(Identifier("device")).WithType(IdentifierName("GraphicsDevice")),
                     Parameter(Identifier("x")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
@@ -288,13 +288,13 @@ namespace ComputeSharp.SourceGenerators
                                         SyntaxKind.NumericLiteralExpression,
                                         Literal(0))))))))));
 
-            // dataLoader.LoadCapturedValues(span0);
+            // loader.LoadCapturedValues(span0);
             statements.Add(
                 ExpressionStatement(
                     InvocationExpression(
                         MemberAccessExpression(
                             SyntaxKind.SimpleMemberAccessExpression,
-                            IdentifierName("dataLoader"),
+                            IdentifierName("loader"),
                             IdentifierName("LoadCapturedValues")))
                     .AddArgumentListArguments(Argument(IdentifierName("span0")))));
 
@@ -329,13 +329,13 @@ namespace ComputeSharp.SourceGenerators
                                             SyntaxKind.NumericLiteralExpression,
                                             Literal(0))))))))));
 
-                // dataLoader.LoadCapturedResources(span1);
+                // loader.LoadCapturedResources(span1);
                 statements.Add(
                     ExpressionStatement(
                         InvocationExpression(
                             MemberAccessExpression(
                                 SyntaxKind.SimpleMemberAccessExpression,
-                                IdentifierName("dataLoader"),
+                                IdentifierName("loader"),
                                 IdentifierName("LoadCapturedResources")))
                         .AddArgumentListArguments(Argument(IdentifierName("span1")))));
             }
@@ -367,7 +367,7 @@ namespace ComputeSharp.SourceGenerators
                     typeName = fieldSymbol.Type.GetFullMetadataName();
 
                 // Disambiguates the name of target fields against the current input parameters
-                if (fieldName is "dataLoader" or "device" or "x" or "y" or "z")
+                if (fieldName is "loader" or "device" or "x" or "y" or "z")
                 {
                     fieldName = $"this.{fieldName}";
                 }
