@@ -35,7 +35,7 @@ namespace ComputeSharp.SourceGenerators
                         .AddModifiers(Token(SyntaxKind.RefKeyword))
                         .WithType(IdentifierName("TMetadataLoader")),
                     Parameter(Identifier("result"))
-                        .AddModifiers(Token(SyntaxKind.RefKeyword))
+                        .AddModifiers(Token(SyntaxKind.OutKeyword))
                         .WithType(IdentifierName(typeof(IntPtr).Name)))
                 .AddConstraintClauses(
                     TypeParameterConstraintClause(IdentifierName("TMetadataLoader"))
@@ -74,7 +74,10 @@ namespace ComputeSharp.SourceGenerators
                                     ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(
                                         LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(5))))))))));
 
-            // Span<ResourceDescriptor> span1 = stackalloc ResourceDescriptor[<COUNT>];
+            // Compute the total number of resources (discovered ones and the implicit target texture, if present)
+            int totalResourcesCount = discoveredResources.Count + (implicitTextureType is not null ? 1 : 0);
+
+            // Span<ResourceDescriptor> span1 = stackalloc ResourceDescriptor[<ADJUSTED_COUNT>];
             yield return
                 LocalDeclarationStatement(
                     VariableDeclaration(
@@ -87,12 +90,12 @@ namespace ComputeSharp.SourceGenerators
                                 ArrayType(IdentifierName("ResourceDescriptor"))
                                 .AddRankSpecifiers(
                                     ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(
-                                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(discoveredResources.Count))))))))));
+                                        LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(totalResourcesCount))))))))));
 
             // ref byte r0 = ref span0[0];
             yield return
                 LocalDeclarationStatement(
-                    VariableDeclaration(RefType(PredefinedType(Token(SyntaxKind.ULongKeyword))))
+                    VariableDeclaration(RefType(PredefinedType(Token(SyntaxKind.ByteKeyword))))
                     .AddVariables(
                         VariableDeclarator(Identifier("r0"))
                         .WithInitializer(EqualsValueClause(

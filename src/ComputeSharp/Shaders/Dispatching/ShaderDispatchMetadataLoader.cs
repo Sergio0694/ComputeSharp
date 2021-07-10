@@ -31,16 +31,17 @@ namespace ComputeSharp.Shaders.Dispatching
         }
 
         /// <inheritdoc/>
-        public void LoadMetadataHandle(ReadOnlySpan<byte> serializedMetadata, ReadOnlySpan<ResourceDescriptor> resourceDescriptors, out IntPtr result)
+        public unsafe void LoadMetadataHandle(ReadOnlySpan<byte> serializedMetadata, ReadOnlySpan<ResourceDescriptor> resourceDescriptors, out IntPtr result)
         {
             Guard.HasSizeEqualTo(serializedMetadata, 5, nameof(serializedMetadata));
 
-            using ComPtr<ID3D12RootSignature> d3D12RootSignature = this.d3D12Device->CreateRootSignature(
-                MemoryMarshal.Read<int>(serializedMetadata),
-                MemoryMarshal.Cast<ResourceDescriptor, D3D12_DESCRIPTOR_RANGE1>(resourceDescriptors),
-                MemoryMarshal.Read<bool>(serializedMetadata[4..]));
-
-            result = *(IntPtr*)&d3D12RootSignature;
+            fixed (IntPtr* p = &result)
+            {
+                *(ComPtr<ID3D12RootSignature>*)p = this.d3D12Device->CreateRootSignature(
+                    MemoryMarshal.Read<int>(serializedMetadata),
+                    MemoryMarshal.Cast<ResourceDescriptor, D3D12_DESCRIPTOR_RANGE1>(resourceDescriptors),
+                    MemoryMarshal.Read<bool>(serializedMetadata[4..]));
+            }
         }
     }
 }
