@@ -463,8 +463,191 @@ namespace ComputeSharp.SourceGenerators
             IEnumerable<string> processedMethods,
             string executeMethod)
         {
-            // builder = ArrayPoolStringBuilder.Create(1024);
-            yield return
+            List<StatementSyntax> statements = new();
+            int sizeHint = 64;
+
+            void AppendLF()
+            {
+                statements.Add(ParseStatement("builder.AppendLine();"));
+                sizeHint += 1;
+            }
+
+            void AppendLine(string text)
+            {
+                statements.Add(
+                    ExpressionStatement(
+                        InvocationExpression(
+                            MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, IdentifierName("builder"), IdentifierName("Append")))
+                            .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(text))))));
+                sizeHint += text.Length;
+            }
+
+            void AppendLineAndLF(string text)
+            {
+                statements.Add(
+                    ExpressionStatement(
+                        InvocationExpression(
+                            MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, IdentifierName("builder"), IdentifierName("AppendLine")))
+                            .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(text))))));
+                sizeHint += text.Length + 1;
+            }
+
+            void AppendCharacterAndLF(char c)
+            {
+                statements.Add(ParseStatement($"builder.AppendLine('{c}');"));
+                sizeHint += 2;
+            }
+
+            // Header
+            AppendLineAndLF("// ================================================");
+            AppendLineAndLF("//                  AUTO GENERATED");
+            AppendLineAndLF("// ================================================");
+            AppendLineAndLF("// This shader was created by ComputeSharp.");
+            AppendLineAndLF("// See: https://github.com/Sergio0694/ComputeSharp.");
+
+            // Group size constants
+            AppendLF();
+            AppendLine("#define __GroupSize__get_X ");
+            statements.Add(ParseStatement("builder.AppendLine(threadsX.ToString());"));
+            AppendLine("#define __GroupSize__get_Y ");
+            statements.Add(ParseStatement("builder.AppendLine(threadsY.ToString());"));
+            AppendLine("#define __GroupSize__get_Z ");
+            statements.Add(ParseStatement("builder.AppendLine(threadsZ.ToString());"));
+
+            // Define declarations
+            foreach (var (name, value) in definedConstants)
+            {
+                AppendLineAndLF($"#define {name} {value}");
+            }
+
+            // Static fields
+            if (staticFields.Any())
+            {
+                AppendLF();
+
+                foreach (var field in staticFields)
+                {
+                    if (field.Assignment is string assignment)
+                    {
+                        AppendLineAndLF($"{field.TypeDeclaration} {field.Name} = {assignment};");
+                    }
+                    else
+                    {
+                        AppendLineAndLF($"{field.TypeDeclaration} {field.Name};");
+                    }
+                }
+            }
+
+            // Declared types
+            foreach (var type in declaredTypes)
+            {
+                AppendLF();
+                AppendLineAndLF(type);
+            }
+
+            // Captured variables
+            AppendLF();
+            AppendLineAndLF("cbuffer _ : register(b0)");
+            AppendCharacterAndLF('{');
+            AppendLineAndLF("    uint __x;");
+            AppendLineAndLF("    uint __y;");
+
+            if (isComputeShader)
+            {
+                AppendLineAndLF("    uint __z;");
+            }
+
+            // User-defined values
+            foreach (var (fieldSymbol, fieldName, fieldType) in instanceFields)
+            {
+                if (fieldSymbol.Type.IsUnmanagedType)
+                {
+                    AppendLineAndLF($"    {fieldType} {fieldName};");
+                }
+            }
+
+            AppendCharacterAndLF('}');
+
+            int
+                constantBuffersCount = 0,
+                readOnlyBuffersCount = 0,
+                readWriteBuffersCount = 0;
+
+            // Optional implicit texture field
+            if (!isComputeShader)
+            {
+                AppendLF();
+                AppendLineAndLF($"{implicitTextureType} __outputTexture : register(u{readWriteBuffersCount++});");
+            }
+
+            // Optional sampler field
+            if (isSamplerUsed)
+            {
+                AppendLF();
+                AppendLineAndLF("SamplerState __sampler : register(s);");
+            }
+
+            // Resources
+            foreach (var (fieldSymbol, fieldName, fieldType) in instanceFields)
+            {
+                string metadataName = fieldSymbol.GetFullMetadataName();
+
+                if (HlslKnownTypes.IsConstantBufferType(metadataName))
+                {
+                    AppendLF();
+                    AppendLineAndLF($"cbuffer _{fieldName} : register(b{constantBuffersCount++})");
+                    AppendCharacterAndLF('{');
+                    AppendLineAndLF($"    {fieldType} {fieldName}[2];");
+                    AppendCharacterAndLF('}');
+                }
+                else if (HlslKnownTypes.IsReadOnlyTypedResourceType(metadataName))
+                {
+                    AppendLF();
+                    AppendLineAndLF($"{fieldType} : register(t{readOnlyBuffersCount++});");
+                }
+                else if (HlslKnownTypes.IsTypedResourceType(metadataName))
+                {
+                    AppendLF();
+                    AppendLineAndLF($"{fieldType} : register(u{readWriteBuffersCount++});");
+                }
+            }
+
+            // Shared buffers
+            foreach (var (bufferName, bufferType, bufferCount) in sharedBuffers)
+            {
+                object count = (object?)bufferCount ?? "threadsX * threadsY * threadsZ";
+
+                AppendLF();
+                AppendLineAndLF($"groupshared {bufferType} {bufferName} [{count}];");
+            }
+
+            // Forward declarations
+            if (forwardDeclarations is not null)
+            {
+                foreach (var forwardDeclaration in forwardDeclarations)
+                {
+                    AppendLF();
+                    AppendLineAndLF(forwardDeclaration);
+                }
+            }
+
+            // Captured methods
+            if (processedMethods is not null)
+            {
+                foreach (var method in processedMethods)
+                {
+                    AppendLF();
+                    AppendLineAndLF(method);
+                }
+            }
+
+            // Entry point
+            AppendLF();
+            AppendLineAndLF("[NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]");
+            AppendLineAndLF(executeMethod);
+
+            // builder = ArrayPoolStringBuilder.Create(<SIZE_HINT>);
+            statements.Insert(0,
                 ExpressionStatement(
                     AssignmentExpression(
                         SyntaxKind.SimpleAssignmentExpression,
@@ -477,163 +660,9 @@ namespace ComputeSharp.SourceGenerators
                         .AddArgumentListArguments(
                             Argument(LiteralExpression(
                                 SyntaxKind.NumericLiteralExpression,
-                                Literal(1024))))));
+                                Literal(sizeHint)))))));
 
-            // Header
-            yield return ParseStatement("builder.AppendLine(\"// ================================================\");");
-            yield return ParseStatement("builder.AppendLine(\"//                  AUTO GENERATED\");");
-            yield return ParseStatement("builder.AppendLine(\"// ================================================\");");
-            yield return ParseStatement("builder.AppendLine(\"// This shader was created by ComputeSharp.\");");
-            yield return ParseStatement("builder.AppendLine(\"// See: https://github.com/Sergio0694/ComputeSharp.\");");
-
-            // Group size constants
-            yield return ParseStatement("builder.AppendLine();");
-            yield return ParseStatement("builder.Append(\"#define __GroupSize__get_X \");");
-            yield return ParseStatement("builder.AppendLine(threadsX.ToString());");
-            yield return ParseStatement("builder.Append(\"#define __GroupSize__get_Y \");");
-            yield return ParseStatement("builder.AppendLine(threadsY.ToString());");
-            yield return ParseStatement("builder.Append(\"#define __GroupSize__get_Z \");");
-            yield return ParseStatement("builder.AppendLine(threadsZ.ToString());");
-
-            // Define declarations
-            foreach (var (name, value) in definedConstants)
-            {
-                yield return ParseStatement($"builder.AppendLine(\"#define {name} {value}\");");
-            }
-
-            // Static fields
-            if (staticFields.Any())
-            {
-                yield return ParseStatement("builder.AppendLine();");
-
-                foreach (var field in staticFields)
-                {
-                    if (field.Assignment is string assignment)
-                    {
-                        yield return ParseStatement($"builder.AppendLine(\"{field.TypeDeclaration} {field.Name} = {assignment};\");");
-                    }
-                    else
-                    {
-                        yield return ParseStatement($"builder.AppendLine(\"{field.TypeDeclaration} {field.Name};\");");
-                    }
-                }
-            }
-
-            // Declared types
-            foreach (var type in declaredTypes)
-            {
-                yield return ParseStatement("builder.AppendLine();");
-                yield return ParseStatement($"builder.AppendLine(\"{type}\");");
-            }
-
-            // Captured variables
-            yield return ParseStatement("builder.AppendLine();");
-            yield return ParseStatement("builder.AppendLine(\"cbuffer _ : register(b0)\");");
-            yield return ParseStatement("builder.AppendLine('{');");
-            yield return ParseStatement("builder.AppendLine(\"    uint __x;\");");
-            yield return ParseStatement("builder.AppendLine(\"    uint __y;\");");
-
-            if (isComputeShader)
-            {
-                yield return ParseStatement("builder.AppendLine(\"    uint __z;\");");
-            }
-
-            // User-defined values
-            foreach (var (fieldSymbol, fieldName, fieldType) in instanceFields)
-            {
-                if (fieldSymbol.Type.IsUnmanagedType)
-                {
-                    yield return ParseStatement($"builder.AppendLine(\"    {fieldType} {fieldName};\");");
-                }
-            }
-
-            yield return ParseStatement("builder.AppendLine('}');");
-
-            int
-                constantBuffersCount = 0,
-                readOnlyBuffersCount = 0,
-                readWriteBuffersCount = 0;
-
-            // Optional implicit texture field
-            if (!isComputeShader)
-            {
-                yield return ParseStatement("builder.AppendLine();");
-                yield return ParseStatement($"builder.AppendLine(\"{implicitTextureType} __outputTexture : register(u{readWriteBuffersCount++});\");");
-            }
-
-            // Optional sampler field
-            if (isSamplerUsed)
-            {
-                yield return ParseStatement("builder.AppendLine();");
-                yield return ParseStatement("builder.AppendLine(\"SamplerState __sampler : register(s);\");");
-            }
-
-            // Resources
-            foreach (var (fieldSymbol, fieldName, fieldType) in instanceFields)
-            {
-                string metadataName = fieldSymbol.GetFullMetadataName();
-
-                if (HlslKnownTypes.IsConstantBufferType(metadataName))
-                {
-                    yield return ParseStatement("builder.AppendLine();");
-                    yield return ParseStatement($"builder.AppendLine(\"cbuffer _{fieldName} : register(b{constantBuffersCount++})\");");
-                    yield return ParseStatement("builder.AppendLine('{');");
-                    yield return ParseStatement($"builder.AppendLine(\"    {fieldType} {fieldName}[2];\");");
-                    yield return ParseStatement("builder.AppendLine('}');");
-                }
-                else if (HlslKnownTypes.IsReadOnlyTypedResourceType(metadataName))
-                {
-                    yield return ParseStatement("builder.AppendLine();");
-                    yield return ParseStatement($"builder.AppendLine(\"{fieldType} : register(t{readOnlyBuffersCount++});\");");
-                }
-                else if (HlslKnownTypes.IsTypedResourceType(metadataName))
-                {
-                    yield return ParseStatement("builder.AppendLine();");
-                    yield return ParseStatement($"builder.AppendLine(\"{fieldType} : register(u{readWriteBuffersCount++});\");");
-                }
-            }
-
-            // Shared buffers
-            foreach (var (bufferName, bufferType, bufferCount) in sharedBuffers)
-            {
-                object count = (object?)bufferCount ?? "threadsX * threadsY * threadsZ";
-
-                yield return ParseStatement("builder.AppendLine();");
-                yield return ParseStatement($"builder.AppendLine(\"groupshared {bufferType} {bufferName} [{count}];\");");
-            }
-
-            // Forward declarations
-            if (forwardDeclarations is not null)
-            {
-                foreach (var forwardDeclaration in forwardDeclarations)
-                {
-                    yield return ParseStatement("builder.AppendLine();");
-                    yield return ParseStatement($"builder.AppendLine(\"{forwardDeclaration}\");");
-                }
-            }
-
-            // Captured methods
-            if (processedMethods is not null)
-            {
-                foreach (var method in processedMethods)
-                {
-                    yield return ParseStatement("builder.AppendLine();");
-                    yield return
-                        ExpressionStatement(
-                            InvocationExpression(
-                                MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, IdentifierName("builder"), IdentifierName("AppendLine")))
-                                .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(method)))));
-                }
-            }
-
-            // Entry point
-            yield return ParseStatement("builder.AppendLine();");
-            yield return ParseStatement("builder.AppendLine(\"[NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]\");");
-            yield return
-                ExpressionStatement(
-                    InvocationExpression(
-                        MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, IdentifierName("builder"), IdentifierName("AppendLine")))
-                        .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(executeMethod)))));
+            return statements;
         }
     }
 }
