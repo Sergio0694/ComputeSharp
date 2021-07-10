@@ -25,8 +25,11 @@ namespace ComputeSharp.Tests
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
 
             using var original = Image.Load<ImageSharpRgba32>(Path.Combine(path, "city.jpg"));
-            using var cpu = original.Clone(c => c.BokehBlur(80, 2, 3));
-            using var gpu = original.Clone(c => c.ApplyProcessor(new HlslBokehBlurProcessor(device.Get(), 80, 2)));
+            
+            original.Mutate(c => c.Resize(1920, 1080));
+
+            using var cpu = original.Clone(c => c.BokehBlur(40, 2, 3));
+            using var gpu = original.Clone(c => c.ApplyProcessor(new HlslBokehBlurProcessor(device.Get(), 40, 2)));
 
             string
                 expectedPath = Path.Combine(path, "city_bokeh_cpu.jpg"),
@@ -47,6 +50,9 @@ namespace ComputeSharp.Tests
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
 
             using var original = Image.Load<ImageSharpRgba32>(Path.Combine(path, "city.jpg"));
+
+            original.Mutate(c => c.Resize(1920, 1080));
+
             using var cpu = original.Clone(c => c.GaussianBlur(30f));
             using var gpu = original.Clone(c => c.ApplyProcessor(new HlslGaussianBlurProcessor(device.Get(), 90)));
 
@@ -57,7 +63,7 @@ namespace ComputeSharp.Tests
             cpu.Save(expectedPath);
             gpu.Save(actualPath);
 
-            ImagingTests.TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.000003f);
+            ImagingTests.TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.0000046f);
         }
     }
 }
