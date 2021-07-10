@@ -20,7 +20,7 @@ namespace ComputeSharp.SourceGenerators
         private static partial MethodDeclarationSyntax CreateLoadDispatchDataMethod(
             GeneratorExecutionContext context,
             INamedTypeSymbol structDeclarationSymbol,
-            out IEnumerable<string> discoveredResources,
+            out IReadOnlyCollection<string> discoveredResources,
             out int root32BitConstantsCount)
         {
             // This code produces a method declaration as follows:
@@ -53,14 +53,14 @@ namespace ComputeSharp.SourceGenerators
         }
 
         /// <summary>
-        /// Gets a sequence of statements to load the dispatch data for a given shader
+        /// Gets a sequence of statements to load the dispatch data for a given shader.
         /// </summary>
         /// <param name="context">The current generator context in use.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-        /// <param name="discoveredResources">The sequence of discovered resources in the current shader type.</param>
+        /// <param name="discoveredResources">The collection of discovered resources in the current shader type.</param>
         /// <param name="root32BitConstantsCount">The total number of 32 bit root constants being loaded for the current shader type.</param>
         /// <returns>The sequence of <see cref="StatementSyntax"/> instances to load shader dispatch data.</returns>
-        private static IEnumerable<StatementSyntax> GetDispatchDataLoadingStatements(GeneratorExecutionContext context, INamedTypeSymbol structDeclarationSymbol, out IEnumerable<string> discoveredResources, out int root32BitConstantsCount)
+        private static IEnumerable<StatementSyntax> GetDispatchDataLoadingStatements(GeneratorExecutionContext context, INamedTypeSymbol structDeclarationSymbol, out IReadOnlyCollection<string> discoveredResources, out int root32BitConstantsCount)
         {
             List<StatementSyntax> statements = new();
             List<string> resources = new();

@@ -59,8 +59,8 @@ namespace ComputeSharp.SourceGenerators
             MethodDeclarationSyntax
                 getDispatchIdMethod = CreateGetDispatchIdMethod(structDeclarationSymbol),
                 loadDispatchDataMethod = CreateLoadDispatchDataMethod(context, structDeclarationSymbol, out var discoveredResources, out int root32BitConstants),
-                buildHlslStringMethod = CreateBuildHlslStringMethod(context, structDeclaration, structDeclarationSymbol, out bool isSamplerUsed),
-                loadDispatchMetadataMethod = CreateLoadDispatchMetadataMethod(context, structDeclaration, structDeclarationSymbol, discoveredResources, root32BitConstants, isSamplerUsed);
+                buildHlslStringMethod = CreateBuildHlslStringMethod(context, structDeclaration, structDeclarationSymbol, out string? implicitTextureType, out bool isSamplerUsed),
+                loadDispatchMetadataMethod = CreateLoadDispatchMetadataMethod(implicitTextureType, discoveredResources, root32BitConstants, isSamplerUsed);
 
             // Reorder the method declarations to respect the order in the interface definition
             MethodDeclarationSyntax[] methods =
@@ -169,13 +169,13 @@ namespace ComputeSharp.SourceGenerators
         /// </summary>
         /// <param name="context">The input <see cref="GeneratorExecutionContext"/> instance to use.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
-        /// <param name="discoveredResources">The sequence of discovered resources in the current shader type.</param>
+        /// <param name="discoveredResources">The collection of discovered resources in the current shader type.</param>
         /// <param name="root32BitConstantsCount">The total number of 32 bit root constants being loaded for the current shader type.</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchDataMethod</c> method.</returns>
         private static partial MethodDeclarationSyntax CreateLoadDispatchDataMethod(
             GeneratorExecutionContext context,
             INamedTypeSymbol structDeclarationSymbol,
-            out IEnumerable<string> discoveredResources,
+            out IReadOnlyCollection<string> discoveredResources,
             out int root32BitConstantsCount);
 
         /// <summary>
@@ -184,29 +184,27 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="context">The input <see cref="GeneratorExecutionContext"/> instance to use.</param>
         /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> node to process.</param>
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
+        /// <param name="implicitTextureType">The implicit texture type, if available (if the shader is a pixel shader).</param>
         /// <param name="isSamplerUsed">Whether or not the current shader type requires a static sampler to be available.</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslString</c> method.</returns>
         private static partial MethodDeclarationSyntax CreateBuildHlslStringMethod(
             GeneratorExecutionContext context,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
+            out string? implicitTextureType,
             out bool isSamplerUsed);
 
         /// <summary>
         /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchMetadata</c> method.
         /// </summary>
-        /// <param name="context">The input <see cref="GeneratorExecutionContext"/> instance to use.</param>
-        /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> node to process.</param>
-        /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
-        /// <param name="discoveredResources">The sequence of resources used by the shader.</param>
+        /// <param name="implicitTextureType">The implicit texture type, if available (if the shader is a pixel shader).</param>
+        /// <param name="discoveredResources">The collection of resources used by the shader.</param>
         /// <param name="root32BitConstantsCount">The total number of 32 bit root constants being loaded for the shader.</param>
         /// <param name="isSamplerUsed">Whether or not the shader requires a static sampler to be available.</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchMetadata</c> method.</returns>
         private static partial MethodDeclarationSyntax CreateLoadDispatchMetadataMethod(
-            GeneratorExecutionContext context,
-            StructDeclarationSyntax structDeclaration,
-            INamedTypeSymbol structDeclarationSymbol,
-            IEnumerable<string> discoveredResources,
+            string? implicitTextureType,
+            IReadOnlyCollection<string> discoveredResources,
             int root32BitConstantsCount,
             bool isSamplerUsed);
     }

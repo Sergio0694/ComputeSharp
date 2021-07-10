@@ -24,6 +24,7 @@ namespace ComputeSharp.SourceGenerators
             GeneratorExecutionContext context,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
+            out string? implicitTextureType,
             out bool isSamplerUsed)
         {
             // Properties are not supported
@@ -44,7 +45,7 @@ namespace ComputeSharp.SourceGenerators
             var semanticModel = new SemanticModelProvider(context.Compilation);
             var pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: nameof(IPixelShader<byte>) });
             var isComputeShader = pixelShaderSymbol is null;
-            var implicitTextureType = isComputeShader ? null : HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!);
+            var pixelShaderTextureType = isComputeShader ? null : HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!);
             var processedMembers = GetProcessedFields(context, structDeclarationSymbol, discoveredTypes, isComputeShader).ToArray();
             var sharedBuffers = GetGroupSharedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
             var (entryPoint, processedMethods, forwardDeclarations, accessesStaticSampler) = GetProcessedMethods(context, structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions, isComputeShader);
@@ -61,13 +62,14 @@ namespace ComputeSharp.SourceGenerators
                 processedTypes,
                 isComputeShader,
                 processedMembers,
-                implicitTextureType,
+                pixelShaderTextureType,
                 accessesStaticSampler,
                 sharedBuffers,
                 forwardDeclarations,
                 processedMethods,
                 entryPoint);
 
+            implicitTextureType = pixelShaderTextureType;
             isSamplerUsed = accessesStaticSampler;
 
             // This code produces a method declaration as follows:
