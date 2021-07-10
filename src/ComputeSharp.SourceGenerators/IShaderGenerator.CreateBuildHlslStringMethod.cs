@@ -450,6 +450,21 @@ namespace ComputeSharp.SourceGenerators
             }
         }
 
+        /// <summary>
+        /// Produces the series of statements to build the current HLSL source.
+        /// </summary>
+        /// <param name="definedConstants">The sequence of defined constants for the shader.</param>
+        /// <param name="staticFields">The sequence of static fields referenced by the shader.</param>
+        /// <param name="declaredTypes">The sequence of declared types used by the shader.</param>
+        /// <param name="isComputeShader">Whether or not the current shader is a compute shader (or a pixel shader).</param>
+        /// <param name="instanceFields">The sequence of instance fields for the current shader.</param>
+        /// <param name="implicitTextureType">The type of the implicit target texture, if present.</param>
+        /// <param name="isSamplerUsed">Whether the static sampler is used by the shader.</param>
+        /// <param name="sharedBuffers">The sequence of shared buffers declared by the shader.</param>
+        /// <param name="forwardDeclarations">The sequence of forward method declarations.</param>
+        /// <param name="processedMethods">The sequence of processed methods used by the shader.</param>
+        /// <param name="executeMethod">The body of the entry point of the shader.</param>
+        /// <returns>The series of statements to build the HLSL source to compile to execute the current shader.</returns>
         private static IEnumerable<StatementSyntax> GenerateRenderMethodBody(
             IEnumerable<(string Name, string Value)> definedConstants,
             IEnumerable<(string Name, string TypeDeclaration, string? Assignment)> staticFields,
