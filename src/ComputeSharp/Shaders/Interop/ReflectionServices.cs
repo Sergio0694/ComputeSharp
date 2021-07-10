@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using ComputeSharp.__Internals;
 using ComputeSharp.Core.Extensions;
-using ComputeSharp.Shaders.Renderer;
 using ComputeSharp.Shaders.Translation;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
@@ -103,13 +102,13 @@ namespace ComputeSharp.Interop
         private static unsafe void GetNonGenericShaderInfo<T>(in T shader, out ShaderInfo shaderInfo)
             where T : struct, IShader<T>
         {
-            ShaderLoader<T> shaderLoader = ShaderLoader<T>.Load(in shader);
+            ArrayPoolStringBuilder shaderSource = ArrayPoolStringBuilder.Create();
 
-            using var shaderSource = HlslShaderRenderer.Render(1, 1, 1, shaderLoader);
+            shader.BuildHlslString(ref shaderSource, 1, 1, 1);
 
             using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.CompileShader(shaderSource.WrittenSpan);
-
             using ComPtr<IDxcUtils> dxcUtils = default;
+
             Guid dxcLibraryClsid = FX.CLSID_DxcLibrary;
 
             FX.DxcCreateInstance(&dxcLibraryClsid, FX.__uuidof<IDxcUtils>(), dxcUtils.GetVoidAddressOf()).Assert();
