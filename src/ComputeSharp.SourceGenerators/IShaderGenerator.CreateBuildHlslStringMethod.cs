@@ -605,7 +605,7 @@ namespace ComputeSharp.SourceGenerators
             // Resources
             foreach (var (fieldSymbol, fieldName, fieldType) in instanceFields)
             {
-                string metadataName = fieldSymbol.GetFullMetadataName();
+                string metadataName = fieldSymbol.Type.GetFullMetadataName();
 
                 if (HlslKnownTypes.IsConstantBufferType(metadataName))
                 {
@@ -618,12 +618,12 @@ namespace ComputeSharp.SourceGenerators
                 else if (HlslKnownTypes.IsReadOnlyTypedResourceType(metadataName))
                 {
                     AppendLF();
-                    AppendLineAndLF($"{fieldType} : register(t{readOnlyBuffersCount++});");
+                    AppendLineAndLF($"{fieldType} {fieldName} : register(t{readOnlyBuffersCount++});");
                 }
                 else if (HlslKnownTypes.IsTypedResourceType(metadataName))
                 {
                     AppendLF();
-                    AppendLineAndLF($"{fieldType} : register(u{readWriteBuffersCount++});");
+                    AppendLineAndLF($"{fieldType} {fieldName} : register(u{readWriteBuffersCount++});");
                 }
             }
 
