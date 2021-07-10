@@ -4,7 +4,7 @@ using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
 using static TerraFX.Interop.D3D12_DESCRIPTOR_RANGE_FLAGS;
 
-#pragma warning disable IDE0052
+#pragma warning disable IDE0052, CS0414
 
 namespace ComputeSharp.__Internals
 {

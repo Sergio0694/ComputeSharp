@@ -5,7 +5,6 @@ using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Shaders.Dispatching;
 using ComputeSharp.Shaders.Extensions;
 using ComputeSharp.Shaders.Translation;
-using ComputeSharp.Shaders.Translation.Interop;
 using ComputeSharp.Shaders.Translation.Models;
 using ComputeSharp.__Internals;
 using Microsoft.Toolkit.Diagnostics;
@@ -27,7 +26,7 @@ namespace ComputeSharp.Shaders
         /// <summary>
         /// The mapping used to cache and reuse compiled shaders.
         /// </summary>
-        private static readonly Dictionary<ShaderKey, CachedShader<T>> ShadersCache = new();
+        private static readonly Dictionary<ShaderKey, CachedShader> ShadersCache = new();
 
         /// <summary>
         /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
@@ -134,7 +133,7 @@ namespace ComputeSharp.Shaders
             lock (ShadersCache)
             {
                 // Get or preload the shader
-                if (!ShadersCache.TryGetValue(key, out CachedShader<T> shaderData))
+                if (!ShadersCache.TryGetValue(key, out CachedShader? shaderData))
                 {
                     LoadShader(threadsX, threadsY, threadsZ, in shader, out shaderData);
 
@@ -192,7 +191,7 @@ namespace ComputeSharp.Shaders
             lock (ShadersCache)
             {
                 // Get or preload the shader
-                if (!ShadersCache.TryGetValue(key, out CachedShader<T> shaderData))
+                if (!ShadersCache.TryGetValue(key, out CachedShader? shaderData))
                 {
                     LoadShader(threadsX, threadsY, 1, in shader, out shaderData);
 
@@ -234,9 +233,9 @@ namespace ComputeSharp.Shaders
         /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
         /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
         /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-        /// <param name="shaderData">The <see cref="CachedShader{T}"/> instance to return with the cached shader data.</param>
+        /// <param name="shaderData">The <see cref="CachedShader"/> instance to return with the cached shader data.</param>
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private static unsafe void LoadShader(int threadsX, int threadsY, int threadsZ, in T shader, out CachedShader<T> shaderData)
+        private static unsafe void LoadShader(int threadsX, int threadsY, int threadsZ, in T shader, out CachedShader shaderData)
         {
             ArrayPoolStringBuilder builder = ArrayPoolStringBuilder.Create();
 
@@ -246,19 +245,17 @@ namespace ComputeSharp.Shaders
 
             builder.Dispose();
 
-            IDxcBlobObject shaderBytecode = new(dxcBlobBytecode.Get());
-
-            shaderData = new CachedShader<T>(null!, shaderBytecode); // TODO
+            shaderData = new CachedShader(dxcBlobBytecode.Get());
         }
 
         /// <summary>
         /// Creates and caches a <see cref="PipelineData"/> instance for a given shader.
         /// </summary>
         /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
-        /// <param name="shaderData">The <see cref="CachedShader{T}"/> instance with the data on the loaded shader.</param>
+        /// <param name="shaderData">The <see cref="CachedShader"/> instance with the data on the loaded shader.</param>
         /// <param name="pipelineData">The resulting <see cref="PipelineData"/> instance to use to run the shader.</param>
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private static unsafe void CreatePipelineData(GraphicsDevice device, in CachedShader<T> shaderData, out PipelineData pipelineData)
+        private static unsafe void CreatePipelineData(GraphicsDevice device, CachedShader shaderData, out PipelineData pipelineData)
         {
             using ComPtr<ID3D12RootSignature> d3D12RootSignature = default;
 
@@ -266,7 +263,7 @@ namespace ComputeSharp.Shaders
 
             default(T).LoadDispatchMetadata(ref metadataLoader, out *(IntPtr*)&d3D12RootSignature);
             
-            using ComPtr<ID3D12PipelineState> d3D12PipelineState = device.D3D12Device->CreateComputePipelineState(d3D12RootSignature.Get(), shaderData.Bytecode.D3D12ShaderBytecode);
+            using ComPtr<ID3D12PipelineState> d3D12PipelineState = device.D3D12Device->CreateComputePipelineState(d3D12RootSignature.Get(), shaderData.D3D12ShaderBytecode);
 
             pipelineData = new PipelineData(d3D12RootSignature.Get(), d3D12PipelineState.Get());
 
