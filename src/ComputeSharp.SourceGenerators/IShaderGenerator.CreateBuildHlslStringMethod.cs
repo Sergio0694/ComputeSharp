@@ -228,7 +228,7 @@ namespace ComputeSharp.SourceGenerators
                         constantDefinitions,
                         context);
 
-                    string? assignment = staticFieldRewriter.Visit(variableDeclarator)?.NormalizeWhitespace().ToFullString();
+                    string? assignment = staticFieldRewriter.Visit(variableDeclarator)?.NormalizeWhitespace(eol: "\n").ToFullString();
 
                     yield return (mapping ?? fieldSymbol.Name, typeDeclaration, assignment);
                 }
@@ -350,8 +350,8 @@ namespace ComputeSharp.SourceGenerators
                 // Emit the extracted local functions first
                 foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
                 {
-                    methods.Add(localFunction.Value.NormalizeWhitespace().ToFullString());
-                    declarations.Add(localFunction.Value.AsDefinition().NormalizeWhitespace().ToFullString());
+                    methods.Add(localFunction.Value.NormalizeWhitespace(eol: "\n").ToFullString());
+                    declarations.Add(localFunction.Value.AsDefinition().NormalizeWhitespace(eol: "\n").ToFullString());
                 }
 
                 // If the method is the shader entry point, do additional processing
@@ -363,20 +363,20 @@ namespace ComputeSharp.SourceGenerators
                         false => new ExecuteMethodRewriter.Pixel(shaderSourceRewriter).Visit(processedMethod)!
                     };
 
-                    entryPoint = processedMethod.NormalizeWhitespace().ToFullString();
+                    entryPoint = processedMethod.NormalizeWhitespace(eol: "\n").ToFullString();
                 }
                 else
                 {
-                    methods.Add(processedMethod.NormalizeWhitespace().ToFullString());
-                    declarations.Add(processedMethod.AsDefinition().NormalizeWhitespace().ToFullString());
+                    methods.Add(processedMethod.NormalizeWhitespace(eol: "\n").ToFullString());
+                    declarations.Add(processedMethod.AsDefinition().NormalizeWhitespace(eol: "\n").ToFullString());
                 }
             }
 
             // Process static methods as well
             foreach (MethodDeclarationSyntax staticMethod in staticMethods.Values)
             {
-                methods.Add(staticMethod.NormalizeWhitespace().ToFullString());
-                declarations.Add(staticMethod.AsDefinition().NormalizeWhitespace().ToFullString());
+                methods.Add(staticMethod.NormalizeWhitespace(eol: "\n").ToFullString());
+                declarations.Add(staticMethod.AsDefinition().NormalizeWhitespace(eol: "\n").ToFullString());
             }
 
             return (entryPoint!, methods, declarations, isSamplerUsed);
@@ -431,7 +431,7 @@ namespace ComputeSharp.SourceGenerators
                 // Insert the trailing ; right after the closing bracket (after normalization)
                 yield return
                     structDeclaration
-                    .NormalizeWhitespace()
+                    .NormalizeWhitespace(eol: "\n")
                     .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
                     .ToFullString();
             }

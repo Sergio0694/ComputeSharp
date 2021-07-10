@@ -150,7 +150,7 @@ namespace ComputeSharp.SourceGenerators
                 UsingDirective(IdentifierName("ComputeSharp.__Internals"))).AddMembers(
                 NamespaceDeclaration(IdentifierName(namespaceName)).AddMembers(typeDeclarationSyntax)
                 .WithNamespaceKeyword(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.NamespaceKeyword, TriviaList())))
-                .NormalizeWhitespace()
+                .NormalizeWhitespace(eol: "\n")
                 .ToFullString();
 
             // Add the method source attribute

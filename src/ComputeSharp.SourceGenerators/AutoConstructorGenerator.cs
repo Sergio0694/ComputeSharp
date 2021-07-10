@@ -101,7 +101,7 @@ namespace ComputeSharp.SourceGenerators
             var source =
                 CompilationUnit().AddMembers(
                 NamespaceDeclaration(IdentifierName(namespaceName)).AddMembers(typeDeclarationSyntax))
-                .NormalizeWhitespace()
+                .NormalizeWhitespace(eol: "\n")
                 .ToFullString();
 
             // Add the partial type

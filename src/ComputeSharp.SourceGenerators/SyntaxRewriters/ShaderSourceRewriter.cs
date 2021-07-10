@@ -406,7 +406,7 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
                         ShaderSourceRewriter shaderSourceRewriter = new(SemanticModel, DiscoveredTypes, this.staticMethods, ConstantDefinitions, Context);
                         MethodDeclarationSyntax
                             methodNode = (MethodDeclarationSyntax)method.DeclaringSyntaxReferences[0].GetSyntax(),
-                            processedMethod = shaderSourceRewriter.Visit(methodNode)!.NormalizeWhitespace().WithoutTrivia();
+                            processedMethod = shaderSourceRewriter.Visit(methodNode)!.NormalizeWhitespace(eol: "\n").WithoutTrivia();
 
                         this.staticMethods.Add(method, processedMethod.WithIdentifier(Identifier(methodIdentifier)));
                     }

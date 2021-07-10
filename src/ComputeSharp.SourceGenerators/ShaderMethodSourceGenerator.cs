@@ -87,7 +87,7 @@ namespace ComputeSharp.SourceGenerators
                         AttributeArgument(NestedArrayExpression(Array.Empty<string[]>()))))) // TODO
                 .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                 .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
-                .NormalizeWhitespace()
+                .NormalizeWhitespace(eol: "\n")
                 .ToFullString();
 
             // Add the method source attribute
@@ -120,7 +120,7 @@ namespace ComputeSharp.SourceGenerators
                 .Visit(methodDeclaration)!
                 .WithIdentifier(Identifier(ShaderMethodSourceAttribute.InvokeMethodIdentifier))
                 .WithoutTrivia()
-                .NormalizeWhitespace()
+                .NormalizeWhitespace(eol: "\n")
                 .ToFullString();
 
             List<string> localFunctions = new(shaderSourceRewriter.LocalFunctions.Count);
@@ -128,7 +128,7 @@ namespace ComputeSharp.SourceGenerators
             // Emit the extracted local functions
             foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
             {
-                localFunctions.Add(localFunction.Value.NormalizeWhitespace().ToFullString());
+                localFunctions.Add(localFunction.Value.NormalizeWhitespace(eol: "\n").ToFullString());
             }
 
             return (targetMethod, localFunctions);
