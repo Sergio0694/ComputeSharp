@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
@@ -9,6 +10,8 @@ namespace ComputeSharp.__Internals
     /// <summary>
     /// A helper type that implements a pooled buffer writer for <see cref="char"/> values.
     /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This type is not intended to be used directly by user code")]
     [DebuggerTypeProxy(typeof(DebugView))]
     public ref struct ArrayPoolStringBuilder
     {
@@ -59,49 +62,13 @@ namespace ComputeSharp.__Internals
         }
 
         /// <summary>
-        /// Appends a character to the current buffer.
+        /// Appends the text representation of the input value to the current buffer.
         /// </summary>
-        public void Append(char character)
+        /// <param name="value">The input value to write.</param>
+        public void Append(int value)
         {
-            EnsureCapacity(1);
-
-            this.array[this.index++] = character;
-        }
-
-        /// <summary>
-        /// Appends the input sequence of characters to the current buffer, with a trailing new line.
-        /// </summary>
-        /// <param name="value">The input characters to write.</param>
-        public void AppendLine(string value)
-        {
-            EnsureCapacity(value.Length + 1);
-
-            value.AsSpan().CopyTo(this.array.AsSpan(this.index));
-
-            this.index += value.Length;
-
-            this.array[this.index++] = '\n';
-        }
-
-        /// <summary>
-        /// Appends a character and a new line to the current buffer.
-        /// </summary>
-        public void AppendLine(char character)
-        {
-            EnsureCapacity(2);
-
-            this.array[this.index++] = character;
-            this.array[this.index++] = '\n';
-        }
-
-        /// <summary>
-        /// Appends a new line to the current buffer.
-        /// </summary>
-        public void AppendLine()
-        {
-            EnsureCapacity(1);
-
-            this.array[this.index++] = '\n';
+            // TODO: switch to ISpanFormattable on .NET 6
+            Append(value.ToString());
         }
 
         /// <summary>
