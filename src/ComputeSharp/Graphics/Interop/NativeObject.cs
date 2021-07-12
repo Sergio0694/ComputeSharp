@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using ComputeSharp.Graphics.Helpers;
 
 namespace ComputeSharp.Interop
 {
@@ -19,7 +20,10 @@ namespace ComputeSharp.Interop
         /// </summary>
         ~NativeObject()
         {
-            CheckAndDispose();
+            if (Interlocked.CompareExchange(ref this.isDisposed, 1, 0) == 0)
+            {
+                OnDispose();
+            }
         }
 
         /// <summary>
@@ -32,22 +36,31 @@ namespace ComputeSharp.Interop
         }
 
         /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Dispose()
         {
-            CheckAndDispose();
+            // If the current instance is a graphics device, check that the LUID doesn't
+            // match the one for the default device, which is deliberately never disposed.
+            // This type check is inlined and then resolved at JIT time if the target instance
+            // is visible to the compiler. That is, if Dispose() is explicitly called on a
+            // sealed type that is not GraphicsDevice, this entire path will just be removed.
+            if (GetType() == typeof(GraphicsDevice) &&
+                DeviceHelper.GetDefaultDeviceLuid() == Unsafe.As<GraphicsDevice>(this).Luid)
+            {
+                return;
+            }
 
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void CheckAndDispose()
-        {
             if (Interlocked.CompareExchange(ref this.isDisposed, 1, 0) == 0)
             {
-                OnDispose();
+                [MethodImpl(MethodImplOptions.NoInlining)]
+                void DisposeAndSuppressFinalize()
+                {
+                    OnDispose();
+
+                    GC.SuppressFinalize(this);
+                }
+
+                DisposeAndSuppressFinalize();
             }
         }
 
