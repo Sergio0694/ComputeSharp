@@ -39,8 +39,6 @@ namespace ComputeSharp.__Internals
         /// <param name="type">The type of resource to create the descriptor for.</param>
         /// <param name="offset">The offset in the resource from the start of the shader mapping.</param>
         /// <param name="descriptor">The resulting <see cref="ResourceDescriptor"/> instance.</param>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("This method is not intended to be called directly by user code")]
         public static void Create(int type, uint offset, out ResourceDescriptor descriptor)
         {
             descriptor.RangeType = (D3D12_DESCRIPTOR_RANGE_TYPE)type;

@@ -14,16 +14,12 @@ namespace ComputeSharp.__Internals
         /// Loads the captured values used by the shader to be dispatched.
         /// </summary>
         /// <param name="data">The sequence of serialized captured values.</param>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("This method is not intended to be called directly by user code")]
         void LoadCapturedValues(ReadOnlySpan<uint> data);
 
         /// <summary>
         /// Loads the captured resources used by the shader to be dispatched.
         /// </summary>
         /// <param name="data">The sequence of serialized resources.</param>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("This method is not intended to be called directly by user code")]
         void LoadCapturedResources(ReadOnlySpan<ulong> data);
     }
 }
