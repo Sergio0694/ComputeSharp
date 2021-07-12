@@ -70,7 +70,7 @@ namespace ComputeSharp.SourceGenerators
             Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
             // Explore the syntax tree and extract the processed info
-            var (invokeMethod, processedMethods) = GetProcessedMethods(context, methodDeclaration, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
+            var (invokeMethod, localFunctions) = GetProcessedMethods(context, methodDeclaration, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
             var processedTypes = IShaderGenerator.GetProcessedTypes(discoveredTypes).ToArray();
             var processedConstants = IShaderGenerator.GetProcessedConstants(constantDefinitions);
 
@@ -80,9 +80,9 @@ namespace ComputeSharp.SourceGenerators
                 AttributeList(SingletonSeparatedList(
                     Attribute(IdentifierName(typeof(ShaderMethodSourceAttribute).FullName)).AddArgumentListArguments(
                         AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(methodDeclarationSymbol.GetFullMetadataName(true)))),
-                        AttributeArgument(ArrayExpression(processedTypes)),
+                        AttributeArgument(NestedArrayExpression(processedTypes)),
                         AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(invokeMethod))),
-                        AttributeArgument(ArrayExpression(processedMethods)),
+                        AttributeArgument(ArrayExpression(localFunctions)),
                         AttributeArgument(NestedArrayExpression(processedConstants)))))
                 .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                 .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))

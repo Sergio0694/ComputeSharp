@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using ComputeSharp.__Internals;
 using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Helpers;
@@ -13,6 +14,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Microsoft.CodeAnalysis.SymbolDisplayTypeQualificationStyle;
+
+#pragma warning disable CS0618
 
 namespace ComputeSharp.SourceGenerators
 {
@@ -404,7 +407,7 @@ namespace ComputeSharp.SourceGenerators
         /// </summary>
         /// <param name="types">The sequence of discovered custom types.</param>
         /// <returns>A sequence of custom type definitions to add to the shader source.</returns>
-        internal static IEnumerable<string> GetProcessedTypes(IEnumerable<INamedTypeSymbol> types)
+        internal static IEnumerable<(string Name, string Definition)> GetProcessedTypes(IEnumerable<INamedTypeSymbol> types)
         {
             foreach (var type in HlslKnownTypes.GetCustomTypes(types))
             {
@@ -430,10 +433,11 @@ namespace ComputeSharp.SourceGenerators
 
                 // Insert the trailing ; right after the closing bracket (after normalization)
                 yield return
-                    structDeclaration
-                    .NormalizeWhitespace(eol: "\n")
-                    .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
-                    .ToFullString();
+                    (structType,
+                     structDeclaration
+                     .NormalizeWhitespace(eol: "\n")
+                     .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
+                     .ToFullString());
             }
         }
 
@@ -468,7 +472,7 @@ namespace ComputeSharp.SourceGenerators
         private static IEnumerable<StatementSyntax> GenerateRenderMethodBody(
             IEnumerable<(string Name, string Value)> definedConstants,
             IEnumerable<(string Name, string TypeDeclaration, string? Assignment)> staticFields,
-            IEnumerable<string> declaredTypes,
+            IEnumerable<(string Name, string Definition)> declaredTypes,
             bool isComputeShader,
             IEnumerable<(IFieldSymbol Symbol, string HlslName, string HlslType)> instanceFields,
             string? implicitTextureType,
@@ -479,6 +483,32 @@ namespace ComputeSharp.SourceGenerators
             string executeMethod)
         {
             List<StatementSyntax> statements = new();
+            int capturedDelegates = 0;
+
+            foreach (var (fieldSymbol, fieldName, fieldType) in instanceFields)
+            {
+                if (fieldSymbol.Type.TypeKind == TypeKind.Delegate)
+                {
+                    // ShaderMethodSourceAttribute __<DELEGATE_NAME>Attribute = ShaderMethodSourceAttribute.GetForDelegate(<DELEGATE_NAME>, "<DELEGATE_NAME>");
+                    statements.Add(
+                        LocalDeclarationStatement(VariableDeclaration(IdentifierName(nameof(ShaderMethodSourceAttribute)))
+                        .AddVariables(
+                            VariableDeclarator(Identifier($"__{fieldName}Attribute"))
+                            .WithInitializer(
+                                EqualsValueClause(
+                                    InvocationExpression(
+                                        MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName(nameof(ShaderMethodSourceAttribute)),
+                                            IdentifierName(nameof(ShaderMethodSourceAttribute.GetForDelegate))))
+                                    .AddArgumentListArguments(
+                                        Argument(IdentifierName(fieldName)),
+                                        Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(fieldName)))))))));
+
+                    capturedDelegates++;
+                }
+            }
+
             int sizeHint = 64;
 
             void AppendLF()
@@ -554,10 +584,10 @@ namespace ComputeSharp.SourceGenerators
             }
 
             // Declared types
-            foreach (var type in declaredTypes)
+            foreach (var (typeName, typeDefinition) in declaredTypes)
             {
                 AppendLF();
-                AppendLineAndLF(type);
+                AppendLineAndLF(typeDefinition);
             }
 
             // Captured variables
@@ -656,13 +686,23 @@ namespace ComputeSharp.SourceGenerators
                 }
             }
 
+            // Captured delegate methods
+            foreach (var (fieldSymbol, fieldName, fieldType) in instanceFields)
+            {
+                if (fieldSymbol.Type.TypeKind == TypeKind.Delegate)
+                {
+                    AppendLF();
+                    statements.Add(ParseStatement($"builder.AppendLine(__{fieldName}Attribute.{nameof(ShaderMethodSourceAttribute.GetMappedInvokeMethod)}(\"{fieldName}\"));"));
+                }
+            }
+
             // Entry point
             AppendLF();
             AppendLineAndLF("[NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]");
             AppendLineAndLF(executeMethod);
 
             // builder = ArrayPoolStringBuilder.Create(<SIZE_HINT>);
-            statements.Insert(0,
+            statements.Insert(capturedDelegates,
                 ExpressionStatement(
                     AssignmentExpression(
                         SyntaxKind.SimpleAssignmentExpression,
