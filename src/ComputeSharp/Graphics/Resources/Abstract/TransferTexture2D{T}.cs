@@ -19,6 +19,11 @@ namespace ComputeSharp.Resources
         where T : unmanaged
     {
         /// <summary>
+        /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
+        /// </summary>
+        private UniquePtr<D3D12MA_Allocation> allocation;
+
+        /// <summary>
         /// The <see cref="ID3D12Resource"/> instance currently mapped.
         /// </summary>
         private ComPtr<ID3D12Resource> d3D12Resource;
@@ -32,12 +37,6 @@ namespace ComputeSharp.Resources
         /// The <see cref="D3D12_PLACED_SUBRESOURCE_FOOTPRINT"/> description for the current resource.
         /// </summary>
         private readonly D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint;
-
-        /// <summary>
-        /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>, if any.
-        /// </summary>
-        /// <remarks>This will be <see langword="null"/> if the owning device has <see cref="GraphicsDevice.IsCacheCoherentUMA"/> set.</remarks>
-        private UniquePtr<D3D12MA_Allocation> allocation;
 
         /// <summary>
         /// Creates a new <see cref="TransferTexture2D{T}"/> instance with the specified parameters.
@@ -69,15 +68,8 @@ namespace ComputeSharp.Resources
                 out _,
                 out ulong totalSizeInBytes);
 
-            if (device.IsCacheCoherentUMA)
-            {
-                this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, allocationMode, totalSizeInBytes, true);
-            }
-            else
-            {
-                this.allocation = device.Allocator->CreateResource(resourceType, allocationMode, totalSizeInBytes);
-                this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
-            }
+            this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, totalSizeInBytes);
+            this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
 
             this.mappedData = (T*)this.d3D12Resource.Get()->Map().Pointer;
 

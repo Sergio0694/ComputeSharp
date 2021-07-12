@@ -59,7 +59,7 @@ namespace ComputeSharp.Resources
                     byteOffset = (nint)offset * sizeof(T),
                     byteLength = length * sizeof(T);
 
-                using UniquePtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(ResourceType.ReadBack, AllocationMode.Default, (ulong)byteLength);
+                using UniquePtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(null, ResourceType.ReadBack, AllocationMode.Default, (ulong)byteLength);
 
                 using (CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY))
                 {
@@ -157,7 +157,7 @@ namespace ComputeSharp.Resources
                     byteOffset = (nint)offset * sizeof(T),
                     byteLength = length * sizeof(T);
 
-                using UniquePtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(ResourceType.Upload, AllocationMode.Default, (ulong)byteLength);
+                using UniquePtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(null, ResourceType.Upload, AllocationMode.Default, (ulong)byteLength);
 
                 using (ID3D12ResourceMap resource = allocation.Get()->GetResource()->Map())
                 fixed (void* sourcePointer = &source)

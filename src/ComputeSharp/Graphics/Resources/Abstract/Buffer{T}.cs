@@ -21,6 +21,11 @@ namespace ComputeSharp.Resources
         where T : unmanaged
     {
         /// <summary>
+        /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
+        /// </summary>
+        private UniquePtr<D3D12MA_Allocation> allocation;
+
+        /// <summary>
         /// The <see cref="ID3D12Resource"/> instance currently mapped.
         /// </summary>
         private ComPtr<ID3D12Resource> d3D12Resource;
@@ -39,12 +44,6 @@ namespace ComputeSharp.Resources
         /// The size in bytes of the current buffer (this value is never negative).
         /// </summary>
         protected readonly nint SizeInBytes;
-
-        /// <summary>
-        /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>, if any.
-        /// </summary>
-        /// <remarks>This will be <see langword="null"/> if the owning device has <see cref="GraphicsDevice.IsCacheCoherentUMA"/> set.</remarks>
-        private UniquePtr<D3D12MA_Allocation> allocation;
 
         /// <summary>
         /// Creates a new <see cref="Buffer{T}"/> instance with the specified parameters.
@@ -78,15 +77,8 @@ namespace ComputeSharp.Resources
             GraphicsDevice = device;
             Length = length;
 
-            if (device.IsCacheCoherentUMA)
-            {
-                this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, allocationMode, (ulong)SizeInBytes, true);
-            }
-            else
-            {
-                this.allocation = device.Allocator->CreateResource(resourceType, allocationMode, (ulong)SizeInBytes);
-                this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
-            }
+            this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, (ulong)SizeInBytes);
+            this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
 
             device.RentShaderResourceViewDescriptorHandles(out D3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 

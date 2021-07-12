@@ -78,6 +78,11 @@ namespace ComputeSharp
         private UniquePtr<D3D12MA_Allocator> allocator;
 
         /// <summary>
+        /// The <see cref="D3D12MA_Pool"/> instance in use, if <see cref="IsCacheCoherentUMA"/> is <see langword="true"/>.
+        /// </summary>
+        private UniquePtr<D3D12MA_Pool> pool;
+
+        /// <summary>
         /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="ID3D12Device"/>.
         /// </summary>
         /// <param name="d3D12Device">The <see cref="ID3D12Device"/> to use for the new <see cref="GraphicsDevice"/> instance.</param>
@@ -114,12 +119,14 @@ namespace ComputeSharp
             allocatorDesc.pDevice = d3D12Device;
             allocatorDesc.pAdapter = dxgiAdapter;
 
-            if (!IsCacheCoherentUMA)
+            fixed (D3D12MA_Allocator** allocator = this.allocator)
             {
-                fixed (D3D12MA_Allocator** allocator = this.allocator)
-                {
-                    D3D12MemAlloc.D3D12MA_CreateAllocator(&allocatorDesc, allocator).Assert();
-                }
+                D3D12MemAlloc.D3D12MA_CreateAllocator(&allocatorDesc, allocator).Assert();
+            }
+
+            if (IsCacheCoherentUMA)
+            {
+                this.pool = this.allocator.Get()->CreatePoolForCacheCoherentUMA();
             }
         }
 
@@ -168,6 +175,11 @@ namespace ComputeSharp
         /// Gets the underlying <see cref="D3D12MA_Allocator"/> wrapped by the current instance.
         /// </summary>
         internal D3D12MA_Allocator* Allocator => this.allocator;
+
+        /// <summary>
+        /// Gets the underlying <see cref="D3D12MA_Pool"/> wrapped by the current instance, if any.
+        /// </summary>
+        internal D3D12MA_Pool* Pool => this.pool;
 
         /// <summary>
         /// Gets whether or not the current device has a cache coherent UMA architecture.
@@ -339,6 +351,7 @@ namespace ComputeSharp
             this.computeCommandAllocatorPool.Dispose();
             this.copyCommandAllocatorPool.Dispose();
             this.shaderResourceViewDescriptorAllocator.Dispose();
+            this.pool.Dispose();
             this.allocator.Dispose();
 
             return true;
