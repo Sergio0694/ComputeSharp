@@ -39,14 +39,14 @@ namespace ComputeSharp.SourceGenerators.Helpers
         /// <para>
         /// That it, it applies the following transformation:
         /// <code>
-        /// { ("K1", "V1"), ("K2", "V2") } => new object[] { new[] { "K1", "V1" }, new[] { "K2", "V2" } }
+        /// { ("K1", "V1", I1), ("K2", "V2", null) } => new object[] { new object[] { "K1", "V1", I1 }, new object[] { "K2", "V2", null } }
         /// </code>
         /// </para>
         /// </summary>
         /// <param name="values">The input sequence of <see cref="string"/> groups.</param>
         /// <returns>An <see cref="ArrayCreationExpressionSyntax"/> instance with the described contents.</returns>
         [Pure]
-        public static ArrayCreationExpressionSyntax NestedArrayExpression(IEnumerable<IEnumerable<string?>> groups)
+        public static ArrayCreationExpressionSyntax NestedArrayExpression(IEnumerable<(string A, string B)> groups)
         {
             return
                 ArrayCreationExpression(
@@ -54,11 +54,13 @@ namespace ComputeSharp.SourceGenerators.Helpers
                 .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
                 .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
                 .AddExpressions(groups.Select(static group =>
-                    ImplicitArrayCreationExpression(InitializerExpression(SyntaxKind.ArrayInitializerExpression).AddExpressions(
-                        group.Select(static item => item is null
-                            ? LiteralExpression(SyntaxKind.NullLiteralExpression)
-                            : LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(item)))
-                        .ToArray()))).ToArray()));
+                    ArrayCreationExpression(
+                    ArrayType(PredefinedType(Token(SyntaxKind.ObjectKeyword)))
+                    .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
+                    .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
+                    .AddExpressions(
+                        LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(group.A)),
+                        LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(group.B))))).ToArray()));
         }
 
         /// <summary>

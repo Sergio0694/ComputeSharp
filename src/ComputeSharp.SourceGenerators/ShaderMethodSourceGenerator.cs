@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
@@ -84,7 +83,7 @@ namespace ComputeSharp.SourceGenerators
                         AttributeArgument(ArrayExpression(processedTypes)),
                         AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(invokeMethod))),
                         AttributeArgument(ArrayExpression(processedMethods)),
-                        AttributeArgument(NestedArrayExpression(Array.Empty<string[]>()))))) // TODO
+                        AttributeArgument(NestedArrayExpression(processedConstants)))))
                 .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                 .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
                 .NormalizeWhitespace(eol: "\n")
