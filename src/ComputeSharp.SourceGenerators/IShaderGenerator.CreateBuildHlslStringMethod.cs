@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Text;
 using ComputeSharp.__Internals;
 using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
@@ -483,6 +484,7 @@ namespace ComputeSharp.SourceGenerators
             string executeMethod)
         {
             List<StatementSyntax> statements = new();
+            StringBuilder textBuilder = new();
             int capturedDelegates = 0;
 
             foreach (var (fieldSymbol, fieldName, fieldType) in instanceFields)
@@ -513,34 +515,47 @@ namespace ComputeSharp.SourceGenerators
 
             void AppendLF()
             {
-                statements.Add(ParseStatement("builder.AppendLine();"));
-                sizeHint += 1;
+                textBuilder.Append('\n');
             }
 
             void AppendLine(string text)
             {
-                statements.Add(
-                    ExpressionStatement(
-                        InvocationExpression(
-                            MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, IdentifierName("builder"), IdentifierName("Append")))
-                            .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(text))))));
-                sizeHint += text.Length;
+                textBuilder.Append(text);
             }
 
             void AppendLineAndLF(string text)
             {
-                statements.Add(
-                    ExpressionStatement(
-                        InvocationExpression(
-                            MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, IdentifierName("builder"), IdentifierName("AppendLine")))
-                            .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(text))))));
-                sizeHint += text.Length + 1;
+                textBuilder.Append(text);
+                textBuilder.Append('\n');
             }
 
             void AppendCharacterAndLF(char c)
             {
-                statements.Add(ParseStatement($"builder.AppendLine('{c}');"));
-                sizeHint += 2;
+                textBuilder.Append(c);
+                textBuilder.Append('\n');
+            }
+
+            void AppendStatement(string text)
+            {
+                FlushText();
+
+                statements.Add(ParseStatement(text));
+            }
+
+            void FlushText()
+            {
+                if (textBuilder.Length > 0)
+                {
+                    sizeHint += textBuilder.Length;
+
+                    statements.Add(
+                        ExpressionStatement(
+                            InvocationExpression(
+                                MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, IdentifierName("builder"), IdentifierName("Append")))
+                                .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(textBuilder.ToString()))))));
+
+                    textBuilder.Clear();
+                }
             }
 
             // Header
@@ -553,11 +568,11 @@ namespace ComputeSharp.SourceGenerators
             // Group size constants
             AppendLF();
             AppendLine("#define __GroupSize__get_X ");
-            statements.Add(ParseStatement("builder.AppendLine(threadsX.ToString());"));
+            AppendStatement("builder.AppendLine(threadsX.ToString());");
             AppendLine("#define __GroupSize__get_Y ");
-            statements.Add(ParseStatement("builder.AppendLine(threadsY.ToString());"));
+            AppendStatement("builder.AppendLine(threadsY.ToString());");
             AppendLine("#define __GroupSize__get_Z ");
-            statements.Add(ParseStatement("builder.AppendLine(threadsZ.ToString());"));
+            AppendStatement("builder.AppendLine(threadsZ.ToString());");
 
             // Define declarations
             foreach (var (name, value) in definedConstants)
@@ -692,7 +707,7 @@ namespace ComputeSharp.SourceGenerators
                 if (fieldSymbol.Type.TypeKind == TypeKind.Delegate)
                 {
                     AppendLF();
-                    statements.Add(ParseStatement($"builder.AppendLine(__{fieldName}Attribute.{nameof(ShaderMethodSourceAttribute.GetMappedInvokeMethod)}(\"{fieldName}\"));"));
+                    AppendStatement($"builder.AppendLine(__{fieldName}Attribute.{nameof(ShaderMethodSourceAttribute.GetMappedInvokeMethod)}(\"{fieldName}\"));");
                 }
             }
 
@@ -700,6 +715,8 @@ namespace ComputeSharp.SourceGenerators
             AppendLF();
             AppendLineAndLF("[NumThreads(__GroupSize__get_X, __GroupSize__get_Y, __GroupSize__get_Z)]");
             AppendLineAndLF(executeMethod);
+
+            FlushText();
 
             // builder = ArrayPoolStringBuilder.Create(<SIZE_HINT>);
             statements.Insert(capturedDelegates,
