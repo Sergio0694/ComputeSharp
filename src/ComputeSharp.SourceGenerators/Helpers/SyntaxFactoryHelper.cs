@@ -39,7 +39,7 @@ namespace ComputeSharp.SourceGenerators.Helpers
         /// <para>
         /// That it, it applies the following transformation:
         /// <code>
-        /// { ("K1", "V1", I1), ("K2", "V2", null) } => new object[] { new object[] { "K1", "V1", I1 }, new object[] { "K2", "V2", null } }
+        /// { ("K1", "V1"), ("K2", "V2") } => new object[] { new string[] { "K1", "V1" }, new string[] { "K2", "V2" } }
         /// </code>
         /// </para>
         /// </summary>
@@ -55,74 +55,12 @@ namespace ComputeSharp.SourceGenerators.Helpers
                 .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
                 .AddExpressions(groups.Select(static group =>
                     ArrayCreationExpression(
-                    ArrayType(PredefinedType(Token(SyntaxKind.ObjectKeyword)))
+                    ArrayType(PredefinedType(Token(SyntaxKind.StringKeyword)))
                     .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
                     .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
                     .AddExpressions(
                         LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(group.A)),
                         LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(group.B))))).ToArray()));
-        }
-
-        /// <summary>
-        /// Creates an <see cref="object"/>[] array expression with the nested groups in the input sequence.
-        /// <para>
-        /// That it, it applies the following transformation:
-        /// <code>
-        /// { ("K1", "V1", I1), ("K2", "V2", null) } => new object[] { new object[] { "K1", "V1", I1 }, new object[] { "K2", "V2", null } }
-        /// </code>
-        /// </para>
-        /// </summary>
-        /// <param name="values">The input sequence of <see cref="string"/> groups.</param>
-        /// <returns>An <see cref="ArrayCreationExpressionSyntax"/> instance with the described contents.</returns>
-        [Pure]
-        public static ArrayCreationExpressionSyntax NestedArrayExpression(IEnumerable<(string A, string B, int? C)> groups)
-        {
-            return
-                ArrayCreationExpression(
-                ArrayType(PredefinedType(Token(SyntaxKind.ObjectKeyword)))
-                .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
-                .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
-                .AddExpressions(groups.Select(static group =>
-                    ArrayCreationExpression(
-                    ArrayType(PredefinedType(Token(SyntaxKind.ObjectKeyword)))
-                    .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
-                    .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
-                    .AddExpressions(
-                        LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(group.A)),
-                        LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(group.B)),
-                        group.C is int i
-                            ? LiteralExpression(SyntaxKind.NumericLiteralExpression, Literal(i))
-                            : LiteralExpression(SyntaxKind.NullLiteralExpression)))).ToArray()));
-        }
-
-        /// <summary>
-        /// Creates a <see cref="string"/>[]? array expression from the given tuple instance.
-        /// <para>
-        /// That it, it applies the following transformation:
-        /// <code>
-        /// null => null
-        /// ("S1", "S2") => new string[] { "S1", "S2" }
-        /// </code>
-        /// </para>
-        /// </summary>
-        /// <param name="values">The input tuple instance.</param>
-        /// <returns>An <see cref="ExpressionSyntax"/> instance with the described contents.</returns>
-        [Pure]
-        public static ExpressionSyntax ArrayExpression((string First, string Second)? values)
-        {
-            if (values is null)
-            {
-                return LiteralExpression(SyntaxKind.NullLiteralExpression);
-            }
-
-            return
-                ArrayCreationExpression(
-                ArrayType(PredefinedType(Token(SyntaxKind.StringKeyword)))
-                .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
-                .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
-                .AddExpressions(
-                    LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(values.Value.First)),
-                    LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(values.Value.Second))));
         }
     }
 }

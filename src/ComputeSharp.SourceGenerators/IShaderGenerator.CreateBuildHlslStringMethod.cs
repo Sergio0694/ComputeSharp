@@ -490,6 +490,7 @@ namespace ComputeSharp.SourceGenerators
             List<StatementSyntax> statements = new();
             StringBuilder textBuilder = new();
             int capturedDelegates = 0;
+            int prologueStatements = 0;
             int sizeHint = 64;
 
             void AppendLF()
@@ -514,7 +515,7 @@ namespace ComputeSharp.SourceGenerators
                 textBuilder.Append('\n');
             }
 
-            void AppendStatement(string text)
+            void AppendParsedStatement(string text)
             {
                 FlushText();
 
@@ -538,28 +539,26 @@ namespace ComputeSharp.SourceGenerators
             }
 
             // Go through all existing delegate fields, if any
-            foreach (var (fieldSymbol, fieldName, fieldType) in instanceFields)
+            foreach (var (fieldSymbol, fieldName, fieldType) in instanceFields.Where(static t => t.Symbol.Type.TypeKind == TypeKind.Delegate))
             {
-                if (fieldSymbol.Type.TypeKind == TypeKind.Delegate)
-                {
-                    // ShaderMethodSourceAttribute __<DELEGATE_NAME>Attribute = ShaderMethodSourceAttribute.GetForDelegate(<DELEGATE_NAME>, "<DELEGATE_NAME>");
-                    statements.Add(
-                        LocalDeclarationStatement(VariableDeclaration(IdentifierName(nameof(ShaderMethodSourceAttribute)))
-                        .AddVariables(
-                            VariableDeclarator(Identifier($"__{fieldName}Attribute"))
-                            .WithInitializer(
-                                EqualsValueClause(
-                                    InvocationExpression(
-                                        MemberAccessExpression(
-                                            SyntaxKind.SimpleMemberAccessExpression,
-                                            IdentifierName(nameof(ShaderMethodSourceAttribute)),
-                                            IdentifierName(nameof(ShaderMethodSourceAttribute.GetForDelegate))))
-                                    .AddArgumentListArguments(
-                                        Argument(IdentifierName(fieldName)),
-                                        Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(fieldName)))))))));
+                // ShaderMethodSourceAttribute __<DELEGATE_NAME>Attribute = ShaderMethodSourceAttribute.GetForDelegate(<DELEGATE_NAME>, "<DELEGATE_NAME>");
+                statements.Add(
+                    LocalDeclarationStatement(VariableDeclaration(IdentifierName(nameof(ShaderMethodSourceAttribute)))
+                    .AddVariables(
+                        VariableDeclarator(Identifier($"__{fieldName}Attribute"))
+                        .WithInitializer(
+                            EqualsValueClause(
+                                InvocationExpression(
+                                    MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName(nameof(ShaderMethodSourceAttribute)),
+                                        IdentifierName(nameof(ShaderMethodSourceAttribute.GetForDelegate))))
+                                .AddArgumentListArguments(
+                                    Argument(IdentifierName(fieldName)),
+                                    Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(fieldName)))))))));
 
-                    capturedDelegates++;
-                }
+                capturedDelegates++;
+                prologueStatements++;
             }
 
             // Declare the hashsets to track imported members and types from delegates, if needed
@@ -576,6 +575,8 @@ namespace ComputeSharp.SourceGenerators
                             VariableDeclarator(Identifier(name))
                             .WithInitializer(EqualsValueClause(ImplicitObjectCreationExpression())))));
 
+                    prologueStatements++;
+
                     // <NAME>.Add("<ITEM>");
                     foreach (var item in items)
                     {
@@ -588,6 +589,8 @@ namespace ComputeSharp.SourceGenerators
                                         IdentifierName("Add")))
                                 .AddArgumentListArguments(Argument(
                                     LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(item))))));
+
+                        prologueStatements++;
                     }
                 }
 
@@ -608,16 +611,25 @@ namespace ComputeSharp.SourceGenerators
             // Group size constants
             AppendLF();
             AppendLine("#define __GroupSize__get_X ");
-            AppendStatement("builder.Append(threadsX);");
+            AppendParsedStatement("builder.Append(threadsX);");
+            AppendLF();
             AppendLine("#define __GroupSize__get_Y ");
-            AppendStatement("builder.Append(threadsY);");
+            AppendParsedStatement("builder.Append(threadsY);");
+            AppendLF();
             AppendLine("#define __GroupSize__get_Z ");
-            AppendStatement("builder.Append(threadsZ);");
+            AppendParsedStatement("builder.Append(threadsZ);");
+            AppendLF();
 
             // Define declarations
             foreach (var (name, value) in definedConstants)
             {
                 AppendLineAndLF($"#define {name} {value}");
+            }
+
+            // Defines from captured delegates
+            foreach (var (_, fieldName, _) in instanceFields.Where(static t => t.Symbol.Type.TypeKind == TypeKind.Delegate))
+            {
+                AppendParsedStatement($"__{fieldName}Attribute.AppendConstants(ref builder, __constantNames);");
             }
 
             // Static fields
@@ -658,12 +670,9 @@ namespace ComputeSharp.SourceGenerators
             }
 
             // User-defined values
-            foreach (var (fieldSymbol, fieldName, fieldType) in instanceFields)
+            foreach (var (fieldSymbol, fieldName, fieldType) in instanceFields.Where(static t => t.Symbol.Type.IsUnmanagedType))
             {
-                if (fieldSymbol.Type.IsUnmanagedType)
-                {
-                    AppendLineAndLF($"    {fieldType} {fieldName};");
-                }
+                AppendLineAndLF($"    {fieldType} {fieldName};");
             }
 
             AppendCharacterAndLF('}');
@@ -742,13 +751,11 @@ namespace ComputeSharp.SourceGenerators
             }
 
             // Captured delegate methods
-            foreach (var (fieldSymbol, fieldName, _) in instanceFields)
+            foreach (var (fieldSymbol, fieldName, _) in instanceFields.Where(static t => t.Symbol.Type.TypeKind == TypeKind.Delegate))
             {
-                if (fieldSymbol.Type.TypeKind == TypeKind.Delegate)
-                {
-                    AppendLF();
-                    AppendStatement($"builder.Append(__{fieldName}Attribute.{nameof(ShaderMethodSourceAttribute.GetMappedInvokeMethod)}(\"{fieldName}\"));");
-                }
+                AppendLF();
+                AppendParsedStatement($"__{fieldName}Attribute.AppendMappedInvokeMethod(ref builder, \"{fieldName}\");");
+                AppendLF();
             }
 
             // Entry point
@@ -758,13 +765,9 @@ namespace ComputeSharp.SourceGenerators
 
             FlushText();
 
-            // The builder declaration needs to go after the captured delegate attribute
-            // declaration, and also after the 3 name mapping hashsets inserted at the top.
-            int builderDeclarationIndex = capturedDelegates > 0 ? capturedDelegates + 3 : 0;
-
             // builder = ArrayPoolStringBuilder.Create(<SIZE_HINT>);
             statements.Insert(
-                builderDeclarationIndex,
+                prologueStatements,
                 ExpressionStatement(
                     AssignmentExpression(
                         SyntaxKind.SimpleAssignmentExpression,

@@ -33,6 +33,9 @@ namespace ComputeSharp.Tests
 
             // Missing attribute
             public static int Identity(int x) => x;
+
+            [ShaderMethod]
+            public static int FunctionWithConstants(int x) => (int)(x + FourAndAHalf);
         }
 
         [CombinatorialTestMethod]
@@ -109,6 +112,37 @@ namespace ComputeSharp.Tests
             for (int i = 0; i < 100; i++)
             {
                 Assert.AreEqual(result[i], Activations.AddOne(Activations.Square(i)));
+            }
+        }
+
+        public const float FourAndAHalf = 4.5f;
+        public const int MagicNumber = 42;
+
+        [AutoConstructor]
+        internal readonly partial struct DelegateWithConstantsShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<int> buffer;
+            public readonly Func<int, int> activation;
+
+            public void Execute()
+            {
+                buffer[ThreadIds.X] = MagicNumber + activation(ThreadIds.X);
+            }
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public unsafe void DelegateWithConstants(Device device)
+        {
+            using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(100);
+
+            device.Get().For(100, new DelegateWithConstantsShader(buffer, Activations.FunctionWithConstants));
+
+            int[] result = buffer.ToArray();
+
+            for (int i = 0; i < 100; i++)
+            {
+                Assert.AreEqual(result[i], MagicNumber + Activations.FunctionWithConstants(i));
             }
         }
     }
