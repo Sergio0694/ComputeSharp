@@ -29,7 +29,8 @@ namespace ComputeSharp.SourceGenerators
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             out string? implicitTextureType,
-            out bool isSamplerUsed)
+            out bool isSamplerUsed,
+            out bool isHashSetDirectiveNeeded)
         {
             // Properties are not supported
             DetectAndReportPropertyDeclarations(context, structDeclarationSymbol);
@@ -71,7 +72,8 @@ namespace ComputeSharp.SourceGenerators
                 sharedBuffers,
                 forwardDeclarations,
                 processedMethods,
-                entryPoint);
+                entryPoint,
+                out isHashSetDirectiveNeeded);
 
             implicitTextureType = pixelShaderTextureType;
             isSamplerUsed = accessesStaticSampler;
@@ -469,6 +471,7 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="forwardDeclarations">The sequence of forward method declarations.</param>
         /// <param name="processedMethods">The sequence of processed methods used by the shader.</param>
         /// <param name="executeMethod">The body of the entry point of the shader.</param>
+        /// <param name="isHashSetDirectiveNeeded">Indicates whether or not the <see langword="using"/> directive for <see cref="HashSet{T}"/> is needed.</param>
         /// <returns>The series of statements to build the HLSL source to compile to execute the current shader.</returns>
         private static IEnumerable<StatementSyntax> GenerateRenderMethodBody(
             IEnumerable<(string Name, string Value)> definedConstants,
@@ -479,9 +482,10 @@ namespace ComputeSharp.SourceGenerators
             string? implicitTextureType,
             bool isSamplerUsed,
             IEnumerable<(string Name, string Type, int? Count)> sharedBuffers,
-            IEnumerable<string>? forwardDeclarations,
+            IEnumerable<string> forwardDeclarations,
             IEnumerable<string> processedMethods,
-            string executeMethod)
+            string executeMethod,
+            out bool isHashSetDirectiveNeeded)
         {
             List<StatementSyntax> statements = new();
             StringBuilder textBuilder = new();
@@ -558,6 +562,42 @@ namespace ComputeSharp.SourceGenerators
                 }
             }
 
+            // Declare the hashsets to track imported members and types from delegates, if needed
+            if (capturedDelegates > 0)
+            {
+                void DeclareMapping(int index, string name, IEnumerable<string> items)
+                {
+                    // HashSet<string> <NAME> = new();
+                    statements.Insert(index,
+                        LocalDeclarationStatement(VariableDeclaration(
+                        GenericName(Identifier("HashSet"))
+                        .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.StringKeyword))))
+                        .AddVariables(
+                            VariableDeclarator(Identifier(name))
+                            .WithInitializer(EqualsValueClause(ImplicitObjectCreationExpression())))));
+
+                    // <NAME>.Add("<ITEM>");
+                    foreach (var item in items)
+                    {
+                        statements.Add(
+                            ExpressionStatement(
+                                InvocationExpression(
+                                    MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName(name),
+                                        IdentifierName("Add")))
+                                .AddArgumentListArguments(Argument(
+                                    LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(item))))));
+                    }
+                }
+
+                DeclareMapping(0, "__typeNames", declaredTypes.Select(static t => t.Name));
+                DeclareMapping(1, "__constantNames", definedConstants.Select(static t => t.Name));
+                DeclareMapping(2, "__methodNames", forwardDeclarations);
+            }
+
+            isHashSetDirectiveNeeded = capturedDelegates > 0;
+
             // Header
             AppendLineAndLF("// ================================================");
             AppendLineAndLF("//                  AUTO GENERATED");
@@ -599,7 +639,7 @@ namespace ComputeSharp.SourceGenerators
             }
 
             // Declared types
-            foreach (var (typeName, typeDefinition) in declaredTypes)
+            foreach (var (_, typeDefinition) in declaredTypes)
             {
                 AppendLF();
                 AppendLineAndLF(typeDefinition);
@@ -702,7 +742,7 @@ namespace ComputeSharp.SourceGenerators
             }
 
             // Captured delegate methods
-            foreach (var (fieldSymbol, fieldName, fieldType) in instanceFields)
+            foreach (var (fieldSymbol, fieldName, _) in instanceFields)
             {
                 if (fieldSymbol.Type.TypeKind == TypeKind.Delegate)
                 {
@@ -718,8 +758,13 @@ namespace ComputeSharp.SourceGenerators
 
             FlushText();
 
+            // The builder declaration needs to go after the captured delegate attribute
+            // declaration, and also after the 3 name mapping hashsets inserted at the top.
+            int builderDeclarationIndex = capturedDelegates > 0 ? capturedDelegates + 3 : 0;
+
             // builder = ArrayPoolStringBuilder.Create(<SIZE_HINT>);
-            statements.Insert(capturedDelegates,
+            statements.Insert(
+                builderDeclarationIndex,
                 ExpressionStatement(
                     AssignmentExpression(
                         SyntaxKind.SimpleAssignmentExpression,

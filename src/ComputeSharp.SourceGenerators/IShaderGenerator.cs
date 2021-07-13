@@ -59,7 +59,7 @@ namespace ComputeSharp.SourceGenerators
             MethodDeclarationSyntax
                 getDispatchIdMethod = CreateGetDispatchIdMethod(structDeclarationSymbol),
                 loadDispatchDataMethod = CreateLoadDispatchDataMethod(context, structDeclarationSymbol, out var discoveredResources, out int root32BitConstants),
-                buildHlslStringMethod = CreateBuildHlslStringMethod(context, structDeclaration, structDeclarationSymbol, out string? implicitTextureType, out bool isSamplerUsed),
+                buildHlslStringMethod = CreateBuildHlslStringMethod(context, structDeclaration, structDeclarationSymbol, out string? implicitTextureType, out bool isSamplerUsed, out bool isHashSetDirectiveNeeded),
                 loadDispatchMetadataMethod = CreateLoadDispatchMetadataMethod(implicitTextureType, discoveredResources, root32BitConstants, isSamplerUsed);
 
             // Reorder the method declarations to respect the order in the interface definition
@@ -122,6 +122,23 @@ namespace ComputeSharp.SourceGenerators
                     .WithoutTrivia();
             }
 
+            // Prepare the necessary using directives
+            List<UsingDirectiveSyntax> usingDirectives = new()
+            {
+                UsingDirective(IdentifierName("System")),
+                UsingDirective(IdentifierName("System.CodeDom.Compiler")),
+                UsingDirective(IdentifierName("System.ComponentModel")),
+                UsingDirective(IdentifierName("System.Diagnostics")),
+                UsingDirective(IdentifierName("System.Diagnostics.CodeAnalysis")),
+                UsingDirective(IdentifierName("System.Runtime.CompilerServices")),
+                UsingDirective(IdentifierName("ComputeSharp.__Internals"))
+            };
+
+            if (isHashSetDirectiveNeeded)
+            {
+                usingDirectives.Insert(2, UsingDirective(IdentifierName("System.Collections.Generic")));
+            }
+
             // Create a static method to create the combined hashcode for a given shader type.
             // This code takes a block syntax and produces a compilation unit as follows:
             //
@@ -140,14 +157,7 @@ namespace ComputeSharp.SourceGenerators
             //     <SHADER_DECLARATION>
             // }
             var source =
-                CompilationUnit().AddUsings(
-                UsingDirective(IdentifierName("System")),
-                UsingDirective(IdentifierName("System.CodeDom.Compiler")),
-                UsingDirective(IdentifierName("System.ComponentModel")),
-                UsingDirective(IdentifierName("System.Diagnostics")),
-                UsingDirective(IdentifierName("System.Diagnostics.CodeAnalysis")),
-                UsingDirective(IdentifierName("System.Runtime.CompilerServices")),
-                UsingDirective(IdentifierName("ComputeSharp.__Internals"))).AddMembers(
+                CompilationUnit().AddUsings(usingDirectives.ToArray()).AddMembers(
                 NamespaceDeclaration(IdentifierName(namespaceName)).AddMembers(typeDeclarationSyntax)
                 .WithNamespaceKeyword(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.NamespaceKeyword, TriviaList())))
                 .NormalizeWhitespace(eol: "\n")
@@ -186,13 +196,15 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
         /// <param name="implicitTextureType">The implicit texture type, if available (if the shader is a pixel shader).</param>
         /// <param name="isSamplerUsed">Whether or not the current shader type requires a static sampler to be available.</param>
+        /// <param name="isHashSetDirectiveNeeded">Indicates whether or not the <see langword="using"/> directive for <see cref="HashSet{T}"/> is needed.</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslString</c> method.</returns>
         private static partial MethodDeclarationSyntax CreateBuildHlslStringMethod(
             GeneratorExecutionContext context,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
             out string? implicitTextureType,
-            out bool isSamplerUsed);
+            out bool isSamplerUsed,
+            out bool isHashSetDirectiveNeeded);
 
         /// <summary>
         /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchMetadata</c> method.
