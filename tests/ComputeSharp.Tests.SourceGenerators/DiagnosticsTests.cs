@@ -283,7 +283,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0010");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0010", "CMPS0031");
         }
 
         [TestMethod]
@@ -310,7 +310,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0010");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0010", "CMPS0031");
         }
 
         [TestMethod]
@@ -337,7 +337,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0011");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0011", "CMPS0031");
         }
 
         [TestMethod]
@@ -894,7 +894,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0029");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0029", "CMPS0031");
         }
 
         [TestMethod]
@@ -923,7 +923,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0029");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0029", "CMPS0031");
         }
 
         [TestMethod]

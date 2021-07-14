@@ -171,5 +171,26 @@ namespace ComputeSharp.Tests
                 return new(1, 1, 1, 1);
             }
         }
+
+        [AutoConstructor]
+        public readonly partial struct LoopWithVarCounterShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<float> buffer;
+
+            /// <inheritdoc/>
+            public void Execute()
+            {
+                for (var i = 0; i < 10; i++)
+                {
+                    buffer[ThreadIds.X * 10 + i] = i;
+                }
+            }
+        }
+
+        [TestMethod]
+        public void LoopWithVarCounter()
+        {
+            ReflectionServices.GetShaderInfo<LoopWithVarCounterShader>(out var info);
+        }
     }
 }
