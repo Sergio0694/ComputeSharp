@@ -74,6 +74,25 @@ namespace ComputeSharp.SourceGenerators.SyntaxRewriters
         }
 
         /// <inheritdoc/>
+        public override SyntaxNode? VisitVariableDeclaration(VariableDeclarationSyntax node)
+        {
+            var updatedNode = (VariableDeclarationSyntax)base.VisitVariableDeclaration(node)!;
+
+            if (SemanticModel.For(node).GetTypeInfo(node.Type).Type is ITypeSymbol { IsUnmanagedType: false } type)
+            {
+                Context.ReportDiagnostic(InvalidObjectDeclaration, node, type);
+            }
+
+            // If var is used, replace it with the explicit type
+            if (updatedNode.Type is IdentifierNameSyntax { IsVar: true })
+            {
+                updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node.Type, SemanticModel.For(node), DiscoveredTypes);
+            }
+
+            return updatedNode;
+        }
+
+        /// <inheritdoc/>
         public override SyntaxNode VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
         {
             var updatedNode = (ObjectCreationExpressionSyntax)base.VisitObjectCreationExpression(node)!;

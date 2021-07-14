@@ -34,8 +34,6 @@ namespace ComputeSharp.__Internals
         /// <param name="buffer">The input <see cref="Buffer{T}"/> instance to check.</param>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
         /// <returns>The GPU descriptor handle for the buffer.</returns>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("This method is not intended to be called directly by user code")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong ValidateAndGetGpuDescriptorHandle<T>(Buffer<T> buffer, GraphicsDevice device)
             where T : unmanaged
@@ -53,8 +51,6 @@ namespace ComputeSharp.__Internals
         /// <param name="texture">The input <see cref="ReadOnlyTexture2D{T}"/> instance to check.</param>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
         /// <returns>The GPU descriptor handle for the texture.</returns>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("This method is not intended to be called directly by user code")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong ValidateAndGetGpuDescriptorHandle<T>(ReadOnlyTexture2D<T> texture, GraphicsDevice device)
             where T : unmanaged
@@ -72,8 +68,6 @@ namespace ComputeSharp.__Internals
         /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to check.</param>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
         /// <returns>The GPU descriptor handle for the texture.</returns>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("This method is not intended to be called directly by user code")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong ValidateAndGetGpuDescriptorHandle<T>(ReadWriteTexture2D<T> texture, GraphicsDevice device)
             where T : unmanaged
@@ -91,8 +85,6 @@ namespace ComputeSharp.__Internals
         /// <param name="texture">The input <see cref="IReadOnlyTexture2D{TPixel}"/> instance to check.</param>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
         /// <returns>The GPU descriptor handle for the texture.</returns>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("This method is not intended to be called directly by user code")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe ulong ValidateAndGetGpuDescriptorHandle<TPixel>(IReadOnlyTexture2D<TPixel> texture, GraphicsDevice device)
             where TPixel : unmanaged
@@ -114,8 +106,6 @@ namespace ComputeSharp.__Internals
         /// <param name="texture">The input <see cref="IReadWriteTexture2D{TPixel}"/> instance to check.</param>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
         /// <returns>The GPU descriptor handle for the texture.</returns>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("This method is not intended to be called directly by user code")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe ulong ValidateAndGetGpuDescriptorHandle<TPixel>(IReadWriteTexture2D<TPixel> texture, GraphicsDevice device)
             where TPixel : unmanaged
@@ -137,8 +127,6 @@ namespace ComputeSharp.__Internals
         /// <param name="texture">The input <see cref="ReadOnlyTexture3D{T}"/> instance to check.</param>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
         /// <returns>The GPU descriptor handle for the texture.</returns>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("This method is not intended to be called directly by user code")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong ValidateAndGetGpuDescriptorHandle<T>(ReadOnlyTexture3D<T> texture, GraphicsDevice device)
             where T : unmanaged
@@ -156,8 +144,6 @@ namespace ComputeSharp.__Internals
         /// <param name="texture">The input <see cref="ReadWriteTexture3D{T}"/> instance to check.</param>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
         /// <returns>The GPU descriptor handle for the texture.</returns>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("This method is not intended to be called directly by user code")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ulong ValidateAndGetGpuDescriptorHandle<T>(ReadWriteTexture3D<T> texture, GraphicsDevice device)
             where T : unmanaged
@@ -175,8 +161,6 @@ namespace ComputeSharp.__Internals
         /// <param name="texture">The input <see cref="IReadOnlyTexture3D{TPixel}"/> instance to check.</param>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
         /// <returns>The GPU descriptor handle for the texture.</returns>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("This method is not intended to be called directly by user code")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe ulong ValidateAndGetGpuDescriptorHandle<TPixel>(IReadOnlyTexture3D<TPixel> texture, GraphicsDevice device)
             where TPixel : unmanaged
@@ -198,8 +182,6 @@ namespace ComputeSharp.__Internals
         /// <param name="texture">The input <see cref="IReadWriteTexture3D{TPixel}"/> instance to check.</param>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
         /// <returns>The GPU descriptor handle for the texture.</returns>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Obsolete("This method is not intended to be called directly by user code")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe ulong ValidateAndGetGpuDescriptorHandle<TPixel>(IReadWriteTexture3D<TPixel> texture, GraphicsDevice device)
             where TPixel : unmanaged

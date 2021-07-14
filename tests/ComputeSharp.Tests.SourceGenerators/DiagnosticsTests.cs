@@ -35,7 +35,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0001");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0001");
         }
 
         [TestMethod]
@@ -60,7 +60,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0001");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0001");
         }
 
         [TestMethod]
@@ -88,7 +88,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0002");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0002");
         }
 
         [TestMethod]
@@ -116,7 +116,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0003");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0003");
         }
 
         [TestMethod]
@@ -142,7 +142,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0004");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0004");
         }
 
         [TestMethod]
@@ -159,7 +159,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0005");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0005");
         }
 
         [TestMethod]
@@ -194,7 +194,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }}
             }}";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, diagnosticsId);
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, diagnosticsId);
         }
 
         [TestMethod]
@@ -226,7 +226,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }}
             }}";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, diagnosticsId);
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, diagnosticsId);
         }
 
         [TestMethod]
@@ -256,7 +256,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }}
             }}";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0006");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0006");
         }
 
         [TestMethod]
@@ -283,7 +283,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0010");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0010", "CMPS0031");
         }
 
         [TestMethod]
@@ -310,7 +310,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0010");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0010", "CMPS0031");
         }
 
         [TestMethod]
@@ -337,7 +337,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0011");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0011", "CMPS0031");
         }
 
         [TestMethod]
@@ -366,7 +366,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0012");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0012");
         }
 
         [TestMethod]
@@ -392,7 +392,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0012");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0012");
         }
 
         [TestMethod]
@@ -419,7 +419,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0012", "CMPS0013");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0012", "CMPS0013");
         }
 
         [TestMethod]
@@ -448,7 +448,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }}
             }}";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0014");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0014");
         }
 
         [TestMethod]
@@ -480,7 +480,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }}
             }}";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0015");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0015");
         }
 
         [TestMethod]
@@ -512,7 +512,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0016", "CMPS0032");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0016", "CMPS0032");
         }
 
         [TestMethod]
@@ -544,7 +544,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0017");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0017");
         }
 
         [TestMethod]
@@ -573,7 +573,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0018");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0018");
         }
 
         [TestMethod]
@@ -603,7 +603,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0019");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0019");
         }
 
         [TestMethod]
@@ -633,7 +633,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0020");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0020");
         }
 
         [TestMethod]
@@ -665,7 +665,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0021");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0021");
         }
 
         [TestMethod]
@@ -695,7 +695,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0022");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0022");
         }
 
         [TestMethod]
@@ -727,7 +727,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0023");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0023");
         }
 
         [TestMethod]
@@ -754,7 +754,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0024");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0024");
         }
 
         [TestMethod]
@@ -781,7 +781,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0032", "CMPS0025");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0032", "CMPS0025");
         }
 
         [TestMethod]
@@ -808,7 +808,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0026");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0026");
         }
 
         [TestMethod]
@@ -840,7 +840,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0027");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0027");
         }
 
         [TestMethod]
@@ -867,7 +867,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0028");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0028");
         }
 
         [TestMethod]
@@ -894,7 +894,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0029");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0029", "CMPS0031");
         }
 
         [TestMethod]
@@ -923,7 +923,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0029");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0029", "CMPS0031");
         }
 
         [TestMethod]
@@ -956,7 +956,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0030");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0030");
         }
 
         [TestMethod]
@@ -983,7 +983,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0031");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0031");
         }
 
         [TestMethod]
@@ -1010,7 +1010,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0032");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0032");
         }
 
         [TestMethod]
@@ -1037,7 +1037,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0033");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0033");
         }
 
         [TestMethod]
@@ -1066,7 +1066,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0034");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0034");
         }
 
         [TestMethod]
@@ -1095,7 +1095,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0035");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0035");
         }
 
         [TestMethod]
@@ -1124,7 +1124,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0035");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0035");
         }
 
         [TestMethod]
@@ -1151,7 +1151,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0036");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0036");
         }
 
         [TestMethod]
@@ -1192,7 +1192,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0042");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0042");
         }
 
         [TestMethod]
@@ -1220,7 +1220,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0043");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0043");
         }
 
         [TestMethod]
@@ -1248,7 +1248,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0045");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0045");
         }
 
         [TestMethod]
@@ -1279,7 +1279,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0045");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0045");
         }
 
         [TestMethod]
@@ -1307,7 +1307,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0045");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0045");
         }
 
         [TestMethod]
@@ -1335,7 +1335,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0045");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0045");
         }
 
         [TestMethod]
@@ -1367,7 +1367,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderDataLoaderGenerator>(source, "CMPS0046");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0046");
         }
 
         [TestMethod]
@@ -1392,7 +1392,7 @@ namespace ComputeSharp.Tests.SourceGenerators
                 }
             }";
 
-            VerifyGeneratedDiagnostics<IComputeShaderSourceGenerator>(source, "CMPS0047");
+            VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0047");
         }
 
         /// <summary>
@@ -1402,7 +1402,7 @@ namespace ComputeSharp.Tests.SourceGenerators
         /// <param name="source">The input source to process.</param>
         /// <param name="index">The target index to check in the resulting output.</param>
         /// <param name="expectedBody">The expected body to compare with the generated code.</param>
-        private void VerifyGeneratedDiagnostics<TGenerator>(string source, params string[] diagnosticsIds)
+        private static void VerifyGeneratedDiagnostics<TGenerator>(string source, params string[] diagnosticsIds)
             where TGenerator : class, ISourceGenerator, new()
         {
             SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source);

@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace ComputeSharp.SourceGenerators
 {
     /// <inheritdoc/>
-    public sealed partial class IComputeShaderHashCodeGenerator
+    public sealed partial class IShaderGenerator
     {
         /// <summary>
         /// An <see cref="ISyntaxContextReceiver"/> that selects candidate nodes to process.

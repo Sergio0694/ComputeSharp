@@ -1,14 +1,15 @@
 ﻿using System;
-using ComputeSharp.Shaders.Translation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+#pragma warning disable CS0618
 
 namespace ComputeSharp.Tests.Internals
 {
     [TestClass]
     [TestCategory("ShaderHashCode")]
-    public class ShaderHashCodeTests
+    public partial class ShaderHashCodeTests
     {
-        public struct Shader1 : IComputeShader
+        public partial struct Shader1 : IComputeShader
         {
             public float A;
             public ReadWriteBuffer<float> B;
@@ -28,19 +29,19 @@ namespace ComputeSharp.Tests.Internals
             Shader1 shader1 = new() { A = value, B = buffer };
 
             int
-                hash1 = ShaderHashCodeProvider.GetHashCode(shader1),
-                hash2 = ShaderHashCodeProvider.GetHashCode(shader1);
+                hash1 = shader1.GetDispatchId(),
+                hash2 = shader1.GetDispatchId();
 
             Assert.IsTrue(hash1 == hash2);
 
             Shader1 shader2 = new() { A = value, B = buffer };
 
-            int hash3 = ShaderHashCodeProvider.GetHashCode(shader2);
+            int hash3 = shader2.GetDispatchId();
 
             Assert.IsTrue(hash1 == hash3);
         }
 
-        public struct Shader2 : IComputeShader
+        public partial struct Shader2 : IComputeShader
         {
             public float A;
             public ReadWriteBuffer<float> B;
@@ -62,8 +63,8 @@ namespace ComputeSharp.Tests.Internals
             Shader2 shader1 = new() { A = 1, B = buffer, F = f };
 
             int
-                hash1 = ShaderHashCodeProvider.GetHashCode(shader1),
-                hash2 = ShaderHashCodeProvider.GetHashCode(shader1);
+                hash1 = shader1.GetDispatchId(),
+                hash2 = shader1.GetDispatchId();
 
             Assert.IsTrue(hash1 == hash2);
 
@@ -71,7 +72,7 @@ namespace ComputeSharp.Tests.Internals
 
             Shader2 shader2 = new() { A = 1, B = buffer, F = f };
 
-            int hash3 = ShaderHashCodeProvider.GetHashCode(shader2);
+            int hash3 = shader2.GetDispatchId();
 
             Assert.IsFalse(hash1 == hash3);
         }

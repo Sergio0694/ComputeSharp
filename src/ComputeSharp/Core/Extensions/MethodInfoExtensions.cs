@@ -23,10 +23,10 @@ namespace ComputeSharp.Core.Extensions
             {
                 var arguments = string.Join(", ", method.GetGenericArguments().Select(static t => t.FullName));
 
-                return $"{method.DeclaringType!.FullName}.{method.Name}<{arguments}>({parameters})";
+                return $"{method.DeclaringType!.FullName!.Replace('+', '.')}.{method.Name}<{arguments}>({parameters})";
             }
 
-            return $"{method.DeclaringType!.FullName}.{method.Name}({parameters})";
+            return $"{method.DeclaringType!.FullName!.Replace('+', '.')}.{method.Name}({parameters})";
         }
     }
 }

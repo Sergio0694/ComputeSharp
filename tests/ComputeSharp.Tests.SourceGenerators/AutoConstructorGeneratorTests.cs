@@ -75,7 +75,7 @@ namespace ComputeSharp.Tests.SourceGenerators
         /// <param name="source">The input source to process.</param>
         /// <param name="index">The target index to check in the resulting output.</param>
         /// <param name="expectedBody">The expected body to compare with the generated code.</param>
-        private void VerifyGeneratedMethodLines<TGenerator>(string source, int index, string expectedBody)
+        private static void VerifyGeneratedMethodLines<TGenerator>(string source, int index, string expectedBody)
             where TGenerator : class, ISourceGenerator, new()
         {
             SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source);
@@ -97,8 +97,8 @@ namespace ComputeSharp.Tests.SourceGenerators
             string outputBody = outputCompilation.SyntaxTrees.Skip(index + 1).First().ToString();
 
             string[]
-                outputLines = outputBody.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries),
-                expectedLines = expectedBody.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                outputLines = outputBody.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries),
+                expectedLines = expectedBody.Replace("\r", "").Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
             Assert.AreEqual(expectedLines.Length, outputLines.Length);
 

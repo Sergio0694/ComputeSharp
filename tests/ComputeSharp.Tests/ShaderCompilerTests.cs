@@ -1,3 +1,4 @@
+using ComputeSharp;
 using ComputeSharp.Interop;
 using ComputeSharp.Tests.Misc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -170,6 +171,56 @@ namespace ComputeSharp.Tests
             {
                 return new(1, 1, 1, 1);
             }
+        }
+
+        [AutoConstructor]
+        public readonly partial struct LoopWithVarCounterShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<float> buffer;
+
+            /// <inheritdoc/>
+            public void Execute()
+            {
+                for (var i = 0; i < 10; i++)
+                {
+                    buffer[ThreadIds.X * 10 + i] = i;
+                }
+            }
+        }
+
+        [TestMethod]
+        public void LoopWithVarCounter()
+        {
+            ReflectionServices.GetShaderInfo<LoopWithVarCounterShader>(out var info);
+        }
+    }
+}
+
+namespace ExternalNamespace
+{
+    [TestClass]
+    [TestCategory("ShaderCompiler")]
+    public partial class ShaderCompilerTestsInExternalNamespace
+    {
+        [AutoConstructor]
+        public readonly partial struct UserDefinedTypeShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<float> buffer;
+
+            /// <inheritdoc/>
+            public void Execute()
+            {
+                for (var i = 0; i < 10; i++)
+                {
+                    buffer[ThreadIds.X * 10 + i] = i;
+                }
+            }
+        }
+
+        [TestMethod]
+        public void UserDefinedType()
+        {
+            ReflectionServices.GetShaderInfo<UserDefinedTypeShader>(out var info);
         }
     }
 }
