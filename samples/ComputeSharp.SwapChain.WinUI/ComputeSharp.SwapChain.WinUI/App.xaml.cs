@@ -25,6 +25,7 @@ namespace ComputeSharp.SwapChain.WinUI
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             m_window = new MainWindow();
+            m_window.Closed += (_, _) => Exit();
             m_window.Activate();
         }
     }
