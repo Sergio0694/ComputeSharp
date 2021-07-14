@@ -131,6 +131,7 @@ namespace ComputeSharp.SourceGenerators
                 UsingDirective(IdentifierName("System.Diagnostics")),
                 UsingDirective(IdentifierName("System.Diagnostics.CodeAnalysis")),
                 UsingDirective(IdentifierName("System.Runtime.CompilerServices")),
+                UsingDirective(IdentifierName("ComputeSharp")),
                 UsingDirective(IdentifierName("ComputeSharp.__Internals"))
             };
 
