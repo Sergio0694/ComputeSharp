@@ -23,6 +23,22 @@ namespace ComputeSharp.__Internals
         }
 
         /// <summary>
+        /// Appends the discovered types for the current method.
+        /// </summary>
+        /// <param name="builder">The target <see cref="ArrayPoolStringBuilder"/> instance to write to.</param>
+        /// <param name="mapping">The mapping of already discovered type names.</param>
+        public void AppendTypes(ref ArrayPoolStringBuilder builder, HashSet<string> mapping)
+        {
+            foreach (KeyValuePair<string, string> type in this.types)
+            {
+                if (mapping.Add(type.Key))
+                {
+                    builder.Append(type.Value);
+                }
+            }
+        }
+
+        /// <summary>
         /// Appends the mapped source code for the current method.
         /// </summary>
         /// <param name="builder">The target <see cref="ArrayPoolStringBuilder"/> instance to write to.</param>

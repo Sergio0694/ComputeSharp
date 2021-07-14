@@ -657,6 +657,14 @@ namespace ComputeSharp.SourceGenerators
                 AppendLineAndLF(typeDefinition);
             }
 
+            // Declared types from captured delegates
+            foreach (var (_, fieldName, _) in instanceFields.Where(static t => t.Symbol.Type.TypeKind == TypeKind.Delegate))
+            {
+                AppendLF();
+                AppendParsedStatement($"__{fieldName}Attribute.AppendTypes(ref builder, __typeNames);");
+                AppendLF();
+            }
+
             // Captured variables
             AppendLF();
             AppendLineAndLF("cbuffer _ : register(b0)");

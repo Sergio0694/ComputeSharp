@@ -36,6 +36,26 @@ namespace ComputeSharp.Tests
 
             [ShaderMethod]
             public static int FunctionWithConstants(int x) => (int)(x + FourAndAHalf);
+
+            [ShaderMethod]
+            public static Position FunctionWithTypes(int x)
+            {
+                Point point = default;
+                point.A = x;
+                point.B = x * x;
+
+                Position position = default;
+                position.X = point.A;
+                position.Y = point.B;
+
+                return position;
+            }
+
+            public struct Point
+            {
+                public int A;
+                public int B;
+            }
         }
 
         [CombinatorialTestMethod]
@@ -143,6 +163,41 @@ namespace ComputeSharp.Tests
             for (int i = 0; i < 100; i++)
             {
                 Assert.AreEqual(result[i], MagicNumber + Activations.FunctionWithConstants(i));
+            }
+        }
+
+        public struct Position
+        {
+            public int X;
+            public int Y;
+        }
+
+        [AutoConstructor]
+        internal readonly partial struct DelegateWithTypesShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<Position> buffer;
+            public readonly Func<int, Position> activation;
+
+            public void Execute()
+            {
+                buffer[ThreadIds.X] = activation(ThreadIds.X);
+            }
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public unsafe void DelegateWithTypes(Device device)
+        {
+            using ReadWriteBuffer<Position> buffer = device.Get().AllocateReadWriteBuffer<Position>(100);
+
+            device.Get().For(100, new DelegateWithTypesShader(buffer, Activations.FunctionWithTypes));
+
+            Position[] result = buffer.ToArray();
+
+            for (int i = 0; i < 100; i++)
+            {
+                Assert.AreEqual(result[i].X, Activations.FunctionWithTypes(i).X);
+                Assert.AreEqual(result[i].Y, Activations.FunctionWithTypes(i).Y);
             }
         }
     }
