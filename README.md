@@ -52,7 +52,7 @@ using ReadWriteBuffer<int> buffer = Gpu.Default.AllocateReadWriteBuffer(array);
 
 The `AllocateReadWriteBuffer` extension takes care of creating a `ReadWriteBuffer<T>` instance with the same size as the input array and copying its contents to the allocated GPU buffer. There are a number of overloads available as well, to create buffers of different types and with custom length.
 
-Next, we need to define the GPU shader to run. To do this, we'll need to define a `struct` type implementing the `IComputeShader` interface. This type will contain the code we want to run on the GPU, as well as fields representing the values we want to capture and pass to the GPU (such as GPU resources, or arbitrary values we need). In this case, we only need to capture the buffer to work on, so the shader type will look like this:
+Next, we need to define the GPU shader to run. To do this, we'll need to define a `partial struct` type implementing the `IComputeShader` interface (note that the `partial` modifier is necessary for **ComputeSharp** to generate additional code to run the shader). This type will contain the code we want to run on the GPU, as well as fields representing the values we want to capture and pass to the GPU (such as GPU resources, or arbitrary values we need). In this case, we only need to capture the buffer to work on, so the shader type will look like this:
 
 ```C#
 [AutoConstructor]
@@ -352,9 +352,11 @@ For a complete example, check out the F# sample [here](https://github.com/Sergio
 
 Huge thanks to these sponsors for directly supporting my work on **ComputeSharp**, it means a lot! 🙌
 
-<a href="https://github.com/xoofx"><img src="https://avatars.githubusercontent.com/u/715038" height="auto" width="80" style="border-radius:50%"></a>
-<a href="https://github.com/sebastienros"><img src="https://avatars.githubusercontent.com/u/1165805" height="auto" width="80" style="border-radius:50%"></a>
-<a href="https://github.com/hawkerm"><img src="https://avatars.githubusercontent.com/u/8959496" height="auto" width="80" style="border-radius:50%"></a>
+<a href="https://github.com/sebastienros"><img src="https://avatars.githubusercontent.com/u/1165805" height="auto" width="60" style="border-radius:50%"></a>
+<a href="https://github.com/ptasev"><img src="https://avatars.githubusercontent.com/u/23424044" height="auto" width="60" style="border-radius:50%"></a>
+<a href="https://github.com/Gavin-Williams"><img src="https://avatars.githubusercontent.com/u/4374176" height="auto" width="60" style="border-radius:50%"></a>
+<a href="https://github.com/hawkerm"><img src="https://avatars.githubusercontent.com/u/8959496" height="auto" width="60" style="border-radius:50%"></a>
+<a href="https://github.com/xoofx"><img src="https://avatars.githubusercontent.com/u/715038" height="auto" width="60" style="border-radius:50%"></a>
 
 # Special thanks
 
