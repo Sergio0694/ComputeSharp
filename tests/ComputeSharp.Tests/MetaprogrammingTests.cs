@@ -56,6 +56,14 @@ namespace ComputeSharp.Tests
                 public int A;
                 public int B;
             }
+
+            [ShaderMethod]
+            public static int FunctionWithLocalFunctionAndStaticMethod(int x)
+            {
+                static int AddTwo(int x) => x + 2;
+
+                return Square(3 + AddOne(x) + AddTwo(x));
+            }
         }
 
         [CombinatorialTestMethod]
@@ -198,6 +206,34 @@ namespace ComputeSharp.Tests
             {
                 Assert.AreEqual(result[i].X, Activations.FunctionWithTypes(i).X);
                 Assert.AreEqual(result[i].Y, Activations.FunctionWithTypes(i).Y);
+            }
+        }
+
+        [AutoConstructor]
+        internal readonly partial struct DelegateWithLocalFunctionsAndStaticMethodsShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<int> buffer;
+            public readonly Func<int, int> activation;
+
+            public void Execute()
+            {
+                buffer[ThreadIds.X] = Activations.AddOne(ThreadIds.X) + activation(ThreadIds.X);
+            }
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        public unsafe void DelegateWithLocalFunctionsAndStaticMethods(Device device)
+        {
+            using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(100);
+
+            device.Get().For(100, new DelegateWithLocalFunctionsAndStaticMethodsShader(buffer, Activations.FunctionWithLocalFunctionAndStaticMethod));
+
+            int[] result = buffer.ToArray();
+
+            for (int i = 0; i < 100; i++)
+            {
+                Assert.AreEqual(result[i], Activations.AddOne(i) + Activations.FunctionWithLocalFunctionAndStaticMethod(i));
             }
         }
     }

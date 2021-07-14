@@ -33,7 +33,45 @@ namespace ComputeSharp.__Internals
             {
                 if (mapping.Add(type.Key))
                 {
+                    builder.Append("\n");
                     builder.Append(type.Value);
+                    builder.Append("\n");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Appends the discovered forward declarations for the current method.
+        /// </summary>
+        /// <param name="builder">The target <see cref="ArrayPoolStringBuilder"/> instance to write to.</param>
+        /// <param name="mapping">The mapping of already discovered type names.</param>
+        public void AppendForwardDeclarations(ref ArrayPoolStringBuilder builder, HashSet<string> mapping)
+        {
+            foreach (KeyValuePair<string, string> method in this.methods)
+            {
+                if (mapping.Add(method.Key))
+                {
+                    builder.Append("\n");
+                    builder.Append(method.Key);
+                    builder.Append("\n");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Appends the discovered methods for the current method.
+        /// </summary>
+        /// <param name="builder">The target <see cref="ArrayPoolStringBuilder"/> instance to write to.</param>
+        /// <param name="mapping">The mapping of already discovered type names.</param>
+        public void AppendMethods(ref ArrayPoolStringBuilder builder, HashSet<string> mapping)
+        {
+            foreach (KeyValuePair<string, string> method in this.methods)
+            {
+                if (mapping.Remove(method.Key))
+                {
+                    builder.Append("\n");
+                    builder.Append(method.Value);
+                    builder.Append("\n");
                 }
             }
         }

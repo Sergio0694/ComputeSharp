@@ -53,7 +53,7 @@ namespace ComputeSharp.SourceGenerators
             var pixelShaderTextureType = isComputeShader ? null : HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!);
             var processedMembers = GetProcessedFields(context, structDeclarationSymbol, discoveredTypes, isComputeShader).ToArray();
             var sharedBuffers = GetGroupSharedMembers(context, structDeclarationSymbol, discoveredTypes).ToArray();
-            var (entryPoint, processedMethods, forwardDeclarations, accessesStaticSampler) = GetProcessedMethods(context, structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions, isComputeShader);
+            var (entryPoint, processedMethods, accessesStaticSampler) = GetProcessedMethods(context, structDeclaration, structDeclarationSymbol, semanticModel, discoveredTypes, staticMethods, constantDefinitions, isComputeShader);
             var implicitSamplerField = accessesStaticSampler ? ("SamplerState", "__sampler") : default((string, string)?);
             var processedTypes = GetProcessedTypes(discoveredTypes).ToArray();
             var processedConstants = GetProcessedConstants(constantDefinitions);
@@ -70,7 +70,6 @@ namespace ComputeSharp.SourceGenerators
                 pixelShaderTextureType,
                 accessesStaticSampler,
                 sharedBuffers,
-                forwardDeclarations,
                 processedMethods,
                 entryPoint,
                 out isHashSetDirectiveNeeded);
@@ -301,7 +300,7 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="isComputeShader">Indicates whether or not <paramref name="structDeclarationSymbol"/> represents a compute shader.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
         [Pure]
-        private static (string EntryPoint, IEnumerable<string> Methods, IEnumerable<string> Declarations, bool IsSamplerUser) GetProcessedMethods(
+        private static (string EntryPoint, IEnumerable<(string Signature, string Definition)> ProcessedMethods, bool IsSamplerUser) GetProcessedMethods(
             GeneratorExecutionContext context,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
@@ -318,8 +317,7 @@ namespace ComputeSharp.SourceGenerators
                 select (MethodDeclarationSyntax)syntaxNode).ToImmutableArray();
 
             string? entryPoint = null;
-            List<string> methods = new();
-            List<string> declarations = new();
+            List<(string, string)> processedMethods = new();
             bool isSamplerUsed = false;
 
             foreach (MethodDeclarationSyntax methodDeclaration in methodDeclarations)
@@ -356,8 +354,9 @@ namespace ComputeSharp.SourceGenerators
                 // Emit the extracted local functions first
                 foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
                 {
-                    methods.Add(localFunction.Value.NormalizeWhitespace(eol: "\n").ToFullString());
-                    declarations.Add(localFunction.Value.AsDefinition().NormalizeWhitespace(eol: "\n").ToFullString());
+                    processedMethods.Add((
+                        localFunction.Value.AsDefinition().NormalizeWhitespace(eol: "\n").ToFullString(),
+                        localFunction.Value.NormalizeWhitespace(eol: "\n").ToFullString()));
                 }
 
                 // If the method is the shader entry point, do additional processing
@@ -373,19 +372,21 @@ namespace ComputeSharp.SourceGenerators
                 }
                 else
                 {
-                    methods.Add(processedMethod.NormalizeWhitespace(eol: "\n").ToFullString());
-                    declarations.Add(processedMethod.AsDefinition().NormalizeWhitespace(eol: "\n").ToFullString());
+                    processedMethods.Add((
+                        processedMethod.AsDefinition().NormalizeWhitespace(eol: "\n").ToFullString(),
+                        processedMethod.NormalizeWhitespace(eol: "\n").ToFullString()));
                 }
             }
 
             // Process static methods as well
             foreach (MethodDeclarationSyntax staticMethod in staticMethods.Values)
             {
-                methods.Add(staticMethod.NormalizeWhitespace(eol: "\n").ToFullString());
-                declarations.Add(staticMethod.AsDefinition().NormalizeWhitespace(eol: "\n").ToFullString());
+                processedMethods.Add((
+                    staticMethod.AsDefinition().NormalizeWhitespace(eol: "\n").ToFullString(),
+                    staticMethod.NormalizeWhitespace(eol: "\n").ToFullString()));
             }
 
-            return (entryPoint!, methods, declarations, isSamplerUsed);
+            return (entryPoint!, processedMethods, isSamplerUsed);
         }
 
         /// <summary>
@@ -468,7 +469,6 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="implicitTextureType">The type of the implicit target texture, if present.</param>
         /// <param name="isSamplerUsed">Whether the static sampler is used by the shader.</param>
         /// <param name="sharedBuffers">The sequence of shared buffers declared by the shader.</param>
-        /// <param name="forwardDeclarations">The sequence of forward method declarations.</param>
         /// <param name="processedMethods">The sequence of processed methods used by the shader.</param>
         /// <param name="executeMethod">The body of the entry point of the shader.</param>
         /// <param name="isHashSetDirectiveNeeded">Indicates whether or not the <see langword="using"/> directive for <see cref="HashSet{T}"/> is needed.</param>
@@ -482,8 +482,7 @@ namespace ComputeSharp.SourceGenerators
             string? implicitTextureType,
             bool isSamplerUsed,
             IEnumerable<(string Name, string Type, int? Count)> sharedBuffers,
-            IEnumerable<string> forwardDeclarations,
-            IEnumerable<string> processedMethods,
+            IEnumerable<(string Signature, string Definition)> processedMethods,
             string executeMethod,
             out bool isHashSetDirectiveNeeded)
         {
@@ -538,31 +537,8 @@ namespace ComputeSharp.SourceGenerators
                 }
             }
 
-            // Go through all existing delegate fields, if any
-            foreach (var (fieldSymbol, fieldName, fieldType) in instanceFields.Where(static t => t.Symbol.Type.TypeKind == TypeKind.Delegate))
-            {
-                // ShaderMethodSourceAttribute __<DELEGATE_NAME>Attribute = ShaderMethodSourceAttribute.GetForDelegate(<DELEGATE_NAME>, "<DELEGATE_NAME>");
-                statements.Add(
-                    LocalDeclarationStatement(VariableDeclaration(IdentifierName(nameof(ShaderMethodSourceAttribute)))
-                    .AddVariables(
-                        VariableDeclarator(Identifier($"__{fieldName}Attribute"))
-                        .WithInitializer(
-                            EqualsValueClause(
-                                InvocationExpression(
-                                    MemberAccessExpression(
-                                        SyntaxKind.SimpleMemberAccessExpression,
-                                        IdentifierName(nameof(ShaderMethodSourceAttribute)),
-                                        IdentifierName(nameof(ShaderMethodSourceAttribute.GetForDelegate))))
-                                .AddArgumentListArguments(
-                                    Argument(IdentifierName(fieldName)),
-                                    Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(fieldName)))))))));
-
-                capturedDelegates++;
-                prologueStatements++;
-            }
-
             // Declare the hashsets to track imported members and types from delegates, if needed
-            if (capturedDelegates > 0)
+            if (instanceFields.Any(static t => t.Symbol.Type.TypeKind == TypeKind.Delegate))
             {
                 void DeclareMapping(int index, string name, IEnumerable<string> items)
                 {
@@ -596,7 +572,30 @@ namespace ComputeSharp.SourceGenerators
 
                 DeclareMapping(0, "__typeNames", declaredTypes.Select(static t => t.Name));
                 DeclareMapping(1, "__constantNames", definedConstants.Select(static t => t.Name));
-                DeclareMapping(2, "__methodNames", forwardDeclarations);
+                DeclareMapping(2, "__methodNames", processedMethods.Select(static t => t.Signature));
+
+                // Go through all existing delegate fields, if any
+                foreach (var (fieldSymbol, fieldName, fieldType) in instanceFields.Where(static t => t.Symbol.Type.TypeKind == TypeKind.Delegate))
+                {
+                    // ShaderMethodSourceAttribute __<DELEGATE_NAME>Attribute = ShaderMethodSourceAttribute.GetForDelegate(<DELEGATE_NAME>, "<DELEGATE_NAME>");
+                    statements.Add(
+                        LocalDeclarationStatement(VariableDeclaration(IdentifierName(nameof(ShaderMethodSourceAttribute)))
+                        .AddVariables(
+                            VariableDeclarator(Identifier($"__{fieldName}Attribute"))
+                            .WithInitializer(
+                                EqualsValueClause(
+                                    InvocationExpression(
+                                        MemberAccessExpression(
+                                            SyntaxKind.SimpleMemberAccessExpression,
+                                            IdentifierName(nameof(ShaderMethodSourceAttribute)),
+                                            IdentifierName(nameof(ShaderMethodSourceAttribute.GetForDelegate))))
+                                    .AddArgumentListArguments(
+                                        Argument(IdentifierName(fieldName)),
+                                        Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(fieldName)))))))));
+
+                    capturedDelegates++;
+                    prologueStatements++;
+                }
             }
 
             isHashSetDirectiveNeeded = capturedDelegates > 0;
@@ -660,9 +659,7 @@ namespace ComputeSharp.SourceGenerators
             // Declared types from captured delegates
             foreach (var (_, fieldName, _) in instanceFields.Where(static t => t.Symbol.Type.TypeKind == TypeKind.Delegate))
             {
-                AppendLF();
                 AppendParsedStatement($"__{fieldName}Attribute.AppendTypes(ref builder, __typeNames);");
-                AppendLF();
             }
 
             // Captured variables
@@ -739,23 +736,50 @@ namespace ComputeSharp.SourceGenerators
             }
 
             // Forward declarations
-            if (forwardDeclarations is not null)
+            foreach (var (forwardDeclaration, _) in processedMethods)
             {
-                foreach (var forwardDeclaration in forwardDeclarations)
+                AppendLF();
+                AppendLineAndLF(forwardDeclaration);
+            }
+
+            // Forward declarations from captured delegates
+            foreach (var (_, fieldName, _) in instanceFields.Where(static t => t.Symbol.Type.TypeKind == TypeKind.Delegate))
+            {
+                AppendParsedStatement($"__{fieldName}Attribute.AppendForwardDeclarations(ref builder, __methodNames);");
+            }
+
+            // Remove all forward declarations from methods that are embedded into the shader.
+            // This is necessary to avoid duplicate definitions from methods from delegates.
+            if (capturedDelegates > 0)
+            {
+                // <NAME>.Add("<ITEM>");
+                foreach (var (forwardDeclaration, _) in processedMethods)
                 {
-                    AppendLF();
-                    AppendLineAndLF(forwardDeclaration);
+                    FlushText();
+
+                    statements.Add(
+                        ExpressionStatement(
+                            InvocationExpression(
+                                MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    IdentifierName("__methodNames"),
+                                    IdentifierName("Remove")))
+                            .AddArgumentListArguments(Argument(
+                                LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(forwardDeclaration))))));
                 }
             }
 
             // Captured methods
-            if (processedMethods is not null)
+            foreach (var (_, method) in processedMethods)
             {
-                foreach (var method in processedMethods)
-                {
-                    AppendLF();
-                    AppendLineAndLF(method);
-                }
+                AppendLF();
+                AppendLineAndLF(method);
+            }
+
+            // Captured methods from captured delegates
+            foreach (var (_, fieldName, _) in instanceFields.Where(static t => t.Symbol.Type.TypeKind == TypeKind.Delegate))
+            {
+                AppendParsedStatement($"__{fieldName}Attribute.AppendMethods(ref builder, __methodNames);");
             }
 
             // Captured delegate methods
