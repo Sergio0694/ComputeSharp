@@ -66,11 +66,10 @@ namespace ComputeSharp.SourceGenerators
         {
             // We need to sets to track all discovered custom types and static methods
             HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
-            Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
             Dictionary<IFieldSymbol, string> constantDefinitions = new(SymbolEqualityComparer.Default);
 
             // Explore the syntax tree and extract the processed info
-            var (invokeMethod, localFunctions) = GetProcessedMethods(context, methodDeclaration, semanticModel, discoveredTypes, staticMethods, constantDefinitions);
+            var (invokeMethod, processedMethods) = GetProcessedMethods(context, methodDeclaration, semanticModel, discoveredTypes, constantDefinitions);
             var processedTypes = IShaderGenerator.GetProcessedTypes(discoveredTypes).ToArray();
             var processedConstants = IShaderGenerator.GetProcessedConstants(constantDefinitions);
 
@@ -80,9 +79,9 @@ namespace ComputeSharp.SourceGenerators
                 AttributeList(SingletonSeparatedList(
                     Attribute(IdentifierName(typeof(ShaderMethodSourceAttribute).FullName)).AddArgumentListArguments(
                         AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(methodDeclarationSymbol.GetFullMetadataName(true)))),
-                        AttributeArgument(NestedArrayExpression(processedTypes)),
                         AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(invokeMethod))),
-                        AttributeArgument(ArrayExpression(localFunctions)),
+                        AttributeArgument(NestedArrayExpression(processedTypes)),
+                        AttributeArgument(NestedArrayExpression(processedMethods)),
                         AttributeArgument(NestedArrayExpression(processedConstants)))))
                 .WithOpenBracketToken(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.OpenBracketToken, TriviaList()))
                 .WithTarget(AttributeTargetSpecifier(Token(SyntaxKind.AssemblyKeyword))))
@@ -100,18 +99,18 @@ namespace ComputeSharp.SourceGenerators
         /// <param name="methodDeclaration">The <see cref="MethodDeclarationSyntax"/> instance for the current method.</param>
         /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the method to process.</param>
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
-        /// <param name="staticMethods">The set of discovered and processed static methods.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
-        /// <returns>A sequence of processed methods in <paramref name="methodDeclaration"/> (main method and local functions).</returns>
+        /// <returns>A sequence of processed methods in <paramref name="methodDeclaration"/> (main method and all captured methods).</returns>
         [Pure]
-        private static (string TargetMethod, IEnumerable<string> LocalFunctions) GetProcessedMethods(
+        private static (string TargetMethod, IEnumerable<(string Signature, string Definition)> ProcessedMethods) GetProcessedMethods(
             GeneratorExecutionContext context,
             MethodDeclarationSyntax methodDeclaration,
             SemanticModelProvider semanticModel,
             ICollection<INamedTypeSymbol> discoveredTypes,
-            IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
             IDictionary<IFieldSymbol, string> constantDefinitions)
         {
+            Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
+
             ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, discoveredTypes, staticMethods, constantDefinitions, context);
 
             // Rewrite the method syntax tree
@@ -122,15 +121,25 @@ namespace ComputeSharp.SourceGenerators
                 .NormalizeWhitespace(eol: "\n")
                 .ToFullString();
 
-            List<string> localFunctions = new(shaderSourceRewriter.LocalFunctions.Count);
+            List<(string, string)> processedMethods = new(shaderSourceRewriter.LocalFunctions.Count);
 
             // Emit the extracted local functions
             foreach (var localFunction in shaderSourceRewriter.LocalFunctions)
             {
-                localFunctions.Add(localFunction.Value.NormalizeWhitespace(eol: "\n").ToFullString());
+                processedMethods.Add((
+                    localFunction.Value.AsDefinition().NormalizeWhitespace(eol: "\n").ToFullString(),
+                    localFunction.Value.NormalizeWhitespace(eol: "\n").ToFullString()));
             }
 
-            return (targetMethod, localFunctions);
+            // Emit the discovered static methods
+            foreach (var staticMethod in staticMethods.Values)
+            {
+                processedMethods.Add((
+                    staticMethod.AsDefinition().NormalizeWhitespace(eol: "\n").ToFullString(),
+                    staticMethod.NormalizeWhitespace(eol: "\n").ToFullString()));
+            }
+
+            return (targetMethod, processedMethods);
         }
     }
 }

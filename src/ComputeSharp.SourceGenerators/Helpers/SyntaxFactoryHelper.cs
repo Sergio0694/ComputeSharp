@@ -13,28 +13,6 @@ namespace ComputeSharp.SourceGenerators.Helpers
     internal static class SyntaxFactoryHelper
     {
         /// <summary>
-        /// Creates a <see cref="string"/>[] array expression from the given sequence of <see cref="string"/> instances.
-        /// <para>
-        /// That it, it applies the following transformation:
-        /// <code>
-        /// { "S1", "S2" } => new string[] { "S1", "S2" }
-        /// </code>
-        /// </para>
-        /// </summary>
-        /// <param name="values">The input sequence of <see cref="string"/> instances.</param>
-        /// <returns>An <see cref="ArrayCreationExpressionSyntax"/> instance with the described contents.</returns>
-        [Pure]
-        public static ArrayCreationExpressionSyntax ArrayExpression(IEnumerable<string> values)
-        {
-            return
-                ArrayCreationExpression(
-                ArrayType(PredefinedType(Token(SyntaxKind.StringKeyword)))
-                .AddRankSpecifiers(ArrayRankSpecifier(SingletonSeparatedList<ExpressionSyntax>(OmittedArraySizeExpression()))))
-                .WithInitializer(InitializerExpression(SyntaxKind.ArrayInitializerExpression)
-                .AddExpressions(values.Select(static value => LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(value))).ToArray()));
-        }
-
-        /// <summary>
         /// Creates an <see cref="object"/>[] array expression with the nested groups in the input sequence.
         /// <para>
         /// That it, it applies the following transformation:

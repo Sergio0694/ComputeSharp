@@ -24,14 +24,14 @@ namespace ComputeSharp.__Internals
         internal const string InvokeMethodIdentifier = "__<NAME>__";
 
         /// <summary>
-        /// The source code for the target entry point method.
-        /// </summary>
-        private readonly string invokeMethod;
-
-        /// <summary>
         /// The fully qualified name of the current method.
         /// </summary>
         private readonly string methodName;
+
+        /// <summary>
+        /// The source code for the target entry point method.
+        /// </summary>
+        private readonly string invokeMethod;
 
         /// <summary>
         /// The collection of custom types.
@@ -41,7 +41,7 @@ namespace ComputeSharp.__Internals
         /// <summary>
         /// The collection of processed methods.
         /// </summary>
-        private readonly string[] methods;
+        private readonly Dictionary<string, string> methods;
 
         /// <summary>
         /// The collection of discovered constants.
@@ -52,16 +52,16 @@ namespace ComputeSharp.__Internals
         /// Creates a new <see cref="ShaderMethodSourceAttribute"/> instance with the specified parameters.
         /// </summary>
         /// <param name="methodName">The fully qualified name of the current method.</param>
-        /// <param name="types">The collection of custom types.</param>
         /// <param name="invokeMethod">The source code for the target entry point method.</param>
+        /// <param name="types">The collection of custom types.</param>
         /// <param name="methods">The collection of processed methods.</param>
         /// <param name="constants">The collection of discovered constants.</param>
-        public ShaderMethodSourceAttribute(string methodName, object[] types, string invokeMethod, string[] methods, object[] constants)
+        public ShaderMethodSourceAttribute(string methodName, string invokeMethod, object[] types, object[] methods, object[] constants)
         {
-            this.invokeMethod = invokeMethod;
             this.methodName = methodName;
+            this.invokeMethod = invokeMethod;
             this.types = types.Cast<string[]>().ToDictionary(static c => c[0], static c => c[1]);
-            this.methods = methods;
+            this.methods = methods.Cast<string[]>().ToDictionary(static c => c[0], static c => c[1]);
             this.constants = constants.Cast<string[]>().ToDictionary(static c => c[0], static c => c[1]);
         }
 
