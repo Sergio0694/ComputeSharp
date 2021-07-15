@@ -421,6 +421,8 @@ namespace ComputeSharp.SourceGenerators
                 // Declare the fields of the current type
                 foreach (var field in type.GetMembers().OfType<IFieldSymbol>())
                 {
+                    if (field.IsStatic) continue;
+
                     INamedTypeSymbol fieldType = (INamedTypeSymbol)field.Type;
 
                     // Convert the name to the fully qualified HLSL version
