@@ -15,7 +15,7 @@ using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 using static ComputeSharp.SourceGenerators.Helpers.SyntaxFactoryHelper;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-#pragma warning disable CS0618
+#pragma warning disable CS0618, RS1024
 
 namespace ComputeSharp.SourceGenerators
 {

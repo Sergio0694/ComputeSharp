@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 using ComputeSharp.SourceGenerators.Extensions;
 using Microsoft.CodeAnalysis;
 
+#pragma warning disable RS1024
+
 namespace ComputeSharp.SourceGenerators.Mappings
 {
     /// <summary>
@@ -118,13 +120,12 @@ namespace ComputeSharp.SourceGenerators.Mappings
         /// <returns>Whether or not <paramref name="typeName"/> represents a structured buffer type.</returns>
         public static bool IsStructuredBufferType(string typeName)
         {
-            switch (typeName)
+            return typeName switch
             {
-                case "ComputeSharp.ConstantBuffer`1":
-                case "ComputeSharp.ReadOnlyBuffer`1":
-                case "ComputeSharp.ReadWriteBuffer`1":
-                    return true;
-                default: return false;
+                "ComputeSharp.ConstantBuffer`1" or 
+                "ComputeSharp.ReadOnlyBuffer`1" or 
+                "ComputeSharp.ReadWriteBuffer`1" => true,
+                _ => false,
             };
         }
 
@@ -135,17 +136,16 @@ namespace ComputeSharp.SourceGenerators.Mappings
         /// <returns>Whether or not <paramref name="typeName"/> represents a readonly typed resource type.</returns>
         public static bool IsReadOnlyTypedResourceType(string typeName)
         {
-            switch (typeName)
+            return typeName switch
             {
-                case "ComputeSharp.ReadOnlyBuffer`1":
-                case "ComputeSharp.ReadOnlyTexture2D`1":
-                case "ComputeSharp.ReadOnlyTexture2D`2":
-                case "ComputeSharp.ReadOnlyTexture3D`1":
-                case "ComputeSharp.ReadOnlyTexture3D`2":
-                case "ComputeSharp.IReadOnlyTexture2D`1":
-                case "ComputeSharp.IReadOnlyTexture3D`1":
-                    return true;
-                default: return false;
+                "ComputeSharp.ReadOnlyBuffer`1" or
+                "ComputeSharp.ReadOnlyTexture2D`1" or
+                "ComputeSharp.ReadOnlyTexture2D`2" or
+                "ComputeSharp.ReadOnlyTexture3D`1" or
+                "ComputeSharp.ReadOnlyTexture3D`2" or
+                "ComputeSharp.IReadOnlyTexture2D`1" or
+                "ComputeSharp.IReadOnlyTexture3D`1" => true,
+                _ => false,
             };
         }
 
@@ -156,25 +156,24 @@ namespace ComputeSharp.SourceGenerators.Mappings
         /// <returns>Whether or not <paramref name="typeName"/> represents a typed resource type.</returns>
         public static bool IsTypedResourceType(string typeName)
         {
-            switch (typeName)
+            return typeName switch
             {
-                case "ComputeSharp.ConstantBuffer`1":
-                case "ComputeSharp.ReadOnlyBuffer`1":
-                case "ComputeSharp.ReadWriteBuffer`1":
-                case "ComputeSharp.ReadOnlyTexture2D`1":
-                case "ComputeSharp.ReadOnlyTexture2D`2":
-                case "ComputeSharp.ReadWriteTexture2D`1":
-                case "ComputeSharp.ReadWriteTexture2D`2":
-                case "ComputeSharp.ReadOnlyTexture3D`1":
-                case "ComputeSharp.ReadOnlyTexture3D`2":
-                case "ComputeSharp.ReadWriteTexture3D`1":
-                case "ComputeSharp.ReadWriteTexture3D`2":
-                case "ComputeSharp.IReadOnlyTexture2D`1":
-                case "ComputeSharp.IReadWriteTexture2D`1":
-                case "ComputeSharp.IReadOnlyTexture3D`1":
-                case "ComputeSharp.IReadWriteTexture3D`1":
-                    return true;
-                default: return false;
+                "ComputeSharp.ConstantBuffer`1" or
+                "ComputeSharp.ReadOnlyBuffer`1" or
+                "ComputeSharp.ReadWriteBuffer`1" or
+                "ComputeSharp.ReadOnlyTexture2D`1" or
+                "ComputeSharp.ReadOnlyTexture2D`2" or
+                "ComputeSharp.ReadWriteTexture2D`1" or
+                "ComputeSharp.ReadWriteTexture2D`2" or
+                "ComputeSharp.ReadOnlyTexture3D`1" or
+                "ComputeSharp.ReadOnlyTexture3D`2" or
+                "ComputeSharp.ReadWriteTexture3D`1" or
+                "ComputeSharp.ReadWriteTexture3D`2" or
+                "ComputeSharp.IReadOnlyTexture2D`1" or
+                "ComputeSharp.IReadWriteTexture2D`1" or
+                "ComputeSharp.IReadOnlyTexture3D`1" or
+                "ComputeSharp.IReadWriteTexture3D`1" => true,
+                _ => false,
             };
         }
 

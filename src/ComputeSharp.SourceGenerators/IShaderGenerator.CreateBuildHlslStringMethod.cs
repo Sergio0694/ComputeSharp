@@ -16,7 +16,7 @@ using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Microsoft.CodeAnalysis.SymbolDisplayTypeQualificationStyle;
 
-#pragma warning disable CS0618
+#pragma warning disable CS0618, RS1024
 
 namespace ComputeSharp.SourceGenerators
 {
