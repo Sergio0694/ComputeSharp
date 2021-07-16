@@ -1,5 +1,6 @@
 ﻿using ComputeSharp.Shaders;
 using ComputeSharp.__Internals;
+using System.Runtime.CompilerServices;
 
 #pragma warning disable CS0618
 
@@ -20,7 +21,7 @@ namespace ComputeSharp
         public static void For<T>(this GraphicsDevice device, int x, in T shader)
             where T : struct, IComputeShader, IShader<T>
         {
-            ShaderRunner<T>.Run(device, x, 1, 1, in shader);
+            ShaderRunner<T>.Run(device, x, 1, 1, ref Unsafe.AsRef(in shader));
         }
 
         /// <summary>
@@ -34,7 +35,7 @@ namespace ComputeSharp
         public static void For<T>(this GraphicsDevice device, int x, int y, in T shader)
             where T : struct, IComputeShader, IShader<T>
         {
-            ShaderRunner<T>.Run(device, x, y, 1, in shader);
+            ShaderRunner<T>.Run(device, x, y, 1, ref Unsafe.AsRef(in shader));
         }
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace ComputeSharp
         public static void For<T>(this GraphicsDevice device, int x, int y, int z, in T shader)
             where T : struct, IComputeShader, IShader<T>
         {
-            ShaderRunner<T>.Run(device, x, y, z, in shader);
+            ShaderRunner<T>.Run(device, x, y, z, ref Unsafe.AsRef(in shader));
         }
 
         /// <summary>
@@ -67,7 +68,7 @@ namespace ComputeSharp
         public static void For<T>(this GraphicsDevice device, int x, int y, int z, int threadsX, int threadsY, int threadsZ, in T shader)
             where T : struct, IComputeShader, IShader<T>
         {
-            ShaderRunner<T>.Run(device, x, y, z, threadsX, threadsY, threadsZ, in shader);
+            ShaderRunner<T>.Run(device, x, y, z, threadsX, threadsY, threadsZ, ref Unsafe.AsRef(in shader));
         }
 
         /// <summary>
@@ -81,7 +82,7 @@ namespace ComputeSharp
             where T : struct, IPixelShader<TPixel>, IShader<T>
             where TPixel : unmanaged
         {
-            ShaderRunner<T>.Run(device, texture, default);
+            ShaderRunner<T>.Run(device, texture, ref Unsafe.AsRef(default(T)));
         }
 
         /// <summary>
@@ -96,7 +97,7 @@ namespace ComputeSharp
             where T : struct, IPixelShader<TPixel>, IShader<T>
             where TPixel : unmanaged
         {
-            ShaderRunner<T>.Run(device, texture, in shader);
+            ShaderRunner<T>.Run(device, texture, ref Unsafe.AsRef(in shader));
         }
     }
 }

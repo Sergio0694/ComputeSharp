@@ -36,7 +36,7 @@ namespace ComputeSharp.Shaders
         /// <param name="y">The number of iterations to run on the Y axis.</param>
         /// <param name="z">The number of iterations to run on the Z axis.</param>
         /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-        public static unsafe void Run(GraphicsDevice device, int x, int y, int z, in T shader)
+        public static unsafe void Run(GraphicsDevice device, int x, int y, int z, ref T shader)
         {
             // Here we calculate the optimized [numthreads] values. Using small thread group sizes leads to the
             // best average performance due to better occupancy of the GPU with different shaders, using any
@@ -84,7 +84,7 @@ namespace ComputeSharp.Shaders
                     break;
             }
 
-            Run(device, x, y, z, threadsX, threadsY, threadsZ, in shader);
+            Run(device, x, y, z, threadsX, threadsY, threadsZ, ref shader);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace ComputeSharp.Shaders
             int threadsX,
             int threadsY,
             int threadsZ,
-            in T shader)
+            ref T shader)
         {
             device.ThrowIfDisposed();
 
@@ -135,7 +135,7 @@ namespace ComputeSharp.Shaders
                 // Get or preload the shader
                 if (!ShadersCache.TryGetValue(key, out CachedShader? shaderData))
                 {
-                    LoadShader(threadsX, threadsY, threadsZ, in shader, out shaderData);
+                    LoadShader(threadsX, threadsY, threadsZ, ref shader, out shaderData);
 
                     // Cache for later use
                     ShadersCache.Add(key, shaderData);
@@ -167,7 +167,7 @@ namespace ComputeSharp.Shaders
         /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
         /// <param name="texture">The target texture to invoke the pixel shader upon.</param>
         /// <param name="shader">The input <typeparamref name="T"/> instance representing the pixel shader to run.</param>
-        public static unsafe void Run<TPixel>(GraphicsDevice device, IReadWriteTexture2D<TPixel> texture, in T shader)
+        public static unsafe void Run<TPixel>(GraphicsDevice device, IReadWriteTexture2D<TPixel> texture, ref T shader)
             where TPixel : unmanaged
         {
             device.ThrowIfDisposed();
@@ -193,7 +193,7 @@ namespace ComputeSharp.Shaders
                 // Get or preload the shader
                 if (!ShadersCache.TryGetValue(key, out CachedShader? shaderData))
                 {
-                    LoadShader(threadsX, threadsY, 1, in shader, out shaderData);
+                    LoadShader(threadsX, threadsY, 1, ref shader, out shaderData);
 
                     // Cache for later use
                     ShadersCache.Add(key, shaderData);
@@ -235,7 +235,7 @@ namespace ComputeSharp.Shaders
         /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
         /// <param name="shaderData">The <see cref="CachedShader"/> instance to return with the cached shader data.</param>
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private static unsafe void LoadShader(int threadsX, int threadsY, int threadsZ, in T shader, out CachedShader shaderData)
+        private static unsafe void LoadShader(int threadsX, int threadsY, int threadsZ, ref T shader, out CachedShader shaderData)
         {
             shader.BuildHlslString(out ArrayPoolStringBuilder builder, threadsX, threadsY, threadsZ);
 
