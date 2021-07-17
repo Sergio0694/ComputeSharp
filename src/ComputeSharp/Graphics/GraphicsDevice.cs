@@ -98,8 +98,8 @@ namespace ComputeSharp
             this.d3D12CopyFence = d3D12Device->CreateFence();
 
             this.shaderResourceViewDescriptorAllocator = new ID3D12DescriptorHandleAllocator(d3D12Device);
-            this.computeCommandListPool = new ID3D12CommandListPool(D3D12_COMMAND_LIST_TYPE_COMPUTE, this.shaderResourceViewDescriptorAllocator.D3D12DescriptorHeap);
-            this.copyCommandListPool = new ID3D12CommandListPool(D3D12_COMMAND_LIST_TYPE_COPY, null);
+            this.computeCommandListPool = new ID3D12CommandListPool(D3D12_COMMAND_LIST_TYPE_COMPUTE);
+            this.copyCommandListPool = new ID3D12CommandListPool(D3D12_COMMAND_LIST_TYPE_COPY);
 
             Luid = Luid.FromLUID(dxgiDescription1->AdapterLuid);
             Name = new string((char*)dxgiDescription1->Description);
@@ -290,6 +290,17 @@ namespace ComputeSharp
                     d3D12CommandAllocator = null;
                     break;
             }
+        }
+
+        /// <summary>
+        /// Sets the descriptor heap for a given <see cref="ID3D12GraphicsCommandList"/> instance.
+        /// </summary>
+        /// <param name="d3D12GraphicsCommandList">The input <see cref="ID3D12GraphicsCommandList"/> instance to use.</param>
+        internal void SetDescriptorHeapForCommandList(ID3D12GraphicsCommandList* d3D12GraphicsCommandList)
+        {
+            ID3D12DescriptorHeap* d3D12DescriptorHeap = this.shaderResourceViewDescriptorAllocator.D3D12DescriptorHeap;
+
+            d3D12GraphicsCommandList->SetDescriptorHeaps(1, &d3D12DescriptorHeap);
         }
 
         /// <summary>

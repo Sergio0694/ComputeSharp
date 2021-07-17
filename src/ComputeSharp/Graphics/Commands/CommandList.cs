@@ -2,6 +2,7 @@
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using TerraFX.Interop;
+using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 
 namespace ComputeSharp.Graphics.Commands
 {
@@ -47,6 +48,12 @@ namespace ComputeSharp.Graphics.Commands
                 d3D12CommandListType,
                 out *(ID3D12GraphicsCommandList**)Unsafe.AsPointer(ref this.d3D12GraphicsCommandList),
                 out *(ID3D12CommandAllocator**)Unsafe.AsPointer(ref this.d3D12CommandAllocator));
+
+            // Set the heap descriptor if the command list is not for copy operations
+            if (d3D12CommandListType is not D3D12_COMMAND_LIST_TYPE_COPY)
+            {
+                device.SetDescriptorHeapForCommandList(this.d3D12GraphicsCommandList);
+            }
         }
 
         /// <summary>

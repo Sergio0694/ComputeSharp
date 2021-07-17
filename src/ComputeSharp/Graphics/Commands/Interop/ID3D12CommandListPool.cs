@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop;
-using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 
 namespace ComputeSharp.Graphics.Commands.Interop
 {
@@ -19,11 +18,6 @@ namespace ComputeSharp.Graphics.Commands.Interop
         private readonly D3D12_COMMAND_LIST_TYPE d3D12CommandListType;
 
         /// <summary>
-        /// The <see cref="ID3D12DescriptorHeap"/> object in use for the current instance.
-        /// </summary>
-        private readonly ID3D12DescriptorHeap* d3D12DescriptorHeap;
-
-        /// <summary>
         /// The queue of <see cref="D3D12CommandListBundle"/> items with the available command lists.
         /// </summary>
         private readonly Queue<D3D12CommandListBundle> d3D12CommandListBundleQueue;
@@ -32,11 +26,9 @@ namespace ComputeSharp.Graphics.Commands.Interop
         /// Creates a new <see cref="ID3D12CommandListPool"/> instance with the specified parameters.
         /// </summary>
         /// <param name="d3D12CommandListType">The command list type to use.</param>
-        /// <param name="d3D12DescriptorHeap">The <see cref="ID3D12DescriptorHeap"/> object in use for the current instance.</param>
-        public ID3D12CommandListPool(D3D12_COMMAND_LIST_TYPE d3D12CommandListType, ID3D12DescriptorHeap* d3D12DescriptorHeap)
+        public ID3D12CommandListPool(D3D12_COMMAND_LIST_TYPE d3D12CommandListType)
         {
             this.d3D12CommandListType = d3D12CommandListType;
-            this.d3D12DescriptorHeap = d3D12DescriptorHeap;
             this.d3D12CommandListBundleQueue = new Queue<D3D12CommandListBundle>();
         }
 
@@ -104,14 +96,6 @@ namespace ComputeSharp.Graphics.Commands.Interop
         {
             using ComPtr<ID3D12CommandAllocator> d3D12CommandAllocatorComPtr = d3D12Device->CreateCommandAllocator(this.d3D12CommandListType);
             using ComPtr<ID3D12GraphicsCommandList> d3D12CommandListComPtr = d3D12Device->CreateCommandList(this.d3D12CommandListType, d3D12CommandAllocatorComPtr.Get());
-
-            // Set the heap descriptor if the command list is not for copy operations
-            if (this.d3D12CommandListType is not D3D12_COMMAND_LIST_TYPE_COPY)
-            {
-                ID3D12DescriptorHeap* d3D12DescriptorHeap = this.d3D12DescriptorHeap;
-
-                d3D12CommandListComPtr.Get()->SetDescriptorHeaps(1, &d3D12DescriptorHeap);
-            }
 
             fixed (ID3D12GraphicsCommandList** d3D12CommandListPtr = &d3D12CommandList)
             fixed (ID3D12CommandAllocator** d3D12CommandAllocatorPtr = &d3D12CommandAllocator)
