@@ -326,17 +326,14 @@ namespace ComputeSharp
 
             d3D12CommandQueue->Signal(d3D12Fence, d3D12FenceValue).Assert();
 
-            // Enqueue the command allocator pool so that it can be reused later. We can do this
-            // before checking and awaiting the fence as the command list and allocaton can already
-            // be reused right after the call to ExecuteCommandLists, and this way we can potentially
-            // do this work in parallel while the GPU dispatching is still being executed.
-            commandListPool.Return(commandList.DetachD3D12CommandList(), commandList.DetachD3D12CommandAllocator());
-
             // If the fence value hasn't been reached, wait until the operation completes
             if (d3D12FenceValue > d3D12Fence->GetCompletedValue())
             {
                 d3D12Fence->SetEventOnCompletion(d3D12FenceValue, default).Assert();
             }
+
+            // Return the rented command list and command allocator so that they can be reused
+            commandListPool.Return(commandList.DetachD3D12CommandList(), commandList.DetachD3D12CommandAllocator());
         }
 
         /// <inheritdoc/>
