@@ -260,12 +260,14 @@ namespace ComputeSharp.Graphics.Extensions
         /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the command list.</param>
         /// <param name="d3D12CommandListType">The type of command list to create.</param>
         /// <param name="d3D12CommandAllocator">The command allocator to use to create the command list.</param>
+        /// <param name="d3D12PipelineState">The initial <see cref="ID3D12PipelineState"/> object, if present.</param>
         /// <returns>A pointer to the newly allocated <see cref="ID3D12GraphicsCommandList"/> instance.</returns>
         /// <exception cref="Exception">Thrown when the creation of the command list fails.</exception>
         public static ComPtr<ID3D12GraphicsCommandList> CreateCommandList(
             this ref ID3D12Device d3D12Device,
             D3D12_COMMAND_LIST_TYPE d3D12CommandListType,
-            ID3D12CommandAllocator* d3D12CommandAllocator)
+            ID3D12CommandAllocator* d3D12CommandAllocator,
+            ID3D12PipelineState* d3D12PipelineState)
         {
             using ComPtr<ID3D12GraphicsCommandList> d3D12GraphicsCommandList = default;
 
@@ -273,7 +275,7 @@ namespace ComputeSharp.Graphics.Extensions
                 0,
                 d3D12CommandListType,
                 d3D12CommandAllocator,
-                null,
+                d3D12PipelineState,
                 FX.__uuidof<ID3D12GraphicsCommandList>(),
                 d3D12GraphicsCommandList.GetVoidAddressOf()).Assert();
 

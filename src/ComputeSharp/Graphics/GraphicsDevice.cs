@@ -252,6 +252,7 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc cref="ID3D12DescriptorHandleAllocator.Rent"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void RentShaderResourceViewDescriptorHandles(
             out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
             out D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle)
@@ -260,6 +261,7 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc cref="ID3D12DescriptorHandleAllocator.Return"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void ReturnShaderResourceViewDescriptorHandles(
             D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
             D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle)
@@ -271,6 +273,7 @@ namespace ComputeSharp
         /// <param name="d3D12CommandListType">The type of command allocator to rent.</param>
         /// <param name="d3D12CommandList">The resulting <see cref="ID3D12GraphicsCommandList"/> value.</param>
         /// <param name="d3D12CommandAllocator">The resulting <see cref="ID3D12CommandAllocator"/> value.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void GetCommandListAndAllocator(
             D3D12_COMMAND_LIST_TYPE d3D12CommandListType,
             out ID3D12GraphicsCommandList* d3D12CommandList,
@@ -279,10 +282,10 @@ namespace ComputeSharp
             switch (d3D12CommandListType)
             {
                 case D3D12_COMMAND_LIST_TYPE_COMPUTE:
-                    this.computeCommandListPool.Rent(this.d3D12Device.Get(), out d3D12CommandList, out d3D12CommandAllocator);
+                    this.computeCommandListPool.Rent(this.d3D12Device.Get(), null, out d3D12CommandList, out d3D12CommandAllocator);
                     break;
                 case D3D12_COMMAND_LIST_TYPE_COPY:
-                    this.copyCommandListPool.Rent(this.d3D12Device.Get(), out d3D12CommandList, out d3D12CommandAllocator);
+                    this.copyCommandListPool.Rent(this.d3D12Device.Get(), null, out d3D12CommandList, out d3D12CommandAllocator);
                     break;
                 default:
                     ThrowHelper.ThrowArgumentException<ComPtr<ID3D12CommandAllocator>>();
@@ -292,10 +295,24 @@ namespace ComputeSharp
             }
         }
 
+        /// <inheritdoc cref="ID3D12CommandListPool.Rent"/>
+        /// <param name="d3D12PipelineState">The <see cref="ID3D12PipelineState"/> instance to use for the new command list.</param>
+        /// <param name="d3D12CommandList">The resulting <see cref="ID3D12GraphicsCommandList"/> value.</param>
+        /// <param name="d3D12CommandAllocator">The resulting <see cref="ID3D12CommandAllocator"/> value.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void GetCommandListAndAllocator(
+            ID3D12PipelineState* d3D12PipelineState,
+            out ID3D12GraphicsCommandList* d3D12CommandList,
+            out ID3D12CommandAllocator* d3D12CommandAllocator)
+        {
+            this.computeCommandListPool.Rent(this.d3D12Device.Get(), d3D12PipelineState, out d3D12CommandList, out d3D12CommandAllocator);
+        }
+
         /// <summary>
         /// Sets the descriptor heap for a given <see cref="ID3D12GraphicsCommandList"/> instance.
         /// </summary>
         /// <param name="d3D12GraphicsCommandList">The input <see cref="ID3D12GraphicsCommandList"/> instance to use.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void SetDescriptorHeapForCommandList(ID3D12GraphicsCommandList* d3D12GraphicsCommandList)
         {
             ID3D12DescriptorHeap* d3D12DescriptorHeap = this.shaderResourceViewDescriptorAllocator.D3D12DescriptorHeap;

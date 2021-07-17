@@ -10,7 +10,6 @@ using ComputeSharp.__Internals;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
-using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 
 #pragma warning disable CS0618
 
@@ -148,10 +147,9 @@ namespace ComputeSharp.Shaders
                 }
             }
 
-            using CommandList commandList = new(device, D3D12_COMMAND_LIST_TYPE_COMPUTE);
+            using CommandList commandList = new(device, pipelineData.D3D12PipelineState);
 
             commandList.D3D12GraphicsCommandList->SetComputeRootSignature(pipelineData.D3D12RootSignature);
-            commandList.D3D12GraphicsCommandList->SetPipelineState(pipelineData.D3D12PipelineState);
 
             ComputeShaderDispatchDataLoader dataLoader = new(commandList.D3D12GraphicsCommandList);
 
@@ -172,7 +170,6 @@ namespace ComputeSharp.Shaders
         {
             device.ThrowIfDisposed();
 
-            // Calculate the dispatch values
             int
                 x = texture.Width,
                 y = texture.Height,
@@ -184,7 +181,6 @@ namespace ComputeSharp.Shaders
             Guard.IsBetweenOrEqualTo(groupsX, 1, FX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
             Guard.IsBetweenOrEqualTo(groupsY, 1, FX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
 
-            // Create the shader key
             ShaderKey key = new(shader.GetDispatchId(), threadsX, threadsY, 1);
             PipelineData? pipelineData;
 
@@ -206,11 +202,9 @@ namespace ComputeSharp.Shaders
                 }
             }
 
-            // Create the commands list and set the pipeline state
-            using CommandList commandList = new(device, D3D12_COMMAND_LIST_TYPE_COMPUTE);
+            using CommandList commandList = new(device, pipelineData.D3D12PipelineState);
 
             commandList.D3D12GraphicsCommandList->SetComputeRootSignature(pipelineData.D3D12RootSignature);
-            commandList.D3D12GraphicsCommandList->SetPipelineState(pipelineData.D3D12PipelineState);
 
             PixelShaderDispatchDataLoader dataLoader = new(commandList.D3D12GraphicsCommandList);
 
@@ -221,7 +215,6 @@ namespace ComputeSharp.Shaders
                 1,
                 ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuDescriptorHandle(device));
 
-            // Dispatch and wait for completion
             commandList.D3D12GraphicsCommandList->Dispatch((uint)groupsX, (uint)groupsY, 1);
             commandList.ExecuteAndWaitForCompletion();
         }

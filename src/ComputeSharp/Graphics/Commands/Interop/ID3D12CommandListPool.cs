@@ -36,16 +36,17 @@ namespace ComputeSharp.Graphics.Commands.Interop
         /// Rents a <see cref="ID3D12GraphicsCommandList"/> and <see cref="ID3D12CommandAllocator"/> pair.
         /// </summary>
         /// <param name="d3D12Device">The <see cref="ID3D12Device"/> renting the command list.</param>
+        /// <param name="d3D12PipelineState">The <see cref="ID3D12PipelineState"/> instance to use for the new command list.</param>
         /// <param name="d3D12CommandList">The resulting <see cref="ID3D12GraphicsCommandList"/> value.</param>
         /// <param name="d3D12CommandAllocator">The resulting <see cref="ID3D12CommandAllocator"/> value.</param>
-        public void Rent(ID3D12Device* d3D12Device, out ID3D12GraphicsCommandList* d3D12CommandList, out ID3D12CommandAllocator* d3D12CommandAllocator)
+        public void Rent(ID3D12Device* d3D12Device, ID3D12PipelineState* d3D12PipelineState, out ID3D12GraphicsCommandList* d3D12CommandList, out ID3D12CommandAllocator* d3D12CommandAllocator)
         {
             lock (this.d3D12CommandListBundleQueue)
             {
                 if (this.d3D12CommandListBundleQueue.TryDequeue(out D3D12CommandListBundle d3D12CommandListBundle))
                 {
                     d3D12CommandListBundle.D3D12CommandAllocator->Reset().Assert();
-                    d3D12CommandListBundle.D3D12CommandList->Reset(d3D12CommandListBundle.D3D12CommandAllocator, null).Assert();
+                    d3D12CommandListBundle.D3D12CommandList->Reset(d3D12CommandListBundle.D3D12CommandAllocator, d3D12PipelineState).Assert();
 
                     d3D12CommandList = d3D12CommandListBundle.D3D12CommandList;
                     d3D12CommandAllocator = d3D12CommandListBundle.D3D12CommandAllocator;
@@ -53,7 +54,7 @@ namespace ComputeSharp.Graphics.Commands.Interop
                     return;
                 }
 
-                CreateCommandListAndAllocator(d3D12Device, out d3D12CommandList, out d3D12CommandAllocator);
+                CreateCommandListAndAllocator(d3D12Device, d3D12PipelineState, out d3D12CommandList, out d3D12CommandAllocator);
             }
         }
 
@@ -89,13 +90,14 @@ namespace ComputeSharp.Graphics.Commands.Interop
         /// Creates a new <see cref="ID3D12CommandList"/> and <see cref="ID3D12CommandAllocator"/> pair.
         /// </summary>
         /// <param name="d3D12Device">The <see cref="ID3D12Device"/> renting the command list.</param>
+        /// <param name="d3D12PipelineState">The <see cref="ID3D12PipelineState"/> instance to use for the new command list.</param>
         /// <param name="d3D12CommandList">The resulting <see cref="ID3D12GraphicsCommandList"/> value.</param>
         /// <param name="d3D12CommandAllocator">The resulting <see cref="ID3D12CommandAllocator"/> value.</param>
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private void CreateCommandListAndAllocator(ID3D12Device* d3D12Device, out ID3D12GraphicsCommandList* d3D12CommandList, out ID3D12CommandAllocator* d3D12CommandAllocator)
+        private void CreateCommandListAndAllocator(ID3D12Device* d3D12Device, ID3D12PipelineState* d3D12PipelineState, out ID3D12GraphicsCommandList* d3D12CommandList, out ID3D12CommandAllocator* d3D12CommandAllocator)
         {
             using ComPtr<ID3D12CommandAllocator> d3D12CommandAllocatorComPtr = d3D12Device->CreateCommandAllocator(this.d3D12CommandListType);
-            using ComPtr<ID3D12GraphicsCommandList> d3D12CommandListComPtr = d3D12Device->CreateCommandList(this.d3D12CommandListType, d3D12CommandAllocatorComPtr.Get());
+            using ComPtr<ID3D12GraphicsCommandList> d3D12CommandListComPtr = d3D12Device->CreateCommandList(this.d3D12CommandListType, d3D12CommandAllocatorComPtr.Get(), d3D12PipelineState);
 
             fixed (ID3D12GraphicsCommandList** d3D12CommandListPtr = &d3D12CommandList)
             fixed (ID3D12CommandAllocator** d3D12CommandAllocatorPtr = &d3D12CommandAllocator)

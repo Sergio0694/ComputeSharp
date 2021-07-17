@@ -57,6 +57,28 @@ namespace ComputeSharp.Graphics.Commands
         }
 
         /// <summary>
+        /// Creates a new <see cref="CommandList"/> instance with the specified parameters.
+        /// </summary>
+        /// <param name="device">The target <see cref="GraphicsDevice"/> instance to use.</param>
+        /// <param name="d3D12PipelineState">The <see cref="ID3D12PipelineState"/> instance to use for the new command list.</param>
+        public CommandList(GraphicsDevice device, ID3D12PipelineState* d3D12PipelineState)
+        {
+            this.device = device;
+            this.d3D12CommandListType = D3D12_COMMAND_LIST_TYPE_COMPUTE;
+
+            Unsafe.SkipInit(out this.d3D12GraphicsCommandList);
+            Unsafe.SkipInit(out this.d3D12CommandAllocator);
+
+            device.GetCommandListAndAllocator(
+                d3D12PipelineState,
+                out *(ID3D12GraphicsCommandList**)Unsafe.AsPointer(ref this.d3D12GraphicsCommandList),
+                out *(ID3D12CommandAllocator**)Unsafe.AsPointer(ref this.d3D12CommandAllocator));
+
+            // Set the heap descriptor for the command list
+            device.SetDescriptorHeapForCommandList(this.d3D12GraphicsCommandList);
+        }
+
+        /// <summary>
         /// Gets the command list type being used by the current instance.
         /// </summary>
         public readonly D3D12_COMMAND_LIST_TYPE D3D12CommandListType => this.d3D12CommandListType;
