@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
-using ComputeSharp.Core.Extensions;
-using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 
@@ -24,14 +22,14 @@ namespace ComputeSharp.Graphics.Commands
         private readonly D3D12_COMMAND_LIST_TYPE d3D12CommandListType;
 
         /// <summary>
-        /// The <see cref="ID3D12CommandAllocator"/> object in use by the current instance.
-        /// </summary>
-        private ComPtr<ID3D12CommandAllocator> d3D12CommandAllocator;
-
-        /// <summary>
         /// The <see cref="ID3D12GraphicsCommandList"/> object in use by the current instance.
         /// </summary>
         private ComPtr<ID3D12GraphicsCommandList> d3D12GraphicsCommandList;
+
+        /// <summary>
+        /// The <see cref="ID3D12CommandAllocator"/> object in use by the current instance.
+        /// </summary>
+        private ComPtr<ID3D12CommandAllocator> d3D12CommandAllocator;
 
         /// <summary>
         /// Creates a new <see cref="CommandList"/> instance with the specified parameters.
@@ -42,8 +40,14 @@ namespace ComputeSharp.Graphics.Commands
         {
             this.device = device;
             this.d3D12CommandListType = d3D12CommandListType;
-            this.d3D12CommandAllocator = device.GetCommandAllocator(d3D12CommandListType);
-            this.d3D12GraphicsCommandList = device.D3D12Device->CreateCommandList(d3D12CommandListType, this.d3D12CommandAllocator);
+
+            Unsafe.SkipInit(out this.d3D12GraphicsCommandList);
+            Unsafe.SkipInit(out this.d3D12CommandAllocator);
+
+            device.GetCommandListAndAllocator(
+                d3D12CommandListType,
+                out *(ID3D12GraphicsCommandList**)Unsafe.AsPointer(ref this.d3D12GraphicsCommandList),
+                out *(ID3D12CommandAllocator**)Unsafe.AsPointer(ref this.d3D12CommandAllocator));
 
             // Set the heap descriptor if the command list is not for copy operations
             if (d3D12CommandListType is not D3D12_COMMAND_LIST_TYPE_COPY)
@@ -67,9 +71,19 @@ namespace ComputeSharp.Graphics.Commands
         /// </summary>
         /// <returns>The <see cref="ID3D12CommandAllocator"/> object in use, with ownership.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ComPtr<ID3D12CommandAllocator> DetachD3D12CommandAllocator()
+        public ID3D12CommandAllocator* DetachD3D12CommandAllocator()
         {
-            return this.d3D12CommandAllocator.Move();
+            return this.d3D12CommandAllocator.Detach();
+        }
+
+        /// <summary>
+        /// Detaches the <see cref="ID3D12GraphicsCommandList"/> object in use by the current instance.
+        /// </summary>
+        /// <returns>The <see cref="ID3D12GraphicsCommandList"/> object in use, with ownership.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ID3D12GraphicsCommandList* DetachD3D12CommandList()
+        {
+            return this.d3D12GraphicsCommandList.Detach();
         }
 
         /// <summary>
