@@ -1,15 +1,10 @@
 <Project>
   <PropertyGroup>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
-
-    <!--Required properties for source link-->
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>    
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="all" />
+    <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.64" PrivateAssets="all" />
     <PackageReference Include="NuGetizer" Version="0.7.1" PrivateAssets="all" />
   </ItemGroup>
 
