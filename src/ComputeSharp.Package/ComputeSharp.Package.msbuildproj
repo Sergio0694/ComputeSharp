@@ -9,9 +9,10 @@
     <Title>ComputeSharp</Title>
     <Description>A library to run C# code in parallel on the GPU through DX12 and dynamically generated HLSL compute shaders</Description>
     <PackageVersion>2.0.0</PackageVersion>
-    <RepositoryUrl>https://github.com/Sergio0694/ComputeSharp.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Sergio0694/ComputeSharp/</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <ProjectUrl>https://github.com/Sergio0694/ComputeSharp</ProjectUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <ProjectUrl>https://github.com/Sergio0694/ComputeSharp/</ProjectUrl>    
     <Authors>Sergio Pedri</Authors>
     <Owners>Sergio Pedri</Owners>
     <Copyright>Copyright (c) 2021 Sergio Pedri</Copyright>
