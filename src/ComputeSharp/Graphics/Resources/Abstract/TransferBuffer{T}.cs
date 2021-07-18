@@ -111,7 +111,10 @@ namespace ComputeSharp.Resources
             this.d3D12Resource.Dispose();
             this.allocation.Dispose();
 
-            GraphicsDevice.UnregisterAllocatedResource();
+            if (GraphicsDevice is GraphicsDevice device)
+            {
+                device.UnregisterAllocatedResource();
+            }
         }
 
         /// <summary>

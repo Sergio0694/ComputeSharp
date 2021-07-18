@@ -95,6 +95,7 @@ namespace ComputeSharp.Resources
         /// Gets the height of the current texture.
         /// </summary>
         public int Height => (int)this.d3D12PlacedSubresourceFootprint.Footprint.Height;
+
         /// <summary>
         /// Gets the depth of the current texture.
         /// </summary>
@@ -128,7 +129,10 @@ namespace ComputeSharp.Resources
             this.d3D12Resource.Dispose();
             this.allocation.Dispose();
 
-            GraphicsDevice.UnregisterAllocatedResource();
+            if (GraphicsDevice is GraphicsDevice device)
+            {
+                device.UnregisterAllocatedResource();
+            }
         }
 
         /// <summary>

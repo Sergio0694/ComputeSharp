@@ -173,11 +173,10 @@ namespace ComputeSharp.Resources
             this.d3D12Resource.Dispose();
             this.allocation.Dispose();
 
-            GraphicsDevice.UnregisterAllocatedResource();
-
-            if (GraphicsDevice?.IsDisposed == false)
+            if (GraphicsDevice is GraphicsDevice device)
             {
-                GraphicsDevice.ReturnShaderResourceViewDescriptorHandles(D3D12CpuDescriptorHandle, D3D12GpuDescriptorHandle);
+                device.UnregisterAllocatedResource();
+                device.ReturnShaderResourceViewDescriptorHandles(D3D12CpuDescriptorHandle, D3D12GpuDescriptorHandle);
             }
         }
 
