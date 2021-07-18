@@ -116,7 +116,7 @@ namespace ComputeSharp.WinUI
         /// <summary>
         /// Indicates whether or not the rendering has been canceled.
         /// </summary>
-        private bool isCancellationRequested;
+        private volatile bool isCancellationRequested;
 
         /// <summary>
         /// The <see cref="Stopwatch"/> instance tracking time since the first rendered frame.
@@ -124,10 +124,22 @@ namespace ComputeSharp.WinUI
         private Stopwatch? renderStopwatch;
 
         /// <summary>
+        /// Indicates whether or not <see cref="OnInitialize"/> has already been called.
+        /// </summary>
+        private bool isInitialized;
+
+        /// <summary>
         /// Initializes the current application.
         /// </summary>
         private unsafe void OnInitialize()
         {
+            if (isInitialized)
+            {
+                return;
+            }
+
+            isInitialized = true;
+
             // Get the underlying ID3D12Device in use
             fixed (ID3D12Device** d3D12Device = this.d3D12Device)
             {
@@ -160,10 +172,8 @@ namespace ComputeSharp.WinUI
             }
 
             // Create the swap chain to display frames
-            using (ComPtr<IDXGISwapChain1> dxgiSwapChain1 = default)
+            using (ComPtr<IDXGIFactory2> dxgiFactory2 = default)
             {
-                using ComPtr<IDXGIFactory2> dxgiFactory2 = default;
-
                 FX.CreateDXGIFactory2(FX.DXGI_CREATE_FACTORY_DEBUG, FX.__uuidof<IDXGIFactory2>(), (void**)dxgiFactory2.GetAddressOf()).Assert();
 
                 DXGI_SWAP_CHAIN_DESC1 dxgiSwapChainDesc1 = default;
@@ -178,6 +188,8 @@ namespace ComputeSharp.WinUI
                 dxgiSwapChainDesc1.Stereo = 0;
                 dxgiSwapChainDesc1.SwapEffect = DXGI_SWAP_EFFECT.DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
                 dxgiSwapChainDesc1.BufferUsage = FX.DXGI_USAGE_RENDER_TARGET_OUTPUT;
+
+                using ComPtr<IDXGISwapChain1> dxgiSwapChain1 = default;
 
                 dxgiFactory2.Get()->CreateSwapChainForComposition(
                     (IUnknown*)this.d3D12CommandQueue.Get(),
@@ -441,6 +453,30 @@ namespace ComputeSharp.WinUI
         private void OnStopRenderLoop()
         {
             this.isCancellationRequested = true;
+        }
+
+        /// <summary>
+        /// Stops the current render loop, and releases all resources.
+        /// </summary>
+        private void OnDisposed()
+        {
+            this.isCancellationRequested = true;
+
+            // Ensure the rendering has stopped
+            if (this.renderThread is Thread renderThread)
+            {
+                renderThread.Join();
+            }
+
+            this.d3D12Device.Dispose();
+            this.d3D12CommandQueue.Dispose();
+            this.d3D12Fence.Dispose();
+            this.d3D12CommandAllocator.Dispose();
+            this.d3D12GraphicsCommandList.Dispose();
+            this.dxgiSwapChain2.Dispose();
+            this.d3D12Resource0.Dispose();
+            this.d3D12Resource1.Dispose();
+            this.texture?.Dispose();
         }
     }
 }

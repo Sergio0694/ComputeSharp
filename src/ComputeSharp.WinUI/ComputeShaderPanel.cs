@@ -20,6 +20,14 @@ namespace ComputeSharp.WinUI
             this.CompositionScaleChanged += ComputeShaderPanel_CompositionScaleChanged;
         }
 
+        /// <summary>
+        /// Finalizes the current <see cref="ComputeShaderPanel"/> instance and releases all resources.
+        /// </summary>
+        ~ComputeShaderPanel()
+        {
+            OnDisposed();
+        }
+
         // Initializes the swap chain and starts the render thread
         private void ComputeShaderPanel_Loaded(object sender, RoutedEventArgs e)
         {
