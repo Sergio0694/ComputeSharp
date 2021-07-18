@@ -109,6 +109,32 @@ namespace ComputeSharp.Tests
         [AllDevices]
         [Resource(typeof(ReadOnlyTexture3D<>))]
         [Resource(typeof(ReadWriteTexture3D<>))]
+        public void DisposeAfterDevice(Device device, Type textureType)
+        {
+            GraphicsDevice? gpu = device switch
+            {
+                Device.Discrete => Gpu.QueryDevices(info => info.IsHardwareAccelerated).FirstOrDefault(),
+                Device.Warp => Gpu.QueryDevices(info => !info.IsHardwareAccelerated).First(),
+                _ => throw new ArgumentException(nameof(device))
+            };
+
+            if (gpu is null)
+            {
+                Assert.Inconclusive();
+
+                return;
+            }
+
+            Texture3D<float> texture = gpu.AllocateTexture3D<float>(textureType, 10, 10, 4);
+
+            gpu.Dispose();
+            texture.Dispose();
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(ReadOnlyTexture3D<>))]
+        [Resource(typeof(ReadWriteTexture3D<>))]
         [Data(0, 0, 0, 64, 64, 3)]
         [Data(0, 14, 0, 64, 50, 3)]
         [Data(0, 14, 1, 64, 50, 2)]

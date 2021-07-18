@@ -76,12 +76,12 @@ namespace ComputeSharp
         /// <summary>
         /// The <see cref="D3D12MA_Allocator"/> in use associated to the current device.
         /// </summary>
-        private UniquePtr<D3D12MA_Allocator> allocator;
+        private ReferenceCountPtr<D3D12MA_Allocator> allocator;
 
         /// <summary>
         /// The <see cref="D3D12MA_Pool"/> instance in use, if <see cref="IsCacheCoherentUMA"/> is <see langword="true"/>.
         /// </summary>
-        private UniquePtr<D3D12MA_Pool> pool;
+        private ReferenceCountPtr<D3D12MA_Pool> pool;
 
         /// <summary>
         /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="ID3D12Device"/>.
@@ -117,14 +117,7 @@ namespace ComputeSharp
 
             IsCacheCoherentUMA = d3D12Architecture1Data.CacheCoherentUMA != 0;
 
-            D3D12MA_ALLOCATOR_DESC allocatorDesc = default;
-            allocatorDesc.pDevice = d3D12Device;
-            allocatorDesc.pAdapter = dxgiAdapter;
-
-            fixed (D3D12MA_Allocator** allocator = this.allocator)
-            {
-                D3D12MemAlloc.D3D12MA_CreateAllocator(&allocatorDesc, allocator).Assert();
-            }
+            this.allocator = d3D12Device->CreateAllocator(dxgiAdapter);
 
             if (IsCacheCoherentUMA)
             {
@@ -252,6 +245,24 @@ namespace ComputeSharp
                 D3D12_FORMAT_SUPPORT1_TEXTURE3D | D3D12_FORMAT_SUPPORT1_TYPED_UNORDERED_ACCESS_VIEW);
         }
 
+        /// <summary>
+        /// Registers that a new resource has been allocated on the current device.
+        /// </summary>
+        internal void RegisterAllocatedResource()
+        {
+            this.pool.AddRef();
+            this.allocator.AddRef();
+        }
+
+        /// <summary>
+        /// Unregisters a generic resource that was allocated on the current device.
+        /// </summary>
+        internal void UnregisterAllocatedResource()
+        {
+            this.pool.Dispose();
+            this.allocator.Dispose();
+        }
+
         /// <inheritdoc cref="ID3D12DescriptorHandleAllocator.Rent"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void RentShaderResourceViewDescriptorHandles(
@@ -370,13 +381,8 @@ namespace ComputeSharp
         }
 
         /// <inheritdoc/>
-        protected override bool OnDispose()
+        protected override void OnDispose()
         {
-            if (DeviceHelper.GetDefaultDeviceLuid() == Luid)
-            {
-                return false;
-            }
-
             DeviceHelper.NotifyDisposedDevice(this);
 
             this.d3D12Device.Dispose();
@@ -389,8 +395,6 @@ namespace ComputeSharp
             this.shaderResourceViewDescriptorAllocator.Dispose();
             this.pool.Dispose();
             this.allocator.Dispose();
-
-            return true;
         }
 
         /// <inheritdoc/>

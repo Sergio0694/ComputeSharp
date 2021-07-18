@@ -54,6 +54,8 @@ namespace ComputeSharp.Resources
             this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, sizeInBytes);
             this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
 
+            device.RegisterAllocatedResource();
+
             this.mappedData = (T*)this.d3D12Resource.Get()->Map().Pointer;
 
             this.d3D12Resource.Get()->SetName(this);
@@ -104,12 +106,15 @@ namespace ComputeSharp.Resources
         }
 
         /// <inheritdoc/>
-        protected override bool OnDispose()
+        protected override void OnDispose()
         {
             this.d3D12Resource.Dispose();
             this.allocation.Dispose();
 
-            return true;
+            if (GraphicsDevice is GraphicsDevice device)
+            {
+                device.UnregisterAllocatedResource();
+            }
         }
 
         /// <summary>

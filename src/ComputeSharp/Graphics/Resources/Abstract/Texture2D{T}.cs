@@ -107,6 +107,7 @@ namespace ComputeSharp.Resources
                 out _,
                 out _);
 
+            device.RegisterAllocatedResource();
             device.RentShaderResourceViewDescriptorHandles(out D3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
 
             switch (resourceType)
@@ -431,17 +432,16 @@ namespace ComputeSharp.Resources
         }
 
         /// <inheritdoc/>
-        protected override bool OnDispose()
+        protected override void OnDispose()
         {
             this.d3D12Resource.Dispose();
             this.allocation.Dispose();
 
-            if (GraphicsDevice?.IsDisposed == false)
+            if (GraphicsDevice is GraphicsDevice device)
             {
-                GraphicsDevice.ReturnShaderResourceViewDescriptorHandles(D3D12CpuDescriptorHandle, D3D12GpuDescriptorHandle);
+                device.UnregisterAllocatedResource();
+                device.ReturnShaderResourceViewDescriptorHandles(D3D12CpuDescriptorHandle, D3D12GpuDescriptorHandle);
             }
-
-            return true;
         }
 
         /// <summary>

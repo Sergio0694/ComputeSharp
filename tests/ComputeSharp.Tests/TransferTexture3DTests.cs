@@ -18,9 +18,9 @@ namespace ComputeSharp.Tests
         [Resource(typeof(ReadBackTexture3D<>))]
         [Data(AllocationMode.Default)]
         [Data(AllocationMode.Clear)]
-        public unsafe void Allocate_Uninitialized_Ok(Device device, Type bufferType, AllocationMode allocationMode)
+        public unsafe void Allocate_Uninitialized_Ok(Device device, Type textureType, AllocationMode allocationMode)
         {
-            using TransferTexture3D<float> texture = device.Get().AllocateTransferTexture3D<float>(bufferType, 128, 256, 32, allocationMode);
+            using TransferTexture3D<float> texture = device.Get().AllocateTransferTexture3D<float>(textureType, 128, 256, 32, allocationMode);
 
             Assert.IsNotNull(texture);
             Assert.AreEqual(texture.Width, 128);
@@ -57,9 +57,9 @@ namespace ComputeSharp.Tests
         [Data(12, 12, -1)]
         [Data(2, 4, ushort.MaxValue + 1)]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void Allocate_Uninitialized_Fail(Device device, Type bufferType, int width, int height, int depth)
+        public void Allocate_Uninitialized_Fail(Device device, Type textureType, int width, int height, int depth)
         {
-            using TransferTexture3D<float> texture = device.Get().AllocateTransferTexture3D<float>(bufferType, width, height, depth);
+            using TransferTexture3D<float> texture = device.Get().AllocateTransferTexture3D<float>(textureType, width, height, depth);
         }
 
         [CombinatorialTestMethod]
@@ -67,13 +67,39 @@ namespace ComputeSharp.Tests
         [Resource(typeof(UploadTexture3D<>))]
         [Resource(typeof(ReadBackTexture3D<>))]
         [ExpectedException(typeof(ObjectDisposedException))]
-        public void UsageAfterDispose(Device device, Type bufferType)
+        public void UsageAfterDispose(Device device, Type textureType)
         {
-            using TransferTexture3D<float> texture = device.Get().AllocateTransferTexture3D<float>(bufferType, 32, 32, 16);
+            using TransferTexture3D<float> texture = device.Get().AllocateTransferTexture3D<float>(textureType, 32, 32, 16);
 
             texture.Dispose();
 
             _ = texture.View;
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(UploadTexture3D<>))]
+        [Resource(typeof(ReadBackTexture3D<>))]
+        public void DisposeAfterDevice(Device device, Type textureType)
+        {
+            GraphicsDevice? gpu = device switch
+            {
+                Device.Discrete => Gpu.QueryDevices(info => info.IsHardwareAccelerated).FirstOrDefault(),
+                Device.Warp => Gpu.QueryDevices(info => !info.IsHardwareAccelerated).First(),
+                _ => throw new ArgumentException(nameof(device))
+            };
+
+            if (gpu is null)
+            {
+                Assert.Inconclusive();
+
+                return;
+            }
+
+            TransferTexture3D<float> texture = gpu.AllocateTransferTexture3D<float>(textureType, 32, 32, 16);
+
+            gpu.Dispose();
+            texture.Dispose();
         }
 
         [CombinatorialTestMethod]

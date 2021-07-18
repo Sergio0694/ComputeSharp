@@ -74,6 +74,8 @@ namespace ComputeSharp.Resources
             this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, totalSizeInBytes);
             this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
 
+            device.RegisterAllocatedResource();
+
             this.mappedData = (T*)this.d3D12Resource.Get()->Map().Pointer;
 
             this.d3D12Resource.Get()->SetName(this);
@@ -93,6 +95,7 @@ namespace ComputeSharp.Resources
         /// Gets the height of the current texture.
         /// </summary>
         public int Height => (int)this.d3D12PlacedSubresourceFootprint.Footprint.Height;
+
         /// <summary>
         /// Gets the depth of the current texture.
         /// </summary>
@@ -121,12 +124,15 @@ namespace ComputeSharp.Resources
         }
 
         /// <inheritdoc/>
-        protected override bool OnDispose()
+        protected override void OnDispose()
         {
             this.d3D12Resource.Dispose();
             this.allocation.Dispose();
 
-            return true;
+            if (GraphicsDevice is GraphicsDevice device)
+            {
+                device.UnregisterAllocatedResource();
+            }
         }
 
         /// <summary>

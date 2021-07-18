@@ -18,9 +18,9 @@ namespace ComputeSharp.Tests
         [Resource(typeof(ReadBackTexture2D<>))]
         [Data(AllocationMode.Default)]
         [Data(AllocationMode.Clear)]
-        public unsafe void Allocate_Uninitialized_Ok(Device device, Type bufferType, AllocationMode allocationMode)
+        public unsafe void Allocate_Uninitialized_Ok(Device device, Type textureType, AllocationMode allocationMode)
         {
-            using TransferTexture2D<float> texture = device.Get().AllocateTransferTexture2D<float>(bufferType, 128, 256, allocationMode);
+            using TransferTexture2D<float> texture = device.Get().AllocateTransferTexture2D<float>(textureType, 128, 256, allocationMode);
 
             Assert.IsNotNull(texture);
             Assert.AreEqual(texture.Width, 128);
@@ -50,9 +50,9 @@ namespace ComputeSharp.Tests
         [Data(0, -4314)]
         [Data(-14, -53)]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void Allocate_Uninitialized_Fail(Device device, Type bufferType, int width, int height)
+        public void Allocate_Uninitialized_Fail(Device device, Type textureType, int width, int height)
         {
-            using TransferTexture2D<float> texture = device.Get().AllocateTransferTexture2D<float>(bufferType, width, height);
+            using TransferTexture2D<float> texture = device.Get().AllocateTransferTexture2D<float>(textureType, width, height);
         }
 
         [CombinatorialTestMethod]
@@ -60,13 +60,39 @@ namespace ComputeSharp.Tests
         [Resource(typeof(UploadTexture2D<>))]
         [Resource(typeof(ReadBackTexture2D<>))]
         [ExpectedException(typeof(ObjectDisposedException))]
-        public void UsageAfterDispose(Device device, Type bufferType)
+        public void UsageAfterDispose(Device device, Type textureType)
         {
-            using TransferTexture2D<float> texture = device.Get().AllocateTransferTexture2D<float>(bufferType, 32, 32);
+            using TransferTexture2D<float> texture = device.Get().AllocateTransferTexture2D<float>(textureType, 32, 32);
 
             texture.Dispose();
 
             _ = texture.View;
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
+        [Resource(typeof(UploadTexture2D<>))]
+        [Resource(typeof(ReadBackTexture2D<>))]
+        public void DisposeAfterDevice(Device device, Type textureType)
+        {
+            GraphicsDevice? gpu = device switch
+            {
+                Device.Discrete => Gpu.QueryDevices(info => info.IsHardwareAccelerated).FirstOrDefault(),
+                Device.Warp => Gpu.QueryDevices(info => !info.IsHardwareAccelerated).First(),
+                _ => throw new ArgumentException(nameof(device))
+            };
+
+            if (gpu is null)
+            {
+                Assert.Inconclusive();
+
+                return;
+            }
+
+            TransferTexture2D<float> texture = gpu.AllocateTransferTexture2D<float>(textureType, 32, 32);
+
+            gpu.Dispose();
+            texture.Dispose();
         }
 
         [CombinatorialTestMethod]

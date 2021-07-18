@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
+using ComputeSharp.Interop;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_COMMAND_QUEUE_FLAGS;
 using static TerraFX.Interop.D3D12_COMMAND_QUEUE_PRIORITY;
@@ -20,6 +22,25 @@ namespace ComputeSharp.Graphics.Extensions
     /// </summary>
     internal static unsafe class ID3D12DeviceExtensions
     {
+        /// <summary>
+        /// Creates a <see cref="D3D12MA_Allocator"/> instance for a given device.
+        /// </summary>
+        /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the allocator.</param>
+        /// <param name="dxgiAdapter">The <see cref="IDXGIAdapter"/> that <paramref name="d3D12Device"/> was created from.</param>
+        /// <returns>A <see cref="D3D12MA_Allocator"/> instance to create resources on the device in use.</returns>
+        public static ReferenceCountPtr<D3D12MA_Allocator> CreateAllocator(this ref ID3D12Device d3D12Device, IDXGIAdapter* dxgiAdapter)
+        {
+            using ReferenceCountPtr<D3D12MA_Allocator> allocator = default;
+
+            D3D12MA_ALLOCATOR_DESC allocatorDesc = default;
+            allocatorDesc.pDevice = (ID3D12Device*)Unsafe.AsPointer(ref d3D12Device);
+            allocatorDesc.pAdapter = dxgiAdapter;
+
+            D3D12MemAlloc.D3D12MA_CreateAllocator(&allocatorDesc, allocator.GetAddressOf()).Assert();
+
+            return allocator.Move();
+        }
+
         /// <summary>
         /// Creates a new <see cref="ID3D12InfoQueue"/> for a given device.
         /// </summary>

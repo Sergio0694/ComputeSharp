@@ -22,9 +22,9 @@ namespace ComputeSharp.Graphics.Extensions
         /// </summary>
         /// <param name="allocator">The <see cref="D3D12MA_Allocator"/> instance in use.</param>
         /// <returns>A <see cref="D3D12MA_Pool"/> instance suited to be used for cache coherent UMA devices.</returns>
-        public static UniquePtr<D3D12MA_Pool> CreatePoolForCacheCoherentUMA(this ref D3D12MA_Allocator allocator)
+        public static ReferenceCountPtr<D3D12MA_Pool> CreatePoolForCacheCoherentUMA(this ref D3D12MA_Allocator allocator)
         {
-            using UniquePtr<D3D12MA_Pool> pool = default;
+            using ReferenceCountPtr<D3D12MA_Pool> pool = default;
 
             D3D12MA_POOL_DESC poolDesc = default;
             poolDesc.HeapProperties.CreationNodeMask = 1;
