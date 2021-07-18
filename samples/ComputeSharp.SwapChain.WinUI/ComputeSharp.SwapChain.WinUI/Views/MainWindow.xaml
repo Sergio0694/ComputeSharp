@@ -107,9 +107,9 @@
                                             ShaderRunner="{x:Bind ShaderRunner}"/>
 
                                         <!--Note: here we have a selection property to work around {x:Bind} not working correctly outside of the
-                                        current template scope. Once that's fixed in WinUI 3, this can be rewritten as a multi-binding like this:
-                                        Visibility="{x:Bind system:Object.ReferenceEquals((local:ComputeShader), ViewModel.SelectedComputeShader), Mode=OneWay}".
-                                        When that is working, the ComputeShader.IsSelected property can also be removed, as it will no longer be needed.-->
+                                            current template scope. Once that's fixed in WinUI 3, this can be rewritten as a multi-binding like this:
+                                            Visibility="{x:Bind system:Object.ReferenceEquals((local:ComputeShader), ViewModel.SelectedComputeShader), Mode=OneWay}".
+                                            When that is working, the ComputeShader.IsSelected property can also be removed, as it will no longer be needed.-->
                                         <Border
                                             BorderThickness="4"
                                             BorderBrush="White"
