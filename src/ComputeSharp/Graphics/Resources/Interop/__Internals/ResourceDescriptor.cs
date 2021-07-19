@@ -12,7 +12,7 @@ namespace ComputeSharp.__Internals
     /// An opaque type describing a captured resource to be used in a shader.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("This interface is not intended to be used directly by user code")]
+    [Obsolete("This type is not intended to be used directly by user code")]
     public struct ResourceDescriptor
     {
         /// <inheritdoc cref="D3D12_DESCRIPTOR_RANGE1.RangeType"/>
