@@ -30,7 +30,7 @@ namespace ComputeSharp.Interop
         /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
         /// </remarks>
         public static void GetShaderInfo<T>(out ShaderInfo shaderInfo)
-            where T : struct, IComputeShader, IShader<T>
+            where T : struct, IComputeShader
         {
             GetNonGenericShaderInfo(default(T), out shaderInfo);
         }
@@ -47,7 +47,7 @@ namespace ComputeSharp.Interop
         /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
         /// </remarks>
         public static unsafe void GetShaderInfo<T>(in T shader, out ShaderInfo shaderInfo)
-            where T : struct, IComputeShader, IShader<T>
+            where T : struct, IComputeShader
         {
             GetNonGenericShaderInfo(in shader, out shaderInfo);
         }
@@ -68,7 +68,7 @@ namespace ComputeSharp.Interop
         /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
         /// </remarks>
         public static void GetShaderInfo<T, TPixel>(out ShaderInfo shaderInfo)
-            where T : struct, IPixelShader<TPixel>, IShader<T>
+            where T : struct, IPixelShader<TPixel>
             where TPixel : unmanaged
         {
             GetNonGenericShaderInfo(default(T), out shaderInfo);
@@ -87,7 +87,7 @@ namespace ComputeSharp.Interop
         /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
         /// </remarks>
         public static unsafe void GetShaderInfo<T, TPixel>(in T shader, out ShaderInfo shaderInfo)
-            where T : struct, IPixelShader<TPixel>, IShader<T>
+            where T : struct, IPixelShader<TPixel>
             where TPixel : unmanaged
         {
             GetNonGenericShaderInfo(in shader, out shaderInfo);
@@ -100,9 +100,9 @@ namespace ComputeSharp.Interop
         /// <param name="shader">The input shader to retrieve info for.</param>
         /// <param name="shaderInfo">The resulting <see cref="ShaderInfo"/> instance.</param>
         private static unsafe void GetNonGenericShaderInfo<T>(in T shader, out ShaderInfo shaderInfo)
-            where T : struct, IShader<T>
+            where T : struct, IShader
         {
-            shader.BuildHlslString(out ArrayPoolStringBuilder shaderSource, 1, 1, 1);
+            Unsafe.AsRef(in shader).BuildHlslString(out ArrayPoolStringBuilder shaderSource, 1, 1, 1);
 
             using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.CompileShader(shaderSource.WrittenSpan);
 

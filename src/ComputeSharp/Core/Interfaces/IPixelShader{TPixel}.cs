@@ -1,9 +1,13 @@
-﻿namespace ComputeSharp
+﻿using ComputeSharp.__Internals;
+
+#pragma warning disable CS0618
+
+namespace ComputeSharp
 {
     /// <summary>
     /// An <see langword="interface"/> representing a pixel shader.
     /// </summary>
-    public interface IPixelShader<TPixel>
+    public interface IPixelShader<TPixel> : IShader
         where TPixel : unmanaged
     {
         /// <summary>

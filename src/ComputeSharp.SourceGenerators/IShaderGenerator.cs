@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ComputeSharp.__Internals;
 using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
 using Microsoft.CodeAnalysis;
@@ -10,6 +11,8 @@ using Microsoft.CodeAnalysis.Text;
 using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Microsoft.CodeAnalysis.SymbolDisplayTypeQualificationStyle;
+
+#pragma warning disable CS0618
 
 namespace ComputeSharp.SourceGenerators
 {
@@ -97,16 +100,13 @@ namespace ComputeSharp.SourceGenerators
             // Create the partial shader type declaration with the hashcode interface method implementation.
             // This code produces a struct declaration as follows:
             //
-            // public struct ShaderType : IShader<ShaderType>
+            // public <MODIFIERS> struct ShaderType
             // {
             //     <METHODS_LIST>
             // }
             var structDeclarationSyntax =
                 StructDeclaration(structName)
                     .WithModifiers(structModifiers)
-                    .AddBaseListTypes(SimpleBaseType(
-                        GenericName(Identifier("IShader"))
-                        .AddTypeArgumentListArguments(IdentifierName(structName))))
                     .AddMembers(methods.Select(m => m.AddAttributeLists(attributes)).ToArray());
 
             TypeDeclarationSyntax typeDeclarationSyntax = structDeclarationSyntax;

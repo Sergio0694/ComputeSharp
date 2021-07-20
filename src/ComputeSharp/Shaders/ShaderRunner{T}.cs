@@ -20,7 +20,7 @@ namespace ComputeSharp.Shaders
     /// </summary>
     /// <typeparam name="T">The type of compute shader to run.</typeparam>
     internal static class ShaderRunner<T>
-        where T : struct, IShader<T>
+        where T : struct, IShader
     {
         /// <summary>
         /// The mapping used to cache and reuse compiled shaders.

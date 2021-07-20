@@ -1,15 +1,12 @@
 ﻿using System;
-using ComputeSharp.__Internals;
 using ComputeSharp.Interop;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
 
-#pragma warning disable CS0618
-
 namespace ComputeSharp.SwapChain.Backend
 {
     internal sealed class SwapChainApplication<T> : Win32Application
-        where T : struct, IPixelShader<Float4>, IShader<T>
+        where T : struct, IPixelShader<Float4>
     {
         /// <summary>
         /// The <see cref="Func{T1, TResult}"/> instance used to create shaders to run.

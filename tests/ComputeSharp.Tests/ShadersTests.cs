@@ -140,7 +140,7 @@ namespace ComputeSharp.Tests
                 if (shaderType.IsAssignableTo(typeof(IComputeShader)))
                 {
                     static void RunComputeShader<T>(ReadWriteTexture2D<Rgba32, Float4> texture)
-                        where T : struct, IComputeShader, IShader<T>
+                        where T : struct, IComputeShader
                     {
                         texture.GraphicsDevice.For(texture.Width, texture.Height, (T)Activator.CreateInstance(typeof(T), texture, 0f)!);
                     }
@@ -152,7 +152,7 @@ namespace ComputeSharp.Tests
                 else
                 {
                     static void RunPixelShader<T>(ReadWriteTexture2D<Rgba32, Float4> texture)
-                        where T : struct, IPixelShader<Float4>, IShader<T>
+                        where T : struct, IPixelShader<Float4>
                     {
                         texture.GraphicsDevice.ForEach(texture, (T)Activator.CreateInstance(typeof(T), 0f)!);
                     }
@@ -191,8 +191,8 @@ namespace ComputeSharp.Tests
             Func<ReadWriteTexture2D<Rgba32, Float4>, TCompute> computeFactory,
             Func<ReadWriteTexture2D<Rgba32, Float4>, TPixel> pixelFactory,
             float delta)
-            where TCompute : struct, IComputeShader, IShader<TCompute>
-            where TPixel : struct, IPixelShader<Float4>, IShader<TPixel>
+            where TCompute : struct, IComputeShader
+            where TPixel : struct, IPixelShader<Float4>
         {
             _ = device.Get();
 
