@@ -79,7 +79,7 @@ namespace ComputeSharp.SourceGenerators
 
             // This code produces a method declaration as follows:
             //
-            // public readonly void BuildHlslString(ref ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ)
+            // readonly void IShader.BuildHlslString(ref ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ)
             // {
             //     <BODY>
             // }
@@ -87,7 +87,8 @@ namespace ComputeSharp.SourceGenerators
                 MethodDeclaration(
                     PredefinedType(Token(SyntaxKind.VoidKeyword)),
                     Identifier("BuildHlslString"))
-                .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.ReadOnlyKeyword))
+                .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName(nameof(IShader))))
+                .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
                 .AddParameterListParameters(
                     Parameter(Identifier("builder")).AddModifiers(Token(SyntaxKind.OutKeyword)).WithType(IdentifierName("ArrayPoolStringBuilder")),
                     Parameter(Identifier("threadsX")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),

@@ -1,4 +1,5 @@
-﻿using ComputeSharp.Tests.Internals.Helpers;
+﻿using ComputeSharp.__Internals;
+using ComputeSharp.Tests.Internals.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 #pragma warning disable CS0618
@@ -26,7 +27,7 @@ namespace ComputeSharp.Tests.Internals
 
             DebugDispatchDataLoader dataLoader = DebugDispatchDataLoader.Create();
 
-            new CapturedResourceShader(buffer).LoadDispatchData(ref dataLoader, Gpu.Default, 111, 222, 333);
+            ((IShader)new CapturedResourceShader(buffer)).LoadDispatchData(ref dataLoader, Gpu.Default, 111, 222, 333);
 
             Assert.AreEqual(3, dataLoader.Values.Length);
             Assert.AreEqual(1, dataLoader.Resources.Length);
@@ -59,7 +60,7 @@ namespace ComputeSharp.Tests.Internals
 
             DebugDispatchDataLoader dataLoader = DebugDispatchDataLoader.Create();
 
-            new MultipleResourcesAndPrimitivesShader(buffer0, buffer1, 1, 22, 77).LoadDispatchData(ref dataLoader, Gpu.Default, 111, 222, 333);
+            ((IShader)new MultipleResourcesAndPrimitivesShader(buffer0, buffer1, 1, 22, 77)).LoadDispatchData(ref dataLoader, Gpu.Default, 111, 222, 333);
 
             Assert.AreEqual(6, dataLoader.Values.Length);
             Assert.AreEqual(2, dataLoader.Resources.Length);
@@ -98,7 +99,7 @@ namespace ComputeSharp.Tests.Internals
             DebugDispatchDataLoader dataLoader = DebugDispatchDataLoader.Create();
             ScalarAndVectorTypesShader shader = new(buffer, new(55, 44, 888), 22, 77, new(3.14, 6.28), 42, 9999);
 
-            shader.LoadDispatchData(ref dataLoader, Gpu.Default, 111, 222, 333);
+            ((IShader)shader).LoadDispatchData(ref dataLoader, Gpu.Default, 111, 222, 333);
 
             Assert.AreEqual(18, dataLoader.Values.Length);
             Assert.AreEqual(1, dataLoader.Resources.Length);
@@ -160,7 +161,7 @@ namespace ComputeSharp.Tests.Internals
                 i2x2: new(11, 22, 33, 44),
                 d: 9999);
 
-            shader.LoadDispatchData(ref dataLoader, Gpu.Default, 111, 222, 333);
+            ((IShader)shader).LoadDispatchData(ref dataLoader, Gpu.Default, 111, 222, 333);
 
             Assert.AreEqual(31, dataLoader.Values.Length);
             Assert.AreEqual(1, dataLoader.Resources.Length);
@@ -240,7 +241,7 @@ namespace ComputeSharp.Tests.Internals
                     i2x2: new(11, 22, 33, 44),
                     d: 9999));
 
-            shader.LoadDispatchData(ref dataLoader, Gpu.Default, 111, 222, 333);
+            ((IShader)shader).LoadDispatchData(ref dataLoader, Gpu.Default, 111, 222, 333);
 
             Assert.AreEqual(31, dataLoader.Values.Length);
             Assert.AreEqual(1, dataLoader.Resources.Length);
@@ -344,7 +345,7 @@ namespace ComputeSharp.Tests.Internals
                         a: 888888,
                         b: new(333.3f, 444.4f))));
 
-            shader.LoadDispatchData(ref dataLoader, Gpu.Default, 111, 222, 333);
+            ((IShader)shader).LoadDispatchData(ref dataLoader, Gpu.Default, 111, 222, 333);
 
             Assert.AreEqual(47, dataLoader.Values.Length);
             Assert.AreEqual(1, dataLoader.Resources.Length);
@@ -425,7 +426,7 @@ namespace ComputeSharp.Tests.Internals
 
             DebugDispatchDataLoader dataLoader = DebugDispatchDataLoader.Create();
 
-            new AmbiguousNamesShader(a, b, c, x, y, z, 7777, 8888, 9999).LoadDispatchData(ref dataLoader, Gpu.Default, 111, 222, 333);
+            ((IShader)new AmbiguousNamesShader(a, b, c, x, y, z, 7777, 8888, 9999)).LoadDispatchData(ref dataLoader, Gpu.Default, 111, 222, 333);
 
             Assert.AreEqual(6, dataLoader.Values.Length);
             Assert.AreEqual(6, dataLoader.Resources.Length);

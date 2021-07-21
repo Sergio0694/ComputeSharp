@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ComputeSharp.__Internals;
 using ComputeSharp.Core.Helpers;
 using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
@@ -10,6 +11,8 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+
+#pragma warning disable CS0618
 
 namespace ComputeSharp.SourceGenerators
 {
@@ -25,8 +28,7 @@ namespace ComputeSharp.SourceGenerators
         {
             // This code produces a method declaration as follows:
             //
-            // public readonly void LoadDispatchData<TDataLoader>(ref TDataLoader loader, GraphicsDevice device, int x, int y, int z)
-            //     where TDataLoader : struct, IDispatchDataLoader
+            // readonly void IShader.LoadDispatchData<TDataLoader>(ref TDataLoader loader, GraphicsDevice device, int x, int y, int z)
             // {
             //     <BODY>
             // }
@@ -34,7 +36,8 @@ namespace ComputeSharp.SourceGenerators
                 MethodDeclaration(
                     PredefinedType(Token(SyntaxKind.VoidKeyword)),
                     Identifier("LoadDispatchData"))
-                .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.ReadOnlyKeyword))
+                .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName(nameof(IShader))))
+                .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
                 .AddTypeParameterListParameters(TypeParameter(Identifier("TDataLoader")))
                 .AddParameterListParameters(
                     Parameter(Identifier("loader"))
@@ -44,11 +47,6 @@ namespace ComputeSharp.SourceGenerators
                     Parameter(Identifier("x")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
                     Parameter(Identifier("y")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
                     Parameter(Identifier("z")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))))
-                .AddConstraintClauses(
-                    TypeParameterConstraintClause(IdentifierName("TDataLoader"))
-                    .AddConstraints(
-                        ClassOrStructConstraint(SyntaxKind.StructConstraint),
-                        TypeConstraint(IdentifierName("IDispatchDataLoader"))))
                 .WithBody(Block(GetDispatchDataLoadingStatements(context, structDeclarationSymbol, out discoveredResources, out root32BitConstantsCount)));
         }
 

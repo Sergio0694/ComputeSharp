@@ -2,10 +2,13 @@
 using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using ComputeSharp.__Internals;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+
+#pragma warning disable CS0618
 
 namespace ComputeSharp.SourceGenerators
 {
@@ -17,7 +20,7 @@ namespace ComputeSharp.SourceGenerators
         {
             // This code produces a method declaration as follows:
             //
-            // public readonly int GetDispatchId()
+            // readonly int IShader.GetDispatchId()
             // {
             //     <BODY>
             // }
@@ -25,7 +28,8 @@ namespace ComputeSharp.SourceGenerators
                 MethodDeclaration(
                     PredefinedType(Token(SyntaxKind.IntKeyword)),
                     Identifier("GetDispatchId"))
-                .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.ReadOnlyKeyword))
+                .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName(nameof(IShader))))
+                .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
                 .WithBody(GetShaderHashCodeBody(structDeclarationSymbol));
         }
 
