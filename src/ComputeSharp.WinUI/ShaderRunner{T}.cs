@@ -1,7 +1,4 @@
 ﻿using System;
-using ComputeSharp.__Internals;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.WinUI
 {
@@ -10,7 +7,7 @@ namespace ComputeSharp.WinUI
     /// </summary>
     /// <typeparam name="T">The type of shader to use to render frames.</typeparam>
     public sealed class ShaderRunner<T> : IShaderRunner
-        where T : struct, IPixelShader<Float4>, IShader<T>
+        where T : struct, IPixelShader<Float4>
     {
         /// <summary>
         /// The <see cref="Func{T1, TResult}"/> instance used to create shaders to run.
