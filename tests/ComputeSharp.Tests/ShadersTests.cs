@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using ComputeSharp.__Internals;
 using ComputeSharp.SwapChain.Shaders;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
@@ -10,8 +9,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.Tests
 {

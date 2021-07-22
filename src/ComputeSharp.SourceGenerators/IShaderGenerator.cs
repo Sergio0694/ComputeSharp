@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ComputeSharp.__Internals;
 using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
 using Microsoft.CodeAnalysis;
@@ -11,8 +10,6 @@ using Microsoft.CodeAnalysis.Text;
 using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Microsoft.CodeAnalysis.SymbolDisplayTypeQualificationStyle;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.SourceGenerators
 {
@@ -75,7 +72,7 @@ namespace ComputeSharp.SourceGenerators
             };
 
             // Method attributes
-            AttributeListSyntax[] attributes = new[]
+            List<AttributeListSyntax> attributes = new()
             {
                 AttributeList(SingletonSeparatedList(
                     Attribute(IdentifierName("GeneratedCode")).AddArgumentListArguments(
@@ -93,6 +90,12 @@ namespace ComputeSharp.SourceGenerators
                         Literal("This method is not intended to be used directly by user code"))))))
             };
 
+            // Add [SkipLocalsInit] if the target project allows it
+            if (context.Compilation.Options is CSharpCompilationOptions { AllowUnsafe: true })
+            {
+                attributes.Add(AttributeList(SingletonSeparatedList(Attribute(IdentifierName("SkipLocalsInit")))));
+            }
+
             string namespaceName = structDeclarationSymbol.ContainingNamespace.ToDisplayString(new(typeQualificationStyle: NameAndContainingTypesAndNamespaces));
             string structName = structDeclaration.Identifier.Text;
             SyntaxTokenList structModifiers = structDeclaration.Modifiers;
@@ -107,7 +110,7 @@ namespace ComputeSharp.SourceGenerators
             var structDeclarationSyntax =
                 StructDeclaration(structName)
                     .WithModifiers(structModifiers)
-                    .AddMembers(methods.Select(m => m.AddAttributeLists(attributes)).ToArray());
+                    .AddMembers(methods.Select(m => m.AddAttributeLists(attributes.ToArray())).ToArray());
 
             TypeDeclarationSyntax typeDeclarationSyntax = structDeclarationSyntax;
 
