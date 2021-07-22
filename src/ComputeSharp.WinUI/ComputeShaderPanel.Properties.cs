@@ -1,11 +1,10 @@
 ﻿using System;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 
 namespace ComputeSharp.WinUI
 {
     /// <inheritdoc cref="ComputeShaderPanel"/>
-    public sealed unsafe partial class ComputeShaderPanel : SwapChainPanel
+    public sealed unsafe partial class ComputeShaderPanel
     {
         /// <summary>
         /// Gets or sets the <see cref="IShaderRunner"/> instance to use to render content.
