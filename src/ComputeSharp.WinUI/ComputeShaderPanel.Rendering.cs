@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Threading;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Interop;
-using Microsoft.UI.Xaml.Controls;
 using TerraFX.Interop;
 using WinRT;
 using FX = TerraFX.Interop.Windows;
@@ -11,7 +10,7 @@ using FX = TerraFX.Interop.Windows;
 namespace ComputeSharp.WinUI
 {
     /// <inheritdoc cref="ComputeShaderPanel"/>
-    public sealed partial class ComputeShaderPanel : SwapChainPanel
+    public sealed partial class ComputeShaderPanel
     {
         /// <summary>
         /// The render thread in use, if any.
@@ -232,21 +231,22 @@ namespace ComputeSharp.WinUI
 
             // Extract the ISwapChainPanelNative reference from the current panel, then query the
             // IDXGISwapChain reference just created and set that as the swap chain panel to use.
-            using (ComPtr<ISwapChainPanelNative> swapChainPanelNative = default)
-            {
-                IUnknown* swapChainPanel = (IUnknown*)((IWinRTObject)this).NativeObject.ThisPtr;
-                Guid iSwapChainPanelNativeUuid = Guid.Parse("63AAD0B8-7C24-40FF-85A8-640D944CC325");
+            using ComPtr<ISwapChainPanelNative> swapChainPanelNative = default;
 
-                swapChainPanel->QueryInterface(
-                    &iSwapChainPanelNativeUuid,
-                    (void**)&swapChainPanelNative).Assert();
+            IUnknown* swapChainPanel = (IUnknown*)((IWinRTObject)this).NativeObject.ThisPtr;
+            Guid iSwapChainPanelNativeUuid = new(0x63AAD0B8, 0x7C24, 0x40FF, 0x85, 0xA8, 0x64, 0x0D, 0x94, 0x4C, 0xC3, 0x25);
 
-                using ComPtr<IDXGISwapChain> idxgiSwapChain = default;
+            swapChainPanel->QueryInterface(
+                &iSwapChainPanelNativeUuid,
+                (void**)&swapChainPanelNative).Assert();
 
-                this.dxgiSwapChain2.CopyTo(&idxgiSwapChain).Assert();
+            using ComPtr<IDXGISwapChain> idxgiSwapChain = default;
 
-                swapChainPanelNative.Get()->SetSwapChain(idxgiSwapChain.Get()).Assert();
-            }
+            this.dxgiSwapChain2.CopyTo(&idxgiSwapChain).Assert();
+
+            swapChainPanelNative.Get()->SetSwapChain(idxgiSwapChain.Get()).Assert();
+
+            GC.KeepAlive(this);
         }
 
         /// <summary>
