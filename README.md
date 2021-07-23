@@ -5,6 +5,12 @@
 
 **ComputeSharp** is a .NET 5 library to run C# code in parallel on the GPU through DX12 and dynamically generated HLSL compute shaders. The available APIs let you access GPU devices, allocate GPU buffers and textures, move data between them and the RAM, write compute shaders entirely in C# and have them run on the GPU. The goal of this project is to make GPU computing easy to use for all .NET developers! 🚀
 
+# What can it actually do?
+
+Since a video is worth a thousand words, here's a showcase of some pixel shaders (originally from [shadertoy.com](https://www.shadertoy.com/)), ported from GLSL to C# and running with **ComputeSharp** in a WinUI 3 sample app. You can use this library to create all sorts of things from scientific simulations, to animated backgrounds, audio visualizers and more! 🙌
+
+https://user-images.githubusercontent.com/10199417/126792509-c11feb11-a609-4fab-86b3-426d43df6d90.mp4
+
 # Table of Contents
 
 - [Installing from NuGet](#installing-from-nuget)
