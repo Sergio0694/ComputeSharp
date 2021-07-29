@@ -23,13 +23,13 @@ namespace ComputeSharp.Graphics.Helpers
             /// <summary>
             /// The <see cref="Predicate{T}"/> instance to use to select devices to create.
             /// </summary>
-            private readonly Predicate<GraphicsDeviceInfo> predicate;
+            private readonly Predicate<GraphicsDeviceInfo>? predicate;
 
             /// <summary>
             /// Creates a new <see cref="Enumerator"/> instance for the given predicate.
             /// </summary>
             /// <param name="predicate">The input predicate to select devices to create.</param>
-            public DeviceQuery(Predicate<GraphicsDeviceInfo> predicate)
+            public DeviceQuery(Predicate<GraphicsDeviceInfo>? predicate)
             {
                 this.predicate = predicate;
             }
@@ -52,9 +52,9 @@ namespace ComputeSharp.Graphics.Helpers
             private sealed unsafe class Enumerator : NativeObject, IEnumerator<GraphicsDevice>
             {
                 /// <summary>
-                /// The <see cref="Predicate{T}"/> instance to use to select devices to create.
+                /// The <see cref="Predicate{T}"/> instance to use to select devices to create, if present.
                 /// </summary>
-                private readonly Predicate<GraphicsDeviceInfo> predicate;
+                private readonly Predicate<GraphicsDeviceInfo>? predicate;
 
                 /// <summary>
                 /// The <see cref="IDXGIFactory4"/> instance used to enumerate devices.
@@ -85,7 +85,7 @@ namespace ComputeSharp.Graphics.Helpers
                 /// Creates a new <see cref="Enumerator"/> instance for the given predicate.
                 /// </summary>
                 /// <param name="predicate">The input predicate to select devices to create.</param>
-                public Enumerator(Predicate<GraphicsDeviceInfo> predicate)
+                public Enumerator(Predicate<GraphicsDeviceInfo>? predicate)
                 {
                     this.predicate = predicate;
                 }
@@ -134,7 +134,7 @@ namespace ComputeSharp.Graphics.Helpers
                                 null);
 
                             if (FX.SUCCEEDED(createDeviceResult) &&
-                                this.predicate(new GraphicsDeviceInfo(&dxgiDescription1)))
+                                this.predicate?.Invoke(new GraphicsDeviceInfo(&dxgiDescription1)) != false)
                             {
                                 using ComPtr<ID3D12Device> d3D12Device = default;
 
@@ -175,7 +175,7 @@ namespace ComputeSharp.Graphics.Helpers
                                 null);
 
                             if (FX.SUCCEEDED(createDeviceResult) &&
-                                this.predicate(new GraphicsDeviceInfo(&dxgiDescription1)))
+                                this.predicate?.Invoke(new GraphicsDeviceInfo(&dxgiDescription1)) != false)
                             {
                                 using ComPtr<ID3D12Device> d3D12Device = default;
 

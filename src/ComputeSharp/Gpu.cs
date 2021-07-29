@@ -34,7 +34,7 @@ namespace ComputeSharp
         [Pure]
         public static IEnumerable<GraphicsDevice> EnumerateDevices()
         {
-            return new DeviceHelper.DeviceQuery(static _ => true);
+            return new DeviceHelper.DeviceQuery(null);
         }
 
         /// <summary>
