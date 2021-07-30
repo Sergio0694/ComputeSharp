@@ -9,6 +9,7 @@ using FX = TerraFX.Interop.Windows;
 using HRESULT = System.Int32;
 using static TerraFX.Interop.D3D_FEATURE_LEVEL;
 using static TerraFX.Interop.D3D_SHADER_MODEL;
+using static TerraFX.Interop.DXGI_GPU_PREFERENCE;
 
 namespace ComputeSharp.Graphics.Helpers
 {
@@ -57,17 +58,17 @@ namespace ComputeSharp.Graphics.Helpers
                 private readonly Predicate<GraphicsDeviceInfo>? predicate;
 
                 /// <summary>
-                /// The <see cref="IDXGIFactory4"/> instance used to enumerate devices.
+                /// The <see cref="IDXGIFactory6"/> instance used to enumerate devices.
                 /// </summary>
-                private ComPtr<IDXGIFactory4> dxgiFactory4;
+                private ComPtr<IDXGIFactory6> dxgiFactory6;
 
                 /// <summary>
-                /// Indicates whether or not the enumerator has already been initialized and <see cref="dxgiFactory4"/> is set.
+                /// Indicates whether or not the enumerator has already been initialized and <see cref="dxgiFactory6"/> is set.
                 /// </summary>
                 private bool isInitialized;
 
                 /// <summary>
-                /// The current adapter index to enumerate adapters from <see cref="dxgiFactory4"/>.
+                /// The current adapter index to enumerate adapters from <see cref="dxgiFactory6"/>.
                 /// </summary>
                 private uint index;
 
@@ -103,11 +104,9 @@ namespace ComputeSharp.Graphics.Helpers
                     {
                         this.isInitialized = true;
 
-                        fixed (IDXGIFactory4** dxgiFactory4 = this.dxgiFactory4)
+                        fixed (IDXGIFactory6** dxgiFactory6 = this.dxgiFactory6)
                         {
-                            EnableDebugMode();
-
-                            FX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, FX.__uuidof<IDXGIFactory4>(), (void**)dxgiFactory4).Assert();
+                            CreateDXGIFactory6(dxgiFactory6);
                         }
                     }
 
@@ -117,11 +116,15 @@ namespace ComputeSharp.Graphics.Helpers
                     {
                         using ComPtr<IDXGIAdapter1> dxgiAdapter1 = default;
 
-                        HRESULT enumAdapters1Result = this.dxgiFactory4.Get()->EnumAdapters1(this.index, dxgiAdapter1.GetAddressOf());
+                        HRESULT enumAdapters1Result = this.dxgiFactory6.Get()->EnumAdapterByGpuPreference(
+                            this.index,
+                            DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
+                            FX.__uuidof<IDXGIAdapter1>(),
+                            dxgiAdapter1.GetVoidAddressOf());
 
                         if (enumAdapters1Result == FX.DXGI_ERROR_NOT_FOUND)
                         {
-                            this.dxgiFactory4.Get()->EnumWarpAdapter(FX.__uuidof<IDXGIAdapter1>(), dxgiAdapter1.GetVoidAddressOf()).Assert();
+                            this.dxgiFactory6.Get()->EnumWarpAdapter(FX.__uuidof<IDXGIAdapter1>(), dxgiAdapter1.GetVoidAddressOf()).Assert();
 
                             DXGI_ADAPTER_DESC1 dxgiDescription1;
 
@@ -205,7 +208,7 @@ namespace ComputeSharp.Graphics.Helpers
                 /// <inheritdoc/>
                 protected override void OnDispose()
                 {
-                    this.dxgiFactory4.Dispose();
+                    this.dxgiFactory6.Dispose();
                 }
             }
         }

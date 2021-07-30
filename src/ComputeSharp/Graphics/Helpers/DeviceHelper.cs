@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
@@ -9,6 +8,7 @@ using FX = TerraFX.Interop.Windows;
 using HRESULT = System.Int32;
 using static TerraFX.Interop.D3D_FEATURE_LEVEL;
 using static TerraFX.Interop.D3D_SHADER_MODEL;
+using static TerraFX.Interop.DXGI_GPU_PREFERENCE;
 
 namespace ComputeSharp.Graphics.Helpers
 {
@@ -82,11 +82,9 @@ namespace ComputeSharp.Graphics.Helpers
         /// <returns>Whether a default device was found with the requested feature level.</returns>
         private static unsafe bool TryGetDefaultDevice(ID3D12Device** d3D12Device, IDXGIAdapter** dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1)
         {
-            using ComPtr<IDXGIFactory4> dxgiFactory4 = default;
+            using ComPtr<IDXGIFactory6> dxgiFactory6 = default;
 
-            EnableDebugMode();
-
-            FX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, FX.__uuidof<IDXGIFactory4>(), dxgiFactory4.GetVoidAddressOf()).Assert();
+            CreateDXGIFactory6(dxgiFactory6.GetAddressOf());
 
             uint i = 0;
 
@@ -94,7 +92,11 @@ namespace ComputeSharp.Graphics.Helpers
             {
                 using ComPtr<IDXGIAdapter1> dxgiAdapter1 = default;
 
-                HRESULT enumAdapters1Result = dxgiFactory4.Get()->EnumAdapters1(i++, dxgiAdapter1.GetAddressOf());
+                HRESULT enumAdapters1Result = dxgiFactory6.Get()->EnumAdapterByGpuPreference(
+                    i++,
+                    DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
+                    FX.__uuidof<IDXGIAdapter1>(),
+                    dxgiAdapter1.GetVoidAddressOf());
 
                 if (enumAdapters1Result == FX.DXGI_ERROR_NOT_FOUND)
                 {
@@ -172,15 +174,13 @@ namespace ComputeSharp.Graphics.Helpers
         /// <returns>Whether a warp device was created successfully.</returns>
         private static unsafe bool TryGetWarpDevice(ID3D12Device** d3D12Device, IDXGIAdapter** dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1)
         {
-            using ComPtr<IDXGIFactory4> dxgiFactory4 = default;
+            using ComPtr<IDXGIFactory6> dxgiFactory6 = default;
 
-            EnableDebugMode();
-
-            FX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, FX.__uuidof<IDXGIFactory4>(), dxgiFactory4.GetVoidAddressOf()).Assert();
+            CreateDXGIFactory6(dxgiFactory6.GetAddressOf());
 
             using ComPtr<IDXGIAdapter1> dxgiAdapter1 = default;
 
-            dxgiFactory4.Get()->EnumWarpAdapter(FX.__uuidof<IDXGIAdapter1>(), dxgiAdapter1.GetVoidAddressOf()).Assert();
+            dxgiFactory6.Get()->EnumWarpAdapter(FX.__uuidof<IDXGIAdapter1>(), dxgiAdapter1.GetVoidAddressOf()).Assert();
             
             dxgiAdapter1.Get()->GetDesc1(dxgiDescription1).Assert();
 
@@ -193,36 +193,6 @@ namespace ComputeSharp.Graphics.Helpers
             dxgiAdapter1.CopyTo(dxgiAdapter);
 
             return FX.SUCCEEDED(createDeviceResult);
-        }
-
-        /// <summary>
-        /// The creation flags for <see cref="IDXGIFactory"/> instances.
-        /// </summary>
-        private const uint IDXGIFactoryCreationFlags =
-#if DEBUG
-            FX.DXGI_CREATE_FACTORY_DEBUG;
-#else
-            0;
-#endif
-
-        /// <summary>
-        /// Enables the debug layer for DirectX APIs.
-        /// </summary>
-        [Conditional("DEBUG")]
-        private static unsafe void EnableDebugMode()
-        {
-            using ComPtr<ID3D12Debug> d3D12Debug = default;
-            using ComPtr<ID3D12Debug1> d3D12Debug1 = default;
-
-            FX.D3D12GetDebugInterface(FX.__uuidof<ID3D12Debug>(), d3D12Debug.GetVoidAddressOf()).Assert();
-
-            d3D12Debug.Get()->EnableDebugLayer();
-
-            if (FX.SUCCEEDED(d3D12Debug.CopyTo(d3D12Debug1.GetAddressOf())))
-            {
-                d3D12Debug1.Get()->SetEnableGPUBasedValidation(FX.TRUE);
-                d3D12Debug1.Get()->SetEnableSynchronizedCommandQueueValidation(FX.TRUE);
-            }
         }
     }
 }
