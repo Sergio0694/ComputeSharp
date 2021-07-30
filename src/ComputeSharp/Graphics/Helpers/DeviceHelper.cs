@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
@@ -9,6 +8,7 @@ using FX = TerraFX.Interop.Windows;
 using HRESULT = System.Int32;
 using static TerraFX.Interop.D3D_FEATURE_LEVEL;
 using static TerraFX.Interop.D3D_SHADER_MODEL;
+using static TerraFX.Interop.DXGI_GPU_PREFERENCE;
 
 namespace ComputeSharp.Graphics.Helpers
 {
@@ -92,7 +92,11 @@ namespace ComputeSharp.Graphics.Helpers
             {
                 using ComPtr<IDXGIAdapter1> dxgiAdapter1 = default;
 
-                HRESULT enumAdapters1Result = dxgiFactory6.Get()->EnumAdapters1(i++, dxgiAdapter1.GetAddressOf());
+                HRESULT enumAdapters1Result = dxgiFactory6.Get()->EnumAdapterByGpuPreference(
+                    i++,
+                    DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
+                    FX.__uuidof<IDXGIAdapter1>(),
+                    dxgiAdapter1.GetVoidAddressOf());
 
                 if (enumAdapters1Result == FX.DXGI_ERROR_NOT_FOUND)
                 {
