@@ -45,15 +45,26 @@ namespace ComputeSharp.Graphics.Commands.Interop
             {
                 if (this.d3D12CommandListBundleQueue.TryDequeue(out D3D12CommandListBundle d3D12CommandListBundle))
                 {
-                    d3D12CommandListBundle.D3D12CommandAllocator->Reset().Assert();
-                    d3D12CommandListBundle.D3D12CommandList->Reset(d3D12CommandListBundle.D3D12CommandAllocator, d3D12PipelineState).Assert();
-
                     d3D12CommandList = d3D12CommandListBundle.D3D12CommandList;
                     d3D12CommandAllocator = d3D12CommandListBundle.D3D12CommandAllocator;
-
-                    return;
                 }
+                else
+                {
+                    d3D12CommandAllocator = null;
+                    d3D12CommandList = null;
+                }
+            }
 
+            // Reset the command allocator and command list outside of the lock, or create a new pair if one to be reused
+            // wasn't available. These operations are relatively expensive, so doing so here reduces thread contention
+            // when multiple shader executions are being dispatched in parallel on the same device.
+            if (d3D12CommandAllocator is not null)
+            {
+                d3D12CommandAllocator->Reset().Assert();
+                d3D12CommandList->Reset(d3D12CommandAllocator, d3D12PipelineState).Assert();
+            }
+            else
+            {
                 CreateCommandListAndAllocator(d3D12Device, d3D12PipelineState, out d3D12CommandList, out d3D12CommandAllocator);
             }
         }

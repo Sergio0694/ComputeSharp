@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+#if DEBUG
 using ComputeSharp.Graphics.Helpers;
+#endif
 using Microsoft.Toolkit.Diagnostics;
 using HRESULT = System.Int32;
 

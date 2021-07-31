@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using ComputeSharp.Core.Extensions;
 using TerraFX.Interop;
 using FX = TerraFX.Interop.Windows;
+using HRESULT = System.Int32;
 
 namespace ComputeSharp.Graphics.Helpers
 {
@@ -33,7 +34,7 @@ namespace ComputeSharp.Graphics.Helpers
 
             FX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, FX.__uuidof<IDXGIFactory4>(), dxgiFactory4.GetVoidAddressOf()).Assert();
 
-            int result = dxgiFactory4.CopyTo(dxgiFactory6);
+            HRESULT result = dxgiFactory4.CopyTo(dxgiFactory6);
 
             if (result == FX.S_OK)
             {
