@@ -9,9 +9,19 @@ namespace ComputeSharp.WinUI.Helpers
     internal unsafe ref struct DynamicResolutionManager
     {
         /// <summary>
-        /// The target frame time in ticks to reach 60fps.
+        /// The target frame time in ticks to reach 60fps (set to 64fps).
         /// </summary>
-        private const long TargetFrameTimeInTicksFor60fps = 166666;
+        private const long TargetFrameTimeInTicksFor60fps = 156250;
+
+        /// <summary>
+        /// The upper frame time threshold in ticks to reach 60fps.
+        /// </summary>
+        private const long UpperFrameTimeThresholdInTicksFor60fps = 166666;
+
+        /// <summary>
+        /// The lower frame time threshold in ticks to reach 60fps (set to 68fps).
+        /// </summary>
+        private const long LowerFrameTimeThresholdInTicksFor60fps = 147058;
 
         /// <summary>
         /// The size of the sliding frame time window to monitor frame times.
@@ -21,7 +31,12 @@ namespace ComputeSharp.WinUI.Helpers
         /// <summary>
         /// The threshold for scale factor updates.
         /// </summary>
-        private const double ScaleFactorDeltaThreshold = 0.05;
+        private const double ScaleFactorDeltaThreshold = 0.005;
+
+        /// <summary>
+        /// The constant multiplicative factor for the scale factor.
+        /// </summary>
+        private const double ScaleFactorDeltaK = 0.8;
 
         /// <summary>
         /// The window of registered frame times for previous frames.
@@ -86,20 +101,24 @@ namespace ComputeSharp.WinUI.Helpers
             {
                 // This formula is adapted from https://software.intel.com/content/www/us/en/develop/articles/dynamic-resolution-rendering-article.html.
                 long averageFrameTimeInTicks = this.slidingFrameTimeWindowSum / SlidingFrameTimeWindowLength;
-                double
-                    frameTimeDelta = (TargetFrameTimeInTicksFor60fps - averageFrameTimeInTicks) / (double)averageFrameTimeInTicks,
-                    scaleFactorDelta = scaleFactor * frameTimeDelta,
-                    updatedScaleFactor = Math.Clamp(scaleFactor + scaleFactorDelta, 0.10, 1.0);
 
-                // Apply the scale factor update if the target scale has changed enough. This helps to avoid
-                // too frequence resolution changes if the scale factor only changes very little every time.
-                if (Math.Abs(scaleFactor - updatedScaleFactor) >= ScaleFactorDeltaThreshold)
+                if (averageFrameTimeInTicks is < LowerFrameTimeThresholdInTicksFor60fps or > UpperFrameTimeThresholdInTicksFor60fps)
                 {
-                    scaleFactor = updatedScaleFactor;
+                    double
+                        frameTimeDelta = (TargetFrameTimeInTicksFor60fps - averageFrameTimeInTicks) / (double)averageFrameTimeInTicks,
+                        scaleFactorDelta = scaleFactor * frameTimeDelta * ScaleFactorDeltaK,
+                        updatedScaleFactor = Math.Clamp(scaleFactor + scaleFactorDelta, 0.10, 1.0);
 
-                    this.frameTimeOffset = -1;
+                    // Apply the scale factor update if the target scale has changed enough. This helps to avoid
+                    // too frequence resolution changes if the scale factor only changes very little every time.
+                    if (Math.Abs(scaleFactor - updatedScaleFactor) >= ScaleFactorDeltaThreshold)
+                    {
+                        scaleFactor = updatedScaleFactor;
 
-                    return true;
+                        this.frameTimeOffset = -1;
+
+                        return true;
+                    }
                 }
             }
 
