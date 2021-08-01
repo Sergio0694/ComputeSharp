@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Interop;
+using ComputeSharp.WinUI.Helpers;
 using TerraFX.Interop;
 using WinRT;
 using FX = TerraFX.Interop.Windows;
@@ -132,12 +133,12 @@ namespace ComputeSharp.WinUI
         /// </summary>
         private unsafe void OnInitialize()
         {
-            if (isInitialized)
+            if (this.isInitialized)
             {
                 return;
             }
 
-            isInitialized = true;
+            this.isInitialized = true;
 
             // Get the underlying ID3D12Device in use
             fixed (ID3D12Device** d3D12Device = this.d3D12Device)
@@ -417,6 +418,8 @@ namespace ComputeSharp.WinUI
                     renderStopwatch = @this.renderStopwatch ??= new(),
                     frameStopwatch = Stopwatch.StartNew();
 
+                DynamicResolutionManager.Create(out DynamicResolutionManager frameTimeWatcher);
+
                 // Start the initial frame separately, before the timer starts. This ensures that
                 // resuming after a pause correctly renders the first frame at the right time.
                 @this.OnUpdate(renderStopwatch.Elapsed);
@@ -429,6 +432,11 @@ namespace ComputeSharp.WinUI
                 while (!@this.isCancellationRequested)
                 {
                     _ = FX.WaitForSingleObjectEx(frameLatencyWaitableObject, 1000, 1);
+
+                    if (frameTimeWatcher.Advance(frameStopwatch.ElapsedTicks, ref @this.resolutionScale))
+                    {
+                        @this.isResizePending = true;
+                    }
 
                     while (frameStopwatch.ElapsedTicks < targetFrameTimeInTicksFor60fps)
                     {
