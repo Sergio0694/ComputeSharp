@@ -134,6 +134,7 @@
             x:Name="ShaderPanel"
             Grid.Row="1"
             ShaderRunner="{x:Bind ViewModel.SelectedComputeShader.ShaderRunner, Mode=OneWay}"
+            IsDynamicResolutionEnabled="{x:Bind ViewModel.IsDynamicResolutionEnabled, Mode=OneWay}"
             ResolutionScale="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToScale(ViewModel.SelectedResolutionScale), Mode=OneWay}"
             IsPaused="{x:Bind ViewModel.IsRenderingPaused, Mode=OneWay}"/>
 
@@ -171,6 +172,10 @@
                 <SymbolIcon Symbol="Setting"/>
                 <Button.Flyout>
                     <MenuFlyout>
+                        <ToggleMenuFlyoutItem
+                            Text="Dynamic resolution"
+                            IsChecked="{x:Bind ViewModel.IsDynamicResolutionEnabled, Mode=TwoWay}"/>
+                        <MenuFlyoutSeparator/>
                         <ToggleMenuFlyoutItem
                             Text="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToFormattedString(ViewModel.ResolutionScaleOptions[0])}"
                             Command="{x:Bind ViewModel.SetResolutionScaleCommand}"

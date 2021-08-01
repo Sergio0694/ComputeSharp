@@ -31,11 +31,13 @@ namespace ComputeSharp.WinUI
         // Initializes the swap chain and starts the render thread
         private void ComputeShaderPanel_Loaded(object sender, RoutedEventArgs e)
         {
-            this.width = ActualWidth;
-            this.height = ActualHeight;
+            this.width = (float)ActualWidth;
+            this.height = (float)ActualHeight;
             this.compositionScaleX = CompositionScaleX;
             this.compositionScaleY = CompositionScaleY;
-            this.resolutionScale = ResolutionScale;
+            this.resolutionScale = (float)ResolutionScale;
+            this.targetResolutionScale = 1.0f;
+            this.isDynamicResolutionEnabled = true;
 
             OnInitialize();
             OnStartRenderLoop();
@@ -50,8 +52,8 @@ namespace ComputeSharp.WinUI
         // Updates the background store for the frame size factors used by the render thread
         private void ComputeShaderPanel_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            this.width = e.NewSize.Width;
-            this.height = e.NewSize.Height;
+            this.width = (float)e.NewSize.Width;
+            this.height = (float)e.NewSize.Height;
 
             OnResize();
         }
