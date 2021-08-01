@@ -50,8 +50,41 @@ namespace ComputeSharp.WinUI
             var @this = (ComputeShaderPanel)d;
             var resolutionScale = (double)e.NewValue;
 
-            @this.resolutionScale = resolutionScale;
-            @this.OnResize();
+            @this.targetResolutionScale = (float)resolutionScale;
+
+            if (!@this.isDynamicResolutionEnabled)
+            {
+                @this.OnResize();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets whether dynamic resolution is enabled. If it is, the internal render
+        /// resolution of the shader being run will be automatically adjusted to reach 60fps.
+        /// <para>The default value for this property is <see langword="true"/>.</para>
+        /// </summary>
+        public bool IsDynamicResolutionEnabled
+        {
+            get => (bool)GetValue(IsDynamicResolutionEnabledProperty);
+            set => SetValue(IsDynamicResolutionEnabledProperty, value);
+        }
+
+        /// <summary>
+        /// The <see cref="DependencyProperty"/> backing <see cref="IsDynamicResolutionEnabled"/>.
+        /// </summary>
+        public static readonly DependencyProperty IsDynamicResolutionEnabledProperty = DependencyProperty.Register(
+            nameof(IsDynamicResolutionEnabled),
+            typeof(bool),
+            typeof(ComputeShaderPanel),
+            new PropertyMetadata(true, OnIsDynamicResolutionEnabledPropertyChanged));
+
+        /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
+        private static void OnIsDynamicResolutionEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var @this = (ComputeShaderPanel)d;
+            var isDynamicResolutionEnabled = (bool)e.NewValue;
+
+            @this.isDynamicResolutionEnabled = isDynamicResolutionEnabled;
         }
 
         /// <summary>

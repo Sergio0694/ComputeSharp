@@ -8,6 +8,8 @@ using TerraFX.Interop;
 using WinRT;
 using FX = TerraFX.Interop.Windows;
 
+#pragma warning disable CS0420
+
 namespace ComputeSharp.WinUI
 {
     /// <inheritdoc cref="ComputeShaderPanel"/>
@@ -86,32 +88,42 @@ namespace ComputeSharp.WinUI
         /// <summary>
         /// Whether or not the window has been resized and requires the buffers to be updated.
         /// </summary>
-        private bool isResizePending;
+        private volatile bool isResizePending;
 
         /// <summary>
         /// The backing store for <see cref="ActualWidth"/> for the render thread.
         /// </summary>
-        private double width;
+        private volatile float width;
 
         /// <summary>
         /// The backing store for <see cref="ActualHeight"/> for the render thread.
         /// </summary>
-        private double height;
+        private volatile float height;
 
         /// <summary>
         /// The backing store for <see cref="CompositionScaleX"/> for the render thread.
         /// </summary>
-        private float compositionScaleX;
+        private volatile float compositionScaleX;
 
         /// <summary>
         /// The backing store for <see cref="CompositionScaleY"/> for the render thread.
         /// </summary>
-        private float compositionScaleY;
+        private volatile float compositionScaleY;
 
         /// <summary>
-        /// The resolution scale used to render frames.
+        /// The resolution scale used to render frames when explicitly controlled by the user.
         /// </summary>
-        private double resolutionScale;
+        private volatile float resolutionScale;
+
+        /// <summary>
+        /// The resolution scale used to render frames, in either render mode.
+        /// </summary>
+        private volatile float targetResolutionScale;
+
+        /// <summary>
+        /// Whether dynamic resolution is currently enabled.
+        /// </summary>
+        private volatile bool isDynamicResolutionEnabled;
 
         /// <summary>
         /// Indicates whether or not the rendering has been canceled.
@@ -181,8 +193,8 @@ namespace ComputeSharp.WinUI
                 dxgiSwapChainDesc1.BufferCount = 2;
                 dxgiSwapChainDesc1.Flags = (uint)DXGI_SWAP_CHAIN_FLAG.DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT;
                 dxgiSwapChainDesc1.Format = DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM;
-                dxgiSwapChainDesc1.Width = (uint)Math.Max(Math.Ceiling(this.width * this.compositionScaleX * this.resolutionScale), 1.0);
-                dxgiSwapChainDesc1.Height = (uint)Math.Max(Math.Ceiling(this.height * this.compositionScaleY * this.resolutionScale), 1.0);
+                dxgiSwapChainDesc1.Width = (uint)Math.Max(Math.Ceiling(this.width * this.compositionScaleX * this.targetResolutionScale), 1.0);
+                dxgiSwapChainDesc1.Height = (uint)Math.Max(Math.Ceiling(this.height * this.compositionScaleY * this.targetResolutionScale), 1.0);
                 dxgiSwapChainDesc1.SampleDesc = new DXGI_SAMPLE_DESC(count: 1, quality: 0);
                 dxgiSwapChainDesc1.Scaling = DXGI_SCALING.DXGI_SCALING_STRETCH;
                 dxgiSwapChainDesc1.Stereo = 0;
@@ -277,15 +289,15 @@ namespace ComputeSharp.WinUI
             // Resize the swap chain buffers
             this.dxgiSwapChain2.Get()->ResizeBuffers(
                 2,
-                (uint)Math.Max(Math.Ceiling(this.width * this.compositionScaleX * this.resolutionScale), 1.0),
-                (uint)Math.Max(Math.Ceiling(this.height * this.compositionScaleY * this.resolutionScale), 1.0),
+                (uint)Math.Max(Math.Ceiling(this.width * this.compositionScaleX * this.targetResolutionScale), 1.0),
+                (uint)Math.Max(Math.Ceiling(this.height * this.compositionScaleY * this.targetResolutionScale), 1.0),
                 DXGI_FORMAT.DXGI_FORMAT_UNKNOWN,
                 (uint)DXGI_SWAP_CHAIN_FLAG.DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT).Assert();
 
             // Apply the necessary scale transform
             DXGI_MATRIX_3X2_F transformMatrix = default;
-            transformMatrix._11 = (float)((1 / this.compositionScaleX) * (1 / this.resolutionScale));
-            transformMatrix._22 = (float)((1 / this.compositionScaleY) * (1 / this.resolutionScale));
+            transformMatrix._11 = (1 / this.compositionScaleX) * (1 / this.targetResolutionScale);
+            transformMatrix._22 = (1 / this.compositionScaleY) * (1 / this.targetResolutionScale);
 
             this.dxgiSwapChain2.Get()->SetMatrixTransform(&transformMatrix).Assert();
 
@@ -420,25 +432,44 @@ namespace ComputeSharp.WinUI
 
                 DynamicResolutionManager.Create(out DynamicResolutionManager frameTimeWatcher);
 
+                bool isDynamicResolutionEnabled = @this.isDynamicResolutionEnabled;
+
                 // Start the initial frame separately, before the timer starts. This ensures that
                 // resuming after a pause correctly renders the first frame at the right time.
                 @this.OnUpdate(renderStopwatch.Elapsed);
 
                 renderStopwatch.Start();
 
-                const long targetFrameTimeInTicksFor60fps = 166666;
+                const long targetFrameTimeInTicksFor61fps = 163934;
 
                 // Main render loop, until cancellation is requested
                 while (!@this.isCancellationRequested)
                 {
                     _ = FX.WaitForSingleObjectEx(frameLatencyWaitableObject, 1000, 1);
 
-                    if (frameTimeWatcher.Advance(frameStopwatch.ElapsedTicks, ref @this.resolutionScale))
+                    // Update the resolution mode, if needed
+                    if (isDynamicResolutionEnabled != @this.isDynamicResolutionEnabled)
+                    {
+                        isDynamicResolutionEnabled = !isDynamicResolutionEnabled;
+
+                        if (isDynamicResolutionEnabled)
+                        {
+                            DynamicResolutionManager.Create(out frameTimeWatcher);
+                        }
+                        else
+                        {
+                            @this.targetResolutionScale = @this.resolutionScale;
+                        }
+                    }
+
+                    // Evaluate the dynamic resolution frame time step, if the mode is enabled
+                    if (isDynamicResolutionEnabled &&
+                        frameTimeWatcher.Advance(frameStopwatch.ElapsedTicks, ref @this.targetResolutionScale))
                     {
                         @this.isResizePending = true;
                     }
 
-                    while (frameStopwatch.ElapsedTicks < targetFrameTimeInTicksFor60fps)
+                    while (frameStopwatch.ElapsedTicks < targetFrameTimeInTicksFor61fps)
                     {
                     }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace ComputeSharp.WinUI.Helpers
 {
@@ -11,7 +12,7 @@ namespace ComputeSharp.WinUI.Helpers
         /// <summary>
         /// The target frame time in ticks to reach 60fps (set to 64fps).
         /// </summary>
-        private const long TargetFrameTimeInTicksFor60fps = 156250;
+        public const long TargetFrameTimeInTicksFor60fps = 156250;
 
         /// <summary>
         /// The upper frame time threshold in ticks to reach 60fps.
@@ -31,12 +32,12 @@ namespace ComputeSharp.WinUI.Helpers
         /// <summary>
         /// The threshold for scale factor updates.
         /// </summary>
-        private const double ScaleFactorDeltaThreshold = 0.005;
+        private const float ScaleFactorDeltaThreshold = 0.005f;
 
         /// <summary>
         /// The constant multiplicative factor for the scale factor.
         /// </summary>
-        private const double ScaleFactorDeltaK = 0.8;
+        private const float ScaleFactorDeltaK = 0.8f;
 
         /// <summary>
         /// The window of registered frame times for previous frames.
@@ -76,7 +77,7 @@ namespace ComputeSharp.WinUI.Helpers
         /// <param name="frameTimeInTicks">The frame time in ticks for the last rendered frame.</param>
         /// <param name="scaleFactor">The current scale factor value being used to render frames.</param>
         /// <returns>Whether or not <paramref name="scaleFactor"/> has been updated and a resize is needed.</returns>
-        public bool Advance(long frameTimeInTicks, ref double scaleFactor)
+        public bool Advance(long frameTimeInTicks, ref float scaleFactor)
         {
             // Ignore the current frame if a resize has just happened
             if (this.frameTimeOffset == -1)
@@ -104,16 +105,16 @@ namespace ComputeSharp.WinUI.Helpers
 
                 if (averageFrameTimeInTicks is < LowerFrameTimeThresholdInTicksFor60fps or > UpperFrameTimeThresholdInTicksFor60fps)
                 {
-                    double
-                        frameTimeDelta = (TargetFrameTimeInTicksFor60fps - averageFrameTimeInTicks) / (double)averageFrameTimeInTicks,
+                    float
+                        frameTimeDelta = (TargetFrameTimeInTicksFor60fps - averageFrameTimeInTicks) / (float)averageFrameTimeInTicks,
                         scaleFactorDelta = scaleFactor * frameTimeDelta * ScaleFactorDeltaK,
-                        updatedScaleFactor = Math.Clamp(scaleFactor + scaleFactorDelta, 0.10, 1.0);
+                        updatedScaleFactor = Math.Clamp(scaleFactor + scaleFactorDelta, 0.10f, 1.0f);
 
                     // Apply the scale factor update if the target scale has changed enough. This helps to avoid
                     // too frequence resolution changes if the scale factor only changes very little every time.
                     if (Math.Abs(scaleFactor - updatedScaleFactor) >= ScaleFactorDeltaThreshold)
                     {
-                        scaleFactor = updatedScaleFactor;
+                        Volatile.Write(ref scaleFactor, updatedScaleFactor);
 
                         this.frameTimeOffset = -1;
 

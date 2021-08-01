@@ -18,6 +18,7 @@ namespace ComputeSharp.SwapChain.WinUI.ViewModels
         /// </summary>
         public MainViewModel()
         {
+            this.isDynamicResolutionEnabled = true;
             this.selectedResolutionScale = 100;
             this.selectedComputeShader = ComputeShaderOptions[0];
             this.selectedComputeShader.IsSelected = true;
@@ -30,6 +31,17 @@ namespace ComputeSharp.SwapChain.WinUI.ViewModels
         /// Gets the available resolution scaling options (as percentage values).
         /// </summary>
         public IList<int> ResolutionScaleOptions { get; } = new[] { 25, 50, 75, 100 };
+
+        private bool isDynamicResolutionEnabled;
+
+        /// <summary>
+        /// Gets or sets whether the dynamic resolution is enabled.
+        /// </summary>
+        public bool IsDynamicResolutionEnabled
+        {
+            get => this.isDynamicResolutionEnabled;
+            set => SetProperty(ref this.isDynamicResolutionEnabled, value);
+        }
 
         private int selectedResolutionScale;
 
