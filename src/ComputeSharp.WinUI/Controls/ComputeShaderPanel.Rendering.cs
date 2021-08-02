@@ -328,7 +328,7 @@ namespace ComputeSharp.WinUI
         }
 
         /// <summary>
-        /// Updates the current application.
+        /// Updates the render resolution, if needed, and renders a new frame.
         /// </summary>
         /// <param name="time">The current time since the start of the application.</param>
         private unsafe void OnUpdate(TimeSpan time)
@@ -348,6 +348,14 @@ namespace ComputeSharp.WinUI
 
             // Generate the new frame
             this.shaderRunner.Execute(this.texture!, time);
+        }
+
+        /// <summary>
+        /// Presents the last rendered frame for the current application.
+        /// </summary>
+        private unsafe void OnPresent()
+        {
+            _ = FX.WaitForSingleObjectEx(frameLatencyWaitableObject, 1000, 1);
 
             using ComPtr<ID3D12Resource> d3D12Resource = default;
 
@@ -424,8 +432,6 @@ namespace ComputeSharp.WinUI
         {
             static void ExecuteRenderLoop(ComputeShaderPanel @this)
             {
-                IntPtr frameLatencyWaitableObject = @this.frameLatencyWaitableObject;
-
                 Stopwatch
                     renderStopwatch = @this.renderStopwatch ??= new(),
                     frameStopwatch = Stopwatch.StartNew();
@@ -437,6 +443,7 @@ namespace ComputeSharp.WinUI
                 // Start the initial frame separately, before the timer starts. This ensures that
                 // resuming after a pause correctly renders the first frame at the right time.
                 @this.OnUpdate(renderStopwatch.Elapsed);
+                @this.OnPresent();
 
                 renderStopwatch.Start();
 
@@ -445,8 +452,6 @@ namespace ComputeSharp.WinUI
                 // Main render loop, until cancellation is requested
                 while (!@this.isCancellationRequested)
                 {
-                    _ = FX.WaitForSingleObjectEx(frameLatencyWaitableObject, 1000, 1);
-
                     // Update the resolution mode, if needed
                     if (isDynamicResolutionEnabled != @this.isDynamicResolutionEnabled)
                     {
@@ -476,6 +481,7 @@ namespace ComputeSharp.WinUI
                     frameStopwatch.Restart();
 
                     @this.OnUpdate(renderStopwatch.Elapsed);
+                    @this.OnPresent();
                 }
 
                 renderStopwatch.Stop();
