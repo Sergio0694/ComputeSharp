@@ -13,7 +13,7 @@ namespace ComputeSharp.SwapChain
         /// <summary>
         /// A texture for <c>\Textures\RustyMetal.png</c>.
         /// </summary>
-        private static readonly IReadOnlyTexture2D<Float4> RustyMetal = LoadTexture();
+        private static readonly IReadOnlyTexture2D<float4> RustyMetal = LoadTexture();
 
         /// <summary>
         /// The mapping of available samples to choose from.
@@ -65,11 +65,11 @@ namespace ComputeSharp.SwapChain
         /// <param name="name">The name of the texture to load.</param>
         /// <returns>A texture with the data from the image at the specified name.</returns>
         [Pure]
-        private static ReadOnlyTexture2D<Rgba32, Float4> LoadTexture([CallerMemberName] string name = null!)
+        private static ReadOnlyTexture2D<Rgba32, float4> LoadTexture([CallerMemberName] string name = null!)
         {
             string filename = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Textures", $"{name}.png");
 
-            return Gpu.Default.LoadReadOnlyTexture2D<Rgba32, Float4>(filename);
+            return Gpu.Default.LoadReadOnlyTexture2D<Rgba32, float4>(filename);
         }
     }
 }

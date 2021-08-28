@@ -388,7 +388,7 @@ namespace ComputeSharp.BokehBlur.Processors
 
                     for (int i = 0; i < width; i++)
                     {
-                        Float4 v = source[i, ThreadIds.X];
+                        float4 v = source[i, ThreadIds.X];
 
                         v.XYZ = v.XYZ * v.XYZ * v.XYZ;
 
@@ -413,7 +413,7 @@ namespace ComputeSharp.BokehBlur.Processors
 
                     for (int i = 0; i < width; i++)
                     {
-                        Float4 v = source[i, ThreadIds.X];
+                        float4 v = source[i, ThreadIds.X];
 
                         v = Hlsl.Clamp(v, 0, float.MaxValue);
                         v.XYZ = Hlsl.Pow(v.XYZ, 1 / 3f);

@@ -14,11 +14,11 @@ namespace ComputeSharp.Tests
         [AllDevices]
         public unsafe void Verify_ThreadIds(Device device)
         {
-            using ReadWriteTexture3D<Int4> buffer = device.Get().AllocateReadWriteTexture3D<Int4>(50, 50, 50);
+            using ReadWriteTexture3D<int4> buffer = device.Get().AllocateReadWriteTexture3D<int4>(50, 50, 50);
 
             device.Get().For(buffer.Width, buffer.Height, buffer.Depth, new ThreadIdsShader(buffer));
 
-            Int4[,,] data = buffer.ToArray();
+            int4[,,] data = buffer.ToArray();
             int* value = stackalloc int[4];
 
             for (int z = 0; z < 50; z++)
@@ -27,7 +27,7 @@ namespace ComputeSharp.Tests
                 {
                     for (int y = 0; y < 50; y++)
                     {
-                        *(Int4*)value = data[z, y, x];
+                        *(int4*)value = data[z, y, x];
 
                         Assert.AreEqual(x, value[0]);
                         Assert.AreEqual(y, value[1]);
@@ -47,7 +47,7 @@ namespace ComputeSharp.Tests
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void Verify_ThreadIds_OutOfRange(Device device, int x, int y, int z)
         {
-            using ReadWriteTexture3D<Int4> buffer = device.Get().AllocateReadWriteTexture3D<Int4>(50, 50, 50);
+            using ReadWriteTexture3D<int4> buffer = device.Get().AllocateReadWriteTexture3D<int4>(50, 50, 50);
 
             device.Get().For(x, y, z, new ThreadIdsShader(buffer));
 
@@ -57,7 +57,7 @@ namespace ComputeSharp.Tests
         [AutoConstructor]
         internal readonly partial struct ThreadIdsShader : IComputeShader
         {
-            public readonly ReadWriteTexture3D<Int4> buffer;
+            public readonly ReadWriteTexture3D<int4> buffer;
 
             public void Execute()
             {
@@ -69,11 +69,11 @@ namespace ComputeSharp.Tests
         [AllDevices]
         public unsafe void Verify_ThreadIdsNormalized(Device device)
         {
-            using ReadWriteTexture3D<Float4> buffer = device.Get().AllocateReadWriteTexture3D<Float4>(10, 20, 30);
+            using ReadWriteTexture3D<float4> buffer = device.Get().AllocateReadWriteTexture3D<float4>(10, 20, 30);
 
             device.Get().For(buffer.Width, buffer.Height, buffer.Depth, new ThreadIdsNormalizedShader(buffer));
 
-            Float4[,,] data = buffer.ToArray();
+            float4[,,] data = buffer.ToArray();
             float* value = stackalloc float[4];
 
             for (int z = 0; z < 30; z++)
@@ -82,7 +82,7 @@ namespace ComputeSharp.Tests
                 {
                     for (int y = 0; y < 20; y++)
                     {
-                        *(Float4*)value = data[z, y, x];
+                        *(float4*)value = data[z, y, x];
 
                         Assert.AreEqual(x / (float)buffer.Width, value[0], 0.000001f);
                         Assert.AreEqual(y / (float)buffer.Height, value[1], 0.000001f);
@@ -96,7 +96,7 @@ namespace ComputeSharp.Tests
         [AutoConstructor]
         internal readonly partial struct ThreadIdsNormalizedShader : IComputeShader
         {
-            public readonly ReadWriteTexture3D<Float4> buffer;
+            public readonly ReadWriteTexture3D<float4> buffer;
 
             public void Execute()
             {
@@ -110,11 +110,11 @@ namespace ComputeSharp.Tests
         [AllDevices]
         public unsafe void Verify_GroupIds(Device device)
         {
-            using ReadWriteTexture3D<Int4> buffer = device.Get().AllocateReadWriteTexture3D<Int4>(50, 50, 50);
+            using ReadWriteTexture3D<int4> buffer = device.Get().AllocateReadWriteTexture3D<int4>(50, 50, 50);
 
             device.Get().For(buffer.Width, buffer.Height, buffer.Depth, 4, 4, 4, new GroupIdsShader(buffer));
 
-            Int4[,,] data = buffer.ToArray();
+            int4[,,] data = buffer.ToArray();
             int* value = stackalloc int[4];
 
             for (int z = 0; z < 50; z++)
@@ -123,7 +123,7 @@ namespace ComputeSharp.Tests
                 {
                     for (int y = 0; y < 50; y++)
                     {
-                        *(Int4*)value = data[z, y, x];
+                        *(int4*)value = data[z, y, x];
 
                         Assert.AreEqual(x % 4, value[0]);
                         Assert.AreEqual(y % 4, value[1]);
@@ -147,7 +147,7 @@ namespace ComputeSharp.Tests
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void Verify_GroupIds_OutOfRange(Device device, int x, int y, int z)
         {
-            using ReadWriteTexture3D<Int4> buffer = device.Get().AllocateReadWriteTexture3D<Int4>(50, 50, 50);
+            using ReadWriteTexture3D<int4> buffer = device.Get().AllocateReadWriteTexture3D<int4>(50, 50, 50);
 
             device.Get().For(buffer.Width, buffer.Height, buffer.Depth, x, y, z, new GroupIdsShader(buffer));
 
@@ -157,7 +157,7 @@ namespace ComputeSharp.Tests
         [AutoConstructor]
         internal readonly partial struct GroupIdsShader : IComputeShader
         {
-            public readonly ReadWriteTexture3D<Int4> buffer;
+            public readonly ReadWriteTexture3D<int4> buffer;
 
             public void Execute()
             {
@@ -195,8 +195,8 @@ namespace ComputeSharp.Tests
                 buffer[1] = GroupSize.Y;
                 buffer[2] = GroupSize.Z;
                 buffer[3] = GroupSize.Count;
-                buffer[4] = (int)Hlsl.Dot(GroupSize.XY, Float2.One);
-                buffer[5] = (int)Hlsl.Dot(GroupSize.XYZ, Float3.One);
+                buffer[4] = (int)Hlsl.Dot(GroupSize.XY, float2.One);
+                buffer[5] = (int)Hlsl.Dot(GroupSize.XYZ, float3.One);
             }
         }
 
@@ -258,8 +258,8 @@ namespace ComputeSharp.Tests
                 buffer[1] = DispatchSize.X;
                 buffer[2] = DispatchSize.Y;
                 buffer[3] = DispatchSize.Z;
-                buffer[4] = (int)Hlsl.Dot(DispatchSize.XY, Float2.One);
-                buffer[5] = (int)Hlsl.Dot(DispatchSize.XYZ, Float3.One);
+                buffer[4] = (int)Hlsl.Dot(DispatchSize.XY, float2.One);
+                buffer[5] = (int)Hlsl.Dot(DispatchSize.XYZ, float3.One);
             }
         }
 
@@ -267,9 +267,9 @@ namespace ComputeSharp.Tests
         [AllDevices]
         public void Verify_DispatchAsPixelShader(Device device)
         {
-            using ReadWriteTexture2D<Rgba32, Float4> texture = device.Get().AllocateReadWriteTexture2D<Rgba32, Float4>(256, 256);
+            using ReadWriteTexture2D<Rgba32, float4> texture = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(256, 256);
 
-            device.Get().ForEach<DispatchPixelShader, Float4>(texture);
+            device.Get().ForEach<DispatchPixelShader, float4>(texture);
 
             Rgba32[,] data = texture.ToArray();
 
@@ -287,9 +287,9 @@ namespace ComputeSharp.Tests
             }
         }
 
-        internal readonly partial struct DispatchPixelShader : IPixelShader<Float4>
+        internal readonly partial struct DispatchPixelShader : IPixelShader<float4>
         {
-            public Float4 Execute()
+            public float4 Execute()
             {
                 return new(
                     (float)ThreadIds.X / DispatchSize.X,

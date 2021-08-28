@@ -6,7 +6,7 @@ using FX = TerraFX.Interop.Windows;
 namespace ComputeSharp.SwapChain.Backend
 {
     internal sealed class SwapChainApplication<T> : Win32Application
-        where T : struct, IPixelShader<Float4>
+        where T : struct, IPixelShader<float4>
     {
         /// <summary>
         /// The <see cref="Func{T1, TResult}"/> instance used to create shaders to run.
@@ -66,7 +66,7 @@ namespace ComputeSharp.SwapChain.Backend
         /// <summary>
         /// The <see cref="ReadWriteTexture2D{T, TPixel}"/> instance used to prepare frames to display.
         /// </summary>
-        private ReadWriteTexture2D<Rgba32, Float4>? texture;
+        private ReadWriteTexture2D<Rgba32, float4>? texture;
 
         /// <summary>
         /// Whether or not the window has been resized and requires the buffers to be updated.
@@ -215,7 +215,7 @@ namespace ComputeSharp.SwapChain.Backend
             D3D12_RESOURCE_DESC d3D12Resource0Description = this.d3D12Resource0.Get()->GetDesc();
 
             // Create the 2D texture to use to generate frames to display
-            this.texture = Gpu.Default.AllocateReadWriteTexture2D<Rgba32, Float4>(
+            this.texture = Gpu.Default.AllocateReadWriteTexture2D<Rgba32, float4>(
                 (int)d3D12Resource0Description.Width,
                 (int)d3D12Resource0Description.Height);
         }

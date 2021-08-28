@@ -11,25 +11,25 @@
         /// <summary>
         /// The target texture.
         /// </summary>
-        public readonly IReadWriteTexture2D<Float4> texture;
+        public readonly IReadWriteTexture2D<float4> texture;
 
         /// <summary>
         /// The current time since the start of the application.
         /// </summary>
         public readonly float time;
 
-        private static Float2x2 Rotate(float a)
+        private static float2x2 Rotate(float a)
         {
             float c = Hlsl.Cos(a), s = Hlsl.Sin(a);
 
             return new(c, s, -s, c);
         }
 
-        private static float Box(Float3 pos, float scale)
+        private static float Box(float3 pos, float scale)
         {
-            static float SDBox(Float3 p, Float3 b)
+            static float SDBox(float3 p, float3 b)
             {
-                Float3 q = Hlsl.Abs(p) - b;
+                float3 q = Hlsl.Abs(p) - b;
 
                 return Hlsl.Length(Hlsl.Max(q, 0.0f)) +
                        Hlsl.Min(Hlsl.Max(q.X, Hlsl.Max(q.Y, q.Z)), 0.0f);
@@ -46,9 +46,9 @@
             return -b;
         }
 
-        private static float BoxSet(Float3 pos, float gTime)
+        private static float BoxSet(float3 pos, float gTime)
         {
-            Float3 pos_origin = pos;
+            float3 pos_origin = pos;
 
             pos = pos_origin;
             pos.Y += Hlsl.Sin(gTime * 0.4f) * 2.5f;
@@ -90,9 +90,9 @@
         /// <inheritdoc/>
         public void Execute()
         {
-            Float2 p = ((Float2)ThreadIds.XY * 2.0f - DispatchSize.XY) / Hlsl.Min(DispatchSize.X, DispatchSize.Y);
-            Float3 ro = new(0.0f, -0.2f, time * 4.0f);
-            Float3 ray = Hlsl.Normalize(new Float3(p, 1.5f));
+            float2 p = ((float2)ThreadIds.XY * 2.0f - DispatchSize.XY) / Hlsl.Min(DispatchSize.X, DispatchSize.Y);
+            float3 ro = new(0.0f, -0.2f, time * 4.0f);
+            float3 ray = Hlsl.Normalize(new float3(p, 1.5f));
 
             ray.XY = Hlsl.Mul(ray.XY, Rotate(Hlsl.Sin(time * 0.03f) * 5.0f));
             ray.YZ = Hlsl.Mul(ray.YZ, Rotate(Hlsl.Sin(time * 0.05f) * 0.2f));
@@ -102,12 +102,12 @@
 
             for (int i = 0; i < 99; i++)
             {
-                static Float3 Mod(Float3 x, float y)
+                static float3 Mod(float3 x, float y)
                 {
                     return x - y * Hlsl.Floor(x / y);
                 }
 
-                Float3 pos = ro + ray * t;
+                float3 pos = ro + ray * t;
 
                 pos = Mod(pos - 2.0f, 4.0f) - 2.0f;
 
@@ -119,8 +119,8 @@
                 t += d * 0.55f;
             }
 
-            Float3 col = ac * 0.02f + new Float3(0.0f, 0.2f * Hlsl.Abs(Hlsl.Sin(time)), 0.5f + Hlsl.Sin(time) * 0.2f);
-            Float4 color = new(col, 1.0f - t * (0.02f + 0.02f * Hlsl.Sin(time)));
+            float3 col = ac * 0.02f + new float3(0.0f, 0.2f * Hlsl.Abs(Hlsl.Sin(time)), 0.5f + Hlsl.Sin(time) * 0.2f);
+            float4 color = new(col, 1.0f - t * (0.02f + 0.02f * Hlsl.Sin(time)));
 
             texture[ThreadIds.XY] = color;
         }

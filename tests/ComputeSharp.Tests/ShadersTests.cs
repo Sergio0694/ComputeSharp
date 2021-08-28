@@ -114,7 +114,7 @@ namespace ComputeSharp.Tests
         {
             string filename = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Shaders", "Textures", "RustyMetal.png");
 
-            using ReadOnlyTexture2D<Rgba32, Float4> background = device.Get().LoadReadOnlyTexture2D<Rgba32, Float4>(filename);
+            using ReadOnlyTexture2D<Rgba32, float4> background = device.Get().LoadReadOnlyTexture2D<Rgba32, float4>(filename);
 
             RunAndCompareShader(
                 device,
@@ -141,29 +141,29 @@ namespace ComputeSharp.Tests
 
             using Image<ImageSharpRgba32> image = new(imageInfo.Width, imageInfo.Height);
 
-            using (ReadWriteTexture2D<Rgba32, Float4> texture = device.Get().AllocateReadWriteTexture2D<Rgba32, Float4>(imageInfo.Width, imageInfo.Height))
+            using (ReadWriteTexture2D<Rgba32, float4> texture = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(imageInfo.Width, imageInfo.Height))
             {
                 if (shaderType.IsAssignableTo(typeof(IComputeShader)))
                 {
-                    static void RunComputeShader<T>(ReadWriteTexture2D<Rgba32, Float4> texture)
+                    static void RunComputeShader<T>(ReadWriteTexture2D<Rgba32, float4> texture)
                         where T : struct, IComputeShader
                     {
                         texture.GraphicsDevice.For(texture.Width, texture.Height, (T)Activator.CreateInstance(typeof(T), texture, 0f)!);
                     }
 
-                    var action = new Action<ReadWriteTexture2D<Rgba32, Float4>>(RunComputeShader<SwapChain.Shaders.Compute.ColorfulInfinity>);
+                    var action = new Action<ReadWriteTexture2D<Rgba32, float4>>(RunComputeShader<SwapChain.Shaders.Compute.ColorfulInfinity>);
 
                     action.Method.GetGenericMethodDefinition().MakeGenericMethod(shaderType).Invoke(null, new[] { texture });
                 }
                 else
                 {
-                    static void RunPixelShader<T>(ReadWriteTexture2D<Rgba32, Float4> texture)
-                        where T : struct, IPixelShader<Float4>
+                    static void RunPixelShader<T>(ReadWriteTexture2D<Rgba32, float4> texture)
+                        where T : struct, IPixelShader<float4>
                     {
                         texture.GraphicsDevice.ForEach(texture, (T)Activator.CreateInstance(typeof(T), 0f)!);
                     }
 
-                    var action = new Action<ReadWriteTexture2D<Rgba32, Float4>>(RunPixelShader<ColorfulInfinity>);
+                    var action = new Action<ReadWriteTexture2D<Rgba32, float4>>(RunPixelShader<ColorfulInfinity>);
 
                     action.Method.GetGenericMethodDefinition().MakeGenericMethod(shaderType).Invoke(null, new[] { texture });
                 }
@@ -194,11 +194,11 @@ namespace ComputeSharp.Tests
         private static void RunAndCompareShader<TCompute, TPixel>(
             Device device,
             Type shaderType,
-            Func<ReadWriteTexture2D<Rgba32, Float4>, TCompute> computeFactory,
-            Func<ReadWriteTexture2D<Rgba32, Float4>, TPixel> pixelFactory,
+            Func<ReadWriteTexture2D<Rgba32, float4>, TCompute> computeFactory,
+            Func<ReadWriteTexture2D<Rgba32, float4>, TPixel> pixelFactory,
             float delta)
             where TCompute : struct, IComputeShader
-            where TPixel : struct, IPixelShader<Float4>
+            where TPixel : struct, IPixelShader<float4>
         {
             _ = device.Get();
 
@@ -208,7 +208,7 @@ namespace ComputeSharp.Tests
 
             using Image<ImageSharpRgba32> image = new(imageInfo.Width, imageInfo.Height);
 
-            using (ReadWriteTexture2D<Rgba32, Float4> texture = device.Get().AllocateReadWriteTexture2D<Rgba32, Float4>(imageInfo.Width, imageInfo.Height))
+            using (ReadWriteTexture2D<Rgba32, float4> texture = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(imageInfo.Width, imageInfo.Height))
             {
                 if (shaderType.IsAssignableTo(typeof(IComputeShader)))
                 {

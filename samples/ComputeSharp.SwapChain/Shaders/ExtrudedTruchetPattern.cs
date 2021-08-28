@@ -6,7 +6,7 @@
     /// <para>Created by Shane.</para>
     /// </summary>
     [AutoConstructor]
-    internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<Float4>
+    internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<float4>
     {
         /// <summary>
         /// The current time since the start of the application.
@@ -24,21 +24,21 @@
         private static int objID;
 
         // Standard 2D rotation formula.
-        private static Float2x2 Rotate2x2(float a)
+        private static float2x2 Rotate2x2(float a)
         {
             float c = Hlsl.Cos(a), s = Hlsl.Sin(a);
 
             return new(c, -s, s, c);
         }
 
-        // IQ's Float2 to float hash.
-        private static float Hash21(Float2 p)
+        // IQ's float2 to float hash.
+        private static float Hash21(float2 p)
         {
-            return Hlsl.Frac(Hlsl.Sin(Hlsl.Dot(p, new Float2(27.619f, 57.583f))) * 43758.5453f);
+            return Hlsl.Frac(Hlsl.Sin(Hlsl.Dot(p, new float2(27.619f, 57.583f))) * 43758.5453f);
         }
 
         // Various distance metrics.
-        private static float Distance(Float2 p)
+        private static float Distance(float2 p)
         {
             if (SHAPE == 0)
             {
@@ -64,14 +64,14 @@
         // A standard square grid 2D blobby Truchet routine: Render circles
         // in opposite corners of a tile, reverse the pattern on alternate
         // checker tiles, and randomly rotate.
-        private static float Truchet(Float2 p)
+        private static float Truchet(float2 p)
         {
             const float sc = 0.5f;
-            Float2 ip = Hlsl.Floor(p / sc) + 0.5f;
+            float2 ip = Hlsl.Floor(p / sc) + 0.5f;
 
             p -= ip * sc;
 
-            float rnd = Hlsl.Frac(Hlsl.Sin(Hlsl.Dot(ip, new Float2(1, 113))) * 45758.5453f);
+            float rnd = Hlsl.Frac(Hlsl.Sin(Hlsl.Dot(ip, new float2(1, 113))) * 45758.5453f);
 
             if (rnd < .5) p.Y = -p.Y;
 
@@ -91,7 +91,7 @@
         // The scene's distance function: There'd be faster ways to do this, but it's
         // more readable this way. Plus, this  is a pretty simple scene, so it's 
         // efficient enough.
-        private static float M(Float3 p)
+        private static float M(float3 p)
         {
             float fl = -p.Z;
             float obj = Truchet(p.XY);
@@ -100,8 +100,8 @@
 
             float studs = 1e5f;
             const float sc = 0.5f;
-            Float2 q = p.XY + 0.5f * sc;
-            Float2 iq = Hlsl.Floor(q / sc) + 0.5f;
+            float2 q = p.XY + 0.5f * sc;
+            float2 iq = Hlsl.Floor(q / sc) + 0.5f;
 
             q -= iq * sc;
 
@@ -117,13 +117,13 @@
 
         // Cheap shadows are hard. In fact, I'd almost say, shadowing particular scenes with limited 
         // iterations is impossible... However, I'd be very grateful if someone could prove me wrong. :)
-        private static float SoftShadow(Float3 ro, Float3 lp, Float3 n, float k)
+        private static float SoftShadow(float3 ro, float3 lp, float3 n, float k)
         {
             const int iter = 24;
 
             ro += n * 0.0015f;
 
-            Float3 rd = lp - ro;
+            float3 rd = lp - ro;
             float shade = 1.0f;
             float t = 0;
             float end = Hlsl.Max(Hlsl.Length(rd), 0.0001f);
@@ -146,7 +146,7 @@
 
         // I keep a collection of occlusion routines... OK, that sounded really nerdy. :)
         // Anyway, I like this one. I'm assuHlsl.Ming it's based on IQ's original.
-        private float CalculateAO(in Float3 p, in Float3 n)
+        private float CalculateAO(in float3 p, in float3 n)
         {
             float sca = 2.0f, occ = 0.0f;
 
@@ -164,25 +164,25 @@
         }
 
         // Standard normal function.
-        private static Float3 Normal(in Float3 p)
+        private static float3 Normal(in float3 p)
         {
-            Float2 e = new(0.001f, 0);
+            float2 e = new(0.001f, 0);
 
-            return Hlsl.Normalize(new Float3(
+            return Hlsl.Normalize(new float3(
                 M(p + e.XYY) - M(p - e.XYY),
                 M(p + e.YXY) - M(p - e.YXY),
                 M(p + e.YYX) - M(p - e.YYX)));
         }
 
         /// <inheritdoc/>
-        public Float4 Execute()
+        public float4 Execute()
         {
-            Int2 coords = new(ThreadIds.X, DispatchSize.Y - ThreadIds.Y);
-            Float2 u = (coords - (Float2)DispatchSize.XY * 0.5f) / DispatchSize.Y;
-            Float3
-                r = Hlsl.Normalize(new Float3(u, 1)),
+            int2 coords = new(ThreadIds.X, DispatchSize.Y - ThreadIds.Y);
+            float2 u = (coords - (float2)DispatchSize.XY * 0.5f) / DispatchSize.Y;
+            float3
+                r = Hlsl.Normalize(new float3(u, 1)),
                 o = new(0, time / 2.0f, -3),
-                l = o + new Float3(0.25f, 0.25f, 2.0f);
+                l = o + new float3(0.25f, 0.25f, 2.0f);
 
             r.YZ = Hlsl.Mul(Rotate2x2(0.15f), r.YZ);
             r.XZ = Hlsl.Mul(Rotate2x2(-Hlsl.Cos(time * 3.14159f / 32.0f) / 8.0f), r.XZ);
@@ -201,15 +201,15 @@
             }
 
             int gObjID = objID;
-            Float3 p = o + r * t, n = Normal(p);
-            Float2 uv = p.XY;
+            float3 p = o + r * t, n = Normal(p);
+            float2 uv = p.XY;
             float sc = 0.5f;
-            Float2 iuv = Hlsl.Floor(uv / sc) + 0.5f;
+            float2 iuv = Hlsl.Floor(uv / sc) + 0.5f;
 
             uv -= iuv * sc;
 
-            Float2 uv2 = p.XY + 0.5f * sc;
-            Float2 iuv2 = Hlsl.Floor(uv2 / sc) + 0.5f;
+            float2 uv2 = p.XY + 0.5f * sc;
+            float2 iuv2 = Hlsl.Floor(uv2 / sc) + 0.5f;
 
             uv2 -= iuv2 * sc;
 
@@ -223,13 +223,13 @@
             float pat2 = (Hlsl.Abs(Hlsl.Frac((uv.X + uv.Y) * lSc + 0.5f) - 0.5f) * 2.0f - 0.5f) / lSc;
             float sf = Hlsl.Dot(Hlsl.Sin(p.XY - Hlsl.Cos(p.YX * 2.0f)), 0.5f);
             float sf2 = Hlsl.Dot(Hlsl.Sin(p.XY * 1.5f - Hlsl.Cos(p.YX * 3.0f)), 0.5f);
-            Float4 col1 = Hlsl.Lerp(new Float4(1, 0.75f, 0.6f, 0), new Float4(1, 0.85f, 0.65f, 0), Hlsl.SmoothStep(-0.5f, 0.5f, sf));
-            Float4 col2 = Hlsl.Lerp(new Float4(0.4f, 0.7f, 1, 0), new Float4(0.3f, 0.85f, 0.95f, 0), Hlsl.SmoothStep(-0.5f, 0.5f, sf2) * 0.5f);
+            float4 col1 = Hlsl.Lerp(new float4(1, 0.75f, 0.6f, 0), new float4(1, 0.85f, 0.65f, 0), Hlsl.SmoothStep(-0.5f, 0.5f, sf));
+            float4 col2 = Hlsl.Lerp(new float4(0.4f, 0.7f, 1, 0), new float4(0.3f, 0.85f, 0.95f, 0), Hlsl.SmoothStep(-0.5f, 0.5f, sf2) * 0.5f);
 
             col1 = Hlsl.Pow(col1, 1.6f);
             col2 = Hlsl.Lerp(col1.ZYXW, Hlsl.Pow(col2, 1.4f), 0.666f);
 
-            Float4 oCol;
+            float4 oCol;
 
             if (gObjID == 0)
             {
@@ -243,7 +243,7 @@
             else if (gObjID == 1)
             {
                 oCol = Hlsl.Lerp(1, 0, 1.0f - Hlsl.SmoothStep(0, 0.01f, d + 0.05f));
-                Float4 fCol = Hlsl.Lerp(col1, 0, (1.0f - Hlsl.SmoothStep(0, 0.01f, pat)) * 0.35f);
+                float4 fCol = Hlsl.Lerp(col1, 0, (1.0f - Hlsl.SmoothStep(0, 0.01f, pat)) * 0.35f);
                 fCol = Hlsl.Lerp(fCol, 0, (1.0f - Hlsl.SmoothStep(0, 0.01f, bord)) * 0.8f);
 
                 if (Mod(iuv.X + iuv.Y, 2.0f) < 0.5f) fCol *= 0.8f;
@@ -272,7 +272,7 @@
                 oCol = Hlsl.Lerp(oCol, 0, (1 - Hlsl.SmoothStep(0, 0.01f, mark - 0.015f)) * 0.8f);
             }
 
-            Float3 ld = l - p;
+            float3 ld = l - p;
             float lDist = Hlsl.Length(ld);
 
             ld /= lDist;
@@ -283,7 +283,7 @@
             float df = Hlsl.Max(Hlsl.Dot(n, ld), 0);
             float sp = Hlsl.Pow(Hlsl.Max(Hlsl.Dot(Hlsl.Reflect(r, n), ld), 0), 32);
 
-            Float4 c = oCol * (df * sh + sp * sh + 0.5f) * at * ao;
+            float4 c = oCol * (df * sh + sp * sh + 0.5f) * at * ao;
 
             c = Hlsl.Sqrt(Hlsl.Max(c, 0));
 

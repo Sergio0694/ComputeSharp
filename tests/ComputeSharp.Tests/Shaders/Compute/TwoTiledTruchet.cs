@@ -11,7 +11,7 @@
         /// <summary>
         /// The target texture.
         /// </summary>
-        public readonly IReadWriteTexture2D<Float4> texture;
+        public readonly IReadWriteTexture2D<float4> texture;
 
         /// <summary>
         /// The current time since the start of the application.
@@ -24,12 +24,12 @@
         /// <param name="p">The input value to compute the distance field for.</param>
         /// <param name="ang">The resulting Truchet angle.</param>
         /// <returns>The distance field for the input value.</returns>
-        private Float2 DistanceField(Float2 p, out Float2 ang)
+        private float2 DistanceField(float2 p, out float2 ang)
         {
             // Fast hash for a pair of floats
-            static float Hash21(Float2 p)
+            static float Hash21(float2 p)
             {
-                return Hlsl.Frac(Hlsl.Sin(Hlsl.Dot(p, new Float2(27.619f, 57.583f))) * 43758.5453f);
+                return Hlsl.Frac(Hlsl.Sin(Hlsl.Dot(p, new float2(27.619f, 57.583f))) * 43758.5453f);
             }
 
             // HLSL's port of the GLSL mod intrinsic
@@ -38,11 +38,11 @@
                 return x - y * Hlsl.Floor(x / y);
             }
 
-            Float2 ip2 = Hlsl.Floor(p / 2.0f);
-            Float2 ip = Hlsl.Floor(p);
+            float2 ip2 = Hlsl.Floor(p / 2.0f);
+            float2 ip = Hlsl.Floor(p);
             float rnd = Hash21(ip);
             float rnd3 = Hash21(ip + 0.57f);
-            Float2 d = 1e5f;
+            float2 d = 1e5f;
 
             p -= ip + 0.5f;
 
@@ -76,7 +76,7 @@
             {
                 if (rnd < .5)
                 {
-                    p = p.YX * new Float2(1, -1);
+                    p = p.YX * new float2(1, -1);
                 }
 
                 d.X = Hlsl.Length(p - 0.5f) - 0.5f;
@@ -116,14 +116,14 @@
         /// <inheritdoc/>
         public void Execute()
         {
-            Float2 uv = (ThreadIds.XY - (Float2)DispatchSize.XY * 0.5f) / DispatchSize.Y;
+            float2 uv = (ThreadIds.XY - (float2)DispatchSize.XY * 0.5f) / DispatchSize.Y;
             float gSc = 7.0f;
-            Float2 p = uv * gSc - new Float2(-1, -0.5f) * time / 2.0f;
+            float2 p = uv * gSc - new float2(-1, -0.5f) * time / 2.0f;
             float sf = 2.0f / DispatchSize.Y * gSc;
             float lSc = 6.0f;
             float lw = 1.0f / lSc / gSc;
-            Float2 d = DistanceField(p, out Float2 ang) - 2.5f / lSc;
-            Float3 col = new(1.0f, 0.9f, 0.8f);
+            float2 d = DistanceField(p, out float2 ang) - 2.5f / lSc;
+            float3 col = new(1.0f, 0.9f, 0.8f);
 
             for (int i = 0; i < 2; i++)
             {
@@ -140,8 +140,8 @@
                 col = Hlsl.Lerp(col, 1 * tracks, 1.0f - Hlsl.SmoothStep(0.0f, sf, di + 2.0f * gap / lSc + lw));
             }
 
-            Float3 rgb = Hlsl.Sqrt(Hlsl.Max(col, 0.0f));
-            Float4 color = new(rgb.X, rgb.Y, rgb.Z, 1.0f);
+            float3 rgb = Hlsl.Sqrt(Hlsl.Max(col, 0.0f));
+            float4 color = new(rgb.X, rgb.Y, rgb.Z, 1.0f);
 
             texture[ThreadIds.XY] = color;
         }

@@ -18,17 +18,17 @@ namespace ComputeSharp.Tests
         [Resource(typeof(ReadOnlyTexture3D<,>))]
         [Resource(typeof(ReadWriteTexture3D<,>))]
         [Data(typeof(Bgra32), typeof(Vector4))]
-        [Data(typeof(Bgra32), typeof(Float4))]
+        [Data(typeof(Bgra32), typeof(float4))]
         [Data(typeof(R16), typeof(float))]
         [Data(typeof(R8), typeof(float))]
         [Data(typeof(Rg16), typeof(Vector2))]
-        [Data(typeof(Rg16), typeof(Float2))]
+        [Data(typeof(Rg16), typeof(float2))]
         [Data(typeof(Rg32), typeof(Vector2))]
-        [Data(typeof(Rg32), typeof(Float2))]
+        [Data(typeof(Rg32), typeof(float2))]
         [Data(typeof(Rgba32), typeof(Vector4))]
-        [Data(typeof(Rgba32), typeof(Float4))]
+        [Data(typeof(Rgba32), typeof(float4))]
         [Data(typeof(Rgba64), typeof(Vector4))]
-        [Data(typeof(Rgba64), typeof(Float4))]
+        [Data(typeof(Rgba64), typeof(float4))]
         public void Allocate_Uninitialized_Pixel_Ok(Device device, Type textureType, Type t, Type tPixel)
         {
             static void Test<T, TPixel>(Device device, Type textureType)

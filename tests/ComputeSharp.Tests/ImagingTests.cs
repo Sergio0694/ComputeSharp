@@ -26,7 +26,7 @@ namespace ComputeSharp.Tests
         {
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
 
-            using ReadOnlyTexture2D<Rgba32, Float4> texture = device.Get().LoadReadOnlyTexture2D<Rgba32, Float4>(path);
+            using ReadOnlyTexture2D<Rgba32, float4> texture = device.Get().LoadReadOnlyTexture2D<Rgba32, float4>(path);
 
             using Image<ImageSharpRgba32> loaded = texture.ToImage<Rgba32, ImageSharpRgba32>();
             using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(path);
@@ -40,7 +40,7 @@ namespace ComputeSharp.Tests
         {
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
 
-            using ReadOnlyTexture2D<Bgra32, Float4> texture = device.Get().LoadReadOnlyTexture2D<Bgra32, Float4>(path);
+            using ReadOnlyTexture2D<Bgra32, float4> texture = device.Get().LoadReadOnlyTexture2D<Bgra32, float4>(path);
 
             using Image<ImageSharpBgra32> loaded = texture.ToImage<Bgra32, ImageSharpBgra32>();
             using Image<ImageSharpBgra32> original = Image.Load<ImageSharpBgra32>(path);
@@ -54,7 +54,7 @@ namespace ComputeSharp.Tests
         {
             string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets", "CityAfter1024x1024Sampling.png");
 
-            using ReadOnlyTexture2D<Bgra32, Float4> texture = device.Get().LoadReadOnlyTexture2D<Bgra32, Float4>(path);
+            using ReadOnlyTexture2D<Bgra32, float4> texture = device.Get().LoadReadOnlyTexture2D<Bgra32, float4>(path);
 
             using Image<ImageSharpBgra32> loaded = texture.ToImage<Bgra32, ImageSharpBgra32>();
             using Image<ImageSharpBgra32> original = Image.Load<ImageSharpBgra32>(path);
@@ -84,7 +84,7 @@ namespace ComputeSharp.Tests
 
             byte[] buffer = File.ReadAllBytes(path);
 
-            using ReadOnlyTexture2D<Rgba32, Float4> texture = device.Get().LoadReadOnlyTexture2D<Rgba32, Float4>(buffer);
+            using ReadOnlyTexture2D<Rgba32, float4> texture = device.Get().LoadReadOnlyTexture2D<Rgba32, float4>(buffer);
 
             using Image<ImageSharpRgba32> loaded = texture.ToImage<Rgba32, ImageSharpRgba32>();
             using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(path);
@@ -101,7 +101,7 @@ namespace ComputeSharp.Tests
                 expectedPath = Path.Combine(path, "city.jpg"),
                 actualPath = Path.Combine(path, "city_rgba32_saved.jpg");
 
-            using ReadOnlyTexture2D<Rgba32, Float4> texture = device.Get().LoadReadOnlyTexture2D<Rgba32, Float4>(expectedPath);
+            using ReadOnlyTexture2D<Rgba32, float4> texture = device.Get().LoadReadOnlyTexture2D<Rgba32, float4>(expectedPath);
 
             texture.Save(actualPath);
 
@@ -117,7 +117,7 @@ namespace ComputeSharp.Tests
                 expectedPath = Path.Combine(path, "city.jpg"),
                 actualPath = Path.Combine(path, "city_bgra32_saved.jpg");
 
-            using ReadOnlyTexture2D<Bgra32, Float4> texture = device.Get().LoadReadOnlyTexture2D<Bgra32, Float4>(expectedPath);
+            using ReadOnlyTexture2D<Bgra32, float4> texture = device.Get().LoadReadOnlyTexture2D<Bgra32, float4>(expectedPath);
 
             texture.Save(actualPath);
 

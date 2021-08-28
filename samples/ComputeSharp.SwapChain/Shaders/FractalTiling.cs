@@ -7,7 +7,7 @@
     /// <para>License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</para>
     /// </summary>
     [AutoConstructor]
-    internal readonly partial struct FractalTiling : IPixelShader<Float4>
+    internal readonly partial struct FractalTiling : IPixelShader<float4>
     {
         /// <summary>
         /// The current time since the start of the application.
@@ -15,18 +15,18 @@
         public readonly float time;
 
         /// <inheritdoc/>
-        public Float4 Execute()
+        public float4 Execute()
         {
-            Float2 position = ((Float2)(256 * ThreadIds.XY)) / DispatchSize.X + time;
-            Float4 color = 0;
+            float2 position = ((float2)(256 * ThreadIds.XY)) / DispatchSize.X + time;
+            float4 color = 0;
 
             for (int i = 0; i < 6; i++)
             {
-                Float2 a = Hlsl.Floor(position);
-                Float2 b = Hlsl.Frac(position);
-                Float4 w = Hlsl.Frac(
+                float2 a = Hlsl.Floor(position);
+                float2 b = Hlsl.Frac(position);
+                float4 w = Hlsl.Frac(
                     (Hlsl.Sin(a.X * 7 + 31.0f * a.Y + 0.01f * time) +
-                     new Float4(0.035f, 0.01f, 0, 0.7f))
+                     new float4(0.035f, 0.01f, 0, 0.7f))
                      * 13.545317f);
 
                 color.XYZ += w.XYZ *
@@ -37,7 +37,7 @@
                 color /= 2.0f;
             }
 
-            color.XYZ = Hlsl.Pow(color.XYZ, new Float3(0.7f, 0.8f, 0.5f));
+            color.XYZ = Hlsl.Pow(color.XYZ, new float3(0.7f, 0.8f, 0.5f));
             color.W = 1.0f;
 
             return color;

@@ -34,7 +34,7 @@ namespace ComputeSharp.Tests
 
             static readonly float Pi = 3.14f;
             static readonly float SinPi = Hlsl.Sin(Pi);
-            static readonly Int2x2 Mat = new(1, 2, 3, 4);
+            static readonly int2x2 Mat = new(1, 2, 3, 4);
             static readonly float Combo = Hlsl.Abs(Hlsl.Clamp(Hlsl.Min(Hlsl.Max(3.14f, 2), 10), 0, 42));
 
             public void Execute()

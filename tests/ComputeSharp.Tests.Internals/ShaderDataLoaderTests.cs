@@ -79,10 +79,10 @@ namespace ComputeSharp.Tests.Internals
         public partial struct ScalarAndVectorTypesShader : IComputeShader
         {
             public ReadWriteBuffer<float> _;
-            public Float3 f3;
+            public float3 f3;
             public int a;
             public int b;
-            public Double2 d2;
+            public double2 d2;
             public int c;
             public int d;
 
@@ -130,13 +130,13 @@ namespace ComputeSharp.Tests.Internals
         public partial struct ScalarVectorAndMatrixTypesShader : IComputeShader
         {
             public ReadWriteBuffer<float> _;
-            public Float2x3 f2x3;
+            public float2x3 f2x3;
             public int a;
             public Int1x3 i1x3;
-            public Double2 d2;
+            public double2 d2;
             public int c;
             public Int1x2 i1x2;
-            public Int2x2 i2x2;
+            public int2x2 i2x2;
             public int d;
 
             public void Execute()
@@ -202,13 +202,13 @@ namespace ComputeSharp.Tests.Internals
         [AutoConstructor]
         public partial struct SimpleTypes
         {
-            public Float2x3 f2x3;
+            public float2x3 f2x3;
             public int a;
             public Int1x3 i1x3;
-            public Double2 d2;
+            public double2 d2;
             public int c;
             public Int1x2 i1x2;
-            public Int2x2 i2x2;
+            public int2x2 i2x2;
             public int d;
         }
 
@@ -282,7 +282,7 @@ namespace ComputeSharp.Tests.Internals
         [AutoConstructor]
         public partial struct CustomType1
         {
-            public Float3 a;
+            public float3 a;
             public SimpleTypes b;
             public int c;
             public CustomType2 d;
@@ -293,7 +293,7 @@ namespace ComputeSharp.Tests.Internals
         public partial struct CustomType2
         {
             public int a;
-            public Float2 b;
+            public float2 b;
             public CustomType3 c;
         }
 
@@ -301,7 +301,7 @@ namespace ComputeSharp.Tests.Internals
         public partial struct CustomType3
         {
             public int a;
-            public Float2 b;
+            public float2 b;
         }
 
         [AutoConstructor]

@@ -1170,10 +1170,10 @@ namespace ComputeSharp.Tests.SourceGenerators
                     M12,
                     M13
                 },
-                public struct Float4 { }
-                public struct Float4x4
+                public struct float4 { }
+                public struct float4x4
                 {
-                    public Float4 this[MatrixIndex m0, MatrixIndex m1, MatrixIndex m2, MatrixIndex m3] => default;
+                    public float4 this[MatrixIndex m0, MatrixIndex m1, MatrixIndex m2, MatrixIndex m3] => default;
                 }
             }
 
@@ -1185,9 +1185,9 @@ namespace ComputeSharp.Tests.SourceGenerators
 
                     public void Execute()
                     {
-                        Float4x4 m = default;
+                        float4x4 m = default;
                         MatrixIndex index = M12;
-                        Float4 = m[M11, index, M13, M11];
+                        float4 = m[M11, index, M13, M11];
                     }
                 }
             }";
@@ -1347,8 +1347,8 @@ namespace ComputeSharp.Tests.SourceGenerators
             namespace ComputeSharp
             {
                 public class ReadWriteBuffer<T> { }
-                public struct Double4x4 { }
-                public struct Float4 { }
+                public struct double4x4 { }
+                public struct float4 { }
             }
 
             namespace MyFancyApp.Sample
@@ -1356,10 +1356,10 @@ namespace ComputeSharp.Tests.SourceGenerators
                 public struct MyShader : IComputeShader
                 {
                     public readonly ReadWriteBuffer<float> buffer;
-                    public readonly Double4x4 a;
-                    public readonly Double4x4 b;
+                    public readonly double4x4 a;
+                    public readonly double4x4 b;
                     public readonly int c;
-                    public readonly Float4 d;
+                    public readonly float4 d;
 
                     public void Execute()
                     {
@@ -1384,7 +1384,7 @@ namespace ComputeSharp.Tests.SourceGenerators
 
             namespace MyFancyApp.Sample
             {
-                public struct MyShader : IComputeShader, IPixelShader<Float4>
+                public struct MyShader : IComputeShader, IPixelShader<float4>
                 {
                     public void Execute()
                     {

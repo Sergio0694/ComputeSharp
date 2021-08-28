@@ -11,7 +11,7 @@
         /// <summary>
         /// The target texture.
         /// </summary>
-        public readonly IReadWriteTexture2D<Float4> texture;
+        public readonly IReadWriteTexture2D<float4> texture;
 
         /// <summary>
         /// The current time Hlsl.Since the start of the application.
@@ -19,41 +19,41 @@
         public readonly float time;
 
         // Standard 2D rotation formula.
-        private static Float2x2 Rotate2x2(in float a)
+        private static float2x2 Rotate2x2(in float a)
         {
             float c = Hlsl.Cos(a), s = Hlsl.Sin(a);
 
             return new(c, -s, s, c);
         }
 
-        // IQ's Float2 to float hash.
-        private static float Hash21(Float2 p)
+        // IQ's float2 to float hash.
+        private static float Hash21(float2 p)
         {
-            return Hlsl.Frac(Hlsl.Sin(Hlsl.Dot(p, new Float2(27.619f, 57.583f))) * 43758.5453f);
+            return Hlsl.Frac(Hlsl.Sin(Hlsl.Dot(p, new float2(27.619f, 57.583f))) * 43758.5453f);
         }
 
-        // Float2 to Float2 hash.
-        private Float2 Hash22(Float2 p)
+        // float2 to float2 hash.
+        private float2 Hash22(float2 p)
         {
-            float n = Hlsl.Sin(Hlsl.Dot(p, new Float2(41, 289)));
+            float n = Hlsl.Sin(Hlsl.Dot(p, new float2(41, 289)));
 
-            p = Hlsl.Frac(new Float2(262144, 32768) * n);
+            p = Hlsl.Frac(new float2(262144, 32768) * n);
 
             return Hlsl.Sin(p * 6.2831853f + time);
         }
 
         // Based on IQ's gradient noise formula.
-        private float N2D3G(Float2 p)
+        private float N2D3G(float2 p)
         {
-            Float2 i = Hlsl.Floor(p);
+            float2 i = Hlsl.Floor(p);
 
             p -= i;
 
-            Float4 v = default;
+            float4 v = default;
 
             v.X = Hlsl.Dot(Hash22(i), p);
-            v.Y = Hlsl.Dot(Hash22(i + Float2.UnitX), p - Float2.UnitX);
-            v.Z = Hlsl.Dot(Hash22(i + Float2.UnitY), p - Float2.UnitY);
+            v.Y = Hlsl.Dot(Hash22(i + float2.UnitX), p - float2.UnitX);
+            v.Z = Hlsl.Dot(Hash22(i + float2.UnitY), p - float2.UnitY);
             v.W = Hlsl.Dot(Hash22(i + 1.0f), p - 1.0f);
 
             p = p * p * p * (p * (p * 6.0f - 15.0f) + 10.0f);
@@ -63,13 +63,13 @@
 
 
         // The isofunction. Just a Hlsl.Single noise function, but it can be more elaborate.
-        private float IsoFunction(in Float2 p)
+        private float IsoFunction(in float2 p)
         {
             return N2D3G(p / 4.0f + 0.07f);
         }
 
         // Unsigned distance to the segment joining "a" and "b".
-        private static float DistLine(Float2 a, Float2 b)
+        private static float DistLine(float2 a, float2 b)
         {
             b = a - b;
 
@@ -79,27 +79,27 @@
         }
 
         // Based on IQ's signed distance to the segment joining "a" and "b".
-        private static float distEdge(Float2 a, Float2 b)
+        private static float distEdge(float2 a, float2 b)
         {
-            return Hlsl.Dot((a + b) * 0.5f, Hlsl.Normalize((b - a).YX * new Float2(-1, 1)));
+            return Hlsl.Dot((a + b) * 0.5f, Hlsl.Normalize((b - a).YX * new float2(-1, 1)));
         }
 
         // Interpolating along the edge connecting vertices v1 and v2 with respect to the isovalue.
-        private static Float2 Interpolate(in Float2 p1, in Float2 p2, float v1, float v2, float isovalue)
+        private static float2 Interpolate(in float2 p1, in float2 p2, float v1, float v2, float isovalue)
         {
             return Hlsl.Lerp(p1, p2, (isovalue - v1) / (v2 - v1) * 0.75f + 0.25f / 2.0f);
         }
 
         // Isoline function.
         private static int IsoLine(
-            Float3 n3,
-            Float2 ip0,
-            Float2 ip1,
-            Float2 ip2,
+            float3 n3,
+            float2 ip0,
+            float2 ip1,
+            float2 ip2,
             float isovalue,
             float i,
-            ref Float2 p0,
-            ref Float2 p1)
+            ref float2 p0,
+            ref float2 p1)
         {
             p0 = 1e5f;
             p1 = 1e5f;
@@ -130,7 +130,7 @@
 
             if (iTh >= 4 && iTh <= 6)
             {
-                Float2 tmp = p0;
+                float2 tmp = p0;
 
                 p0 = p1;
                 p1 = tmp;
@@ -138,7 +138,7 @@
 
             if (i == 0.0f)
             {
-                Float2 tmp = p0;
+                float2 tmp = p0;
 
                 p0 = p1;
                 p1 = tmp;
@@ -147,22 +147,22 @@
             return iTh;
         }
 
-        private Float3 SimplexContour(Float2 p)
+        private float3 SimplexContour(float2 p)
         {
             const float gSc = 8.0f;
 
             p *= gSc;
 
-            Float2 oP = p;
+            float2 oP = p;
 
-            p += new Float2(N2D3G(p * 3.5f), N2D3G(p * 3.5f + 7.3f)) * 0.015f;
+            p += new float2(N2D3G(p * 3.5f), N2D3G(p * 3.5f + 7.3f)) * 0.015f;
 
-            Float2 s = Hlsl.Floor(p + (p.X + p.Y) * 0.36602540378f);
+            float2 s = Hlsl.Floor(p + (p.X + p.Y) * 0.36602540378f);
 
             p -= s - (s.X + s.Y) * 0.211324865f;
 
             float i = p.X < p.Y ? 1.0f : 0.0f;
-            Float2
+            float2
                 ioffs = new(1.0f - i, i),
                 ip0 = 0,
                 ip1 = ioffs - 0.2113248654f,
@@ -174,7 +174,7 @@
             ip2 -= ctr;
             p -= ctr;
 
-            Float3 n3 = default;
+            float3 n3 = default;
 
             n3.X = IsoFunction(s);
             n3.Y = IsoFunction(s + ioffs);
@@ -188,7 +188,7 @@
                 d5 = 1e5f;
 
             float isovalue = 0;
-            Float2 p0 = default, p1 = default;
+            float2 p0 = default, p1 = default;
             int iTh = IsoLine(n3, ip0, ip1, ip2, isovalue, i, ref p0, ref p1);
 
             d = Hlsl.Min(d, distEdge(p - p0, p - p1));
@@ -227,38 +227,38 @@
             d4 /= gSc;
             d5 /= gSc;
 
-            Float3 col = new(1, 0.85f, 0.6f);
+            float3 col = new(1, 0.85f, 0.6f);
             float sf = 0.004f;
 
-            if (d > 0.0f && d2 > 0.0f) col = new Float3(1, 1.8f, 3) * 0.45f;
-            if (d > 0.0f) col = Hlsl.Lerp(col, new Float3(1, 1.85f, 3) * 0.3f, (1.0f - Hlsl.SmoothStep(0.0f, sf, d2 - 0.012f)));
+            if (d > 0.0f && d2 > 0.0f) col = new float3(1, 1.8f, 3) * 0.45f;
+            if (d > 0.0f) col = Hlsl.Lerp(col, new float3(1, 1.85f, 3) * 0.3f, (1.0f - Hlsl.SmoothStep(0.0f, sf, d2 - 0.012f)));
 
-            col = Hlsl.Lerp(col, new Float3(1.1f, 0.85f, 0.6f), (1.0f - Hlsl.SmoothStep(0.0f, sf, d2)));
-            col = Hlsl.Lerp(col, new Float3(1.5f, 0.9f, 0.6f) * 0.6f, (1.0f - Hlsl.SmoothStep(0.0f, sf, d - 0.012f)));
-            col = Hlsl.Lerp(col, new Float3(1, 0.8f, 0.6f) * new Float3(0.7f, 1.0f, 0.75f) * 0.95f, (1.0f - Hlsl.SmoothStep(0.0f, sf, d)));
+            col = Hlsl.Lerp(col, new float3(1.1f, 0.85f, 0.6f), (1.0f - Hlsl.SmoothStep(0.0f, sf, d2)));
+            col = Hlsl.Lerp(col, new float3(1.5f, 0.9f, 0.6f) * 0.6f, (1.0f - Hlsl.SmoothStep(0.0f, sf, d - 0.012f)));
+            col = Hlsl.Lerp(col, new float3(1, 0.8f, 0.6f) * new float3(0.7f, 1.0f, 0.75f) * 0.95f, (1.0f - Hlsl.SmoothStep(0.0f, sf, d)));
 
-            if (d2 > 0.0f) col *= (Hlsl.Abs(Hlsl.Dot(n3, Float3.One)) * 1.25f + 1.25f) / 2.0f;
-            else col *= Hlsl.Max(2.0f - (Hlsl.Dot(n3, Float3.One) + 1.45f) / 1.25f, 0.0f);
+            if (d2 > 0.0f) col *= (Hlsl.Abs(Hlsl.Dot(n3, float3.One)) * 1.25f + 1.25f) / 2.0f;
+            else col *= Hlsl.Max(2.0f - (Hlsl.Dot(n3, float3.One) + 1.45f) / 1.25f, 0.0f);
 
             float pat = Hlsl.Abs(Hlsl.Frac(tri * 12.5f + 0.4f) - 0.5f) * 2.0f;
 
             col *= pat * 0.425f + 0.75f;
-            col = Hlsl.Lerp(col, Float3.Zero, (1.0f - Hlsl.SmoothStep(0.0f, sf, d5)) * 0.95f);
-            col = Hlsl.Lerp(col, Float3.Zero, (1.0f - Hlsl.SmoothStep(0.0f, sf, d3)));
-            col = Hlsl.Lerp(col, Float3.Zero, (1.0f - Hlsl.SmoothStep(0.0f, sf, d4)));
-            col = Hlsl.Lerp(col, Float3.One, (1.0f - Hlsl.SmoothStep(0.0f, sf, d4 + 0.005f)));
+            col = Hlsl.Lerp(col, float3.Zero, (1.0f - Hlsl.SmoothStep(0.0f, sf, d5)) * 0.95f);
+            col = Hlsl.Lerp(col, float3.Zero, (1.0f - Hlsl.SmoothStep(0.0f, sf, d3)));
+            col = Hlsl.Lerp(col, float3.Zero, (1.0f - Hlsl.SmoothStep(0.0f, sf, d4)));
+            col = Hlsl.Lerp(col, float3.One, (1.0f - Hlsl.SmoothStep(0.0f, sf, d4 + 0.005f)));
 
-            Float2 q = oP * 1.5f;
+            float2 q = oP * 1.5f;
 
             col = Hlsl.Min(col, 1.0f);
 
-            float gr = Hlsl.Sqrt(Hlsl.Dot(col, new Float3(0.299f, 0.587f, 0.114f))) * 1.25f;
-            float ns = (N2D3G(q * 4.0f * new Float2(1.0f / 3.0f, 3)) * 0.64f + N2D3G(q * 8.0f * new Float2(1.0f / 3.0f, 3)) * 0.34f) * 0.5f + 0.5f;
+            float gr = Hlsl.Sqrt(Hlsl.Dot(col, new float3(0.299f, 0.587f, 0.114f))) * 1.25f;
+            float ns = (N2D3G(q * 4.0f * new float2(1.0f / 3.0f, 3)) * 0.64f + N2D3G(q * 8.0f * new float2(1.0f / 3.0f, 3)) * 0.34f) * 0.5f + 0.5f;
 
             ns = gr - ns;
             q = Hlsl.Mul(q, Rotate2x2(3.14159f / 3.0f));
 
-            float ns2 = (N2D3G(q * 4.0f * new Float2(1.0f / 3.0f, 3)) * 0.64f + N2D3G(q * 8.0f * new Float2(1.0f / 3.0f, 3)) * 0.34f) * 0.5f + 0.5f;
+            float ns2 = (N2D3G(q * 4.0f * new float2(1.0f / 3.0f, 3)) * 0.64f + N2D3G(q * 8.0f * new float2(1.0f / 3.0f, 3)) * 0.34f) * 0.5f + 0.5f;
 
             ns2 = gr - ns2;
             ns = Hlsl.SmoothStep(0.0f, 1.0f, Hlsl.Min(ns, ns2));
@@ -270,15 +270,15 @@
         /// <inheritdoc/>
         public void Execute()
         {
-            Int2 coordinate = new(ThreadIds.X, DispatchSize.Y - ThreadIds.Y);
-            Float2 uv = (coordinate - (Float2)DispatchSize.XY * 0.5f) / Hlsl.Min(650.0f, DispatchSize.Y);
-            Float2 p = Hlsl.Mul(Rotate2x2(3.14159f / 12.0f), uv) + new Float2(0.8660254f, 0.5f) * time / 16.0f;
-            Float3 col = SimplexContour(p);
+            int2 coordinate = new(ThreadIds.X, DispatchSize.Y - ThreadIds.Y);
+            float2 uv = (coordinate - (float2)DispatchSize.XY * 0.5f) / Hlsl.Min(650.0f, DispatchSize.Y);
+            float2 p = Hlsl.Mul(Rotate2x2(3.14159f / 12.0f), uv) + new float2(0.8660254f, 0.5f) * time / 16.0f;
+            float3 col = SimplexContour(p);
 
-            uv = coordinate / (Float2)DispatchSize.XY;
+            uv = coordinate / (float2)DispatchSize.XY;
             col *= Hlsl.Pow(16.0f * uv.X * uv.Y * (1.0f - uv.X) * (1.0f - uv.Y), 0.0625f) + 0.1f;
 
-            Float4 color = new(Hlsl.Sqrt(Hlsl.Max(col, 0.0f)), 1);
+            float4 color = new(Hlsl.Sqrt(Hlsl.Max(col, 0.0f)), 1);
 
             texture[ThreadIds.XY] = color;
         }

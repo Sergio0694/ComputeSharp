@@ -21,17 +21,17 @@ namespace ComputeSharp.Tests
         [Resource(typeof(ReadOnlyTexture2D<,>))]
         [Resource(typeof(ReadWriteTexture2D<,>))]
         [Data(typeof(Bgra32), typeof(Vector4))]
-        [Data(typeof(Bgra32), typeof(Float4))]
+        [Data(typeof(Bgra32), typeof(float4))]
         [Data(typeof(R16), typeof(float))]
         [Data(typeof(R8), typeof(float))]
         [Data(typeof(Rg16), typeof(Vector2))]
-        [Data(typeof(Rg16), typeof(Float2))]
+        [Data(typeof(Rg16), typeof(float2))]
         [Data(typeof(Rg32), typeof(Vector2))]
-        [Data(typeof(Rg32), typeof(Float2))]
+        [Data(typeof(Rg32), typeof(float2))]
         [Data(typeof(Rgba32), typeof(Vector4))]
-        [Data(typeof(Rgba32), typeof(Float4))]
+        [Data(typeof(Rgba32), typeof(float4))]
         [Data(typeof(Rgba64), typeof(Vector4))]
-        [Data(typeof(Rgba64), typeof(Float4))]
+        [Data(typeof(Rgba64), typeof(float4))]
         public void Allocate_Uninitialized_Pixel_Ok(Device device, Type textureType, Type t, Type tPixel)
         {
             static void Test<T, TPixel>(Device device, Type textureType)
@@ -76,8 +76,8 @@ namespace ComputeSharp.Tests
 
             using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
 
-            using ReadOnlyTexture2D<Rgba32, Float4> source = device.Get().LoadReadOnlyTexture2D<Rgba32, Float4>(Path.Combine(imagingPath, "city.jpg"));
-            using ReadWriteTexture2D<Rgba32, Float4> destination = device.Get().AllocateReadWriteTexture2D<Rgba32, Float4>(sampled.Width, sampled.Height);
+            using ReadOnlyTexture2D<Rgba32, float4> source = device.Get().LoadReadOnlyTexture2D<Rgba32, float4>(Path.Combine(imagingPath, "city.jpg"));
+            using ReadWriteTexture2D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(sampled.Width, sampled.Height);
 
             device.Get().For(sampled.Width, sampled.Height, new SamplingComputeShader(source, destination));
 
@@ -89,8 +89,8 @@ namespace ComputeSharp.Tests
         [AutoConstructor]
         public readonly partial struct SamplingComputeShader : IComputeShader
         {
-            public readonly IReadOnlyTexture2D<Float4> source;
-            public readonly IReadWriteTexture2D<Float4> destination;
+            public readonly IReadOnlyTexture2D<float4> source;
+            public readonly IReadWriteTexture2D<float4> destination;
 
             public void Execute()
             {
@@ -109,8 +109,8 @@ namespace ComputeSharp.Tests
 
             using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
 
-            using ReadOnlyTexture2D<Rgba32, Float4> source = device.Get().LoadReadOnlyTexture2D<Rgba32, Float4>(Path.Combine(imagingPath, "city.jpg"));
-            using ReadWriteTexture2D<Rgba32, Float4> destination = device.Get().AllocateReadWriteTexture2D<Rgba32, Float4>(sampled.Width, sampled.Height);
+            using ReadOnlyTexture2D<Rgba32, float4> source = device.Get().LoadReadOnlyTexture2D<Rgba32, float4>(Path.Combine(imagingPath, "city.jpg"));
+            using ReadWriteTexture2D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(sampled.Width, sampled.Height);
 
             device.Get().ForEach(destination, new SamplingPixelShader(source));
 
@@ -120,11 +120,11 @@ namespace ComputeSharp.Tests
         }
 
         [AutoConstructor]
-        public readonly partial struct SamplingPixelShader : IPixelShader<Float4>
+        public readonly partial struct SamplingPixelShader : IPixelShader<float4>
         {
-            public readonly IReadOnlyTexture2D<Float4> texture;
+            public readonly IReadOnlyTexture2D<float4> texture;
 
-            public Float4 Execute()
+            public float4 Execute()
             {
                 return texture[ThreadIds.Normalized.XY];
             }
