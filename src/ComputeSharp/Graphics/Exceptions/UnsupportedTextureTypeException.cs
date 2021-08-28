@@ -41,7 +41,6 @@ namespace ComputeSharp.Exceptions
             });
 
             builder.Append("As a possible workaround on older devices, consider using a texture type of lower rank, or a linear buffer.");
-            builder.ToString();
 
             return new(builder.ToString());
         }
