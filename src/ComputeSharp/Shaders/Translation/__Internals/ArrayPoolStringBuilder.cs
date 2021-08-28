@@ -49,6 +49,17 @@ namespace ComputeSharp.__Internals
         }
 
         /// <summary>
+        /// Appends the input character to the current buffer.
+        /// </summary>
+        /// <param name="value">The input character to write.</param>
+        public void Append(char value)
+        {
+            EnsureCapacity(1);
+
+            this.array[this.index++] = value;
+        }
+
+        /// <summary>
         /// Appends the input sequence of characters to the current buffer.
         /// </summary>
         /// <param name="value">The input characters to write.</param>

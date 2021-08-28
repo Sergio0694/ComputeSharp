@@ -17,7 +17,11 @@ namespace ComputeSharp.__Internals
             {
                 if (mapping.Add(constant.Key))
                 {
-                    builder.Append($"#define {constant.Key} {constant.Value}\n");
+                    builder.Append("#define ");
+                    builder.Append(constant.Key);
+                    builder.Append(' ');
+                    builder.Append(constant.Value);
+                    builder.Append('\n');
                 }
             }
         }
@@ -33,9 +37,9 @@ namespace ComputeSharp.__Internals
             {
                 if (mapping.Add(type.Key))
                 {
-                    builder.Append("\n");
+                    builder.Append('\n');
                     builder.Append(type.Value);
-                    builder.Append("\n");
+                    builder.Append('\n');
                 }
             }
         }
@@ -51,9 +55,9 @@ namespace ComputeSharp.__Internals
             {
                 if (mapping.Add(method.Key))
                 {
-                    builder.Append("\n");
+                    builder.Append('\n');
                     builder.Append(method.Key);
-                    builder.Append("\n");
+                    builder.Append('\n');
                 }
             }
         }
@@ -69,9 +73,9 @@ namespace ComputeSharp.__Internals
             {
                 if (mapping.Remove(method.Key))
                 {
-                    builder.Append("\n");
+                    builder.Append('\n');
                     builder.Append(method.Value);
-                    builder.Append("\n");
+                    builder.Append('\n');
                 }
             }
         }
