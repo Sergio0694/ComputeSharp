@@ -56,7 +56,7 @@ namespace ComputeSharp.__Internals
         {
             EnsureCapacity(value.Length);
 
-            value.AsSpan().CopyTo(this.array.AsSpan(this.index));
+            value.CopyTo(this.array.AsSpan(this.index));
 
             this.index += value.Length;
         }
@@ -67,8 +67,14 @@ namespace ComputeSharp.__Internals
         /// <param name="value">The input value to write.</param>
         public void Append(int value)
         {
-            // TODO: switch to ISpanFormattable on .NET 6
-            Append(value.ToString());
+            int charsWritten;
+
+            while (!value.TryFormat(this.array.AsSpan(this.index), out charsWritten))
+            {
+                EnsureCapacity(10);
+            }
+
+            this.index += charsWritten;
         }
 
         /// <summary>
