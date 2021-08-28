@@ -77,4 +77,12 @@
     <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="EmbeddedResources\GlobalUsingDirectives.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="EmbeddedResources\GlobalUsingDirectives.cs" />
+  </ItemGroup>
+
 </Project>
