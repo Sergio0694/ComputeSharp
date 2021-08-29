@@ -1,4 +1,4 @@
-using ComputeSharp;
+﻿using ComputeSharp;
 using ComputeSharp.Interop;
 using ComputeSharp.Tests.Misc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

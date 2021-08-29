@@ -5,114 +5,113 @@ using System.Reflection;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ComputeSharp.Tests.Attributes
+namespace ComputeSharp.Tests.Attributes;
+
+/// <summary>
+/// A custom <see cref="TestMethodAttribute"/> implementation that also acts as a combinatorial <see cref="ITestDataSource"/>
+/// instance. It has dedicated paths for target devices and resource types, and arbitrary inputs for the test methods.
+/// </summary>
+/// <remarks>
+/// Use this attribute in combination with <see cref="DeviceAttribute"/>, <see cref="AllDevicesAttribute"/>,
+/// <see cref="ResourceAttribute"/> or <see cref="DataAttribute"/>, not other existing MSTest attributes.
+/// </remarks>
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITestDataSource
 {
-    /// <summary>
-    /// A custom <see cref="TestMethodAttribute"/> implementation that also acts as a combinatorial <see cref="ITestDataSource"/>
-    /// instance. It has dedicated paths for target devices and resource types, and arbitrary inputs for the test methods.
-    /// </summary>
-    /// <remarks>
-    /// Use this attribute in combination with <see cref="DeviceAttribute"/>, <see cref="AllDevicesAttribute"/>,
-    /// <see cref="ResourceAttribute"/> or <see cref="DataAttribute"/>, not other existing MSTest attributes.
-    /// </remarks>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITestDataSource
+    /// <inheritdoc/>
+    IEnumerable<object[]> ITestDataSource.GetData(MethodInfo methodInfo)
     {
-        /// <inheritdoc/>
-        IEnumerable<object[]> ITestDataSource.GetData(MethodInfo methodInfo)
+        Device[] devices;
+
+        if (methodInfo.GetCustomAttribute<AllDevicesAttribute>() is not null)
         {
-            Device[] devices;
+            devices = Enum.GetValues<Device>();
+        }
+        else if (methodInfo.GetCustomAttributes<DeviceAttribute>().ToArray() is { Length: > 0 } values)
+        {
+            devices = values.Select(static value => value.Device).ToArray();
+        }
+        else
+        {
+            devices = Array.Empty<Device>();
+        }
 
-            if (methodInfo.GetCustomAttribute<AllDevicesAttribute>() is not null)
-            {
-                devices = Enum.GetValues<Device>();
-            }
-            else if (methodInfo.GetCustomAttributes<DeviceAttribute>().ToArray() is { Length: > 0 } values)
-            {
-                devices = values.Select(static value => value.Device).ToArray();
-            }
-            else
-            {
-                devices = Array.Empty<Device>();
-            }
+        Type[] resources = methodInfo.GetCustomAttributes<ResourceAttribute>().Select(static value => value.Type).ToArray();
+        object[][] data = methodInfo.GetCustomAttributes<DataAttribute>().Select(static value => value.Data).ToArray();
 
-            Type[] resources = methodInfo.GetCustomAttributes<ResourceAttribute>().Select(static value => value.Type).ToArray();
-            object[][] data = methodInfo.GetCustomAttributes<DataAttribute>().Select(static value => value.Data).ToArray();
-
-            if (devices.Length > 0)
+        if (devices.Length > 0)
+        {
+            foreach (Device device in devices)
             {
-                foreach (Device device in devices)
+                if (resources.Length > 0)
                 {
-                    if (resources.Length > 0)
-                    {
-                        foreach (Type type in resources)
-                        {
-                            if (data.Length == 0)
-                            {
-                                yield return new object[] { device, type };
-                            }
-                            else
-                            {
-                                foreach (object[] items in data)
-                                {
-                                    yield return new object[] { device, type }.Concat(items).ToArray();
-                                }
-                            }
-                        }
-                    }
-                    else
+                    foreach (Type type in resources)
                     {
                         if (data.Length == 0)
                         {
-                            yield return new object[] { device };
+                            yield return new object[] { device, type };
                         }
                         else
                         {
                             foreach (object[] items in data)
                             {
-                                yield return new object[] { device }.Concat(items).ToArray();
+                                yield return new object[] { device, type }.Concat(items).ToArray();
                             }
                         }
                     }
                 }
-            }
-            else if (resources.Length > 0)
-            {
-                foreach (Type type in resources)
+                else
                 {
                     if (data.Length == 0)
                     {
-                        yield return new object[] { type };
+                        yield return new object[] { device };
                     }
                     else
                     {
                         foreach (object[] items in data)
                         {
-                            yield return new object[] { type }.Concat(items).ToArray();
+                            yield return new object[] { device }.Concat(items).ToArray();
                         }
                     }
                 }
             }
-            else
+        }
+        else if (resources.Length > 0)
+        {
+            foreach (Type type in resources)
             {
                 if (data.Length == 0)
                 {
-                    yield return Array.Empty<object>();
+                    yield return new object[] { type };
                 }
                 else
                 {
                     foreach (object[] items in data)
                     {
-                        yield return items;
+                        yield return new object[] { type }.Concat(items).ToArray();
                     }
                 }
             }
         }
-
-        /// <inheritdoc/>
-        string ITestDataSource.GetDisplayName(MethodInfo methodInfo, object[] data)
+        else
         {
-            return $"{methodInfo.Name} ({string.Join(", ", data)})";
+            if (data.Length == 0)
+            {
+                yield return Array.Empty<object>();
+            }
+            else
+            {
+                foreach (object[] items in data)
+                {
+                    yield return items;
+                }
+            }
         }
+    }
+
+    /// <inheritdoc/>
+    string ITestDataSource.GetDisplayName(MethodInfo methodInfo, object[] data)
+    {
+        return $"{methodInfo.Name} ({string.Join(", ", data)})";
     }
 }

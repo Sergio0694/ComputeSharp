@@ -17,8 +17,8 @@ using RuntimeHelpers = ComputeSharp.SourceGenerators.Helpers.RuntimeHelpers;
 using MemoryMarshal = ComputeSharp.SourceGenerators.Helpers.MemoryMarshal;
 #endif
 
-namespace ComputeSharp
-{
+namespace ComputeSharp;
+
 <#
     for (int rows = 1; rows <= 4; rows++)
     for (int columns = 1; columns <= 4; columns++)
@@ -27,9 +27,6 @@ namespace ComputeSharp
 
         GenerateMatrixProperties(typeName, rows, columns, elementSize);
     }
-#>
-}
-<#
 }
 
 // Generates all vector access properties for a specified type
@@ -40,17 +37,16 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
     string rowTypeName = columns > 1 ? $"{typeName}{columns}" : elementTypeName;
     List<string> fieldNames = new List<string>();
 #>
-    /// <inheritdoc cref="<#=fullTypeName#>"/>
-    [StructLayout(LayoutKind.Explicit, Size = <#=(elementSize * rows * columns)#>, Pack = <#=elementSize#>)]
-    public unsafe partial struct <#=fullTypeName#>
-    {
-        /// <summary>
-        /// A private buffer to which the undefined properties will point to.
-        /// </summary>
-        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(<#=fullTypeName#>), sizeof(<#=typeName#>4));
+/// <inheritdoc cref="<#=fullTypeName#>"/>
+[StructLayout(LayoutKind.Explicit, Size = <#=(elementSize * rows * columns)#>, Pack = <#=elementSize#>)]
+public unsafe partial struct <#=fullTypeName#>
+{
+    /// <summary>
+    /// A private buffer to which the undefined properties will point to.
+    /// </summary>
+    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(<#=fullTypeName#>), sizeof(<#=typeName#>4));
 <#
     WriteLine("");
-    PushIndent("    ");
     PushIndent("    ");
 
     // Generate the private fields
@@ -124,64 +120,62 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
     }
 
     PopIndent();
-    PopIndent();
 #>
-        /// <summary>
-        /// Gets a reference to a specific row in the current <see cref="<#=fullTypeName#>"/> instance.
-        /// </summary>
-        /// <param name="row">The row to access.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public readonly ref <#=rowTypeName#> this[int row] => ref *(<#=rowTypeName#>*)UndefinedData;
+    /// <summary>
+    /// Gets a reference to a specific row in the current <see cref="<#=fullTypeName#>"/> instance.
+    /// </summary>
+    /// <param name="row">The row to access.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public readonly ref <#=rowTypeName#> this[int row] => ref *(<#=rowTypeName#>*)UndefinedData;
 
-        /// <summary>
-        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
-        /// </summary>
-        /// <param name="xy0">The identifier of the first item to index.</param>
-        /// <param name="xy1">The identifier of the second item to index.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public readonly ref <#=typeName#>2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(<#=typeName#>2*)UndefinedData;
+    /// <summary>
+    /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
+    /// </summary>
+    /// <param name="xy0">The identifier of the first item to index.</param>
+    /// <param name="xy1">The identifier of the second item to index.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public readonly ref <#=typeName#>2 this[MatrixIndex xy0, MatrixIndex xy1] => ref *(<#=typeName#>2*)UndefinedData;
         
-        /// <summary>
-        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
-        /// </summary>
-        /// <param name="xy0">The identifier of the first item to index.</param>
-        /// <param name="xy1">The identifier of the second item to index.</param>
-        /// <param name="xy2">The identifier of the third item to index.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public readonly ref <#=typeName#>3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(<#=typeName#>3*)UndefinedData;
+    /// <summary>
+    /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
+    /// </summary>
+    /// <param name="xy0">The identifier of the first item to index.</param>
+    /// <param name="xy1">The identifier of the second item to index.</param>
+    /// <param name="xy2">The identifier of the third item to index.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public readonly ref <#=typeName#>3 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2] => ref *(<#=typeName#>3*)UndefinedData;
         
-        /// <summary>
-        /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
-        /// </summary>
-        /// <param name="xy0">The identifier of the first item to index.</param>
-        /// <param name="xy1">The identifier of the second item to index.</param>
-        /// <param name="xy2">The identifier of the third item to index.</param>
-        /// <param name="xy3">The identifier of the fourth item to index.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public readonly ref <#=typeName#>4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(<#=typeName#>4*)UndefinedData;
+    /// <summary>
+    /// Gets a swizzled reference to a specific sequence of items in the current <see cref="<#=fullTypeName#>"/> instance.
+    /// </summary>
+    /// <param name="xy0">The identifier of the first item to index.</param>
+    /// <param name="xy1">The identifier of the second item to index.</param>
+    /// <param name="xy2">The identifier of the third item to index.</param>
+    /// <param name="xy3">The identifier of the fourth item to index.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public readonly ref <#=typeName#>4 this[MatrixIndex xy0, MatrixIndex xy1, MatrixIndex xy2, MatrixIndex xy3] => ref *(<#=typeName#>4*)UndefinedData;
 <#
     for (int i = 1; i <= rows; i++)
     for (int j = 1; j <= columns; j++)
     {
         WriteLine("");
 #>
-        /// <summary>
-        /// Gets a reference to the <see cref="<#=elementTypeName#>"/> value representing the component at position [<#=i#>, <#=j#>].
-        /// </summary>
-        public readonly ref <#=elementTypeName#> M<#=i#><#=j#> => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m<#=i#><#=j#>), 1));
+    /// <summary>
+    /// Gets a reference to the <see cref="<#=elementTypeName#>"/> value representing the component at position [<#=i#>, <#=j#>].
+    /// </summary>
+    public readonly ref <#=elementTypeName#> M<#=i#><#=j#> => ref MemoryMarshal.GetReference(MemoryMarshal.CreateSpan(ref Unsafe.AsRef(in this.m<#=i#><#=j#>), 1));
 <#
     }
 
     WriteLine("");
 #>
-        /// <summary>
-        /// Creates a new <see cref="<#=fullTypeName#>"/> value with the same value for all its components.
-        /// </summary>
-        /// <param name="x">The value to use for the components of the new <see cref="<#=fullTypeName#>"/> instance.</param>
-        public static implicit operator <#=fullTypeName#>(<#=elementTypeName#> x)
+    /// <summary>
+    /// Creates a new <see cref="<#=fullTypeName#>"/> value with the same value for all its components.
+    /// </summary>
+    /// <param name="x">The value to use for the components of the new <see cref="<#=fullTypeName#>"/> instance.</param>
+    public static implicit operator <#=fullTypeName#>(<#=elementTypeName#> x)
 <#
     // Complete the conversion operator above
-    PushIndent("    ");
     PushIndent("    ");
     WriteLine("{");
     PushIndent("    ");
@@ -200,7 +194,6 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
     PopIndent();
     WriteLine("}");
     PopIndent();
-    PopIndent();
 
     // Generate the negation operator
     if (typeName != "UInt")
@@ -209,12 +202,12 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
 
         string operatorName = typeName == "Bool" ? "!" : "-";
 #>
-        /// <summary>
-        /// Negates a <see cref="<#=fullTypeName#>"/> value.
-        /// </summary>
-        /// <param name="matrix">The <see cref="<#=fullTypeName#>"/> value to negate.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static <#=fullTypeName#> operator <#=operatorName#>(<#=fullTypeName#> matrix) => default;
+    /// <summary>
+    /// Negates a <see cref="<#=fullTypeName#>"/> value.
+    /// </summary>
+    /// <param name="matrix">The <see cref="<#=fullTypeName#>"/> value to negate.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=fullTypeName#> operator <#=operatorName#>(<#=fullTypeName#> matrix) => default;
 <#
     }
 
@@ -223,37 +216,37 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
     {
         WriteLine("");
 #>
-        /// <summary>
-        /// Sums two <see cref="<#=fullTypeName#>"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to sum.</param>
-        /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to sum.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static <#=fullTypeName#> operator +(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
+    /// <summary>
+    /// Sums two <see cref="<#=fullTypeName#>"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to sum.</param>
+    /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to sum.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=fullTypeName#> operator +(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
 
-        /// <summary>
-        /// Divides two <see cref="<#=fullTypeName#>"/> values (elementwise division).
-        /// </summary>
-        /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to divide.</param>
-        /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to divide.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static <#=fullTypeName#> operator /(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
+    /// <summary>
+    /// Divides two <see cref="<#=fullTypeName#>"/> values (elementwise division).
+    /// </summary>
+    /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to divide.</param>
+    /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to divide.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=fullTypeName#> operator /(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
 
-        /// <summary>
-        /// Multiplies two <see cref="<#=fullTypeName#>"/> values (elementwise product).
-        /// </summary>
-        /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to multiply.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static <#=fullTypeName#> operator *(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
+    /// <summary>
+    /// Multiplies two <see cref="<#=fullTypeName#>"/> values (elementwise product).
+    /// </summary>
+    /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to multiply.</param>
+    /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to multiply.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=fullTypeName#> operator *(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
 
-        /// <summary>
-        /// Subtracts two <see cref="<#=fullTypeName#>"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to subtract.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static <#=fullTypeName#> operator -(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
+    /// <summary>
+    /// Subtracts two <see cref="<#=fullTypeName#>"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="<#=fullTypeName#>"/> value to subtract.</param>
+    /// <param name="right">The second <see cref="<#=fullTypeName#>"/> value to subtract.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=fullTypeName#> operator -(<#=fullTypeName#> left, <#=fullTypeName#> right) => default;
 <#
     }
 
@@ -262,11 +255,11 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
     {
         WriteLine("");
 #>
-        /// <summary>
-        /// Casts a <see cref="<#=typeName#><#=columns#>"/> value to a <see cref="<#=fullTypeName#>"/> one.
-        /// </summary>
-        /// <param name="vector">The input <see cref="<#=typeName#><#=columns#>"/> value to cast.</param>
-        public static implicit operator <#=fullTypeName#>(<#=typeName#><#=columns#> vector) => *(<#=fullTypeName#>*)&vector;
+    /// <summary>
+    /// Casts a <see cref="<#=typeName#><#=columns#>"/> value to a <see cref="<#=fullTypeName#>"/> one.
+    /// </summary>
+    /// <param name="vector">The input <see cref="<#=typeName#><#=columns#>"/> value to cast.</param>
+    public static implicit operator <#=fullTypeName#>(<#=typeName#><#=columns#> vector) => *(<#=fullTypeName#>*)&vector;
 <#
     }
 
@@ -274,15 +267,15 @@ void GenerateMatrixProperties(string typeName, int rows, int columns, int elemen
     {
         WriteLine("");
 #>
-        /// <summary>
-        /// Casts a <see cref="<#=fullTypeName#>"/> value to a <see cref="<#=typeName#><#=rows#>"/> one.
-        /// </summary>
-        /// <param name="matrix">The input <see cref="<#=fullTypeName#>"/> value to cast.</param>
-        public static implicit operator <#=typeName#><#=rows#>(<#=fullTypeName#> matrix) => *(<#=typeName#><#=rows#>*)&matrix;
+    /// <summary>
+    /// Casts a <see cref="<#=fullTypeName#>"/> value to a <see cref="<#=typeName#><#=rows#>"/> one.
+    /// </summary>
+    /// <param name="matrix">The input <see cref="<#=fullTypeName#>"/> value to cast.</param>
+    public static implicit operator <#=typeName#><#=rows#>(<#=fullTypeName#> matrix) => *(<#=typeName#><#=rows#>*)&matrix;
 <#
     }
 #>
-    }
+}
 <#
 }
 #>

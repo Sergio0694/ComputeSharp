@@ -4,78 +4,77 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 #pragma warning disable CS0618
 
-namespace ComputeSharp.Tests.Internals
+namespace ComputeSharp.Tests.Internals;
+
+[TestClass]
+[TestCategory("ShaderHashCode")]
+public partial class ShaderHashCodeTests
 {
-    [TestClass]
-    [TestCategory("ShaderHashCode")]
-    public partial class ShaderHashCodeTests
+    public partial struct Shader1 : IComputeShader
     {
-        public partial struct Shader1 : IComputeShader
+        public float A;
+        public ReadWriteBuffer<float> B;
+
+        public void Execute()
         {
-            public float A;
-            public ReadWriteBuffer<float> B;
-
-            public void Execute()
-            {
-                B[0] = A;
-            }
+            B[0] = A;
         }
+    }
 
-        [TestMethod]
-        public void ShaderWithNoCapturedDelegates()
+    [TestMethod]
+    public void ShaderWithNoCapturedDelegates()
+    {
+        float value = 10;
+        using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
+
+        Shader1 shader1 = new() { A = value, B = buffer };
+
+        int
+            hash1 = ((IShader)shader1).GetDispatchId(),
+            hash2 = ((IShader)shader1).GetDispatchId();
+
+        Assert.IsTrue(hash1 == hash2);
+
+        Shader1 shader2 = new() { A = value, B = buffer };
+
+        int hash3 = ((IShader)shader2).GetDispatchId();
+
+        Assert.IsTrue(hash1 == hash3);
+    }
+
+    public partial struct Shader2 : IComputeShader
+    {
+        public float A;
+        public ReadWriteBuffer<float> B;
+        public Func<float, float> F;
+
+        public void Execute()
         {
-            float value = 10;
-            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
-
-            Shader1 shader1 = new() { A = value, B = buffer };
-
-            int
-                hash1 = ((IShader)shader1).GetDispatchId(),
-                hash2 = ((IShader)shader1).GetDispatchId();
-
-            Assert.IsTrue(hash1 == hash2);
-
-            Shader1 shader2 = new() { A = value, B = buffer };
-
-            int hash3 = ((IShader)shader2).GetDispatchId();
-
-            Assert.IsTrue(hash1 == hash3);
+            B[0] = F(A);
         }
+    }
 
-        public partial struct Shader2 : IComputeShader
-        {
-            public float A;
-            public ReadWriteBuffer<float> B;
-            public Func<float, float> F;
+    [TestMethod]
+    public void ShaderWithCapturedDelegates()
+    {
+        Func<float, float> f = static x => x * x;
 
-            public void Execute()
-            {
-                B[0] = F(A);
-            }
-        }
+        using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
 
-        [TestMethod]
-        public void ShaderWithCapturedDelegates()
-        {
-            Func<float, float> f = static x => x * x;
+        Shader2 shader1 = new() { A = 1, B = buffer, F = f };
 
-            using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(1);
+        int
+            hash1 = ((IShader)shader1).GetDispatchId(),
+            hash2 = ((IShader)shader1).GetDispatchId();
 
-            Shader2 shader1 = new() { A = 1, B = buffer, F = f };
+        Assert.IsTrue(hash1 == hash2);
 
-            int
-                hash1 = ((IShader)shader1).GetDispatchId(),
-                hash2 = ((IShader)shader1).GetDispatchId();
+        f = static x => x + 1;
 
-            Assert.IsTrue(hash1 == hash2);
+        Shader2 shader2 = new() { A = 1, B = buffer, F = f };
 
-            f = static x => x + 1;
+        int hash3 = ((IShader)shader2).GetDispatchId();
 
-            Shader2 shader2 = new() { A = 1, B = buffer, F = f };
-
-            int hash3 = ((IShader)shader2).GetDispatchId();
-
-            Assert.IsFalse(hash1 == hash3);
-        }
+        Assert.IsFalse(hash1 == hash3);
     }
 }

@@ -68,19 +68,18 @@ using MemoryMarshal = ComputeSharp.SourceGenerators.Helpers.MemoryMarshal;
 
 #nullable enable
 
-namespace ComputeSharp
+namespace ComputeSharp;
+
+/// <inheritdoc cref="<#=typeName#>"/>
+[StructLayout(LayoutKind.Explicit, Size = <#=(elementSize * i)#>, Pack = <#=elementSize#>)]
+public unsafe partial struct <#=typeName#><#=formattable#>
 {
-    /// <inheritdoc cref="<#=typeName#>"/>
-    [StructLayout(LayoutKind.Explicit, Size = <#=(elementSize * i)#>, Pack = <#=elementSize#>)]
-    public unsafe partial struct <#=typeName#><#=formattable#>
-    {
-        /// <summary>
-        /// A private buffer to which the undefined properties will point to.
-        /// </summary>
-        private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(<#=typeName#>), sizeof(<#=elementTypeName#>4));
+    /// <summary>
+    /// A private buffer to which the undefined properties will point to.
+    /// </summary>
+    private static readonly void* UndefinedData = (void*)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(<#=typeName#>), sizeof(<#=elementTypeName#>4));
 <#
     WriteLine("");
-    PushIndent("    ");
     PushIndent("    ");
 
     // Generate the private fields
@@ -92,16 +91,14 @@ namespace ComputeSharp
     }
 
     PopIndent();
-    PopIndent();
 #>
-        /// <summary>
-        /// Gets a reference to a specific component in the current <see cref="<#=typeName#>"/> instance.
-        /// </summary>
-        /// <param name="i">The index of the component to access.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public readonly ref <#=hlslElementTypeName#> this[int i] => ref *(<#=hlslElementTypeName#>*)UndefinedData;
+    /// <summary>
+    /// Gets a reference to a specific component in the current <see cref="<#=typeName#>"/> instance.
+    /// </summary>
+    /// <param name="i">The index of the component to access.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public readonly ref <#=hlslElementTypeName#> this[int i] => ref *(<#=hlslElementTypeName#>*)UndefinedData;
 <#
-    PushIndent("    ");
     PushIndent("    ");
 
     // Generate the combinatorial swizzling properties
@@ -148,20 +145,18 @@ namespace ComputeSharp
     }
 
     PopIndent();
-    PopIndent();
     WriteLine("");
 
     if (elementTypeName == "Bool")
     {
 #>
-        /// <inheritdoc/>
-        public override readonly string ToString()
-        {
-            StringBuilder sb = new();
+    /// <inheritdoc/>
+    public override readonly string ToString()
+    {
+        StringBuilder sb = new();
 
-            sb.Append('<');
+        sb.Append('<');
 <#
-        PushIndent("    ");
         PushIndent("    ");
         PushIndent("    ");
 
@@ -177,33 +172,31 @@ namespace ComputeSharp
 
         PopIndent();
         PopIndent();
-        PopIndent();
 #>
-            sb.Append('>');
+        sb.Append('>');
 
-            return sb.ToString();
-        }
+        return sb.ToString();
+    }
 <#
     }
     else
     {
 #>
-        /// <inheritdoc/>
-        public override readonly string ToString()
-        {
-            return ToString("G", CultureInfo.CurrentCulture);
-        }
+    /// <inheritdoc/>
+    public override readonly string ToString()
+    {
+        return ToString("G", CultureInfo.CurrentCulture);
+    }
 
-        /// <inheritdoc/>
-        public readonly string ToString(string? format, IFormatProvider? formatProvider)
-        {
-            StringBuilder sb = new();
+    /// <inheritdoc/>
+    public readonly string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        StringBuilder sb = new();
 
-            string separator = NumberFormatInfo.GetInstance(formatProvider).NumberGroupSeparator;
+        string separator = NumberFormatInfo.GetInstance(formatProvider).NumberGroupSeparator;
 
-            sb.Append('<');
+        sb.Append('<');
 <#
-    PushIndent("    ");
     PushIndent("    ");
     PushIndent("    ");
 
@@ -220,12 +213,11 @@ namespace ComputeSharp
 
     PopIndent();
     PopIndent();
-    PopIndent();
 #>
-            sb.Append('>');
+        sb.Append('>');
 
-            return sb.ToString();
-        }
+        return sb.ToString();
+    }
 <#
     }
 
@@ -237,12 +229,12 @@ namespace ComputeSharp
         string argumentName = "xyzw".Substring(0, i);
         string operatorName = elementTypeName == "Bool" ? "!" : "-";
 #>
-        /// <summary>
-        /// Negates a <see cref="<#=typeName#>"/> value.
-        /// </summary>
-        /// <param name="<#=argumentName#>">The <see cref="<#=typeName#>"/> value to negate.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static <#=typeName#> operator <#=operatorName#>(<#=typeName#> <#=argumentName#>) => default;
+    /// <summary>
+    /// Negates a <see cref="<#=typeName#>"/> value.
+    /// </summary>
+    /// <param name="<#=argumentName#>">The <see cref="<#=typeName#>"/> value to negate.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator <#=operatorName#>(<#=typeName#> <#=argumentName#>) => default;
 <#
     }
 
@@ -251,41 +243,40 @@ namespace ComputeSharp
     {
         WriteLine("");
 #>
-        /// <summary>
-        /// Sums two <see cref="<#=typeName#>"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="<#=typeName#>"/> value to sum.</param>
-        /// <param name="right">The second <see cref="<#=typeName#>"/> value to sum.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static <#=typeName#> operator +(<#=typeName#> left, <#=typeName#> right) => default;
+    /// <summary>
+    /// Sums two <see cref="<#=typeName#>"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="<#=typeName#>"/> value to sum.</param>
+    /// <param name="right">The second <see cref="<#=typeName#>"/> value to sum.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator +(<#=typeName#> left, <#=typeName#> right) => default;
 
-        /// <summary>
-        /// Divides two <see cref="<#=typeName#>"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="<#=typeName#>"/> value to divide.</param>
-        /// <param name="right">The second <see cref="<#=typeName#>"/> value to divide.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static <#=typeName#> operator /(<#=typeName#> left, <#=typeName#> right) => default;
+    /// <summary>
+    /// Divides two <see cref="<#=typeName#>"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="<#=typeName#>"/> value to divide.</param>
+    /// <param name="right">The second <see cref="<#=typeName#>"/> value to divide.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator /(<#=typeName#> left, <#=typeName#> right) => default;
 
-        /// <summary>
-        /// Multiplies two <see cref="<#=typeName#>"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="<#=typeName#>"/> value to multiply.</param>
-        /// <param name="right">The second <see cref="<#=typeName#>"/> value to multiply.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static <#=typeName#> operator *(<#=typeName#> left, <#=typeName#> right) => default;
+    /// <summary>
+    /// Multiplies two <see cref="<#=typeName#>"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="<#=typeName#>"/> value to multiply.</param>
+    /// <param name="right">The second <see cref="<#=typeName#>"/> value to multiply.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator *(<#=typeName#> left, <#=typeName#> right) => default;
 
-        /// <summary>
-        /// Subtracts two <see cref="<#=typeName#>"/> values.
-        /// </summary>
-        /// <param name="left">The first <see cref="<#=typeName#>"/> value to subtract.</param>
-        /// <param name="right">The second <see cref="<#=typeName#>"/> value to subtract.</param>
-        /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
-        public static <#=typeName#> operator -(<#=typeName#> left, <#=typeName#> right) => default;
+    /// <summary>
+    /// Subtracts two <see cref="<#=typeName#>"/> values.
+    /// </summary>
+    /// <param name="left">The first <see cref="<#=typeName#>"/> value to subtract.</param>
+    /// <param name="right">The second <see cref="<#=typeName#>"/> value to subtract.</param>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    public static <#=typeName#> operator -(<#=typeName#> left, <#=typeName#> right) => default;
 <#
     }
 #>
-    }
 }
 <#
 }

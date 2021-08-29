@@ -1,240 +1,239 @@
-using System;
+﻿using System;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 #pragma warning disable IDE0062
 
-namespace ComputeSharp.Tests
+namespace ComputeSharp.Tests;
+
+[TestClass]
+[TestCategory("Metaprogramming")]
+public partial class MetaprogrammingTests
 {
-    [TestClass]
-    [TestCategory("Metaprogramming")]
-    public partial class MetaprogrammingTests
+    [AutoConstructor]
+    internal readonly partial struct ActivationWithDelegateShader : IComputeShader
     {
-        [AutoConstructor]
-        internal readonly partial struct ActivationWithDelegateShader : IComputeShader
-        {
-            public readonly ReadWriteBuffer<int> buffer;
-            public readonly Func<int, int> activation;
+        public readonly ReadWriteBuffer<int> buffer;
+        public readonly Func<int, int> activation;
 
-            public void Execute()
-            {
-                buffer[ThreadIds.X] = activation(ThreadIds.X);
-            }
+        public void Execute()
+        {
+            buffer[ThreadIds.X] = activation(ThreadIds.X);
+        }
+    }
+
+    public static class Activations
+    {
+        [ShaderMethod]
+        public static int Square(int x) => x * x;
+
+        [ShaderMethod]
+        public static int AddOne(int x) => x + 1;
+
+        // Missing attribute
+        public static int Identity(int x) => x;
+
+        [ShaderMethod]
+        public static int FunctionWithConstants(int x) => (int)(x + FourAndAHalf);
+
+        [ShaderMethod]
+        public static Position FunctionWithTypes(int x)
+        {
+            Point point = default;
+            point.A = x;
+            point.B = x * x;
+
+            Position position = default;
+            position.X = point.A;
+            position.Y = point.B;
+
+            return position;
         }
 
-        public static class Activations
+        public struct Point
         {
-            [ShaderMethod]
-            public static int Square(int x) => x * x;
-
-            [ShaderMethod]
-            public static int AddOne(int x) => x + 1;
-
-            // Missing attribute
-            public static int Identity(int x) => x;
-
-            [ShaderMethod]
-            public static int FunctionWithConstants(int x) => (int)(x + FourAndAHalf);
-
-            [ShaderMethod]
-            public static Position FunctionWithTypes(int x)
-            {
-                Point point = default;
-                point.A = x;
-                point.B = x * x;
-
-                Position position = default;
-                position.X = point.A;
-                position.Y = point.B;
-
-                return position;
-            }
-
-            public struct Point
-            {
-                public int A;
-                public int B;
-            }
-
-            [ShaderMethod]
-            public static int FunctionWithLocalFunctionAndStaticMethod(int x)
-            {
-                static int AddTwo(int x) => x + 2;
-
-                return Square(3 + AddOne(x) + AddTwo(x));
-            }
+            public int A;
+            public int B;
         }
 
-        [CombinatorialTestMethod]
-        [AllDevices]
-        public unsafe void ActivationWithDelegate(Device device)
+        [ShaderMethod]
+        public static int FunctionWithLocalFunctionAndStaticMethod(int x)
         {
-            using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(100);
+            static int AddTwo(int x) => x + 2;
 
-            device.Get().For(100, new ActivationWithDelegateShader(buffer, Activations.Square));
+            return Square(3 + AddOne(x) + AddTwo(x));
+        }
+    }
 
-            int[] result = buffer.ToArray();
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public unsafe void ActivationWithDelegate(Device device)
+    {
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(100);
 
-            for (int i = 0; i < 100; i++)
-            {
-                Assert.AreEqual(result[i], Activations.Square(i));
-            }
+        device.Get().For(100, new ActivationWithDelegateShader(buffer, Activations.Square));
 
-            device.Get().For(100, new ActivationWithDelegateShader(buffer, Activations.AddOne));
+        int[] result = buffer.ToArray();
 
-            result = buffer.ToArray();
-
-            for (int i = 0; i < 100; i++)
-            {
-                Assert.AreEqual(result[i], Activations.AddOne(i));
-            }
+        for (int i = 0; i < 100; i++)
+        {
+            Assert.AreEqual(result[i], Activations.Square(i));
         }
 
-        [CombinatorialTestMethod]
-        [AllDevices]
-        [ExpectedException(typeof(ArgumentException))]
-        public unsafe void DelegateWithMissingAttributeOnMethod(Device device)
-        {
-            using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(100);
+        device.Get().For(100, new ActivationWithDelegateShader(buffer, Activations.AddOne));
 
-            device.Get().For(100, new ActivationWithDelegateShader(buffer, Activations.Identity));
+        result = buffer.ToArray();
+
+        for (int i = 0; i < 100; i++)
+        {
+            Assert.AreEqual(result[i], Activations.AddOne(i));
         }
+    }
 
-        [CombinatorialTestMethod]
-        [AllDevices]
-        [ExpectedException(typeof(ArgumentException))]
-        public unsafe void DelegateWrappingNonStaticMethod(Device device)
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [ExpectedException(typeof(ArgumentException))]
+    public unsafe void DelegateWithMissingAttributeOnMethod(Device device)
+    {
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(100);
+
+        device.Get().For(100, new ActivationWithDelegateShader(buffer, Activations.Identity));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [ExpectedException(typeof(ArgumentException))]
+    public unsafe void DelegateWrappingNonStaticMethod(Device device)
+    {
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(100);
+
+        [ShaderMethod]
+        int Dummy(int x) => x;
+
+        device.Get().For(100, new ActivationWithDelegateShader(buffer, Dummy));
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct ActivationWithMultipleDelegatesShader : IComputeShader
+    {
+        public readonly ReadWriteBuffer<int> buffer;
+        public readonly Func<int, int> f1;
+        public readonly Func<int, int> f2;
+
+        public void Execute()
         {
-            using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(100);
-
-            [ShaderMethod]
-            int Dummy(int x) => x;
-
-            device.Get().For(100, new ActivationWithDelegateShader(buffer, Dummy));
+            buffer[ThreadIds.X] = f2(f1(ThreadIds.X));
         }
+    }
 
-        [AutoConstructor]
-        internal readonly partial struct ActivationWithMultipleDelegatesShader : IComputeShader
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public unsafe void ActivationWithMultipleDelegates(Device device)
+    {
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(100);
+
+        device.Get().For(100, new ActivationWithMultipleDelegatesShader(buffer, Activations.Square, Activations.AddOne));
+
+        int[] result = buffer.ToArray();
+
+        for (int i = 0; i < 100; i++)
         {
-            public readonly ReadWriteBuffer<int> buffer;
-            public readonly Func<int, int> f1;
-            public readonly Func<int, int> f2;
-
-            public void Execute()
-            {
-                buffer[ThreadIds.X] = f2(f1(ThreadIds.X));
-            }
+            Assert.AreEqual(result[i], Activations.AddOne(Activations.Square(i)));
         }
+    }
 
-        [CombinatorialTestMethod]
-        [AllDevices]
-        public unsafe void ActivationWithMultipleDelegates(Device device)
+    public const float FourAndAHalf = 4.5f;
+    public const int MagicNumber = 42;
+
+    [AutoConstructor]
+    internal readonly partial struct DelegateWithConstantsShader : IComputeShader
+    {
+        public readonly ReadWriteBuffer<int> buffer;
+        public readonly Func<int, int> activation;
+
+        public void Execute()
         {
-            using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(100);
-
-            device.Get().For(100, new ActivationWithMultipleDelegatesShader(buffer, Activations.Square, Activations.AddOne));
-
-            int[] result = buffer.ToArray();
-
-            for (int i = 0; i < 100; i++)
-            {
-                Assert.AreEqual(result[i], Activations.AddOne(Activations.Square(i)));
-            }
+            buffer[ThreadIds.X] = MagicNumber + activation(ThreadIds.X);
         }
+    }
 
-        public const float FourAndAHalf = 4.5f;
-        public const int MagicNumber = 42;
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public unsafe void DelegateWithConstants(Device device)
+    {
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(100);
 
-        [AutoConstructor]
-        internal readonly partial struct DelegateWithConstantsShader : IComputeShader
+        device.Get().For(100, new DelegateWithConstantsShader(buffer, Activations.FunctionWithConstants));
+
+        int[] result = buffer.ToArray();
+
+        for (int i = 0; i < 100; i++)
         {
-            public readonly ReadWriteBuffer<int> buffer;
-            public readonly Func<int, int> activation;
-
-            public void Execute()
-            {
-                buffer[ThreadIds.X] = MagicNumber + activation(ThreadIds.X);
-            }
+            Assert.AreEqual(result[i], MagicNumber + Activations.FunctionWithConstants(i));
         }
+    }
 
-        [CombinatorialTestMethod]
-        [AllDevices]
-        public unsafe void DelegateWithConstants(Device device)
+    public struct Position
+    {
+        public int X;
+        public int Y;
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct DelegateWithTypesShader : IComputeShader
+    {
+        public readonly ReadWriteBuffer<Position> buffer;
+        public readonly Func<int, Position> activation;
+
+        public void Execute()
         {
-            using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(100);
-
-            device.Get().For(100, new DelegateWithConstantsShader(buffer, Activations.FunctionWithConstants));
-
-            int[] result = buffer.ToArray();
-
-            for (int i = 0; i < 100; i++)
-            {
-                Assert.AreEqual(result[i], MagicNumber + Activations.FunctionWithConstants(i));
-            }
+            buffer[ThreadIds.X] = activation(ThreadIds.X);
         }
+    }
 
-        public struct Position
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public unsafe void DelegateWithTypes(Device device)
+    {
+        using ReadWriteBuffer<Position> buffer = device.Get().AllocateReadWriteBuffer<Position>(100);
+
+        device.Get().For(100, new DelegateWithTypesShader(buffer, Activations.FunctionWithTypes));
+
+        Position[] result = buffer.ToArray();
+
+        for (int i = 0; i < 100; i++)
         {
-            public int X;
-            public int Y;
+            Assert.AreEqual(result[i].X, Activations.FunctionWithTypes(i).X);
+            Assert.AreEqual(result[i].Y, Activations.FunctionWithTypes(i).Y);
         }
+    }
 
-        [AutoConstructor]
-        internal readonly partial struct DelegateWithTypesShader : IComputeShader
+    [AutoConstructor]
+    internal readonly partial struct DelegateWithLocalFunctionsAndStaticMethodsShader : IComputeShader
+    {
+        public readonly ReadWriteBuffer<int> buffer;
+        public readonly Func<int, int> activation;
+
+        public void Execute()
         {
-            public readonly ReadWriteBuffer<Position> buffer;
-            public readonly Func<int, Position> activation;
-
-            public void Execute()
-            {
-                buffer[ThreadIds.X] = activation(ThreadIds.X);
-            }
+            buffer[ThreadIds.X] = Activations.AddOne(ThreadIds.X) + activation(ThreadIds.X);
         }
+    }
 
-        [CombinatorialTestMethod]
-        [AllDevices]
-        public unsafe void DelegateWithTypes(Device device)
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public unsafe void DelegateWithLocalFunctionsAndStaticMethods(Device device)
+    {
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(100);
+
+        device.Get().For(100, new DelegateWithLocalFunctionsAndStaticMethodsShader(buffer, Activations.FunctionWithLocalFunctionAndStaticMethod));
+
+        int[] result = buffer.ToArray();
+
+        for (int i = 0; i < 100; i++)
         {
-            using ReadWriteBuffer<Position> buffer = device.Get().AllocateReadWriteBuffer<Position>(100);
-
-            device.Get().For(100, new DelegateWithTypesShader(buffer, Activations.FunctionWithTypes));
-
-            Position[] result = buffer.ToArray();
-
-            for (int i = 0; i < 100; i++)
-            {
-                Assert.AreEqual(result[i].X, Activations.FunctionWithTypes(i).X);
-                Assert.AreEqual(result[i].Y, Activations.FunctionWithTypes(i).Y);
-            }
-        }
-
-        [AutoConstructor]
-        internal readonly partial struct DelegateWithLocalFunctionsAndStaticMethodsShader : IComputeShader
-        {
-            public readonly ReadWriteBuffer<int> buffer;
-            public readonly Func<int, int> activation;
-
-            public void Execute()
-            {
-                buffer[ThreadIds.X] = Activations.AddOne(ThreadIds.X) + activation(ThreadIds.X);
-            }
-        }
-
-        [CombinatorialTestMethod]
-        [AllDevices]
-        public unsafe void DelegateWithLocalFunctionsAndStaticMethods(Device device)
-        {
-            using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(100);
-
-            device.Get().For(100, new DelegateWithLocalFunctionsAndStaticMethodsShader(buffer, Activations.FunctionWithLocalFunctionAndStaticMethod));
-
-            int[] result = buffer.ToArray();
-
-            for (int i = 0; i < 100; i++)
-            {
-                Assert.AreEqual(result[i], Activations.AddOne(i) + Activations.FunctionWithLocalFunctionAndStaticMethod(i));
-            }
+            Assert.AreEqual(result[i], Activations.AddOne(i) + Activations.FunctionWithLocalFunctionAndStaticMethod(i));
         }
     }
 }

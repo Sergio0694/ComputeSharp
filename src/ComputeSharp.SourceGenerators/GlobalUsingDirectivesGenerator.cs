@@ -4,34 +4,32 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
-namespace ComputeSharp.SourceGenerators
+namespace ComputeSharp.SourceGenerators;
+
+/// <summary>
+/// A source generator to create global using directives for the HLSL primitive types.
+/// </summary>
+[Generator]
+public sealed class GlobalUsingDirectivesGenerator : ISourceGenerator
 {
-    /// <summary>
-    /// A source generator to create global using directives for the HLSL primitive types.
-    /// </summary>
-    [Generator]
-    public sealed class GlobalUsingDirectivesGenerator : ISourceGenerator
+    /// <inheritdoc/>
+    public void Initialize(GeneratorInitializationContext context)
     {
-        /// <inheritdoc/>
-        public void Initialize(GeneratorInitializationContext context)
+        context.RegisterForPostInitialization(static context =>
         {
-            context.RegisterForPostInitialization(static context =>
-            {
-                const string filename = "ComputeSharp.SourceGenerators.EmbeddedResources.GlobalUsingDirectives.cs";
+            const string filename = "ComputeSharp.SourceGenerators.EmbeddedResources.GlobalUsingDirectives.cs";
 
-                using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(filename);
-                using StreamReader reader = new(stream);
+            using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(filename);
+            using StreamReader reader = new(stream);
 
-                string globalUsingDirectives = reader.ReadToEnd();
+            string globalUsingDirectives = reader.ReadToEnd();
 
-                context.AddSource("GlobalUsingDirectives.cs", SourceText.From(globalUsingDirectives, Encoding.UTF8));
-            });
-        }
+            context.AddSource("GlobalUsingDirectives.cs", SourceText.From(globalUsingDirectives, Encoding.UTF8));
+        });
+    }
 
-        /// <inheritdoc/>
-        public void Execute(GeneratorExecutionContext context)
-        {
-        }
+    /// <inheritdoc/>
+    public void Execute(GeneratorExecutionContext context)
+    {
     }
 }
-
