@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Exceptions;
 using TerraFX.Interop;
-using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Shaders.Translation;
 
@@ -49,11 +48,11 @@ internal sealed unsafe partial class ShaderCompiler
         using ComPtr<IDxcLibrary> dxcLibrary = default;
         using ComPtr<IDxcIncludeHandler> dxcIncludeHandler = default;
 
-        Guid dxcCompilerCLGuid = FX.CLSID_DxcCompiler;
-        Guid dxcLibraryCLGuid = FX.CLSID_DxcLibrary;
+        Guid dxcCompilerCLGuid = Windows.CLSID_DxcCompiler;
+        Guid dxcLibraryCLGuid = Windows.CLSID_DxcLibrary;
 
-        FX.DxcCreateInstance(&dxcCompilerCLGuid, FX.__uuidof<IDxcCompiler>(), dxcCompiler.GetVoidAddressOf()).Assert();
-        FX.DxcCreateInstance(&dxcLibraryCLGuid, FX.__uuidof<IDxcLibrary>(), dxcLibrary.GetVoidAddressOf()).Assert();
+        Windows.DxcCreateInstance(&dxcCompilerCLGuid, Windows.__uuidof<IDxcCompiler>(), dxcCompiler.GetVoidAddressOf()).Assert();
+        Windows.DxcCreateInstance(&dxcLibraryCLGuid, Windows.__uuidof<IDxcLibrary>(), dxcLibrary.GetVoidAddressOf()).Assert();
 
         dxcLibrary.Get()->CreateIncludeHandler(dxcIncludeHandler.GetAddressOf()).Assert();
 

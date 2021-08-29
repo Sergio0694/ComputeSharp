@@ -13,7 +13,6 @@ using static TerraFX.Interop.D3D12_FENCE_FLAGS;
 using static TerraFX.Interop.D3D12_MESSAGE_ID;
 using static TerraFX.Interop.D3D12_SRV_DIMENSION;
 using static TerraFX.Interop.D3D12_UAV_DIMENSION;
-using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Graphics.Extensions;
 
@@ -51,7 +50,7 @@ internal static unsafe class ID3D12DeviceExtensions
     {
         ComPtr<ID3D12InfoQueue> d3D12InfoQueue = default;
 
-        d3D12Device.QueryInterface(FX.__uuidof<ID3D12InfoQueue>(), d3D12InfoQueue.GetVoidAddressOf()).Assert();
+        d3D12Device.QueryInterface(Windows.__uuidof<ID3D12InfoQueue>(), d3D12InfoQueue.GetVoidAddressOf()).Assert();
 
         D3D12_MESSAGE_ID* d3D12MessageIds = stackalloc D3D12_MESSAGE_ID[3]
         {
@@ -88,7 +87,7 @@ internal static unsafe class ID3D12DeviceExtensions
 
         d3D12Device.CreateCommandQueue(
             &d3D12CommandQueueDesc,
-            FX.__uuidof<ID3D12CommandQueue>(),
+            Windows.__uuidof<ID3D12CommandQueue>(),
             d3D12CommandQueue.GetVoidAddressOf()).Assert();
 
         return d3D12CommandQueue.Move();
@@ -107,7 +106,7 @@ internal static unsafe class ID3D12DeviceExtensions
         d3D12Device.CreateFence(
             0,
             D3D12_FENCE_FLAG_NONE,
-            FX.__uuidof<ID3D12Fence>(),
+            Windows.__uuidof<ID3D12Fence>(),
             d3D12Fence.GetVoidAddressOf()).Assert();
 
         return d3D12Fence.Move();
@@ -132,7 +131,7 @@ internal static unsafe class ID3D12DeviceExtensions
 
         d3D12Device.CreateDescriptorHeap(
             &d3D12DescriptorHeapDesc,
-            FX.__uuidof<ID3D12DescriptorHeap>(),
+            Windows.__uuidof<ID3D12DescriptorHeap>(),
             d3D12DescriptorHeap.GetVoidAddressOf()).Assert();
 
         return d3D12DescriptorHeap.Move();
@@ -177,7 +176,7 @@ internal static unsafe class ID3D12DeviceExtensions
     {
         D3D12_SHADER_RESOURCE_VIEW_DESC d3D12ShaderResourceViewDescription = default;
         d3D12ShaderResourceViewDescription.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-        d3D12ShaderResourceViewDescription.Shader4ComponentMapping = FX.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+        d3D12ShaderResourceViewDescription.Shader4ComponentMapping = Windows.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
         d3D12ShaderResourceViewDescription.Buffer.NumElements = bufferSize;
         d3D12ShaderResourceViewDescription.Buffer.StructureByteStride = elementSize;
 
@@ -202,7 +201,7 @@ internal static unsafe class ID3D12DeviceExtensions
         D3D12_SHADER_RESOURCE_VIEW_DESC d3D12ShaderResourceViewDescription = default;
         d3D12ShaderResourceViewDescription.ViewDimension = d3D12SrvDimension;
         d3D12ShaderResourceViewDescription.Format = dxgiFormat;
-        d3D12ShaderResourceViewDescription.Shader4ComponentMapping = FX.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+        d3D12ShaderResourceViewDescription.Shader4ComponentMapping = Windows.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
         d3D12ShaderResourceViewDescription.Texture2D.MipLevels = uint.MaxValue;
 
         d3D12Device.CreateShaderResourceView(d3D12Resource, &d3D12ShaderResourceViewDescription, d3D12CpuDescriptorHandle);
@@ -269,7 +268,7 @@ internal static unsafe class ID3D12DeviceExtensions
 
         d3D12Device.CreateCommandAllocator(
             d3D12CommandListType,
-            FX.__uuidof<ID3D12CommandAllocator>(),
+            Windows.__uuidof<ID3D12CommandAllocator>(),
             d3D12CommandAllocator.GetVoidAddressOf()).Assert();
 
         return d3D12CommandAllocator.Move();
@@ -297,7 +296,7 @@ internal static unsafe class ID3D12DeviceExtensions
             d3D12CommandListType,
             d3D12CommandAllocator,
             d3D12PipelineState,
-            FX.__uuidof<ID3D12GraphicsCommandList>(),
+            Windows.__uuidof<ID3D12GraphicsCommandList>(),
             d3D12GraphicsCommandList.GetVoidAddressOf()).Assert();
 
         return d3D12GraphicsCommandList.Move();

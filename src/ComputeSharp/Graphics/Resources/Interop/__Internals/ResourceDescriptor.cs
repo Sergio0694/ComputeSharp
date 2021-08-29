@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using TerraFX.Interop;
-using FX = TerraFX.Interop.Windows;
 using static TerraFX.Interop.D3D12_DESCRIPTOR_RANGE_FLAGS;
 
 #pragma warning disable IDE0052, CS0414
@@ -46,6 +45,6 @@ public struct ResourceDescriptor
         descriptor.BaseShaderRegister = offset;
         descriptor.RegisterSpace = 0;
         descriptor.Flags = D3D12_DESCRIPTOR_RANGE_FLAG_NONE;
-        descriptor.OffsetInDescriptorsFromTableStart = FX.D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+        descriptor.OffsetInDescriptorsFromTableStart = Windows.D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
     }
 }

@@ -9,7 +9,6 @@ using ComputeSharp.Shaders.Translation.Models;
 using ComputeSharp.__Internals;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
-using FX = TerraFX.Interop.Windows;
 
 #pragma warning disable CS0618
 
@@ -122,9 +121,9 @@ internal static class ShaderRunner<T>
             groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1),
             groupsZ = Math.DivRem(z, threadsZ, out int modZ) + (modZ == 0 ? 0 : 1);
 
-        Guard.IsBetweenOrEqualTo(groupsX, 1, FX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
-        Guard.IsBetweenOrEqualTo(groupsY, 1, FX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
-        Guard.IsBetweenOrEqualTo(groupsZ, 1, FX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
+        Guard.IsBetweenOrEqualTo(groupsX, 1, Windows.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
+        Guard.IsBetweenOrEqualTo(groupsY, 1, Windows.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
+        Guard.IsBetweenOrEqualTo(groupsZ, 1, Windows.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
 
         ShaderKey key = new(shader.GetDispatchId(), threadsX, threadsY, threadsZ);
         PipelineData? pipelineData;
@@ -178,8 +177,8 @@ internal static class ShaderRunner<T>
             groupsX = Math.DivRem(x, threadsX, out int modX) + (modX == 0 ? 0 : 1),
             groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1);
 
-        Guard.IsBetweenOrEqualTo(groupsX, 1, FX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
-        Guard.IsBetweenOrEqualTo(groupsY, 1, FX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
+        Guard.IsBetweenOrEqualTo(groupsX, 1, Windows.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
+        Guard.IsBetweenOrEqualTo(groupsY, 1, Windows.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
 
         ShaderKey key = new(shader.GetDispatchId(), threadsX, threadsY, 1);
         PipelineData? pipelineData;

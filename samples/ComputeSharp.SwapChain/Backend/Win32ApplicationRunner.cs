@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using TerraFX.Interop;
-using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.SwapChain.Backend;
 
@@ -52,7 +51,7 @@ internal unsafe static class Win32ApplicationRunner
     {
         Win32ApplicationRunner.application = application;
 
-        IntPtr hInstance = FX.GetModuleHandleW(null);
+        IntPtr hInstance = Windows.GetModuleHandleW(null);
 
         fixed (char* name = Assembly.GetExecutingAssembly().FullName)
         fixed (char* windowTitle = application.GetType().ToString())
@@ -61,33 +60,33 @@ internal unsafe static class Win32ApplicationRunner
             WNDCLASSEXW windowClassEx = new()
             {
                 cbSize = (uint)sizeof(WNDCLASSEXW),
-                style = FX.CS_HREDRAW | FX.CS_VREDRAW,
+                style = Windows.CS_HREDRAW | Windows.CS_VREDRAW,
                 lpfnWndProc = &WindowProc,
                 hInstance = hInstance,
-                hCursor = FX.LoadCursorW(IntPtr.Zero, FX.MAKEINTRESOURCE(32512)),
+                hCursor = Windows.LoadCursorW(IntPtr.Zero, Windows.MAKEINTRESOURCE(32512)),
                 lpszClassName = (ushort*)name
             };
 
             // Register the window class
-            _ = FX.RegisterClassExW(&windowClassEx);
+            _ = Windows.RegisterClassExW(&windowClassEx);
 
             Rectangle windowRect = new(0, 0, 1280, 720);
 
             // Set the target window size
-            _ = FX.AdjustWindowRect((RECT*)&windowRect, FX.WS_OVERLAPPEDWINDOW, FX.FALSE);
+            _ = Windows.AdjustWindowRect((RECT*)&windowRect, Windows.WS_OVERLAPPEDWINDOW, Windows.FALSE);
 
             uint
                 height = (uint)(windowRect.Bottom - windowRect.Top),
                 width = (uint)(windowRect.Right - windowRect.Left);
 
             // Create the window and store a handle to it
-            hwnd = FX.CreateWindowExW(
+            hwnd = Windows.CreateWindowExW(
                 0,
                 windowClassEx.lpszClassName,
                 (ushort*)windowTitle,
-                FX.WS_OVERLAPPEDWINDOW,
-                FX.CW_USEDEFAULT,
-                FX.CW_USEDEFAULT,
+                Windows.WS_OVERLAPPEDWINDOW,
+                Windows.CW_USEDEFAULT,
+                Windows.CW_USEDEFAULT,
                 (int)width,
                 (int)height,
                 HWND.NULL,
@@ -102,14 +101,14 @@ internal unsafe static class Win32ApplicationRunner
             margins.cyTopHeight = -1;
             margins.cyBottomHeight = -1;
 
-            _ = FX.DwmExtendFrameIntoClientArea(hwnd, &margins);
+            _ = Windows.DwmExtendFrameIntoClientArea(hwnd, &margins);
         }
 
         // Initialize the application
         application.OnInitialize(hwnd);
 
         // Display the window
-        _ = FX.ShowWindow(hwnd, FX.SW_SHOWDEFAULT);
+        _ = Windows.ShowWindow(hwnd, Windows.SW_SHOWDEFAULT);
 
         MSG msg = default;
 
@@ -140,12 +139,12 @@ internal unsafe static class Win32ApplicationRunner
         renderThread.Start((application, tokenSource.Token));
 
         // Process any messages in the queue
-        while (msg.message != FX.WM_QUIT)
+        while (msg.message != Windows.WM_QUIT)
         {
-            if (FX.PeekMessageW(&msg, HWND.NULL, 0, 0, FX.PM_REMOVE) != 0)
+            if (Windows.PeekMessageW(&msg, HWND.NULL, 0, 0, Windows.PM_REMOVE) != 0)
             {
-                _ = FX.TranslateMessage(&msg);
-                _ = FX.DispatchMessageW(&msg);
+                _ = Windows.TranslateMessage(&msg);
+                _ = Windows.DispatchMessageW(&msg);
             }
             else if (isPaused)
             {
@@ -175,9 +174,9 @@ internal unsafe static class Win32ApplicationRunner
         switch (uMsg)
         {
             // Change the paused state on window activation
-            case FX.WM_ACTIVATE:
+            case Windows.WM_ACTIVATE:
             {
-                if (FX.LOWORD(wParam) == FX.WA_INACTIVE)
+                if (Windows.LOWORD(wParam) == Windows.WA_INACTIVE)
                 {
                     isPaused = true;
                 }
@@ -189,18 +188,18 @@ internal unsafe static class Win32ApplicationRunner
             }
 
             // Change the paused state when ESC is pressed
-            case FX.WM_KEYDOWN:
+            case Windows.WM_KEYDOWN:
             {
                 if ((ConsoleKey)wParam == ConsoleKey.Escape)
                 {
 
                     if (isPaused)
                     {
-                        FX.SetCapture(hwnd);
+                        Windows.SetCapture(hwnd);
                     }
                     else
                     {
-                        FX.ReleaseCapture();
+                        Windows.ReleaseCapture();
                     }
 
                     isPaused = !isPaused;
@@ -210,7 +209,7 @@ internal unsafe static class Win32ApplicationRunner
             }
 
             // Window resize started
-            case FX.WM_ENTERSIZEMOVE:
+            case Windows.WM_ENTERSIZEMOVE:
             {
                 isResizing = true;
 
@@ -218,7 +217,7 @@ internal unsafe static class Win32ApplicationRunner
             }
 
             // Window resize completed
-            case FX.WM_EXITSIZEMOVE:
+            case Windows.WM_EXITSIZEMOVE:
             {
                 isResizing = false;
                 application.OnResize();
@@ -227,9 +226,9 @@ internal unsafe static class Win32ApplicationRunner
             }
 
             // Size update
-            case FX.WM_SIZE:
+            case Windows.WM_SIZE:
             {
-                if (!isResizing && wParam != FX.SIZE_MINIMIZED)
+                if (!isResizing && wParam != Windows.SIZE_MINIMIZED)
                 {
                     application.OnResize();
                 }
@@ -238,19 +237,19 @@ internal unsafe static class Win32ApplicationRunner
             }
 
             // Size and position of the window (needed to enable the borderless mode)
-            case FX.WM_NCCALCSIZE:
+            case Windows.WM_NCCALCSIZE:
             {
                 return 0;
             }
 
             // Enable dragging the window
-            case FX.WM_NCHITTEST:
+            case Windows.WM_NCHITTEST:
             {
                 POINT point;
                 RECT rect;
 
-                _ = FX.GetCursorPos(&point);
-                _ = FX.GetWindowRect(hwnd, &rect);
+                _ = Windows.GetCursorPos(&point);
+                _ = Windows.GetWindowRect(hwnd, &rect);
 
                 bool
                     isAtTop = Math.Abs(point.y - rect.top) < 12,
@@ -260,37 +259,37 @@ internal unsafe static class Win32ApplicationRunner
 
                 if (isAtTop)
                 {
-                    if (isAtRight) return FX.HTTOPRIGHT;
-                    if (isAtLeft) return FX.HTTOPLEFT;
-                    return FX.HTTOP;
+                    if (isAtRight) return Windows.HTTOPRIGHT;
+                    if (isAtLeft) return Windows.HTTOPLEFT;
+                    return Windows.HTTOP;
                 }
 
                 if (isAtRight)
                 {
-                    if (isAtTop) return FX.HTTOPRIGHT;
-                    if (isAtBottom) return FX.HTBOTTOMRIGHT;
-                    return FX.HTRIGHT;
+                    if (isAtTop) return Windows.HTTOPRIGHT;
+                    if (isAtBottom) return Windows.HTBOTTOMRIGHT;
+                    return Windows.HTRIGHT;
                 }
 
                 if (isAtBottom)
                 {
-                    if (isAtRight) return FX.HTBOTTOMRIGHT;
-                    if (isAtLeft) return FX.HTBOTTOMLEFT;
-                    return FX.HTBOTTOM;
+                    if (isAtRight) return Windows.HTBOTTOMRIGHT;
+                    if (isAtLeft) return Windows.HTBOTTOMLEFT;
+                    return Windows.HTBOTTOM;
                 }
 
                 if (isAtLeft)
                 {
-                    if (isAtTop) return FX.HTTOPLEFT;
-                    if (isAtBottom) return FX.HTBOTTOMLEFT;
-                    return FX.HTLEFT;
+                    if (isAtTop) return Windows.HTTOPLEFT;
+                    if (isAtBottom) return Windows.HTBOTTOMLEFT;
+                    return Windows.HTLEFT;
                 }
 
-                return FX.HTCAPTION;
+                return Windows.HTCAPTION;
             }
 
             // Restore the drop shadow
-            case FX.WM_DWMCOMPOSITIONCHANGED:
+            case Windows.WM_DWMCOMPOSITIONCHANGED:
             {
                 MARGINS margins = default;
                 margins.cxLeftWidth = -1;
@@ -298,19 +297,19 @@ internal unsafe static class Win32ApplicationRunner
                 margins.cyTopHeight = -1;
                 margins.cyBottomHeight = -1;
 
-                _ = FX.DwmExtendFrameIntoClientArea(hwnd, &margins);
+                _ = Windows.DwmExtendFrameIntoClientArea(hwnd, &margins);
 
                 return 0;
             }
 
             // Shutdown
-            case FX.WM_DESTROY:
+            case Windows.WM_DESTROY:
             {
-                FX.PostQuitMessage(0);
+                Windows.PostQuitMessage(0);
                 return 0;
             }
         }
 
-        return FX.DefWindowProcW(hwnd, uMsg, wParam, lParam);
+        return Windows.DefWindowProcW(hwnd, uMsg, wParam, lParam);
     }
 }

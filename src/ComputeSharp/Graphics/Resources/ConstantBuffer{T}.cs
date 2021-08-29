@@ -5,12 +5,12 @@ using ComputeSharp.Core.Helpers;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
-using ComputeSharp.Graphics.Resources.Enums;
 using ComputeSharp.Graphics.Resources.Interop;
 using ComputeSharp.Resources;
 using ComputeSharp.Resources.Debug;
 using Microsoft.Toolkit.Diagnostics;
-using FX = TerraFX.Interop.Windows;
+using TerraFX.Interop;
+using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
 namespace ComputeSharp;
 
@@ -26,7 +26,7 @@ public sealed class ConstantBuffer<T> : Buffer<T>
     /// <summary>
     /// The alignment boundary for elements in a constant buffer.
     /// </summary>
-    private const int ElementAlignment = FX.D3D12_COMMONSHADER_CONSTANT_BUFFER_PARTIAL_UPDATE_EXTENTS_BYTE_ALIGNMENT;
+    private const int ElementAlignment = Windows.D3D12_COMMONSHADER_CONSTANT_BUFFER_PARTIAL_UPDATE_EXTENTS_BYTE_ALIGNMENT;
 
     /// <summary>
     /// Creates a new <see cref="ConstantBuffer{T}"/> instance with the specified parameters.

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using FX = TerraFX.Interop.Windows;
+using TerraFX.Interop;
 
 namespace ComputeSharp.Shaders.Translation;
 
@@ -23,7 +23,7 @@ internal sealed unsafe partial class ShaderCompiler
         // libraries from the NuGet directory, if an RID is not in use, or we need to ensure that dxil.dll is
         // loaded correctly in case the program was executed with the host being in another directory.
         // This happens when doing eg. "dotnet bin\Debug\net5.0\MyApp.dll", which would crash at runtime.
-        FX.ResolveLibrary += (libraryName, assembly, searchPath) =>
+        Windows.ResolveLibrary += (libraryName, assembly, searchPath) =>
         {
             if (libraryName is not "dxcompiler") return IntPtr.Zero;
 

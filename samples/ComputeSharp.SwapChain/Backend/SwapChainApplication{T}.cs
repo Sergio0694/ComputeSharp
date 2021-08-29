@@ -1,7 +1,6 @@
 ﻿using System;
 using ComputeSharp.Interop;
 using TerraFX.Interop;
-using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.SwapChain.Backend;
 
@@ -88,7 +87,7 @@ internal sealed class SwapChainApplication<T> : Win32Application
         // Get the underlying ID3D12Device in use
         fixed (ID3D12Device** d3D12Device = this.d3D12Device)
         {
-            _ = InteropServices.TryGetID3D12Device(Gpu.Default, FX.__uuidof<ID3D12Device>(), (void**)d3D12Device);
+            _ = InteropServices.TryGetID3D12Device(Gpu.Default, Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device);
         }
 
         // Create the direct command queue to use
@@ -102,7 +101,7 @@ internal sealed class SwapChainApplication<T> : Win32Application
 
             _ = d3D12Device.Get()->CreateCommandQueue(
                 &d3D12CommandQueueDesc,
-                FX.__uuidof<ID3D12CommandQueue>(),
+                Windows.__uuidof<ID3D12CommandQueue>(),
                 (void**)d3D12CommandQueue);
         }
 
@@ -112,7 +111,7 @@ internal sealed class SwapChainApplication<T> : Win32Application
             _ = this.d3D12Device.Get()->CreateFence(
                 0,
                 D3D12_FENCE_FLAGS.D3D12_FENCE_FLAG_NONE,
-                FX.__uuidof<ID3D12Fence>(),
+                Windows.__uuidof<ID3D12Fence>(),
                 (void**)d3D12Fence);
         }
 
@@ -121,7 +120,7 @@ internal sealed class SwapChainApplication<T> : Win32Application
         {
             using ComPtr<IDXGIFactory2> dxgiFactory2 = default;
 
-            _ = FX.CreateDXGIFactory2(FX.DXGI_CREATE_FACTORY_DEBUG, FX.__uuidof<IDXGIFactory2>(), (void**)dxgiFactory2.GetAddressOf());
+            _ = Windows.CreateDXGIFactory2(Windows.DXGI_CREATE_FACTORY_DEBUG, Windows.__uuidof<IDXGIFactory2>(), (void**)dxgiFactory2.GetAddressOf());
 
             DXGI_SWAP_CHAIN_DESC1 dxgiSwapChainDesc1 = default;
             dxgiSwapChainDesc1.AlphaMode = DXGI_ALPHA_MODE.DXGI_ALPHA_MODE_IGNORE;
@@ -149,7 +148,7 @@ internal sealed class SwapChainApplication<T> : Win32Application
         {
             this.d3D12Device.Get()->CreateCommandAllocator(
                 D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_DIRECT,
-                FX.__uuidof<ID3D12CommandAllocator>(),
+                Windows.__uuidof<ID3D12CommandAllocator>(),
                 (void**)d3D12CommandAllocator);
         }
 
@@ -161,7 +160,7 @@ internal sealed class SwapChainApplication<T> : Win32Application
                 D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_DIRECT,
                 d3D12CommandAllocator,
                 null,
-                FX.__uuidof<ID3D12GraphicsCommandList>(),
+                Windows.__uuidof<ID3D12GraphicsCommandList>(),
                 (void**)d3D12GraphicsCommandList);
         }
 
@@ -206,8 +205,8 @@ internal sealed class SwapChainApplication<T> : Win32Application
         fixed (ID3D12Resource** d3D12Resource0 = this.d3D12Resource0)
         fixed (ID3D12Resource** d3D12Resource1 = this.d3D12Resource1)
         {
-            _ = dxgiSwapChain1.Get()->GetBuffer(0, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0);
-            _ = dxgiSwapChain1.Get()->GetBuffer(1, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1);
+            _ = dxgiSwapChain1.Get()->GetBuffer(0, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0);
+            _ = dxgiSwapChain1.Get()->GetBuffer(1, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1);
         }
 
         this.texture?.Dispose();
@@ -236,7 +235,7 @@ internal sealed class SwapChainApplication<T> : Win32Application
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 
         // Get the underlying ID3D12Resource pointer for the texture
-        _ = InteropServices.TryGetID3D12Resource(this.texture!, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
+        _ = InteropServices.TryGetID3D12Resource(this.texture!, Windows.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
 
         // Get the target back buffer to update
         ID3D12Resource* d3D12ResourceBackBuffer = this.currentBufferIndex switch

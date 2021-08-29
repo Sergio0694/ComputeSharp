@@ -8,7 +8,6 @@ using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_FEATURE;
-using FX = TerraFX.Interop.Windows;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
 namespace ComputeSharp.Resources;
@@ -59,7 +58,7 @@ public unsafe abstract class Buffer<T> : NativeObject
 
         if (resourceType == ResourceType.Constant)
         {
-            Guard.IsBetweenOrEqualTo(length, 1, FX.D3D12_REQ_CONSTANT_BUFFER_ELEMENT_COUNT, nameof(length));
+            Guard.IsBetweenOrEqualTo(length, 1, Windows.D3D12_REQ_CONSTANT_BUFFER_ELEMENT_COUNT, nameof(length));
         }
         else
         {

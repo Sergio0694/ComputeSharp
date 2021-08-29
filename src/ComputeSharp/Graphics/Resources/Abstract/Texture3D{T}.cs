@@ -12,7 +12,6 @@ using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
 using static TerraFX.Interop.D3D12_RESOURCE_STATES;
 using static TerraFX.Interop.D3D12_SRV_DIMENSION;
 using static TerraFX.Interop.D3D12_UAV_DIMENSION;
-using FX = TerraFX.Interop.Windows;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
 #pragma warning disable CS0618
@@ -75,9 +74,9 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
     {
         device.ThrowIfDisposed();
 
-        Guard.IsBetweenOrEqualTo(width, 1, FX.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, FX.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(height));
-        Guard.IsBetweenOrEqualTo(depth, 1, FX.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(depth));
+        Guard.IsBetweenOrEqualTo(width, 1, Windows.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(width));
+        Guard.IsBetweenOrEqualTo(height, 1, Windows.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(height));
+        Guard.IsBetweenOrEqualTo(depth, 1, Windows.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(depth));
 
         if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), d3D12FormatSupport))
         {

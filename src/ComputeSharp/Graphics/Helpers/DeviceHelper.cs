@@ -4,7 +4,6 @@ using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
-using FX = TerraFX.Interop.Windows;
 using HRESULT = System.Int32;
 using static TerraFX.Interop.D3D_FEATURE_LEVEL;
 using static TerraFX.Interop.D3D_SHADER_MODEL;
@@ -95,10 +94,10 @@ internal static partial class DeviceHelper
             HRESULT enumAdapters1Result = dxgiFactory6.Get()->EnumAdapterByGpuPreference(
                 i++,
                 DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
-                FX.__uuidof<IDXGIAdapter1>(),
+                Windows.__uuidof<IDXGIAdapter1>(),
                 dxgiAdapter1.GetVoidAddressOf());
 
-            if (enumAdapters1Result == FX.DXGI_ERROR_NOT_FOUND)
+            if (enumAdapters1Result == Windows.DXGI_ERROR_NOT_FOUND)
             {
                 return false;
             }
@@ -120,23 +119,23 @@ internal static partial class DeviceHelper
             // a device for adapters that would've failed at the FL11 check already.
             if (d3D12Device == null)
             {
-                HRESULT createDeviceResult = FX.D3D12CreateDevice(
+                HRESULT createDeviceResult = Windows.D3D12CreateDevice(
                     dxgiAdapter1.AsIUnknown().Get(),
                     D3D_FEATURE_LEVEL_11_0,
-                    FX.__uuidof<ID3D12Device>(),
+                    Windows.__uuidof<ID3D12Device>(),
                     null);
 
-                if (FX.SUCCEEDED(createDeviceResult))
+                if (Windows.SUCCEEDED(createDeviceResult))
                 {
                     using ComPtr<ID3D12Device> d3D12DeviceCandidate = default;
 
-                    createDeviceResult = FX.D3D12CreateDevice(
+                    createDeviceResult = Windows.D3D12CreateDevice(
                         dxgiAdapter1.AsIUnknown().Get(),
                         D3D_FEATURE_LEVEL_11_0,
-                        FX.__uuidof<ID3D12Device>(),
+                        Windows.__uuidof<ID3D12Device>(),
                         d3D12DeviceCandidate.GetVoidAddressOf());
 
-                    if (FX.SUCCEEDED(createDeviceResult) &&
+                    if (Windows.SUCCEEDED(createDeviceResult) &&
                         d3D12DeviceCandidate.Get()->IsShaderModelSupported(D3D_SHADER_MODEL_6_0))
                     {
                         return true;
@@ -147,13 +146,13 @@ internal static partial class DeviceHelper
             {
                 using ComPtr<ID3D12Device> d3D12DeviceCandidate = default;
 
-                HRESULT createDeviceResult = FX.D3D12CreateDevice(
+                HRESULT createDeviceResult = Windows.D3D12CreateDevice(
                     dxgiAdapter1.AsIUnknown().Get(),
                     D3D_FEATURE_LEVEL_11_0,
-                    FX.__uuidof<ID3D12Device>(),
+                    Windows.__uuidof<ID3D12Device>(),
                     d3D12DeviceCandidate.GetVoidAddressOf());
 
-                if (FX.SUCCEEDED(createDeviceResult) &&
+                if (Windows.SUCCEEDED(createDeviceResult) &&
                     d3D12DeviceCandidate.Get()->IsShaderModelSupported(D3D_SHADER_MODEL_6_0))
                 {
                     d3D12DeviceCandidate.CopyTo(d3D12Device);
@@ -180,18 +179,18 @@ internal static partial class DeviceHelper
 
         using ComPtr<IDXGIAdapter1> dxgiAdapter1 = default;
 
-        dxgiFactory6.Get()->EnumWarpAdapter(FX.__uuidof<IDXGIAdapter1>(), dxgiAdapter1.GetVoidAddressOf()).Assert();
+        dxgiFactory6.Get()->EnumWarpAdapter(Windows.__uuidof<IDXGIAdapter1>(), dxgiAdapter1.GetVoidAddressOf()).Assert();
         
         dxgiAdapter1.Get()->GetDesc1(dxgiDescription1).Assert();
 
-        HRESULT createDeviceResult = FX.D3D12CreateDevice(
+        HRESULT createDeviceResult = Windows.D3D12CreateDevice(
             dxgiAdapter1.AsIUnknown().Get(),
             D3D_FEATURE_LEVEL_11_0,
-            FX.__uuidof<ID3D12Device>(),
+            Windows.__uuidof<ID3D12Device>(),
             (void**)d3D12Device);
 
         dxgiAdapter1.CopyTo(dxgiAdapter);
 
-        return FX.SUCCEEDED(createDeviceResult);
+        return Windows.SUCCEEDED(createDeviceResult);
     }
 }

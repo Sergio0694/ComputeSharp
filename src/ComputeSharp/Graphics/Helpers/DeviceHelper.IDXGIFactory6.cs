@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Core.Extensions;
 using TerraFX.Interop;
-using FX = TerraFX.Interop.Windows;
 using HRESULT = System.Int32;
 
 namespace ComputeSharp.Graphics.Helpers;
@@ -17,7 +16,7 @@ internal static partial class DeviceHelper
     /// </summary>
     private const uint IDXGIFactoryCreationFlags =
 #if DEBUG
-        FX.DXGI_CREATE_FACTORY_DEBUG;
+        Windows.DXGI_CREATE_FACTORY_DEBUG;
 #else
         0;
 #endif
@@ -32,16 +31,16 @@ internal static partial class DeviceHelper
 
         EnableDebugMode();
 
-        FX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, FX.__uuidof<IDXGIFactory4>(), dxgiFactory4.GetVoidAddressOf()).Assert();
+        Windows.CreateDXGIFactory2(IDXGIFactoryCreationFlags, Windows.__uuidof<IDXGIFactory4>(), dxgiFactory4.GetVoidAddressOf()).Assert();
 
         HRESULT result = dxgiFactory4.CopyTo(dxgiFactory6);
 
-        if (result == FX.S_OK)
+        if (result == Windows.S_OK)
         {
             return;
         }
 
-        if (result == FX.E_NOINTERFACE)
+        if (result == Windows.E_NOINTERFACE)
         {
             IDXGIFactory4As6Backcompat.Create(dxgiFactory4.Get(), dxgiFactory6);
 
@@ -62,14 +61,14 @@ internal static partial class DeviceHelper
         using ComPtr<ID3D12Debug> d3D12Debug = default;
         using ComPtr<ID3D12Debug1> d3D12Debug1 = default;
 
-        FX.D3D12GetDebugInterface(FX.__uuidof<ID3D12Debug>(), d3D12Debug.GetVoidAddressOf()).Assert();
+        Windows.D3D12GetDebugInterface(Windows.__uuidof<ID3D12Debug>(), d3D12Debug.GetVoidAddressOf()).Assert();
 
         d3D12Debug.Get()->EnableDebugLayer();
 
-        if (FX.SUCCEEDED(d3D12Debug.CopyTo(d3D12Debug1.GetAddressOf())))
+        if (Windows.SUCCEEDED(d3D12Debug.CopyTo(d3D12Debug1.GetAddressOf())))
         {
-            d3D12Debug1.Get()->SetEnableGPUBasedValidation(FX.TRUE);
-            d3D12Debug1.Get()->SetEnableSynchronizedCommandQueueValidation(FX.TRUE);
+            d3D12Debug1.Get()->SetEnableGPUBasedValidation(Windows.TRUE);
+            d3D12Debug1.Get()->SetEnableSynchronizedCommandQueueValidation(Windows.TRUE);
         }
     }
 

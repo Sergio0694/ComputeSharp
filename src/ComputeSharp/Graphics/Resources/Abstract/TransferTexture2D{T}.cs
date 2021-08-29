@@ -6,7 +6,6 @@ using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_FORMAT_SUPPORT1;
-using FX = TerraFX.Interop.Windows;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
 namespace ComputeSharp.Resources;
@@ -50,8 +49,8 @@ public unsafe abstract class TransferTexture2D<T> : NativeObject
     {
         device.ThrowIfDisposed();
 
-        Guard.IsBetweenOrEqualTo(width, 1, FX.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, FX.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION, nameof(height));
+        Guard.IsBetweenOrEqualTo(width, 1, Windows.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION, nameof(width));
+        Guard.IsBetweenOrEqualTo(height, 1, Windows.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION, nameof(height));
 
         if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE2D))
         {

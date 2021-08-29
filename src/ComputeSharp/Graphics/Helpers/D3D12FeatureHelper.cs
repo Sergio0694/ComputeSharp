@@ -3,7 +3,6 @@ using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_FEATURE;
-using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Graphics.Helpers;
 
@@ -51,7 +50,7 @@ internal static class D3D12FeatureHelper
                     &d3D12Options7,
                     (uint)sizeof(D3D12_FEATURE_DATA_D3D12_OPTIONS7));
 
-                if (result == FX.S_OK)
+                if (result == Windows.S_OK)
                 {
                     return D3D12_HEAP_FLAGS.D3D12_HEAP_FLAG_CREATE_NOT_ZEROED;
                 }

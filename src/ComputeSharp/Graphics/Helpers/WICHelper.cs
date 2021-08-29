@@ -2,7 +2,6 @@
 using System.Diagnostics.Contracts;
 using ComputeSharp.Core.Extensions;
 using TerraFX.Interop;
-using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Graphics.Helpers;
 
@@ -22,13 +21,13 @@ internal sealed unsafe class WICHelper
     private WICHelper()
     {
         using ComPtr<IWICImagingFactory2> wicImagingFactory2 = default;
-        Guid wicImagingFactor2Clsid = FX.CLSID_WICImagingFactory2;
+        Guid wicImagingFactor2Clsid = Windows.CLSID_WICImagingFactory2;
 
-        FX.CoCreateInstance(
+        Windows.CoCreateInstance(
             &wicImagingFactor2Clsid,
             null,
             (uint)CLSCTX.CLSCTX_INPROC_SERVER,
-            FX.__uuidof<IWICImagingFactory2>(),
+            Windows.__uuidof<IWICImagingFactory2>(),
             wicImagingFactory2.GetVoidAddressOf()).Assert();
 
         this.wicImagingFactory2 = wicImagingFactory2.Move();
@@ -66,7 +65,7 @@ internal sealed unsafe class WICHelper
             this.wicImagingFactory2.Get()->CreateDecoderFromFilename(
                 (ushort*)p,
                 null,
-                FX.GENERIC_READ,
+                Windows.GENERIC_READ,
                 WICDecodeOptions.WICDecodeMetadataCacheOnDemand,
                 wicBitmapDecoder.GetAddressOf()).Assert();
         }
@@ -132,7 +131,7 @@ internal sealed unsafe class WICHelper
         {
             wicStream.Get()->InitializeFromFilename(
                 (ushort*)p,
-                FX.GENERIC_WRITE);
+                Windows.GENERIC_WRITE);
         }
 
         // Initialize the encoder

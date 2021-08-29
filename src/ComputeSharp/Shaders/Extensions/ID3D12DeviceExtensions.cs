@@ -5,7 +5,6 @@ using static TerraFX.Interop.D3D12_COMPARISON_FUNC;
 using static TerraFX.Interop.D3D12_FILTER;
 using static TerraFX.Interop.D3D12_PIPELINE_STATE_FLAGS;
 using static TerraFX.Interop.D3D12_TEXTURE_ADDRESS_MODE;
-using FX = TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Shaders.Extensions;
 
@@ -72,7 +71,7 @@ internal static unsafe class ID3D12DeviceExtensions
 
             // Serialize the root signature from the data just computed. When this is done
             // we just work with the resulting blobs, so the input data can be unpinned.
-            FX.D3D12SerializeVersionedRootSignature(
+            Windows.D3D12SerializeVersionedRootSignature(
                 &d3D12VersionedRootSignatureDescription,
                 d3D3Blob.GetAddressOf(),
                 d3D3BlobError.GetAddressOf()).Assert();
@@ -82,7 +81,7 @@ internal static unsafe class ID3D12DeviceExtensions
             0,
             d3D3Blob.Get()->GetBufferPointer(),
             d3D3Blob.Get()->GetBufferSize(),
-            FX.__uuidof<ID3D12RootSignature>(),
+            Windows.__uuidof<ID3D12RootSignature>(),
             d3D12RootSignature.GetVoidAddressOf()).Assert();
 
         return d3D12RootSignature.Move();
@@ -112,7 +111,7 @@ internal static unsafe class ID3D12DeviceExtensions
 
         d3D12Device.CreateComputePipelineState(
             &d3D12ComputePipelineStateDescription,
-            FX.__uuidof<ID3D12PipelineState>(),
+            Windows.__uuidof<ID3D12PipelineState>(),
             d3D12PipelineState.GetVoidAddressOf()).Assert();
 
         return d3D12PipelineState.Move();
