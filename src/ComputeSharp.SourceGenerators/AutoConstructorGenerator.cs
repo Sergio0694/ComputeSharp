@@ -62,7 +62,7 @@ public sealed partial class AutoConstructorGenerator : ISourceGenerator
         var fields = (
             from fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>()
             where !fieldSymbol.IsConst && !fieldSymbol.IsStatic && !fieldSymbol.IsFixedSizeBuffer
-            let typeName = fieldSymbol.Type!.ToDisplayString()
+            let typeName = fieldSymbol.Type!.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
             let fieldFullType = ParseTypeName(typeName)
             select (Type: fieldFullType, Identifier: Identifier(fieldSymbol.Name))).ToImmutableArray();
 
@@ -100,7 +100,8 @@ public sealed partial class AutoConstructorGenerator : ISourceGenerator
         // From this, we can finally generate the source code to output.
         var source =
             CompilationUnit().AddMembers(
-            NamespaceDeclaration(IdentifierName(namespaceName)).AddMembers(typeDeclarationSyntax))
+            FileScopedNamespaceDeclaration(IdentifierName(namespaceName)).AddMembers(typeDeclarationSyntax)
+            .WithNamespaceKeyword(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.NamespaceKeyword, TriviaList())))
             .NormalizeWhitespace(eol: "\n")
             .ToFullString();
 

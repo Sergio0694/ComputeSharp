@@ -28,7 +28,7 @@ public sealed partial class IShaderGenerator
     {
         // This code produces a method declaration as follows:
         //
-        // readonly void IShader.LoadDispatchData<TDataLoader>(ref TDataLoader loader, GraphicsDevice device, int x, int y, int z)
+        // readonly void global::ComputeSharp.__Internals.IShader.LoadDispatchData<TDataLoader>(ref TDataLoader loader, global::ComputeSharp.GraphicsDevice device, int x, int y, int z)
         // {
         //     <BODY>
         // }
@@ -36,14 +36,14 @@ public sealed partial class IShaderGenerator
             MethodDeclaration(
                 PredefinedType(Token(SyntaxKind.VoidKeyword)),
                 Identifier("LoadDispatchData"))
-            .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName(nameof(IShader))))
+            .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.__Internals.{nameof(IShader)}")))
             .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
             .AddTypeParameterListParameters(TypeParameter(Identifier("TDataLoader")))
             .AddParameterListParameters(
                 Parameter(Identifier("loader"))
                     .AddModifiers(Token(SyntaxKind.RefKeyword))
                     .WithType(IdentifierName("TDataLoader")),
-                Parameter(Identifier("device")).WithType(IdentifierName("GraphicsDevice")),
+                Parameter(Identifier("device")).WithType(IdentifierName("global::ComputeSharp.GraphicsDevice")),
                 Parameter(Identifier("x")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
                 Parameter(Identifier("y")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
                 Parameter(Identifier("z")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))))
@@ -58,7 +58,7 @@ public sealed partial class IShaderGenerator
     /// <param name="discoveredResources">The collection of discovered resources in the current shader type.</param>
     /// <param name="root32BitConstantsCount">The total number of 32 bit root constants being loaded for the current shader type.</param>
     /// <returns>The sequence of <see cref="StatementSyntax"/> instances to load shader dispatch data.</returns>
-    private static IEnumerable<StatementSyntax> GetDispatchDataLoadingStatements(GeneratorExecutionContext context, INamedTypeSymbol structDeclarationSymbol, out IReadOnlyCollection<string> discoveredResources, out int root32BitConstantsCount)
+        private static IEnumerable<StatementSyntax> GetDispatchDataLoadingStatements(GeneratorExecutionContext context, INamedTypeSymbol structDeclarationSymbol, out IReadOnlyCollection<string> discoveredResources, out int root32BitConstantsCount)
     {
         List<StatementSyntax> statements = new();
         List<string> resources = new();
@@ -128,11 +128,11 @@ public sealed partial class IShaderGenerator
             context.ReportDiagnostic(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
         }
 
-        // Span<uint> span0 = stackalloc uint[<VARIABLES>];
+        // global::System.Span<uint> span0 = stackalloc uint[<VARIABLES>];
         statements.Insert(0,
             LocalDeclarationStatement(
                 VariableDeclaration(
-                    GenericName(Identifier("Span"))
+                    GenericName(Identifier("global::System.Span"))
                     .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.UIntKeyword))))
                 .AddVariables(
                     VariableDeclarator(Identifier("span0"))
@@ -169,11 +169,11 @@ public sealed partial class IShaderGenerator
 
         if (resourceOffset > 0)
         {
-            // Span<ulong> span1 = stackalloc ulong[<RESOURCES>];
+            // global::System.Span<ulong> span1 = stackalloc ulong[<RESOURCES>];
             statements.Insert(1,
                 LocalDeclarationStatement(
                     VariableDeclaration(
-                        GenericName(Identifier("Span"))
+                        GenericName(Identifier("global::System.Span"))
                         .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.ULongKeyword))))
                     .AddVariables(
                         VariableDeclarator(Identifier("span1"))
@@ -257,8 +257,8 @@ public sealed partial class IShaderGenerator
                 statements.Add(ExpressionStatement(
                     AssignmentExpression(
                         SyntaxKind.SimpleAssignmentExpression,
-                        ParseExpression($"Unsafe.Add(ref r1, {resourceOffset++})"),
-                        ParseExpression($"GraphicsResourceHelper.ValidateAndGetGpuDescriptorHandle({fieldName}, device)"))));
+                        ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.Add(ref r1, {resourceOffset++})"),
+                        ParseExpression($"global::ComputeSharp.__Internals.GraphicsResourceHelper.ValidateAndGetGpuDescriptorHandle({fieldName}, device)"))));
             }
             else if (HlslKnownTypes.IsKnownHlslType(typeName))
             {
@@ -291,17 +291,17 @@ public sealed partial class IShaderGenerator
         if (HlslKnownTypes.IsNonLinearMatrixType(typeName, out string? elementName, out int rows, out int columns))
         {
             string
-                rowTypeName = $"ComputeSharp.{elementName}{columns}",
+                rowTypeName = $"global::ComputeSharp.{elementName}{columns}",
                 rowLocalName = $"__{string.Join("_", fieldPath)}__row0";
 
-            statements.Add(ParseStatement($"ref {rowTypeName} {rowLocalName} = ref Unsafe.As<{typeName}, {rowTypeName}>(ref Unsafe.AsRef(in {string.Join(".", fieldPath)}));"));
+            statements.Add(ParseStatement($"ref {rowTypeName} {rowLocalName} = ref global::System.Runtime.CompilerServices.Unsafe.As<global::{typeName}, {rowTypeName}>(ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in {string.Join(".", fieldPath)}));"));
 
             // Generate the loading code for each individual row, with proper alignment.
             // This will result in the following (assuming Float2x3 m):
             //
-            // ref Float3 __m__row0 = ref Unsafe.As<Float2x3, Float3>(ref Unsafe.AsRef(in m));
-            // Unsafe.As<uint, Float3>(ref Unsafe.AddByteOffset(ref r0, (nint)rawDataOffset)) =, Unsafe.Add(ref __m__row0, 0);
-            // Unsafe.As<uint, Float3>(ref Unsafe.AddByteOffset(ref r0, (nint)(rawDataOffset + 16))) = Unsafe.Add(ref __m__row0, 1);
+            // ref global::ComputeSharp.Float3 __m__row0 = ref global::System.Runtime.CompilerServices.Unsafe.As<global::ComputeSharp.Float2x3, global::ComputeSharp.Float3>(ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in m));
+            // global::System.Runtime.CompilerServices.Unsafe.As<uint, global::ComputeSharp.Float3>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)rawDataOffset)) =, global::System.Runtime.CompilerServices.Unsafe.Add(ref __m__row0, 0);
+            // global::System.Runtime.CompilerServices.Unsafe.As<uint, global::ComputeSharp.Float3>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint)(rawDataOffset + 16))) = global::System.Runtime.CompilerServices.Unsafe.Add(ref __m__row0, 1);
             for (int j = 0; j < rows; j++)
             {
                 rawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
@@ -309,8 +309,8 @@ public sealed partial class IShaderGenerator
                 statements.Add(ExpressionStatement(
                     AssignmentExpression(
                         SyntaxKind.SimpleAssignmentExpression,
-                        ParseExpression($"Unsafe.As<uint, {rowTypeName}>(ref Unsafe.AddByteOffset(ref r0, (nint){rawDataOffset}))"),
-                        ParseExpression($"Unsafe.Add(ref {rowLocalName}, {j})"))));
+                        ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.As<uint, {rowTypeName}>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint){rawDataOffset}))"),
+                        ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.Add(ref {rowLocalName}, {j})"))));
 
                 rawDataOffset += fieldPack * columns;
             }
@@ -329,7 +329,7 @@ public sealed partial class IShaderGenerator
             statements.Add(ExpressionStatement(
                 AssignmentExpression(
                     SyntaxKind.SimpleAssignmentExpression,
-                    ParseExpression($"Unsafe.As<uint, {typeName}>(ref Unsafe.AddByteOffset(ref r0, (nint){rawDataOffset}))"),
+                    ParseExpression($"global::System.Runtime.CompilerServices.Unsafe.As<uint, global::{typeName}>(ref global::System.Runtime.CompilerServices.Unsafe.AddByteOffset(ref r0, (nint){rawDataOffset}))"),
                     ParseExpression($"{string.Join(".", fieldPath)}"))));
 
             rawDataOffset += fieldSize;

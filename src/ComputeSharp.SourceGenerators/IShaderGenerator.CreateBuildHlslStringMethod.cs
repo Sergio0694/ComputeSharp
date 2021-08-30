@@ -29,8 +29,7 @@ public sealed partial class IShaderGenerator
         StructDeclarationSyntax structDeclaration,
         INamedTypeSymbol structDeclarationSymbol,
         out string? implicitTextureType,
-        out bool isSamplerUsed,
-        out bool isHashSetDirectiveNeeded)
+        out bool isSamplerUsed)
     {
         // Properties are not supported
         DetectAndReportPropertyDeclarations(context, structDeclarationSymbol);
@@ -71,15 +70,14 @@ public sealed partial class IShaderGenerator
             accessesStaticSampler,
             sharedBuffers,
             processedMethods,
-            entryPoint,
-            out isHashSetDirectiveNeeded);
+            entryPoint);
 
         implicitTextureType = pixelShaderTextureType;
         isSamplerUsed = accessesStaticSampler;
 
         // This code produces a method declaration as follows:
         //
-        // readonly void IShader.BuildHlslString(ref ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ)
+        // readonly void global::ComputeSharp.__Internals.IShader.BuildHlslString(ref global::ComputeSharp.__Internals.ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ)
         // {
         //     <BODY>
         // }
@@ -87,10 +85,10 @@ public sealed partial class IShaderGenerator
             MethodDeclaration(
                 PredefinedType(Token(SyntaxKind.VoidKeyword)),
                 Identifier("BuildHlslString"))
-            .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName(nameof(IShader))))
+            .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.__Internals.{nameof(IShader)}")))
             .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
             .AddParameterListParameters(
-                Parameter(Identifier("builder")).AddModifiers(Token(SyntaxKind.OutKeyword)).WithType(IdentifierName("ArrayPoolStringBuilder")),
+                Parameter(Identifier("builder")).AddModifiers(Token(SyntaxKind.OutKeyword)).WithType(IdentifierName("global::ComputeSharp.__Internals.ArrayPoolStringBuilder")),
                 Parameter(Identifier("threadsX")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
                 Parameter(Identifier("threadsY")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
                 Parameter(Identifier("threadsZ")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))))
@@ -474,7 +472,6 @@ public sealed partial class IShaderGenerator
     /// <param name="sharedBuffers">The sequence of shared buffers declared by the shader.</param>
     /// <param name="processedMethods">The sequence of processed methods used by the shader.</param>
     /// <param name="executeMethod">The body of the entry point of the shader.</param>
-    /// <param name="isHashSetDirectiveNeeded">Indicates whether or not the <see langword="using"/> directive for <see cref="HashSet{T}"/> is needed.</param>
     /// <returns>The series of statements to build the HLSL source to compile to execute the current shader.</returns>
     private static IEnumerable<StatementSyntax> GenerateRenderMethodBody(
         IEnumerable<(string Name, string Value)> definedConstants,
@@ -486,8 +483,7 @@ public sealed partial class IShaderGenerator
         bool isSamplerUsed,
         IEnumerable<(string Name, string Type, int? Count)> sharedBuffers,
         IEnumerable<(string Signature, string Definition)> processedMethods,
-        string executeMethod,
-        out bool isHashSetDirectiveNeeded)
+        string executeMethod)
     {
         List<StatementSyntax> statements = new();
         StringBuilder textBuilder = new();
@@ -545,10 +541,10 @@ public sealed partial class IShaderGenerator
         {
             void DeclareMapping(int index, string name, IEnumerable<string> items)
             {
-                // HashSet<string> <NAME> = new();
+                // global::System.Collections.Generic.HashSet<string> <NAME> = new();
                 statements.Insert(index,
                     LocalDeclarationStatement(VariableDeclaration(
-                    GenericName(Identifier("HashSet"))
+                    GenericName(Identifier("global::System.Collections.Generic.HashSet"))
                     .AddTypeArgumentListArguments(PredefinedType(Token(SyntaxKind.StringKeyword))))
                     .AddVariables(
                         VariableDeclarator(Identifier(name))
@@ -580,9 +576,9 @@ public sealed partial class IShaderGenerator
             // Go through all existing delegate fields, if any
             foreach (var (fieldSymbol, fieldName, fieldType) in instanceFields.Where(static t => t.Symbol.Type.TypeKind == TypeKind.Delegate))
             {
-                // ShaderMethodSourceAttribute __<DELEGATE_NAME>Attribute = ShaderMethodSourceAttribute.GetForDelegate(<DELEGATE_NAME>, "<DELEGATE_NAME>");
+                // global::ComputeSharp.__Internals.ShaderMethodSourceAttribute __<DELEGATE_NAME>Attribute = global::ComputeSharp.__Internals.ShaderMethodSourceAttribute.GetForDelegate(<DELEGATE_NAME>, "<DELEGATE_NAME>");
                 statements.Add(
-                    LocalDeclarationStatement(VariableDeclaration(IdentifierName(nameof(ShaderMethodSourceAttribute)))
+                    LocalDeclarationStatement(VariableDeclaration(IdentifierName($"global::ComputeSharp.__Internals.{nameof(ShaderMethodSourceAttribute)}"))
                     .AddVariables(
                         VariableDeclarator(Identifier($"__{fieldName}Attribute"))
                         .WithInitializer(
@@ -590,7 +586,7 @@ public sealed partial class IShaderGenerator
                                 InvocationExpression(
                                     MemberAccessExpression(
                                         SyntaxKind.SimpleMemberAccessExpression,
-                                        IdentifierName(nameof(ShaderMethodSourceAttribute)),
+                                        IdentifierName($"global::ComputeSharp.__Internals.{nameof(ShaderMethodSourceAttribute)}"),
                                         IdentifierName(nameof(ShaderMethodSourceAttribute.GetForDelegate))))
                                 .AddArgumentListArguments(
                                     Argument(IdentifierName(fieldName)),
@@ -600,8 +596,6 @@ public sealed partial class IShaderGenerator
                 prologueStatements++;
             }
         }
-
-        isHashSetDirectiveNeeded = capturedDelegates > 0;
 
         // Header
         AppendLineAndLF("// ================================================");
@@ -800,7 +794,7 @@ public sealed partial class IShaderGenerator
 
         FlushText();
 
-        // builder = ArrayPoolStringBuilder.Create(<SIZE_HINT>);
+        // builder = global::ComputeSharp.__Internals.ArrayPoolStringBuilder.Create(<SIZE_HINT>);
         statements.Insert(
             prologueStatements,
             ExpressionStatement(
@@ -810,7 +804,7 @@ public sealed partial class IShaderGenerator
                     InvocationExpression(
                         MemberAccessExpression(
                             SyntaxKind.SimpleMemberAccessExpression,
-                            IdentifierName("ArrayPoolStringBuilder"),
+                            IdentifierName("global::ComputeSharp.__Internals.ArrayPoolStringBuilder"),
                             IdentifierName("Create")))
                     .AddArgumentListArguments(
                         Argument(LiteralExpression(

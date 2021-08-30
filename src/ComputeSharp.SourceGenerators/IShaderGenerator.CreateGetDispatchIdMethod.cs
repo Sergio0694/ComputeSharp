@@ -20,7 +20,7 @@ public sealed partial class IShaderGenerator
     {
         // This code produces a method declaration as follows:
         //
-        // readonly int IShader.GetDispatchId()
+        // readonly int global::ComputeSharp.__Internals.IShader.GetDispatchId()
         // {
         //     <BODY>
         // }
@@ -28,7 +28,7 @@ public sealed partial class IShaderGenerator
             MethodDeclaration(
                 PredefinedType(Token(SyntaxKind.IntKeyword)),
                 Identifier("GetDispatchId"))
-            .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName(nameof(IShader))))
+            .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.__Internals.{nameof(IShader)}")))
             .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
             .WithBody(GetShaderHashCodeBody(structDeclarationSymbol));
     }
@@ -59,9 +59,9 @@ public sealed partial class IShaderGenerator
 
         List<StatementSyntax> blockStatements = new(4);
 
-        // HashCode hashCode = default;
+        // global::System.HashCode hashCode = default;
         blockStatements.Add(LocalDeclarationStatement(
-            VariableDeclaration(IdentifierName("HashCode"))
+            VariableDeclaration(IdentifierName("global::System.HashCode"))
             .AddVariables(
                 VariableDeclarator(Identifier("hashCode"))
                 .WithInitializer(EqualsValueClause(

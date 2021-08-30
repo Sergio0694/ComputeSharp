@@ -59,7 +59,7 @@ public sealed partial class IShaderGenerator : ISourceGenerator
         MethodDeclarationSyntax
             getDispatchIdMethod = CreateGetDispatchIdMethod(structDeclarationSymbol),
             loadDispatchDataMethod = CreateLoadDispatchDataMethod(context, structDeclarationSymbol, out var discoveredResources, out int root32BitConstants),
-            buildHlslStringMethod = CreateBuildHlslStringMethod(context, structDeclaration, structDeclarationSymbol, out string? implicitTextureType, out bool isSamplerUsed, out bool isHashSetDirectiveNeeded),
+            buildHlslStringMethod = CreateBuildHlslStringMethod(context, structDeclaration, structDeclarationSymbol, out string? implicitTextureType, out bool isSamplerUsed),
             loadDispatchMetadataMethod = CreateLoadDispatchMetadataMethod(implicitTextureType, discoveredResources, root32BitConstants, isSamplerUsed);
 
         // Reorder the method declarations to respect the order in the interface definition
@@ -75,16 +75,16 @@ public sealed partial class IShaderGenerator : ISourceGenerator
         List<AttributeListSyntax> attributes = new()
         {
             AttributeList(SingletonSeparatedList(
-                Attribute(IdentifierName("GeneratedCode")).AddArgumentListArguments(
+                Attribute(IdentifierName("global::System.CodeDom.Compiler.GeneratedCode")).AddArgumentListArguments(
                     AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(IShaderGenerator).FullName))),
                     AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(IShaderGenerator).Assembly.GetName().Version.ToString())))))),
-            AttributeList(SingletonSeparatedList(Attribute(IdentifierName("DebuggerNonUserCode")))),
-            AttributeList(SingletonSeparatedList(Attribute(IdentifierName("ExcludeFromCodeCoverage")))),
+            AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Diagnostics.DebuggerNonUserCode")))),
+            AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage")))),
             AttributeList(SingletonSeparatedList(
-                Attribute(IdentifierName("EditorBrowsable")).AddArgumentListArguments(
-                AttributeArgument(ParseExpression("EditorBrowsableState.Never"))))),
+                Attribute(IdentifierName("global::System.ComponentModel.EditorBrowsable")).AddArgumentListArguments(
+                AttributeArgument(ParseExpression("global::System.ComponentModel.EditorBrowsableState.Never"))))),
             AttributeList(SingletonSeparatedList(
-                Attribute(IdentifierName("Obsolete")).AddArgumentListArguments(
+                Attribute(IdentifierName("global::System.Obsolete")).AddArgumentListArguments(
                 AttributeArgument(LiteralExpression(
                     SyntaxKind.StringLiteralExpression,
                     Literal("This method is not intended to be used directly by user code"))))))
@@ -93,7 +93,7 @@ public sealed partial class IShaderGenerator : ISourceGenerator
         // Add [SkipLocalsInit] if the target project allows it
         if (context.Compilation.Options is CSharpCompilationOptions { AllowUnsafe: true })
         {
-            attributes.Add(AttributeList(SingletonSeparatedList(Attribute(IdentifierName("SkipLocalsInit")))));
+            attributes.Add(AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Runtime.CompilerServices.SkipLocalsInit")))));
         }
 
         string namespaceName = structDeclarationSymbol.ContainingNamespace.ToDisplayString(new(typeQualificationStyle: NameAndContainingTypesAndNamespaces));
@@ -125,44 +125,17 @@ public sealed partial class IShaderGenerator : ISourceGenerator
                 .WithoutTrivia();
         }
 
-        // Prepare the necessary using directives
-        List<UsingDirectiveSyntax> usingDirectives = new()
-        {
-            UsingDirective(IdentifierName("System")),
-            UsingDirective(IdentifierName("System.CodeDom.Compiler")),
-            UsingDirective(IdentifierName("System.ComponentModel")),
-            UsingDirective(IdentifierName("System.Diagnostics")),
-            UsingDirective(IdentifierName("System.Diagnostics.CodeAnalysis")),
-            UsingDirective(IdentifierName("System.Runtime.CompilerServices")),
-            UsingDirective(IdentifierName("ComputeSharp")),
-            UsingDirective(IdentifierName("ComputeSharp.__Internals"))
-        };
-
-        if (isHashSetDirectiveNeeded)
-        {
-            usingDirectives.Insert(2, UsingDirective(IdentifierName("System.Collections.Generic")));
-        }
-
         // Create a static method to create the combined hashcode for a given shader type.
         // This code takes a block syntax and produces a compilation unit as follows:
         //
-        // using System;
-        // using System.CodeDom.Compiler;
-        // using System.ComponentModel;
-        // using System.Diagnostics;
-        // using System.Diagnostics.CodeAnalysis;
-        // using System.Runtime.CompilerServices;
-        // using ComputeSharp.__Internals;
-        //
         // #pragma warning disable
         //
-        // namespace <SHADER_NAMESPACE>
-        // {
-        //     <SHADER_DECLARATION>
-        // }
+        // namespace <SHADER_NAMESPACE>;
+        // 
+        // <SHADER_DECLARATION>
         var source =
-            CompilationUnit().AddUsings(usingDirectives.ToArray()).AddMembers(
-            NamespaceDeclaration(IdentifierName(namespaceName)).AddMembers(typeDeclarationSyntax)
+            CompilationUnit().AddMembers(
+            FileScopedNamespaceDeclaration(IdentifierName(namespaceName)).AddMembers(typeDeclarationSyntax)
             .WithNamespaceKeyword(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.NamespaceKeyword, TriviaList())))
             .NormalizeWhitespace(eol: "\n")
             .ToFullString();
@@ -200,15 +173,13 @@ public sealed partial class IShaderGenerator : ISourceGenerator
     /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
     /// <param name="implicitTextureType">The implicit texture type, if available (if the shader is a pixel shader).</param>
     /// <param name="isSamplerUsed">Whether or not the current shader type requires a static sampler to be available.</param>
-    /// <param name="isHashSetDirectiveNeeded">Indicates whether or not the <see langword="using"/> directive for <see cref="HashSet{T}"/> is needed.</param>
     /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslString</c> method.</returns>
     private static partial MethodDeclarationSyntax CreateBuildHlslStringMethod(
         GeneratorExecutionContext context,
         StructDeclarationSyntax structDeclaration,
         INamedTypeSymbol structDeclarationSymbol,
         out string? implicitTextureType,
-        out bool isSamplerUsed,
-        out bool isHashSetDirectiveNeeded);
+        out bool isSamplerUsed);
 
     /// <summary>
     /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchMetadata</c> method.
