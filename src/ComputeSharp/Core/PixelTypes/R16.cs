@@ -14,7 +14,7 @@ namespace ComputeSharp;
 /// </para>
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct R16 : IEquatable<R16>, IUnorm<float>
+public struct R16 : IEquatable<R16>, ISpanFormattable, IUnorm<float>
 {
     /// <summary>
     /// The red component.
@@ -77,4 +77,16 @@ public struct R16 : IEquatable<R16>, IUnorm<float>
 
     /// <inheritdoc/>
     public override readonly string ToString() => $"{nameof(R16)}({this.R})";
+
+    /// <inheritdoc/>
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        return string.Create(formatProvider, $"{nameof(R16)}({this.R})");
+    }
+
+    /// <inheritdoc/>
+    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    {
+        return destination.TryWrite(provider, $"{nameof(R16)}({this.R})", out charsWritten);
+    }    
 }

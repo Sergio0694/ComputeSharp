@@ -15,7 +15,7 @@ namespace ComputeSharp;
 /// </para>
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct Rg32 : IEquatable<Rg32>, IUnorm<Vector2>, IUnorm<Float2>
+public struct Rg32 : IEquatable<Rg32>, ISpanFormattable, IUnorm<Vector2>, IUnorm<Float2>
 {
     /// <summary>
     /// The red component.
@@ -85,4 +85,16 @@ public struct Rg32 : IEquatable<Rg32>, IUnorm<Vector2>, IUnorm<Float2>
 
     /// <inheritdoc/>
     public override readonly string ToString() => $"{nameof(Rg32)}({this.R}, {this.G})";
+
+    /// <inheritdoc/>
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        return string.Create(formatProvider, $"{nameof(Rg32)}({this.R}, {this.G})");
+    }
+
+    /// <inheritdoc/>
+    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    {
+        return destination.TryWrite(provider, $"{nameof(Rg32)}({this.R}, {this.G})", out charsWritten);
+    }
 }
