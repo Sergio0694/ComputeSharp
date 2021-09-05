@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
 namespace ComputeSharp;
 
@@ -40,6 +41,22 @@ public readonly struct Bool
     {
         return Value.ToString();
     }
+
+    /// <inheritdoc cref="bool.ToString(IFormatProvider?)"/>
+    public string ToString(IFormatProvider? formatProvider)
+    {
+        return Value.ToString();
+    }
+
+#if !SOURCE_GENERATOR
+
+    /// <inheritdoc cref="bool.TryFormat(Span{char}, out int)"/>
+    public bool TryFormat(Span<char> destination, out int charsWritten)
+    {
+        return Value.TryFormat(destination, out charsWritten);
+    }
+
+#endif
 
     /// <summary>
     /// Checks whether or not two <see cref="Bool"/> instances represent the same <see cref="bool"/> value.

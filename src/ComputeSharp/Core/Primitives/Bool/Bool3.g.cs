@@ -1,6 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
 #if !NET6_0
 using RuntimeHelpers = ComputeSharp.SourceGenerators.Helpers.RuntimeHelpers;
 using MemoryMarshal = ComputeSharp.SourceGenerators.Helpers.MemoryMarshal;
@@ -1469,21 +1468,15 @@ public unsafe partial struct Bool3
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     public readonly ref readonly Bool4 BBBB => ref *(Bool4*)UndefinedData;
 
+#if !SOURCE_GENERATOR
+
     /// <inheritdoc/>
     public override readonly string ToString()
     {
-        StringBuilder sb = new();
-
-        sb.Append('<');
-        sb.Append(this.x);
-        sb.Append(", ");
-        sb.Append(this.y);
-        sb.Append(", ");
-        sb.Append(this.z);
-        sb.Append('>');
-
-        return sb.ToString();
+        return string.Create(null, stackalloc char[32], $"<{this.x}, {this.y}, {this.z}>");
     }
+
+#endif
 
     /// <summary>
     /// Negates a <see cref="Bool3"/> value.
