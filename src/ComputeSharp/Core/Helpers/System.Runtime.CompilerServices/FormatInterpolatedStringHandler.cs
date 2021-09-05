@@ -11,7 +11,7 @@ namespace System.Runtime.CompilerServices;
 /// Provides a handler used by the language compiler to process interpolated strings into <see cref="string"/> instances.
 /// </summary>
 [InterpolatedStringHandler]
-public ref struct FormatInterpolatedStringHandler
+internal ref struct FormatInterpolatedStringHandler
 {
     /// <summary>
     /// Minimum size array to rent from the pool.
@@ -96,18 +96,6 @@ public ref struct FormatInterpolatedStringHandler
     public string ToStringAndClear()
     {
         string result = new(characters.Slice(0, position));
-
-        Clear();
-
-        return result;
-    }
-
-    /// <summary>
-    /// Clears the handler, returning any rented array to the pool.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal void Clear()
-    {
         char[]? toReturn = arrayToReturnToPool;
 
         this = default;
@@ -116,6 +104,8 @@ public ref struct FormatInterpolatedStringHandler
         {
             ArrayPool<char>.Shared.Return(toReturn);
         }
+
+        return result;
     }
 
     /// <summary>

@@ -1,7 +1,6 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 namespace System.Runtime.CompilerServices;
@@ -9,9 +8,8 @@ namespace System.Runtime.CompilerServices;
 /// <summary>
 /// Provides a handler used by the language compiler to format interpolated strings into character spans.
 /// </summary>
-[EditorBrowsable(EditorBrowsableState.Never)]
 [InterpolatedStringHandler]
-public ref struct TryWriteFormatInterpolatedStringHandler
+internal ref struct TryWriteFormatInterpolatedStringHandler
 {
     /// <summary>
     /// The destination buffer.
