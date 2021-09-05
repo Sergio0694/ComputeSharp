@@ -1496,7 +1496,7 @@ public unsafe partial struct Double3
     }
 
     /// <inheritdoc/>
-    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    public readonly bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
         string separator = NumberFormatInfo.GetInstance(provider).NumberGroupSeparator;
 
