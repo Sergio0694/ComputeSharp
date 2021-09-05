@@ -50,7 +50,7 @@ void GenerateVectorProperties(string typeName, int elementSize)
     string elementTypeName = Regex.Match(typeName, @"^[A-Za-z]+").Value;
     string hlslElementTypeName = elementTypeName.ToLower();
     int i = int.Parse(Regex.Match(typeName, @"\d+$").Value);
-    string formattable = elementTypeName == "Bool" ? "" : "IFormattable";
+    string formattable = elementTypeName == "Bool" ? "" : "ISpanFormattable";
 
     if (elementTypeName != "Bool")
     {
@@ -192,6 +192,19 @@ public unsafe partial struct <#=typeName#>
             formatProvider,
             stackalloc char[64],
             $"<<#=string.Join("{separator} ", "xyzw".Take(i).Select(c => $"{{this.{c}}}"))#>>");
+    }
+
+    /// <inheritdoc/>
+    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    {
+        string separator = NumberFormatInfo.GetInstance(provider).NumberGroupSeparator;
+
+        return TryWriteInterpolatedStringHandler.TryWrite(
+            destination,
+            format,
+            provider,
+            $"<<#=string.Join("{separator} ", "xyzw".Take(i).Select(c => $"{{this.{c}}}"))#>>",
+            out charsWritten);
     }
 <#
     }

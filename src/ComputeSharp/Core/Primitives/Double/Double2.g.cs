@@ -15,7 +15,7 @@ namespace ComputeSharp;
 [StructLayout(LayoutKind.Explicit, Size = 16, Pack = 8)]
 public unsafe partial struct Double2
 #if !SOURCE_GENERATOR
-    : IFormattable
+    : ISpanFormattable
 #endif
 {
     /// <summary>
@@ -412,6 +412,19 @@ public unsafe partial struct Double2
             formatProvider,
             stackalloc char[64],
             $"<{this.x}{separator} {this.y}>");
+    }
+
+    /// <inheritdoc/>
+    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    {
+        string separator = NumberFormatInfo.GetInstance(provider).NumberGroupSeparator;
+
+        return TryWriteFormatInterpolatedStringHandler.TryWrite(
+            destination,
+            format,
+            provider,
+            $"<{this.x}{separator} {this.y}>",
+            out charsWritten);
     }
 
 #endif

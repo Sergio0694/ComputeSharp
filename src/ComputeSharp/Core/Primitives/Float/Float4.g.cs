@@ -15,7 +15,7 @@ namespace ComputeSharp;
 [StructLayout(LayoutKind.Explicit, Size = 16, Pack = 4)]
 public unsafe partial struct Float4
 #if !SOURCE_GENERATOR
-    : IFormattable
+    : ISpanFormattable
 #endif
 {
     /// <summary>
@@ -4134,6 +4134,19 @@ public unsafe partial struct Float4
             formatProvider,
             stackalloc char[64],
             $"<{this.x}{separator} {this.y}{separator} {this.z}{separator} {this.w}>");
+    }
+
+    /// <inheritdoc/>
+    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    {
+        string separator = NumberFormatInfo.GetInstance(provider).NumberGroupSeparator;
+
+        return TryWriteFormatInterpolatedStringHandler.TryWrite(
+            destination,
+            format,
+            provider,
+            $"<{this.x}{separator} {this.y}{separator} {this.z}{separator} {this.w}>",
+            out charsWritten);
     }
 
 #endif

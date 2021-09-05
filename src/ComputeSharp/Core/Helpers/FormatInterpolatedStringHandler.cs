@@ -133,6 +133,7 @@ public ref struct FormatInterpolatedStringHandler
             if ((uint)pos < (uint)chars.Length)
             {
                 chars[pos] = value[0];
+
                 position = pos + 1;
             }
             else
