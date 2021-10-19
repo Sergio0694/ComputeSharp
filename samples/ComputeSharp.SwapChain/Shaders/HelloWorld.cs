@@ -16,7 +16,7 @@
         /// <inheritdoc/>
         public Float4 Execute()
         {
-            // Normalized ScreenSpace UV coordinates from 0.0f to 1.0f
+            // Normalized screen space UV coordinates from 0.0f to 1.0f
             Float2 uv = ThreadIds.Normalized.XY;
 
             // Time varying pixel color
