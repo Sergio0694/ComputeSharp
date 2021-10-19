@@ -17,7 +17,7 @@
         public Float4 Execute()
         {
             // Normalized ScreenSpace UV coordinates from 0.0f to 1.0f
-            Float2 uv = new Float2(ThreadIds.Normalized.X, ThreadIds.Normalized.Y);
+            Float2 uv = ThreadIds.Normalized.XY;
 
             // Time varying pixel color
             Float3 col = 0.5f + 0.5f * Hlsl.Cos(time + new Float3(uv, uv.X) + new Float3(0, 2, 4));
