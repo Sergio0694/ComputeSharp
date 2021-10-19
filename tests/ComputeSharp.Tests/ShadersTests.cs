@@ -18,6 +18,15 @@ namespace ComputeSharp.Tests
     {
         [CombinatorialTestMethod]
         [AllDevices]
+        [Data(typeof(HelloWorld))]
+        [Data(typeof(SwapChain.Shaders.Compute.HelloWorld))]
+        public void HelloWorld(Device device, Type shaderType)
+        {
+            RunAndCompareShader(device, shaderType, 0.0000004f);
+        }
+
+        [CombinatorialTestMethod]
+        [AllDevices]
         [Data(typeof(ColorfulInfinity))]
         [Data(typeof(SwapChain.Shaders.Compute.ColorfulInfinity))]
         public void ColorfulInfinity(Device device, Type shaderType)
