@@ -27,7 +27,7 @@
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslBokehBlurProcessor{TPixel}.cs" Link="Imaging\Processors\HlslBokehBlurProcessor{TPixel}.cs" />
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor.cs" />
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor{TPixel}.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor{TPixel}.cs" />
-	<Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\HelloWorld.cs" Link="Shaders\Pixel\HelloWorld.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\HelloWorld.cs" Link="Shaders\Pixel\HelloWorld.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ColorfulInfinity.cs" Link="Shaders\Pixel\ColorfulInfinity.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ContouredLayers.cs" Link="Shaders\Pixel\ContouredLayers.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ExtrudedTruchetPattern.cs" Link="Shaders\Pixel\ExtrudedTruchetPattern.cs" />
@@ -46,9 +46,9 @@
     <None Update="Assets/CityAfter1024x1024Sampling.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-	  <None Update="Assets\HelloWorld.png">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
+    <None Update="Assets\HelloWorld.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\ColorfulInfinity.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
