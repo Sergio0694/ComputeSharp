@@ -59,7 +59,7 @@ public class NativeLibrariesResolverTests
         CleanSampleProject(configuration, rid);
         BuildSampleProject(configuration, rid);
 
-        string realtivePathToDll = Path.Combine("bin", $"{configuration}", "net5.0", $"{ToDirectory(rid)}", "ComputeSharp.Sample.NuGet.dll");
+        string realtivePathToDll = Path.Combine("bin", $"{configuration}", "net6.0", $"{ToDirectory(rid)}", "ComputeSharp.Sample.NuGet.dll");
 
         Assert.AreEqual(0, Exec(SampleProjectDirectory!, "dotnet", realtivePathToDll));
     }
@@ -74,7 +74,7 @@ public class NativeLibrariesResolverTests
         CleanSampleProject(configuration, rid);
         BuildSampleProject(configuration, rid);
 
-        string pathToDllDirectory = Path.Combine(SampleProjectDirectory!, "bin", $"{configuration}", "net5.0", $"{ToDirectory(rid)}");
+        string pathToDllDirectory = Path.Combine(SampleProjectDirectory!, "bin", $"{configuration}", "net6.0", $"{ToDirectory(rid)}");
 
         Assert.AreEqual(0, Exec(pathToDllDirectory, "dotnet", "ComputeSharp.Sample.NuGet.dll"));
     }
@@ -89,7 +89,7 @@ public class NativeLibrariesResolverTests
         CleanSampleProject(configuration, rid);
         BuildSampleProject(configuration, rid);
 
-        string relativePathToAppHost = Path.Combine("bin", $"{configuration}", "net5.0", $"{ToDirectory(rid)}", "ComputeSharp.Sample.NuGet.exe");
+        string relativePathToAppHost = Path.Combine("bin", $"{configuration}", "net6.0", $"{ToDirectory(rid)}", "ComputeSharp.Sample.NuGet.exe");
 
         Assert.AreEqual(0, Exec(SampleProjectDirectory!, relativePathToAppHost, ""));
     }
@@ -104,7 +104,7 @@ public class NativeLibrariesResolverTests
         CleanSampleProject(configuration, rid);
         BuildSampleProject(configuration, rid);
 
-        string pathToAppHostDirectory = Path.Combine(SampleProjectDirectory!, "bin", $"{configuration}", "net5.0", $"{ToDirectory(rid)}");
+        string pathToAppHostDirectory = Path.Combine(SampleProjectDirectory!, "bin", $"{configuration}", "net6.0", $"{ToDirectory(rid)}");
 
         Assert.AreEqual(0, Exec(pathToAppHostDirectory, "ComputeSharp.Sample.NuGet.exe", ""));
     }
@@ -125,7 +125,7 @@ public class NativeLibrariesResolverTests
 
         Exec(SampleProjectDirectory!, "dotnet", $"publish -c Release -r win-x64 {ToOption(publishMode)} {ToOption(deploymentMode)} {ToOption(nativeLibsDeploymentMode)} /bl");
 
-        string pathToAppHost = Path.Combine("bin", $"Release", "net5.0", "win-x64", "publish", "ComputeSharp.Sample.NuGet.exe");
+        string pathToAppHost = Path.Combine("bin", $"Release", "net6.0", "win-x64", "publish", "ComputeSharp.Sample.NuGet.exe");
 
         Assert.AreEqual(0, Exec(SampleProjectDirectory!, pathToAppHost, ""));
     }
