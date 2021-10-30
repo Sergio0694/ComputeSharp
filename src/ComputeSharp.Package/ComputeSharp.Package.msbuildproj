@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />
-    <ProjectReference Include="..\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" />
+    <ProjectReference Include="..\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj" PackFolder="analyzers\dotnet\cs" />
   </ItemGroup>
 
 </Project>
