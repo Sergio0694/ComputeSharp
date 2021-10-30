@@ -45,21 +45,20 @@ public class AutoConstructorGeneratorTests
         }";
 
         string expected = @"
-        namespace MyFancyApp.Sample
+        #pragma warning disable
+        namespace MyFancyApp.Sample;
+        public partial interface IFoo<T>
         {
-            public partial interface IFoo<T>
+            public partial class Foo
             {
-                public partial class Foo
+                public readonly partial struct Test
                 {
-                    public readonly partial struct Test
+                    public Test(float a, global::System.Numerics.Vector2 b, global::ComputeSharp.ReadWriteBuffer<global::System.Numerics.Vector4> c, global::ComputeSharp.ReadWriteBuffer<int> d)
                     {
-                        public Test(float a, System.Numerics.Vector2 b, ComputeSharp.ReadWriteBuffer<System.Numerics.Vector4> c, ComputeSharp.ReadWriteBuffer<int> d)
-                        {
-                            this.a = a;
-                            this.b = b;
-                            this.c = c;
-                            this.d = d;
-                        }
+                        this.a = a;
+                        this.b = b;
+                        this.c = c;
+                        this.d = d;
                     }
                 }
             }

@@ -1160,6 +1160,8 @@ public class DiagnosticsTests
         string source = @"
         using ComputeSharp;
         using static ComputeSharp.MatrixIndex;
+        using float4 = ComputeSharp.Float4;
+        using float4x4 = ComputeSharp.Float4x4;
 
         namespace ComputeSharp
         {
@@ -1170,10 +1172,10 @@ public class DiagnosticsTests
                 M12,
                 M13
             },
-            public struct float4 { }
-            public struct float4x4
+            public struct Float4 { }
+            public struct Float4x4
             {
-                public float4 this[MatrixIndex m0, MatrixIndex m1, MatrixIndex m2, MatrixIndex m3] => default;
+                public Float4 this[MatrixIndex m0, MatrixIndex m1, MatrixIndex m2, MatrixIndex m3] => default;
             }
         }
 
@@ -1343,12 +1345,14 @@ public class DiagnosticsTests
     {
         string source = @"
         using ComputeSharp;
+        using double4x4 = ComputeSharp.Double4x4;
+        using float4 = ComputeSharp.Float4;
 
         namespace ComputeSharp
         {
             public class ReadWriteBuffer<T> { }
-            public struct double4x4 { }
-            public struct float4 { }
+            public struct Double4x4 { }
+            public struct Float4 { }
         }
 
         namespace MyFancyApp.Sample
