@@ -77,7 +77,7 @@ public sealed partial class ShaderMethodSourceGenerator : ISourceGenerator
         var source =
             CompilationUnit().AddAttributeLists(
             AttributeList(SingletonSeparatedList(
-                Attribute(IdentifierName($"global::ComputeSharp.__Internals.{typeof(ShaderMethodSourceAttribute).FullName}")).AddArgumentListArguments(
+                Attribute(IdentifierName($"global::{typeof(ShaderMethodSourceAttribute).FullName}")).AddArgumentListArguments(
                     AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(methodDeclarationSymbol.GetFullMetadataName(true)))),
                     AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(invokeMethod))),
                     AttributeArgument(NestedArrayExpression(processedTypes)),
