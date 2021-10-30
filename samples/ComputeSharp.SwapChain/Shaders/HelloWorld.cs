@@ -5,7 +5,7 @@
     /// Ported from <see href="https://www.shadertoy.com/new"/>.
     /// </summary>
     [AutoConstructor]
-    internal readonly partial struct HelloWorld : IPixelShader<Float4>
+    internal readonly partial struct HelloWorld : IPixelShader<float4>
     {
         /// <summary>
         /// The current time since the start of the application.
@@ -13,13 +13,13 @@
         public readonly float time;
 
         /// <inheritdoc/>
-        public Float4 Execute()
+        public float4 Execute()
         {
             // Normalized screen space UV coordinates from 0.0 to 1.0
-            Float2 uv = ThreadIds.Normalized.XY;
+            float2 uv = ThreadIds.Normalized.XY;
 
             // Time varying pixel color
-            Float3 col = 0.5f + 0.5f * Hlsl.Cos(time + new Float3(uv, uv.X) + new Float3(0, 2, 4));
+            float3 col = 0.5f + 0.5f * Hlsl.Cos(time + new float3(uv, uv.X) + new float3(0, 2, 4));
 
             // Output to screen
             return new(col, 1f);
