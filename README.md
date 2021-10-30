@@ -99,6 +99,8 @@ Shaders can store either GPU resources or custom values in their fields, so that
 
 ✅ Custom `struct` types containing any of the types above, as well as other valid custom `struct` types
 
+> **NOTE:** since **ComputeSharp** generates global type aliases for all the HLSL types in consuming projects, it's possible to refer to them via the same name they use in HLSL, for simplicity. For instance, `Float4` can just be referred to as `float4`, `Float4x4` will just be `float4x4`, etc. This also allows the type names to look more consistent with other C# primitive types.
+
 ## GPU resource types
 
 There are a number of extension APIs for the `GraphicsDevice` class that can be used to allocate GPU resources. Here is a breakdown of the main resource types that are available:
@@ -121,18 +123,18 @@ There are a number of extension APIs for the `GraphicsDevice` class that can be 
 As mentioned in the [Capturing variables](#capturing-variables) paragraph, **ComputeSharp** also exposes matrix types that can be used in compute shaders. These values store individual component values in row-major order (for consistency with .NET arrays) and can be indexed in several ways just like with HLSL vector types. One noticeable difference compared to HLSL vector types though is the lack of explicit properties to extract swizzled vectors (eg. `Float4.XZY` returns a `Float3` value with the `X`, `Z` and `Y` components). Due to the number of possible combinations being simply too high in the case of matrix types (eg. `Float4x4` alone would have had over 160k properties), the ability to extract swizzled vectors ([see here](https://docs.microsoft.com/windows/win32/direct3dhlsl/dx-graphics-hlsl-per-component-math)) can be achieved through the use of a special indexer property and values from the `MatrixIndex` type. Here is how it can be used:
 
 ```csharp
-Float4x4 matrix = default;
+float4x4 matrix = default;
 
 // Standard indexer for rows and individual items
-Float4 row = matrix[0];
+float4 row = matrix[0];
 float item = matrix[0][1];
 
 // Swizzled indexers, which can be made less verbose to
 // write by adding this using static directive to the file
 using static ComputeSharp.MatrixIndex;
 
-Float4 diagonal = matrix[M11, M22, M33, M44];
-Float4 vertices = matrix[M11, M14, M44, M41];
+float4 diagonal = matrix[M11, M22, M33, M44];
+float4 vertices = matrix[M11, M14, M44, M41];
 ```
 
 Matrix types also include a number of built-in operators to work with vector types, and the `Hlsl` class detailed below (see [HLSL intrinsics](#hlsl-intrinsics)) also includes several overloads for the available methods to work on both matrix and vector types at the same time (eg. for row/matrix multiplication and other common linear algebra operations).
@@ -178,7 +180,7 @@ public readonly partial struct SampleShaderWithConstants : IComputeShader
 
     private const int iterations = 10;
     private const float pi = 3.14f;
-    private static readonly Float2 sinCosPi = new(Hlsl.Sin(Pi), Hlsl.Cos(Pi));
+    private static readonly float2 sinCosPi = new(Hlsl.Sin(Pi), Hlsl.Cos(Pi));
     private static float sum;
 
     public void Execute()
@@ -214,7 +216,7 @@ As mentioned in the [GPU resource types](#gpu-resource-types) paragraph, there a
 
 ```csharp
 // Load a texture from a specified image, and decode it in the BGRA32 format
-using var texture = Gpu.Default.LoadReadWriteTexture2D<Bgra32, Float4>("myImage.jpg");
+using var texture = Gpu.Default.LoadReadWriteTexture2D<Bgra32, float4>("myImage.jpg");
 
 // Run our shader on the texture we just loaded
 Gpu.Default.For(texture.Width, texture.Height, new GrayscaleEffect(texture));
@@ -229,7 +231,7 @@ With the compute shader being like this:
 [AutoConstructor]
 public readonly partial struct GrayscaleEffect : IComputeShader
 {
-    public readonly IReadWriteTexture2D<Float4> texture;
+    public readonly IReadWriteTexture2D<float4> texture;
 
     // Other captured resources or values here...
 
@@ -237,7 +239,7 @@ public readonly partial struct GrayscaleEffect : IComputeShader
     {
         // Our image processing logic here. In this example, we are just
         // applying a naive grayscale effect to all pixels in the image.
-        Float3 rgb = texture[ThreadIds.XY].RGB;
+        float3 rgb = texture[ThreadIds.XY].RGB;
         float avg = Hlsl.Dot(rgb, new(0.0722f, 0.7152f, 0.2126f));
 
         texture[ThreadIds.XY].RGB = avg;
