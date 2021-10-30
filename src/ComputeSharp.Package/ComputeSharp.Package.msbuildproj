@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.Build.NoTargets/2.0.1" DefaultTargets="Pack">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>

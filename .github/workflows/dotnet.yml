@@ -94,7 +94,7 @@ jobs:
         dotnet-version: 6.0.x
         include-prerelease: true
     - name: Build
-      run: dotnet build src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj -c Release
+      run: dotnet build src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj -c Release /p:ContinuousIntegrationBuild=True
       shell: cmd
     - name: Upload package artifact
       uses: actions/upload-artifact@v2
