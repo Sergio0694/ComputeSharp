@@ -203,16 +203,19 @@ jobs:
 
   # Build the WinUI panel project
   build-project-winui:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1
+      uses: microsoft/setup-msbuild@v1.0.3
+      with:
+        vs-prerelease: true
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
+        include-prerelease: true
     - name: Build
       run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /property:Configuration=Release
       shell: cmd
@@ -222,16 +225,19 @@ jobs:
   build-package-winui:
     if: success()
     needs: [build-project-winui]
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1
+      uses: microsoft/setup-msbuild@v1.0.3
+      with:
+        vs-prerelease: true
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
+        include-prerelease: true
     - name: Build
       run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /property:Configuration=Release
       shell: cmd
@@ -248,16 +254,19 @@ jobs:
   build-samples-winui:
     if: success()
     needs: [build-project-winui]
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1
+      uses: microsoft/setup-msbuild@v1.0.3
+      with:
+        vs-prerelease: true
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
+        include-prerelease: true
     - name: Build ComputeSharp.Sample
       run: msbuild samples\ComputeSharp.SwapChain.WinUI\ComputeSharp.SwapChain.WinUI\ComputeSharp.SwapChain.WinUI.csproj -t:restore /property:Configuration=Release
       shell: cmd
