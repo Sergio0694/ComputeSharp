@@ -2,9 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackFolder>analyzers\dotnet\cs</PackFolder>
     <PackSymbols>false</PackSymbols>
     <Description>ComputeSharp.SourceGenerators</Description>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>SOURCE_GENERATOR</DefineConstants>
   </PropertyGroup>
 
   <!--The source generator cannot contain package references or project references, so instead we're just
@@ -69,12 +72,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.10.0" PrivateAssets="all" Pack="false" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.0-3.final" PrivateAssets="all" Pack="false" />
   </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
     <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="EmbeddedResources\GlobalUsingDirectives.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="EmbeddedResources\GlobalUsingDirectives.cs" />
   </ItemGroup>
 
 </Project>

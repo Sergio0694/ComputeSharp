@@ -28,56 +28,55 @@ using System.Numerics;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 
-namespace ComputeSharp.Tests
+namespace ComputeSharp.Tests;
+
+public partial class Texture3DTests
 {
-    public partial class Texture3DTests
+    [CombinatorialTestMethod]
+    [AllDevices]
+<#
+foreach (var (t, tPixel) in EnumerateTypes())
+{
+#>
+    [Data(typeof(<#=t#>), typeof(<#=tPixel#>))]
+<#
+}
+#>
+    public void Dispatch_NormalizedTexture3D(Device device, Type t, Type tPixel)
     {
-        [CombinatorialTestMethod]
-        [AllDevices]
 <#
 foreach (var (t, tPixel) in EnumerateTypes())
 {
 #>
-        [Data(typeof(<#=t#>), typeof(<#=tPixel#>))]
-<#
-}
-#>
-        public void Dispatch_NormalizedTexture3D(Device device, Type t, Type tPixel)
+        if (t == typeof(<#=t#>) && tPixel == typeof(<#=tPixel#>))
         {
-<#
-foreach (var (t, tPixel) in EnumerateTypes())
-{
-#>
-            if (t == typeof(<#=t#>) && tPixel == typeof(<#=tPixel#>))
-            {
-                using ReadOnlyTexture3D<<#=t#>, <#=tPixel#>> source = device.Get().AllocateReadOnlyTexture3D<<#=t#>, <#=tPixel#>>(128, 128, 2);
-                using ReadWriteTexture3D<<#=t#>, <#=tPixel#>> destination = device.Get().AllocateReadWriteTexture3D<<#=t#>, <#=tPixel#>>(128, 128, 2);
+            using ReadOnlyTexture3D<<#=t#>, <#=tPixel#>> source = device.Get().AllocateReadOnlyTexture3D<<#=t#>, <#=tPixel#>>(128, 128, 2);
+            using ReadWriteTexture3D<<#=t#>, <#=tPixel#>> destination = device.Get().AllocateReadWriteTexture3D<<#=t#>, <#=tPixel#>>(128, 128, 2);
 
-                device.Get().For(128, 128, 2, new Shader_Unorm_<#=t#>_<#=tPixel#>(source, destination));
-            }
-<#
-}
-#>
-        }
-<#
-
-foreach (var (t, tPixel) in EnumerateTypes())
-{
-#>
-
-        [AutoConstructor]
-        internal readonly partial struct Shader_Unorm_<#=t#>_<#=tPixel#> : IComputeShader
-        {
-            public readonly ReadOnlyTexture3D<<#=t#>, <#=tPixel#>> source;
-            public readonly ReadWriteTexture3D<<#=t#>, <#=tPixel#>> destination;
-
-            public void Execute()
-            {
-                destination[ThreadIds.XYZ] = (source[ThreadIds.XYZ] + destination[ThreadIds.XYZ]) / 2;
-            }
+            device.Get().For(128, 128, 2, new Shader_Unorm_<#=t#>_<#=tPixel#>(source, destination));
         }
 <#
 }
 #>
     }
+<#
+
+foreach (var (t, tPixel) in EnumerateTypes())
+{
+#>
+
+    [AutoConstructor]
+    internal readonly partial struct Shader_Unorm_<#=t#>_<#=tPixel#> : IComputeShader
+    {
+        public readonly ReadOnlyTexture3D<<#=t#>, <#=tPixel#>> source;
+        public readonly ReadWriteTexture3D<<#=t#>, <#=tPixel#>> destination;
+
+        public void Execute()
+        {
+            destination[ThreadIds.XYZ] = (source[ThreadIds.XYZ] + destination[ThreadIds.XYZ]) / 2;
+        }
+    }
+<#
+}
+#>
 }

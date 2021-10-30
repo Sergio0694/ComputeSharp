@@ -4,8 +4,8 @@
   </PropertyGroup>
 
   <ItemGroup>    
-    <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.64" PrivateAssets="all" />
-    <PackageReference Include="NuGetizer" Version="0.7.1" PrivateAssets="all" />
+    <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.66" PrivateAssets="all" />
+    <PackageReference Include="NuGetizer" Version="0.7.5" PrivateAssets="all" />
   </ItemGroup>
 
   <Import Project="..\Directory.Build.props" />

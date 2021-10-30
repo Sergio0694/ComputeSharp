@@ -3,13 +3,12 @@ using System.Diagnostics.Contracts;
 using ComputeSharp.Core.Intrinsics.Attributes;
 using ComputeSharp.Exceptions;
 
-namespace ComputeSharp
+namespace ComputeSharp;
+
+/// <inheritdoc cref="Hlsl"/>
+public static partial class Hlsl
 {
-    /// <inheritdoc cref="Hlsl"/>
-    public static partial class Hlsl
-    {
 <#
-PushIndent("    ");
 PushIndent("    ");
 
 bool isFirst = true;
@@ -62,7 +61,5 @@ foreach (var intrinsic in Intrinsics)
 }
 
 PopIndent();
-PopIndent();
 #>
-    }
 }

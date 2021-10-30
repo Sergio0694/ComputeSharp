@@ -1,4 +1,4 @@
-using ComputeSharp;
+﻿using ComputeSharp;
 using ComputeSharp.Interop;
 using ComputeSharp.Tests.Misc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -39,13 +39,13 @@ namespace ComputeSharp.Tests
         [AutoConstructor]
         public readonly partial struct SpecialTypeAsReturnTypeShader : IComputeShader
         {
-            public readonly ReadWriteBuffer<Float2> buffer;
+            public readonly ReadWriteBuffer<float2> buffer;
 
-            Float2 Foo(float x) => x;
+            float2 Foo(float x) => x;
 
             public void Execute()
             {
-                static Float3 Bar(float x) => x;
+                static float3 Bar(float x) => x;
 
                 buffer[ThreadIds.X] = Foo(ThreadIds.X) + Bar(ThreadIds.X).XY;
             }
@@ -60,11 +60,11 @@ namespace ComputeSharp.Tests
         [AutoConstructor]
         public readonly partial struct LocalFunctionInExternalMethodsShader : IComputeShader
         {
-            public readonly ReadWriteBuffer<Float2> buffer;
+            public readonly ReadWriteBuffer<float2> buffer;
 
-            Float2 Foo(float x)
+            float2 Foo(float x)
             {
-                static Float2 Baz(float y) => y;
+                static float2 Baz(float y) => y;
 
                 return Baz(x);
             }
@@ -84,7 +84,7 @@ namespace ComputeSharp.Tests
         [AutoConstructor]
         public partial struct CustomStructType
         {
-            public Float2 a;
+            public float2 a;
             public int b;
         }
 
@@ -158,16 +158,16 @@ namespace ComputeSharp.Tests
         [TestMethod]
         public void PixelShader()
         {
-            ReflectionServices.GetShaderInfo<StatelessPixelShader, Float4>(out var info);
+            ReflectionServices.GetShaderInfo<StatelessPixelShader, float4>(out var info);
 
             Assert.AreEqual(info.TextureStoreInstructionCount, 1u);
             Assert.AreEqual(info.BoundResourceCount, 2u);
         }
 
-        public readonly partial struct StatelessPixelShader : IPixelShader<Float4>
+        public readonly partial struct StatelessPixelShader : IPixelShader<float4>
         {
             /// <inheritdoc/>
-            public Float4 Execute()
+            public float4 Execute()
             {
                 return new(1, 1, 1, 1);
             }

@@ -4,151 +4,149 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Core.Extensions;
 using TerraFX.Interop;
-using FX = TerraFX.Interop.Windows;
 using HRESULT = System.Int32;
 
-namespace ComputeSharp.Graphics.Helpers
+namespace ComputeSharp.Graphics.Helpers;
+
+/// <inheritdoc cref="DeviceHelper"/>
+internal static partial class DeviceHelper
 {
-    /// <inheritdoc cref="DeviceHelper"/>
-    internal static partial class DeviceHelper
-    {
-        /// <summary>
-        /// The creation flags for <see cref="IDXGIFactory"/> instances.
-        /// </summary>
-        private const uint IDXGIFactoryCreationFlags =
+    /// <summary>
+    /// The creation flags for <see cref="IDXGIFactory"/> instances.
+    /// </summary>
+    private const uint IDXGIFactoryCreationFlags =
 #if DEBUG
-            FX.DXGI_CREATE_FACTORY_DEBUG;
+        Windows.DXGI_CREATE_FACTORY_DEBUG;
 #else
-            0;
+        0;
 #endif
 
-        /// <summary>
-        /// Creates a new <see cref="IDXGIFactory6"/> instance to be used to enumerate devices.
-        /// </summary>
-        /// <param name="dxgiFactory6">The resulting <see cref="IDXGIFactory6"/> instance.</param>
-        private static unsafe void CreateDXGIFactory6(IDXGIFactory6** dxgiFactory6)
+    /// <summary>
+    /// Creates a new <see cref="IDXGIFactory6"/> instance to be used to enumerate devices.
+    /// </summary>
+    /// <param name="dxgiFactory6">The resulting <see cref="IDXGIFactory6"/> instance.</param>
+    private static unsafe void CreateDXGIFactory6(IDXGIFactory6** dxgiFactory6)
+    {
+        using ComPtr<IDXGIFactory4> dxgiFactory4 = default;
+
+        EnableDebugMode();
+
+        Windows.CreateDXGIFactory2(IDXGIFactoryCreationFlags, Windows.__uuidof<IDXGIFactory4>(), dxgiFactory4.GetVoidAddressOf()).Assert();
+
+        HRESULT result = dxgiFactory4.CopyTo(dxgiFactory6);
+
+        if (result == Windows.S_OK)
         {
-            using ComPtr<IDXGIFactory4> dxgiFactory4 = default;
+            return;
+        }
 
-            EnableDebugMode();
-
-            FX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, FX.__uuidof<IDXGIFactory4>(), dxgiFactory4.GetVoidAddressOf()).Assert();
-
-            HRESULT result = dxgiFactory4.CopyTo(dxgiFactory6);
-
-            if (result == FX.S_OK)
-            {
-                return;
-            }
-
-            if (result == FX.E_NOINTERFACE)
-            {
-                IDXGIFactory4As6Backcompat.Create(dxgiFactory4.Get(), dxgiFactory6);
-
-                return;
-            }
-
-            result.Assert();
+        if (result == Windows.E_NOINTERFACE)
+        {
+            IDXGIFactory4As6Backcompat.Create(dxgiFactory4.Get(), dxgiFactory6);
 
             return;
         }
 
-        /// <summary>
-        /// Enables the debug layer for DirectX APIs.
-        /// </summary>
-        [Conditional("DEBUG")]
-        private static unsafe void EnableDebugMode()
+        result.Assert();
+
+        return;
+    }
+
+    /// <summary>
+    /// Enables the debug layer for DirectX APIs.
+    /// </summary>
+    [Conditional("DEBUG")]
+    private static unsafe void EnableDebugMode()
+    {
+        using ComPtr<ID3D12Debug> d3D12Debug = default;
+        using ComPtr<ID3D12Debug1> d3D12Debug1 = default;
+
+        Windows.D3D12GetDebugInterface(Windows.__uuidof<ID3D12Debug>(), d3D12Debug.GetVoidAddressOf()).Assert();
+
+        d3D12Debug.Get()->EnableDebugLayer();
+
+        if (Windows.SUCCEEDED(d3D12Debug.CopyTo(d3D12Debug1.GetAddressOf())))
         {
-            using ComPtr<ID3D12Debug> d3D12Debug = default;
-            using ComPtr<ID3D12Debug1> d3D12Debug1 = default;
+            d3D12Debug1.Get()->SetEnableGPUBasedValidation(Windows.TRUE);
+            d3D12Debug1.Get()->SetEnableSynchronizedCommandQueueValidation(Windows.TRUE);
+        }
+    }
 
-            FX.D3D12GetDebugInterface(FX.__uuidof<ID3D12Debug>(), d3D12Debug.GetVoidAddressOf()).Assert();
+    /// <summary>
+    /// A custom <see cref="IDXGIFactory6"/> fallback implementation to use on systems with no support for it.
+    /// </summary>
+    private unsafe struct IDXGIFactory4As6Backcompat
+    {
+        /// <summary>
+        /// The shared method table pointer for all <see cref="IDXGIFactory4As6Backcompat"/> instances.
+        /// </summary>
+        private static readonly void** Vtbl = InitVtbl();
 
-            d3D12Debug.Get()->EnableDebugLayer();
+        /// <summary>
+        /// Builds the custom method table pointer for <see cref="IDXGIFactory4As6Backcompat"/>.
+        /// </summary>
+        /// <returns>The method table pointer for <see cref="IDXGIFactory4As6Backcompat"/>.</returns>
+        private static void** InitVtbl()
+        {
+            void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(IDXGIFactory4As6Backcompat), sizeof(void*) * 30);
 
-            if (FX.SUCCEEDED(d3D12Debug.CopyTo(d3D12Debug1.GetAddressOf())))
-            {
-                d3D12Debug1.Get()->SetEnableGPUBasedValidation(FX.TRUE);
-                d3D12Debug1.Get()->SetEnableSynchronizedCommandQueueValidation(FX.TRUE);
-            }
+            new Span<IntPtr>(lpVtbl, 30).Clear();
+
+            lpVtbl[2] = (delegate* unmanaged<IDXGIFactory4As6Backcompat*, uint>)&Release;
+            lpVtbl[27] = (delegate* unmanaged<IDXGIFactory4As6Backcompat*, Guid*, void**, int>)&EnumWarpAdapter;
+            lpVtbl[29] = (delegate* unmanaged<IDXGIFactory4As6Backcompat*, uint, DXGI_GPU_PREFERENCE, Guid*, void**, int>)&EnumAdapterByGpuPreference;
+
+            return lpVtbl;
         }
 
         /// <summary>
-        /// A custom <see cref="IDXGIFactory6"/> fallback implementation to use on systems with no support for it.
+        /// The method table pointer for the current instance.
         /// </summary>
-        private unsafe struct IDXGIFactory4As6Backcompat
+        private void** lpVtbl;
+
+        /// <summary>
+        /// The wrapped <see cref="IDXGIFactory4"/> instance.
+        /// </summary>
+        private IDXGIFactory4* dxgiFactory4;
+
+        /// <summary>
+        /// Creates and initializes a new <see cref="IDXGIFactory4As6Backcompat"/> instance.
+        /// </summary>
+        /// <param name="dxgiFactory4">The <see cref="IDXGIFactory4"/> instance to wrap.</param>
+        /// <param name="dxgiFactory6">The resulting <see cref="IDXGIFactory6"/> instance.</param>
+        public static void Create(IDXGIFactory4* dxgiFactory4, IDXGIFactory6** dxgiFactory6)
         {
-            /// <summary>
-            /// The shared method table pointer for all <see cref="IDXGIFactory4As6Backcompat"/> instances.
-            /// </summary>
-            private static readonly void** Vtbl = InitVtbl();
+            IDXGIFactory4As6Backcompat* @this = (IDXGIFactory4As6Backcompat*)Marshal.AllocHGlobal(sizeof(IDXGIFactory4As6Backcompat));
 
-            /// <summary>
-            /// Builds the custom method table pointer for <see cref="IDXGIFactory4As6Backcompat"/>.
-            /// </summary>
-            /// <returns>The method table pointer for <see cref="IDXGIFactory4As6Backcompat"/>.</returns>
-            private static void** InitVtbl()
-            {
-                void** lpVtbl = (void**)RuntimeHelpers.AllocateTypeAssociatedMemory(typeof(IDXGIFactory4As6Backcompat), sizeof(void*) * 30);
+            @this->lpVtbl = Vtbl;
+            @this->dxgiFactory4 = dxgiFactory4;
 
-                new Span<IntPtr>(lpVtbl, 30).Clear();
+            *dxgiFactory6 = (IDXGIFactory6*)@this;
+        }
 
-                lpVtbl[2] = (delegate* unmanaged<IDXGIFactory4As6Backcompat*, uint>)&Release;
-                lpVtbl[27] = (delegate* unmanaged<IDXGIFactory4As6Backcompat*, Guid*, void**, int>)&EnumWarpAdapter;
-                lpVtbl[29] = (delegate* unmanaged<IDXGIFactory4As6Backcompat*, uint, DXGI_GPU_PREFERENCE, Guid*, void**, int>)&EnumAdapterByGpuPreference;
+        /// <inheritdoc cref="IUnknown.Release"/>
+        [UnmanagedCallersOnly]
+        public static uint Release(IDXGIFactory4As6Backcompat* @this)
+        {
+            @this->dxgiFactory4->Release();
 
-                return lpVtbl;
-            }
+            Marshal.FreeHGlobal((IntPtr)@this);
 
-            /// <summary>
-            /// The method table pointer for the current instance.
-            /// </summary>
-            private void** lpVtbl;
+            return 0;
+        }
 
-            /// <summary>
-            /// The wrapped <see cref="IDXGIFactory4"/> instance.
-            /// </summary>
-            private IDXGIFactory4* dxgiFactory4;
+        /// <inheritdoc cref="IDXGIFactory6.EnumWarpAdapter(Guid*, void**)"/>
+        [UnmanagedCallersOnly]
+        public static int EnumWarpAdapter(IDXGIFactory4As6Backcompat* @this, Guid* riid, void** ppvAdapter)
+        {
+            return @this->dxgiFactory4->EnumWarpAdapter(riid, ppvAdapter);
+        }
 
-            /// <summary>
-            /// Creates and initializes a new <see cref="IDXGIFactory4As6Backcompat"/> instance.
-            /// </summary>
-            /// <param name="dxgiFactory4">The <see cref="IDXGIFactory4"/> instance to wrap.</param>
-            /// <param name="dxgiFactory6">The resulting <see cref="IDXGIFactory6"/> instance.</param>
-            public static void Create(IDXGIFactory4* dxgiFactory4, IDXGIFactory6** dxgiFactory6)
-            {
-                IDXGIFactory4As6Backcompat* @this = (IDXGIFactory4As6Backcompat*)Marshal.AllocHGlobal(sizeof(IDXGIFactory4As6Backcompat));
-
-                @this->lpVtbl = Vtbl;
-                @this->dxgiFactory4 = dxgiFactory4;
-
-                *dxgiFactory6 = (IDXGIFactory6*)@this;
-            }
-
-            /// <inheritdoc cref="IUnknown.Release"/>
-            [UnmanagedCallersOnly]
-            public static uint Release(IDXGIFactory4As6Backcompat* @this)
-            {
-                @this->dxgiFactory4->Release();
-
-                Marshal.FreeHGlobal((IntPtr)@this);
-
-                return 0;
-            }
-
-            /// <inheritdoc cref="IDXGIFactory6.EnumWarpAdapter(Guid*, void**)"/>
-            [UnmanagedCallersOnly]
-            public static int EnumWarpAdapter(IDXGIFactory4As6Backcompat* @this, Guid* riid, void** ppvAdapter)
-            {
-                return @this->dxgiFactory4->EnumWarpAdapter(riid, ppvAdapter);
-            }
-
-            /// <inheritdoc cref="IDXGIFactory6.EnumAdapterByGpuPreference(uint, DXGI_GPU_PREFERENCE, Guid*, void**)"/>
-            [UnmanagedCallersOnly]
-            public static int EnumAdapterByGpuPreference(IDXGIFactory4As6Backcompat* @this, uint Adapter, DXGI_GPU_PREFERENCE GpuPreference, Guid* riid, void** ppvAdapter)
-            {
-                return @this->dxgiFactory4->EnumAdapters1(Adapter, (IDXGIAdapter1**)ppvAdapter);
-            }
+        /// <inheritdoc cref="IDXGIFactory6.EnumAdapterByGpuPreference(uint, DXGI_GPU_PREFERENCE, Guid*, void**)"/>
+        [UnmanagedCallersOnly]
+        public static int EnumAdapterByGpuPreference(IDXGIFactory4As6Backcompat* @this, uint Adapter, DXGI_GPU_PREFERENCE GpuPreference, Guid* riid, void** ppvAdapter)
+        {
+            return @this->dxgiFactory4->EnumAdapters1(Adapter, (IDXGIAdapter1**)ppvAdapter);
         }
     }
 }

@@ -5,81 +5,80 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing.Processors;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
-namespace ComputeSharp.BokehBlur.Processors
+namespace ComputeSharp.BokehBlur.Processors;
+
+/// <summary>
+/// Applies bokeh blur processing to the image.
+/// </summary>
+public sealed partial class HlslBokehBlurProcessor : IImageProcessor
 {
     /// <summary>
-    /// Applies bokeh blur processing to the image.
+    /// The default radius used by the parameterless constructor.
     /// </summary>
-    public sealed partial class HlslBokehBlurProcessor : IImageProcessor
+    public const int DefaultRadius = 32;
+
+    /// <summary>
+    /// The default component count used by the parameterless constructor.
+    /// </summary>
+    public const int DefaultComponents = 2;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HlslBokehBlurProcessor"/> class.
+    /// </summary>
+    public HlslBokehBlurProcessor()
+        : this(Gpu.Default, DefaultRadius, DefaultComponents)
     {
-        /// <summary>
-        /// The default radius used by the parameterless constructor.
-        /// </summary>
-        public const int DefaultRadius = 32;
+    }
 
-        /// <summary>
-        /// The default component count used by the parameterless constructor.
-        /// </summary>
-        public const int DefaultComponents = 2;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HlslBokehBlurProcessor"/> class.
+    /// </summary>
+    /// <param name="radius">The size of the area to sample.</param>
+    /// <param name="components">The number of components to use to approximate the original 2D bokeh blur convolution kernel.</param>
+    public HlslBokehBlurProcessor(int radius, int components)
+        : this(Gpu.Default, radius, components)
+    {
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HlslBokehBlurProcessor"/> class.
-        /// </summary>
-        public HlslBokehBlurProcessor()
-            : this(Gpu.Default, DefaultRadius, DefaultComponents)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HlslBokehBlurProcessor"/> class.
+    /// </summary>
+    /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
+    /// <param name="radius">The size of the area to sample.</param>
+    /// <param name="components">The number of components to use to approximate the original 2D bokeh blur convolution kernel.</param>
+    public HlslBokehBlurProcessor(GraphicsDevice device, int radius, int components)
+    {
+        GraphicsDevice = device;
+        Radius = radius;
+        Components = components;
+    }
+
+    /// <summary>
+    /// Gets the <see cref="ComputeSharp.GraphicsDevice"/> associated with the current instance.
+    /// </summary>
+    public GraphicsDevice GraphicsDevice { get; }
+
+    /// <summary>
+    /// Gets the radius.
+    /// </summary>
+    public int Radius { get; }
+
+    /// <summary>
+    /// Gets the number of components.
+    /// </summary>
+    public int Components { get; }
+
+    /// <inheritdoc/>
+    public IImageProcessor<TPixel> CreatePixelSpecificProcessor<TPixel>(Configuration configuration, Image<TPixel> source, Rectangle sourceRectangle)
+        where TPixel : unmanaged, IPixel<TPixel>
+    {
+        if (typeof(TPixel) != typeof(ImageSharpRgba32))
         {
+            ThrowHelper.ThrowInvalidOperationException("This processor only supports the RGBA32 pixel format");
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HlslBokehBlurProcessor"/> class.
-        /// </summary>
-        /// <param name="radius">The size of the area to sample.</param>
-        /// <param name="components">The number of components to use to approximate the original 2D bokeh blur convolution kernel.</param>
-        public HlslBokehBlurProcessor(int radius, int components)
-            : this(Gpu.Default, radius, components)
-        {
-        }
+        var processor = new Implementation(this, configuration, Unsafe.As<Image<ImageSharpRgba32>>(source), sourceRectangle);
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HlslBokehBlurProcessor"/> class.
-        /// </summary>
-        /// <param name="device">The <see cref="GraphicsDevice"/> associated with the current instance.</param>
-        /// <param name="radius">The size of the area to sample.</param>
-        /// <param name="components">The number of components to use to approximate the original 2D bokeh blur convolution kernel.</param>
-        public HlslBokehBlurProcessor(GraphicsDevice device, int radius, int components)
-        {
-            GraphicsDevice = device;
-            Radius = radius;
-            Components = components;
-        }
-
-        /// <summary>
-        /// Gets the <see cref="ComputeSharp.GraphicsDevice"/> associated with the current instance.
-        /// </summary>
-        public GraphicsDevice GraphicsDevice { get; }
-
-        /// <summary>
-        /// Gets the radius.
-        /// </summary>
-        public int Radius { get; }
-
-        /// <summary>
-        /// Gets the number of components.
-        /// </summary>
-        public int Components { get; }
-
-        /// <inheritdoc/>
-        public IImageProcessor<TPixel> CreatePixelSpecificProcessor<TPixel>(Configuration configuration, Image<TPixel> source, Rectangle sourceRectangle)
-            where TPixel : unmanaged, IPixel<TPixel>
-        {
-            if (typeof(TPixel) != typeof(ImageSharpRgba32))
-            {
-                ThrowHelper.ThrowInvalidOperationException("This processor only supports the RGBA32 pixel format");
-            }
-
-            var processor = new Implementation(this, configuration, Unsafe.As<Image<ImageSharpRgba32>>(source), sourceRectangle);
-
-            return Unsafe.As<IImageProcessor<TPixel>>(processor);
-        }
+        return Unsafe.As<IImageProcessor<TPixel>>(processor);
     }
 }
