@@ -14,7 +14,8 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
+        include-prerelease: true
     - name: Build
       run: dotnet build src\ComputeSharp\ComputeSharp.csproj -c Release
       shell: cmd
@@ -30,7 +31,8 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
+        include-prerelease: true
     - name: Run ComputeSharp.Tests
       run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
@@ -52,24 +54,25 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
+        include-prerelease: true
     - name: Build ComputeSharp.Sample
       run: dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release
       shell: cmd
     - name: Run ComputeSharp.Sample
-      run: dotnet samples\ComputeSharp.Sample\bin\Release\net5.0\ComputeSharp.Sample.dll
+      run: dotnet samples\ComputeSharp.Sample\bin\Release\net6.0\ComputeSharp.Sample.dll
       shell: cmd
     - name: Build ComputeSharp.Sample.FSharp
       run: dotnet build samples\ComputeSharp.Sample.FSharp\ComputeSharp.Sample.FSharp.fsproj -c Release
       shell: cmd
     - name: Run ComputeSharp.Sample.FSharp
-      run: dotnet samples\ComputeSharp.Sample.FSharp\bin\Release\net5.0\ComputeSharp.Sample.FSharp.dll
+      run: dotnet samples\ComputeSharp.Sample.FSharp\bin\Release\net6.0\ComputeSharp.Sample.FSharp.dll
       shell: cmd
     - name: Build ComputeSharp.ImageProcessing.csproj
       run: dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release
       shell: cmd
     - name: Run ComputeSharp.ImageProcessing.csproj
-      run: dotnet samples\ComputeSharp.ImageProcessing\bin\Release\net5.0\ComputeSharp.ImageProcessing.dll
+      run: dotnet samples\ComputeSharp.ImageProcessing\bin\Release\net6.0\ComputeSharp.ImageProcessing.dll
       shell: cmd
     - name: Build ComputeSharp.Benchmark.csproj
       run: dotnet build samples\ComputeSharp.Benchmark\ComputeSharp.Benchmark.csproj -c Release
@@ -88,7 +91,8 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
+        include-prerelease: true
     - name: Build
       run: dotnet build src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj -c Release
       shell: cmd
@@ -111,7 +115,8 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
+        include-prerelease: true
     - name: Create local NuGet feed
       run: mkdir src\ComputeSharp.Package\bin\Release
       shell: cmd
@@ -124,7 +129,7 @@ jobs:
       run: dotnet build samples\ComputeSharp.Sample.NuGet\ComputeSharp.Sample.NuGet.csproj -c Release
       shell: cmd
     - name: Run ComputeSharp.Sample.NuGet
-      run: dotnet samples\ComputeSharp.Sample.NuGet\bin\Release\net5.0\ComputeSharp.Sample.NuGet.dll
+      run: dotnet samples\ComputeSharp.Sample.NuGet\bin\Release\net6.0\ComputeSharp.Sample.NuGet.dll
       shell: cmd
 
   # Run the extra tests to validate a number of build and publishing configurations.
@@ -140,7 +145,8 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
+        include-prerelease: true
     - name: Run ComputeSharp.Tests.NativeLibrariesResolver
       run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
