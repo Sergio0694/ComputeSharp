@@ -46,6 +46,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0-preview3" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22489-preview" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="7.1.1-preview3" />
+    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Core" Version="7.1.1-preview3" />
+    <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.1-preview3" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
