@@ -50,7 +50,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Sample.FSharp.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.WinUI", "src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj", "{FA18BA9F-76BF-4DE0-8D24-02FC7657E6CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.WinUI3", "samples\ComputeSharp.WinUI3\ComputeSharp.WinUI3.csproj", "{0071701E-B9C5-4098-BE5F-EF556C4553C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.SwapChain.WinUI", "samples\ComputeSharp.SwapChain.WinUI\ComputeSharp.SwapChain.WinUI.csproj", "{0071701E-B9C5-4098-BE5F-EF556C4553C6}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
