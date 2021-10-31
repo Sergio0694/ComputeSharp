@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "Test2": {
+      "commandName": "MsixPackage"
+    }
+  }
+}
