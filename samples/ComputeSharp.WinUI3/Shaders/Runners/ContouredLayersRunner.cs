@@ -21,7 +21,7 @@ namespace ComputeSharp.SwapChain.WinUI.Shaders.Runners
         {
             if (this.texture is null)
             {
-                string filename = Path.Combine(Package.Current.InstalledLocation.Path, "Images", "Textures", "RustyMetal.png");
+                string filename = Path.Combine(Package.Current.InstalledLocation.Path, "Assets", "Textures", "RustyMetal.png");
 
                 this.texture = Gpu.Default.LoadReadOnlyTexture2D<Rgba32, Float4>(filename);
             }
