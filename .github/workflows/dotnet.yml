@@ -167,7 +167,7 @@ jobs:
         dotnet-version: 6.0.x
         include-prerelease: true
     - name: Build
-      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /property:Configuration=Release
+      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /p:Configuration=Release /p:Platform=x64
       shell: cmd
 
   # Build the WinUI project again to generate a NuGet package from it.
@@ -189,16 +189,16 @@ jobs:
         dotnet-version: 6.0.x
         include-prerelease: true
     - name: Build
-      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /property:Configuration=Release
+      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /p:Configuration=Release /p:Platform=x64
       shell: cmd
     - name: Pack
-      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:pack /property:Configuration=Release
+      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:pack /p:Configuration=Release /p:Platform=x64
       shell: cmd
     - name: Upload package artifact
       uses: actions/upload-artifact@v2
       with:
         name: ComputeSharp.WinUI.nupkg
-        path: src\ComputeSharp.WinUI\bin\Release\*.nupkg
+        path: src\ComputeSharp.WinUI\bin\x64\Release\*.nupkg
 
   # Build all the local WinUI samples to ensure they build with no errors
   build-samples-winui:
@@ -218,5 +218,5 @@ jobs:
         dotnet-version: 6.0.x
         include-prerelease: true
     - name: Build ComputeSharp.Sample
-      run: msbuild samples\ComputeSharp.SwapChain.WinUI\ComputeSharp.SwapChain.WinUI.csproj -t:restore /property:Configuration=Release
+      run: msbuild samples\ComputeSharp.SwapChain.WinUI\ComputeSharp.SwapChain.WinUI.csproj -t:restore /p:Configuration=Release /p:Platform=x64
       shell: cmd
