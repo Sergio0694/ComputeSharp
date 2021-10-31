@@ -39,7 +39,7 @@
                         TintColor="#FF222222"
                         TintOpacity="0.2"
                         BlurAmount="12"
-                        TextureUri="ms-appx:///Images/Misc/noise_low.png"/>
+                        TextureUri="ms-appx:///Assets/Misc/noise_low.png"/>
                 </Border.Background>
 
                 <!--Shadow panel with the shaders list-->
