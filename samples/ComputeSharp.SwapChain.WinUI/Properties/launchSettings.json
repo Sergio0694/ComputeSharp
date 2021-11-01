@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Test2": {
+    "ComputeSharp.SwapChain.WinUI": {
       "commandName": "MsixPackage"
     }
   }
