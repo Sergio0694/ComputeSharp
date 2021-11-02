@@ -1,5 +1,4 @@
 ﻿using ComputeSharp.Core.Extensions;
-using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 using static TerraFX.Interop.D3D12_CPU_PAGE_PROPERTY;
@@ -22,9 +21,9 @@ internal static unsafe class AllocatorExtensions
     /// </summary>
     /// <param name="allocator">The <see cref="D3D12MA_Allocator"/> instance in use.</param>
     /// <returns>A <see cref="D3D12MA_Pool"/> instance suited to be used for cache coherent UMA devices.</returns>
-    public static ReferenceCountPtr<D3D12MA_Pool> CreatePoolForCacheCoherentUMA(this ref D3D12MA_Allocator allocator)
+    public static ComPtr<D3D12MA_Pool> CreatePoolForCacheCoherentUMA(this ref D3D12MA_Allocator allocator)
     {
-        using ReferenceCountPtr<D3D12MA_Pool> pool = default;
+        using ComPtr<D3D12MA_Pool> pool = default;
 
         D3D12MA_POOL_DESC poolDesc = default;
         poolDesc.HeapProperties.CreationNodeMask = 1;
@@ -46,8 +45,8 @@ internal static unsafe class AllocatorExtensions
     /// <param name="resourceType">The resource type currently in use.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <param name="sizeInBytes">The size in bytes of the current buffer.</param>
-    /// <returns>An <see cref="UniquePtr{T}"/> reference for the current <see cref="D3D12MA_Allocation"/> object.</returns>
-    public static UniquePtr<D3D12MA_Allocation> CreateResource(
+    /// <returns>An <see cref="ComPtr{T}"/> reference for the current <see cref="D3D12MA_Allocation"/> object.</returns>
+    public static ComPtr<D3D12MA_Allocation> CreateResource(
         this ref D3D12MA_Allocator allocator,
         D3D12MA_Pool* pool,
         ResourceType resourceType,
@@ -67,7 +66,7 @@ internal static unsafe class AllocatorExtensions
              _ => ThrowHelper.ThrowArgumentException<(D3D12_HEAP_TYPE, D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
         };
 
-        using UniquePtr<D3D12MA_Allocation> allocation = default;
+        using ComPtr<D3D12MA_Allocation> allocation = default;
 
         D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Buffer(sizeInBytes, d3D12ResourceFlags);
 
@@ -99,8 +98,8 @@ internal static unsafe class AllocatorExtensions
     /// <param name="width">The width of the texture resource.</param>
     /// <param name="height">The height of the texture resource.</param>
     /// <param name="d3D12ResourceStates">The default <see cref="D3D12_RESOURCE_STATES"/> value for the resource.</param>
-    /// <returns>An <see cref="UniquePtr{T}"/> reference for the current <see cref="D3D12MA_Allocation"/> object.</returns>
-    public static UniquePtr<D3D12MA_Allocation> CreateResource(
+    /// <returns>An <see cref="ComPtr{T}"/> reference for the current <see cref="D3D12MA_Allocation"/> object.</returns>
+    public static ComPtr<D3D12MA_Allocation> CreateResource(
         this ref D3D12MA_Allocator allocator,
         D3D12MA_Pool* pool,
         ResourceType resourceType,
@@ -120,7 +119,7 @@ internal static unsafe class AllocatorExtensions
             _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
         };
 
-        using UniquePtr<D3D12MA_Allocation> allocation = default;
+        using ComPtr<D3D12MA_Allocation> allocation = default;
 
         D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex2D(dxgiFormat, width, height, mipLevels: 1, flags: d3D12ResourceFlags);
 
@@ -153,8 +152,8 @@ internal static unsafe class AllocatorExtensions
     /// <param name="height">The height of the texture resource.</param>
     /// <param name="depth">The depth of the texture resource.</param>
     /// <param name="d3D12ResourceStates">The default <see cref="D3D12_RESOURCE_STATES"/> value for the resource.</param>
-    /// <returns>An <see cref="UniquePtr{T}"/> reference for the current <see cref="D3D12MA_Allocation"/> object.</returns>
-    public static UniquePtr<D3D12MA_Allocation> CreateResource(
+    /// <returns>An <see cref="ComPtr{T}"/> reference for the current <see cref="D3D12MA_Allocation"/> object.</returns>
+    public static ComPtr<D3D12MA_Allocation> CreateResource(
         this ref D3D12MA_Allocator allocator,
         D3D12MA_Pool* pool,
         ResourceType resourceType,
@@ -175,7 +174,7 @@ internal static unsafe class AllocatorExtensions
             _ => ThrowHelper.ThrowArgumentException<(D3D12_RESOURCE_FLAGS, D3D12_RESOURCE_STATES)>()
         };
 
-        using UniquePtr<D3D12MA_Allocation> allocation = default;
+        using ComPtr<D3D12MA_Allocation> allocation = default;
 
         D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(dxgiFormat, width, height, depth, mipLevels: 1, flags: d3D12ResourceFlags);
 

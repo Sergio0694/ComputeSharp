@@ -28,7 +28,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
     /// <summary>
     /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
     /// </summary>
-    private UniquePtr<D3D12MA_Allocation> allocation;
+    private ComPtr<D3D12MA_Allocation> allocation;
 
     /// <summary>
     /// The <see cref="ID3D12Resource"/> instance currently mapped.
@@ -188,7 +188,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
             out ulong rowSizeInBytes,
             out ulong totalSizeInBytes);
 
-        using UniquePtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(
+        using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(
             GraphicsDevice.Pool,
             ResourceType.ReadBack,
             AllocationMode.Default,
@@ -427,7 +427,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
             out ulong rowSizeInBytes,
             out ulong totalSizeInBytes);
 
-        using UniquePtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(
+        using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(
             GraphicsDevice.Pool,
             ResourceType.Upload,
             AllocationMode.Default,
