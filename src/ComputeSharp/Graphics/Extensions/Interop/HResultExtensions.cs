@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Helpers;
 #endif
 using Microsoft.Toolkit.Diagnostics;
-using HRESULT = System.Int32;
+using TerraFX.Interop;
 
 namespace ComputeSharp.Core.Extensions;
 
@@ -22,6 +22,17 @@ internal static class HResultExtensions
     /// <exception cref="Win32Exception">Thrown if <paramref name="result"/> represents an error.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Assert(this HRESULT result)
+    {
+        Assert((int)result);
+    }
+
+    /// <summary>
+    /// Throws a <see cref="Win32Exception"/> if <paramref name="result"/> represents an error.
+    /// </summary>
+    /// <param name="result">The input <see cref="int"/> to check.</param>
+    /// <exception cref="Win32Exception">Thrown if <paramref name="result"/> represents an error.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Assert(this int result)
     {
 #if DEBUG
         bool hasErrorsOrWarnings = DeviceHelper.FlushAllID3D12InfoQueueMessagesAndCheckForErrorsOrWarnings();
