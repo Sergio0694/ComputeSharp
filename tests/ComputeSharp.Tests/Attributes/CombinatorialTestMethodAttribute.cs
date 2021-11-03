@@ -25,7 +25,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
 
         if (methodInfo.GetCustomAttribute<AllDevicesAttribute>() is not null)
         {
-            devices = Enum.GetValues<Device>();
+            devices = (Device[])Enum.GetValues(typeof(Device));
         }
         else if (methodInfo.GetCustomAttributes<DeviceAttribute>().ToArray() is { Length: > 0 } values)
         {

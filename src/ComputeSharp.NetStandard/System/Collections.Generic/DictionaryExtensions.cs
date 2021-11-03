@@ -14,7 +14,8 @@ internal static class DictionaryExtensions
     /// <param name="key">The lookup key to use.</param>
     /// <param name="value">The resulting item, if present.</param>
     /// <returns>Whether or not an item was found with the given key.</returns>
-    public static bool Remove<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, out TValue value)
+    public static bool Remove<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, out TValue? value)
+        where TKey : notnull
     {
         if (dictionary.TryGetValue(key, out value))
         {

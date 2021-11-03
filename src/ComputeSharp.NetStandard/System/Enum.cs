@@ -14,6 +14,6 @@ internal static class Enum
     public static string GetName<T>(T value)
         where T : unmanaged, global::System.Enum
     {
-        return global::System.Enum.GetName(typeof(T), value);
+        return global::System.Enum.GetName(typeof(T), value)!;
     }
 }
