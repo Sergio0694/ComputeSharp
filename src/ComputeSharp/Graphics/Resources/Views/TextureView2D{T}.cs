@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
-using ComputeSharp.Resources.Views;
+using Microsoft.Toolkit.Diagnostics;
 
 #pragma warning disable CS0809
 
@@ -128,11 +128,8 @@ public readonly unsafe ref partial struct TextureView2D<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            if ((uint)x >= (uint)this.width ||
-                (uint)y >= (uint)this.height)
-            {
-                ThrowHelper.ThrowIndexOutOfRangeException();
-            }
+            Guard.IsInRange(x, 0, this.width, nameof(x));
+            Guard.IsInRange(y, 0, this.height, nameof(y));
 
             return ref *((T*)((byte*)this.pointer + (y * this.pitchInBytes)) + x);
         }
@@ -181,10 +178,7 @@ public readonly unsafe ref partial struct TextureView2D<T>
         }
         else
         {
-            if (Length > destination.Length)
-            {
-                ThrowHelper.ThrowArgumentExceptionForDestinationTooShort();
-            }
+            Guard.HasSizeGreaterThanOrEqualTo(destination, Length, nameof(destination));
 
             for (int y = 0, j = 0; y < this.height; y++, j += this.width)
             {
@@ -308,10 +302,7 @@ public readonly unsafe ref partial struct TextureView2D<T>
     [Pure]
     public Span<T> GetRowSpan(int y)
     {
-        if ((uint)y >= (uint)this.height)
-        {
-            ThrowHelper.ThrowArgumentOutOfRangeExceptionForRow();
-        }
+        Guard.IsInRange(y, 0, this.height, nameof(y));
 
         return new((byte*)this.pointer + (y * this.pitchInBytes), this.width);
     }

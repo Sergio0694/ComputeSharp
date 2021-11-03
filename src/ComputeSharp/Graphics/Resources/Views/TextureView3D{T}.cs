@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
-using ComputeSharp.Resources.Views;
+using Microsoft.Toolkit.Diagnostics;
 
 #pragma warning disable CS0809
 
@@ -153,12 +153,9 @@ public readonly unsafe ref partial struct TextureView3D<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            if ((uint)x >= (uint)this.width ||
-                (uint)y >= (uint)this.height ||
-                (uint)z >= (uint)this.depth)
-            {
-                ThrowHelper.ThrowIndexOutOfRangeException();
-            }
+            Guard.IsInRange(x, 0, this.width, nameof(x));
+            Guard.IsInRange(y, 0, this.height, nameof(y));
+            Guard.IsInRange(z, 0, this.depth, nameof(z));
 
             return ref *((T*)((byte*)this.pointer + (z * this.height * this.strideInBytes) + (y * this.strideInBytes)) + x);
         }
@@ -344,15 +341,8 @@ public readonly unsafe ref partial struct TextureView3D<T>
     [Pure]
     public Span<T> GetRowSpan(int y, int z)
     {
-        if ((uint)y >= (uint)this.height)
-        {
-            ThrowHelper.ThrowArgumentOutOfRangeExceptionForRow();
-        }
-
-        if ((uint)z >= (uint)this.depth)
-        {
-            ThrowHelper.ThrowArgumentOutOfRangeExceptionForZ();
-        }
+        Guard.IsInRange(y, 0, this.height, nameof(y));
+        Guard.IsInRange(z, 0, this.depth, nameof(z));
 
         return new((byte*)this.pointer + (z * this.height * this.strideInBytes) + (y * this.strideInBytes), this.width);
     }
