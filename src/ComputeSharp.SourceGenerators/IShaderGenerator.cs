@@ -89,8 +89,9 @@ public sealed partial class IShaderGenerator : ISourceGenerator
                     Literal("This method is not intended to be used directly by user code"))))))
         };
 
-        // Add [SkipLocalsInit] if the target project allows it
-        if (context.Compilation.Options is CSharpCompilationOptions { AllowUnsafe: true })
+        // Add [SkipLocalsInit] if the target project allows it and can access it
+        if (context.Compilation.Options is CSharpCompilationOptions { AllowUnsafe: true } &&
+            context.Compilation.GetTypeByMetadataName("System.Runtime.CompilerServices.SkipLocalsInit") is not null)
         {
             attributes.Add(AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Runtime.CompilerServices.SkipLocalsInit")))));
         }
