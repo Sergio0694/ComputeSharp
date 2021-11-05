@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop;
 
 namespace ComputeSharp.Shaders.Translation;
@@ -13,28 +14,36 @@ internal sealed unsafe partial class ShaderCompiler
     /// </summary>
     private static void InitializeDxcLibrariesLoading()
     {
-        // Test whether the native libraries are present in the same folder of the executable
-        // (which is the case when the program was built with a runtime identifier), or whether
-        // they are in the "runtimes\win-x64\native" folder in the executable directory.
-        string nugetNativeLibsPath = Path.Combine(AppContext.BaseDirectory, @"runtimes\win-x64\native");
-        bool isNuGetRuntimeLibrariesDirectoryPresent = Directory.Exists(nugetNativeLibsPath);
-
         // Register a custom library resolver for the two DXC libraries. We need to either manually load the two
         // libraries from the NuGet directory, if an RID is not in use, or we need to ensure that dxil.dll is
         // loaded correctly in case the program was executed with the host being in another directory.
         // This happens when doing eg. "dotnet bin\Debug\net5.0\MyApp.dll", which would crash at runtime.
-        Windows.ResolveLibrary += (libraryName, assembly, searchPath) =>
+        Windows.ResolveLibrary += static (libraryName, assembly, searchPath) =>
         {
             if (libraryName is not "dxcompiler") return IntPtr.Zero;
+
+            string rid = RuntimeInformation.ProcessArchitecture switch
+            {
+                Architecture.X64 => "win-x64",
+                Architecture.Arm64 => "win-arm64",
+                _ => ThrowHelper.ThrowNotSupportedException<string>("Invalid process architecture")
+            };
+
+            // Test whether the native libraries are present in the same folder of the executable
+            // (which is the case when the program was built with a runtime identifier), or whether
+            // they are in the "runtimes\win-x64\native" folder in the executable directory.
+            string nugetNativeLibsPath = Path.Combine(AppContext.BaseDirectory, $@"runtimes\{rid}\native");
+            bool isNuGetRuntimeLibrariesDirectoryPresent = Directory.Exists(nugetNativeLibsPath);
 
             if (isNuGetRuntimeLibrariesDirectoryPresent)
             {
                 string
-                    dxcompilerPath = Path.Combine(AppContext.BaseDirectory, @"runtimes\win-x64\native\dxcompiler.dll"),
-                    dxilPath = Path.Combine(AppContext.BaseDirectory, @"runtimes\win-x64\native\dxil.dll");
+                    dxcompilerPath = Path.Combine(AppContext.BaseDirectory, $@"runtimes\{rid}\native\dxcompiler.dll"),
+                    dxilPath = Path.Combine(AppContext.BaseDirectory, $@"runtimes\{rid}\native\dxil.dll");
 
                 // Load DXIL first so that DXC doesn't fail to load it, and then DXIL, both from the NuGet path
-                if (NativeLibrary.TryLoad(dxilPath, out _) && NativeLibrary.TryLoad(dxcompilerPath, out IntPtr handle))
+                if (NativeLibrary.TryLoad(dxilPath, out _) &&
+                    NativeLibrary.TryLoad(dxcompilerPath, out IntPtr handle))
                 {
                     return handle;
                 }
