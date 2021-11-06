@@ -13,16 +13,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Libraries\dxcompiler.dll"
-          Link="dxcompiler.dll"
+    <None Include="Libraries\x64\dxcompiler.dll"
+          Link="runtimes\win-x64\native\dxcompiler.dll"
           Visible="False"
           CopyToOutputDirectory="PreserveNewest"
           PackFolder="runtimes\win-x64\native" />
-    <None Include="Libraries\dxil.dll"
-          Link="dxil.dll"
+    <None Include="Libraries\x64\dxil.dll"
+          Link="runtimes\win-x64\native\dxil.dll"
           Visible="False"
           CopyToOutputDirectory="PreserveNewest"
           PackFolder="runtimes\win-x64\native" />
+    <None Include="Libraries\arm64\dxcompiler.dll"
+          Link="runtimes\win-arm64\native\dxcompiler.dll"
+          Visible="False"
+          CopyToOutputDirectory="PreserveNewest"
+          PackFolder="runtimes\win-arm64\native" />
+    <None Include="Libraries\arm64\dxil.dll"
+          Link="runtimes\win-arm64\native\dxil.dll"
+          Visible="False"
+          CopyToOutputDirectory="PreserveNewest"
+          PackFolder="runtimes\win-arm64\native" />
   </ItemGroup>
 
   <ItemGroup>
