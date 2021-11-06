@@ -220,14 +220,14 @@ internal sealed unsafe class WICHelper
         // Get the first frame of the loaded image (if more are present, they will be ignored)
         wicBitmapDecoder->GetFrame(0, wicBitmapFrameDecode.GetAddressOf()).Assert();
 
-        uint width, height;
+        uint width;
+        uint height;
 
         // Extract the image size info
         wicBitmapFrameDecode.Get()->GetSize(&width, &height).Assert();
 
-        Guid
-            wicTargetPixelFormatGuid = WICFormatHelper.GetForType<T>(),
-            wicActualPixelFormatGuid;
+        Guid wicTargetPixelFormatGuid = WICFormatHelper.GetForType<T>();
+        Guid wicActualPixelFormatGuid;
 
         // Get the current and target pixel format info
         wicBitmapFrameDecode.Get()->GetPixelFormat(&wicActualPixelFormatGuid).Assert();

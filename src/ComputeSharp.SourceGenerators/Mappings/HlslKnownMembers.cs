@@ -214,9 +214,8 @@ internal static class HlslKnownMembers
             where Regex.IsMatch(property.Name, "^M[1-4]{2}$")
             select (Type: type, Property: property))
         {
-            char
-                row = (char)(item.Property.Name[1] - 1),
-                column = (char)(item.Property.Name[2] - 1);
+            char row = (char)(item.Property.Name[1] - 1);
+            char column = (char)(item.Property.Name[2] - 1);
 
             knownMembers.Add($"{item.Type.FullName}{Type.Delimiter}{item.Property.Name}", $"_m{row}{column}");
         }
@@ -254,18 +253,16 @@ internal static class HlslKnownMembers
                     break;
                 case string name when name.Length == 2:
                 {
-                    string
-                        numerator = $"float2({typeof(ThreadIds).Name}.{char.ToLower(name[0])}, {typeof(ThreadIds).Name}.{char.ToLower(name[1])})",
-                        denominator = $"float2(__{char.ToLower(name[0])}, __{char.ToLower(name[1])})";
+                        string numerator = $"float2({typeof(ThreadIds).Name}.{char.ToLower(name[0])}, {typeof(ThreadIds).Name}.{char.ToLower(name[1])})";
+                        string denominator = $"float2(__{char.ToLower(name[0])}, __{char.ToLower(name[1])})";
 
                     knownMembers.Add(key, $"{numerator} / {denominator}");
                     break;
                 }
                 case string name when name.Length == 3:
                 {
-                    string
-                        numerator = $"float3({typeof(ThreadIds).Name}.{char.ToLower(name[0])}, {typeof(ThreadIds).Name}.{char.ToLower(name[1])}, {typeof(ThreadIds).Name}.{char.ToLower(name[2])})",
-                        denominator = $"float3(__{char.ToLower(name[0])}, __{char.ToLower(name[1])}, __{char.ToLower(name[2])})";
+                        string numerator = $"float3({typeof(ThreadIds).Name}.{char.ToLower(name[0])}, {typeof(ThreadIds).Name}.{char.ToLower(name[1])}, {typeof(ThreadIds).Name}.{char.ToLower(name[2])})";
+                        string denominator = $"float3(__{char.ToLower(name[0])}, __{char.ToLower(name[1])}, __{char.ToLower(name[2])})";
 
                     knownMembers.Add(key, $"{numerator} / {denominator}");
                     break;

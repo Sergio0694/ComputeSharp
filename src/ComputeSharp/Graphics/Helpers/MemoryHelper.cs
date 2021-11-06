@@ -187,9 +187,8 @@ internal static class MemoryHelper
         {
             for (int z = 0; z < depth; z++)
             {
-                ulong
-                    sourceZOffset = (uint)z * widthInBytes * height,
-                    destinationZOffset = (uint)z * sliceInBytes;
+                ulong sourceZOffset = (uint)z * widthInBytes * height;
+                ulong destinationZOffset = (uint)z * sliceInBytes;
 
                 for (int i = 0; i < height; i++)
                 {
@@ -231,9 +230,8 @@ internal static class MemoryHelper
         {
             for (int z = 0; z < depth; z++)
             {
-                ulong
-                    sourceZOffset = (uint)z * sliceInBytes,
-                    destinationZOffset = (uint)z * widthInBytes * height;
+                ulong sourceZOffset = (uint)z * sliceInBytes;
+                ulong destinationZOffset = (uint)z * widthInBytes * height;
 
                 for (int i = 0; i < height; i++)
                 {

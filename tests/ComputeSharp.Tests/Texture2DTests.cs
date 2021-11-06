@@ -135,9 +135,8 @@ public partial class Texture2DTests
 
         texture.CopyTo(result, x, y, width, height);
 
-        Span2D<float>
-            expected = new Span2D<float>(array, 64, 64).Slice(y, x, height, width),
-            data = new(result, height, width);
+        Span2D<float> expected = new Span2D<float>(array, 64, 64).Slice(y, x, height, width);
+        Span2D<float> data = new(result, height, width);
 
         CollectionAssert.AreEqual(expected.ToArray(), data.ToArray());
     }

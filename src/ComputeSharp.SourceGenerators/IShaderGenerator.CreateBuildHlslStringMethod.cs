@@ -679,10 +679,9 @@ public sealed partial class IShaderGenerator
 
         AppendCharacterAndLF('}');
 
-        int
-            constantBuffersCount = 1,
-            readOnlyBuffersCount = 0,
-            readWriteBuffersCount = 0;
+        int constantBuffersCount = 1;
+        int readOnlyBuffersCount = 0;
+        int readWriteBuffersCount = 0;
 
         // Optional implicit texture field
         if (!isComputeShader)

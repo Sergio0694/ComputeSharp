@@ -67,9 +67,8 @@ public sealed partial class IShaderGenerator
 
         var pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: nameof(IPixelShader<byte>) });
         var isComputeShader = pixelShaderSymbol is null;
-        int
-            resourceOffset = 0,
-            rawDataOffset = sizeof(int) * (isComputeShader ? 3 : 2);
+        int resourceOffset = 0;
+        int rawDataOffset = sizeof(int) * (isComputeShader ? 3 : 2);
 
         // Append the statements for the dispatch ranges:
         //
@@ -232,9 +231,8 @@ public sealed partial class IShaderGenerator
                  !fieldSymbol.IsConst && !fieldSymbol.IsStatic && !fieldSymbol.IsFixedSizeBuffer
            select fieldSymbol)
         {
-            string
-                fieldName = fieldSymbol.Name,
-                typeName = fieldSymbol.Type.GetFullMetadataName();
+            string fieldName = fieldSymbol.Name;
+            string typeName = fieldSymbol.Type.GetFullMetadataName();
 
             // Disambiguates the name of target fields against the current input parameters
             if (fieldName is "loader" or "device" or "x" or "y" or "z")
@@ -290,9 +288,8 @@ public sealed partial class IShaderGenerator
         // each row needs to be at a multiple of 16 bytes (a float4 register).
         if (HlslKnownTypes.IsNonLinearMatrixType(typeName, out string? elementName, out int rows, out int columns))
         {
-            string
-                rowTypeName = $"global::ComputeSharp.{elementName}{columns}",
-                rowLocalName = $"__{string.Join("_", fieldPath)}__row0";
+            string rowTypeName = $"global::ComputeSharp.{elementName}{columns}";
+            string rowLocalName = $"__{string.Join("_", fieldPath)}__row0";
 
             statements.Add(ParseStatement($"ref {rowTypeName} {rowLocalName} = ref global::System.Runtime.CompilerServices.Unsafe.As<global::{typeName}, {rowTypeName}>(ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in {string.Join(".", fieldPath)}));"));
 

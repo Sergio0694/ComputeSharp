@@ -20,7 +20,8 @@ internal readonly partial struct Octagrams : IComputeShader
 
     private static float2x2 Rotate(float a)
     {
-        float c = Hlsl.Cos(a), s = Hlsl.Sin(a);
+        float c = Hlsl.Cos(a);
+        float s = Hlsl.Sin(a);
 
         return new(c, s, -s, c);
     }

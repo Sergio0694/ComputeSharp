@@ -75,9 +75,8 @@ internal unsafe static class Win32ApplicationRunner
             // Set the target window size
             _ = Windows.AdjustWindowRect((RECT*)&windowRect, Windows.WS_OVERLAPPEDWINDOW, Windows.FALSE);
 
-            uint
-                height = (uint)(windowRect.Bottom - windowRect.Top),
-                width = (uint)(windowRect.Right - windowRect.Left);
+            uint height = (uint)(windowRect.Bottom - windowRect.Top);
+            uint width = (uint)(windowRect.Right - windowRect.Left);
 
             // Create the window and store a handle to it
             hwnd = Windows.CreateWindowExW(
@@ -117,9 +116,8 @@ internal unsafe static class Win32ApplicationRunner
         {
             (Win32Application application, CancellationToken token) = ((Win32Application, CancellationToken))args!;
 
-            Stopwatch
-                startStopwatch = Stopwatch.StartNew(),
-                frameStopwatch = Stopwatch.StartNew();
+            Stopwatch startStopwatch = Stopwatch.StartNew();
+            Stopwatch frameStopwatch = Stopwatch.StartNew();
 
             const long targetFrameTimeInTicksFor60fps = 166666;
 
@@ -251,11 +249,10 @@ internal unsafe static class Win32ApplicationRunner
                 _ = Windows.GetCursorPos(&point);
                 _ = Windows.GetWindowRect(hwnd, &rect);
 
-                bool
-                    isAtTop = Math.Abs(point.y - rect.top) < 12,
-                    isAtRight = Math.Abs(point.x - rect.right) < 12,
-                    isAtBottom = Math.Abs(point.y - rect.bottom) < 12,
-                    isAtLeft = Math.Abs(point.x - rect.left) < 12;
+                    bool isAtTop = Math.Abs(point.y - rect.top) < 12;
+                    bool isAtRight = Math.Abs(point.x - rect.right) < 12;
+                    bool isAtBottom = Math.Abs(point.y - rect.bottom) < 12;
+                    bool isAtLeft = Math.Abs(point.x - rect.left) < 12;
 
                 if (isAtTop)
                 {

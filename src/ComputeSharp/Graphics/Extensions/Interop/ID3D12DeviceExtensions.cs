@@ -322,7 +322,8 @@ internal static unsafe class ID3D12DeviceExtensions
         out ulong totalSizeInBytes)
     {
         D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex2D(dxgiFormat, width, height);
-        ulong a, b;
+        ulong a;
+        ulong b;
 
         fixed (D3D12_PLACED_SUBRESOURCE_FOOTPRINT* p = &d3D12PlacedSubresourceFootprint)
         {
@@ -357,7 +358,8 @@ internal static unsafe class ID3D12DeviceExtensions
         out ulong totalSizeInBytes)
     {
         D3D12_RESOURCE_DESC d3D12ResourceDescription = D3D12_RESOURCE_DESC.Tex3D(dxgiFormat, width, height, depth);
-        ulong a, b;
+        ulong a;
+        ulong b;
 
         fixed (D3D12_PLACED_SUBRESOURCE_FOOTPRINT* p = &d3D12PlacedSubresourceFootprint)
         {

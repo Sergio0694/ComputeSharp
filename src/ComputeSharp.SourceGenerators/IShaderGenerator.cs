@@ -56,11 +56,10 @@ public sealed partial class IShaderGenerator : ISourceGenerator
     private static void OnExecute(GeneratorExecutionContext context, StructDeclarationSyntax structDeclaration, INamedTypeSymbol structDeclarationSymbol)
     {
         // Create the required interface methods for the current shader type
-        MethodDeclarationSyntax
-            getDispatchIdMethod = CreateGetDispatchIdMethod(structDeclarationSymbol),
-            loadDispatchDataMethod = CreateLoadDispatchDataMethod(context, structDeclarationSymbol, out var discoveredResources, out int root32BitConstants),
-            buildHlslStringMethod = CreateBuildHlslStringMethod(context, structDeclaration, structDeclarationSymbol, out string? implicitTextureType, out bool isSamplerUsed),
-            loadDispatchMetadataMethod = CreateLoadDispatchMetadataMethod(implicitTextureType, discoveredResources, root32BitConstants, isSamplerUsed);
+        MethodDeclarationSyntax getDispatchIdMethod = CreateGetDispatchIdMethod(structDeclarationSymbol);
+        MethodDeclarationSyntax loadDispatchDataMethod = CreateLoadDispatchDataMethod(context, structDeclarationSymbol, out var discoveredResources, out int root32BitConstants);
+        MethodDeclarationSyntax buildHlslStringMethod = CreateBuildHlslStringMethod(context, structDeclaration, structDeclarationSymbol, out string? implicitTextureType, out bool isSamplerUsed);
+        MethodDeclarationSyntax loadDispatchMetadataMethod = CreateLoadDispatchMetadataMethod(implicitTextureType, discoveredResources, root32BitConstants, isSamplerUsed);
 
         // Reorder the method declarations to respect the order in the interface definition
         MethodDeclarationSyntax[] methods =

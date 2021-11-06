@@ -37,9 +37,8 @@ internal sealed unsafe partial class ShaderCompiler
 
             if (isNuGetRuntimeLibrariesDirectoryPresent)
             {
-                string
-                    dxcompilerPath = Path.Combine(AppContext.BaseDirectory, $@"runtimes\{rid}\native\dxcompiler.dll"),
-                    dxilPath = Path.Combine(AppContext.BaseDirectory, $@"runtimes\{rid}\native\dxil.dll");
+                string dxcompilerPath = Path.Combine(AppContext.BaseDirectory, $@"runtimes\{rid}\native\dxcompiler.dll");
+                string dxilPath = Path.Combine(AppContext.BaseDirectory, $@"runtimes\{rid}\native\dxil.dll");
 
                 // Load DXIL first so that DXC doesn't fail to load it, and then DXIL, both from the NuGet path
                 if (NativeLibrary.TryLoad(dxilPath, out _) &&

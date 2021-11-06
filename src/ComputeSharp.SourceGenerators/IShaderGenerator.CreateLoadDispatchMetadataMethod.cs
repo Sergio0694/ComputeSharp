@@ -122,11 +122,10 @@ public sealed partial class IShaderGenerator
         yield return ParseStatement($"global::System.Runtime.CompilerServices.Unsafe.WriteUnaligned<int>(ref global::System.Runtime.CompilerServices.Unsafe.Add(ref r0, 0), {root32BitConstantsCount});");
         yield return ParseStatement($"global::System.Runtime.CompilerServices.Unsafe.WriteUnaligned<bool>(ref global::System.Runtime.CompilerServices.Unsafe.Add(ref r0, 4), {isSamplerUsed.ToString().ToLowerInvariant()});");
 
-        int
-            constantBufferOffset = 1,
-            readOnlyResourceOffset = 0,
-            readWriteResourceOffset = 0,
-            resourceOffset = 0;
+        int constantBufferOffset = 1;
+        int readOnlyResourceOffset = 0;
+        int readWriteResourceOffset = 0;
+        int resourceOffset = 0;
 
         // Add the implicit texture descriptor, if needed
         if (implicitTextureType is not null)

@@ -22,7 +22,8 @@ internal readonly partial struct PyramidPattern : IComputeShader
     // Standard 2D rotation formula.
     private static float2x2 Rotate2x2(in float a)
     {
-        float c = Hlsl.Cos(a), s = Hlsl.Sin(a);
+        float c = Hlsl.Cos(a);
+        float s = Hlsl.Sin(a);
 
         return new(c, -s, s, c);
     }
@@ -146,9 +147,8 @@ internal readonly partial struct PyramidPattern : IComputeShader
         float2 oP = p;
         float m = BMap(p);
         float3 n = new(0, 0, -1);
-        float
-            edge = 0.0f,
-            bumpFactor = 0.25f;
+        float edge = 0.0f;
+        float bumpFactor = 0.25f;
 
         n = DoBumpMap(p, n, bumpFactor, ref edge);
 

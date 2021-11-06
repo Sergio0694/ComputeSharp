@@ -16,7 +16,8 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
     // Standard 2D rotation formula.
     private static float2x2 Rotate2x2(in float a)
     {
-        float c = Hlsl.Cos(a), s = Hlsl.Sin(a);
+        float c = Hlsl.Cos(a);
+        float s = Hlsl.Sin(a);
 
         return new(c, -s, s, c);
     }
@@ -157,12 +158,11 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
         p -= s - (s.X + s.Y) * 0.211324865f;
 
         float i = p.X < p.Y ? 1.0f : 0.0f;
-        float2
-            ioffs = new(1.0f - i, i),
-            ip0 = 0,
-            ip1 = ioffs - 0.2113248654f,
-            ip2 = 0.577350269f,
-            ctr = (ip0 + ip1 + ip2) / 3.0f;
+        float2 ioffs = new(1.0f - i, i);
+        float2 ip0 = 0;
+        float2 ip1 = ioffs - 0.2113248654f;
+        float2 ip2 = 0.577350269f;
+        float2 ctr = (ip0 + ip1 + ip2) / 3.0f;
 
         ip0 -= ctr;
         ip1 -= ctr;
@@ -175,15 +175,14 @@ internal readonly partial struct TriangleGridContouring : IPixelShader<float4>
         n3.Y = IsoFunction(s + ioffs);
         n3.Z = IsoFunction(s + 1.0f);
 
-        float
-            d = 1e5f,
-            d2 = 1e5f,
-            d3 = 1e5f,
-            d4 = 1e5f,
-            d5 = 1e5f;
-
+        float d = 1e5f;
+        float d2 = 1e5f;
+        float d3 = 1e5f;
+        float d4 = 1e5f;
+        float d5 = 1e5f;
         float isovalue = 0;
-        float2 p0 = default, p1 = default;
+        float2 p0 = default;
+        float2 p1 = default;
         int iTh = IsoLine(n3, ip0, ip1, ip2, isovalue, i, ref p0, ref p1);
 
         d = Hlsl.Min(d, distEdge(p - p0, p - p1));

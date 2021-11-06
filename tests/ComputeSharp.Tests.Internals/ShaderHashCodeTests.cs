@@ -29,9 +29,8 @@ public partial class ShaderHashCodeTests
 
         Shader1 shader1 = new() { A = value, B = buffer };
 
-        int
-            hash1 = ((IShader)shader1).GetDispatchId(),
-            hash2 = ((IShader)shader1).GetDispatchId();
+        int hash1 = ((IShader)shader1).GetDispatchId();
+        int hash2 = ((IShader)shader1).GetDispatchId();
 
         Assert.IsTrue(hash1 == hash2);
 
@@ -63,9 +62,8 @@ public partial class ShaderHashCodeTests
 
         Shader2 shader1 = new() { A = 1, B = buffer, F = f };
 
-        int
-            hash1 = ((IShader)shader1).GetDispatchId(),
-            hash2 = ((IShader)shader1).GetDispatchId();
+        int hash1 = ((IShader)shader1).GetDispatchId();
+        int hash2 = ((IShader)shader1).GetDispatchId();
 
         Assert.IsTrue(hash1 == hash2);
 

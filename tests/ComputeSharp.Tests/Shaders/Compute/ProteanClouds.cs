@@ -23,7 +23,8 @@ internal readonly partial struct ProteanClouds : IComputeShader
 
     private static float2x2 Rotate(in float a)
     {
-        float c = Hlsl.Cos(a), s = Hlsl.Sin(a);
+        float c = Hlsl.Cos(a);
+        float s = Hlsl.Sin(a);
 
         return new(c, s, -s, c);
     }

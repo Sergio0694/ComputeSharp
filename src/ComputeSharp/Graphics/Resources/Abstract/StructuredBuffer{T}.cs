@@ -55,9 +55,8 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         }
         else
         {
-            nint
-                byteOffset = (nint)offset * sizeof(T),
-                byteLength = length * sizeof(T);
+            nint byteOffset = (nint)offset * sizeof(T);
+            nint byteLength = length * sizeof(T);
 
             using UniquePtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(null, ResourceType.ReadBack, AllocationMode.Default, (ulong)byteLength);
 
@@ -115,10 +114,9 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         }
         else
         {
-            ulong
-                byteDestinationOffset = (uint)destinationOffset * (uint)sizeof(T),
-                byteOffset = (uint)offset * (uint)sizeof(T),
-                byteLength = (uint)length * (uint)sizeof(T);
+            ulong byteDestinationOffset = (uint)destinationOffset * (uint)sizeof(T);
+            ulong byteOffset = (uint)offset * (uint)sizeof(T);
+            ulong byteLength = (uint)length * (uint)sizeof(T);
 
             using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
@@ -153,9 +151,8 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         }
         else
         {
-            nint
-                byteOffset = (nint)offset * sizeof(T),
-                byteLength = length * sizeof(T);
+            nint byteOffset = (nint)offset * sizeof(T);
+            nint byteLength = length * sizeof(T);
 
             using UniquePtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(null, ResourceType.Upload, AllocationMode.Default, (ulong)byteLength);
 
@@ -211,10 +208,9 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         }
         else
         {
-            ulong
-                byteSourceOffset = (uint)sourceOffset * (uint)sizeof(T),
-                byteOffset = (uint)offset * (uint)sizeof(T),
-                byteLength = (uint)length * (uint)sizeof(T);
+            ulong byteSourceOffset = (uint)sourceOffset * (uint)sizeof(T);
+            ulong byteOffset = (uint)offset * (uint)sizeof(T);
+            ulong byteLength = (uint)length * (uint)sizeof(T);
 
             using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 

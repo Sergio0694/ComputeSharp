@@ -88,6 +88,7 @@ public sealed partial class HlslBokehBlurProcessor
                 // Initialize the complex kernels and parameters with the current arguments
                 (KernelParameters, KernelsScale) = GetParameters();
                 Kernels = CreateComplexKernels();
+
                 NormalizeKernels();
 
                 // Store them in the cache for future use
@@ -161,6 +162,7 @@ public sealed partial class HlslBokehBlurProcessor
         {
             // Prepare the kernel components
             int index = Math.Max(0, Math.Min(ComponentsCount - 1, KernelComponents.Count));
+
             return (KernelComponents[index], KernelScales[index]);
         }
 
@@ -171,9 +173,11 @@ public sealed partial class HlslBokehBlurProcessor
         {
             var kernels = new Complex64[KernelParameters.Length][];
             ref Vector4 baseRef = ref MemoryMarshal.GetReference(KernelParameters.AsSpan());
+
             for (int i = 0; i < KernelParameters.Length; i++)
             {
                 ref Vector4 paramsRef = ref Unsafe.Add(ref baseRef, i);
+
                 kernels[i] = CreateComplex1DKernel(paramsRef.X, paramsRef.Y);
             }
 
@@ -189,12 +193,14 @@ public sealed partial class HlslBokehBlurProcessor
         {
             var kernel = new Complex64[KernelSize];
             ref Complex64 baseRef = ref MemoryMarshal.GetReference(kernel.AsSpan());
-            int r = Radius, n = -r;
+            int r = Radius;
+            int n = -r;
 
             for (int i = 0; i < KernelSize; i++, n++)
             {
                 // Incrementally compute the range values
                 float value = n * KernelsScale * (1f / r);
+
                 value *= value;
 
                 // Fill in the complex kernel values
@@ -230,6 +236,7 @@ public sealed partial class HlslBokehBlurProcessor
                     {
                         ref Complex64 jRef = ref Unsafe.Add(ref valueRef, j);
                         ref Complex64 kRef = ref Unsafe.Add(ref valueRef, k);
+
                         total +=
                             paramsRef.Z * (jRef.Real * kRef.Real - jRef.Imaginary * kRef.Imaginary)
                             + paramsRef.W * (jRef.Real * kRef.Imaginary + jRef.Imaginary * kRef.Real);
@@ -239,6 +246,7 @@ public sealed partial class HlslBokehBlurProcessor
 
             // Normalize the kernels
             float scalar = 1f / MathF.Sqrt(total);
+
             for (int i = 0; i < kernelsSpan.Length; i++)
             {
                 ref Complex64[] kernelsRef = ref Unsafe.Add(ref baseKernelsRef, i);

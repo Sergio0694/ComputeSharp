@@ -150,7 +150,9 @@ public partial class Texture3DTests
         int[,,] array = new int[3, 64, 64];
 
         foreach (var item in array.AsSpan().Enumerate())
+        {
             item.Value = item.Index;
+        }
 
         using Texture3D<int> texture = device.Get().AllocateTexture3D(textureType, array);
 
@@ -160,9 +162,8 @@ public partial class Texture3DTests
 
         for (int k = 0; k < depth; k++)
         {
-            Span2D<int>
-                source = array.AsSpan2D(z + k).Slice(y, x, height, width),
-                destination = result.AsSpan2D(k);
+            Span2D<int> source = array.AsSpan2D(z + k).Slice(y, x, height, width);
+            Span2D<int> destination = result.AsSpan2D(k);
 
             CollectionAssert.AreEqual(source.ToArray(), destination.ToArray());
         }

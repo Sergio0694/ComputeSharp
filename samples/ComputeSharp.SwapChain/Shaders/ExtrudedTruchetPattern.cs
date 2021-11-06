@@ -26,7 +26,8 @@ internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<float4>
     // Standard 2D rotation formula.
     private static float2x2 Rotate2x2(float a)
     {
-        float c = Hlsl.Cos(a), s = Hlsl.Sin(a);
+        float c = Hlsl.Cos(a);
+        float s = Hlsl.Sin(a);
 
         return new(c, -s, s, c);
     }
@@ -148,12 +149,14 @@ internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<float4>
     // Anyway, I like this one. I'm assuHlsl.Ming it's based on IQ's original.
     private float CalculateAO(in float3 p, in float3 n)
     {
-        float sca = 2.0f, occ = 0.0f;
+        float sca = 2.0f;
+        float occ = 0.0f;
 
         for (int i = (int)Hlsl.Min(time, 0f); i < 5; i++)
         {
             float hr = (i + 1f) * 0.15f / 5.0f;
             float d = M(p + n * hr);
+
             occ += (hr - d) * sca;
             sca *= 0.7f;
 
@@ -179,16 +182,17 @@ internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<float4>
     {
         int2 coords = new(ThreadIds.X, DispatchSize.Y - ThreadIds.Y);
         float2 u = (coords - (float2)DispatchSize.XY * 0.5f) / DispatchSize.Y;
-        float3
-            r = Hlsl.Normalize(new float3(u, 1)),
-            o = new(0, time / 2.0f, -3),
-            l = o + new float3(0.25f, 0.25f, 2.0f);
+        float3 r = Hlsl.Normalize(new float3(u, 1));
+        float3 o = new(0, time / 2.0f, -3);
+        float3 l = o + new float3(0.25f, 0.25f, 2.0f);
 
         r.YZ = Hlsl.Mul(Rotate2x2(0.15f), r.YZ);
         r.XZ = Hlsl.Mul(Rotate2x2(-Hlsl.Cos(time * 3.14159f / 32.0f) / 8.0f), r.XZ);
         r.XY = Hlsl.Mul(Rotate2x2(Hlsl.Sin(time * 3.14159f / 32.0f) / 8.0f), r.XY);
 
-        float d, t = Hash21(r.XY * 57.0f + Hlsl.Frac(time)) * 0.5f, glow = 0;
+        float d;
+        float t = Hash21(r.XY * 57.0f + Hlsl.Frac(time)) * 0.5f;
+        float glow = 0;
 
         for (int i = 0; i < 96; i++)
         {
@@ -201,7 +205,8 @@ internal readonly partial struct ExtrudedTruchetPattern : IPixelShader<float4>
         }
 
         int gObjID = objID;
-        float3 p = o + r * t, n = Normal(p);
+        float3 p = o + r * t;
+        float3 n = Normal(p);
         float2 uv = p.XY;
         float sc = 0.5f;
         float2 iuv = Hlsl.Floor(uv / sc) + 0.5f;

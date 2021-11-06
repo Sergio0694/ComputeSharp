@@ -95,9 +95,8 @@ public class AutoConstructorGeneratorTests
 
         string outputBody = outputCompilation.SyntaxTrees.Skip(index + 1).First().ToString();
 
-        string[]
-            outputLines = outputBody.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries),
-            expectedLines = expectedBody.Replace("\r", "").Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        string[] outputLines = outputBody.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        string[] expectedLines = expectedBody.Replace("\r", "").Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
         Assert.AreEqual(expectedLines.Length, outputLines.Length);
 

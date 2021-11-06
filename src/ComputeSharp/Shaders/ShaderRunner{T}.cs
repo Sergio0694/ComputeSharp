@@ -41,15 +41,13 @@ internal static class ShaderRunner<T>
         // number of registers and any amount of thread local storage. We use the wave size of the device in
         // use for 1D dispatches, otherwise a multiple of 32 that is greater than or equal to 64, which still
         // results in an evenly divisible number of waves per thread group on all existing GPU devices.
-        bool
-            xIs1 = x == 1,
-            yIs1 = y == 1,
-            zIs1 = z == 1;
-        int
-            mask = *(byte*)&xIs1 << 2 | *(byte*)&yIs1 << 1 | *(byte*)&zIs1,
-            threadsX,
-            threadsY,
-            threadsZ;
+        bool xIs1 = x == 1;
+        bool yIs1 = y == 1;
+        bool zIs1 = z == 1;
+        int mask = *(byte*)&xIs1 << 2 | *(byte*)&yIs1 << 1 | *(byte*)&zIs1;
+        int threadsX;
+        int threadsY;
+        int threadsZ;
 
         switch (mask - 1)
         {
@@ -116,10 +114,9 @@ internal static class ShaderRunner<T>
         Guard.IsBetweenOrEqualTo(threadsZ, 1, 64, nameof(threadsZ));
         Guard.IsLessThanOrEqualTo(threadsX * threadsY * threadsZ, 1024, "threadsXYZ");
 
-        int
-            groupsX = Math.DivRem(x, threadsX, out int modX) + (modX == 0 ? 0 : 1),
-            groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1),
-            groupsZ = Math.DivRem(z, threadsZ, out int modZ) + (modZ == 0 ? 0 : 1);
+        int groupsX = Math.DivRem(x, threadsX, out int modX) + (modX == 0 ? 0 : 1);
+        int groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1);
+        int groupsZ = Math.DivRem(z, threadsZ, out int modZ) + (modZ == 0 ? 0 : 1);
 
         Guard.IsBetweenOrEqualTo(groupsX, 1, Windows.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
         Guard.IsBetweenOrEqualTo(groupsY, 1, Windows.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
@@ -169,13 +166,12 @@ internal static class ShaderRunner<T>
     {
         device.ThrowIfDisposed();
 
-        int
-            x = texture.Width,
-            y = texture.Height,
-            threadsX = 8,
-            threadsY = 8,
-            groupsX = Math.DivRem(x, threadsX, out int modX) + (modX == 0 ? 0 : 1),
-            groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1);
+        int x = texture.Width;
+        int y = texture.Height;
+        int threadsX = 8;
+        int threadsY = 8;
+        int groupsX = Math.DivRem(x, threadsX, out int modX) + (modX == 0 ? 0 : 1);
+        int groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1);
 
         Guard.IsBetweenOrEqualTo(groupsX, 1, Windows.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
         Guard.IsBetweenOrEqualTo(groupsY, 1, Windows.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));

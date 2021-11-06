@@ -40,9 +40,8 @@ internal static unsafe class ID3D12GraphicsCommandListExtensions
         ushort depth)
     {
         D3D12_RESOURCE_DESC d3D12ResourceDescriptionSource = d3D12ResourceSource->GetDesc();
-        D3D12_TEXTURE_COPY_LOCATION
-            d3D12TextureCopyLocationDestination = new(d3D12ResourceDestination, in *d3D12PlacedSubresourceFootprintDestination),
-            d3D12TextureCopyLocationSource = new(d3D12ResourceSource, 0);
+        D3D12_TEXTURE_COPY_LOCATION d3D12TextureCopyLocationDestination = new(d3D12ResourceDestination, in *d3D12PlacedSubresourceFootprintDestination);
+        D3D12_TEXTURE_COPY_LOCATION d3D12TextureCopyLocationSource = new(d3D12ResourceSource, 0);
         D3D12_BOX d3D12Box;
         D3D12_BOX* pD3D12Box;
 
@@ -99,9 +98,8 @@ internal static unsafe class ID3D12GraphicsCommandListExtensions
         uint height,
         ushort depth)
     {
-        D3D12_TEXTURE_COPY_LOCATION
-            d3D12TextureCopyLocationDestination = new(d3D12ResourceDestination, 0),
-            d3D12TextureCopyLocationSource = new(d3D12ResourceSource, in *d3D12PlacedSubresourceFootprintSource);
+        D3D12_TEXTURE_COPY_LOCATION d3D12TextureCopyLocationDestination = new(d3D12ResourceDestination, 0);
+        D3D12_TEXTURE_COPY_LOCATION d3D12TextureCopyLocationSource = new(d3D12ResourceSource, in *d3D12PlacedSubresourceFootprintSource);
         D3D12_BOX d3D12Box;
         D3D12_BOX* pD3D12Box;
 

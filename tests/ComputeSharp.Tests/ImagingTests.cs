@@ -96,10 +96,9 @@ public class ImagingTests
     [AllDevices]
     public void SaveRgba32AsJpeg(Device device)
     {
-        string
-            path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging"),
-            expectedPath = Path.Combine(path, "city.jpg"),
-            actualPath = Path.Combine(path, "city_rgba32_saved.jpg");
+        string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
+        string expectedPath = Path.Combine(path, "city.jpg");
+        string actualPath = Path.Combine(path, "city_rgba32_saved.jpg");
 
         using ReadOnlyTexture2D<Rgba32, float4> texture = device.Get().LoadReadOnlyTexture2D<Rgba32, float4>(expectedPath);
 
@@ -112,10 +111,9 @@ public class ImagingTests
     [AllDevices]
     public void SaveBgra32AsJpeg(Device device)
     {
-        string
-            path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging"),
-            expectedPath = Path.Combine(path, "city.jpg"),
-            actualPath = Path.Combine(path, "city_bgra32_saved.jpg");
+        string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
+        string expectedPath = Path.Combine(path, "city.jpg");
+        string actualPath = Path.Combine(path, "city_bgra32_saved.jpg");
 
         using ReadOnlyTexture2D<Bgra32, float4> texture = device.Get().LoadReadOnlyTexture2D<Bgra32, float4>(expectedPath);
 
@@ -128,11 +126,10 @@ public class ImagingTests
     [AllDevices]
     public void SaveR8AsJpeg(Device device)
     {
-        string
-            path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging"),
-            sourcePath = Path.Combine(path, "city.jpg"),
-            expectedPath = Path.Combine(path, "city_r8_reference.jpg"),
-            actualPath = Path.Combine(path, "city_r8_saved.jpg");
+        string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
+        string sourcePath = Path.Combine(path, "city.jpg");
+        string expectedPath = Path.Combine(path, "city_r8_reference.jpg");
+        string actualPath = Path.Combine(path, "city_r8_saved.jpg");
 
         using ReadOnlyTexture2D<R8, float> texture = device.Get().LoadReadOnlyTexture2D<R8, float>(sourcePath);
 

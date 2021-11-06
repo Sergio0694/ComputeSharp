@@ -31,9 +31,8 @@ public class ImageProcessingTests
         using var cpu = original.Clone(c => c.BokehBlur(40, 2, 3));
         using var gpu = original.Clone(c => c.ApplyProcessor(new HlslBokehBlurProcessor(device.Get(), 40, 2)));
 
-        string
-            expectedPath = Path.Combine(path, "city_bokeh_cpu.jpg"),
-            actualPath = Path.Combine(path, "city_bokeh_gpu.jpg");
+        string expectedPath = Path.Combine(path, "city_bokeh_cpu.jpg");
+        string actualPath = Path.Combine(path, "city_bokeh_gpu.jpg");
 
         cpu.Save(expectedPath);
         gpu.Save(actualPath);
@@ -56,9 +55,8 @@ public class ImageProcessingTests
         using var cpu = original.Clone(c => c.GaussianBlur(30f));
         using var gpu = original.Clone(c => c.ApplyProcessor(new HlslGaussianBlurProcessor(device.Get(), 90)));
 
-        string
-            expectedPath = Path.Combine(path, "city_gaussian_cpu.jpg"),
-            actualPath = Path.Combine(path, "city_gaussian_gpu.jpg");
+        string expectedPath = Path.Combine(path, "city_gaussian_cpu.jpg");
+        string actualPath = Path.Combine(path, "city_gaussian_gpu.jpg");
 
         cpu.Save(expectedPath);
         gpu.Save(actualPath);
