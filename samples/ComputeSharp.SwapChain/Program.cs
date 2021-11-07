@@ -21,6 +21,7 @@ class Program
     private static readonly Win32Application[] Samples = new Win32Application[]
     {
         new SwapChainApplication<HelloWorld>(static time => new((float)time.TotalSeconds)),
+        new SwapChainApplication<FourColorGradient>(static time => new((float)time.TotalSeconds)),
         new SwapChainApplication<ColorfulInfinity>(static time => new((float)time.TotalSeconds)),
         new SwapChainApplication<FractalTiling>(static time => new((float)time.TotalSeconds)),
         new SwapChainApplication<TwoTiledTruchet>(static time => new((float)time.TotalSeconds)),
