@@ -35,28 +35,35 @@ class Program
 
     static void Main()
     {
-        Console.WriteLine("Available samples:");
-        Console.WriteLine();
-
-        for (int i = 0; i < Samples.Length; i++)
-        {
-            Console.WriteLine($"{i}: {Samples[i].GetType().GenericTypeArguments[0].Name}");
-        }
-
-        Console.WriteLine();
-
         int index;
 
         do
         {
-            Console.Write("Enter the index of the sample to run: ");
-        }
-        while (!int.TryParse(Console.ReadLine(), out index));
+            Console.WriteLine("Available samples:");
+            Console.WriteLine();
 
-        Console.WriteLine();
-        Console.WriteLine($"Starting {Samples[index].GetType().GenericTypeArguments[0].Name}...");
+            for (int i = 0; i < Samples.Length; i++)
+            {
+                Console.WriteLine($"{i}: {Samples[i].GetType().GenericTypeArguments[0].Name}");
+            }
 
-        Win32ApplicationRunner.Run(Samples[index]);
+            Console.WriteLine($"{Samples.Length}+: Exit (Use Escape, 'Q', or Alt+F4 to exit a sample once chosen.)");
+            Console.WriteLine();            
+
+            do
+            {
+                Console.Write("Enter the index of the sample to run: ");
+            }
+            while (!int.TryParse(Console.ReadLine(), out index));
+
+            if (index < Samples.Length)
+            {
+                Console.WriteLine();
+                Console.WriteLine($"Starting {Samples[index].GetType().GenericTypeArguments[0].Name}...");
+
+                Win32ApplicationRunner.Run(Samples[index]);
+            }
+        } while (index < Samples.Length);
     }
 
     /// <summary>
