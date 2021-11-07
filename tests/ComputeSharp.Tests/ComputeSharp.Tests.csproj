@@ -30,6 +30,7 @@
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\HelloWorld.cs" Link="Shaders\Pixel\HelloWorld.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ColorfulInfinity.cs" Link="Shaders\Pixel\ColorfulInfinity.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ContouredLayers.cs" Link="Shaders\Pixel\ContouredLayers.cs" />
+    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\FourColorGradient.cs" Link="Shaders\Pixel\FourColorGradient.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ExtrudedTruchetPattern.cs" Link="Shaders\Pixel\ExtrudedTruchetPattern.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\FractalTiling.cs" Link="Shaders\Pixel\FractalTiling.cs" />
     <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\MengerJourney.cs" Link="Shaders\Pixel\MengerJourney.cs" />
@@ -56,6 +57,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Assets\ExtrudedTruchetPattern.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\FourColorGradient.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\FractalTiling.png">

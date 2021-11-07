@@ -36,6 +36,15 @@ public class ShadersTests
 
     [CombinatorialTestMethod]
     [AllDevices]
+    [Data(typeof(FourColorGradient))]
+    [Data(typeof(SwapChain.Shaders.Compute.FourColorGradient))]
+    public void FourColorGradient(Device device, Type shaderType)
+    {
+        RunAndCompareShader(device, shaderType, 0.00021f);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
     [Data(typeof(FractalTiling))]
     [Data(typeof(SwapChain.Shaders.Compute.FractalTiling))]
     public void FractalTiling(Device device, Type shaderType)
