@@ -249,6 +249,19 @@ public readonly partial struct GrayscaleEffect : IComputeShader
 
 > **NOTE:** this is just an example to illustrate how these texture types can help with automatic pixel format conversion. You're free to use any library of choice to load and save image data, as well as to how to structure your compute shaders representing image effects. This is just one of the infinite possible effects that could be achieved by using **ComputeSharp**.
 
+You can also use a similar technique to create a blank texture, render a single frame of a pixel shader, and save the output to a file:
+
+```csharp
+// Create a blank 1280x720 surface for us to render to
+using var texture = Gpu.Default.AllocateReadWriteTexture2D<Bgra32, float4>(1280, 720);
+
+// Using an existing shader from our samples, we can render a specific time frame
+Gpu.Default.ForEach(texture, new FourColorGradient(0));
+
+// Save the result to a file on disk
+texture.Save("output.png");
+```
+
 ## Shader metaprogramming
 
 One of the reasons why **ComputeSharp** compiles shaders at runtime is that it allows it to support a number of dynamic scenarios, including shader metaprogramming. What this means is that it's possible to have a shader that captures an instance of a `Delegate` type (provided the signature matches the supported types mentioned above), and reuse it with different methods. The library will automatically run different variations of the shaders depending on what methods they are capturing. Here is an example:
