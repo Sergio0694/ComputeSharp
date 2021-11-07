@@ -1,0 +1,8 @@
+# Refactored code to use file scoped using declarations
+d5e3114f7c57c815fe72ae8e2c4c1225352bfc03
+
+# Updated pixel tests T4 templates to file scoped using directives
+6fe06ea4b2b8be4d4038d79840e215448e8f3893
+
+# Removed multiline variable declarations
+ee0d3a7b68e95a9c3e569d582b4efc8aa7fd4d4a
