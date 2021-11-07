@@ -56,14 +56,14 @@ class Program
             }
             while (!int.TryParse(Console.ReadLine(), out index));
 
-            if (index < Samples.Length)
+            if (index >= 0 && index < Samples.Length)
             {
                 Console.WriteLine();
                 Console.WriteLine($"Starting {Samples[index].GetType().GenericTypeArguments[0].Name}...");
 
                 Win32ApplicationRunner.Run(Samples[index]);
             }
-        } while (index < Samples.Length);
+        } while (index >= 0 && index < Samples.Length);
     }
 
     /// <summary>
