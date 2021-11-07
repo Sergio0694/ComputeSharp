@@ -39,8 +39,8 @@ internal readonly partial struct FourColorGradient : IComputeShader
     /// <summary>
     /// Generate a hash from a vector.
     /// </summary>
-    /// <param name="p">Vector to hash</param>
-    /// <returns>Hashed vector</returns>
+    /// <param name="p">Vector to hash.</param>
+    /// <returns>Hashed vector.</returns>
     private static float2 Hash(float2 p)
     {
         p = new float2(Hlsl.Dot(p, new float2(2127.1f, 81.17f)), Hlsl.Dot(p, new float2(1269.5f, 283.37f)));
@@ -51,8 +51,8 @@ internal readonly partial struct FourColorGradient : IComputeShader
     /// <summary>
     /// Generate a smoothed noise pattern.
     /// </summary>
-    /// <param name="p">Position vector</param>
-    /// <returns>Depth</returns>
+    /// <param name="p">Position vector.</param>
+    /// <returns>Depth value.</returns>
     private static float Noise(float2 p)
     {
         float2 i = Hlsl.Floor(p);
@@ -103,9 +103,8 @@ internal readonly partial struct FourColorGradient : IComputeShader
         // Draw the image
         float3 layer1 = Hlsl.Lerp(colorOne, colorTwo, Hlsl.SmoothStep(-0.3f, 0.2f, Hlsl.Mul(tuv.XY, Rotate(Hlsl.Radians(-5.0f))).X));
         float3 layer2 = Hlsl.Lerp(colorThree, colorFour, Hlsl.SmoothStep(-0.3f, 0.2f, Hlsl.Mul(tuv.XY, Rotate(Hlsl.Radians(-5.0f))).X));
-        float3 finalComp = Hlsl.Lerp(layer1, layer2, Hlsl.SmoothStep(0.5f, -0.3f, tuv.Y));
-        float3 col = finalComp;
+        float3 col = Hlsl.Lerp(layer1, layer2, Hlsl.SmoothStep(0.5f, -0.3f, tuv.Y));
 
-        texture[ThreadIds.XY] = new(col, 1.0f);
+        texture[ThreadIds.XY] = new float4(col, 1.0f);
     }
 }
