@@ -12,7 +12,7 @@ internal sealed unsafe partial class ShaderCompiler
     /// <summary>
     /// Initializes the DLL resolvers for the dxcompiler.dll and dxil.dll libraries.
     /// </summary>
-    private static void InitializeDxcLibrariesLoading()
+    static ShaderCompiler()
     {
         // Register a custom library resolver for the two DXC libraries. We need to either manually load the two
         // libraries from the NuGet directory, if an RID is not in use, or we need to ensure that dxil.dll is

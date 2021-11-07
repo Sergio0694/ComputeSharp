@@ -39,11 +39,6 @@ internal sealed unsafe partial class ShaderCompiler
     /// </summary>
     private ShaderCompiler()
     {
-        lock(this)
-        {
-            InitializeDxcLibrariesLoading();
-        }
-
         using ComPtr<IDxcCompiler> dxcCompiler = default;
         using ComPtr<IDxcLibrary> dxcLibrary = default;
         using ComPtr<IDxcIncludeHandler> dxcIncludeHandler = default;
