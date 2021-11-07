@@ -39,6 +39,7 @@ class Program
 
         do
         {
+            Console.Clear();
             Console.WriteLine("Available samples:");
             Console.WriteLine();
 
@@ -47,7 +48,7 @@ class Program
                 Console.WriteLine($"{i}: {Samples[i].GetType().GenericTypeArguments[0].Name}");
             }
 
-            Console.WriteLine($"{Samples.Length}+: Exit (Use Escape, 'Q', or Alt+F4 to exit a sample once chosen.)");
+            Console.WriteLine($"{Samples.Length}+: Exit (Use Escape, 'Q', or Alt + F4 to exit a sample once chosen)");
             Console.WriteLine();            
 
             do
@@ -63,7 +64,8 @@ class Program
 
                 Win32ApplicationRunner.Run(Samples[index]);
             }
-        } while (index >= 0 && index < Samples.Length);
+        }
+        while (index >= 0 && index < Samples.Length);
     }
 
     /// <summary>
