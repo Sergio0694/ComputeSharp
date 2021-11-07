@@ -20,6 +20,9 @@ internal readonly partial struct FourColorGradient : IPixelShader<float4>
     private static readonly float3 colorThree = new(0f, 0.999f, 0f);
     private static readonly float3 colorFour = new(0f, 0f, 0.999f);
 
+    /// <summary>
+    /// Standard 2D rotation formula.
+    /// </summary>
     private static float2x2 Rotate(float a)
     {
         float c = Hlsl.Cos(a);
@@ -28,6 +31,11 @@ internal readonly partial struct FourColorGradient : IPixelShader<float4>
         return new(c, s, -s, c);
     }
 
+    /// <summary>
+    /// Generate a hash from a vector.
+    /// </summary>
+    /// <param name="p">Vector to hash</param>
+    /// <returns>Hashed vector</returns>
     private static float2 Hash(float2 p)
     {
         p = new float2(Hlsl.Dot(p, new float2(2127.1f, 81.17f)), Hlsl.Dot(p, new float2(1269.5f, 283.37f)));
@@ -35,6 +43,11 @@ internal readonly partial struct FourColorGradient : IPixelShader<float4>
         return Hlsl.Frac(Hlsl.Sin(p) * 43758.5453f);
     }
 
+    /// <summary>
+    /// Generate a smoothed noise pattern.
+    /// </summary>
+    /// <param name="p">Position vector</param>
+    /// <returns>Depth</returns>
     private static float Noise(float2 p)
     {
         float2 i = Hlsl.Floor(p);
