@@ -148,6 +148,12 @@ internal unsafe static class Win32ApplicationRunner
             {
                 Thread.Sleep(100);
             }
+
+            // Also listen to Escape and 'Q' to Quit.
+            if (msg.message == Windows.WM_KEYUP && (msg.wParam == Windows.VK_ESCAPE || msg.wParam == 0x51))
+            {
+                _ = Windows.DestroyWindow(hwnd);
+            }
         }
 
         tokenSource.Cancel();
