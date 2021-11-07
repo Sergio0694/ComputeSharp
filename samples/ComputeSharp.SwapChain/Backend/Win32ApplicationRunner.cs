@@ -63,7 +63,7 @@ internal unsafe static class Win32ApplicationRunner
                 style = Windows.CS_HREDRAW | Windows.CS_VREDRAW,
                 lpfnWndProc = &WindowProc,
                 hInstance = hInstance,
-                hCursor = Windows.LoadCursorW(IntPtr.Zero, Windows.MAKEINTRESOURCE(32512)),
+                hCursor = Windows.LoadCursorW(IntPtr.Zero, Windows.IDC_ARROW),
                 lpszClassName = (ushort*)name
             };
 
