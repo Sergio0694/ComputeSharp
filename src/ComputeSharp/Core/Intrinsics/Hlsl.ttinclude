@@ -822,9 +822,9 @@ var Intrinsics = new[]
         Returns = "A floating-point, scalar value that represents the distance between the {x} parameter and the {y} parameter.",
         Overloads = new[]
         {
-            new { Return = "Float2", Params = new[] { "Float2", "Float2" } },
-            new { Return = "Float3", Params = new[] { "Float3", "Float3" } },
-            new { Return = "Float4", Params = new[] { "Float4", "Float4" } }
+            new { Return = "float", Params = new[] { "Float2", "Float2" } },
+            new { Return = "float", Params = new[] { "Float3", "Float3" } },
+            new { Return = "float", Params = new[] { "Float4", "Float4" } }
         },
         IsPure = true
     },

@@ -5229,7 +5229,7 @@ public static partial class Hlsl
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [Pure]
     [HlslIntrinsicName("distance")]
-    public static Float2 Distance(Float2 x, Float2 y) => default;
+    public static float Distance(Float2 x, Float2 y) => default;
 
     /// <summary>
     /// Returns a distance scalar between two vectors.
@@ -5240,7 +5240,7 @@ public static partial class Hlsl
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [Pure]
     [HlslIntrinsicName("distance")]
-    public static Float3 Distance(Float3 x, Float3 y) => default;
+    public static float Distance(Float3 x, Float3 y) => default;
 
     /// <summary>
     /// Returns a distance scalar between two vectors.
@@ -5251,7 +5251,7 @@ public static partial class Hlsl
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [Pure]
     [HlslIntrinsicName("distance")]
-    public static Float4 Distance(Float4 x, Float4 y) => default;
+    public static float Distance(Float4 x, Float4 y) => default;
 
     /// <summary>
     /// Returns the dot product of two vectors.
