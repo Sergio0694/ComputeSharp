@@ -45,12 +45,14 @@ public abstract class StructuredBuffer<T> : Buffer<T>
 
             fixed (void* destinationPointer = &destination)
             {
-                MemoryHelper.Copy(
-                    resource.Pointer,
-                    (uint)offset,
-                    (uint)length,
-                    (uint)sizeof(T),
-                    destinationPointer);
+                MemoryHelper.Copy<T>(
+                    source: resource.Pointer,
+                    destination: destinationPointer,
+                    sourceElementOffset: (uint)offset,
+                    destinationElementOffset: 0,
+                    sourceElementPitchInBytes: (uint)sizeof(T),
+                    destinationElementPitchInBytes: (uint)sizeof(T),
+                    count: (uint)length);
             }
         }
         else
@@ -70,12 +72,14 @@ public abstract class StructuredBuffer<T> : Buffer<T>
 
             fixed (void* destinationPointer = &destination)
             {
-                MemoryHelper.Copy(
-                    resource.Pointer,
-                    0u,
-                    (uint)length,
-                    (uint)sizeof(T),
-                    destinationPointer);
+                MemoryHelper.Copy<T>(
+                    source: resource.Pointer,
+                    destination: destinationPointer,
+                    sourceElementOffset: 0,
+                    destinationElementOffset: 0,
+                    sourceElementPitchInBytes: (uint)sizeof(T),
+                    destinationElementPitchInBytes: (uint)sizeof(T),
+                    count: (uint)length);
             }
         }
     }
@@ -105,12 +109,14 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         {
             using ID3D12ResourceMap resource = D3D12Resource->Map();
 
-            MemoryHelper.Copy(
-                resource.Pointer,
-                (uint)offset,
-                (uint)length,
-                (uint)sizeof(T),
-                destination.MappedData + destinationOffset);
+            MemoryHelper.Copy<T>(
+                source: resource.Pointer,
+                destination: destination.MappedData,
+                sourceElementOffset: (uint)offset,
+                destinationElementOffset: (uint)destinationOffset,
+                sourceElementPitchInBytes: (uint)sizeof(T),
+                destinationElementPitchInBytes: (uint)sizeof(T),
+                count: (uint)length);
         }
         else
         {
@@ -141,12 +147,14 @@ public abstract class StructuredBuffer<T> : Buffer<T>
 
             fixed (void* sourcePointer = &source)
             {
-                MemoryHelper.Copy(
-                    sourcePointer,
-                    (uint)offset,
-                    (uint)length,
-                    (uint)sizeof(T),
-                    resource.Pointer);
+                MemoryHelper.Copy<T>(
+                    source: sourcePointer,
+                    destination: resource.Pointer,
+                    sourceElementOffset: 0,
+                    destinationElementOffset: (uint)offset,
+                    sourceElementPitchInBytes: (uint)sizeof(T),
+                    destinationElementPitchInBytes: (uint)sizeof(T),
+                    count: (uint)length);
             }
         }
         else
@@ -159,12 +167,14 @@ public abstract class StructuredBuffer<T> : Buffer<T>
             using (ID3D12ResourceMap resource = allocation.Get()->GetResource()->Map())
             fixed (void* sourcePointer = &source)
             {
-                MemoryHelper.Copy(
-                    sourcePointer,
-                    0u,
-                    (uint)length,
-                    (uint)sizeof(T),
-                    resource.Pointer);
+                MemoryHelper.Copy<T>(
+                    source: sourcePointer,
+                    destination: resource.Pointer,
+                    sourceElementOffset: 0,
+                    destinationElementOffset: 0,
+                    sourceElementPitchInBytes: (uint)sizeof(T),
+                    destinationElementPitchInBytes: (uint)sizeof(T),
+                    count: (uint)length);
             }
 
             using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
@@ -199,12 +209,14 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         {
             using ID3D12ResourceMap resource = D3D12Resource->Map();
 
-            MemoryHelper.Copy(
-                source.MappedData,
-                (uint)sourceOffset,
-                (uint)length,
-                (uint)sizeof(T),
-                (T*)resource.Pointer + offset);
+            MemoryHelper.Copy<T>(
+                source: source.MappedData,
+                destination: resource.Pointer,
+                sourceElementOffset: (uint)sourceOffset,
+                destinationElementOffset: (uint)offset,
+                sourceElementPitchInBytes: (uint)sizeof(T),
+                destinationElementPitchInBytes: (uint)sizeof(T),
+                count: (uint)length);
         }
         else
         {

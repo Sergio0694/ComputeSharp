@@ -70,24 +70,14 @@ public sealed class ConstantBuffer<T> : Buffer<T>
 
         fixed (void* destinationPointer = &destination)
         {
-            if (IsPaddingPresent)
-            {
-                MemoryHelper.Copy<T>(
-                    resource.Pointer,
-                    (uint)offset,
-                    (uint)size,
-                    (uint)GetPaddedSize(),
-                    destinationPointer);
-            }
-            else
-            {
-                MemoryHelper.Copy(
-                    resource.Pointer,
-                    (uint)offset,
-                    (uint)size,
-                    (uint)sizeof(T),
-                    destinationPointer);
-            }
+            MemoryHelper.Copy<T>(
+                source: resource.Pointer,
+                destination: destinationPointer,
+                sourceElementOffset: (uint)offset,
+                destinationElementOffset: 0,
+                sourceElementPitchInBytes: (uint)GetPaddedSize(),
+                destinationElementPitchInBytes: (uint)sizeof(T),
+                count: (uint)size);
         }
     }
 
@@ -105,25 +95,14 @@ public sealed class ConstantBuffer<T> : Buffer<T>
 
         fixed (void* sourcePointer = &source)
         {
-            if (IsPaddingPresent)
-            {
-                MemoryHelper.Copy<T>(
-                    sourcePointer,
-                    resource.Pointer,
-                    (uint)offset,
-                    (uint)size,
-                    (uint)GetPaddedSize(),
-                    isPaddingInSourceToo: false);
-            }
-            else
-            {
-                MemoryHelper.Copy(
-                    sourcePointer,
-                    (uint)offset,
-                    (uint)size,
-                    (uint)sizeof(T),
-                    resource.Pointer);
-            }
+            MemoryHelper.Copy<T>(
+                source: sourcePointer,
+                destination: resource.Pointer,
+                sourceElementOffset: 0,
+                destinationElementOffset: (uint)offset,
+                sourceElementPitchInBytes: (uint)sizeof(T),
+                destinationElementPitchInBytes: (uint)GetPaddedSize(),
+                count: (uint)size);
         }
     }
 
@@ -144,25 +123,14 @@ public sealed class ConstantBuffer<T> : Buffer<T>
             using ID3D12ResourceMap sourceMap = buffer.D3D12Resource->Map();
             using ID3D12ResourceMap destinationMap = D3D12Resource->Map();
 
-            if (IsPaddingPresent)
-            {
-                MemoryHelper.Copy<T>(
-                    sourceMap.Pointer,
-                    destinationMap.Pointer,
-                    0,
-                    (uint)source.Length,
-                    (uint)GetPaddedSize(),
-                    isPaddingInSourceToo: true);
-            }
-            else
-            {
-                MemoryHelper.Copy(
-                    sourceMap.Pointer,
-                    0,
-                    (uint)source.Length,
-                    (uint)sizeof(T),
-                    destinationMap.Pointer);
-            }
+            MemoryHelper.Copy<T>(
+                source: sourceMap.Pointer,
+                destination: destinationMap.Pointer,
+                sourceElementOffset: 0,
+                destinationElementOffset: 0,
+                sourceElementPitchInBytes: (uint)GetPaddedSize(),
+                destinationElementPitchInBytes: (uint)GetPaddedSize(),
+                count: (uint)source.Length);
         }
         else CopyFromWithCpuBuffer(source);
     }
