@@ -184,10 +184,11 @@ public partial class BufferTests
     [Resource(typeof(ReadOnlyBuffer<>))]
     [Resource(typeof(ReadWriteBuffer<>))]
     [Data(0, 0, 4096)]
-    [Data(512, 0, 2048)]
     [Data(0, 512, 2048)]
-    [Data(127, 1024, 587)]
-    public void CopyTo_RangeToVoid_Ok(Device device, Type bufferType, int destinationOffset, int bufferOffset, int count)
+    [Data(512, 0, 2048)]
+    [Data(1024, 127, 587)]
+    [Data(65, 127, 587)]
+    public void CopyTo_RangeToVoid_Ok(Device device, Type bufferType, int sourceOffset, int destinationOffset, int count)
     {
         float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
 
@@ -195,9 +196,9 @@ public partial class BufferTests
 
         float[] result = new float[4096];
 
-        buffer.CopyTo(result, destinationOffset, bufferOffset, count);
+        buffer.CopyTo(result, sourceOffset, destinationOffset, count);
 
-        Assert.IsTrue(array.AsSpan(bufferOffset, count).SequenceEqual(result.AsSpan(destinationOffset, count)));
+        Assert.IsTrue(array.AsSpan(sourceOffset, count).SequenceEqual(result.AsSpan(destinationOffset, count)));
     }
 
     [CombinatorialTestMethod]
@@ -206,13 +207,13 @@ public partial class BufferTests
     [Resource(typeof(ReadOnlyBuffer<>))]
     [Resource(typeof(ReadWriteBuffer<>))]
     [Data(0, 0, 8196)]
-    [Data(-12, 0, 1024)]
-    [Data(0, -56, 1024)]
-    [Data(512, 0, 4096)]
-    [Data(12, 1024, 3600)]
-    [Data(12, 1024, -2096)]
+    [Data(0, -12, 1024)]
+    [Data(-56, 0, 1024)]
+    [Data(0, 512, 4096)]
+    [Data(1024, 12, 3600)]
+    [Data(1024, 12, - 2096)]
     [ExpectedException(typeof(ArgumentOutOfRangeException))]
-    public void CopyTo_RangeToVoid_Fail(Device device, Type bufferType, int destinationOffset, int bufferOffset, int count)
+    public void CopyTo_RangeToVoid_Fail(Device device, Type bufferType, int sourceOffset, int destinationOffset, int count)
     {
         float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
 
@@ -220,7 +221,7 @@ public partial class BufferTests
 
         float[] result = new float[4096];
 
-        buffer.CopyTo(result, destinationOffset, bufferOffset, count);
+        buffer.CopyTo(result, sourceOffset, destinationOffset, count);
     }
 
     [CombinatorialTestMethod]

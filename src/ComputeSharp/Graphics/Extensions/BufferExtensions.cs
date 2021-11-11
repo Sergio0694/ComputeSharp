@@ -63,15 +63,15 @@ public static class BufferExtensions
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
     /// <param name="buffer">The input <see cref="Buffer{T}"/> instance to read data from.</param>
     /// <param name="destination">The input array to write data to.</param>
+    /// <param name="sourceOffset">The offset to start reading data from.</param>
     /// <param name="destinationOffset">The starting offset within <paramref name="destination"/> to write data to.</param>
-    /// <param name="bufferOffset">The offset to start reading data from.</param>
     /// <param name="count">The number of items to read.</param>
-    public static void CopyTo<T>(this Buffer<T> buffer, T[] destination, int destinationOffset, int bufferOffset, int count)
+    public static void CopyTo<T>(this Buffer<T> buffer, T[] destination, int sourceOffset, int destinationOffset, int count)
         where T : unmanaged
     {
         Span<T> span = destination.AsSpan(destinationOffset, count);
 
-        buffer.CopyTo(span, bufferOffset);
+        buffer.CopyTo(span, sourceOffset);
     }
 
     /// <summary>
