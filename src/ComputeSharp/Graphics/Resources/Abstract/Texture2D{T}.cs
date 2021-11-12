@@ -226,7 +226,7 @@ public unsafe abstract class Texture2D<T> : NativeObject, GraphicsResourceHelper
     /// <summary>
     /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target <see cref="Texture2D{T}"/> instance.
     /// </summary>
-    /// <param name="destination">The target <see cref="ReadBackTexture2D{T}"/> instance to write data to.</param>
+    /// <param name="destination">The target <see cref="Texture2D{T}"/> instance to write data to.</param>
     /// <param name="destinationOffsetX">The horizontal offset within <paramref name="destination"/>.</param>
     /// <param name="destinationOffsetY">The vertical offset within <paramref name="destination"/>.</param>
     /// <param name="sourceOffsetX">The horizontal offset in the source texture.</param>

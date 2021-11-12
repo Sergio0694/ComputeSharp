@@ -241,6 +241,83 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
     }
 
     /// <summary>
+    /// Reads the contents of the specified range from the current <see cref="Texture3D{T}"/> instance and writes them into a <see cref="Texture3D{T}"/> instance.
+    /// </summary>
+    /// <param name="destination">The target <see cref="Texture3D{T}"/> instance to write data to.</param>
+    /// <param name="sourceOffsetX">The horizontal offset in the source texture.</param>
+    /// <param name="sourceOffsetY">The vertical offset in the source texture.</param>
+    /// <param name="sourceOffsetZ">The depthwise offset in the source texture.</param>
+    /// <param name="destinationOffsetX">The horizontal offset within <paramref name="destination"/>.</param>
+    /// <param name="destinationOffsetY">The vertical offset within <paramref name="destination"/>.</param>
+    /// <param name="destinationOffsetZ">The depthwise offset within <paramref name="destination"/>.</param>
+    /// <param name="width">The width of the memory area to copy.</param>
+    /// <param name="height">The height of the memory area to copy.</param>
+    /// <param name="depth">The depth of the memory area to copy.</param>
+    internal void CopyTo(Texture3D<T> destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
+    {
+        GraphicsDevice.ThrowIfDisposed();
+
+        ThrowIfDisposed();
+
+        destination.ThrowIfDeviceMismatch(GraphicsDevice);
+        destination.ThrowIfDisposed();
+
+        Guard.IsInRange(sourceOffsetX, 0, Width, nameof(sourceOffsetX));
+        Guard.IsInRange(sourceOffsetY, 0, Height, nameof(sourceOffsetY));
+        Guard.IsInRange(sourceOffsetZ, 0, Depth, nameof(sourceOffsetZ));
+        Guard.IsInRange(destinationOffsetX, 0, destination.Width, nameof(destinationOffsetX));
+        Guard.IsInRange(destinationOffsetY, 0, destination.Height, nameof(destinationOffsetY));
+        Guard.IsInRange(destinationOffsetZ, 0, destination.Depth, nameof(destinationOffsetZ));
+        Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
+        Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
+        Guard.IsBetweenOrEqualTo(depth, 1, Depth, nameof(depth));
+        Guard.IsBetweenOrEqualTo(width, 1, destination.Width, nameof(width));
+        Guard.IsBetweenOrEqualTo(height, 1, destination.Height, nameof(height));
+        Guard.IsBetweenOrEqualTo(depth, 1, destination.Depth, nameof(depth));
+        Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
+        Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
+        Guard.IsBetweenOrEqualTo(destinationOffsetZ + depth, 1, destination.Depth, nameof(destinationOffsetZ));
+        Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
+        Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
+        Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
+
+        D3D12_COMMAND_LIST_TYPE d3D12CommandListType =
+            this.d3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE ||
+            destination.d3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE
+            ? D3D12_COMMAND_LIST_TYPE_COMPUTE
+            : D3D12_COMMAND_LIST_TYPE_COPY;
+
+        using CommandList copyCommandList = new(GraphicsDevice, d3D12CommandListType);
+
+        if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
+        {
+            copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_SOURCE);
+            copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(destination.D3D12Resource, destination.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_DEST);
+        }
+
+        copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
+            d3D12ResourceDestination: destination.D3D12Resource,
+            (uint)destinationOffsetX,
+            (uint)destinationOffsetY,
+            (ushort)destinationOffsetZ,
+            d3D12ResourceSource: D3D12Resource,
+            (uint)sourceOffsetX,
+            (uint)sourceOffsetY,
+            (ushort)sourceOffsetZ,
+            (uint)width,
+            (uint)height,
+            (ushort)depth);
+
+        if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
+        {
+            copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, this.d3D12ResourceState);
+            copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(destination.D3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, destination.d3D12ResourceState);
+        }
+
+        copyCommandList.ExecuteAndWaitForCompletion();
+    }
+
+    /// <summary>
     /// Reads the contents of the specified range from the current <see cref="Texture3D{T}"/> instance and writes them into a <see cref="ReadBackTexture3D{T}"/> instance.
     /// </summary>
     /// <param name="destination">The target <see cref="ReadBackTexture3D{T}"/> instance to write data to.</param>
