@@ -135,6 +135,64 @@ public partial class Texture3DTests
     [AllDevices]
     [Resource(typeof(ReadOnlyTexture3D<>))]
     [Resource(typeof(ReadWriteTexture3D<>))]
+    [Data(0, 0, 0, 64, 64, 8)]
+    [Data(0, 14, 0, 64, 50, 1)]
+    [Data(14, 0, 0, 50, 64, 1)]
+    [Data(0, 0, 3, 50, 64, 1)]
+    [Data(10, 10, 1, 54, 54, 4)]
+    [Data(20, 20, 3, 32, 27, 3)]
+    [Data(40, 2, 4, 4, 62, 4)]
+    [Data(0, 60, 1, 64, 4, 6)]
+    [Data(63, 2, 2, 1, 60, 5)]
+    [Data(2, 63, 7, 60, 1, 1)]
+    public void GetData_RangeToArray_Ok(Device device, Type textureType, int x, int y, int z, int width, int height, int depth)
+    {
+        float[] array = Enumerable.Range(0, 64 * 64 * 8).Select(static i => (float)i).ToArray();
+
+        using Texture3D<float> texture = device.Get().AllocateTexture3D(textureType, array, 64, 64, 8);
+
+        float[,,] result = texture.ToArray(x, y, z, width, height, depth);
+
+        Assert.AreEqual(depth, result.GetLength(0));
+        Assert.AreEqual(height, result.GetLength(1));
+        Assert.AreEqual(width, result.GetLength(2));
+
+        for (int k = 0; k < depth; k++)
+        {
+            Span2D<float> expected = new Span2D<float>(array, 64 * 64 * (k + z), 64, 64, 0).Slice(y, x, height, width);
+            Span2D<float> data = new(result, k);
+
+            CollectionAssert.AreEqual(expected.ToArray(), data.ToArray());
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Resource(typeof(ReadOnlyTexture3D<>))]
+    [Resource(typeof(ReadWriteTexture3D<>))]
+    [Data(-1, 0, 0, 50, 50, 1)]
+    [Data(0, -1, 0, 50, 50, 1)]
+    [Data(0, 0, -1, 50, 50, 1)]
+    [Data(12, 0, 0, -1, 50, 1)]
+    [Data(12, 0, 0, 20, -1, 0)]
+    [Data(12, 0, 0, 20, 2, -1)]
+    [Data(12, 20, 0, 20, 50, 2)]
+    [Data(12, 20, 0, 60, 20, 3)]
+    [Data(12, 10, 6, 20, 20, 10)]
+    [Data(80, 20, 0, 40, 20, 1)]
+    [Data(0, 80, 0, 40, 20, 1)]
+    [ExpectedException(typeof(ArgumentOutOfRangeException))]
+    public void GetData_RangeToArray_Fail(Device device, Type textureType, int x, int y, int z, int width, int height, int depth)
+    {
+        using Texture3D<float> texture = device.Get().AllocateTexture3D<float>(textureType, 64, 64, 8);
+
+        _ = texture.ToArray(x, y, z, width, height, depth);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Resource(typeof(ReadOnlyTexture3D<>))]
+    [Resource(typeof(ReadWriteTexture3D<>))]
     [Data(0, 0, 0, 64, 64, 3)]
     [Data(0, 14, 0, 64, 50, 3)]
     [Data(0, 14, 1, 64, 50, 2)]

@@ -34,6 +34,35 @@ public static class Texture3DExtensions
     }
 
     /// <summary>
+    /// Reads the contents of the current <see cref="Texture3D{T}"/> instance and returns an array.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <param name="source">The input <see cref="Texture3D{T}"/> instance to read data from.</param>
+    /// <param name="x">The horizontal offset in the source texture.</param>
+    /// <param name="y">The vertical offset in the source texture.</param>
+    /// <param name="z">The depthwise offset in the source texture.</param>
+    /// <param name="width">The width of the memory area to copy.</param>
+    /// <param name="height">The height of the memory area to copy.</param>
+    /// <param name="depth">The depth of the memory area to copy.</param>
+    /// <returns>A <typeparamref name="T"/> array with the contents of the current texture.</returns>
+    public static unsafe T[,,] ToArray<T>(this Texture3D<T> source, int x, int y, int z, int width, int height, int depth)
+        where T : unmanaged
+    {
+        Guard.IsGreaterThanOrEqualTo(width, 0, nameof(width));
+        Guard.IsGreaterThanOrEqualTo(height, 0, nameof(height));
+        Guard.IsGreaterThanOrEqualTo(depth, 0, nameof(depth));
+
+        T[,,] data = new T[depth, height, width];
+
+        fixed (T* p = data)
+        {
+            source.CopyTo(new Span<T>(p, width * height * depth), x, y, z, width, height, depth);
+        }
+
+        return data;
+    }
+
+    /// <summary>
     /// Reads the contents of the current <see cref="Texture3D{T}"/> instance and writes them into a target array.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
