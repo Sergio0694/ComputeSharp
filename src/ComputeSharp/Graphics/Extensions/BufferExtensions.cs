@@ -100,6 +100,33 @@ public static class BufferExtensions
     }
 
     /// <summary>
+    /// Reads the contents of the specified <see cref="Buffer{T}"/> instance and copies them to the target <see cref="Buffer{T}"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the buffers.</typeparam>
+    /// <param name="buffer">The input <see cref="Buffer{T}"/> instance to read data from.</param>
+    /// <param name="destination">The target <see cref="Buffer{T}"/> instance to write data to.</param>
+    public static void CopyTo<T>(this Buffer<T> buffer, Buffer<T> destination)
+        where T : unmanaged
+    {
+        buffer.CopyTo(destination, 0, 0, buffer.Length);
+    }
+
+    /// <summary>
+    /// Reads the contents of the specified range from a <see cref="Buffer{T}"/> instance and copies them to the target <see cref="Buffer{T}"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the buffers.</typeparam>
+    /// <param name="buffer">The input <see cref="Buffer{T}"/> instance to read data from.</param>
+    /// <param name="destination">The target <see cref="Buffer{T}"/> instance to write data to.</param>
+    /// <param name="sourceOffset">The offset to start reading data from.</param>
+    /// <param name="destinationOffset">The starting offset within <paramref name="destination"/> to write data to.</param>
+    /// <param name="count">The number of items to read.</param>
+    public static void CopyTo<T>(this Buffer<T> buffer, Buffer<T> destination, int sourceOffset, int destinationOffset, int count)
+        where T : unmanaged
+    {
+        buffer.CopyTo(destination, sourceOffset, destinationOffset, count);
+    }
+
+    /// <summary>
     /// Writes the contents of a given <typeparamref name="T"/> array to a <see cref="Buffer{T}"/> instance.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
@@ -151,5 +178,32 @@ public static class BufferExtensions
         where T : unmanaged
     {
         buffer.CopyFrom(ref MemoryMarshal.GetReference(source), source.Length, offset);
+    }
+
+    /// <summary>
+    /// Writes the contents of the specified <see cref="Buffer{T}"/> instance to the curreent <see cref="Buffer{T}"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the buffers.</typeparam>
+    /// <param name="buffer">The input <see cref="Buffer{T}"/> instance to write data data to.</param>
+    /// <param name="source">The source <see cref="Buffer{T}"/> instance to read data from.</param>
+    public static void CopyFrom<T>(this Buffer<T> buffer, Buffer<T> source)
+        where T : unmanaged
+    {
+        source.CopyTo(buffer, 0, 0, source.Length);
+    }
+
+    /// <summary>
+    /// Writes the contents of the specified range from a <see cref="Buffer{T}"/> instance and copies them to the current <see cref="Buffer{T}"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the buffers.</typeparam>
+    /// <param name="buffer">The input <see cref="Buffer{T}"/> instance to write data to.</param>
+    /// <param name="source">The source <see cref="Buffer{T}"/> instance to read data from.</param>
+    /// <param name="sourceOffset">The offset to start reading data from.</param>
+    /// <param name="destinationOffset">The starting offset within <paramref name="buffer"/> to write data to.</param>
+    /// <param name="count">The number of items to read.</param>
+    public static void CopyFrom<T>(this Buffer<T> buffer, Buffer<T> source, int sourceOffset, int destinationOffset, int count)
+        where T : unmanaged
+    {
+        source.CopyTo(buffer, sourceOffset, destinationOffset, count);
     }
 }

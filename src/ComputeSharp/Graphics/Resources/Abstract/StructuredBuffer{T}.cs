@@ -36,8 +36,9 @@ public abstract class StructuredBuffer<T> : Buffer<T>
 
         ThrowIfDisposed();
 
+        Guard.IsBetweenOrEqualTo(length, 0, Length, nameof(length));
         Guard.IsInRange(offset, 0, Length, nameof(offset));
-        Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(length));
+        Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 
         if (GraphicsDevice.IsCacheCoherentUMA)
         {
@@ -82,6 +83,44 @@ public abstract class StructuredBuffer<T> : Buffer<T>
                     count: (uint)length);
             }
         }
+    }
+
+    /// <inheritdoc/>
+    internal override unsafe void CopyTo(Buffer<T> destination, int sourceOffset, int destinationOffset, int length)
+    {
+        GraphicsDevice.ThrowIfDisposed();
+
+        ThrowIfDisposed();
+
+        destination.ThrowIfDeviceMismatch(GraphicsDevice);
+        destination.ThrowIfDisposed();
+
+        Guard.IsBetweenOrEqualTo(length, 0, Length, nameof(length));
+        Guard.IsBetweenOrEqualTo(length, 0, destination.Length, nameof(length));
+        Guard.IsInRange(sourceOffset, 0, Length, nameof(sourceOffset));
+        Guard.IsLessThanOrEqualTo(sourceOffset + length, Length, nameof(sourceOffset));
+        Guard.IsInRange(destinationOffset, 0, destination.Length, nameof(destinationOffset));
+        Guard.IsLessThanOrEqualTo(destinationOffset + length, destination.Length, nameof(destinationOffset));
+
+        if (!destination.IsPaddingPresent)
+        {
+            nint sourceByteOffset = (nint)sourceOffset * sizeof(T);
+            nint destinationByteOffset = (nint)destinationOffset * sizeof(T);
+            nint byteLength = length * sizeof(T);
+
+            // Directly copy the input buffer
+            using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
+
+            copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(
+                destination.D3D12Resource,
+                (ulong)destinationByteOffset,
+                D3D12Resource,
+                (ulong)sourceByteOffset,
+                (ulong)byteLength);
+
+            copyCommandList.ExecuteAndWaitForCompletion();
+        }
+        else CopyToWithCpuBuffer(destination, sourceOffset, destinationOffset, length);
     }
 
     /// <summary>
@@ -138,8 +177,9 @@ public abstract class StructuredBuffer<T> : Buffer<T>
 
         ThrowIfDisposed();
 
+        Guard.IsBetweenOrEqualTo(length, 0, Length, nameof(length));
         Guard.IsInRange(offset, 0, Length, nameof(offset));
-        Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(length));
+        Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 
         if (GraphicsDevice.IsCacheCoherentUMA)
         {
@@ -229,28 +269,5 @@ public abstract class StructuredBuffer<T> : Buffer<T>
             copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(D3D12Resource, byteOffset, source.D3D12Resource, byteSourceOffset, byteLength);
             copyCommandList.ExecuteAndWaitForCompletion();
         }
-    }
-
-    /// <inheritdoc/>
-    public override unsafe void CopyFrom(Buffer<T> source)
-    {
-        GraphicsDevice.ThrowIfDisposed();
-
-        ThrowIfDisposed();
-
-        source.ThrowIfDeviceMismatch(GraphicsDevice);
-        source.ThrowIfDisposed();
-
-        Guard.IsLessThanOrEqualTo(source.Length, Length, nameof(Length));
-
-        if (!source.IsPaddingPresent)
-        {
-            // Directly copy the input buffer
-            using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
-
-            copyCommandList.D3D12GraphicsCommandList->CopyBufferRegion(D3D12Resource, 0, source.D3D12Resource, 0,(ulong)SizeInBytes);
-            copyCommandList.ExecuteAndWaitForCompletion();
-        }
-        else CopyFromWithCpuBuffer(source);
     }
 }

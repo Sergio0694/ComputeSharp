@@ -226,6 +226,58 @@ public partial class BufferTests
 
     [CombinatorialTestMethod]
     [AllDevices]
+    [Resource(typeof(ConstantBuffer<>))]
+    [Resource(typeof(ReadOnlyBuffer<>))]
+    [Resource(typeof(ReadWriteBuffer<>))]
+    [AdditionalResource(typeof(ConstantBuffer<>))]
+    [AdditionalResource(typeof(ReadOnlyBuffer<>))]
+    [AdditionalResource(typeof(ReadWriteBuffer<>))]
+    [Data(0, 0, 4096)]
+    [Data(0, 512, 2048)]
+    [Data(512, 0, 2048)]
+    [Data(1024, 127, 587)]
+    [Data(65, 127, 587)]
+    public void CopyTo_BufferToVoid_Ok(Device device, Type sourceType, Type destinationType, int sourceOffset, int destinationOffset, int count)
+    {
+        float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
+
+        using Buffer<float> source = device.Get().AllocateBuffer(sourceType, array);
+        using Buffer<float> destination = device.Get().AllocateBuffer<float>(destinationType, 4096);
+
+        source.CopyTo(destination, sourceOffset, destinationOffset, count);
+
+        float[] result = destination.ToArray();
+
+        Assert.IsTrue(array.AsSpan(sourceOffset, count).SequenceEqual(result.AsSpan(destinationOffset, count)));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Resource(typeof(ConstantBuffer<>))]
+    [Resource(typeof(ReadOnlyBuffer<>))]
+    [Resource(typeof(ReadWriteBuffer<>))]
+    [AdditionalResource(typeof(ConstantBuffer<>))]
+    [AdditionalResource(typeof(ReadOnlyBuffer<>))]
+    [AdditionalResource(typeof(ReadWriteBuffer<>))]
+    [Data(0, 0, 8196)]
+    [Data(0, -12, 1024)]
+    [Data(-56, 0, 1024)]
+    [Data(0, 512, 4096)]
+    [Data(1024, 12, 3600)]
+    [Data(1024, 12, -2096)]
+    [ExpectedException(typeof(ArgumentOutOfRangeException))]
+    public void CopyTo_BufferToVoid_Fail(Device device, Type sourceType, Type destinationType, int sourceOffset, int destinationOffset, int count)
+    {
+        float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
+
+        using Buffer<float> source = device.Get().AllocateBuffer(sourceType, array);
+        using Buffer<float> destination = device.Get().AllocateBuffer<float>(destinationType, 4096);
+
+        source.CopyTo(destination, sourceOffset, destinationOffset, count);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
     public void Dispatch_ConstantBuffer(Device device)
     {
         int[] data = Enumerable.Range(0, 1024).ToArray();

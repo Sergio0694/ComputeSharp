@@ -57,14 +57,15 @@ public sealed class ConstantBuffer<T> : Buffer<T>
     }
 
     /// <inheritdoc/>
-    internal override unsafe void CopyTo(ref T destination, int size, int offset)
+    internal override unsafe void CopyTo(ref T destination, int length, int offset)
     {
         GraphicsDevice.ThrowIfDisposed();
 
         ThrowIfDisposed();
 
+        Guard.IsBetweenOrEqualTo(length, 0, Length, nameof(length));
         Guard.IsInRange(offset, 0, Length, nameof(offset));
-        Guard.IsLessThanOrEqualTo(offset + size, Length, nameof(size));
+        Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 
         using ID3D12ResourceMap resource = D3D12Resource->Map();
 
@@ -77,19 +78,54 @@ public sealed class ConstantBuffer<T> : Buffer<T>
                 destinationElementOffset: 0,
                 sourceElementPitchInBytes: (uint)GetPaddedSize(),
                 destinationElementPitchInBytes: (uint)sizeof(T),
-                count: (uint)size);
+                count: (uint)length);
         }
     }
 
     /// <inheritdoc/>
-    internal override unsafe void CopyFrom(ref T source, int size, int offset)
+    internal override unsafe void CopyTo(Buffer<T> destination, int sourceOffset, int destinationOffset, int length)
     {
         GraphicsDevice.ThrowIfDisposed();
 
         ThrowIfDisposed();
 
+        destination.ThrowIfDeviceMismatch(GraphicsDevice);
+        destination.ThrowIfDisposed();
+
+        Guard.IsBetweenOrEqualTo(length, 0, Length, nameof(length));
+        Guard.IsBetweenOrEqualTo(length, 0, destination.Length, nameof(length));
+        Guard.IsInRange(sourceOffset, 0, Length, nameof(sourceOffset));
+        Guard.IsLessThanOrEqualTo(sourceOffset + length, Length, nameof(sourceOffset));
+        Guard.IsInRange(destinationOffset, 0, destination.Length, nameof(destinationOffset));
+        Guard.IsLessThanOrEqualTo(destinationOffset + length, destination.Length, nameof(destinationOffset));
+
+        if (destination is ConstantBuffer<T> buffer)
+        {
+            using ID3D12ResourceMap sourceMap = D3D12Resource->Map();
+            using ID3D12ResourceMap destinationMap = buffer.D3D12Resource->Map();
+
+            MemoryHelper.Copy<T>(
+                source: sourceMap.Pointer,
+                destination: destinationMap.Pointer,
+                sourceElementOffset: (uint)sourceOffset,
+                destinationElementOffset: (uint)destinationOffset,
+                sourceElementPitchInBytes: (uint)GetPaddedSize(),
+                destinationElementPitchInBytes: (uint)GetPaddedSize(),
+                count: (uint)length);
+        }
+        else CopyToWithCpuBuffer(destination, sourceOffset, destinationOffset, length);
+    }
+
+    /// <inheritdoc/>
+    internal override unsafe void CopyFrom(ref T source, int length, int offset)
+    {
+        GraphicsDevice.ThrowIfDisposed();
+
+        ThrowIfDisposed();
+
+        Guard.IsBetweenOrEqualTo(length, 0, Length, nameof(length));
         Guard.IsInRange(offset, 0, Length, nameof(offset));
-        Guard.IsLessThanOrEqualTo(offset + size, Length, nameof(size));
+        Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 
         using ID3D12ResourceMap resource = D3D12Resource->Map();
 
@@ -102,37 +138,8 @@ public sealed class ConstantBuffer<T> : Buffer<T>
                 destinationElementOffset: (uint)offset,
                 sourceElementPitchInBytes: (uint)sizeof(T),
                 destinationElementPitchInBytes: (uint)GetPaddedSize(),
-                count: (uint)size);
+                count: (uint)length);
         }
-    }
-
-    /// <inheritdoc/>
-    public override unsafe void CopyFrom(Buffer<T> source)
-    {
-        GraphicsDevice.ThrowIfDisposed();
-
-        ThrowIfDisposed();
-
-        source.ThrowIfDeviceMismatch(GraphicsDevice);
-        source.ThrowIfDisposed();
-
-        Guard.IsLessThanOrEqualTo(source.Length, Length, nameof(Length));
-
-        if (source is ConstantBuffer<T> buffer)
-        {
-            using ID3D12ResourceMap sourceMap = buffer.D3D12Resource->Map();
-            using ID3D12ResourceMap destinationMap = D3D12Resource->Map();
-
-            MemoryHelper.Copy<T>(
-                source: sourceMap.Pointer,
-                destination: destinationMap.Pointer,
-                sourceElementOffset: 0,
-                destinationElementOffset: 0,
-                sourceElementPitchInBytes: (uint)GetPaddedSize(),
-                destinationElementPitchInBytes: (uint)GetPaddedSize(),
-                count: (uint)source.Length);
-        }
-        else CopyFromWithCpuBuffer(source);
     }
 
     /// <inheritdoc/>
