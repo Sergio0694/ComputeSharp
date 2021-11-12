@@ -126,9 +126,9 @@ public unsafe abstract class Buffer<T> : NativeObject
     /// Reads the contents of the specified range from the current <see cref="Buffer{T}"/> instance and writes them into a target memory area.
     /// </summary>
     /// <param name="destination">The input memory area to write data to.</param>
-    /// <param name="length">The length of the memory area to write data to.</param>
-    /// <param name="offset">The offset to start reading data from.</param>
-    internal abstract void CopyTo(ref T destination, int length, int offset);
+    /// <param name="sourceOffset">The offset to start reading data from.</param>
+    /// <param name="count">The length of the memory area to write data to.</param>
+    internal abstract void CopyTo(ref T destination, int sourceOffset, int count);
 
     /// <summary>
     /// Writes the contents of a given range from the current <see cref="Buffer{T}"/> instance and writes them into a target <see cref="Buffer{T}"/> instance.
@@ -136,8 +136,8 @@ public unsafe abstract class Buffer<T> : NativeObject
     /// <param name="destination">The target <see cref="Buffer{T}"/> instance to write data to.</param>
     /// <param name="sourceOffset">The offset to start reading data from.</param>
     /// <param name="destinationOffset">The starting offset within <paramref name="destination"/> to write data to.</param>
-    /// <param name="length">The number of items to read.</param>
-    internal abstract void CopyTo(Buffer<T> destination, int sourceOffset, int destinationOffset, int length);
+    /// <param name="count">The number of items to read.</param>
+    internal abstract void CopyTo(Buffer<T> destination, int sourceOffset, int destinationOffset, int count);
 
     /// <summary>
     /// Writes the contents of a given range from the current <see cref="Buffer{T}"/> instance and writes them into a target <see cref="Buffer{T}"/> instance, using a temporary CPU buffer.
@@ -145,18 +145,18 @@ public unsafe abstract class Buffer<T> : NativeObject
     /// <param name="destination">The target <see cref="Buffer{T}"/> instance to write data to.</param>
     /// <param name="sourceOffset">The offset to start reading data from.</param>
     /// <param name="destinationOffset">The starting offset within <paramref name="destination"/> to write data to.</param>
-    /// <param name="length">The number of items to read.</param>
-    protected void CopyToWithCpuBuffer(Buffer<T> destination, int sourceOffset, int destinationOffset, int length)
+    /// <param name="count">The number of items to read.</param>
+    protected void CopyToWithCpuBuffer(Buffer<T> destination, int sourceOffset, int destinationOffset, int count)
     {
-        T[] array = ArrayPool<T>.Shared.Rent(length);
+        T[] array = ArrayPool<T>.Shared.Rent(count);
 
         try
         {
             ref T r0 = ref MemoryMarshal.GetArrayDataReference(array);
 
-            CopyTo(ref r0, length, sourceOffset);
+            CopyTo(ref r0, sourceOffset, count);
 
-            destination.CopyFrom(ref r0, length, destinationOffset);
+            destination.CopyFrom(ref r0, destinationOffset, count);
         }
         finally
         {
@@ -168,9 +168,9 @@ public unsafe abstract class Buffer<T> : NativeObject
     /// Writes the contents of a given memory area to a specified area of the current <see cref="Buffer{T}"/> instance.
     /// </summary>
     /// <param name="source">The input memory area to read data from.</param>
-    /// <param name="length">The length of the input memory area to read data from.</param>
-    /// <param name="offset">The offset to start writing data to.</param>
-    internal abstract void CopyFrom(ref T source, int length, int offset);
+    /// <param name="destinationOffset">The offset to start writing data to.</param>
+    /// <param name="count">The length of the input memory area to read data from.</param>
+    internal abstract void CopyFrom(ref T source, int destinationOffset, int count);
 
     /// <inheritdoc/>
     protected override void OnDispose()

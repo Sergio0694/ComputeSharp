@@ -30,15 +30,15 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     }
 
     /// <inheritdoc/>
-    internal override unsafe void CopyTo(ref T destination, int length, int offset)
+    internal override unsafe void CopyTo(ref T destination, int sourceOffset, int count)
     {
         GraphicsDevice.ThrowIfDisposed();
 
         ThrowIfDisposed();
 
-        Guard.IsBetweenOrEqualTo(length, 0, Length, nameof(length));
-        Guard.IsInRange(offset, 0, Length, nameof(offset));
-        Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
+        Guard.IsBetweenOrEqualTo(count, 0, Length, nameof(count));
+        Guard.IsInRange(sourceOffset, 0, Length, nameof(sourceOffset));
+        Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
 
         if (GraphicsDevice.IsCacheCoherentUMA)
         {
@@ -49,17 +49,17 @@ public abstract class StructuredBuffer<T> : Buffer<T>
                 MemoryHelper.Copy<T>(
                     source: resource.Pointer,
                     destination: destinationPointer,
-                    sourceElementOffset: (uint)offset,
+                    sourceElementOffset: (uint)sourceOffset,
                     destinationElementOffset: 0,
                     sourceElementPitchInBytes: (uint)sizeof(T),
                     destinationElementPitchInBytes: (uint)sizeof(T),
-                    count: (uint)length);
+                    count: (uint)count);
             }
         }
         else
         {
-            nint byteOffset = (nint)offset * sizeof(T);
-            nint byteLength = length * sizeof(T);
+            nint byteOffset = (nint)sourceOffset * sizeof(T);
+            nint byteLength = count * sizeof(T);
 
             using UniquePtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(null, ResourceType.ReadBack, AllocationMode.Default, (ulong)byteLength);
 
@@ -80,13 +80,13 @@ public abstract class StructuredBuffer<T> : Buffer<T>
                     destinationElementOffset: 0,
                     sourceElementPitchInBytes: (uint)sizeof(T),
                     destinationElementPitchInBytes: (uint)sizeof(T),
-                    count: (uint)length);
+                    count: (uint)count);
             }
         }
     }
 
     /// <inheritdoc/>
-    internal override unsafe void CopyTo(Buffer<T> destination, int sourceOffset, int destinationOffset, int length)
+    internal override unsafe void CopyTo(Buffer<T> destination, int sourceOffset, int destinationOffset, int count)
     {
         GraphicsDevice.ThrowIfDisposed();
 
@@ -95,18 +95,18 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         destination.ThrowIfDeviceMismatch(GraphicsDevice);
         destination.ThrowIfDisposed();
 
-        Guard.IsBetweenOrEqualTo(length, 0, Length, nameof(length));
-        Guard.IsBetweenOrEqualTo(length, 0, destination.Length, nameof(length));
+        Guard.IsBetweenOrEqualTo(count, 0, Length, nameof(count));
+        Guard.IsBetweenOrEqualTo(count, 0, destination.Length, nameof(count));
         Guard.IsInRange(sourceOffset, 0, Length, nameof(sourceOffset));
-        Guard.IsLessThanOrEqualTo(sourceOffset + length, Length, nameof(sourceOffset));
+        Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
         Guard.IsInRange(destinationOffset, 0, destination.Length, nameof(destinationOffset));
-        Guard.IsLessThanOrEqualTo(destinationOffset + length, destination.Length, nameof(destinationOffset));
+        Guard.IsLessThanOrEqualTo(destinationOffset + count, destination.Length, nameof(destinationOffset));
 
         if (!destination.IsPaddingPresent)
         {
             nint sourceByteOffset = (nint)sourceOffset * sizeof(T);
             nint destinationByteOffset = (nint)destinationOffset * sizeof(T);
-            nint byteLength = length * sizeof(T);
+            nint byteLength = count * sizeof(T);
 
             // Directly copy the input buffer
             using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
@@ -120,17 +120,17 @@ public abstract class StructuredBuffer<T> : Buffer<T>
 
             copyCommandList.ExecuteAndWaitForCompletion();
         }
-        else CopyToWithCpuBuffer(destination, sourceOffset, destinationOffset, length);
+        else CopyToWithCpuBuffer(destination, sourceOffset, destinationOffset, count);
     }
 
     /// <summary>
     /// Reads the contents of the specified range from the current <see cref="StructuredBuffer{T}"/> instance and writes them into a target <see cref="ReadBackBuffer{T}"/> instance.
     /// </summary>
     /// <param name="destination">The target <see cref="ReadBackBuffer{T}"/> instance to write data to.</param>
+    /// <param name="sourceOffset">The offset to start reading data from.</param>
     /// <param name="destinationOffset">The starting offset within <paramref name="destination"/> to write data to.</param>
-    /// <param name="length">The number of items to read.</param>
-    /// <param name="offset">The offset to start reading data from.</param>
-    internal unsafe void CopyTo(ReadBackBuffer<T> destination, int destinationOffset, int length, int offset)
+    /// <param name="count">The number of items to read.</param>
+    internal unsafe void CopyTo(ReadBackBuffer<T> destination, int sourceOffset, int destinationOffset, int count)
     {
         GraphicsDevice.ThrowIfDisposed();
 
@@ -139,10 +139,12 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         destination.ThrowIfDeviceMismatch(GraphicsDevice);
         destination.ThrowIfDisposed();
 
-        Guard.IsInRange(offset, 0, Length, nameof(offset));
-        Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(length));
+        Guard.IsBetweenOrEqualTo(count, 0, Length, nameof(count));
+        Guard.IsBetweenOrEqualTo(count, 0, destination.Length, nameof(count));
+        Guard.IsInRange(sourceOffset, 0, Length, nameof(sourceOffset));
+        Guard.IsLessThanOrEqualTo(sourceOffset + count, Length, nameof(sourceOffset));
         Guard.IsInRange(destinationOffset, 0, destination.Length, nameof(destinationOffset));
-        Guard.IsLessThanOrEqualTo(destinationOffset + length, destination.Length, nameof(length));
+        Guard.IsLessThanOrEqualTo(destinationOffset + count, destination.Length, nameof(destinationOffset));
 
         if (GraphicsDevice.IsCacheCoherentUMA)
         {
@@ -151,17 +153,17 @@ public abstract class StructuredBuffer<T> : Buffer<T>
             MemoryHelper.Copy<T>(
                 source: resource.Pointer,
                 destination: destination.MappedData,
-                sourceElementOffset: (uint)offset,
+                sourceElementOffset: (uint)sourceOffset,
                 destinationElementOffset: (uint)destinationOffset,
                 sourceElementPitchInBytes: (uint)sizeof(T),
                 destinationElementPitchInBytes: (uint)sizeof(T),
-                count: (uint)length);
+                count: (uint)count);
         }
         else
         {
             ulong byteDestinationOffset = (uint)destinationOffset * (uint)sizeof(T);
-            ulong byteOffset = (uint)offset * (uint)sizeof(T);
-            ulong byteLength = (uint)length * (uint)sizeof(T);
+            ulong byteOffset = (uint)sourceOffset * (uint)sizeof(T);
+            ulong byteLength = (uint)count * (uint)sizeof(T);
 
             using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 
@@ -171,7 +173,7 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     }
 
     /// <inheritdoc/>
-    internal override unsafe void CopyFrom(ref T source, int length, int offset)
+    internal override unsafe void CopyFrom(ref T source, int offset, int length)
     {
         GraphicsDevice.ThrowIfDisposed();
 
@@ -229,9 +231,9 @@ public abstract class StructuredBuffer<T> : Buffer<T>
     /// </summary>
     /// <param name="source">The input <see cref="UploadBuffer{T}"/> instance to read data from.</param>
     /// <param name="sourceOffset">The starting offset within <paramref name="source"/> to read data from.</param>
-    /// <param name="length">The number of items to read.</param>
-    /// <param name="offset">The offset to start reading writing data to.</param>
-    internal unsafe void CopyFrom(UploadBuffer<T> source, int sourceOffset, int length, int offset)
+    /// <param name="destinationOffset">The offset to start reading writing data to.</param>
+    /// <param name="count">The number of items to read.</param>
+    internal unsafe void CopyFrom(UploadBuffer<T> source, int sourceOffset, int destinationOffset, int count)
     {
         GraphicsDevice.ThrowIfDisposed();
 
@@ -240,10 +242,12 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         source.ThrowIfDeviceMismatch(GraphicsDevice);
         source.ThrowIfDisposed();
 
-        Guard.IsInRange(offset, 0, Length, nameof(offset));
-        Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(length));
+        Guard.IsBetweenOrEqualTo(count, 0, Length, nameof(count));
+        Guard.IsBetweenOrEqualTo(count, 0, source.Length, nameof(count));
         Guard.IsInRange(sourceOffset, 0, source.Length, nameof(sourceOffset));
-        Guard.IsLessThanOrEqualTo(sourceOffset + length, source.Length, nameof(length));
+        Guard.IsLessThanOrEqualTo(sourceOffset + count, source.Length, nameof(sourceOffset));
+        Guard.IsInRange(destinationOffset, 0, Length, nameof(destinationOffset));
+        Guard.IsLessThanOrEqualTo(destinationOffset + count, Length, nameof(destinationOffset));
 
         if (GraphicsDevice.IsCacheCoherentUMA)
         {
@@ -253,16 +257,16 @@ public abstract class StructuredBuffer<T> : Buffer<T>
                 source: source.MappedData,
                 destination: resource.Pointer,
                 sourceElementOffset: (uint)sourceOffset,
-                destinationElementOffset: (uint)offset,
+                destinationElementOffset: (uint)destinationOffset,
                 sourceElementPitchInBytes: (uint)sizeof(T),
                 destinationElementPitchInBytes: (uint)sizeof(T),
-                count: (uint)length);
+                count: (uint)count);
         }
         else
         {
             ulong byteSourceOffset = (uint)sourceOffset * (uint)sizeof(T);
-            ulong byteOffset = (uint)offset * (uint)sizeof(T);
-            ulong byteLength = (uint)length * (uint)sizeof(T);
+            ulong byteOffset = (uint)destinationOffset * (uint)sizeof(T);
+            ulong byteLength = (uint)count * (uint)sizeof(T);
 
             using CommandList copyCommandList = new(GraphicsDevice, D3D12_COMMAND_LIST_TYPE_COPY);
 

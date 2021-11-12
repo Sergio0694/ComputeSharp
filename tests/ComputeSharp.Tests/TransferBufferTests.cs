@@ -124,7 +124,7 @@ public partial class TransferBufferTests
 
         using ReadOnlyBuffer<int> readOnlyBuffer = device.Get().AllocateReadOnlyBuffer<int>(uploadBuffer.Length);
 
-        uploadBuffer.CopyTo(readOnlyBuffer, destinationOffset, bufferOffset, count);
+        uploadBuffer.CopyTo(readOnlyBuffer, bufferOffset, destinationOffset, count);
 
         int[] result = readOnlyBuffer.ToArray(destinationOffset, count);
 
@@ -164,7 +164,7 @@ public partial class TransferBufferTests
         using ReadOnlyBuffer<int> readOnlyBuffer = device.Get().AllocateReadOnlyBuffer(source);
         using ReadBackBuffer<int> readBackBuffer = device.Get().AllocateReadBackBuffer<int>(readOnlyBuffer.Length);
 
-        readOnlyBuffer.CopyTo(readBackBuffer, destinationOffset, bufferOffset, count);
+        readOnlyBuffer.CopyTo(readBackBuffer, bufferOffset, destinationOffset, count);
 
         Assert.AreEqual(source.Length, readBackBuffer.Length);
         Assert.IsTrue(source.AsSpan(bufferOffset, count).SequenceEqual(readBackBuffer.Span.Slice(destinationOffset, count)));
