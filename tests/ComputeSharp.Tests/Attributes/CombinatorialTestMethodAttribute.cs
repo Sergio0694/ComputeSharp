@@ -37,6 +37,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
         }
 
         Type[] resources = methodInfo.GetCustomAttributes<ResourceAttribute>().Select(static value => value.Type).ToArray();
+        Type[] additionalResources = methodInfo.GetCustomAttributes<AdditionalResourceAttribute>().Select(static value => value.Type).ToArray();
         object[][] data = methodInfo.GetCustomAttributes<DataAttribute>().Select(static value => value.Data).ToArray();
 
         if (devices.Length > 0)
@@ -47,21 +48,46 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                 {
                     foreach (Type type in resources)
                     {
-                        if (data.Length == 0)
+                        if (additionalResources.Length > 0)
                         {
-                            yield return new object[] { device, type };
+                            foreach (Type additionalType in additionalResources)
+                            {
+                                if (data.Length == 0)
+                                {
+                                    yield return new object[] { device, type, additionalType };
+                                }
+                                else
+                                {
+                                    foreach (object[] items in data)
+                                    {
+                                        yield return new object[] { device, type, additionalType }.Concat(items).ToArray();
+                                    }
+                                }
+                            }
                         }
                         else
                         {
-                            foreach (object[] items in data)
+                            if (data.Length == 0)
                             {
-                                yield return new object[] { device, type }.Concat(items).ToArray();
+                                yield return new object[] { device, type };
+                            }
+                            else
+                            {
+                                foreach (object[] items in data)
+                                {
+                                    yield return new object[] { device, type }.Concat(items).ToArray();
+                                }
                             }
                         }
                     }
                 }
                 else
                 {
+                    if (additionalResources.Length > 0)
+                    {
+                        Assert.Fail("Invalid usage of [AdditionalResource]");
+                    }
+
                     if (data.Length == 0)
                     {
                         yield return new object[] { device };
@@ -80,21 +106,46 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
         {
             foreach (Type type in resources)
             {
-                if (data.Length == 0)
+                if (additionalResources.Length > 0)
                 {
-                    yield return new object[] { type };
+                    foreach (Type additionalType in additionalResources)
+                    {
+                        if (data.Length == 0)
+                        {
+                            yield return new object[] { type, additionalType };
+                        }
+                        else
+                        {
+                            foreach (object[] items in data)
+                            {
+                                yield return new object[] { type, additionalType }.Concat(items).ToArray();
+                            }
+                        }
+                    }
                 }
                 else
                 {
-                    foreach (object[] items in data)
+                    if (data.Length == 0)
                     {
-                        yield return new object[] { type }.Concat(items).ToArray();
+                        yield return new object[] { type };
+                    }
+                    else
+                    {
+                        foreach (object[] items in data)
+                        {
+                            yield return new object[] { type }.Concat(items).ToArray();
+                        }
                     }
                 }
             }
         }
         else
         {
+            if (additionalResources.Length > 0)
+            {
+                Assert.Fail("Invalid usage of [AdditionalResource]");
+            }
+
             if (data.Length == 0)
             {
                 yield return Array.Empty<object>();
