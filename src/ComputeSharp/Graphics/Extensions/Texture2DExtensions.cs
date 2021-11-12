@@ -206,6 +206,24 @@ public static class Texture2DExtensions
     }
 
     /// <summary>
+    /// Reads the contents of a <see cref="Texture2D{T}"/> instance and writes them into a target <see cref="ReadBackTexture2D{T}"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <param name="source">The input <see cref="Texture2D{T}"/> instance to read data from.</param>
+    /// <param name="destination">The target <see cref="ReadBackTexture2D{T}"/> instance to write data to.</param>
+    /// <param name="sourceOffsetX">The horizontal offset in the source texture.</param>
+    /// <param name="sourceOffsetY">The vertical offset in the source texture.</param>
+    /// <param name="destinationOffsetX">The horizontal offset in the destination texture.</param>
+    /// <param name="destinationOffsetY">The vertical offset in the destination texture.</param>
+    /// <param name="width">The width of the memory area to copy.</param>
+    /// <param name="height">The height of the memory area to copy.</param>
+    public static void CopyTo<T>(this Texture2D<T> source, ReadBackTexture2D<T> destination, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
+        where T : unmanaged
+    {
+        source.CopyTo(destination, sourceOffsetX, sourceOffsetY, destinationOffsetX, destinationOffsetY, width, height);
+    }
+
+    /// <summary>
     /// Writes the contents of a given <typeparamref name="T"/> array to the current <see cref="Texture2D{T}"/> instance.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
@@ -338,6 +356,52 @@ public static class Texture2DExtensions
         where T : unmanaged
     {
         destination.CopyFrom(ref MemoryMarshal.GetReference(source), source.Length, destinationOffsetX, destinationOffsetY, width, height);
+    }
+
+    /// <summary>
+    /// Reads the contents of an <see cref="UploadTexture2D{T}"/> instance and writes them into a target <see cref="Texture2D{T}"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <param name="destination">The target <see cref="Texture2D{T}"/> instance to write data to.</param>
+    /// <param name="source">The input <see cref="UploadTexture2D{T}"/> instance to read data from.</param>
+    public static void CopyFrom<T>(this Texture2D<T> destination, UploadTexture2D<T> source)
+        where T : unmanaged
+    {
+        destination.CopyFrom(source, 0, 0, 0, 0, source.Width, source.Height);
+    }
+
+    /// <summary>
+    /// Reads the contents of an <see cref="UploadTexture2D{T}"/> instance and writes them into a target <see cref="Texture2D{T}"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <param name="destination">The target <see cref="Texture2D{T}"/> instance to write data to.</param>
+    /// <param name="source">The input <see cref="UploadTexture2D{T}"/> instance to read data from.</param>
+    /// <param name="sourceOffsetX">The horizontal offset in the source texture.</param>
+    /// <param name="sourceOffsetY">The vertical offset in the source texture.</param>
+    /// <param name="width">The width of the memory area to copy.</param>
+    /// <param name="height">The height of the memory area to copy.</param>
+    public static void CopyFrom<T>(this Texture2D<T> destination, UploadTexture2D<T> source, int sourceOffsetX, int sourceOffsetY, int width, int height)
+        where T : unmanaged
+    {
+        destination.CopyFrom(source, sourceOffsetX, sourceOffsetY, 0, 0, width, height);
+    }
+
+    /// <summary>
+    /// Reads the contents of an <see cref="UploadTexture2D{T}"/> instance and writes them into a target <see cref="Texture2D{T}"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <param name="destination">The target <see cref="Texture2D{T}"/> instance to write data to.</param>
+    /// <param name="source">The input <see cref="UploadTexture2D{T}"/> instance to read data from.</param>
+    /// <param name="sourceOffsetX">The horizontal offset in the source texture.</param>
+    /// <param name="sourceOffsetY">The vertical offset in the source texture.</param>
+    /// <param name="destinationOffsetX">The horizontal offset in the destination texture.</param>
+    /// <param name="destinationOffsetY">The vertical offset in the destination texture.</param>
+    /// <param name="width">The width of the memory area to copy.</param>
+    /// <param name="height">The height of the memory area to copy.</param>
+    public static void CopyFrom<T>(this Texture2D<T> destination, UploadTexture2D<T> source, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
+        where T : unmanaged
+    {
+        destination.CopyFrom(source, sourceOffsetX, sourceOffsetY, destinationOffsetX, destinationOffsetY, width, height);
     }
 
     /// <summary>
