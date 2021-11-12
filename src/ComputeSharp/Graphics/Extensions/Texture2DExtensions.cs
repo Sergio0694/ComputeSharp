@@ -30,6 +30,33 @@ public static class Texture2DExtensions
     }
 
     /// <summary>
+    /// Reads the contents of the current <see cref="Texture2D{T}"/> instance and returns an array.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <param name="source">The input <see cref="Texture2D{T}"/> instance to read data from.</param>
+    /// <param name="x">The horizontal offset in the source texture.</param>
+    /// <param name="y">The vertical offset in the source texture.</param>
+    /// <param name="width">The width of the memory area to copy.</param>
+    /// <param name="height">The height of the memory area to copy.</param>
+    /// <returns>A <typeparamref name="T"/> array with the contents of the current texture.</returns>
+    [Pure]
+    public static unsafe T[,] ToArray<T>(this Texture2D<T> source, int x, int y, int width, int height)
+        where T : unmanaged
+    {
+        Guard.IsGreaterThanOrEqualTo(width, 0, nameof(width));
+        Guard.IsGreaterThanOrEqualTo(height, 0, nameof(height));
+
+        T[,] data = new T[height, width];
+
+        fixed (T* p = data)
+        {
+            source.CopyTo(new Span<T>(p, width * height), x, y, width, height);
+        }
+
+        return data;
+    }
+
+    /// <summary>
     /// Reads the contents of the current <see cref="Texture2D{T}"/> instance and writes them into a target array.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
