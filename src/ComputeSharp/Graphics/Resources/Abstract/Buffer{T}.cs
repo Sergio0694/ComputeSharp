@@ -1,6 +1,7 @@
 ﻿using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ComputeSharp.Core.Helpers;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
@@ -72,11 +73,14 @@ public unsafe abstract class Buffer<T> : NativeObject
             UnsupportedDoubleOperationsException.Throw<T>();
         }
 
-        SizeInBytes = checked((nint)(length * elementSizeInBytes));
+        nint usableSizeInBytes = checked((nint)(length * elementSizeInBytes));
+        nint effectiveSizeInBytes = resourceType == ResourceType.Constant ? AlignmentHelper.Pad(usableSizeInBytes, Windows.D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT) : usableSizeInBytes;
+
+        SizeInBytes = usableSizeInBytes;
         GraphicsDevice = device;
         Length = length;
 
-        this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, (ulong)SizeInBytes);
+        this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, (ulong)effectiveSizeInBytes);
         this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
 
         device.RegisterAllocatedResource();
@@ -85,7 +89,7 @@ public unsafe abstract class Buffer<T> : NativeObject
         switch (resourceType)
         {
             case ResourceType.Constant:
-                device.D3D12Device->CreateConstantBufferView(this.d3D12Resource.Get(), SizeInBytes, D3D12CpuDescriptorHandle);
+                device.D3D12Device->CreateConstantBufferView(this.d3D12Resource.Get(), effectiveSizeInBytes, D3D12CpuDescriptorHandle);
                 break;
             case ResourceType.ReadOnly:
                 device.D3D12Device->CreateShaderResourceView(this.d3D12Resource.Get(), (uint)length, elementSizeInBytes, D3D12CpuDescriptorHandle);

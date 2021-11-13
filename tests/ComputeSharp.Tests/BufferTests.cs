@@ -18,12 +18,16 @@ public partial class BufferTests
     [Resource(typeof(ReadWriteBuffer<>))]
     [Data(AllocationMode.Default)]
     [Data(AllocationMode.Clear)]
-    public void Allocate_Uninitialized_Ok(Device device, Type bufferType, AllocationMode allocationMode)
+    [AdditionalData(128)]
+    [AdditionalData(768)]
+    [AdditionalData(1024)]
+    [AdditionalData(443)]
+    public void Allocate_Uninitialized_Ok(Device device, Type bufferType, AllocationMode allocationMode, int size)
     {
-        using Buffer<float> buffer = device.Get().AllocateBuffer<float>(bufferType, 128, allocationMode);
+        using Buffer<float> buffer = device.Get().AllocateBuffer<float>(bufferType, size, allocationMode);
 
         Assert.IsNotNull(buffer);
-        Assert.AreEqual(buffer.Length, 128);
+        Assert.AreEqual(buffer.Length, size);
         Assert.AreSame(buffer.GraphicsDevice, device.Get());
 
         if (allocationMode == AllocationMode.Clear)
@@ -53,14 +57,18 @@ public partial class BufferTests
     [Resource(typeof(ConstantBuffer<>))]
     [Resource(typeof(ReadOnlyBuffer<>))]
     [Resource(typeof(ReadWriteBuffer<>))]
-    public void Allocate_FromArray(Device device, Type bufferType)
+    [Data(128)]
+    [Data(768)]
+    [Data(1024)]
+    [Data(443)]
+    public void Allocate_FromArray(Device device, Type bufferType, int size)
     {
-        float[] data = Enumerable.Range(0, 128).Select(static i => (float)i).ToArray();
+        float[] data = Enumerable.Range(0, size).Select(static i => (float)i).ToArray();
 
         using Buffer<float> buffer = device.Get().AllocateBuffer(bufferType, data);
 
         Assert.IsNotNull(buffer);
-        Assert.AreEqual(buffer.Length, 128);
+        Assert.AreEqual(buffer.Length, size);
         Assert.AreSame(buffer.GraphicsDevice, device.Get());
 
         float[] result = buffer.ToArray();
@@ -75,18 +83,22 @@ public partial class BufferTests
     [Resource(typeof(ConstantBuffer<>))]
     [Resource(typeof(ReadOnlyBuffer<>))]
     [Resource(typeof(ReadWriteBuffer<>))]
-    [Data(typeof(ConstantBuffer<>))]
-    [Data(typeof(ReadOnlyBuffer<>))]
-    [Data(typeof(ReadWriteBuffer<>))]
-    public void Allocate_FromBuffer(Device device, Type sourceType, Type destinationType)
+    [AdditionalResource(typeof(ConstantBuffer<>))]
+    [AdditionalResource(typeof(ReadOnlyBuffer<>))]
+    [AdditionalResource(typeof(ReadWriteBuffer<>))]
+    [Data(128)]
+    [Data(768)]
+    [Data(1024)]
+    [Data(443)]
+    public void Allocate_FromBuffer(Device device, Type sourceType, Type destinationType, int size)
     {
-        float[] data = Enumerable.Range(0, 128).Select(static i => (float)i).ToArray();
+        float[] data = Enumerable.Range(0, size).Select(static i => (float)i).ToArray();
 
         using Buffer<float> source = device.Get().AllocateBuffer(sourceType, data);
         using Buffer<float> destination = device.Get().AllocateBuffer(destinationType, source);
 
         Assert.IsNotNull(destination);
-        Assert.AreEqual(destination.Length, 128);
+        Assert.AreEqual(destination.Length, size);
         Assert.AreSame(destination.GraphicsDevice, device.Get());
 
         float[] result = destination.ToArray();
