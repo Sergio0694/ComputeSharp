@@ -17,7 +17,7 @@ internal sealed class Texture2DDebugView<T>
     {
         if (texture is not null)
         {
-            var items = new T[texture.Height, texture.Width];
+            T[,] items = new T[texture.Height, texture.Width];
 
             texture.CopyTo(ref items[0, 0], items.Length, 0, 0, texture.Width, texture.Height);
 

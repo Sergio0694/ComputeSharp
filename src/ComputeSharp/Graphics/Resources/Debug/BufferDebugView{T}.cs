@@ -18,7 +18,7 @@ internal sealed class BufferDebugView<T>
     {
         if (buffer is not null)
         {
-            var items = GC.AllocateUninitializedArray<T>(buffer.Length);
+            T[] items = GC.AllocateUninitializedArray<T>(buffer.Length);
 
             buffer.CopyTo(ref items[0], 0, buffer.Length);
 

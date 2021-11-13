@@ -18,7 +18,7 @@ internal sealed class TransferBufferDebugView<T>
     {
         if (buffer is not null)
         {
-            var items = GC.AllocateUninitializedArray<T>(buffer.Length);
+            T[] items = GC.AllocateUninitializedArray<T>(buffer.Length);
 
             buffer.Span.CopyTo(items);
 
