@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\ComputeSharp.Tests\Attributes\AdditionalDataAttribute.cs" Link="Attributes\AdditionalDataAttribute.cs" />
     <Compile Include="..\ComputeSharp.Tests\Attributes\AdditionalResourceAttribute.cs" Link="Attributes\AdditionalResourceAttribute.cs" />
     <Compile Include="..\ComputeSharp.Tests\Attributes\AllDevicesAttribute.cs" Link="Attributes\AllDevicesAttribute.cs" />
     <Compile Include="..\ComputeSharp.Tests\Attributes\CombinatorialTestMethodAttribute.cs" Link="Attributes\CombinatorialTestMethodAttribute.cs" />

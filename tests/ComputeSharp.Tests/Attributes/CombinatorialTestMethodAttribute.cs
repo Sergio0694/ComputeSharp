@@ -39,6 +39,7 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
         Type[] resources = methodInfo.GetCustomAttributes<ResourceAttribute>().Select(static value => value.Type).ToArray();
         Type[] additionalResources = methodInfo.GetCustomAttributes<AdditionalResourceAttribute>().Select(static value => value.Type).ToArray();
         object[][] data = methodInfo.GetCustomAttributes<DataAttribute>().Select(static value => value.Data).ToArray();
+        object[][] additionalData = methodInfo.GetCustomAttributes<AdditionalDataAttribute>().Select(static value => value.Data).ToArray();
 
         if (devices.Length > 0)
         {
@@ -54,13 +55,31 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                             {
                                 if (data.Length == 0)
                                 {
+                                    if (additionalData.Length > 0)
+                                    {
+                                        Assert.Fail("Invalid usage of [AdditionalData]");
+                                    }
+
                                     yield return new object[] { device, type, additionalType };
                                 }
                                 else
                                 {
-                                    foreach (object[] items in data)
+                                    if (additionalData.Length > 0)
                                     {
-                                        yield return new object[] { device, type, additionalType }.Concat(items).ToArray();
+                                        foreach (object[] items in data)
+                                        {
+                                            foreach (object[] additionalItems in additionalData)
+                                            {
+                                                yield return new object[] { device, type, additionalType }.Concat(items).Concat(additionalItems).ToArray();
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (object[] items in data)
+                                        {
+                                            yield return new object[] { device, type, additionalType }.Concat(items).ToArray();
+                                        }
                                     }
                                 }
                             }
@@ -69,13 +88,31 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                         {
                             if (data.Length == 0)
                             {
+                                if (additionalData.Length > 0)
+                                {
+                                    Assert.Fail("Invalid usage of [AdditionalData]");
+                                }
+
                                 yield return new object[] { device, type };
                             }
                             else
                             {
-                                foreach (object[] items in data)
+                                if (additionalData.Length > 0)
                                 {
-                                    yield return new object[] { device, type }.Concat(items).ToArray();
+                                    foreach (object[] items in data)
+                                    {
+                                        foreach (object[] additionalItems in additionalData)
+                                        {
+                                            yield return new object[] { device, type }.Concat(items).Concat(additionalItems).ToArray();
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    foreach (object[] items in data)
+                                    {
+                                        yield return new object[] { device, type }.Concat(items).ToArray();
+                                    }
                                 }
                             }
                         }
@@ -90,13 +127,31 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
 
                     if (data.Length == 0)
                     {
+                        if (additionalData.Length > 0)
+                        {
+                            Assert.Fail("Invalid usage of [AdditionalData]");
+                        }
+
                         yield return new object[] { device };
                     }
                     else
                     {
-                        foreach (object[] items in data)
+                        if (additionalData.Length > 0)
                         {
-                            yield return new object[] { device }.Concat(items).ToArray();
+                            foreach (object[] items in data)
+                            {
+                                foreach (object[] additionalItems in additionalData)
+                                {
+                                    yield return new object[] { device }.Concat(items).Concat(additionalItems).ToArray();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            foreach (object[] items in data)
+                            {
+                                yield return new object[] { device }.Concat(items).ToArray();
+                            }
                         }
                     }
                 }
@@ -112,13 +167,31 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                     {
                         if (data.Length == 0)
                         {
+                            if (additionalData.Length > 0)
+                            {
+                                Assert.Fail("Invalid usage of [AdditionalData]");
+                            }
+
                             yield return new object[] { type, additionalType };
                         }
                         else
                         {
-                            foreach (object[] items in data)
+                            if (additionalData.Length > 0)
                             {
-                                yield return new object[] { type, additionalType }.Concat(items).ToArray();
+                                foreach (object[] items in data)
+                                {
+                                    foreach (object[] additionalItems in additionalData)
+                                    {
+                                        yield return new object[] { type, additionalType }.Concat(items).Concat(additionalItems).ToArray();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                foreach (object[] items in data)
+                                {
+                                    yield return new object[] { type, additionalType }.Concat(items).ToArray();
+                                }
                             }
                         }
                     }
@@ -127,13 +200,31 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
                 {
                     if (data.Length == 0)
                     {
+                        if (additionalData.Length > 0)
+                        {
+                            Assert.Fail("Invalid usage of [AdditionalData]");
+                        }
+
                         yield return new object[] { type };
                     }
                     else
                     {
-                        foreach (object[] items in data)
+                        if (additionalData.Length > 0)
                         {
-                            yield return new object[] { type }.Concat(items).ToArray();
+                            foreach (object[] items in data)
+                            {
+                                foreach (object[] additionalItems in additionalData)
+                                {
+                                    yield return new object[] { type }.Concat(items).Concat(additionalItems).ToArray();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            foreach (object[] items in data)
+                            {
+                                yield return new object[] { type }.Concat(items).ToArray();
+                            }
                         }
                     }
                 }
@@ -148,13 +239,31 @@ public sealed class CombinatorialTestMethodAttribute : TestMethodAttribute, ITes
 
             if (data.Length == 0)
             {
+                if (additionalData.Length > 0)
+                {
+                    Assert.Fail("Invalid usage of [AdditionalData]");
+                }
+
                 yield return Array.Empty<object>();
             }
             else
             {
-                foreach (object[] items in data)
+                if (additionalData.Length > 0)
                 {
-                    yield return items;
+                    foreach (object[] items in data)
+                    {
+                        foreach (object[] additionalItems in additionalData)
+                        {
+                            yield return items.Concat(additionalItems).ToArray();
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (object[] items in data)
+                    {
+                        yield return items;
+                    }
                 }
             }
         }

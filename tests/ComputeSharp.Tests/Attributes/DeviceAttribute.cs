@@ -9,6 +9,10 @@ namespace ComputeSharp.Tests.Attributes;
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 public sealed class DeviceAttribute : Attribute
 {
+    /// <summary>
+    /// Creates a new <see cref="DeviceAttribute"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="device">The target device type to use..</param>
     public DeviceAttribute(Device device)
     {
         Device = device;
