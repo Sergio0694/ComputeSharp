@@ -3,7 +3,7 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Runtime.CompilerServices;
 using Microsoft.Toolkit.Diagnostics;
-using TerraFX.Interop;
+using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Graphics.Helpers;
 

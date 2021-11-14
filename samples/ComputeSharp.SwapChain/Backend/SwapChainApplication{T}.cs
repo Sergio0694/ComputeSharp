@@ -1,6 +1,9 @@
 ﻿using System;
 using ComputeSharp.Interop;
-using TerraFX.Interop;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
+
+#pragma warning disable CA1416
 
 namespace ComputeSharp.SwapChain.Backend;
 
@@ -120,7 +123,7 @@ internal sealed class SwapChainApplication<T> : Win32Application
         {
             using ComPtr<IDXGIFactory2> dxgiFactory2 = default;
 
-            _ = Windows.CreateDXGIFactory2(Windows.DXGI_CREATE_FACTORY_DEBUG, Windows.__uuidof<IDXGIFactory2>(), (void**)dxgiFactory2.GetAddressOf());
+            _ = DirectX.CreateDXGIFactory2(DirectX.DXGI_CREATE_FACTORY_DEBUG, Windows.__uuidof<IDXGIFactory2>(), (void**)dxgiFactory2.GetAddressOf());
 
             DXGI_SWAP_CHAIN_DESC1 dxgiSwapChainDesc1 = default;
             dxgiSwapChainDesc1.AlphaMode = DXGI_ALPHA_MODE.DXGI_ALPHA_MODE_IGNORE;

@@ -3,7 +3,8 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.__Internals;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Shaders.Translation;
-using TerraFX.Interop;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0618
 
@@ -109,9 +110,10 @@ public static class ReflectionServices
 
         using ComPtr<IDxcUtils> dxcUtils = default;
 
-        Guid dxcLibraryClsid = Windows.CLSID_DxcLibrary;
-
-        Windows.DxcCreateInstance(&dxcLibraryClsid, Windows.__uuidof<IDxcUtils>(), dxcUtils.GetVoidAddressOf()).Assert();
+        DirectX.DxcCreateInstance(
+            (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_DxcLibrary)),
+            Windows.__uuidof<IDxcUtils>(),
+            dxcUtils.GetVoidAddressOf()).Assert();
 
         using ComPtr<ID3D12ShaderReflection> d3D12ShaderReflection = default;
 

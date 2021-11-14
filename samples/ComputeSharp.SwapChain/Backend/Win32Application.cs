@@ -1,5 +1,5 @@
 ﻿using System;
-using TerraFX.Interop;
+using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.SwapChain.Backend;
 

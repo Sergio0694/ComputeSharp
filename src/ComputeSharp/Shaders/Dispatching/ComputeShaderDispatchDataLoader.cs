@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.__Internals;
-using TerraFX.Interop;
+using TerraFX.Interop.DirectX;
 using System.Runtime.InteropServices;
 
 #pragma warning disable CS0618

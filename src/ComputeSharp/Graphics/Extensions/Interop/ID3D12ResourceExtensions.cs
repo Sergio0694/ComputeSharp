@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Resources.Interop;
-using TerraFX.Interop;
+using TerraFX.Interop.DirectX;
 
 namespace ComputeSharp.Graphics.Extensions;
 

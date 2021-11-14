@@ -4,8 +4,9 @@ using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TerraFX.Interop;
-using static TerraFX.Interop.D3D12_RESOURCE_DIMENSION;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
+using static TerraFX.Interop.DirectX.D3D12_RESOURCE_DIMENSION;
 
 namespace ComputeSharp.Tests;
 

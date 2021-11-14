@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
-using TerraFX.Interop;
+using TerraFX.Interop.Windows;
+
+#pragma warning disable CA1416
 
 namespace ComputeSharp.Graphics.Helpers;
 
@@ -21,10 +24,9 @@ internal sealed unsafe class WICHelper
     private WICHelper()
     {
         using ComPtr<IWICImagingFactory2> wicImagingFactory2 = default;
-        Guid wicImagingFactor2Clsid = Windows.CLSID_WICImagingFactory2;
 
         Windows.CoCreateInstance(
-            &wicImagingFactor2Clsid,
+            (Guid*)Unsafe.AsPointer(ref Unsafe.AsRef(in CLSID.CLSID_WICImagingFactory2)),
             null,
             (uint)CLSCTX.CLSCTX_INPROC_SERVER,
             Windows.__uuidof<IWICImagingFactory2>(),

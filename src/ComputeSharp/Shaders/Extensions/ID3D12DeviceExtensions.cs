@@ -1,10 +1,11 @@
 ﻿using System;
 using ComputeSharp.Core.Extensions;
-using TerraFX.Interop;
-using static TerraFX.Interop.D3D12_COMPARISON_FUNC;
-using static TerraFX.Interop.D3D12_FILTER;
-using static TerraFX.Interop.D3D12_PIPELINE_STATE_FLAGS;
-using static TerraFX.Interop.D3D12_TEXTURE_ADDRESS_MODE;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
+using static TerraFX.Interop.DirectX.D3D12_COMPARISON_FUNC;
+using static TerraFX.Interop.DirectX.D3D12_FILTER;
+using static TerraFX.Interop.DirectX.D3D12_PIPELINE_STATE_FLAGS;
+using static TerraFX.Interop.DirectX.D3D12_TEXTURE_ADDRESS_MODE;
 
 namespace ComputeSharp.Shaders.Extensions;
 
@@ -71,7 +72,7 @@ internal static unsafe class ID3D12DeviceExtensions
 
             // Serialize the root signature from the data just computed. When this is done
             // we just work with the resulting blobs, so the input data can be unpinned.
-            Windows.D3D12SerializeVersionedRootSignature(
+            DirectX.D3D12SerializeVersionedRootSignature(
                 &d3D12VersionedRootSignatureDescription,
                 d3D3Blob.GetAddressOf(),
                 d3D3BlobError.GetAddressOf()).Assert();

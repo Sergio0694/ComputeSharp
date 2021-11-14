@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Toolkit.Diagnostics;
-using TerraFX.Interop;
+using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Shaders.Translation;
 

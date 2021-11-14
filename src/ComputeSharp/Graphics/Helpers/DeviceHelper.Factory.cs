@@ -2,7 +2,8 @@
 #if DEBUG
 using ComputeSharp.Graphics.Extensions;
 #endif
-using TerraFX.Interop;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Graphics.Helpers;
 

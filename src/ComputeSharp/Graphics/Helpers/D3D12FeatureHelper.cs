@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
-using TerraFX.Interop;
-using static TerraFX.Interop.D3D12_FEATURE;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
+using static TerraFX.Interop.DirectX.D3D12_FEATURE;
 
 namespace ComputeSharp.Graphics.Helpers;
 

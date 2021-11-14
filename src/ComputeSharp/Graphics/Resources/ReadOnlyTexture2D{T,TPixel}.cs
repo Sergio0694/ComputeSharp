@@ -4,7 +4,7 @@ using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Resources.Enums;
 using ComputeSharp.Resources;
 using ComputeSharp.Resources.Debug;
-using static TerraFX.Interop.D3D12_FORMAT_SUPPORT1;
+using static TerraFX.Interop.DirectX.D3D12_FORMAT_SUPPORT1;
 
 #pragma warning disable CS0618
 

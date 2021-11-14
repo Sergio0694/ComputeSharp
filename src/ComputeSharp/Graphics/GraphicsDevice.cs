@@ -9,11 +9,12 @@ using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
-using TerraFX.Interop;
-using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
-using static TerraFX.Interop.D3D12_FEATURE;
-using static TerraFX.Interop.D3D12_FORMAT_SUPPORT1;
-using static TerraFX.Interop.DXGI_ADAPTER_FLAG;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
+using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
+using static TerraFX.Interop.DirectX.D3D12_FEATURE;
+using static TerraFX.Interop.DirectX.D3D12_FORMAT_SUPPORT1;
+using static TerraFX.Interop.DirectX.DXGI_ADAPTER_FLAG;
 
 namespace ComputeSharp;
 

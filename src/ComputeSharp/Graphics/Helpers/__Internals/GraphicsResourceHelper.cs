@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Resources;
 using Microsoft.Toolkit.Diagnostics;
-using TerraFX.Interop;
+using TerraFX.Interop.DirectX;
 
 namespace ComputeSharp.__Internals;
 

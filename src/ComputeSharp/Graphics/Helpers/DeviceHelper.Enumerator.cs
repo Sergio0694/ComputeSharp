@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Interop;
-using TerraFX.Interop;
-using HRESULT = System.Int32;
-using static TerraFX.Interop.D3D_FEATURE_LEVEL;
-using static TerraFX.Interop.D3D_SHADER_MODEL;
-using static TerraFX.Interop.DXGI_GPU_PREFERENCE;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
+using static TerraFX.Interop.DirectX.D3D_FEATURE_LEVEL;
+using static TerraFX.Interop.DirectX.D3D_SHADER_MODEL;
+using static TerraFX.Interop.DirectX.DXGI_GPU_PREFERENCE;
+
+#pragma warning disable CA1416
 
 namespace ComputeSharp.Graphics.Helpers;
 
@@ -129,7 +131,7 @@ internal static partial class DeviceHelper
 
                         dxgiAdapter1.Get()->GetDesc1(&dxgiDescription1).Assert();
 
-                        HRESULT createDeviceResult = Windows.D3D12CreateDevice(
+                        HRESULT createDeviceResult = DirectX.D3D12CreateDevice(
                             dxgiAdapter1.AsIUnknown().Get(),
                             D3D_FEATURE_LEVEL_11_0,
                             Windows.__uuidof<ID3D12Device>(),
@@ -140,7 +142,7 @@ internal static partial class DeviceHelper
                         {
                             using ComPtr<ID3D12Device> d3D12Device = default;
 
-                            Windows.D3D12CreateDevice(
+                            DirectX.D3D12CreateDevice(
                                 dxgiAdapter1.AsIUnknown().Get(),
                                 D3D_FEATURE_LEVEL_11_0,
                                 Windows.__uuidof<ID3D12Device>(),
@@ -170,7 +172,7 @@ internal static partial class DeviceHelper
                             continue;
                         }
 
-                        HRESULT createDeviceResult = Windows.D3D12CreateDevice(
+                        HRESULT createDeviceResult = DirectX.D3D12CreateDevice(
                             dxgiAdapter1.AsIUnknown().Get(),
                             D3D_FEATURE_LEVEL_11_0,
                             Windows.__uuidof<ID3D12Device>(),
@@ -181,7 +183,7 @@ internal static partial class DeviceHelper
                         {
                             using ComPtr<ID3D12Device> d3D12Device = default;
 
-                            Windows.D3D12CreateDevice(
+                            DirectX.D3D12CreateDevice(
                                 dxgiAdapter1.AsIUnknown().Get(),
                                 D3D_FEATURE_LEVEL_11_0,
                                 Windows.__uuidof<ID3D12Device>(),

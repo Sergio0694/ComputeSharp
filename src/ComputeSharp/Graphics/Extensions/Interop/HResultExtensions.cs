@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Helpers;
 #endif
 using Microsoft.Toolkit.Diagnostics;
-using TerraFX.Interop;
+using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Core.Extensions;
 

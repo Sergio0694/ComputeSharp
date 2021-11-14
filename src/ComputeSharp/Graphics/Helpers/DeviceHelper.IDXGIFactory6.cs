@@ -3,8 +3,10 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ComputeSharp.Core.Extensions;
-using TerraFX.Interop;
-using HRESULT = System.Int32;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
+
+#pragma warning disable CA1416
 
 namespace ComputeSharp.Graphics.Helpers;
 
@@ -16,7 +18,7 @@ internal static partial class DeviceHelper
     /// </summary>
     private const uint IDXGIFactoryCreationFlags =
 #if DEBUG
-        Windows.DXGI_CREATE_FACTORY_DEBUG;
+        DirectX.DXGI_CREATE_FACTORY_DEBUG;
 #else
         0;
 #endif
@@ -31,7 +33,7 @@ internal static partial class DeviceHelper
 
         EnableDebugMode();
 
-        Windows.CreateDXGIFactory2(IDXGIFactoryCreationFlags, Windows.__uuidof<IDXGIFactory4>(), dxgiFactory4.GetVoidAddressOf()).Assert();
+        DirectX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, Windows.__uuidof<IDXGIFactory4>(), dxgiFactory4.GetVoidAddressOf()).Assert();
 
         HRESULT result = dxgiFactory4.CopyTo(dxgiFactory6);
 
@@ -40,7 +42,7 @@ internal static partial class DeviceHelper
             return;
         }
 
-        if (result == Windows.E_NOINTERFACE)
+        if (result == E.E_NOINTERFACE)
         {
             IDXGIFactory4As6Backcompat.Create(dxgiFactory4.Get(), dxgiFactory6);
 
@@ -61,7 +63,7 @@ internal static partial class DeviceHelper
         using ComPtr<ID3D12Debug> d3D12Debug = default;
         using ComPtr<ID3D12Debug1> d3D12Debug1 = default;
 
-        Windows.D3D12GetDebugInterface(Windows.__uuidof<ID3D12Debug>(), d3D12Debug.GetVoidAddressOf()).Assert();
+        DirectX.D3D12GetDebugInterface(Windows.__uuidof<ID3D12Debug>(), d3D12Debug.GetVoidAddressOf()).Assert();
 
         d3D12Debug.Get()->EnableDebugLayer();
 

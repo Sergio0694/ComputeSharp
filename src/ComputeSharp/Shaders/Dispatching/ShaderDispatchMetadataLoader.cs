@@ -4,7 +4,8 @@ using System.Runtime.InteropServices;
 using ComputeSharp.Shaders.Extensions;
 using ComputeSharp.__Internals;
 using Microsoft.Toolkit.Diagnostics;
-using TerraFX.Interop;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
 
 #pragma warning disable CS0618
 

@@ -1,7 +1,8 @@
 ﻿using ComputeSharp.Exceptions;
 using ComputeSharp.Shaders.Translation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TerraFX.Interop;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Tests.Internals;
 

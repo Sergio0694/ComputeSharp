@@ -3,8 +3,9 @@ using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Graphics.Resources.Interop;
 using Microsoft.Toolkit.Diagnostics;
-using TerraFX.Interop;
-using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
+using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
 namespace ComputeSharp.Resources;

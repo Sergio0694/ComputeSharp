@@ -1,12 +1,13 @@
 ﻿using ComputeSharp.Core.Extensions;
 using Microsoft.Toolkit.Diagnostics;
-using TerraFX.Interop;
-using static TerraFX.Interop.D3D12_CPU_PAGE_PROPERTY;
-using static TerraFX.Interop.D3D12_HEAP_TYPE;
-using static TerraFX.Interop.D3D12_MEMORY_POOL;
-using static TerraFX.Interop.D3D12_RESOURCE_FLAGS;
-using static TerraFX.Interop.D3D12_RESOURCE_STATES;
-using static TerraFX.Interop.D3D12MA_ALLOCATION_FLAGS;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
+using static TerraFX.Interop.DirectX.D3D12_CPU_PAGE_PROPERTY;
+using static TerraFX.Interop.DirectX.D3D12_HEAP_TYPE;
+using static TerraFX.Interop.DirectX.D3D12_MEMORY_POOL;
+using static TerraFX.Interop.DirectX.D3D12_RESOURCE_FLAGS;
+using static TerraFX.Interop.DirectX.D3D12_RESOURCE_STATES;
+using static TerraFX.Interop.DirectX.D3D12MA_ALLOCATION_FLAGS;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
 namespace ComputeSharp.Graphics.Extensions;
