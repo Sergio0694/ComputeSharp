@@ -18,12 +18,16 @@ public partial class BufferTests
     [Resource(typeof(ReadWriteBuffer<>))]
     [Data(AllocationMode.Default)]
     [Data(AllocationMode.Clear)]
-    public void Allocate_Uninitialized_Ok(Device device, Type bufferType, AllocationMode allocationMode)
+    [AdditionalData(128)]
+    [AdditionalData(768)]
+    [AdditionalData(1024)]
+    [AdditionalData(443)]
+    public void Allocate_Uninitialized_Ok(Device device, Type bufferType, AllocationMode allocationMode, int size)
     {
-        using Buffer<float> buffer = device.Get().AllocateBuffer<float>(bufferType, 128, allocationMode);
+        using Buffer<float> buffer = device.Get().AllocateBuffer<float>(bufferType, size, allocationMode);
 
         Assert.IsNotNull(buffer);
-        Assert.AreEqual(buffer.Length, 128);
+        Assert.AreEqual(buffer.Length, size);
         Assert.AreSame(buffer.GraphicsDevice, device.Get());
 
         if (allocationMode == AllocationMode.Clear)
@@ -53,14 +57,18 @@ public partial class BufferTests
     [Resource(typeof(ConstantBuffer<>))]
     [Resource(typeof(ReadOnlyBuffer<>))]
     [Resource(typeof(ReadWriteBuffer<>))]
-    public void Allocate_FromArray(Device device, Type bufferType)
+    [Data(128)]
+    [Data(768)]
+    [Data(1024)]
+    [Data(443)]
+    public void Allocate_FromArray(Device device, Type bufferType, int size)
     {
-        float[] data = Enumerable.Range(0, 128).Select(static i => (float)i).ToArray();
+        float[] data = Enumerable.Range(0, size).Select(static i => (float)i).ToArray();
 
         using Buffer<float> buffer = device.Get().AllocateBuffer(bufferType, data);
 
         Assert.IsNotNull(buffer);
-        Assert.AreEqual(buffer.Length, 128);
+        Assert.AreEqual(buffer.Length, size);
         Assert.AreSame(buffer.GraphicsDevice, device.Get());
 
         float[] result = buffer.ToArray();
@@ -75,18 +83,22 @@ public partial class BufferTests
     [Resource(typeof(ConstantBuffer<>))]
     [Resource(typeof(ReadOnlyBuffer<>))]
     [Resource(typeof(ReadWriteBuffer<>))]
-    [Data(typeof(ConstantBuffer<>))]
-    [Data(typeof(ReadOnlyBuffer<>))]
-    [Data(typeof(ReadWriteBuffer<>))]
-    public void Allocate_FromBuffer(Device device, Type sourceType, Type destinationType)
+    [AdditionalResource(typeof(ConstantBuffer<>))]
+    [AdditionalResource(typeof(ReadOnlyBuffer<>))]
+    [AdditionalResource(typeof(ReadWriteBuffer<>))]
+    [Data(128)]
+    [Data(768)]
+    [Data(1024)]
+    [Data(443)]
+    public void Allocate_FromBuffer(Device device, Type sourceType, Type destinationType, int size)
     {
-        float[] data = Enumerable.Range(0, 128).Select(static i => (float)i).ToArray();
+        float[] data = Enumerable.Range(0, size).Select(static i => (float)i).ToArray();
 
         using Buffer<float> source = device.Get().AllocateBuffer(sourceType, data);
         using Buffer<float> destination = device.Get().AllocateBuffer(destinationType, source);
 
         Assert.IsNotNull(destination);
-        Assert.AreEqual(destination.Length, 128);
+        Assert.AreEqual(destination.Length, size);
         Assert.AreSame(destination.GraphicsDevice, device.Get());
 
         float[] result = destination.ToArray();
@@ -184,10 +196,11 @@ public partial class BufferTests
     [Resource(typeof(ReadOnlyBuffer<>))]
     [Resource(typeof(ReadWriteBuffer<>))]
     [Data(0, 0, 4096)]
-    [Data(512, 0, 2048)]
     [Data(0, 512, 2048)]
-    [Data(127, 1024, 587)]
-    public void CopyTo_RangeToVoid_Ok(Device device, Type bufferType, int destinationOffset, int bufferOffset, int count)
+    [Data(512, 0, 2048)]
+    [Data(1024, 127, 587)]
+    [Data(65, 127, 587)]
+    public void CopyTo_RangeToVoid_Ok(Device device, Type bufferType, int sourceOffset, int destinationOffset, int count)
     {
         float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
 
@@ -195,9 +208,9 @@ public partial class BufferTests
 
         float[] result = new float[4096];
 
-        buffer.CopyTo(result, destinationOffset, bufferOffset, count);
+        buffer.CopyTo(result, sourceOffset, destinationOffset, count);
 
-        Assert.IsTrue(array.AsSpan(bufferOffset, count).SequenceEqual(result.AsSpan(destinationOffset, count)));
+        Assert.IsTrue(array.AsSpan(sourceOffset, count).SequenceEqual(result.AsSpan(destinationOffset, count)));
     }
 
     [CombinatorialTestMethod]
@@ -206,13 +219,13 @@ public partial class BufferTests
     [Resource(typeof(ReadOnlyBuffer<>))]
     [Resource(typeof(ReadWriteBuffer<>))]
     [Data(0, 0, 8196)]
-    [Data(-12, 0, 1024)]
-    [Data(0, -56, 1024)]
-    [Data(512, 0, 4096)]
-    [Data(12, 1024, 3600)]
-    [Data(12, 1024, -2096)]
+    [Data(0, -12, 1024)]
+    [Data(-56, 0, 1024)]
+    [Data(0, 512, 4096)]
+    [Data(1024, 12, 3600)]
+    [Data(1024, 12, - 2096)]
     [ExpectedException(typeof(ArgumentOutOfRangeException))]
-    public void CopyTo_RangeToVoid_Fail(Device device, Type bufferType, int destinationOffset, int bufferOffset, int count)
+    public void CopyTo_RangeToVoid_Fail(Device device, Type bufferType, int sourceOffset, int destinationOffset, int count)
     {
         float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
 
@@ -220,7 +233,59 @@ public partial class BufferTests
 
         float[] result = new float[4096];
 
-        buffer.CopyTo(result, destinationOffset, bufferOffset, count);
+        buffer.CopyTo(result, sourceOffset, destinationOffset, count);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Resource(typeof(ConstantBuffer<>))]
+    [Resource(typeof(ReadOnlyBuffer<>))]
+    [Resource(typeof(ReadWriteBuffer<>))]
+    [AdditionalResource(typeof(ConstantBuffer<>))]
+    [AdditionalResource(typeof(ReadOnlyBuffer<>))]
+    [AdditionalResource(typeof(ReadWriteBuffer<>))]
+    [Data(0, 0, 4096)]
+    [Data(0, 512, 2048)]
+    [Data(512, 0, 2048)]
+    [Data(1024, 127, 587)]
+    [Data(65, 127, 587)]
+    public void CopyTo_BufferToVoid_Ok(Device device, Type sourceType, Type destinationType, int sourceOffset, int destinationOffset, int count)
+    {
+        float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
+
+        using Buffer<float> source = device.Get().AllocateBuffer(sourceType, array);
+        using Buffer<float> destination = device.Get().AllocateBuffer<float>(destinationType, 4096);
+
+        source.CopyTo(destination, sourceOffset, destinationOffset, count);
+
+        float[] result = destination.ToArray();
+
+        Assert.IsTrue(array.AsSpan(sourceOffset, count).SequenceEqual(result.AsSpan(destinationOffset, count)));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Resource(typeof(ConstantBuffer<>))]
+    [Resource(typeof(ReadOnlyBuffer<>))]
+    [Resource(typeof(ReadWriteBuffer<>))]
+    [AdditionalResource(typeof(ConstantBuffer<>))]
+    [AdditionalResource(typeof(ReadOnlyBuffer<>))]
+    [AdditionalResource(typeof(ReadWriteBuffer<>))]
+    [Data(0, 0, 8196)]
+    [Data(0, -12, 1024)]
+    [Data(-56, 0, 1024)]
+    [Data(0, 512, 4096)]
+    [Data(1024, 12, 3600)]
+    [Data(1024, 12, -2096)]
+    [ExpectedException(typeof(ArgumentOutOfRangeException))]
+    public void CopyTo_BufferToVoid_Fail(Device device, Type sourceType, Type destinationType, int sourceOffset, int destinationOffset, int count)
+    {
+        float[] array = Enumerable.Range(0, 4096).Select(static i => (float)i).ToArray();
+
+        using Buffer<float> source = device.Get().AllocateBuffer(sourceType, array);
+        using Buffer<float> destination = device.Get().AllocateBuffer<float>(destinationType, 4096);
+
+        source.CopyTo(destination, sourceOffset, destinationOffset, count);
     }
 
     [CombinatorialTestMethod]

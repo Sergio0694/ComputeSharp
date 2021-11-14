@@ -8,10 +8,17 @@ namespace ComputeSharp.Tests.Attributes;
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
 public sealed class ResourceAttribute : Attribute
 {
+    /// <summary>
+    /// Creates a new <see cref="ResourceAttribute"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="type">The resource type.</param>
     public ResourceAttribute(Type type)
     {
         Type = type;
     }
 
+    /// <summary>
+    /// Gets the resource type for the current attribute.
+    /// </summary>
     public Type Type { get; }
 }

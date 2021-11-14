@@ -22,6 +22,19 @@ internal static class AlignmentHelper
     }
 
     /// <summary>
+    /// Pads the input size so that its pitch is aligned to a multiple of a specified length.
+    /// </summary>
+    /// <param name="size">The input size to pad, if needed.</param>
+    /// <param name="alignment">The target alignment.</param>
+    /// <returns>The padded value relative to the given inputs.</returns>
+    [Pure]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static nint Pad(nint size, nint alignment)
+    {
+        return (size + alignment - 1) & ~(alignment - 1);
+    }
+
+    /// <summary>
     /// Aligns a given offset to a specified boundary, if a given size increment would have crossed it.
     /// </summary>
     /// <param name="offset">The starting offset to align, if needed.</param>

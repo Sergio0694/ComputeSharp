@@ -94,7 +94,7 @@ public partial class TransferBufferTests
 
     [CombinatorialTestMethod]
     [AllDevices]
-    public void Allocate_UploadBuffer_Copy_Full(Device device)
+    public void Allocate_UploadBuffer_CopyTo_Full(Device device)
     {
         using UploadBuffer<int> uploadBuffer = device.Get().AllocateUploadBuffer<int>(4096);
 
@@ -113,10 +113,10 @@ public partial class TransferBufferTests
     [CombinatorialTestMethod]
     [AllDevices]
     [Data(0, 0, 4096)]
-    [Data(128, 0, 2048)]
     [Data(0, 128, 2048)]
-    [Data(97, 33, 512)]
-    public void Allocate_UploadBuffer_Copy_Range(Device device, int destinationOffset, int bufferOffset, int count)
+    [Data(128, 0, 2048)]
+    [Data(33, 97, 512)]
+    public void Allocate_UploadBuffer_CopyTo_Range(Device device, int sourceOffset, int destinationOffset, int count)
     {
         using UploadBuffer<int> uploadBuffer = device.Get().AllocateUploadBuffer<int>(4096);
 
@@ -124,17 +124,17 @@ public partial class TransferBufferTests
 
         using ReadOnlyBuffer<int> readOnlyBuffer = device.Get().AllocateReadOnlyBuffer<int>(uploadBuffer.Length);
 
-        uploadBuffer.CopyTo(readOnlyBuffer, destinationOffset, bufferOffset, count);
+        uploadBuffer.CopyTo(readOnlyBuffer, sourceOffset, destinationOffset, count);
 
         int[] result = readOnlyBuffer.ToArray(destinationOffset, count);
 
         Assert.AreEqual(result.Length, count);
-        Assert.IsTrue(uploadBuffer.Span.Slice(bufferOffset, count).SequenceEqual(result));
+        Assert.IsTrue(uploadBuffer.Span.Slice(sourceOffset, count).SequenceEqual(result));
     }
 
     [CombinatorialTestMethod]
     [AllDevices]
-    public void Allocate_ReadBackBuffer_Copy_Full(Device device)
+    public void Allocate_ReadBackBuffer_CopyTo_Full(Device device)
     {
         int[] source = new int[4096];
 
@@ -152,10 +152,10 @@ public partial class TransferBufferTests
     [CombinatorialTestMethod]
     [AllDevices]
     [Data(0, 0, 4096)]
-    [Data(128, 0, 2048)]
     [Data(0, 128, 2048)]
-    [Data(97, 33, 512)]
-    public void Allocate_ReadBackBuffer_Copy_Range(Device device, int destinationOffset, int bufferOffset, int count)
+    [Data(128, 0, 2048)]
+    [Data(33, 97, 512)]
+    public void Allocate_ReadBackBuffer_CopyTo_Range(Device device, int sourceOffset, int destinationOffset, int count)
     {
         int[] source = new int[4096];
 
@@ -164,9 +164,87 @@ public partial class TransferBufferTests
         using ReadOnlyBuffer<int> readOnlyBuffer = device.Get().AllocateReadOnlyBuffer(source);
         using ReadBackBuffer<int> readBackBuffer = device.Get().AllocateReadBackBuffer<int>(readOnlyBuffer.Length);
 
-        readOnlyBuffer.CopyTo(readBackBuffer, destinationOffset, bufferOffset, count);
+        readOnlyBuffer.CopyTo(readBackBuffer, sourceOffset, destinationOffset, count);
 
         Assert.AreEqual(source.Length, readBackBuffer.Length);
-        Assert.IsTrue(source.AsSpan(bufferOffset, count).SequenceEqual(readBackBuffer.Span.Slice(destinationOffset, count)));
+        Assert.IsTrue(source.AsSpan(sourceOffset, count).SequenceEqual(readBackBuffer.Span.Slice(destinationOffset, count)));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void Allocate_UploadBuffer_CopyFrom_Full(Device device)
+    {
+        using UploadBuffer<int> uploadBuffer = device.Get().AllocateUploadBuffer<int>(4096);
+
+        new Random(42).NextBytes(uploadBuffer.Span.AsBytes());
+
+        using ReadOnlyBuffer<int> readOnlyBuffer = device.Get().AllocateReadOnlyBuffer<int>(uploadBuffer.Length);
+
+        readOnlyBuffer.CopyFrom(uploadBuffer);
+
+        int[] result = readOnlyBuffer.ToArray();
+
+        Assert.AreEqual(uploadBuffer.Length, result.Length);
+        Assert.IsTrue(uploadBuffer.Span.SequenceEqual(result));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(0, 0, 4096)]
+    [Data(0, 128, 2048)]
+    [Data(128, 0, 2048)]
+    [Data(33, 97, 512)]
+    public void Allocate_UploadBuffer_CopyFrom_Range(Device device, int sourceOffset, int destinationOffset, int count)
+    {
+        using UploadBuffer<int> uploadBuffer = device.Get().AllocateUploadBuffer<int>(4096);
+
+        new Random(42).NextBytes(uploadBuffer.Span.AsBytes());
+
+        using ReadOnlyBuffer<int> readOnlyBuffer = device.Get().AllocateReadOnlyBuffer<int>(uploadBuffer.Length);
+
+        readOnlyBuffer.CopyFrom(uploadBuffer, sourceOffset, destinationOffset, count);
+
+        int[] result = readOnlyBuffer.ToArray(destinationOffset, count);
+
+        Assert.AreEqual(result.Length, count);
+        Assert.IsTrue(uploadBuffer.Span.Slice(sourceOffset, count).SequenceEqual(result));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void Allocate_ReadBackBuffer_CopyFrom_Full(Device device)
+    {
+        int[] source = new int[4096];
+
+        new Random(42).NextBytes(source.AsSpan().AsBytes());
+
+        using ReadOnlyBuffer<int> readOnlyBuffer = device.Get().AllocateReadOnlyBuffer(source);
+        using ReadBackBuffer<int> readBackBuffer = device.Get().AllocateReadBackBuffer<int>(readOnlyBuffer.Length);
+
+        readBackBuffer.CopyFrom(readOnlyBuffer);
+
+        Assert.AreEqual(source.Length, readBackBuffer.Length);
+        Assert.IsTrue(source.AsSpan().SequenceEqual(readBackBuffer.Span));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(0, 0, 4096)]
+    [Data(0, 128, 2048)]
+    [Data(128, 0, 2048)]
+    [Data(33, 97, 512)]
+    public void Allocate_ReadBackBuffer_CopyFrom_Range(Device device, int sourceOffset, int destinationOffset, int count)
+    {
+        int[] source = new int[4096];
+
+        new Random(42).NextBytes(source.AsSpan().AsBytes());
+
+        using ReadOnlyBuffer<int> readOnlyBuffer = device.Get().AllocateReadOnlyBuffer(source);
+        using ReadBackBuffer<int> readBackBuffer = device.Get().AllocateReadBackBuffer<int>(readOnlyBuffer.Length);
+
+        readBackBuffer.CopyFrom(readOnlyBuffer, sourceOffset, destinationOffset, count);
+
+        Assert.AreEqual(source.Length, readBackBuffer.Length);
+        Assert.IsTrue(source.AsSpan(sourceOffset, count).SequenceEqual(readBackBuffer.Span.Slice(destinationOffset, count)));
     }
 }

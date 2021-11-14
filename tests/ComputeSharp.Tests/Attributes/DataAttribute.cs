@@ -8,6 +8,10 @@ namespace ComputeSharp.Tests.Attributes;
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
 public sealed class DataAttribute : Attribute
 {
+    /// <summary>
+    /// Creates a new <see cref="DataAttribute"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="data">The input data.</param>
     public DataAttribute(params object[] data)
     {
         Data = data;

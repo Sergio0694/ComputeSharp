@@ -135,6 +135,64 @@ public partial class Texture3DTests
     [AllDevices]
     [Resource(typeof(ReadOnlyTexture3D<>))]
     [Resource(typeof(ReadWriteTexture3D<>))]
+    [Data(0, 0, 0, 64, 64, 8)]
+    [Data(0, 14, 0, 64, 50, 1)]
+    [Data(14, 0, 0, 50, 64, 1)]
+    [Data(0, 0, 3, 50, 64, 1)]
+    [Data(10, 10, 1, 54, 54, 4)]
+    [Data(20, 20, 3, 32, 27, 3)]
+    [Data(40, 2, 4, 4, 62, 4)]
+    [Data(0, 60, 1, 64, 4, 6)]
+    [Data(63, 2, 2, 1, 60, 5)]
+    [Data(2, 63, 7, 60, 1, 1)]
+    public void GetData_RangeToArray_Ok(Device device, Type textureType, int x, int y, int z, int width, int height, int depth)
+    {
+        float[] array = Enumerable.Range(0, 64 * 64 * 8).Select(static i => (float)i).ToArray();
+
+        using Texture3D<float> texture = device.Get().AllocateTexture3D(textureType, array, 64, 64, 8);
+
+        float[,,] result = texture.ToArray(x, y, z, width, height, depth);
+
+        Assert.AreEqual(depth, result.GetLength(0));
+        Assert.AreEqual(height, result.GetLength(1));
+        Assert.AreEqual(width, result.GetLength(2));
+
+        for (int k = 0; k < depth; k++)
+        {
+            Span2D<float> expected = new Span2D<float>(array, 64 * 64 * (k + z), 64, 64, 0).Slice(y, x, height, width);
+            Span2D<float> data = new(result, k);
+
+            CollectionAssert.AreEqual(expected.ToArray(), data.ToArray());
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Resource(typeof(ReadOnlyTexture3D<>))]
+    [Resource(typeof(ReadWriteTexture3D<>))]
+    [Data(-1, 0, 0, 50, 50, 1)]
+    [Data(0, -1, 0, 50, 50, 1)]
+    [Data(0, 0, -1, 50, 50, 1)]
+    [Data(12, 0, 0, -1, 50, 1)]
+    [Data(12, 0, 0, 20, -1, 0)]
+    [Data(12, 0, 0, 20, 2, -1)]
+    [Data(12, 20, 0, 20, 50, 2)]
+    [Data(12, 20, 0, 60, 20, 3)]
+    [Data(12, 10, 6, 20, 20, 10)]
+    [Data(80, 20, 0, 40, 20, 1)]
+    [Data(0, 80, 0, 40, 20, 1)]
+    [ExpectedException(typeof(ArgumentOutOfRangeException))]
+    public void GetData_RangeToArray_Fail(Device device, Type textureType, int x, int y, int z, int width, int height, int depth)
+    {
+        using Texture3D<float> texture = device.Get().AllocateTexture3D<float>(textureType, 64, 64, 8);
+
+        _ = texture.ToArray(x, y, z, width, height, depth);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Resource(typeof(ReadOnlyTexture3D<>))]
+    [Resource(typeof(ReadWriteTexture3D<>))]
     [Data(0, 0, 0, 64, 64, 3)]
     [Data(0, 14, 0, 64, 50, 3)]
     [Data(0, 14, 1, 64, 50, 2)]
@@ -192,6 +250,289 @@ public partial class Texture3DTests
         float[] result = new float[array.Length];
 
         texture.CopyTo(result, x, y, z, width, height, depth);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Resource(typeof(ReadOnlyTexture3D<>))]
+    [Resource(typeof(ReadWriteTexture3D<>))]
+    [AdditionalResource(typeof(ReadOnlyTexture3D<>))]
+    [AdditionalResource(typeof(ReadWriteTexture3D<>))]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, 512, 512, 3)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, 512, 512, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 1, 0, 0, 0, 512, 512, 2)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 1, 512, 512, 2)]
+    // [Data(512, 512, 4, 512, 512, 4, 0, 0, 1, 0, 0, 2, 512, 512, 2)]
+    // This test fails, only on WARP devices, and only if not run on its own. It seems
+    // to be possibly caused by a bug in ID3D12GraphicsCommandList::CopyTextureRegion.
+    [Data(512, 1024, 3, 512, 512, 3, 127, 256, 1, 128, 128, 1, 128, 256, 1)]
+    [Data(512, 1024, 3, 512, 512, 3, 127, 256, 1, 128, 128, 1, 128, 256, 2)]
+    [Data(512, 1024, 3, 512, 512, 3, 122, 329, 1, 127, 256, 2, 125, 200, 1)]
+    [Data(1024, 1024, 3, 512, 512, 3, 127, 256, 1, 128, 128, 1, 128, 256, 1)]
+    [Data(1024, 1024, 3, 512, 512, 3, 127, 256, 1, 128, 128, 1, 128, 256, 2)]
+    [Data(1024, 1024, 3, 512, 512, 3, 122, 329, 1, 127, 256, 2, 125, 200, 1)]
+    [Data(512, 512, 2, 1024, 1024, 3, 0, 0, 0, 0, 0, 0, 512, 512, 1)]
+    [Data(512, 512, 2, 1024, 1024, 3, 0, 0, 0, 512, 0, 0, 512, 512, 1)]
+    [Data(512, 512, 2, 1024, 1024, 3, 0, 0, 0, 0, 512, 0, 512, 512, 1)]
+    [Data(512, 512, 2, 1024, 1024, 3, 0, 0, 0, 512, 512, 0, 512, 512, 1)]
+    [Data(512, 512, 2, 1024, 1024, 3, 0, 0, 0, 0, 0, 0, 512, 512, 2)]
+    [Data(512, 512, 2, 1024, 1024, 3, 0, 0, 0, 512, 0, 0, 512, 512, 2)]
+    [Data(512, 512, 2, 1024, 1024, 3, 0, 0, 0, 0, 512, 0, 512, 512, 2)]
+    [Data(512, 512, 2, 1024, 1024, 3, 0, 0, 0, 512, 512, 0, 512, 512, 2)]
+    public void CopyTo_TextureToVoid_Ok(
+        Device device,
+        Type sourceType,
+        Type destinationType,
+        int sourceWidth,
+        int sourceHeight,
+        int sourceDepth,
+        int destinationWidth,
+        int destinationHeight,
+        int destinationDepth,
+        int sourceOffsetX,
+        int sourceOffsetY,
+        int sourceOffsetZ,
+        int destinationOffsetX,
+        int destinationOffsetY,
+        int destinationOffsetZ,
+        int copyWidth,
+        int copyHeight,
+        int copyDepth)
+    {
+        float[] array = Enumerable.Range(0, sourceHeight * sourceWidth * sourceDepth).Select(static i => (float)i).ToArray();
+
+        using Texture3D<float> source = device.Get().AllocateTexture3D(sourceType, array, sourceWidth, sourceHeight, sourceDepth);
+        using Texture3D<float> destination = device.Get().AllocateTexture3D<float>(destinationType, destinationWidth, destinationHeight, destinationDepth, AllocationMode.Clear);
+
+        source.CopyTo(destination, sourceOffsetX, sourceOffsetY, sourceOffsetZ, destinationOffsetX, destinationOffsetY, destinationOffsetZ, copyWidth, copyHeight, copyDepth);
+
+        float[,,] stack = destination.ToArray();
+
+        for (int k = 0; k < destinationDepth; k++)
+        {
+            ReadOnlySpan2D<float> result = new(stack, k);
+
+            for (int i = 0; i < destinationHeight; i++)
+            {
+                for (int j = 0; j < destinationWidth; j++)
+                {
+                    if (k >= destinationOffsetZ &&
+                        k < destinationOffsetZ + copyDepth &&
+                        i >= destinationOffsetY &&
+                        i < destinationOffsetY + copyHeight &&
+                        j >= destinationOffsetX &&
+                        j < destinationOffsetX + copyWidth)
+                    {
+                        int sourceZ = k - destinationOffsetZ + sourceOffsetZ;
+                        int sourceY = i - destinationOffsetY + sourceOffsetY;
+                        int sourceX = j - destinationOffsetX + sourceOffsetX;
+
+                        ReadOnlySpan2D<float> expected = new(array, sourceZ * sourceHeight * sourceWidth, sourceHeight, sourceWidth, 0);
+
+                        Assert.AreEqual(expected[sourceY, sourceX], result[i, j]);
+                    }
+                    else
+                    {
+                        Assert.AreEqual(0, result[i, j]);
+                    }
+                }
+            }
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Resource(typeof(ReadOnlyTexture3D<>))]
+    [Resource(typeof(ReadWriteTexture3D<>))]
+    [AdditionalResource(typeof(ReadOnlyTexture3D<>))]
+    [AdditionalResource(typeof(ReadWriteTexture3D<>))]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, 2055, 1024, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, -1, 1024, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, int.MaxValue, 1024, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, 256, 1025, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, 256, -1, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, 256, int.MaxValue, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, 256, 128, 6)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, 256, 128, -1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, 256, 128, int.MaxValue)]
+    [Data(512, 512, 3, 512, 512, 3, 450, 0, 0, 0, 0, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 450, 0, 0, 0, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 5, 0, 0, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 450, 0, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 450, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 4, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, -1, 0, 0, 0, 0, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, -1, 0, 0, 0, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, -1, 0, 0, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, -1, 0, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, -1, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, -1, 128, 128, 1)]
+    [ExpectedException(typeof(ArgumentOutOfRangeException))]
+    public void CopyTo_TextureToVoid_Fail(
+        Device device,
+        Type sourceType,
+        Type destinationType,
+        int sourceWidth,
+        int sourceHeight,
+        int sourceDepth,
+        int destinationWidth,
+        int destinationHeight,
+        int destinationDepth,
+        int sourceOffsetX,
+        int sourceOffsetY,
+        int sourceOffsetZ,
+        int destinationOffsetX,
+        int destinationOffsetY,
+        int destinationOffsetZ,
+        int copyWidth,
+        int copyHeight,
+        int copyDepth)
+    {
+        using Texture3D<float> source = device.Get().AllocateTexture3D<float>(sourceType, sourceWidth, sourceHeight, sourceDepth);
+        using Texture3D<float> destination = device.Get().AllocateTexture3D<float>(destinationType, destinationWidth, destinationHeight, destinationDepth, AllocationMode.Clear);
+
+        source.CopyTo(destination, sourceOffsetX, sourceOffsetY, sourceOffsetZ, destinationOffsetX, destinationOffsetY, destinationOffsetZ, copyWidth, copyHeight, copyDepth);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Resource(typeof(ReadOnlyTexture3D<>))]
+    [Resource(typeof(ReadWriteTexture3D<>))]
+    [AdditionalResource(typeof(ReadOnlyTexture3D<>))]
+    [AdditionalResource(typeof(ReadWriteTexture3D<>))]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, 512, 512, 3)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, 512, 512, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 1, 0, 0, 0, 512, 512, 2)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 1, 512, 512, 2)]
+    // [Data(512, 512, 4, 512, 512, 4, 0, 0, 1, 0, 0, 2, 512, 512, 2)]
+    // TODO: see explanation above in CopyTo_TextureToVoid_Ok
+    [Data(512, 1024, 3, 512, 512, 3, 127, 256, 1, 128, 128, 1, 128, 256, 1)]
+    [Data(512, 1024, 3, 512, 512, 3, 127, 256, 1, 128, 128, 1, 128, 256, 2)]
+    [Data(512, 1024, 3, 512, 512, 3, 122, 329, 1, 127, 256, 2, 125, 200, 1)]
+    [Data(1024, 1024, 3, 512, 512, 3, 127, 256, 1, 128, 128, 1, 128, 256, 1)]
+    [Data(1024, 1024, 3, 512, 512, 3, 127, 256, 1, 128, 128, 1, 128, 256, 2)]
+    [Data(1024, 1024, 3, 512, 512, 3, 122, 329, 1, 127, 256, 2, 125, 200, 1)]
+    [Data(512, 512, 2, 1024, 1024, 3, 0, 0, 0, 0, 0, 0, 512, 512, 1)]
+    [Data(512, 512, 2, 1024, 1024, 3, 0, 0, 0, 512, 0, 0, 512, 512, 1)]
+    [Data(512, 512, 2, 1024, 1024, 3, 0, 0, 0, 0, 512, 0, 512, 512, 1)]
+    [Data(512, 512, 2, 1024, 1024, 3, 0, 0, 0, 512, 512, 0, 512, 512, 1)]
+    [Data(512, 512, 2, 1024, 1024, 3, 0, 0, 0, 0, 0, 0, 512, 512, 2)]
+    [Data(512, 512, 2, 1024, 1024, 3, 0, 0, 0, 512, 0, 0, 512, 512, 2)]
+    [Data(512, 512, 2, 1024, 1024, 3, 0, 0, 0, 0, 512, 0, 512, 512, 2)]
+    [Data(512, 512, 2, 1024, 1024, 3, 0, 0, 0, 512, 512, 0, 512, 512, 2)]
+    public void CopyFrom_TextureToVoid_Ok(
+        Device device,
+        Type sourceType,
+        Type destinationType,
+        int sourceWidth,
+        int sourceHeight,
+        int sourceDepth,
+        int destinationWidth,
+        int destinationHeight,
+        int destinationDepth,
+        int sourceOffsetX,
+        int sourceOffsetY,
+        int sourceOffsetZ,
+        int destinationOffsetX,
+        int destinationOffsetY,
+        int destinationOffsetZ,
+        int copyWidth,
+        int copyHeight,
+        int copyDepth)
+    {
+        float[] array = Enumerable.Range(0, sourceHeight * sourceWidth * sourceDepth).Select(static i => (float)i).ToArray();
+
+        using Texture3D<float> source = device.Get().AllocateTexture3D(sourceType, array, sourceWidth, sourceHeight, sourceDepth);
+        using Texture3D<float> destination = device.Get().AllocateTexture3D<float>(destinationType, destinationWidth, destinationHeight, destinationDepth, AllocationMode.Clear);
+
+        destination.CopyFrom(source, sourceOffsetX, sourceOffsetY, sourceOffsetZ, destinationOffsetX, destinationOffsetY, destinationOffsetZ, copyWidth, copyHeight, copyDepth);
+
+        float[,,] stack = destination.ToArray();
+
+        for (int k = 0; k < destinationDepth; k++)
+        {
+            ReadOnlySpan2D<float> result = new(stack, k);
+
+            for (int i = 0; i < destinationHeight; i++)
+            {
+                for (int j = 0; j < destinationWidth; j++)
+                {
+                    if (k >= destinationOffsetZ &&
+                        k < destinationOffsetZ + copyDepth &&
+                        i >= destinationOffsetY &&
+                        i < destinationOffsetY + copyHeight &&
+                        j >= destinationOffsetX &&
+                        j < destinationOffsetX + copyWidth)
+                    {
+                        int sourceZ = k - destinationOffsetZ + sourceOffsetZ;
+                        int sourceY = i - destinationOffsetY + sourceOffsetY;
+                        int sourceX = j - destinationOffsetX + sourceOffsetX;
+
+                        ReadOnlySpan2D<float> expected = new(array, sourceZ * sourceHeight * sourceWidth, sourceHeight, sourceWidth, 0);
+
+                        Assert.AreEqual(expected[sourceY, sourceX], result[i, j]);
+                    }
+                    else
+                    {
+                        Assert.AreEqual(0, result[i, j]);
+                    }
+                }
+            }
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Resource(typeof(ReadOnlyTexture3D<>))]
+    [Resource(typeof(ReadWriteTexture3D<>))]
+    [AdditionalResource(typeof(ReadOnlyTexture3D<>))]
+    [AdditionalResource(typeof(ReadWriteTexture3D<>))]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, 2055, 1024, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, -1, 1024, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, int.MaxValue, 1024, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, 256, 1025, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, 256, -1, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, 256, int.MaxValue, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, 256, 128, 6)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, 256, 128, -1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 0, 256, 128, int.MaxValue)]
+    [Data(512, 512, 3, 512, 512, 3, 450, 0, 0, 0, 0, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 450, 0, 0, 0, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 5, 0, 0, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 450, 0, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 450, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, 4, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, -1, 0, 0, 0, 0, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, -1, 0, 0, 0, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, -1, 0, 0, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, -1, 0, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, -1, 0, 128, 128, 1)]
+    [Data(512, 512, 3, 512, 512, 3, 0, 0, 0, 0, 0, -1, 128, 128, 1)]
+    [ExpectedException(typeof(ArgumentOutOfRangeException))]
+    public void CopyFrom_TextureToVoid_Fail(
+        Device device,
+        Type sourceType,
+        Type destinationType,
+        int sourceWidth,
+        int sourceHeight,
+        int sourceDepth,
+        int destinationWidth,
+        int destinationHeight,
+        int destinationDepth,
+        int sourceOffsetX,
+        int sourceOffsetY,
+        int sourceOffsetZ,
+        int destinationOffsetX,
+        int destinationOffsetY,
+        int destinationOffsetZ,
+        int copyWidth,
+        int copyHeight,
+        int copyDepth)
+    {
+        using Texture3D<float> source = device.Get().AllocateTexture3D<float>(sourceType, sourceWidth, sourceHeight, sourceDepth);
+        using Texture3D<float> destination = device.Get().AllocateTexture3D<float>(destinationType, destinationWidth, destinationHeight, destinationDepth, AllocationMode.Clear);
+
+        destination.CopyFrom(source, sourceOffsetX, sourceOffsetY, sourceOffsetZ, destinationOffsetX, destinationOffsetY, destinationOffsetZ, copyWidth, copyHeight, copyDepth);
     }
 
     [CombinatorialTestMethod]

@@ -19,4 +19,16 @@
                       PrivateAssets="contentfiles;build"/>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="..\ComputeSharp.Tests\Attributes\AdditionalDataAttribute.cs" Link="Attributes\AdditionalDataAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Tests\Attributes\AdditionalResourceAttribute.cs" Link="Attributes\AdditionalResourceAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Tests\Attributes\AllDevicesAttribute.cs" Link="Attributes\AllDevicesAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Tests\Attributes\CombinatorialTestMethodAttribute.cs" Link="Attributes\CombinatorialTestMethodAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Tests\Attributes\DataAttribute.cs" Link="Attributes\DataAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Tests\Attributes\DeviceAttribute.cs" Link="Attributes\DeviceAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Tests\Attributes\ResourceAttribute.cs" Link="Attributes\ResourceAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Tests\Extensions\DeviceExtensions.cs" Link="Extensions\DeviceExtensions.cs" />
+    <Compile Include="..\ComputeSharp.Tests\Extensions\GraphicsDeviceExtensions.cs" Link="Extensions\GraphicsDeviceExtensions.cs" />
+  </ItemGroup>
+
 </Project>

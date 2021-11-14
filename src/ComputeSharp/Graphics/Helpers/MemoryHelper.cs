@@ -9,87 +9,109 @@ namespace ComputeSharp.Graphics.Helpers;
 internal static class MemoryHelper
 {
     /// <summary>
-    /// Copies the content of a source memory area to a target one, accounting for padding.
-    /// The destination memory area has padding for each element, while the source does not.
+    /// Copies the content of a source memory area to a target one, accounting for padding if present.
     /// </summary>
+    /// <typeparam name="T">The type of elements being copied.</typeparam>
     /// <param name="source">The source memory area to read from.</param>
     /// <param name="destination">The pointer for the destination memory area.</param>
-    /// <param name="offset">The destination offset to start writing data to.</param>
-    /// <param name="length">The number of items to copy.</param>
-    /// <param name="elementPitchInBytes">The padded size of each element.</param>
-    /// <param name="isPaddingInSourceToo">Indicates whether or not the source is padded too.</param>
+    /// <param name="sourceElementOffset">The source offset to start reading data from.</param>
+    /// <param name="destinationElementOffset">The destination offset to start writing data to.</param>
+    /// <param name="sourceElementPitchInBytes">The padded size of each element in <paramref name="source"/>.</param>
+    /// <param name="destinationElementPitchInBytes">The padded size of each element in <paramref name="destination"/>.</param>
+    /// <param name="count">The number of items to copy from <paramref name="source"/> to <paramref name="destination"/>.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static unsafe void Copy<T>(
         void* source,
         void* destination,
-        uint offset,
-        uint length,
-        uint elementPitchInBytes,
-        bool isPaddingInSourceToo)
+        uint sourceElementOffset,
+        uint destinationElementOffset,
+        uint sourceElementPitchInBytes,
+        uint destinationElementPitchInBytes,
+        uint count)
         where T : unmanaged
     {
-        destination = (byte*)destination + offset * elementPitchInBytes;
+        // Offset adjustment
+        source = (byte*)source + sourceElementOffset * sourceElementPitchInBytes;
+        destination = (byte*)destination + destinationElementOffset * destinationElementPitchInBytes;
 
-        if (isPaddingInSourceToo)
+        if (sourceElementPitchInBytes == (uint)sizeof(T))
         {
-            for (int i = 0; i < length; i++)
+            if (destinationElementPitchInBytes == (uint)sizeof(T))
             {
-                *(T*)&((byte*)destination)[i * elementPitchInBytes] = *(T*)&((byte*)source)[i * elementPitchInBytes];
+                // Neither source nor destination have padding
+                Buffer.MemoryCopy(
+                    source: source,
+                    destination: destination,
+                    destinationSizeInBytes: ulong.MaxValue,
+                    sourceBytesToCopy: count * (uint)sizeof(T));
             }
+            else
+            {
+                // Source has no padding, destination does
+                static void Copy(
+                    void* source,
+                    void* destination,
+                    uint destinationElementPitchInBytes,
+                    uint count)
+                {
+                    void* sourceEnd = (byte*)source + count * sizeof(T);
+
+                    while (source < sourceEnd)
+                    {
+                        *(T*)destination = *(T*)source;
+
+                        source = (byte*)source + sizeof(T);
+                        destination = (byte*)destination + destinationElementPitchInBytes;
+                    }
+                }
+
+                Copy(source, destination, destinationElementPitchInBytes, count);
+            }
+        }
+        else if (destinationElementPitchInBytes == (uint)sizeof(T))
+        {
+            // Source has padding, destination does not
+            static void Copy(
+                void* source,
+                void* destination,
+                uint sourceElementPitchInBytes,
+                uint count)
+            {
+                void* sourceEnd = (byte*)source + count * sourceElementPitchInBytes;
+
+                while (source < sourceEnd)
+                {
+                    *(T*)destination = *(T*)source;
+
+                    source = (byte*)source + sourceElementPitchInBytes;
+                    destination = (byte*)destination + sizeof(T);
+                }
+            }
+
+            Copy(source, destination, sourceElementPitchInBytes, count);
         }
         else
         {
-            for (int i = 0; i < length; i++)
+            // Both source and destination have padding
+            static void Copy(
+                void* source,
+                void* destination,
+                uint sourceElementPitchInBytes,
+                uint destinationElementPitchInBytes,
+                uint count)
             {
-                *(T*)&((byte*)destination)[i * elementPitchInBytes] = ((T*)source)[i];
+                void* sourceEnd = (byte*)source + count * sourceElementPitchInBytes;
+                
+                while (source < sourceEnd)
+                {
+                    *(T*)destination = *(T*)source;
+
+                    source = (byte*)source + sourceElementPitchInBytes;
+                    destination = (byte*)destination + destinationElementPitchInBytes;
+                }
             }
-        }
-    }
 
-    /// <summary>
-    /// Copies the content of a source memory area to a target one.
-    /// </summary>
-    /// <param name="source">The source memory area to read from.</param>
-    /// <param name="offset">The source offset to start reading data from.</param>
-    /// <param name="length">The number of items to copy.</param>
-    /// <param name="elementSizeInBytes">The size in bytes of each item to copy.</param>
-    /// <param name="destination">The pointer for the destination memory area.</param>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static unsafe void Copy(
-        void* source,
-        uint offset,
-        uint length,
-        uint elementSizeInBytes,
-        void* destination)
-    {
-        Buffer.MemoryCopy(
-            (byte*)source + offset * elementSizeInBytes,
-            destination,
-            ulong.MaxValue,
-            elementSizeInBytes * length);
-    }
-
-    /// <summary>
-    /// Copies the content of a source memory area to a target one, accounting for padding.
-    /// The source memory area has padding for each element, while the destination does not.
-    /// </summary>
-    /// <param name="source">The source memory area to read from.</param>
-    /// <param name="offset">The source offset to start reading data from.</param>
-    /// <param name="length">The number of items to copy.</param>
-    /// <param name="elementPitchInBytes">The padded size of each element.</param>
-    /// <param name="destination">The pointer for the destination memory area.</param>
-    public static unsafe void Copy<T>(
-        void* source,
-        uint offset,
-        uint length,
-        uint elementPitchInBytes,
-        void* destination)
-        where T : unmanaged
-    {
-        source = (byte*)source + offset * elementPitchInBytes;
-
-        for (int i = 0; i < length; i++)
-        {
-            ((T*)destination)[i] = *(T*)&((byte*)source)[i * elementPitchInBytes];
+            Copy(source, destination, sourceElementPitchInBytes, destinationElementPitchInBytes, count);
         }
     }
 

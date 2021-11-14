@@ -11,26 +11,53 @@ public static class StructuredBufferExtensions
     /// Reads the contents of a <see cref="StructuredBuffer{T}"/> instance and writes them into a target <see cref="ReadBackBuffer{T}"/> instance.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
-    /// <param name="buffer">The input <see cref="StructuredBuffer{T}"/> instance to read data from.</param>
+    /// <param name="source">The input <see cref="StructuredBuffer{T}"/> instance to read data from.</param>
     /// <param name="destination">The target <see cref="ReadBackBuffer{T}"/> instance to write data to.</param>
-    public static void CopyTo<T>(this StructuredBuffer<T> buffer, ReadBackBuffer<T> destination)
+    public static void CopyTo<T>(this StructuredBuffer<T> source, ReadBackBuffer<T> destination)
         where T : unmanaged
     {
-        buffer.CopyTo(destination, 0, buffer.Length, 0);
+        source.CopyTo(destination, 0, 0, source.Length);
     }
 
     /// <summary>
     /// Reads the contents of a <see cref="StructuredBuffer{T}"/> instance and writes them into a target <see cref="ReadBackBuffer{T}"/> instance.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
-    /// <param name="buffer">The input <see cref="StructuredBuffer{T}"/> instance to read data from.</param>
+    /// <param name="source">The input <see cref="StructuredBuffer{T}"/> instance to read data from.</param>
     /// <param name="destination">The target <see cref="ReadBackBuffer{T}"/> instance to write data to.</param>
+    /// <param name="sourceOffset">The offset to start reading data from.</param>
     /// <param name="destinationOffset">The starting offset within <paramref name="destination"/> to write data to.</param>
-    /// <param name="bufferOffset">The offset to start reading data from.</param>
     /// <param name="count">The number of items to read.</param>
-    public static void CopyTo<T>(this StructuredBuffer<T> buffer, ReadBackBuffer<T> destination, int destinationOffset, int bufferOffset, int count)
+    public static void CopyTo<T>(this StructuredBuffer<T> source, ReadBackBuffer<T> destination, int sourceOffset, int destinationOffset, int count)
         where T : unmanaged
     {
-        buffer.CopyTo(destination, destinationOffset, count, bufferOffset);
+        source.CopyTo(destination, sourceOffset, destinationOffset, count);
+    }
+
+    /// <summary>
+    /// Reads the contents of an <see cref="UploadBuffer{T}"/> instance and writes them into a target <see cref="UploadBuffer{T}"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
+    /// <param name="destination">The target <see cref="StructuredBuffer{T}"/> instance to write data to.</param>
+    /// <param name="source">The input <see cref="UploadBuffer{T}"/> instance to read data from.</param>
+    public static void CopyFrom<T>(this StructuredBuffer<T> destination, UploadBuffer<T> source)
+        where T : unmanaged
+    {
+        source.CopyTo(destination, 0, 0, source.Length);
+    }
+
+    /// <summary>
+    /// Reads the contents of an <see cref="UploadBuffer{T}"/> instance and writes them into a target <see cref="UploadBuffer{T}"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
+    /// <param name="destination">The target <see cref="StructuredBuffer{T}"/> instance to write data to.</param>
+    /// <param name="source">The input <see cref="UploadBuffer{T}"/> instance to read data from.</param>
+    /// <param name="sourceOffset">The offset to start reading data from.</param>
+    /// <param name="destinationOffset">The starting offset within <paramref name="destination"/> to write data to.</param>
+    /// <param name="count">The number of items to read.</param>
+    public static void CopyFrom<T>(this StructuredBuffer<T> destination, UploadBuffer<T> source, int sourceOffset, int destinationOffset, int count)
+        where T : unmanaged
+    {
+        source.CopyTo(destination, sourceOffset, destinationOffset, count);
     }
 }
