@@ -176,7 +176,7 @@ internal static unsafe class ID3D12DeviceExtensions
     {
         D3D12_SHADER_RESOURCE_VIEW_DESC d3D12ShaderResourceViewDescription = default;
         d3D12ShaderResourceViewDescription.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-        d3D12ShaderResourceViewDescription.Shader4ComponentMapping = DirectX.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+        d3D12ShaderResourceViewDescription.Shader4ComponentMapping = D3D12.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
         d3D12ShaderResourceViewDescription.Buffer.NumElements = bufferSize;
         d3D12ShaderResourceViewDescription.Buffer.StructureByteStride = elementSize;
 
@@ -201,7 +201,7 @@ internal static unsafe class ID3D12DeviceExtensions
         D3D12_SHADER_RESOURCE_VIEW_DESC d3D12ShaderResourceViewDescription = default;
         d3D12ShaderResourceViewDescription.ViewDimension = d3D12SrvDimension;
         d3D12ShaderResourceViewDescription.Format = dxgiFormat;
-        d3D12ShaderResourceViewDescription.Shader4ComponentMapping = DirectX.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+        d3D12ShaderResourceViewDescription.Shader4ComponentMapping = D3D12.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
         d3D12ShaderResourceViewDescription.Texture2D.MipLevels = uint.MaxValue;
 
         d3D12Device.CreateShaderResourceView(d3D12Resource, &d3D12ShaderResourceViewDescription, d3D12CpuDescriptorHandle);

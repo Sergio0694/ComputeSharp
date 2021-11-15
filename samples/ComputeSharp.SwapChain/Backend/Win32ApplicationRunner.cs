@@ -60,10 +60,10 @@ internal unsafe static class Win32ApplicationRunner
             WNDCLASSEXW windowClassEx = new()
             {
                 cbSize = (uint)sizeof(WNDCLASSEXW),
-                style = Windows.CS_HREDRAW | Windows.CS_VREDRAW,
+                style = CS.CS_HREDRAW | CS.CS_VREDRAW,
                 lpfnWndProc = (delegate* unmanaged<HWND, uint, WPARAM, LPARAM, LRESULT>)(delegate* unmanaged<IntPtr, uint, nuint, nint, nint>)&WindowProc,
                 hInstance = hInstance,
-                hCursor = Windows.LoadCursorW(HINSTANCE.NULL, Windows.IDC_ARROW),
+                hCursor = Windows.LoadCursorW(HINSTANCE.NULL, IDC.IDC_ARROW),
                 lpszClassName = (ushort*)name
             };
 
@@ -107,7 +107,7 @@ internal unsafe static class Win32ApplicationRunner
         application.OnInitialize(hwnd);
 
         // Display the window
-        _ = Windows.ShowWindow(hwnd, Windows.SW_SHOWDEFAULT);
+        _ = Windows.ShowWindow(hwnd, SW.SW_SHOWDEFAULT);
 
         MSG msg = default;
 

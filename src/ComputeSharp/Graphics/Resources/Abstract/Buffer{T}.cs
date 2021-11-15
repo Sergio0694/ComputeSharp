@@ -60,7 +60,7 @@ public unsafe abstract class Buffer<T> : NativeObject
 
         if (resourceType == ResourceType.Constant)
         {
-            Guard.IsBetweenOrEqualTo(length, 1, DirectX.D3D12_REQ_CONSTANT_BUFFER_ELEMENT_COUNT, nameof(length));
+            Guard.IsBetweenOrEqualTo(length, 1, D3D12.D3D12_REQ_CONSTANT_BUFFER_ELEMENT_COUNT, nameof(length));
         }
         else
         {
@@ -75,7 +75,7 @@ public unsafe abstract class Buffer<T> : NativeObject
         }
 
         nint usableSizeInBytes = checked((nint)(length * elementSizeInBytes));
-        nint effectiveSizeInBytes = resourceType == ResourceType.Constant ? AlignmentHelper.Pad(usableSizeInBytes, DirectX.D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT) : usableSizeInBytes;
+        nint effectiveSizeInBytes = resourceType == ResourceType.Constant ? AlignmentHelper.Pad(usableSizeInBytes, D3D12.D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT) : usableSizeInBytes;
 
         SizeInBytes = usableSizeInBytes;
         GraphicsDevice = device;

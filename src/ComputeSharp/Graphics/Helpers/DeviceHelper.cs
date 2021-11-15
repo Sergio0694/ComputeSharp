@@ -99,7 +99,7 @@ internal static partial class DeviceHelper
                 Windows.__uuidof<IDXGIAdapter1>(),
                 dxgiAdapter1.GetVoidAddressOf());
 
-            if (enumAdapters1Result == Windows.DXGI_ERROR_NOT_FOUND)
+            if (enumAdapters1Result == DXGI.DXGI_ERROR_NOT_FOUND)
             {
                 return false;
             }

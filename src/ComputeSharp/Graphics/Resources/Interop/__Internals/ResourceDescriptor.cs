@@ -45,6 +45,6 @@ public struct ResourceDescriptor
         descriptor.BaseShaderRegister = offset;
         descriptor.RegisterSpace = 0;
         descriptor.Flags = D3D12_DESCRIPTOR_RANGE_FLAG_NONE;
-        descriptor.OffsetInDescriptorsFromTableStart = DirectX.D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+        descriptor.OffsetInDescriptorsFromTableStart = D3D12.D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
     }
 }

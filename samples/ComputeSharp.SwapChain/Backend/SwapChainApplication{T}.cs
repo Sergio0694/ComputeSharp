@@ -123,7 +123,7 @@ internal sealed class SwapChainApplication<T> : Win32Application
         {
             using ComPtr<IDXGIFactory2> dxgiFactory2 = default;
 
-            _ = DirectX.CreateDXGIFactory2(DirectX.DXGI_CREATE_FACTORY_DEBUG, Windows.__uuidof<IDXGIFactory2>(), (void**)dxgiFactory2.GetAddressOf());
+            _ = DirectX.CreateDXGIFactory2(DXGI.DXGI_CREATE_FACTORY_DEBUG, Windows.__uuidof<IDXGIFactory2>(), (void**)dxgiFactory2.GetAddressOf());
 
             DXGI_SWAP_CHAIN_DESC1 dxgiSwapChainDesc1 = default;
             dxgiSwapChainDesc1.AlphaMode = DXGI_ALPHA_MODE.DXGI_ALPHA_MODE_IGNORE;

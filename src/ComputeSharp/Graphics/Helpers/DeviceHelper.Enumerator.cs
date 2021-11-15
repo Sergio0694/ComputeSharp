@@ -123,7 +123,7 @@ internal static partial class DeviceHelper
                         Windows.__uuidof<IDXGIAdapter1>(),
                         dxgiAdapter1.GetVoidAddressOf());
 
-                    if (enumAdapters1Result == Windows.DXGI_ERROR_NOT_FOUND)
+                    if (enumAdapters1Result == DXGI.DXGI_ERROR_NOT_FOUND)
                     {
                         this.dxgiFactory6.Get()->EnumWarpAdapter(Windows.__uuidof<IDXGIAdapter1>(), dxgiAdapter1.GetVoidAddressOf()).Assert();
 

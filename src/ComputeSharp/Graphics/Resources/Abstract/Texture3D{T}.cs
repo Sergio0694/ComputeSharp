@@ -75,9 +75,9 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
     {
         device.ThrowIfDisposed();
 
-        Guard.IsBetweenOrEqualTo(width, 1, DirectX.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, DirectX.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(height));
-        Guard.IsBetweenOrEqualTo(depth, 1, DirectX.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(depth));
+        Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(width));
+        Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(height));
+        Guard.IsBetweenOrEqualTo(depth, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(depth));
 
         if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), d3D12FormatSupport))
         {

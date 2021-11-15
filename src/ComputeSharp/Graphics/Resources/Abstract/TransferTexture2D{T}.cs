@@ -50,8 +50,8 @@ public unsafe abstract class TransferTexture2D<T> : NativeObject
     {
         device.ThrowIfDisposed();
 
-        Guard.IsBetweenOrEqualTo(width, 1, DirectX.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, DirectX.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION, nameof(height));
+        Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION, nameof(width));
+        Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION, nameof(height));
 
         if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), D3D12_FORMAT_SUPPORT1_TEXTURE2D))
         {

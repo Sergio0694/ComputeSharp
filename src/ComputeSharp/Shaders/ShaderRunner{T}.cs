@@ -119,9 +119,9 @@ internal static class ShaderRunner<T>
         int groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1);
         int groupsZ = Math.DivRem(z, threadsZ, out int modZ) + (modZ == 0 ? 0 : 1);
 
-        Guard.IsBetweenOrEqualTo(groupsX, 1, DirectX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
-        Guard.IsBetweenOrEqualTo(groupsY, 1, DirectX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
-        Guard.IsBetweenOrEqualTo(groupsZ, 1, DirectX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
+        Guard.IsBetweenOrEqualTo(groupsX, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
+        Guard.IsBetweenOrEqualTo(groupsY, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
+        Guard.IsBetweenOrEqualTo(groupsZ, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
 
         ShaderKey key = new(shader.GetDispatchId(), threadsX, threadsY, threadsZ);
         PipelineData? pipelineData;
@@ -174,8 +174,8 @@ internal static class ShaderRunner<T>
         int groupsX = Math.DivRem(x, threadsX, out int modX) + (modX == 0 ? 0 : 1);
         int groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1);
 
-        Guard.IsBetweenOrEqualTo(groupsX, 1, DirectX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
-        Guard.IsBetweenOrEqualTo(groupsY, 1, DirectX.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
+        Guard.IsBetweenOrEqualTo(groupsX, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
+        Guard.IsBetweenOrEqualTo(groupsY, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
 
         ShaderKey key = new(shader.GetDispatchId(), threadsX, threadsY, 1);
         PipelineData? pipelineData;

@@ -18,7 +18,7 @@ internal static partial class DeviceHelper
     /// </summary>
     private const uint IDXGIFactoryCreationFlags =
 #if DEBUG
-        DirectX.DXGI_CREATE_FACTORY_DEBUG;
+        DXGI.DXGI_CREATE_FACTORY_DEBUG;
 #else
         0;
 #endif
@@ -37,7 +37,7 @@ internal static partial class DeviceHelper
 
         HRESULT result = dxgiFactory4.CopyTo(dxgiFactory6);
 
-        if (result == Windows.S_OK)
+        if (result == S.S_OK)
         {
             return;
         }

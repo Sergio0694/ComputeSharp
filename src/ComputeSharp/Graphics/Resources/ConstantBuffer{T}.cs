@@ -26,7 +26,7 @@ public sealed class ConstantBuffer<T> : Buffer<T>
     /// <summary>
     /// The alignment boundary for elements in a constant buffer.
     /// </summary>
-    private const int ElementAlignment = DirectX.D3D12_COMMONSHADER_CONSTANT_BUFFER_PARTIAL_UPDATE_EXTENTS_BYTE_ALIGNMENT;
+    private const int ElementAlignment = D3D12.D3D12_COMMONSHADER_CONSTANT_BUFFER_PARTIAL_UPDATE_EXTENTS_BYTE_ALIGNMENT;
 
     /// <summary>
     /// Creates a new <see cref="ConstantBuffer{T}"/> instance with the specified parameters.
