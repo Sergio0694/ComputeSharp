@@ -61,7 +61,7 @@ internal unsafe static class Win32ApplicationRunner
             {
                 cbSize = (uint)sizeof(WNDCLASSEXW),
                 style = CS.CS_HREDRAW | CS.CS_VREDRAW,
-                lpfnWndProc = (delegate* unmanaged<HWND, uint, WPARAM, LPARAM, LRESULT>)(delegate* unmanaged<IntPtr, uint, nuint, nint, nint>)&WindowProc,
+                lpfnWndProc = &WindowProc,
                 hInstance = hInstance,
                 hCursor = Windows.LoadCursorW(HINSTANCE.NULL, IDC.IDC_ARROW),
                 lpszClassName = (ushort*)name
@@ -173,7 +173,7 @@ internal unsafe static class Win32ApplicationRunner
     /// <param name="lParam">Additional message information (the contents depend on the value of <paramref name="uMsg"/>).</param>
     /// <returns>The result of the message processing for the input message.</returns>
     [UnmanagedCallersOnly]
-    private static nint WindowProc(IntPtr hwnd, uint uMsg, nuint wParam, nint lParam)
+    private static LRESULT WindowProc(HWND hwnd, uint uMsg, WPARAM wParam, LPARAM lParam)
     {
         switch (uMsg)
         {
@@ -194,12 +194,12 @@ internal unsafe static class Win32ApplicationRunner
             // Change the paused state when ESC is pressed
             case WM.WM_KEYDOWN:
             {
-                if ((ConsoleKey)wParam == ConsoleKey.Escape)
+                if (wParam == (byte)ConsoleKey.Escape)
                 {
 
                     if (isPaused)
                     {
-                        Windows.SetCapture((HWND)hwnd);
+                        Windows.SetCapture(hwnd);
                     }
                     else
                     {
@@ -232,7 +232,7 @@ internal unsafe static class Win32ApplicationRunner
             // Size update
             case WM.WM_SIZE:
             {
-                if (!isResizing && wParam != Windows.SIZE_MINIMIZED)
+                if (!isResizing && wParam != (byte)Windows.SIZE_MINIMIZED)
                 {
                     application.OnResize();
                 }
@@ -253,7 +253,7 @@ internal unsafe static class Win32ApplicationRunner
                 RECT rect;
 
                 _ = Windows.GetCursorPos(&point);
-                _ = Windows.GetWindowRect((HWND)hwnd, &rect);
+                _ = Windows.GetWindowRect(hwnd, &rect);
 
                     bool isAtTop = Math.Abs(point.y - rect.top) < 12;
                     bool isAtRight = Math.Abs(point.x - rect.right) < 12;
@@ -300,7 +300,7 @@ internal unsafe static class Win32ApplicationRunner
                 margins.cyTopHeight = -1;
                 margins.cyBottomHeight = -1;
 
-                _ = Windows.DwmExtendFrameIntoClientArea((HWND)hwnd, &margins);
+                _ = Windows.DwmExtendFrameIntoClientArea(hwnd, &margins);
 
                 return 0;
             }
@@ -313,6 +313,6 @@ internal unsafe static class Win32ApplicationRunner
             }
         }
 
-        return Windows.DefWindowProcW((HWND)hwnd, uMsg, wParam, lParam);
+        return Windows.DefWindowProcW(hwnd, uMsg, wParam, lParam);
     }
 }
