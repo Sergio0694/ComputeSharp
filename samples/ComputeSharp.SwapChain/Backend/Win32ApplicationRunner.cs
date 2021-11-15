@@ -139,7 +139,7 @@ internal unsafe static class Win32ApplicationRunner
         // Process any messages in the queue
         while (msg.message != WM.WM_QUIT)
         {
-            if (Windows.PeekMessageW(&msg, HWND.NULL, 0, 0, Windows.PM_REMOVE) != 0)
+            if (Windows.PeekMessageW(&msg, HWND.NULL, 0, 0, PM.PM_REMOVE) != 0)
             {
                 _ = Windows.TranslateMessage(&msg);
                 _ = Windows.DispatchMessageW(&msg);
