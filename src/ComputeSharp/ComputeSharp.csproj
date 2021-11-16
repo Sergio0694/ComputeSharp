@@ -5,6 +5,7 @@
     <OutputPath>bin\Release</OutputPath>
     <DocumentationFile>ComputeSharp.xml</DocumentationFile>
     <Description>ComputeSharp</Description>
+    <Platforms>AnyCPU;x64;ARM64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>

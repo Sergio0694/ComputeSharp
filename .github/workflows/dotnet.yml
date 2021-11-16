@@ -15,7 +15,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        include-prerelease: true
     - name: Build
       run: dotnet build src\ComputeSharp\ComputeSharp.csproj -c Release
       shell: cmd
@@ -36,12 +35,17 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        include-prerelease: true
-    - name: Run ComputeSharp.Tests
-      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -v n -l "console;verbosity=detailed"
+    - name: Run ComputeSharp.Tests (.NET 6)
+      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
       shell: cmd
-    - name: Run ComputeSharp.Tests.Internals
-      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -v n -l "console;verbosity=detailed"
+    - name: Run ComputeSharp.Tests.Internals (.NET 6)
+      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests (.NET Core 3.1)
+      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release -f netcoreapp3.1 /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.Internals (.NET Core 3.1)
+      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -c Release -f netcoreapp3.1 /p:Platform=x64 -v n -l "console;verbosity=detailed"
       shell: cmd
     - name: Run ComputeSharp.Tests.SourceGenerators
       run: dotnet test tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
@@ -59,7 +63,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        include-prerelease: true
     - name: Build ComputeSharp.Sample
       run: dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release
       shell: cmd
@@ -96,7 +99,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        include-prerelease: true
     - name: Build
       run: dotnet build src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj -c Release /p:ContinuousIntegrationBuild=True
       shell: cmd
@@ -120,7 +122,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        include-prerelease: true
     - name: Create local NuGet feed
       run: mkdir src\ComputeSharp.Package\bin\Release
       shell: cmd
@@ -150,7 +151,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        include-prerelease: true
     - name: Run ComputeSharp.Tests.NativeLibrariesResolver
       run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
