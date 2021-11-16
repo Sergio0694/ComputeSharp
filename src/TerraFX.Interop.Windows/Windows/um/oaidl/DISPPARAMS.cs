@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct DISPPARAMS
+    internal unsafe partial struct DISPPARAMS
     {
         [NativeTypeName("VARIANTARG *")]
         public VARIANT* rgvarg;

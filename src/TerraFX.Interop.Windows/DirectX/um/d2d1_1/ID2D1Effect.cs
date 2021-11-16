@@ -14,7 +14,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("28211A43-7D89-476F-8181-2D6159B220AD")]
     [NativeTypeName("struct ID2D1Effect : ID2D1Properties")]
     [NativeInheritance("ID2D1Properties")]
-    public unsafe partial struct ID2D1Effect : ID2D1Effect.Interface
+    internal unsafe partial struct ID2D1Effect : ID2D1Effect.Interface
     {
         public void** lpVtbl;
 
@@ -213,7 +213,7 @@ namespace TerraFX.Interop.DirectX
             void GetOutput(ID2D1Image** outputImage);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1Effect*, Guid*, void**, int> QueryInterface;

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public partial struct RECT
+    internal partial struct RECT
     {
         [NativeTypeName("LONG")]
         public int left;

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DXGI_SAMPLE_DESC
+    internal partial struct DXGI_SAMPLE_DESC
     {
         public uint Count;
 

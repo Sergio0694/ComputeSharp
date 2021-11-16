@@ -9,7 +9,7 @@ using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.Me
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DXGI_GAMMA_CONTROL
+    internal partial struct DXGI_GAMMA_CONTROL
     {
         public DXGI_RGB Scale;
 
@@ -18,7 +18,7 @@ namespace TerraFX.Interop.DirectX
         [NativeTypeName("DXGI_RGB [1025]")]
         public _GammaCurve_e__FixedBuffer GammaCurve;
 
-        public partial struct _GammaCurve_e__FixedBuffer
+        internal partial struct _GammaCurve_e__FixedBuffer
         {
             public DXGI_RGB e0;
             public DXGI_RGB e1;

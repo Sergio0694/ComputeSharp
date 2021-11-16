@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DWRITE_FONT_METRICS
+    internal partial struct DWRITE_FONT_METRICS
     {
         [NativeTypeName("UINT16")]
         public ushort designUnitsPerEm;

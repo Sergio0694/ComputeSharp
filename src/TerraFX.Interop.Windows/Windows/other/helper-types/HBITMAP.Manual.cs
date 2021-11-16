@@ -4,7 +4,7 @@ using System;
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct HBITMAP : IEquatable<HBITMAP>
+    internal unsafe partial struct HBITMAP : IEquatable<HBITMAP>
     {
         public static explicit operator HBITMAP(HGDIOBJ value) => new HBITMAP(value.Value);
 

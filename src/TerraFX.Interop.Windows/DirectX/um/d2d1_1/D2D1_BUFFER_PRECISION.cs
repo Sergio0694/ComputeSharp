@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_BUFFER_PRECISION : uint
+    internal enum D2D1_BUFFER_PRECISION : uint
     {
         D2D1_BUFFER_PRECISION_UNKNOWN = 0,
         D2D1_BUFFER_PRECISION_8BPC_UNORM = 1,

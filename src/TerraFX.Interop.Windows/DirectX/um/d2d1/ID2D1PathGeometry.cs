@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD906A5-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1PathGeometry : ID2D1Geometry")]
     [NativeInheritance("ID2D1Geometry")]
-    public unsafe partial struct ID2D1PathGeometry : ID2D1PathGeometry.Interface
+    internal unsafe partial struct ID2D1PathGeometry : ID2D1PathGeometry.Interface
     {
         public void** lpVtbl;
 
@@ -241,7 +241,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT GetFigureCount([NativeTypeName("UINT32 *")] uint* count);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1PathGeometry*, Guid*, void**, int> QueryInterface;

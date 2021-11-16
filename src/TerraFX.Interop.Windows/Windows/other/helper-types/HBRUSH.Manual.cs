@@ -4,7 +4,7 @@ using System;
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct HBRUSH : IEquatable<HBRUSH>
+    internal unsafe partial struct HBRUSH : IEquatable<HBRUSH>
     {
         public static explicit operator HBRUSH(HGDIOBJ value) => new HBRUSH(value.Value);
 

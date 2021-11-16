@@ -2,7 +2,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct HMODULE
+    internal unsafe partial struct HMODULE
     {
         public static explicit operator HMODULE(HINSTANCE value) => new HMODULE(value.Value);
 

@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("310D36A0-D2E7-4C0A-AA04-6A9D23B8886A")]
     [NativeTypeName("struct IDXGISwapChain : IDXGIDeviceSubObject")]
     [NativeInheritance("IDXGIDeviceSubObject")]
-    public unsafe partial struct IDXGISwapChain : IDXGISwapChain.Interface
+    internal unsafe partial struct IDXGISwapChain : IDXGISwapChain.Interface
     {
         public void** lpVtbl;
 
@@ -178,7 +178,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT GetLastPresentCount(uint* pLastPresentCount);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDXGISwapChain*, Guid*, void**, int> QueryInterface;

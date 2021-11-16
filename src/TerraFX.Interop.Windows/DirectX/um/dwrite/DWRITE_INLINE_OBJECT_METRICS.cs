@@ -7,7 +7,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DWRITE_INLINE_OBJECT_METRICS
+    internal partial struct DWRITE_INLINE_OBJECT_METRICS
     {
         public float width;
 

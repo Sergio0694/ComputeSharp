@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_INFO_QUEUE_FILTER
+    internal partial struct D3D12_INFO_QUEUE_FILTER
     {
         public D3D12_INFO_QUEUE_FILTER_DESC AllowList;
 

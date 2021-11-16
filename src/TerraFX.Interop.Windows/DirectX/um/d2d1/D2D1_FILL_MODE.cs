@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_FILL_MODE : uint
+    internal enum D2D1_FILL_MODE : uint
     {
         D2D1_FILL_MODE_ALTERNATE = 0,
         D2D1_FILL_MODE_WINDING = 1,

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D1_ROUNDED_RECT
+    internal partial struct D2D1_ROUNDED_RECT
     {
         [NativeTypeName("D2D1_RECT_F")]
         public D2D_RECT_F rect;

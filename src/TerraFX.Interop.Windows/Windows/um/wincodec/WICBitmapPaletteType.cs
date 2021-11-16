@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public enum WICBitmapPaletteType
+    internal enum WICBitmapPaletteType
     {
         WICBitmapPaletteTypeCustom = 0,
         WICBitmapPaletteTypeMedianCut = 0x1,

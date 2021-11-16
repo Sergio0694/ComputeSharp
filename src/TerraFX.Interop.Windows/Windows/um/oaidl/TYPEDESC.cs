@@ -9,7 +9,7 @@ using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.Me
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct TYPEDESC
+    internal unsafe partial struct TYPEDESC
     {
         [NativeTypeName("tagTYPEDESC::(anonymous union at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/oaidl.h:653:36)")]
         public _Anonymous_e__Union Anonymous;
@@ -45,7 +45,7 @@ namespace TerraFX.Interop.Windows
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public unsafe partial struct _Anonymous_e__Union
+        internal unsafe partial struct _Anonymous_e__Union
         {
             [FieldOffset(0)]
             [NativeTypeName("struct tagTYPEDESC *")]

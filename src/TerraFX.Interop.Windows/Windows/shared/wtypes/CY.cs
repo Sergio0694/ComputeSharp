@@ -10,7 +10,7 @@ using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.Me
 namespace TerraFX.Interop.Windows
 {
     [StructLayout(LayoutKind.Explicit)]
-    public partial struct CY
+    internal partial struct CY
     {
         [FieldOffset(0)]
         [NativeTypeName("tagCY::(anonymous struct at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/shared/wtypes.h:679:5)")]
@@ -38,7 +38,7 @@ namespace TerraFX.Interop.Windows
             }
         }
 
-        public partial struct _Anonymous_e__Struct
+        internal partial struct _Anonymous_e__Struct
         {
             [NativeTypeName("ULONG")]
             public uint Lo;

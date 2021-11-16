@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DWRITE_OVERHANG_METRICS
+    internal partial struct DWRITE_OVERHANG_METRICS
     {
         public float left;
 

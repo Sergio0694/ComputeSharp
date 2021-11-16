@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DWRITE_MEASURING_MODE
+    internal enum DWRITE_MEASURING_MODE
     {
         DWRITE_MEASURING_MODE_NATURAL,
         DWRITE_MEASURING_MODE_GDI_CLASSIC,

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_TILE_SHAPE
+    internal partial struct D3D12_TILE_SHAPE
     {
         public uint WidthInTexels;
 

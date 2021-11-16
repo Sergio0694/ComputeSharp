@@ -15,7 +15,7 @@ namespace TerraFX.Interop.Windows
     /// <summary>A type that allows working with pointers to COM objects more securely.</summary>
     /// <typeparam name="T">The type to wrap in the current <see cref="ComPtr{T}"/> instance.</typeparam>
     /// <remarks>While this type is not marked as <see langword="ref"/> so that it can also be used in fields, make sure to keep the reference counts properly tracked if you do store <see cref="ComPtr{T}"/> instances on the heap.</remarks>
-    public unsafe struct ComPtr<T> : IDisposable
+    internal unsafe struct ComPtr<T> : IDisposable
         where T : unmanaged, IUnknown.Interface
     {
         /// <summary>The raw pointer to a COM object, if existing.</summary>

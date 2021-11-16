@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_QUERY_TYPE
+    internal enum D3D12_QUERY_TYPE
     {
         D3D12_QUERY_TYPE_OCCLUSION = 0,
         D3D12_QUERY_TYPE_BINARY_OCCLUSION = 1,

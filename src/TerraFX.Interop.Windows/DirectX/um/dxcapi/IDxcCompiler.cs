@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("8C210BF3-011F-4422-8D70-6F9ACB8DB617")]
     [NativeTypeName("struct IDxcCompiler : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IDxcCompiler : IDxcCompiler.Interface
+    internal unsafe partial struct IDxcCompiler : IDxcCompiler.Interface
     {
         public void** lpVtbl;
 
@@ -73,7 +73,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT Disassemble(IDxcBlob* pSource, IDxcBlobEncoding** ppDisassembly);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDxcCompiler*, Guid*, void**, int> QueryInterface;

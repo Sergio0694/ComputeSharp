@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 
 namespace TerraFX.Interop.Windows
 {
-    public static partial class Windows
+    internal static partial class Windows
     {
         [NativeTypeName("const GUID")]
         public static ref readonly Guid NO_SUBGROUP_GUID

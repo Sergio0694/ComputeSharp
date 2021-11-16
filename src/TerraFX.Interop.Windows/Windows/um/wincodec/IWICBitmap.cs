@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00000121-A8F2-4877-BA0A-FD2B6645FB94")]
     [NativeTypeName("struct IWICBitmap : IWICBitmapSource")]
     [NativeInheritance("IWICBitmapSource")]
-    public unsafe partial struct IWICBitmap : IWICBitmap.Interface
+    internal unsafe partial struct IWICBitmap : IWICBitmap.Interface
     {
         public void** lpVtbl;
 
@@ -107,7 +107,7 @@ namespace TerraFX.Interop.Windows
             HRESULT SetResolution(double dpiX, double dpiY);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IWICBitmap*, Guid*, void**, int> QueryInterface;

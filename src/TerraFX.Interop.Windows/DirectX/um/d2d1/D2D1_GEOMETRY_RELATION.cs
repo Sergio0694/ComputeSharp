@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_GEOMETRY_RELATION : uint
+    internal enum D2D1_GEOMETRY_RELATION : uint
     {
         D2D1_GEOMETRY_RELATION_UNKNOWN = 0,
         D2D1_GEOMETRY_RELATION_DISJOINT = 1,

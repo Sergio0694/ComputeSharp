@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D1_RENDERING_CONTROLS
+    internal partial struct D2D1_RENDERING_CONTROLS
     {
         public D2D1_BUFFER_PRECISION bufferPrecision;
 

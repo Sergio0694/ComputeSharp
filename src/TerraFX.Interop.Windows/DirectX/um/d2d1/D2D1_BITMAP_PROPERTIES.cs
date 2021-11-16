@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D1_BITMAP_PROPERTIES
+    internal partial struct D2D1_BITMAP_PROPERTIES
     {
         public D2D1_PIXEL_FORMAT pixelFormat;
 

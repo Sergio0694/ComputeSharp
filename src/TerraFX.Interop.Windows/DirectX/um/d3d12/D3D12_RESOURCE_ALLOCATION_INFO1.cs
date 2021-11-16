@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_RESOURCE_ALLOCATION_INFO1
+    internal partial struct D3D12_RESOURCE_ALLOCATION_INFO1
     {
         [NativeTypeName("UINT64")]
         public ulong Offset;

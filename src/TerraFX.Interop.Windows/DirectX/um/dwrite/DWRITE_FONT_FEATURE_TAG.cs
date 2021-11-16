@@ -6,7 +6,7 @@
 namespace TerraFX.Interop.DirectX
 {
     [NativeTypeName("int")]
-    public enum DWRITE_FONT_FEATURE_TAG : uint
+    internal enum DWRITE_FONT_FEATURE_TAG : uint
     {
         DWRITE_FONT_FEATURE_TAG_ALTERNATIVE_FRACTIONS = (unchecked(((uint)((byte)('c')) << 24) | ((uint)((byte)('r')) << 16) | ((uint)((byte)('f')) << 8) | (uint)((byte)('a')))),
         DWRITE_FONT_FEATURE_TAG_PETITE_CAPITALS_FROM_CAPITALS = (unchecked(((uint)((byte)('c')) << 24) | ((uint)((byte)('p')) << 16) | ((uint)((byte)('2')) << 8) | (uint)((byte)('c')))),

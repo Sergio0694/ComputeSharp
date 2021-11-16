@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DXGI_FEATURE
+    internal enum DXGI_FEATURE
     {
         DXGI_FEATURE_PRESENT_ALLOW_TEARING = 0,
     }

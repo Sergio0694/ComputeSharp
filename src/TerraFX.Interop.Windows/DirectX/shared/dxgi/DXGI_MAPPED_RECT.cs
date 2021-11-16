@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct DXGI_MAPPED_RECT
+    internal unsafe partial struct DXGI_MAPPED_RECT
     {
         public int Pitch;
 

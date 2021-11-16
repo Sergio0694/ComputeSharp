@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00000103-A8F2-4877-BA0A-FD2B6645FB94")]
     [NativeTypeName("struct IWICBitmapEncoder : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IWICBitmapEncoder : IWICBitmapEncoder.Interface
+    internal unsafe partial struct IWICBitmapEncoder : IWICBitmapEncoder.Interface
     {
         public void** lpVtbl;
 
@@ -142,7 +142,7 @@ namespace TerraFX.Interop.Windows
             HRESULT GetMetadataQueryWriter(IWICMetadataQueryWriter** ppIMetadataQueryWriter);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IWICBitmapEncoder*, Guid*, void**, int> QueryInterface;

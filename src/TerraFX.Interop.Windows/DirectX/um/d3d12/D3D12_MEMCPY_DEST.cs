@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D3D12_MEMCPY_DEST
+    internal unsafe partial struct D3D12_MEMCPY_DEST
     {
         public void* pData;
 

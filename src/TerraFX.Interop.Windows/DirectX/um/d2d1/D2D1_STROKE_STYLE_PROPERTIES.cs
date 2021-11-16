@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D1_STROKE_STYLE_PROPERTIES
+    internal partial struct D2D1_STROKE_STYLE_PROPERTIES
     {
         public D2D1_CAP_STYLE startCap;
 

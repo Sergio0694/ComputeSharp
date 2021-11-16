@@ -4,7 +4,7 @@ using System;
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct HCURSOR : IComparable, IComparable<HCURSOR>, IEquatable<HCURSOR>, IFormattable
+    internal unsafe partial struct HCURSOR : IComparable, IComparable<HCURSOR>, IEquatable<HCURSOR>, IFormattable
     {
         public readonly void* Value;
 

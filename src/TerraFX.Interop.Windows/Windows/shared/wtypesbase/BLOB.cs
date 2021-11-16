@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct BLOB
+    internal unsafe partial struct BLOB
     {
         [NativeTypeName("ULONG")]
         public uint cbSize;

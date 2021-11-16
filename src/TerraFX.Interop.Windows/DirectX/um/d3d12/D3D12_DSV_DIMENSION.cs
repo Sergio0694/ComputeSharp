@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_DSV_DIMENSION
+    internal enum D3D12_DSV_DIMENSION
     {
         D3D12_DSV_DIMENSION_UNKNOWN = 0,
         D3D12_DSV_DIMENSION_TEXTURE1D = 1,

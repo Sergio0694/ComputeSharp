@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_RANGE
+    internal partial struct D3D12_RANGE
     {
         [NativeTypeName("SIZE_T")]
         public nuint Begin;

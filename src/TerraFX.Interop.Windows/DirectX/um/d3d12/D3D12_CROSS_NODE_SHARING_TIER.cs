@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_CROSS_NODE_SHARING_TIER
+    internal enum D3D12_CROSS_NODE_SHARING_TIER
     {
         D3D12_CROSS_NODE_SHARING_TIER_NOT_SUPPORTED = 0,
         D3D12_CROSS_NODE_SHARING_TIER_1_EMULATED = 1,

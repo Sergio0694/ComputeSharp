@@ -8,7 +8,7 @@ using System;
 namespace TerraFX.Interop.DirectX
 {
     [Flags]
-    public enum D2D1_LAYER_OPTIONS1 : uint
+    internal enum D2D1_LAYER_OPTIONS1 : uint
     {
         D2D1_LAYER_OPTIONS1_NONE = 0,
         D2D1_LAYER_OPTIONS1_INITIALIZE_FROM_BACKGROUND = 1,

@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("EAF3A2DA-ECF4-4D24-B644-B34F6842024B")]
     [NativeTypeName("struct IDWritePixelSnapping : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IDWritePixelSnapping : IDWritePixelSnapping.Interface
+    internal unsafe partial struct IDWritePixelSnapping : IDWritePixelSnapping.Interface
     {
         public void** lpVtbl;
 
@@ -73,7 +73,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT GetPixelsPerDip(void* clientDrawingContext, float* pixelsPerDip);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDWritePixelSnapping*, Guid*, void**, int> QueryInterface;

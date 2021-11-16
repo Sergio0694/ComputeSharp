@@ -10,7 +10,7 @@ using TerraFX.Interop.Windows;
 namespace TerraFX.Interop.DirectX
 {
     [Guid("8337A8A6-A216-444A-B2F4-314733A73AEA")]
-    public unsafe partial struct ID3D12ShaderReflectionVariable : ID3D12ShaderReflectionVariable.Interface
+    internal unsafe partial struct ID3D12ShaderReflectionVariable : ID3D12ShaderReflectionVariable.Interface
     {
         public void** lpVtbl;
 
@@ -57,7 +57,7 @@ namespace TerraFX.Interop.DirectX
             uint GetInterfaceSlot(uint uArrayIndex);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (D3D12_SHADER_VARIABLE_DESC *) __attribute__((nothrow)) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID3D12ShaderReflectionVariable*, D3D12_SHADER_VARIABLE_DESC*, int> GetDesc;

@@ -8,7 +8,7 @@ using System;
 namespace TerraFX.Interop.DirectX
 {
     [Flags]
-    public enum D3D12_RESOURCE_FLAGS
+    internal enum D3D12_RESOURCE_FLAGS
     {
         D3D12_RESOURCE_FLAG_NONE = 0,
         D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET = 0x1,

@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00020403-0000-0000-C000-000000000046")]
     [NativeTypeName("struct ITypeComp : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct ITypeComp : ITypeComp.Interface
+    internal unsafe partial struct ITypeComp : ITypeComp.Interface
     {
         public void** lpVtbl;
 
@@ -62,7 +62,7 @@ namespace TerraFX.Interop.Windows
             HRESULT BindType([NativeTypeName("LPOLESTR")] ushort* szName, [NativeTypeName("ULONG")] uint lHashVal, ITypeInfo** ppTInfo, ITypeComp** ppTComp);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ITypeComp*, Guid*, void**, int> QueryInterface;

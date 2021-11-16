@@ -7,7 +7,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_RASTERIZER_DESC
+    internal partial struct D3D12_RASTERIZER_DESC
     {
         public D3D12_FILL_MODE FillMode;
 

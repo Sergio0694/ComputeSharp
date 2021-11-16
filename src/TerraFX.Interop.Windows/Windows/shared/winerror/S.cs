@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public static partial class S
+    internal static partial class S
     {
         [NativeTypeName("#define S_OK ((HRESULT)0L)")]
         public const int S_OK = ((int)(0));

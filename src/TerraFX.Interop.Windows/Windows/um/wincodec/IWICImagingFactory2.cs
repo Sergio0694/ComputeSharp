@@ -15,7 +15,7 @@ namespace TerraFX.Interop.Windows
     [Guid("7B816B45-1996-4476-B132-DE9E247C8AF0")]
     [NativeTypeName("struct IWICImagingFactory2 : IWICImagingFactory")]
     [NativeInheritance("IWICImagingFactory")]
-    public unsafe partial struct IWICImagingFactory2 : IWICImagingFactory2.Interface
+    internal unsafe partial struct IWICImagingFactory2 : IWICImagingFactory2.Interface
     {
         public void** lpVtbl;
 
@@ -230,7 +230,7 @@ namespace TerraFX.Interop.Windows
             HRESULT CreateImageEncoder(ID2D1Device* pD2DDevice, IWICImageEncoder** ppWICImageEncoder);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IWICImagingFactory2*, Guid*, void**, int> QueryInterface;

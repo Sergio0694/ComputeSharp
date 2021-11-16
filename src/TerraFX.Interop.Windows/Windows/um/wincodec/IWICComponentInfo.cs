@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("23BC3F0A-698B-4357-886B-F24D50671334")]
     [NativeTypeName("struct IWICComponentInfo : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IWICComponentInfo : IWICComponentInfo.Interface
+    internal unsafe partial struct IWICComponentInfo : IWICComponentInfo.Interface
     {
         public void** lpVtbl;
 
@@ -122,7 +122,7 @@ namespace TerraFX.Interop.Windows
             HRESULT GetFriendlyName(uint cchFriendlyName, [NativeTypeName("WCHAR *")] ushort* wzFriendlyName, uint* pcchActual);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IWICComponentInfo*, Guid*, void**, int> QueryInterface;

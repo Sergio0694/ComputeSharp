@@ -7,7 +7,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct DXGI_PRESENT_PARAMETERS
+    internal unsafe partial struct DXGI_PRESENT_PARAMETERS
     {
         public uint DirtyRectsCount;
 

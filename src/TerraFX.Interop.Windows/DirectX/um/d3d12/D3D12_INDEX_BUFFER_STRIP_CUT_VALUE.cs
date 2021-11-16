@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_INDEX_BUFFER_STRIP_CUT_VALUE
+    internal enum D3D12_INDEX_BUFFER_STRIP_CUT_VALUE
     {
         D3D12_INDEX_BUFFER_STRIP_CUT_VALUE_DISABLED = 0,
         D3D12_INDEX_BUFFER_STRIP_CUT_VALUE_0xFFFF = 1,

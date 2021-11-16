@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("135FF860-22B7-4DDF-B0F6-218F4F299A43")]
     [NativeTypeName("struct IWICStream : IStream")]
     [NativeInheritance("IStream")]
-    public unsafe partial struct IWICStream : IWICStream.Interface
+    internal unsafe partial struct IWICStream : IWICStream.Interface
     {
         public void** lpVtbl;
 
@@ -159,7 +159,7 @@ namespace TerraFX.Interop.Windows
             HRESULT InitializeFromIStreamRegion(IStream* pIStream, ULARGE_INTEGER ulOffset, ULARGE_INTEGER ulMaxSize);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IWICStream*, Guid*, void**, int> QueryInterface;

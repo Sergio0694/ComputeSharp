@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00020401-0000-0000-C000-000000000046")]
     [NativeTypeName("struct ITypeInfo : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct ITypeInfo : ITypeInfo.Interface
+    internal unsafe partial struct ITypeInfo : ITypeInfo.Interface
     {
         public void** lpVtbl;
 
@@ -232,7 +232,7 @@ namespace TerraFX.Interop.Windows
             void ReleaseVarDesc(VARDESC* pVarDesc);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ITypeInfo*, Guid*, void**, int> QueryInterface;

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_TEXT_ANTIALIAS_MODE : uint
+    internal enum D2D1_TEXT_ANTIALIAS_MODE : uint
     {
         D2D1_TEXT_ANTIALIAS_MODE_DEFAULT = 0,
         D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE = 1,

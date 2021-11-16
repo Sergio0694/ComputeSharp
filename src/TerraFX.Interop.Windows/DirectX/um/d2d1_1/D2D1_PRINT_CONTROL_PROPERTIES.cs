@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D1_PRINT_CONTROL_PROPERTIES
+    internal partial struct D2D1_PRINT_CONTROL_PROPERTIES
     {
         public D2D1_PRINT_FONT_SUBSET_MODE fontSubset;
 

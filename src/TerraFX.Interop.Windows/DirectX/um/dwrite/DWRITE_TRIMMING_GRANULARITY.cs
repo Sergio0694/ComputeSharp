@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DWRITE_TRIMMING_GRANULARITY
+    internal enum DWRITE_TRIMMING_GRANULARITY
     {
         DWRITE_TRIMMING_GRANULARITY_NONE,
         DWRITE_TRIMMING_GRANULARITY_CHARACTER,

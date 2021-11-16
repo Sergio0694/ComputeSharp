@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("7241D424-2646-4191-97C0-98E96E42FC68")]
     [NativeTypeName("struct IDxcBlobEncoding : IDxcBlob")]
     [NativeInheritance("IDxcBlob")]
-    public unsafe partial struct IDxcBlobEncoding : IDxcBlobEncoding.Interface
+    internal unsafe partial struct IDxcBlobEncoding : IDxcBlobEncoding.Interface
     {
         public void** lpVtbl;
 
@@ -69,7 +69,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT GetEncoding(BOOL* pKnown, [NativeTypeName("UINT32 *")] uint* pCodePage);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDxcBlobEncoding*, Guid*, void**, int> QueryInterface;

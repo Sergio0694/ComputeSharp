@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("47DD575D-AC05-4CDD-8049-9B02CD16F44C")]
     [NativeTypeName("struct ID2D1Device : ID2D1Resource")]
     [NativeInheritance("ID2D1Resource")]
-    public unsafe partial struct ID2D1Device : ID2D1Device.Interface
+    internal unsafe partial struct ID2D1Device : ID2D1Device.Interface
     {
         public void** lpVtbl;
 
@@ -102,7 +102,7 @@ namespace TerraFX.Interop.DirectX
             void ClearResources([NativeTypeName("UINT32")] uint millisecondsSinceUse = 0);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1Device*, Guid*, void**, int> QueryInterface;

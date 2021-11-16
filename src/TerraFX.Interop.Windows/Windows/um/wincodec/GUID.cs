@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 
 namespace TerraFX.Interop.Windows
 {
-    public static partial class GUID
+    internal static partial class GUID
     {
         [NativeTypeName("const GUID")]
         public static ref readonly Guid GUID_VendorMicrosoft

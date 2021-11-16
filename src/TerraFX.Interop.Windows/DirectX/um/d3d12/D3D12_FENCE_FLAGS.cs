@@ -8,7 +8,7 @@ using System;
 namespace TerraFX.Interop.DirectX
 {
     [Flags]
-    public enum D3D12_FENCE_FLAGS
+    internal enum D3D12_FENCE_FLAGS
     {
         D3D12_FENCE_FLAG_NONE = 0,
         D3D12_FENCE_FLAG_SHARED = 0x1,

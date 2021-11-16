@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_BOX
+    internal partial struct D3D12_BOX
     {
         public uint left;
 

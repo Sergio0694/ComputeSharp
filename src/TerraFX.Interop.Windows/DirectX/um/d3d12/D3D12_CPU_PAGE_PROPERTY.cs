@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_CPU_PAGE_PROPERTY
+    internal enum D3D12_CPU_PAGE_PROPERTY
     {
         D3D12_CPU_PAGE_PROPERTY_UNKNOWN = 0,
         D3D12_CPU_PAGE_PROPERTY_NOT_AVAILABLE = 1,

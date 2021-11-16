@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("54D7898A-A061-40A7-BEC7-E465BCBA2C4F")]
     [NativeTypeName("struct ID2D1CommandSink : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct ID2D1CommandSink : ID2D1CommandSink.Interface
+    internal unsafe partial struct ID2D1CommandSink : ID2D1CommandSink.Interface
     {
         public void** lpVtbl;
 
@@ -293,7 +293,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT PopLayer();
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1CommandSink*, Guid*, void**, int> QueryInterface;

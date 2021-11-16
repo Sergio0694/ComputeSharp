@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct CABSTRBLOB
+    internal unsafe partial struct CABSTRBLOB
     {
         [NativeTypeName("ULONG")]
         public uint cElems;

@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("0A753DCF-C4D8-4B91-ADF6-BE5A60D95A76")]
     [NativeTypeName("struct ID3D12Fence : ID3D12Pageable")]
     [NativeInheritance("ID3D12Pageable")]
-    public unsafe partial struct ID3D12Fence : ID3D12Fence.Interface
+    internal unsafe partial struct ID3D12Fence : ID3D12Fence.Interface
     {
         public void** lpVtbl;
 
@@ -110,7 +110,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT Signal([NativeTypeName("UINT64")] ulong Value);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID3D12Fence*, Guid*, void**, int> QueryInterface;

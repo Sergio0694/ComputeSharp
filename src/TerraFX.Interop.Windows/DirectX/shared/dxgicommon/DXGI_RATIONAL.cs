@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DXGI_RATIONAL
+    internal partial struct DXGI_RATIONAL
     {
         public uint Numerator;
 

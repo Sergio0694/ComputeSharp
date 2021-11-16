@@ -8,7 +8,7 @@ using System;
 namespace TerraFX.Interop.DirectX
 {
     [Flags]
-    public enum D2D1_DEVICE_CONTEXT_OPTIONS : uint
+    internal enum D2D1_DEVICE_CONTEXT_OPTIONS : uint
     {
         D2D1_DEVICE_CONTEXT_OPTIONS_NONE = 0,
         D2D1_DEVICE_CONTEXT_OPTIONS_ENABLE_MULTITHREADED_OPTIMIZATIONS = 1,

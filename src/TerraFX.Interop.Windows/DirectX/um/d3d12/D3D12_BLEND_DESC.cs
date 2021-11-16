@@ -10,7 +10,7 @@ using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.Me
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_BLEND_DESC
+    internal partial struct D3D12_BLEND_DESC
     {
         public BOOL AlphaToCoverageEnable;
 
@@ -19,7 +19,7 @@ namespace TerraFX.Interop.DirectX
         [NativeTypeName("D3D12_RENDER_TARGET_BLEND_DESC [8]")]
         public _RenderTarget_e__FixedBuffer RenderTarget;
 
-        public partial struct _RenderTarget_e__FixedBuffer
+        internal partial struct _RenderTarget_e__FixedBuffer
         {
             public D3D12_RENDER_TARGET_BLEND_DESC e0;
             public D3D12_RENDER_TARGET_BLEND_DESC e1;

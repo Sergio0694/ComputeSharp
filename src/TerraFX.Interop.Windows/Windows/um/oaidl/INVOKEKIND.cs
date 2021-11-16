@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public enum INVOKEKIND
+    internal enum INVOKEKIND
     {
         INVOKE_FUNC = 1,
         INVOKE_PROPERTYGET = 2,

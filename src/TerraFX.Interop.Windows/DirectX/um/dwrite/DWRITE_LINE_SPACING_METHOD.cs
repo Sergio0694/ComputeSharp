@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DWRITE_LINE_SPACING_METHOD
+    internal enum DWRITE_LINE_SPACING_METHOD
     {
         DWRITE_LINE_SPACING_METHOD_DEFAULT,
         DWRITE_LINE_SPACING_METHOD_UNIFORM,

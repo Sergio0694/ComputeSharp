@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_DASH_STYLE : uint
+    internal enum D2D1_DASH_STYLE : uint
     {
         D2D1_DASH_STYLE_SOLID = 0,
         D2D1_DASH_STYLE_DASH = 1,

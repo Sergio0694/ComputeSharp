@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_PROPERTY_TYPE : uint
+    internal enum D2D1_PROPERTY_TYPE : uint
     {
         D2D1_PROPERTY_TYPE_UNKNOWN = 0,
         D2D1_PROPERTY_TYPE_STRING = 1,

@@ -10,7 +10,7 @@ using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.Me
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D3D12_CLEAR_VALUE
+    internal unsafe partial struct D3D12_CLEAR_VALUE
     {
         public DXGI_FORMAT Format;
 
@@ -36,7 +36,7 @@ namespace TerraFX.Interop.DirectX
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public unsafe partial struct _Anonymous_e__Union
+        internal unsafe partial struct _Anonymous_e__Union
         {
             [FieldOffset(0)]
             [NativeTypeName("FLOAT [4]")]

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public enum WICDecodeOptions
+    internal enum WICDecodeOptions
     {
         WICDecodeMetadataCacheOnDemand = 0,
         WICDecodeMetadataCacheOnLoad = 0x1,

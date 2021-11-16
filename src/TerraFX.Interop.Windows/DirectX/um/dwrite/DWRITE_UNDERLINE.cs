@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct DWRITE_UNDERLINE
+    internal unsafe partial struct DWRITE_UNDERLINE
     {
         public float width;
 

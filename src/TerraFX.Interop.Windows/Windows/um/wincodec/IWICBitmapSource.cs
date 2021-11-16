@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00000120-A8F2-4877-BA0A-FD2B6645FB94")]
     [NativeTypeName("struct IWICBitmapSource : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IWICBitmapSource : IWICBitmapSource.Interface
+    internal unsafe partial struct IWICBitmapSource : IWICBitmapSource.Interface
     {
         public void** lpVtbl;
 
@@ -92,7 +92,7 @@ namespace TerraFX.Interop.Windows
             HRESULT CopyPixels([NativeTypeName("const WICRect *")] WICRect* prc, uint cbStride, uint cbBufferSize, byte* pbBuffer);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IWICBitmapSource*, Guid*, void**, int> QueryInterface;

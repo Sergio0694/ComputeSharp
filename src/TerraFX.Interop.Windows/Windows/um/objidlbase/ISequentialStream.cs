@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("0C733A30-2A1C-11CE-ADE5-00AA0044773D")]
     [NativeTypeName("struct ISequentialStream : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct ISequentialStream : ISequentialStream.Interface
+    internal unsafe partial struct ISequentialStream : ISequentialStream.Interface
     {
         public void** lpVtbl;
 
@@ -62,7 +62,7 @@ namespace TerraFX.Interop.Windows
             HRESULT Write([NativeTypeName("const void *")] void* pv, [NativeTypeName("ULONG")] uint cb, [NativeTypeName("ULONG *")] uint* pcbWritten);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ISequentialStream*, Guid*, void**, int> QueryInterface;

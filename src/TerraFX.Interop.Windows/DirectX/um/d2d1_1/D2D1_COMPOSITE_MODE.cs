@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_COMPOSITE_MODE : uint
+    internal enum D2D1_COMPOSITE_MODE : uint
     {
         D2D1_COMPOSITE_MODE_SOURCE_OVER = 0,
         D2D1_COMPOSITE_MODE_DESTINATION_OVER = 1,

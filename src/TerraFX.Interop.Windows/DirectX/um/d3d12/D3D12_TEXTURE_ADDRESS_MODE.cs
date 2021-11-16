@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_TEXTURE_ADDRESS_MODE
+    internal enum D3D12_TEXTURE_ADDRESS_MODE
     {
         D3D12_TEXTURE_ADDRESS_MODE_WRAP = 1,
         D3D12_TEXTURE_ADDRESS_MODE_MIRROR = 2,

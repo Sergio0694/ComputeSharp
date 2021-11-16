@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D_POINT_2U
+    internal partial struct D2D_POINT_2U
     {
         [NativeTypeName("UINT32")]
         public uint x;

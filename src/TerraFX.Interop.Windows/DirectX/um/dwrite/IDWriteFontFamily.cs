@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("DA20D8EF-812A-4C43-9802-62EC4ABD7ADD")]
     [NativeTypeName("struct IDWriteFontFamily : IDWriteFontList")]
     [NativeInheritance("IDWriteFontList")]
-    public unsafe partial struct IDWriteFontFamily : IDWriteFontFamily.Interface
+    internal unsafe partial struct IDWriteFontFamily : IDWriteFontFamily.Interface
     {
         public void** lpVtbl;
 
@@ -95,7 +95,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT GetMatchingFonts(DWRITE_FONT_WEIGHT weight, DWRITE_FONT_STRETCH stretch, DWRITE_FONT_STYLE style, IDWriteFontList** matchingFonts);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDWriteFontFamily*, Guid*, void**, int> QueryInterface;

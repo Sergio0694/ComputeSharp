@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00000302-A8F2-4877-BA0A-FD2B6645FB94")]
     [NativeTypeName("struct IWICBitmapScaler : IWICBitmapSource")]
     [NativeInheritance("IWICBitmapSource")]
-    public unsafe partial struct IWICBitmapScaler : IWICBitmapScaler.Interface
+    internal unsafe partial struct IWICBitmapScaler : IWICBitmapScaler.Interface
     {
         public void** lpVtbl;
 
@@ -87,7 +87,7 @@ namespace TerraFX.Interop.Windows
             HRESULT Initialize(IWICBitmapSource* pISource, uint uiWidth, uint uiHeight, WICBitmapInterpolationMode mode);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IWICBitmapScaler*, Guid*, void**, int> QueryInterface;

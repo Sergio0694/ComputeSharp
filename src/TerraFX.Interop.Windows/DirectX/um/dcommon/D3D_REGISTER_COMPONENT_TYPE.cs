@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D_REGISTER_COMPONENT_TYPE
+    internal enum D3D_REGISTER_COMPONENT_TYPE
     {
         D3D_REGISTER_COMPONENT_UNKNOWN = 0,
         D3D_REGISTER_COMPONENT_UINT32 = 1,

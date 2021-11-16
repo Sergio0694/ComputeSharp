@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 
 namespace TerraFX.Interop.DirectX
 {
-    public static partial class D3D11
+    internal static partial class D3D11
     {
         [NativeTypeName("const GUID")]
         public static ref readonly Guid D3D11_DECODER_PROFILE_MPEG2_MOCOMP

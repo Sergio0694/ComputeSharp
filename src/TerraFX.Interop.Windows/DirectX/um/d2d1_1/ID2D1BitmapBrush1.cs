@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("41343A53-E41A-49A2-91CD-21793BBB62E5")]
     [NativeTypeName("struct ID2D1BitmapBrush1 : ID2D1BitmapBrush")]
     [NativeInheritance("ID2D1BitmapBrush")]
-    public unsafe partial struct ID2D1BitmapBrush1 : ID2D1BitmapBrush1.Interface
+    internal unsafe partial struct ID2D1BitmapBrush1 : ID2D1BitmapBrush1.Interface
     {
         public void** lpVtbl;
 
@@ -154,7 +154,7 @@ namespace TerraFX.Interop.DirectX
             D2D1_INTERPOLATION_MODE GetInterpolationMode1();
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1BitmapBrush1*, Guid*, void**, int> QueryInterface;

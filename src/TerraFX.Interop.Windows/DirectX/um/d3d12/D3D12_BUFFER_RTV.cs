@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_BUFFER_RTV
+    internal partial struct D3D12_BUFFER_RTV
     {
         [NativeTypeName("UINT64")]
         public ulong FirstElement;

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_PRIMITIVE_TOPOLOGY_TYPE
+    internal enum D3D12_PRIMITIVE_TOPOLOGY_TYPE
     {
         D3D12_PRIMITIVE_TOPOLOGY_TYPE_UNDEFINED = 0,
         D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT = 1,

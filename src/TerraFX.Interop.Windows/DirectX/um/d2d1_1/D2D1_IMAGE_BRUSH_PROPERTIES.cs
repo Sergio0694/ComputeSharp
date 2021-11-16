@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D1_IMAGE_BRUSH_PROPERTIES
+    internal partial struct D2D1_IMAGE_BRUSH_PROPERTIES
     {
         [NativeTypeName("D2D1_RECT_F")]
         public D2D_RECT_F sourceRectangle;

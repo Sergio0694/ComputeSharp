@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_PACKED_MIP_INFO
+    internal partial struct D3D12_PACKED_MIP_INFO
     {
         [NativeTypeName("UINT8")]
         public byte NumStandardMips;

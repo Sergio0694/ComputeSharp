@@ -4,7 +4,7 @@ using System;
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct HPALETTE : IComparable, IComparable<HPALETTE>, IEquatable<HPALETTE>, IFormattable
+    internal unsafe partial struct HPALETTE : IComparable, IComparable<HPALETTE>, IEquatable<HPALETTE>, IFormattable
     {
         public readonly void* Value;
 

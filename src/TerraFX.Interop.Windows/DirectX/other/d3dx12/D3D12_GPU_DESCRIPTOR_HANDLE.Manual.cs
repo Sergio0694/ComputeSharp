@@ -7,7 +7,7 @@ using System;
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D3D12_GPU_DESCRIPTOR_HANDLE : IEquatable<D3D12_GPU_DESCRIPTOR_HANDLE>
+    internal unsafe partial struct D3D12_GPU_DESCRIPTOR_HANDLE : IEquatable<D3D12_GPU_DESCRIPTOR_HANDLE>
     {
         public static D3D12_GPU_DESCRIPTOR_HANDLE DEFAULT => default;
 

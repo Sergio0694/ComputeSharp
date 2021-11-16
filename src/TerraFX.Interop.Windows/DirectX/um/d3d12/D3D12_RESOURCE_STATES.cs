@@ -8,7 +8,7 @@ using System;
 namespace TerraFX.Interop.DirectX
 {
     [Flags]
-    public enum D3D12_RESOURCE_STATES
+    internal enum D3D12_RESOURCE_STATES
     {
         D3D12_RESOURCE_STATE_COMMON = 0,
         D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER = 0x1,

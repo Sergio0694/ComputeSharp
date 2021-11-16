@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD9069D-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1StrokeStyle : ID2D1Resource")]
     [NativeInheritance("ID2D1Resource")]
-    public unsafe partial struct ID2D1StrokeStyle : ID2D1StrokeStyle.Interface
+    internal unsafe partial struct ID2D1StrokeStyle : ID2D1StrokeStyle.Interface
     {
         public void** lpVtbl;
 
@@ -142,7 +142,7 @@ namespace TerraFX.Interop.DirectX
             void GetDashes(float* dashes, [NativeTypeName("UINT32")] uint dashesCount);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1StrokeStyle*, Guid*, void**, int> QueryInterface;

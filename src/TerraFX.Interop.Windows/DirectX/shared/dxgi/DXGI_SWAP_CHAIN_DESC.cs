@@ -7,7 +7,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DXGI_SWAP_CHAIN_DESC
+    internal partial struct DXGI_SWAP_CHAIN_DESC
     {
         public DXGI_MODE_DESC BufferDesc;
 

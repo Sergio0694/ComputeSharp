@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("0000002F-0000-0000-C000-000000000046")]
     [NativeTypeName("struct IRecordInfo : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IRecordInfo : IRecordInfo.Interface
+    internal unsafe partial struct IRecordInfo : IRecordInfo.Interface
     {
         public void** lpVtbl;
 
@@ -204,7 +204,7 @@ namespace TerraFX.Interop.Windows
             HRESULT RecordDestroy([NativeTypeName("PVOID")] void* pvRecord);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IRecordInfo*, Guid*, void**, int> QueryInterface;

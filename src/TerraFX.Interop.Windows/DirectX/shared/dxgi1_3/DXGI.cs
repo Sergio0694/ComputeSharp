@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public static partial class DXGI
+    internal static partial class DXGI
     {
         [NativeTypeName("#define DXGI_CREATE_FACTORY_DEBUG 0x1")]
         public const int DXGI_CREATE_FACTORY_DEBUG = 0x1;

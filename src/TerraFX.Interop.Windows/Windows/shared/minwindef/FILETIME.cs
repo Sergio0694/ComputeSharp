@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public partial struct FILETIME
+    internal partial struct FILETIME
     {
         [NativeTypeName("DWORD")]
         public uint dwLowDateTime;

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_FILTER
+    internal enum D3D12_FILTER
     {
         D3D12_FILTER_MIN_MAG_MIP_POINT = 0,
         D3D12_FILTER_MIN_MAG_POINT_MIP_LINEAR = 0x1,

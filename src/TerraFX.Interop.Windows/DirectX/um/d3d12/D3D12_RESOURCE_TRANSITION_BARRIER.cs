@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D3D12_RESOURCE_TRANSITION_BARRIER
+    internal unsafe partial struct D3D12_RESOURCE_TRANSITION_BARRIER
     {
         public ID3D12Resource* pResource;
 

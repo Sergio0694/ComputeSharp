@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("0EC870A6-5D7E-4C22-8CFC-5BAAE07616ED")]
     [NativeTypeName("struct ID3D12CommandQueue : ID3D12Pageable")]
     [NativeInheritance("ID3D12Pageable")]
-    public unsafe partial struct ID3D12CommandQueue : ID3D12CommandQueue.Interface
+    internal unsafe partial struct ID3D12CommandQueue : ID3D12CommandQueue.Interface
     {
         public void** lpVtbl;
 
@@ -189,7 +189,7 @@ namespace TerraFX.Interop.DirectX
             D3D12_COMMAND_QUEUE_DESC GetDesc();
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID3D12CommandQueue*, Guid*, void**, int> QueryInterface;

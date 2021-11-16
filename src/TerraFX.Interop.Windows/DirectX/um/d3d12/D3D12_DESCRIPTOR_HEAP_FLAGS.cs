@@ -8,7 +8,7 @@ using System;
 namespace TerraFX.Interop.DirectX
 {
     [Flags]
-    public enum D3D12_DESCRIPTOR_HEAP_FLAGS
+    internal enum D3D12_DESCRIPTOR_HEAP_FLAGS
     {
         D3D12_DESCRIPTOR_HEAP_FLAG_NONE = 0,
         D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE = 0x1,

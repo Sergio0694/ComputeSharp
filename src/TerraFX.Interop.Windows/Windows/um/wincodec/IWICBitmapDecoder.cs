@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("9EDDE9E7-8DEE-47EA-99DF-E6FAF2ED44BF")]
     [NativeTypeName("struct IWICBitmapDecoder : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IWICBitmapDecoder : IWICBitmapDecoder.Interface
+    internal unsafe partial struct IWICBitmapDecoder : IWICBitmapDecoder.Interface
     {
         public void** lpVtbl;
 
@@ -152,7 +152,7 @@ namespace TerraFX.Interop.Windows
             HRESULT GetFrame(uint index, IWICBitmapFrameDecode** ppIBitmapFrame);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IWICBitmapDecoder*, Guid*, void**, int> QueryInterface;

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public enum TYPEKIND
+    internal enum TYPEKIND
     {
         TKIND_ENUM = 0,
         TKIND_RECORD = (TKIND_ENUM + 1),

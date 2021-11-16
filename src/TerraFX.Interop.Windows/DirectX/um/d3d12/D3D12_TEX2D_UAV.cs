@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_TEX2D_UAV
+    internal partial struct D3D12_TEX2D_UAV
     {
         public uint MipSlice;
 

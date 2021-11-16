@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D1_BRUSH_PROPERTIES
+    internal partial struct D2D1_BRUSH_PROPERTIES
     {
         public float opacity;
 

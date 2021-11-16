@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public enum FUNCKIND
+    internal enum FUNCKIND
     {
         FUNC_VIRTUAL = 0,
         FUNC_PUREVIRTUAL = (FUNC_VIRTUAL + 1),

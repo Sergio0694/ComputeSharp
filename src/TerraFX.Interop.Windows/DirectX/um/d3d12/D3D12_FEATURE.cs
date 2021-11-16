@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_FEATURE
+    internal enum D3D12_FEATURE
     {
         D3D12_FEATURE_D3D12_OPTIONS = 0,
         D3D12_FEATURE_ARCHITECTURE = 1,

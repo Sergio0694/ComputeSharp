@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DXGI_MODE_ROTATION
+    internal enum DXGI_MODE_ROTATION
     {
         DXGI_MODE_ROTATION_UNSPECIFIED = 0,
         DXGI_MODE_ROTATION_IDENTITY = 1,

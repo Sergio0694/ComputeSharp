@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D_SHADER_INPUT_TYPE
+    internal enum D3D_SHADER_INPUT_TYPE
     {
         D3D_SIT_CBUFFER = 0,
         D3D_SIT_TBUFFER = (D3D_SIT_CBUFFER + 1),

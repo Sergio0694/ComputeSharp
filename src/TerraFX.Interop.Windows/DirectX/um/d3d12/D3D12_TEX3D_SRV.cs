@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_TEX3D_SRV
+    internal partial struct D3D12_TEX3D_SRV
     {
         public uint MostDetailedMip;
 

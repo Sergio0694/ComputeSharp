@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_COMPARISON_FUNC
+    internal enum D3D12_COMPARISON_FUNC
     {
         D3D12_COMPARISON_FUNC_NEVER = 1,
         D3D12_COMPARISON_FUNC_LESS = 2,

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_TILED_RESOURCE_COORDINATE
+    internal partial struct D3D12_TILED_RESOURCE_COORDINATE
     {
         public uint X;
 

@@ -7,7 +7,7 @@ using System;
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct CACLSID
+    internal unsafe partial struct CACLSID
     {
         [NativeTypeName("ULONG")]
         public uint cElems;

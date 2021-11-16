@@ -15,7 +15,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("C1B6694F-FF09-44A9-B03C-77900A0A1D17")]
     [NativeTypeName("struct IDXGIFactory6 : IDXGIFactory5")]
     [NativeInheritance("IDXGIFactory5")]
-    public unsafe partial struct IDXGIFactory6 : IDXGIFactory6.Interface
+    internal unsafe partial struct IDXGIFactory6 : IDXGIFactory6.Interface
     {
         public void** lpVtbl;
 
@@ -237,7 +237,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT EnumAdapterByGpuPreference(uint Adapter, DXGI_GPU_PREFERENCE GpuPreference, [NativeTypeName("const IID &")] Guid* riid, void** ppvAdapter);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDXGIFactory6*, Guid*, void**, int> QueryInterface;

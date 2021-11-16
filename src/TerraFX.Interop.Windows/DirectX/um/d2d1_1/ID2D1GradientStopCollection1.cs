@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("AE1572F4-5DD0-4777-998B-9279472AE63B")]
     [NativeTypeName("struct ID2D1GradientStopCollection1 : ID2D1GradientStopCollection")]
     [NativeInheritance("ID2D1GradientStopCollection")]
-    public unsafe partial struct ID2D1GradientStopCollection1 : ID2D1GradientStopCollection1.Interface
+    internal unsafe partial struct ID2D1GradientStopCollection1 : ID2D1GradientStopCollection1.Interface
     {
         public void** lpVtbl;
 
@@ -129,7 +129,7 @@ namespace TerraFX.Interop.DirectX
             D2D1_COLOR_INTERPOLATION_MODE GetColorInterpolationMode();
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1GradientStopCollection1*, Guid*, void**, int> QueryInterface;

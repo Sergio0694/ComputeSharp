@@ -8,7 +8,7 @@ using static TerraFX.Interop.DirectX.D3D12_SHADER_VISIBILITY;
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D3D12_ROOT_PARAMETER1
+    internal unsafe partial struct D3D12_ROOT_PARAMETER1
     {
         public static void InitAsDescriptorTable([NativeTypeName("D3D12_ROOT_PARAMETER1 &")] out D3D12_ROOT_PARAMETER1 rootParam, uint numDescriptorRanges, [NativeTypeName("const D3D12_DESCRIPTOR_RANGE1 *")] D3D12_DESCRIPTOR_RANGE1* pDescriptorRanges, D3D12_SHADER_VISIBILITY visibility = D3D12_SHADER_VISIBILITY_ALL)
         {

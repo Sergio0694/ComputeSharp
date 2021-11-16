@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 namespace TerraFX.Interop.Windows
 {
     [Guid("00000000-0000-0000-C000-000000000046")]
-    public unsafe partial struct IUnknown : IUnknown.Interface
+    internal unsafe partial struct IUnknown : IUnknown.Interface
     {
         public void** lpVtbl;
 
@@ -51,7 +51,7 @@ namespace TerraFX.Interop.Windows
             uint Release();
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IUnknown*, Guid*, void**, int> QueryInterface;

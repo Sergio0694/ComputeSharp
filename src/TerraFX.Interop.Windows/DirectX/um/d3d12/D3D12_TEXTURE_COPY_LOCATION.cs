@@ -9,7 +9,7 @@ using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.Me
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D3D12_TEXTURE_COPY_LOCATION
+    internal unsafe partial struct D3D12_TEXTURE_COPY_LOCATION
     {
         public ID3D12Resource* pResource;
 
@@ -37,7 +37,7 @@ namespace TerraFX.Interop.DirectX
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public partial struct _Anonymous_e__Union
+        internal partial struct _Anonymous_e__Union
         {
             [FieldOffset(0)]
             public D3D12_PLACED_SUBRESOURCE_FOOTPRINT PlacedFootprint;

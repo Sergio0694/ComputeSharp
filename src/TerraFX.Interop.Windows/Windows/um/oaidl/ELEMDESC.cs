@@ -9,7 +9,7 @@ using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.Me
 
 namespace TerraFX.Interop.Windows
 {
-    public partial struct ELEMDESC
+    internal partial struct ELEMDESC
     {
         public TYPEDESC tdesc;
 
@@ -35,7 +35,7 @@ namespace TerraFX.Interop.Windows
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public partial struct _Anonymous_e__Union
+        internal partial struct _Anonymous_e__Union
         {
             [FieldOffset(0)]
             public IDLDESC idldesc;

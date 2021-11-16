@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("8339FDE3-106F-47AB-8373-1C6295EB10B3")]
     [NativeTypeName("struct IDWriteInlineObject : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IDWriteInlineObject : IDWriteInlineObject.Interface
+    internal unsafe partial struct IDWriteInlineObject : IDWriteInlineObject.Interface
     {
         public void** lpVtbl;
 
@@ -83,7 +83,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT GetBreakConditions(DWRITE_BREAK_CONDITION* breakConditionBefore, DWRITE_BREAK_CONDITION* breakConditionAfter);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDWriteInlineObject*, Guid*, void**, int> QueryInterface;

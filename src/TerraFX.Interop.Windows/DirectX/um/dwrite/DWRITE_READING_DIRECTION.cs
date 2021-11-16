@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DWRITE_READING_DIRECTION
+    internal enum DWRITE_READING_DIRECTION
     {
         DWRITE_READING_DIRECTION_LEFT_TO_RIGHT = 0,
         DWRITE_READING_DIRECTION_RIGHT_TO_LEFT = 1,

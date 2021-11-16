@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D1_ELLIPSE
+    internal partial struct D2D1_ELLIPSE
     {
         [NativeTypeName("D2D1_POINT_2F")]
         public D2D_POINT_2F point;

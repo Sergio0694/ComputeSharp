@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("30989668-E1C9-4597-B395-458EEDB808DF")]
     [NativeTypeName("struct IWICMetadataQueryReader : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IWICMetadataQueryReader : IWICMetadataQueryReader.Interface
+    internal unsafe partial struct IWICMetadataQueryReader : IWICMetadataQueryReader.Interface
     {
         public void** lpVtbl;
 
@@ -82,7 +82,7 @@ namespace TerraFX.Interop.Windows
             HRESULT GetEnumerator(IEnumString** ppIEnumString);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IWICMetadataQueryReader*, Guid*, void**, int> QueryInterface;

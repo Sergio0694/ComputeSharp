@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DWRITE_GLYPH_METRICS
+    internal partial struct DWRITE_GLYPH_METRICS
     {
         [NativeTypeName("INT32")]
         public int leftSideBearing;

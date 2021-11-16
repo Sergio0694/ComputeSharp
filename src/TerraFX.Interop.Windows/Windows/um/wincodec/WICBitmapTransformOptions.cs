@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public enum WICBitmapTransformOptions
+    internal enum WICBitmapTransformOptions
     {
         WICBitmapTransformRotate0 = 0,
         WICBitmapTransformRotate90 = 0x1,

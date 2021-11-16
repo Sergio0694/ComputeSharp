@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("B66F034F-D0E2-40AB-B436-6DE39E321A94")]
     [NativeTypeName("struct IWICColorTransform : IWICBitmapSource")]
     [NativeInheritance("IWICBitmapSource")]
-    public unsafe partial struct IWICColorTransform : IWICColorTransform.Interface
+    internal unsafe partial struct IWICColorTransform : IWICColorTransform.Interface
     {
         public void** lpVtbl;
 
@@ -87,7 +87,7 @@ namespace TerraFX.Interop.Windows
             HRESULT Initialize(IWICBitmapSource* pIBitmapSource, IWICColorContext* pIContextSource, IWICColorContext* pIContextDest, [NativeTypeName("REFWICPixelFormatGUID")] Guid* pixelFmtDest);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IWICColorTransform*, Guid*, void**, int> QueryInterface;

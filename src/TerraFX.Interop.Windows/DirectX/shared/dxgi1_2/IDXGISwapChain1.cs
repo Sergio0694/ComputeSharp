@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("790A45F7-0D42-4876-983A-0A55CFE6F4AA")]
     [NativeTypeName("struct IDXGISwapChain1 : IDXGISwapChain")]
     [NativeInheritance("IDXGISwapChain")]
-    public unsafe partial struct IDXGISwapChain1 : IDXGISwapChain1.Interface
+    internal unsafe partial struct IDXGISwapChain1 : IDXGISwapChain1.Interface
     {
         public void** lpVtbl;
 
@@ -258,7 +258,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT GetRotation(DXGI_MODE_ROTATION* pRotation);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDXGISwapChain1*, Guid*, void**, int> QueryInterface;

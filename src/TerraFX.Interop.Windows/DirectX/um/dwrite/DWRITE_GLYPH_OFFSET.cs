@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DWRITE_GLYPH_OFFSET
+    internal partial struct DWRITE_GLYPH_OFFSET
     {
         public float advanceOffset;
 

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public enum WICBitmapInterpolationMode
+    internal enum WICBitmapInterpolationMode
     {
         WICBitmapInterpolationModeNearestNeighbor = 0,
         WICBitmapInterpolationModeLinear = 0x1,

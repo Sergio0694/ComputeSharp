@@ -7,7 +7,7 @@ using System;
 
 namespace TerraFX.Interop.Windows
 {
-    public partial struct TLIBATTR
+    internal partial struct TLIBATTR
     {
         public Guid guid;
 

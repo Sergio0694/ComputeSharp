@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DWRITE_MATRIX
+    internal partial struct DWRITE_MATRIX
     {
         public float m11;
 

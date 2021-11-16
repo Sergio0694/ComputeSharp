@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D2D1_BITMAP_PROPERTIES1
+    internal unsafe partial struct D2D1_BITMAP_PROPERTIES1
     {
         public D2D1_PIXEL_FORMAT pixelFormat;
 

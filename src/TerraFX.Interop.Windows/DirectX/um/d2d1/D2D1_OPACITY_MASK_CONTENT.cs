@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_OPACITY_MASK_CONTENT : uint
+    internal enum D2D1_OPACITY_MASK_CONTENT : uint
     {
         D2D1_OPACITY_MASK_CONTENT_GRAPHICS = 0,
         D2D1_OPACITY_MASK_CONTENT_TEXT_NATURAL = 1,

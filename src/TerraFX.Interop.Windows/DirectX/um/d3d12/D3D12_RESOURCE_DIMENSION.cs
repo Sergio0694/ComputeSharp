@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_RESOURCE_DIMENSION
+    internal enum D3D12_RESOURCE_DIMENSION
     {
         D3D12_RESOURCE_DIMENSION_UNKNOWN = 0,
         D3D12_RESOURCE_DIMENSION_BUFFER = 1,

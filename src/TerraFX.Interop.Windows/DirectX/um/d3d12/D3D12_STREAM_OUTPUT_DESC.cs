@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D3D12_STREAM_OUTPUT_DESC
+    internal unsafe partial struct D3D12_STREAM_OUTPUT_DESC
     {
         [NativeTypeName("const D3D12_SO_DECLARATION_ENTRY *")]
         public D3D12_SO_DECLARATION_ENTRY* pSODeclaration;

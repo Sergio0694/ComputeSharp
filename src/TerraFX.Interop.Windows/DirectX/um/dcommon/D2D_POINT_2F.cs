@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D_POINT_2F
+    internal partial struct D2D_POINT_2F
     {
         public float x;
 

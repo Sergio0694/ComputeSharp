@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct CADBL
+    internal unsafe partial struct CADBL
     {
         [NativeTypeName("ULONG")]
         public uint cElems;

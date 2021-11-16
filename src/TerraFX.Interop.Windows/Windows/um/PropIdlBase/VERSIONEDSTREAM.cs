@@ -7,7 +7,7 @@ using System;
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct VERSIONEDSTREAM
+    internal unsafe partial struct VERSIONEDSTREAM
     {
         public Guid guidVersion;
 

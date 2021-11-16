@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("EC5EC8A9-C395-4314-9C77-54D7A935FF70")]
     [NativeTypeName("struct IWICImagingFactory : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IWICImagingFactory : IWICImagingFactory.Interface
+    internal unsafe partial struct IWICImagingFactory : IWICImagingFactory.Interface
     {
         public void** lpVtbl;
 
@@ -292,7 +292,7 @@ namespace TerraFX.Interop.Windows
             HRESULT CreateQueryWriterFromReader(IWICMetadataQueryReader* pIQueryReader, [NativeTypeName("const GUID *")] Guid* pguidVendor, IWICMetadataQueryWriter** ppIQueryWriter);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IWICImagingFactory*, Guid*, void**, int> QueryInterface;

@@ -7,7 +7,7 @@ using System;
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct TYPEATTR
+    internal unsafe partial struct TYPEATTR
     {
         public Guid guid;
 

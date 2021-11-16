@@ -7,7 +7,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D1_HWND_RENDER_TARGET_PROPERTIES
+    internal partial struct D2D1_HWND_RENDER_TARGET_PROPERTIES
     {
         public HWND hwnd;
 

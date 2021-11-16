@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2C1D867D-C290-41C8-AE7E-34A98702E9A5")]
     [NativeTypeName("struct ID2D1PrintControl : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct ID2D1PrintControl : ID2D1PrintControl.Interface
+    internal unsafe partial struct ID2D1PrintControl : ID2D1PrintControl.Interface
     {
         public void** lpVtbl;
 
@@ -63,7 +63,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT Close();
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1PrintControl*, Guid*, void**, int> QueryInterface;

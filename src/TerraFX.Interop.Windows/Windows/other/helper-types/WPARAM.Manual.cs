@@ -2,7 +2,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct WPARAM
+    internal unsafe partial struct WPARAM
     {
         public static explicit operator WPARAM(void* value) => new WPARAM((nuint)(value));
 

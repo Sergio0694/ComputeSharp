@@ -9,7 +9,7 @@ using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.Me
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_RENDER_TARGET_VIEW_DESC
+    internal partial struct D3D12_RENDER_TARGET_VIEW_DESC
     {
         public DXGI_FORMAT Format;
 
@@ -91,7 +91,7 @@ namespace TerraFX.Interop.DirectX
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public partial struct _Anonymous_e__Union
+        internal partial struct _Anonymous_e__Union
         {
             [FieldOffset(0)]
             public D3D12_BUFFER_RTV Buffer;

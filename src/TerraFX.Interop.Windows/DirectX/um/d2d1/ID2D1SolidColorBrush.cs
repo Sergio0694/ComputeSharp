@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD906A9-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1SolidColorBrush : ID2D1Brush")]
     [NativeInheritance("ID2D1Brush")]
-    public unsafe partial struct ID2D1SolidColorBrush : ID2D1SolidColorBrush.Interface
+    internal unsafe partial struct ID2D1SolidColorBrush : ID2D1SolidColorBrush.Interface
     {
         public void** lpVtbl;
 
@@ -101,7 +101,7 @@ namespace TerraFX.Interop.DirectX
             DXGI_RGBA GetColor();
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1SolidColorBrush*, Guid*, void**, int> QueryInterface;

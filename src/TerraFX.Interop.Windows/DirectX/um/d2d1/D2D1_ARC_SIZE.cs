@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_ARC_SIZE : uint
+    internal enum D2D1_ARC_SIZE : uint
     {
         D2D1_ARC_SIZE_SMALL = 0,
         D2D1_ARC_SIZE_LARGE = 1,

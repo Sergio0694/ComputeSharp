@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public partial struct SAFEARRAYBOUND
+    internal partial struct SAFEARRAYBOUND
     {
         [NativeTypeName("ULONG")]
         public uint cElements;

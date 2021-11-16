@@ -4,7 +4,7 @@ using System;
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct HPEN : IEquatable<HPEN>
+    internal unsafe partial struct HPEN : IEquatable<HPEN>
     {
         public static explicit operator HPEN(HGDIOBJ value) => new HPEN(value.Value);
 

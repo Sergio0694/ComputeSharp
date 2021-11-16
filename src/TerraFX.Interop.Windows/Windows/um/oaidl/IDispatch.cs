@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00020400-0000-0000-C000-000000000046")]
     [NativeTypeName("struct IDispatch : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IDispatch : IDispatch.Interface
+    internal unsafe partial struct IDispatch : IDispatch.Interface
     {
         public void** lpVtbl;
 
@@ -82,7 +82,7 @@ namespace TerraFX.Interop.Windows
             HRESULT Invoke([NativeTypeName("DISPID")] int dispIdMember, [NativeTypeName("const IID &")] Guid* riid, [NativeTypeName("LCID")] uint lcid, [NativeTypeName("WORD")] ushort wFlags, DISPPARAMS* pDispParams, VARIANT* pVarResult, EXCEPINFO* pExcepInfo, uint* puArgErr);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDispatch*, Guid*, void**, int> QueryInterface;

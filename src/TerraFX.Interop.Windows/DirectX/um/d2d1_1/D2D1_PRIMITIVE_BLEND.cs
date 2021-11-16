@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_PRIMITIVE_BLEND : uint
+    internal enum D2D1_PRIMITIVE_BLEND : uint
     {
         D2D1_PRIMITIVE_BLEND_SOURCE_OVER = 0,
         D2D1_PRIMITIVE_BLEND_COPY = 1,

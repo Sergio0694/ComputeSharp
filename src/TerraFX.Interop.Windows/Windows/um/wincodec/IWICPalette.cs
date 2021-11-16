@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00000040-A8F2-4877-BA0A-FD2B6645FB94")]
     [NativeTypeName("struct IWICPalette : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IWICPalette : IWICPalette.Interface
+    internal unsafe partial struct IWICPalette : IWICPalette.Interface
     {
         public void** lpVtbl;
 
@@ -142,7 +142,7 @@ namespace TerraFX.Interop.Windows
             HRESULT HasAlpha(BOOL* pfHasAlpha);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IWICPalette*, Guid*, void**, int> QueryInterface;

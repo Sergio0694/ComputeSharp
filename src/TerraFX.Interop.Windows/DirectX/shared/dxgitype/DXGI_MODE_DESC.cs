@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DXGI_MODE_DESC
+    internal partial struct DXGI_MODE_DESC
     {
         public uint Width;
 

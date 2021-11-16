@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_STATIC_SAMPLER_DESC
+    internal partial struct D3D12_STATIC_SAMPLER_DESC
     {
         public D3D12_FILTER Filter;
 

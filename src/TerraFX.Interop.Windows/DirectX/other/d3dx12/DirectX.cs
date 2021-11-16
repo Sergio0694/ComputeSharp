@@ -8,7 +8,7 @@ using static TerraFX.Interop.DirectX.D3D12_FEATURE;
 
 namespace TerraFX.Interop.DirectX
 {
-    public static unsafe partial class DirectX
+    internal static unsafe partial class DirectX
     {
         public static uint D3D12CalcSubresource(uint MipSlice, uint ArraySlice, uint PlaneSlice, uint MipLevels, uint ArraySize)
         {

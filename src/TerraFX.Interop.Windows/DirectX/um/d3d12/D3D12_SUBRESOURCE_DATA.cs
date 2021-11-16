@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D3D12_SUBRESOURCE_DATA
+    internal unsafe partial struct D3D12_SUBRESOURCE_DATA
     {
         [NativeTypeName("const void *")]
         public void* pData;

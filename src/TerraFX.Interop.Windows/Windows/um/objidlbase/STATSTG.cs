@@ -7,7 +7,7 @@ using System;
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct STATSTG
+    internal unsafe partial struct STATSTG
     {
         [NativeTypeName("LPOLESTR")]
         public ushort* pwcsName;

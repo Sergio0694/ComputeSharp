@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_DESCRIPTOR_RANGE_TYPE
+    internal enum D3D12_DESCRIPTOR_RANGE_TYPE
     {
         D3D12_DESCRIPTOR_RANGE_TYPE_SRV = 0,
         D3D12_DESCRIPTOR_RANGE_TYPE_UAV = (D3D12_DESCRIPTOR_RANGE_TYPE_SRV + 1),

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_FEATURE_DATA_FORMAT_SUPPORT
+    internal partial struct D3D12_FEATURE_DATA_FORMAT_SUPPORT
     {
         public DXGI_FORMAT Format;
 

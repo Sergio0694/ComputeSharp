@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D_RESOURCE_RETURN_TYPE
+    internal enum D3D_RESOURCE_RETURN_TYPE
     {
         D3D_RETURN_TYPE_UNORM = 1,
         D3D_RETURN_TYPE_SNORM = 2,

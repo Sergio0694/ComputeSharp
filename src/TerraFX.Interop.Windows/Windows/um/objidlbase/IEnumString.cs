@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00000101-0000-0000-C000-000000000046")]
     [NativeTypeName("struct IEnumString : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IEnumString : IEnumString.Interface
+    internal unsafe partial struct IEnumString : IEnumString.Interface
     {
         public void** lpVtbl;
 
@@ -82,7 +82,7 @@ namespace TerraFX.Interop.Windows
             HRESULT Clone(IEnumString** ppenum);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IEnumString*, Guid*, void**, int> QueryInterface;

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DXGI_ALPHA_MODE : uint
+    internal enum DXGI_ALPHA_MODE : uint
     {
         DXGI_ALPHA_MODE_UNSPECIFIED = 0,
         DXGI_ALPHA_MODE_PREMULTIPLIED = 1,

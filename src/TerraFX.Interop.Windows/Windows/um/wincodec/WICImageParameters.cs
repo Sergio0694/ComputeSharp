@@ -9,7 +9,7 @@ using TerraFX.Interop.DirectX;
 namespace TerraFX.Interop.Windows
 {
     [SupportedOSPlatform("windows8.0")]
-    public partial struct WICImageParameters
+    internal partial struct WICImageParameters
     {
         public D2D1_PIXEL_FORMAT PixelFormat;
 

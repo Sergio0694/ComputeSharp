@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("AFFAA4CA-63FE-4D8E-B8AD-159000AF4304")]
     [NativeTypeName("struct ID3D12Debug1 : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct ID3D12Debug1 : ID3D12Debug1.Interface
+    internal unsafe partial struct ID3D12Debug1 : ID3D12Debug1.Interface
     {
         public void** lpVtbl;
 
@@ -73,7 +73,7 @@ namespace TerraFX.Interop.DirectX
             void SetEnableSynchronizedCommandQueueValidation(BOOL Enable);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID3D12Debug1*, Guid*, void**, int> QueryInterface;

@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("EF8A8135-5CC6-45FE-8825-C5A0724EB819")]
     [NativeTypeName("struct IDWriteTextRenderer : IDWritePixelSnapping")]
     [NativeInheritance("IDWritePixelSnapping")]
-    public unsafe partial struct IDWriteTextRenderer : IDWriteTextRenderer.Interface
+    internal unsafe partial struct IDWriteTextRenderer : IDWriteTextRenderer.Interface
     {
         public void** lpVtbl;
 
@@ -104,7 +104,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT DrawInlineObject(void* clientDrawingContext, float originX, float originY, IDWriteInlineObject* inlineObject, BOOL isSideways, BOOL isRightToLeft, IUnknown* clientDrawingEffect);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDWriteTextRenderer*, Guid*, void**, int> QueryInterface;

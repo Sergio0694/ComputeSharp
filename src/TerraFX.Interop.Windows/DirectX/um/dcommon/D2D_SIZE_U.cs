@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D_SIZE_U
+    internal partial struct D2D_SIZE_U
     {
         [NativeTypeName("UINT32")]
         public uint width;

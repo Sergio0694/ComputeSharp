@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DWRITE_TEXT_ALIGNMENT
+    internal enum DWRITE_TEXT_ALIGNMENT
     {
         DWRITE_TEXT_ALIGNMENT_LEADING,
         DWRITE_TEXT_ALIGNMENT_TRAILING,

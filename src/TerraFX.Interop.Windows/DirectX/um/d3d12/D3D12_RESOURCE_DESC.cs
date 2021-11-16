@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_RESOURCE_DESC
+    internal partial struct D3D12_RESOURCE_DESC
     {
         public D3D12_RESOURCE_DIMENSION Dimension;
 

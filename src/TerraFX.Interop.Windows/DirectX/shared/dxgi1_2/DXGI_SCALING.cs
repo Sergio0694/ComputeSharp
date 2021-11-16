@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DXGI_SCALING
+    internal enum DXGI_SCALING
     {
         DXGI_SCALING_STRETCH = 0,
         DXGI_SCALING_NONE = 1,

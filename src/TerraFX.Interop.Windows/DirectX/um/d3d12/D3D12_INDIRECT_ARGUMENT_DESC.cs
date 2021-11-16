@@ -9,7 +9,7 @@ using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.Me
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_INDIRECT_ARGUMENT_DESC
+    internal partial struct D3D12_INDIRECT_ARGUMENT_DESC
     {
         public D3D12_INDIRECT_ARGUMENT_TYPE Type;
 
@@ -62,7 +62,7 @@ namespace TerraFX.Interop.DirectX
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public partial struct _Anonymous_e__Union
+        internal partial struct _Anonymous_e__Union
         {
             [FieldOffset(0)]
             [NativeTypeName("struct (anonymous struct at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/d3d12.h:4113:9)")]
@@ -84,12 +84,12 @@ namespace TerraFX.Interop.DirectX
             [NativeTypeName("struct (anonymous struct at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/d3d12.h:4131:9)")]
             public _UnorderedAccessView_e__Struct UnorderedAccessView;
 
-            public partial struct _VertexBuffer_e__Struct
+            internal partial struct _VertexBuffer_e__Struct
             {
                 public uint Slot;
             }
 
-            public partial struct _Constant_e__Struct
+            internal partial struct _Constant_e__Struct
             {
                 public uint RootParameterIndex;
 
@@ -98,17 +98,17 @@ namespace TerraFX.Interop.DirectX
                 public uint Num32BitValuesToSet;
             }
 
-            public partial struct _ConstantBufferView_e__Struct
+            internal partial struct _ConstantBufferView_e__Struct
             {
                 public uint RootParameterIndex;
             }
 
-            public partial struct _ShaderResourceView_e__Struct
+            internal partial struct _ShaderResourceView_e__Struct
             {
                 public uint RootParameterIndex;
             }
 
-            public partial struct _UnorderedAccessView_e__Struct
+            internal partial struct _UnorderedAccessView_e__Struct
             {
                 public uint RootParameterIndex;
             }

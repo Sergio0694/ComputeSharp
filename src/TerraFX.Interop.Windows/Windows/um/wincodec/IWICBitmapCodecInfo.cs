@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("E87A44C4-B76E-4C47-8B09-298EB12A2714")]
     [NativeTypeName("struct IWICBitmapCodecInfo : IWICComponentInfo")]
     [NativeInheritance("IWICComponentInfo")]
-    public unsafe partial struct IWICBitmapCodecInfo : IWICBitmapCodecInfo.Interface
+    internal unsafe partial struct IWICBitmapCodecInfo : IWICBitmapCodecInfo.Interface
     {
         public void** lpVtbl;
 
@@ -218,7 +218,7 @@ namespace TerraFX.Interop.Windows
             HRESULT MatchesMimeType([NativeTypeName("LPCWSTR")] ushort* wzMimeType, BOOL* pfMatches);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IWICBitmapCodecInfo*, Guid*, void**, int> QueryInterface;

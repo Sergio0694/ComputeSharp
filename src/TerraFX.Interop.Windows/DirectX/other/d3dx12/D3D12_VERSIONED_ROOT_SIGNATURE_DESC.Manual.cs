@@ -12,7 +12,7 @@ using static TerraFX.Interop.DirectX.D3D12_ROOT_SIGNATURE_FLAGS;
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D3D12_VERSIONED_ROOT_SIGNATURE_DESC
+    internal unsafe partial struct D3D12_VERSIONED_ROOT_SIGNATURE_DESC
     {
         public D3D12_VERSIONED_ROOT_SIGNATURE_DESC([NativeTypeName("const D3D12_ROOT_SIGNATURE_DESC &")] in D3D12_ROOT_SIGNATURE_DESC o)
         {

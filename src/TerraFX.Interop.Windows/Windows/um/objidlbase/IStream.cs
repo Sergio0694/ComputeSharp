@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("0000000C-0000-0000-C000-000000000046")]
     [NativeTypeName("struct IStream : ISequentialStream")]
     [NativeInheritance("ISequentialStream")]
-    public unsafe partial struct IStream : IStream.Interface
+    internal unsafe partial struct IStream : IStream.Interface
     {
         public void** lpVtbl;
 
@@ -146,7 +146,7 @@ namespace TerraFX.Interop.Windows
             HRESULT Clone(IStream** ppstm);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IStream*, Guid*, void**, int> QueryInterface;

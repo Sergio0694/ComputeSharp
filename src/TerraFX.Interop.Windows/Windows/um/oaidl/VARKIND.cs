@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public enum VARKIND
+    internal enum VARKIND
     {
         VAR_PERINSTANCE = 0,
         VAR_STATIC = (VAR_PERINSTANCE + 1),

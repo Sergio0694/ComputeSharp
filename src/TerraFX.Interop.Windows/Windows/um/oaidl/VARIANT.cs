@@ -9,7 +9,7 @@ using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.Me
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct VARIANT
+    internal unsafe partial struct VARIANT
     {
         [NativeTypeName("tagVARIANT::(anonymous union at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/oaidl.h:478:5)")]
         public _Anonymous_e__Union Anonymous;
@@ -483,7 +483,7 @@ namespace TerraFX.Interop.Windows
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public unsafe partial struct _Anonymous_e__Union
+        internal unsafe partial struct _Anonymous_e__Union
         {
             [FieldOffset(0)]
             [NativeTypeName("tagVARIANT::(anonymous struct at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/oaidl.h:480:9)")]
@@ -492,7 +492,7 @@ namespace TerraFX.Interop.Windows
             [FieldOffset(0)]
             public DECIMAL decVal;
 
-            public unsafe partial struct _Anonymous_e__Struct
+            internal unsafe partial struct _Anonymous_e__Struct
             {
                 [NativeTypeName("VARTYPE")]
                 public ushort vt;
@@ -510,7 +510,7 @@ namespace TerraFX.Interop.Windows
                 public _Anonymous_e__Union Anonymous;
 
                 [StructLayout(LayoutKind.Explicit)]
-                public unsafe partial struct _Anonymous_e__Union
+                internal unsafe partial struct _Anonymous_e__Union
                 {
                     [FieldOffset(0)]
                     [NativeTypeName("LONGLONG")]
@@ -672,7 +672,7 @@ namespace TerraFX.Interop.Windows
                     [NativeTypeName("tagVARIANT::(anonymous struct at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/oaidl.h:533:17)")]
                     public _Anonymous_e__Struct Anonymous;
 
-                    public unsafe partial struct _Anonymous_e__Struct
+                    internal unsafe partial struct _Anonymous_e__Struct
                     {
                         [NativeTypeName("PVOID")]
                         public void* pvRecord;

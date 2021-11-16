@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_ROOT_CONSTANTS
+    internal partial struct D3D12_ROOT_CONSTANTS
     {
         public uint ShaderRegister;
 

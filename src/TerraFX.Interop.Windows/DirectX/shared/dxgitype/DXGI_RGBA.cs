@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DXGI_RGBA
+    internal partial struct DXGI_RGBA
     {
         public float r;
 

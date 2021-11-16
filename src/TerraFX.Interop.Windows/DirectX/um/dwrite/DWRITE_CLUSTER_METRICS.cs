@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DWRITE_CLUSTER_METRICS
+    internal partial struct DWRITE_CLUSTER_METRICS
     {
         public float width;
 

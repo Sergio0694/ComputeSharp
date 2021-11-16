@@ -7,7 +7,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D3D12_DISCARD_REGION
+    internal unsafe partial struct D3D12_DISCARD_REGION
     {
         public uint NumRects;
 

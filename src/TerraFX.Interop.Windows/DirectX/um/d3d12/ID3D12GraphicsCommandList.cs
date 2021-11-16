@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("5B160D0F-AC1B-4185-8BA8-B3AE42A5A455")]
     [NativeTypeName("struct ID3D12GraphicsCommandList : ID3D12CommandList")]
     [NativeInheritance("ID3D12CommandList")]
-    public unsafe partial struct ID3D12GraphicsCommandList : ID3D12GraphicsCommandList.Interface
+    internal unsafe partial struct ID3D12GraphicsCommandList : ID3D12GraphicsCommandList.Interface
     {
         public void** lpVtbl;
 
@@ -595,7 +595,7 @@ namespace TerraFX.Interop.DirectX
             void ExecuteIndirect(ID3D12CommandSignature* pCommandSignature, uint MaxCommandCount, ID3D12Resource* pArgumentBuffer, [NativeTypeName("UINT64")] ulong ArgumentBufferOffset, ID3D12Resource* pCountBuffer, [NativeTypeName("UINT64")] ulong CountBufferOffset);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID3D12GraphicsCommandList*, Guid*, void**, int> QueryInterface;

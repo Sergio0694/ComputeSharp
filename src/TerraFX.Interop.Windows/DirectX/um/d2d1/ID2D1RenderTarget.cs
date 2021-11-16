@@ -19,7 +19,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD90694-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1RenderTarget : ID2D1Resource")]
     [NativeInheritance("ID2D1Resource")]
-    public unsafe partial struct ID2D1RenderTarget : ID2D1RenderTarget.Interface
+    internal unsafe partial struct ID2D1RenderTarget : ID2D1RenderTarget.Interface
     {
         public void** lpVtbl;
 
@@ -670,7 +670,7 @@ namespace TerraFX.Interop.DirectX
             BOOL IsSupported([NativeTypeName("const D2D1_RENDER_TARGET_PROPERTIES *")] D2D1_RENDER_TARGET_PROPERTIES* renderTargetProperties);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1RenderTarget*, Guid*, void**, int> QueryInterface;

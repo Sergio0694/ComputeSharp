@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_LOGIC_OP
+    internal enum D3D12_LOGIC_OP
     {
         D3D12_LOGIC_OP_CLEAR = 0,
         D3D12_LOGIC_OP_SET = (D3D12_LOGIC_OP_CLEAR + 1),

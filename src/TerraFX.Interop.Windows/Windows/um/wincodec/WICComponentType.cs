@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public enum WICComponentType
+    internal enum WICComponentType
     {
         WICDecoder = 0x1,
         WICEncoder = 0x2,

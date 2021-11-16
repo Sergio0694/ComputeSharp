@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D_NAME
+    internal enum D3D_NAME
     {
         D3D_NAME_UNDEFINED = 0,
         D3D_NAME_POSITION = 1,

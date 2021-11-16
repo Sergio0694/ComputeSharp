@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("3C613A02-34B2-44EA-9A7C-45AEA9C6FD6D")]
     [NativeTypeName("struct IWICColorContext : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IWICColorContext : IWICColorContext.Interface
+    internal unsafe partial struct IWICColorContext : IWICColorContext.Interface
     {
         public void** lpVtbl;
 
@@ -102,7 +102,7 @@ namespace TerraFX.Interop.Windows
             HRESULT GetExifColorSpace(uint* pValue);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IWICColorContext*, Guid*, void**, int> QueryInterface;

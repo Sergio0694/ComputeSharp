@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2F0DA53A-2ADD-47CD-82EE-D9EC34688E75")]
     [NativeTypeName("struct IDWriteRenderingParams : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IDWriteRenderingParams : IDWriteRenderingParams.Interface
+    internal unsafe partial struct IDWriteRenderingParams : IDWriteRenderingParams.Interface
     {
         public void** lpVtbl;
 
@@ -93,7 +93,7 @@ namespace TerraFX.Interop.DirectX
             DWRITE_RENDERING_MODE GetRenderingMode();
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDWriteRenderingParams*, Guid*, void**, int> QueryInterface;

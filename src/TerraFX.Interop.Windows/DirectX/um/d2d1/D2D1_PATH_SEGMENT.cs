@@ -8,7 +8,7 @@ using System;
 namespace TerraFX.Interop.DirectX
 {
     [Flags]
-    public enum D2D1_PATH_SEGMENT : uint
+    internal enum D2D1_PATH_SEGMENT : uint
     {
         D2D1_PATH_SEGMENT_NONE = 0x00000000,
         D2D1_PATH_SEGMENT_FORCE_UNSTROKED = 0x00000001,

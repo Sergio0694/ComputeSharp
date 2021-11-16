@@ -7,7 +7,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DXGI_SWAP_CHAIN_FULLSCREEN_DESC
+    internal partial struct DXGI_SWAP_CHAIN_FULLSCREEN_DESC
     {
         public DXGI_RATIONAL RefreshRate;
 

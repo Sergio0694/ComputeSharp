@@ -7,7 +7,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct DXGI_GAMMA_CONTROL_CAPABILITIES
+    internal unsafe partial struct DXGI_GAMMA_CONTROL_CAPABILITIES
     {
         public BOOL ScaleAndOffsetSupported;
 

@@ -9,7 +9,7 @@ using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.Me
 
 namespace TerraFX.Interop.Windows
 {
-    public partial struct ARRAYDESC
+    internal partial struct ARRAYDESC
     {
         public TYPEDESC tdescElem;
 
@@ -18,7 +18,7 @@ namespace TerraFX.Interop.Windows
         [NativeTypeName("SAFEARRAYBOUND [1]")]
         public _rgbounds_e__FixedBuffer rgbounds;
 
-        public partial struct _rgbounds_e__FixedBuffer
+        internal partial struct _rgbounds_e__FixedBuffer
         {
             public SAFEARRAYBOUND e0;
 

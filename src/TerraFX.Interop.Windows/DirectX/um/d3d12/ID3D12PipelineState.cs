@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("765A30F3-F624-4C6F-A828-ACE948622445")]
     [NativeTypeName("struct ID3D12PipelineState : ID3D12Pageable")]
     [NativeInheritance("ID3D12Pageable")]
-    public unsafe partial struct ID3D12PipelineState : ID3D12PipelineState.Interface
+    internal unsafe partial struct ID3D12PipelineState : ID3D12PipelineState.Interface
     {
         public void** lpVtbl;
 
@@ -88,7 +88,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT GetCachedBlob(ID3DBlob** ppBlob);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID3D12PipelineState*, Guid*, void**, int> QueryInterface;

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DWRITE_FONT_FACE_TYPE
+    internal enum DWRITE_FONT_FACE_TYPE
     {
         DWRITE_FONT_FACE_TYPE_CFF,
         DWRITE_FONT_FACE_TYPE_TRUETYPE,

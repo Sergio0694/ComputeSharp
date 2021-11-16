@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("739D886A-CEF5-47DC-8769-1A8B41BEBBB0")]
     [NativeTypeName("struct IDWriteFontFile : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IDWriteFontFile : IDWriteFontFile.Interface
+    internal unsafe partial struct IDWriteFontFile : IDWriteFontFile.Interface
     {
         public void** lpVtbl;
 
@@ -73,7 +73,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT Analyze(BOOL* isSupportedFontType, DWRITE_FONT_FILE_TYPE* fontFileType, DWRITE_FONT_FACE_TYPE* fontFaceType, [NativeTypeName("UINT32 *")] uint* numberOfFaces);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDWriteFontFile*, Guid*, void**, int> QueryInterface;

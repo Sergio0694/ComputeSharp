@@ -9,7 +9,7 @@ using static TerraFX.Interop.DirectX.D3D12_RESOURCE_BARRIER_TYPE;
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D3D12_RESOURCE_BARRIER
+    internal unsafe partial struct D3D12_RESOURCE_BARRIER
     {
         public static D3D12_RESOURCE_BARRIER InitTransition(ID3D12Resource* pResource, D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter, uint subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES, D3D12_RESOURCE_BARRIER_FLAGS flags = D3D12_RESOURCE_BARRIER_FLAG_NONE)
         {

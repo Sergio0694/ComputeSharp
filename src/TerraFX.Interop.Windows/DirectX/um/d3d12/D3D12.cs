@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 
 namespace TerraFX.Interop.DirectX
 {
-    public static partial class D3D12
+    internal static partial class D3D12
     {
         [NativeTypeName("const GUID")]
         public static ref readonly Guid D3D12_PROTECTED_RESOURCES_SESSION_HARDWARE_PROTECTED

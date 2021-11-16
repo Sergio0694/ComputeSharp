@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD9069F-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1GeometrySink : ID2D1SimplifiedGeometrySink")]
     [NativeInheritance("ID2D1SimplifiedGeometrySink")]
-    public unsafe partial struct ID2D1GeometrySink : ID2D1GeometrySink.Interface
+    internal unsafe partial struct ID2D1GeometrySink : ID2D1GeometrySink.Interface
     {
         public void** lpVtbl;
 
@@ -142,7 +142,7 @@ namespace TerraFX.Interop.DirectX
             void AddArc([NativeTypeName("const D2D1_ARC_SEGMENT *")] D2D1_ARC_SEGMENT* arc);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1GeometrySink*, Guid*, void**, int> QueryInterface;

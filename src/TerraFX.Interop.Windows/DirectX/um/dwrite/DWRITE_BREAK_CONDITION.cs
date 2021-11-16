@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DWRITE_BREAK_CONDITION
+    internal enum DWRITE_BREAK_CONDITION
     {
         DWRITE_BREAK_CONDITION_NEUTRAL,
         DWRITE_BREAK_CONDITION_CAN_BREAK,

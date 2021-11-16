@@ -7,7 +7,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DXGI_SWAP_CHAIN_DESC1
+    internal partial struct DXGI_SWAP_CHAIN_DESC1
     {
         public uint Width;
 

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public partial struct IDLDESC
+    internal partial struct IDLDESC
     {
         [NativeTypeName("ULONG_PTR")]
         public nuint dwReserved;

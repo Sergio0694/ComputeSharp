@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD906C1-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1TessellationSink : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct ID2D1TessellationSink : ID2D1TessellationSink.Interface
+    internal unsafe partial struct ID2D1TessellationSink : ID2D1TessellationSink.Interface
     {
         public void** lpVtbl;
 
@@ -63,7 +63,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT Close();
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1TessellationSink*, Guid*, void**, int> QueryInterface;

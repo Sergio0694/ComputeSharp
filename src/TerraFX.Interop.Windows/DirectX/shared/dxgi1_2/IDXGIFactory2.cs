@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("50C83A1C-E072-4C48-87B0-3630FA36A6D0")]
     [NativeTypeName("struct IDXGIFactory2 : IDXGIFactory1")]
     [NativeInheritance("IDXGIFactory1")]
-    public unsafe partial struct IDXGIFactory2 : IDXGIFactory2.Interface
+    internal unsafe partial struct IDXGIFactory2 : IDXGIFactory2.Interface
     {
         public void** lpVtbl;
 
@@ -230,7 +230,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT CreateSwapChainForComposition(IUnknown* pDevice, [NativeTypeName("const DXGI_SWAP_CHAIN_DESC1 *")] DXGI_SWAP_CHAIN_DESC1* pDesc, IDXGIOutput* pRestrictToOutput, IDXGISwapChain1** ppSwapChain);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDXGIFactory2*, Guid*, void**, int> QueryInterface;

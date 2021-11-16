@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD906A3-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1RoundedRectangleGeometry : ID2D1Geometry")]
     [NativeInheritance("ID2D1Geometry")]
-    public unsafe partial struct ID2D1RoundedRectangleGeometry : ID2D1RoundedRectangleGeometry.Interface
+    internal unsafe partial struct ID2D1RoundedRectangleGeometry : ID2D1RoundedRectangleGeometry.Interface
     {
         public void** lpVtbl;
 
@@ -211,7 +211,7 @@ namespace TerraFX.Interop.DirectX
             void GetRoundedRect(D2D1_ROUNDED_RECT* roundedRect);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1RoundedRectangleGeometry*, Guid*, void**, int> QueryInterface;

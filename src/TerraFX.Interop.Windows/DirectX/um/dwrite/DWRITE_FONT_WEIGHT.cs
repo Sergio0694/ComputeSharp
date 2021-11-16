@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DWRITE_FONT_WEIGHT
+    internal enum DWRITE_FONT_WEIGHT
     {
         DWRITE_FONT_WEIGHT_THIN = 100,
         DWRITE_FONT_WEIGHT_EXTRA_LIGHT = 200,

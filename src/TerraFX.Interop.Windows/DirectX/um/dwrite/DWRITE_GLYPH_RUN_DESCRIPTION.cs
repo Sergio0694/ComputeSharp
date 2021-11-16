@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct DWRITE_GLYPH_RUN_DESCRIPTION
+    internal unsafe partial struct DWRITE_GLYPH_RUN_DESCRIPTION
     {
         [NativeTypeName("const WCHAR *")]
         public ushort* localeName;

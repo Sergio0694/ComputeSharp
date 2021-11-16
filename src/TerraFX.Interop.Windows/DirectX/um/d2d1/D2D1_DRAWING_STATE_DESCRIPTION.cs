@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D1_DRAWING_STATE_DESCRIPTION
+    internal partial struct D2D1_DRAWING_STATE_DESCRIPTION
     {
         public D2D1_ANTIALIAS_MODE antialiasMode;
 

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D3D12_COMMAND_SIGNATURE_DESC
+    internal unsafe partial struct D3D12_COMMAND_SIGNATURE_DESC
     {
         public uint ByteStride;
 

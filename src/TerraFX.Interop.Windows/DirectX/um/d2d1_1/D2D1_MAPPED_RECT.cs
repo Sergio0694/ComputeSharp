@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D2D1_MAPPED_RECT
+    internal unsafe partial struct D2D1_MAPPED_RECT
     {
         [NativeTypeName("UINT32")]
         public uint pitch;

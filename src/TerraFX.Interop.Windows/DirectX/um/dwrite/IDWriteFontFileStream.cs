@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("6D4865FE-0AB8-4D91-8F62-5DD6BE34A3E0")]
     [NativeTypeName("struct IDWriteFontFileStream : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IDWriteFontFileStream : IDWriteFontFileStream.Interface
+    internal unsafe partial struct IDWriteFontFileStream : IDWriteFontFileStream.Interface
     {
         public void** lpVtbl;
 
@@ -83,7 +83,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT GetLastWriteTime([NativeTypeName("UINT64 *")] ulong* lastWriteTime);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDWriteFontFileStream*, Guid*, void**, int> QueryInterface;

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DWRITE_TRIMMING
+    internal partial struct DWRITE_TRIMMING
     {
         public DWRITE_TRIMMING_GRANULARITY granularity;
 

@@ -8,7 +8,7 @@ using System;
 namespace TerraFX.Interop.DirectX
 {
     [Flags]
-    public enum D2D1_MAP_OPTIONS : uint
+    internal enum D2D1_MAP_OPTIONS : uint
     {
         D2D1_MAP_OPTIONS_NONE = 0,
         D2D1_MAP_OPTIONS_READ = 1,

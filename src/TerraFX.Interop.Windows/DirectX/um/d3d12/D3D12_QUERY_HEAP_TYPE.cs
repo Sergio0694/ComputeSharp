@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_QUERY_HEAP_TYPE
+    internal enum D3D12_QUERY_HEAP_TYPE
     {
         D3D12_QUERY_HEAP_TYPE_OCCLUSION = 0,
         D3D12_QUERY_HEAP_TYPE_TIMESTAMP = 1,

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DWRITE_TEXT_RANGE
+    internal partial struct DWRITE_TEXT_RANGE
     {
         [NativeTypeName("UINT32")]
         public uint startPosition;

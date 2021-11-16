@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("5A58797D-A72C-478D-8BA2-EFC6B0EFE88E")]
     [NativeTypeName("struct ID3D12ShaderReflection : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct ID3D12ShaderReflection : ID3D12ShaderReflection.Interface
+    internal unsafe partial struct ID3D12ShaderReflection : ID3D12ShaderReflection.Interface
     {
         public void** lpVtbl;
 
@@ -235,7 +235,7 @@ namespace TerraFX.Interop.DirectX
             ulong GetRequiresFlags();
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, Guid*, void**, int> QueryInterface;

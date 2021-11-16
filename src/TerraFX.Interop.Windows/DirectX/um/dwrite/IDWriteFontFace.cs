@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("5F49804D-7024-4D43-BFA9-D25984F53849")]
     [NativeTypeName("struct IDWriteFontFace : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IDWriteFontFace : IDWriteFontFace.Interface
+    internal unsafe partial struct IDWriteFontFace : IDWriteFontFace.Interface
     {
         public void** lpVtbl;
 
@@ -197,7 +197,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT GetGdiCompatibleGlyphMetrics(float emSize, float pixelsPerDip, [NativeTypeName("const DWRITE_MATRIX *")] DWRITE_MATRIX* transform, BOOL useGdiNatural, [NativeTypeName("const UINT16 *")] ushort* glyphIndices, [NativeTypeName("UINT32")] uint glyphCount, DWRITE_GLYPH_METRICS* glyphMetrics, [Optional] BOOL isSideways);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDWriteFontFace*, Guid*, void**, int> QueryInterface;

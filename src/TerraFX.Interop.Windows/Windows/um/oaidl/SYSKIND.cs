@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public enum SYSKIND
+    internal enum SYSKIND
     {
         SYS_WIN16 = 0,
         SYS_WIN32 = (SYS_WIN16 + 1),

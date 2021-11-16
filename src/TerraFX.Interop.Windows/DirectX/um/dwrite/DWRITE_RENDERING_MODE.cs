@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DWRITE_RENDERING_MODE
+    internal enum DWRITE_RENDERING_MODE
     {
         DWRITE_RENDERING_MODE_DEFAULT,
         DWRITE_RENDERING_MODE_ALIASED,

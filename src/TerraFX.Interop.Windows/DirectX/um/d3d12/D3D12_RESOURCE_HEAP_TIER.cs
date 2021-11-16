@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_RESOURCE_HEAP_TIER
+    internal enum D3D12_RESOURCE_HEAP_TIER
     {
         D3D12_RESOURCE_HEAP_TIER_1 = 1,
         D3D12_RESOURCE_HEAP_TIER_2 = 2,

@@ -9,7 +9,7 @@ using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.Me
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct SAFEARRAY
+    internal unsafe partial struct SAFEARRAY
     {
         public ushort cDims;
 
@@ -27,7 +27,7 @@ namespace TerraFX.Interop.Windows
         [NativeTypeName("SAFEARRAYBOUND [1]")]
         public _rgsabound_e__FixedBuffer rgsabound;
 
-        public partial struct _rgsabound_e__FixedBuffer
+        internal partial struct _rgsabound_e__FixedBuffer
         {
             public SAFEARRAYBOUND e0;
 

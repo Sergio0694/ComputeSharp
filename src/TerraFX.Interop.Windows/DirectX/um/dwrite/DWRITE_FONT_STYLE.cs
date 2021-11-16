@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DWRITE_FONT_STYLE
+    internal enum DWRITE_FONT_STYLE
     {
         DWRITE_FONT_STYLE_NORMAL,
         DWRITE_FONT_STYLE_OBLIQUE,

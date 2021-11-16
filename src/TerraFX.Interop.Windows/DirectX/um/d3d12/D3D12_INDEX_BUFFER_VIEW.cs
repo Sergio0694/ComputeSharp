@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_INDEX_BUFFER_VIEW
+    internal partial struct D3D12_INDEX_BUFFER_VIEW
     {
         [NativeTypeName("D3D12_GPU_VIRTUAL_ADDRESS")]
         public ulong BufferLocation;

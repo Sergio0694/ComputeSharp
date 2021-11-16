@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("7F61FC7D-950D-467F-B3E3-3C02FB49187C")]
     [NativeTypeName("struct IDxcIncludeHandler : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IDxcIncludeHandler : IDxcIncludeHandler.Interface
+    internal unsafe partial struct IDxcIncludeHandler : IDxcIncludeHandler.Interface
     {
         public void** lpVtbl;
 
@@ -53,7 +53,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT LoadSource([NativeTypeName("LPCWSTR")] ushort* pFilename, IDxcBlob** ppIncludeSource);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDxcIncludeHandler*, Guid*, void**, int> QueryInterface;

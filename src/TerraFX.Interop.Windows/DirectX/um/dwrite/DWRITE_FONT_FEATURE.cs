@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DWRITE_FONT_FEATURE
+    internal partial struct DWRITE_FONT_FEATURE
     {
         public DWRITE_FONT_FEATURE_TAG nameTag;
 

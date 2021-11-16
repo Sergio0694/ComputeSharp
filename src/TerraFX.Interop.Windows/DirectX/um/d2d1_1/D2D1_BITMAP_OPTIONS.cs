@@ -8,7 +8,7 @@ using System;
 namespace TerraFX.Interop.DirectX
 {
     [Flags]
-    public enum D2D1_BITMAP_OPTIONS : uint
+    internal enum D2D1_BITMAP_OPTIONS : uint
     {
         D2D1_BITMAP_OPTIONS_NONE = 0x00000000,
         D2D1_BITMAP_OPTIONS_TARGET = 0x00000001,

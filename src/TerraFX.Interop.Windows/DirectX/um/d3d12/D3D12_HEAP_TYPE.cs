@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_HEAP_TYPE
+    internal enum D3D12_HEAP_TYPE
     {
         D3D12_HEAP_TYPE_DEFAULT = 1,
         D3D12_HEAP_TYPE_UPLOAD = 2,

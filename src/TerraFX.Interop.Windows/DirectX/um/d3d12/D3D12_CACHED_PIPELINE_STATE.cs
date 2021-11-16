@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D3D12_CACHED_PIPELINE_STATE
+    internal unsafe partial struct D3D12_CACHED_PIPELINE_STATE
     {
         [NativeTypeName("const void *")]
         public void* pCachedBlob;

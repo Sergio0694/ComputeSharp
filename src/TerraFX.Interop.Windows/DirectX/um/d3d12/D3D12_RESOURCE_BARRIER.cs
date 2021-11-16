@@ -9,7 +9,7 @@ using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.Me
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_RESOURCE_BARRIER
+    internal partial struct D3D12_RESOURCE_BARRIER
     {
         public D3D12_RESOURCE_BARRIER_TYPE Type;
 
@@ -46,7 +46,7 @@ namespace TerraFX.Interop.DirectX
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public partial struct _Anonymous_e__Union
+        internal partial struct _Anonymous_e__Union
         {
             [FieldOffset(0)]
             public D3D12_RESOURCE_TRANSITION_BARRIER Transition;

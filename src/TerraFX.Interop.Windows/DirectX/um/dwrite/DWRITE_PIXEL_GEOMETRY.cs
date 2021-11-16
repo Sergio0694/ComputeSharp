@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DWRITE_PIXEL_GEOMETRY
+    internal enum DWRITE_PIXEL_GEOMETRY
     {
         DWRITE_PIXEL_GEOMETRY_FLAT,
         DWRITE_PIXEL_GEOMETRY_RGB,

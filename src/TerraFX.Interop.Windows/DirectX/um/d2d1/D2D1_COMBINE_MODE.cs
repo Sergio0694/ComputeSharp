@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_COMBINE_MODE : uint
+    internal enum D2D1_COMBINE_MODE : uint
     {
         D2D1_COMBINE_MODE_UNION = 0,
         D2D1_COMBINE_MODE_INTERSECT = 1,

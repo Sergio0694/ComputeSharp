@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D1_BITMAP_BRUSH_PROPERTIES
+    internal partial struct D2D1_BITMAP_BRUSH_PROPERTIES
     {
         public D2D1_EXTEND_MODE extendModeX;
 

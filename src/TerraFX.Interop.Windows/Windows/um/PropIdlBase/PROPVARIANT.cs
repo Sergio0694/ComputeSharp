@@ -10,7 +10,7 @@ using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.Me
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct PROPVARIANT
+    internal unsafe partial struct PROPVARIANT
     {
         [NativeTypeName("tagPROPVARIANT::(anonymous union at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/PropIdlBase.h:303:3)")]
         public _Anonymous_e__Union Anonymous;
@@ -718,7 +718,7 @@ namespace TerraFX.Interop.Windows
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public unsafe partial struct _Anonymous_e__Union
+        internal unsafe partial struct _Anonymous_e__Union
         {
             [FieldOffset(0)]
             [NativeTypeName("tagPROPVARIANT::(anonymous struct at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/PropIdlBase.h:305:1)")]
@@ -727,7 +727,7 @@ namespace TerraFX.Interop.Windows
             [FieldOffset(0)]
             public DECIMAL decVal;
 
-            public unsafe partial struct _Anonymous_e__Struct
+            internal unsafe partial struct _Anonymous_e__Struct
             {
                 [NativeTypeName("VARTYPE")]
                 public ushort vt;
@@ -745,7 +745,7 @@ namespace TerraFX.Interop.Windows
                 public _Anonymous_e__Union Anonymous;
 
                 [StructLayout(LayoutKind.Explicit)]
-                public unsafe partial struct _Anonymous_e__Union
+                internal unsafe partial struct _Anonymous_e__Union
                 {
                     [FieldOffset(0)]
                     [NativeTypeName("CHAR")]

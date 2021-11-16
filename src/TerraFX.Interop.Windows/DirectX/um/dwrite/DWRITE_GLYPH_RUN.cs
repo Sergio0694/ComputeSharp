@@ -7,7 +7,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct DWRITE_GLYPH_RUN
+    internal unsafe partial struct DWRITE_GLYPH_RUN
     {
         public IDWriteFontFace* fontFace;
 

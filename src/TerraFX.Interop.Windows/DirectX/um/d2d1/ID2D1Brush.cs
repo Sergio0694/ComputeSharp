@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD906A8-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1Brush : ID2D1Resource")]
     [NativeInheritance("ID2D1Resource")]
-    public unsafe partial struct ID2D1Brush : ID2D1Brush.Interface
+    internal unsafe partial struct ID2D1Brush : ID2D1Brush.Interface
     {
         public void** lpVtbl;
 
@@ -90,7 +90,7 @@ namespace TerraFX.Interop.DirectX
             void GetTransform([NativeTypeName("D2D1_MATRIX_3X2_F *")] D2D_MATRIX_3X2_F* transform);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1Brush*, Guid*, void**, int> QueryInterface;

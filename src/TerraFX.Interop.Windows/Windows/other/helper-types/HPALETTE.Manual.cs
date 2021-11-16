@@ -4,7 +4,7 @@ using System;
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct HPALETTE : IEquatable<HPALETTE>
+    internal unsafe partial struct HPALETTE : IEquatable<HPALETTE>
     {
         public static explicit operator HPALETTE(HGDIOBJ value) => new HPALETTE(value.Value);
 

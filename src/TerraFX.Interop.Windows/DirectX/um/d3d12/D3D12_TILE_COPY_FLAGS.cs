@@ -8,7 +8,7 @@ using System;
 namespace TerraFX.Interop.DirectX
 {
     [Flags]
-    public enum D3D12_TILE_COPY_FLAGS
+    internal enum D3D12_TILE_COPY_FLAGS
     {
         D3D12_TILE_COPY_FLAG_NONE = 0,
         D3D12_TILE_COPY_FLAG_NO_HAZARD = 0x1,

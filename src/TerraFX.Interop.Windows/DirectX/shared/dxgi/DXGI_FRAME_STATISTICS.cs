@@ -7,7 +7,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DXGI_FRAME_STATISTICS
+    internal partial struct DXGI_FRAME_STATISTICS
     {
         public uint PresentCount;
 

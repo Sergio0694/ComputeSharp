@@ -14,7 +14,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("483473D7-CD46-4F9D-9D3A-3112AA80159D")]
     [NativeTypeName("struct ID2D1Properties : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct ID2D1Properties : ID2D1Properties.Interface
+    internal unsafe partial struct ID2D1Properties : ID2D1Properties.Interface
     {
         public void** lpVtbl;
 
@@ -182,7 +182,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT GetSubProperties([NativeTypeName("UINT32")] uint index, ID2D1Properties** subProperties);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1Properties*, Guid*, void**, int> QueryInterface;

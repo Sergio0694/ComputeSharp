@@ -7,7 +7,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_FEATURE_DATA_D3D12_OPTIONS1
+    internal partial struct D3D12_FEATURE_DATA_D3D12_OPTIONS1
     {
         public BOOL WaveOps;
 

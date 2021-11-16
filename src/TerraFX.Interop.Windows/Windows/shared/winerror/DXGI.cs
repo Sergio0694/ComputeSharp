@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public static partial class DXGI
+    internal static partial class DXGI
     {
         [NativeTypeName("#define DXGI_STATUS_OCCLUDED _HRESULT_TYPEDEF_(0x087A0001L)")]
         public const int DXGI_STATUS_OCCLUDED = ((int)(0x087A0001));

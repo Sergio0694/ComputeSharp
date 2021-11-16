@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD906AB-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1LinearGradientBrush : ID2D1Brush")]
     [NativeInheritance("ID2D1Brush")]
-    public unsafe partial struct ID2D1LinearGradientBrush : ID2D1LinearGradientBrush.Interface
+    internal unsafe partial struct ID2D1LinearGradientBrush : ID2D1LinearGradientBrush.Interface
     {
         public void** lpVtbl;
 
@@ -134,7 +134,7 @@ namespace TerraFX.Interop.DirectX
             void GetGradientStopCollection(ID2D1GradientStopCollection** gradientStopCollection);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1LinearGradientBrush*, Guid*, void**, int> QueryInterface;

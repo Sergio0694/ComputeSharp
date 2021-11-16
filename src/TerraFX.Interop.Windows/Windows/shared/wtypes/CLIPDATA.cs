@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct CLIPDATA
+    internal unsafe partial struct CLIPDATA
     {
         [NativeTypeName("ULONG")]
         public uint cbSize;

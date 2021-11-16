@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D_TESSELLATOR_DOMAIN
+    internal enum D3D_TESSELLATOR_DOMAIN
     {
         D3D_TESSELLATOR_DOMAIN_UNDEFINED = 0,
         D3D_TESSELLATOR_DOMAIN_ISOLINE = 1,

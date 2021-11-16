@@ -8,7 +8,7 @@ using System;
 namespace TerraFX.Interop.DirectX
 {
     [Flags]
-    public enum D3D12_FORMAT_SUPPORT2
+    internal enum D3D12_FORMAT_SUPPORT2
     {
         D3D12_FORMAT_SUPPORT2_NONE = 0,
         D3D12_FORMAT_SUPPORT2_UAV_ATOMIC_ADD = 0x1,

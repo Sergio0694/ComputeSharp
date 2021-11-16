@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("08256209-099A-4B34-B86D-C22B110E7771")]
     [NativeTypeName("struct IDWriteLocalizedStrings : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IDWriteLocalizedStrings : IDWriteLocalizedStrings.Interface
+    internal unsafe partial struct IDWriteLocalizedStrings : IDWriteLocalizedStrings.Interface
     {
         public void** lpVtbl;
 
@@ -105,7 +105,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT GetString([NativeTypeName("UINT32")] uint index, [NativeTypeName("WCHAR *")] ushort* stringBuffer, [NativeTypeName("UINT32")] uint size);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDWriteLocalizedStrings*, Guid*, void**, int> QueryInterface;

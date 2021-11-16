@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public enum WICBitmapCreateCacheOption
+    internal enum WICBitmapCreateCacheOption
     {
         WICBitmapNoCache = 0,
         WICBitmapCacheOnDemand = 0x1,

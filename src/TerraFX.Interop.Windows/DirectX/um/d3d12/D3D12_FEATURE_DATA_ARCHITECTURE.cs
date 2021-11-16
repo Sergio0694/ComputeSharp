@@ -7,7 +7,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_FEATURE_DATA_ARCHITECTURE
+    internal partial struct D3D12_FEATURE_DATA_ARCHITECTURE
     {
         public uint NodeIndex;
 

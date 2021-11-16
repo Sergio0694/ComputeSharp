@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("3127CA40-446E-11CE-8135-00AA004BB851")]
     [NativeTypeName("struct IErrorLog : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IErrorLog : IErrorLog.Interface
+    internal unsafe partial struct IErrorLog : IErrorLog.Interface
     {
         public void** lpVtbl;
 
@@ -52,7 +52,7 @@ namespace TerraFX.Interop.Windows
             HRESULT AddError([NativeTypeName("LPCOLESTR")] ushort* pszPropName, EXCEPINFO* pExcepInfo);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IErrorLog*, Guid*, void**, int> QueryInterface;

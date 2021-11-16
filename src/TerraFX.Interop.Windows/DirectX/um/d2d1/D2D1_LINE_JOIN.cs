@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_LINE_JOIN : uint
+    internal enum D2D1_LINE_JOIN : uint
     {
         D2D1_LINE_JOIN_MITER = 0,
         D2D1_LINE_JOIN_BEVEL = 1,

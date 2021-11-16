@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("FE9E984D-3F95-407C-B5DB-CB94D4E8F87C")]
     [NativeTypeName("struct ID2D1ImageBrush : ID2D1Brush")]
     [NativeInheritance("ID2D1Brush")]
-    public unsafe partial struct ID2D1ImageBrush : ID2D1ImageBrush.Interface
+    internal unsafe partial struct ID2D1ImageBrush : ID2D1ImageBrush.Interface
     {
         public void** lpVtbl;
 
@@ -178,7 +178,7 @@ namespace TerraFX.Interop.DirectX
             void GetSourceRectangle([NativeTypeName("D2D1_RECT_F *")] D2D_RECT_F* sourceRectangle);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1ImageBrush*, Guid*, void**, int> QueryInterface;

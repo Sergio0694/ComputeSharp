@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("770AAE78-F26F-4DBA-A829-253C83D1B387")]
     [NativeTypeName("struct IDXGIFactory1 : IDXGIFactory")]
     [NativeInheritance("IDXGIFactory")]
-    public unsafe partial struct IDXGIFactory1 : IDXGIFactory1.Interface
+    internal unsafe partial struct IDXGIFactory1 : IDXGIFactory1.Interface
     {
         public void** lpVtbl;
 
@@ -126,7 +126,7 @@ namespace TerraFX.Interop.DirectX
             BOOL IsCurrent();
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDXGIFactory1*, Guid*, void**, int> QueryInterface;

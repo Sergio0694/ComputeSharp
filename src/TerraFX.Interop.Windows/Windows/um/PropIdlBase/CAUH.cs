@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct CAUH
+    internal unsafe partial struct CAUH
     {
         [NativeTypeName("ULONG")]
         public uint cElems;

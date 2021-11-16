@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_BLEND_OP
+    internal enum D3D12_BLEND_OP
     {
         D3D12_BLEND_OP_ADD = 1,
         D3D12_BLEND_OP_SUBTRACT = 2,

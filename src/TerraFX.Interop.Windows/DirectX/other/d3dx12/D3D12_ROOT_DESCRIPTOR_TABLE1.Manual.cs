@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D3D12_ROOT_DESCRIPTOR_TABLE1
+    internal unsafe partial struct D3D12_ROOT_DESCRIPTOR_TABLE1
     {
         public D3D12_ROOT_DESCRIPTOR_TABLE1(uint numDescriptorRanges, [NativeTypeName("const D3D12_DESCRIPTOR_RANGE1 *")] D3D12_DESCRIPTOR_RANGE1* _pDescriptorRanges)
         {

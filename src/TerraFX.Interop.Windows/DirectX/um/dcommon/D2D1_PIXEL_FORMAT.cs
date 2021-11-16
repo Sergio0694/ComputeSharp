@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D1_PIXEL_FORMAT
+    internal partial struct D2D1_PIXEL_FORMAT
     {
         public DXGI_FORMAT format;
 

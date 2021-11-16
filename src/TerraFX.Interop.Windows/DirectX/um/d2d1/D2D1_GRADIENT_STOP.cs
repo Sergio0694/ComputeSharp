@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D1_GRADIENT_STOP
+    internal partial struct D2D1_GRADIENT_STOP
     {
         public float position;
 

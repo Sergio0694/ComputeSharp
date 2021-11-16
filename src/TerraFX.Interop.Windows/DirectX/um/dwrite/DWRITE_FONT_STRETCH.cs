@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DWRITE_FONT_STRETCH
+    internal enum DWRITE_FONT_STRETCH
     {
         DWRITE_FONT_STRETCH_UNDEFINED = 0,
         DWRITE_FONT_STRETCH_ULTRA_CONDENSED = 1,

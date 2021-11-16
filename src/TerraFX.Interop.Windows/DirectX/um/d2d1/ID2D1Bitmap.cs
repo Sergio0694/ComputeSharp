@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("A2296057-EA42-4099-983B-539FB6505426")]
     [NativeTypeName("struct ID2D1Bitmap : ID2D1Image")]
     [NativeInheritance("ID2D1Image")]
-    public unsafe partial struct ID2D1Bitmap : ID2D1Bitmap.Interface
+    internal unsafe partial struct ID2D1Bitmap : ID2D1Bitmap.Interface
     {
         public void** lpVtbl;
 
@@ -127,7 +127,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT CopyFromMemory([NativeTypeName("const D2D1_RECT_U *")] D2D_RECT_U* dstRect, [NativeTypeName("const void *")] void* srcData, [NativeTypeName("UINT32")] uint pitch);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1Bitmap*, Guid*, void**, int> QueryInterface;

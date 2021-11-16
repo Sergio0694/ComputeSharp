@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_DEPTH_STENCIL_VALUE
+    internal partial struct D3D12_DEPTH_STENCIL_VALUE
     {
         public float Depth;
 

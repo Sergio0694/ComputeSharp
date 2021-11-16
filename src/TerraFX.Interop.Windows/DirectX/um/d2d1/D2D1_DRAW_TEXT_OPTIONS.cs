@@ -8,7 +8,7 @@ using System;
 namespace TerraFX.Interop.DirectX
 {
     [Flags]
-    public enum D2D1_DRAW_TEXT_OPTIONS : uint
+    internal enum D2D1_DRAW_TEXT_OPTIONS : uint
     {
         D2D1_DRAW_TEXT_OPTIONS_NO_SNAP = 0x00000001,
         D2D1_DRAW_TEXT_OPTIONS_CLIP = 0x00000002,

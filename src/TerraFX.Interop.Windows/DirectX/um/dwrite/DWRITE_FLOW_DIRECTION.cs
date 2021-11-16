@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DWRITE_FLOW_DIRECTION
+    internal enum DWRITE_FLOW_DIRECTION
     {
         DWRITE_FLOW_DIRECTION_TOP_TO_BOTTOM = 0,
         DWRITE_FLOW_DIRECTION_BOTTOM_TO_TOP = 1,

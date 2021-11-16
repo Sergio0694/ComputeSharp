@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 
 namespace TerraFX.Interop.Windows
 {
-    public static partial class CLSID
+    internal static partial class CLSID
     {
         [NativeTypeName("const GUID")]
         public static ref readonly Guid CLSID_WICImagingFactory1

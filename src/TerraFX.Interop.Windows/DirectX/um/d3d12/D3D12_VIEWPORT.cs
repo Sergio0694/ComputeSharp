@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_VIEWPORT
+    internal partial struct D3D12_VIEWPORT
     {
         public float TopLeftX;
 

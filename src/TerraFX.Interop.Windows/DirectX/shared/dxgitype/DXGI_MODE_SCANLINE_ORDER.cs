@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DXGI_MODE_SCANLINE_ORDER
+    internal enum DXGI_MODE_SCANLINE_ORDER
     {
         DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED = 0,
         DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE = 1,

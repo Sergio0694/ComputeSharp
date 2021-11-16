@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public static partial class Windows
+    internal static partial class Windows
     {
         [NativeTypeName("#define STRICT 1")]
         public const int STRICT = 1;

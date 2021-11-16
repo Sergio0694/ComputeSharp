@@ -2,7 +2,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct HCURSOR
+    internal unsafe partial struct HCURSOR
     {
         public static explicit operator HCURSOR(HICON value) => new HCURSOR(value.Value);
 

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_SWEEP_DIRECTION : uint
+    internal enum D2D1_SWEEP_DIRECTION : uint
     {
         D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE = 0,
         D2D1_SWEEP_DIRECTION_CLOCKWISE = 1,

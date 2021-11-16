@@ -2,7 +2,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct LRESULT
+    internal unsafe partial struct LRESULT
     {
         public static explicit operator LRESULT(void* value) => new LRESULT((nint)(value));
 

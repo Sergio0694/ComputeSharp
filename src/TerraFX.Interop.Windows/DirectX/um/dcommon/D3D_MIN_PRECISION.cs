@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D_MIN_PRECISION
+    internal enum D3D_MIN_PRECISION
     {
         D3D_MIN_PRECISION_DEFAULT = 0,
         D3D_MIN_PRECISION_FLOAT_16 = 1,

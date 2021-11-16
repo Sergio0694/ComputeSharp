@@ -15,7 +15,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("82237326-8111-4F7C-BCF4-B5C1175564FE")]
     [NativeTypeName("struct ID2D1GdiMetafileSink : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct ID2D1GdiMetafileSink : ID2D1GdiMetafileSink.Interface
+    internal unsafe partial struct ID2D1GdiMetafileSink : ID2D1GdiMetafileSink.Interface
     {
         public void** lpVtbl;
 
@@ -55,7 +55,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT ProcessRecord([NativeTypeName("DWORD")] uint recordType, [NativeTypeName("const void *")] void* recordData, [NativeTypeName("DWORD")] uint recordDataSize);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1GdiMetafileSink*, Guid*, void**, int> QueryInterface;

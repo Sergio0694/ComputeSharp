@@ -7,7 +7,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_TILE_REGION_SIZE
+    internal partial struct D3D12_TILE_REGION_SIZE
     {
         public uint NumTiles;
 

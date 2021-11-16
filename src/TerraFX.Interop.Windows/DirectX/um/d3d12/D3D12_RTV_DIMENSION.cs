@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_RTV_DIMENSION
+    internal enum D3D12_RTV_DIMENSION
     {
         D3D12_RTV_DIMENSION_UNKNOWN = 0,
         D3D12_RTV_DIMENSION_BUFFER = 1,

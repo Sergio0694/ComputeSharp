@@ -10,7 +10,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public static unsafe partial class DirectX
+    internal static unsafe partial class DirectX
     {
         [SupportedOSPlatform("windows8.1")]
         [DllImport("dxgi", ExactSpelling = true)]

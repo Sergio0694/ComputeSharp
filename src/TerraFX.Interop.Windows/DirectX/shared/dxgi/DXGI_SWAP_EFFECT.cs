@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DXGI_SWAP_EFFECT
+    internal enum DXGI_SWAP_EFFECT
     {
         DXGI_SWAP_EFFECT_DISCARD = 0,
         DXGI_SWAP_EFFECT_SEQUENTIAL = 1,

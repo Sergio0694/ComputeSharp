@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_SUBRESOURCE_FOOTPRINT
+    internal partial struct D3D12_SUBRESOURCE_FOOTPRINT
     {
         public DXGI_FORMAT Format;
 

@@ -8,7 +8,7 @@ using System;
 namespace TerraFX.Interop.DirectX
 {
     [Flags]
-    public enum D3D12_SHADER_MIN_PRECISION_SUPPORT
+    internal enum D3D12_SHADER_MIN_PRECISION_SUPPORT
     {
         D3D12_SHADER_MIN_PRECISION_SUPPORT_NONE = 0,
         D3D12_SHADER_MIN_PRECISION_SUPPORT_10_BIT = 0x1,

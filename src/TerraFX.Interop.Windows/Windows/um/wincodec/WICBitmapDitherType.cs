@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public enum WICBitmapDitherType
+    internal enum WICBitmapDitherType
     {
         WICBitmapDitherTypeNone = 0,
         WICBitmapDitherTypeSolid = 0,

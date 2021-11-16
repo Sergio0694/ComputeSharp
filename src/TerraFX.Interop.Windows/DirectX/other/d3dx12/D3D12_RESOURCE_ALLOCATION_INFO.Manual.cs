@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_RESOURCE_ALLOCATION_INFO
+    internal partial struct D3D12_RESOURCE_ALLOCATION_INFO
     {
         public D3D12_RESOURCE_ALLOCATION_INFO([NativeTypeName("UINT64")] ulong size, [NativeTypeName("UINT64")] ulong alignment)
         {

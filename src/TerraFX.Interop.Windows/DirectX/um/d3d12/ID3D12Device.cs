@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("189819F1-1DB6-4B57-BE54-1821339B85F7")]
     [NativeTypeName("struct ID3D12Device : ID3D12Object")]
     [NativeInheritance("ID3D12Object")]
-    public unsafe partial struct ID3D12Device : ID3D12Device.Interface
+    internal unsafe partial struct ID3D12Device : ID3D12Device.Interface
     {
         public void** lpVtbl;
 
@@ -444,7 +444,7 @@ namespace TerraFX.Interop.DirectX
             LUID GetAdapterLuid();
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID3D12Device*, Guid*, void**, int> QueryInterface;

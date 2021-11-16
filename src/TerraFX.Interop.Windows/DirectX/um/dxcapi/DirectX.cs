@@ -9,7 +9,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public static unsafe partial class DirectX
+    internal static unsafe partial class DirectX
     {
         [DllImport("dxcompiler", ExactSpelling = true)]
         public static extern HRESULT DxcCreateInstance([NativeTypeName("const IID &")] Guid* rclsid, [NativeTypeName("const IID &")] Guid* riid, [NativeTypeName("LPVOID *")] void** ppv);

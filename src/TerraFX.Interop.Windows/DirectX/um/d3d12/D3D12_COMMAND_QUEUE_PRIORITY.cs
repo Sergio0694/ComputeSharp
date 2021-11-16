@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_COMMAND_QUEUE_PRIORITY
+    internal enum D3D12_COMMAND_QUEUE_PRIORITY
     {
         D3D12_COMMAND_QUEUE_PRIORITY_NORMAL = 0,
         D3D12_COMMAND_QUEUE_PRIORITY_HIGH = 100,

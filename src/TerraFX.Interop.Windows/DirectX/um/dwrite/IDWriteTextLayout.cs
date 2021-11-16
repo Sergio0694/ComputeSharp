@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("53737037-6D14-410B-9BFE-0B182BB70961")]
     [NativeTypeName("struct IDWriteTextLayout : IDWriteTextFormat")]
     [NativeInheritance("IDWriteTextFormat")]
-    public unsafe partial struct IDWriteTextLayout : IDWriteTextLayout.Interface
+    internal unsafe partial struct IDWriteTextLayout : IDWriteTextLayout.Interface
     {
         public void** lpVtbl;
 
@@ -610,7 +610,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT HitTestTextRange([NativeTypeName("UINT32")] uint textPosition, [NativeTypeName("UINT32")] uint textLength, float originX, float originY, DWRITE_HIT_TEST_METRICS* hitTestMetrics, [NativeTypeName("UINT32")] uint maxHitTestMetricsCount, [NativeTypeName("UINT32 *")] uint* actualHitTestMetricsCount);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDWriteTextLayout*, Guid*, void**, int> QueryInterface;

@@ -15,7 +15,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2F543DC3-CFC1-4211-864F-CFD91C6F3395")]
     [NativeTypeName("struct ID2D1GdiMetafile : ID2D1Resource")]
     [NativeInheritance("ID2D1Resource")]
-    public unsafe partial struct ID2D1GdiMetafile : ID2D1GdiMetafile.Interface
+    internal unsafe partial struct ID2D1GdiMetafile : ID2D1GdiMetafile.Interface
     {
         public void** lpVtbl;
 
@@ -72,7 +72,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT GetBounds([NativeTypeName("D2D1_RECT_F *")] D2D_RECT_F* bounds);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1GdiMetafile*, Guid*, void**, int> QueryInterface;

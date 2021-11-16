@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("8BA5FB08-5195-40E2-AC58-0D989C3A0102")]
     [NativeTypeName("struct ID3D10Blob : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct ID3DBlob : ID3DBlob.Interface
+    internal unsafe partial struct ID3DBlob : ID3DBlob.Interface
     {
         public void** lpVtbl;
 
@@ -67,7 +67,7 @@ namespace TerraFX.Interop.DirectX
             nuint GetBufferSize();
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID3DBlob*, Guid*, void**, int> QueryInterface;

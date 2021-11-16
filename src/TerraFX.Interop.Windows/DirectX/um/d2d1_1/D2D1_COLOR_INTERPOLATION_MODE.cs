@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_COLOR_INTERPOLATION_MODE : uint
+    internal enum D2D1_COLOR_INTERPOLATION_MODE : uint
     {
         D2D1_COLOR_INTERPOLATION_MODE_STRAIGHT = 0,
         D2D1_COLOR_INTERPOLATION_MODE_PREMULTIPLIED = 1,

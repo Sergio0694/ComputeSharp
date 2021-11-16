@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D3D12_SO_DECLARATION_ENTRY
+    internal unsafe partial struct D3D12_SO_DECLARATION_ENTRY
     {
         public uint Stream;
 

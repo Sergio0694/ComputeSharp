@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D1_LINEAR_GRADIENT_BRUSH_PROPERTIES
+    internal partial struct D2D1_LINEAR_GRADIENT_BRUSH_PROPERTIES
     {
         [NativeTypeName("D2D1_POINT_2F")]
         public D2D_POINT_2F startPoint;

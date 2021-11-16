@@ -9,7 +9,7 @@ using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.Me
 
 namespace TerraFX.Interop.Windows
 {
-    public partial struct DECIMAL
+    internal partial struct DECIMAL
     {
         public ushort wReserved;
 
@@ -77,7 +77,7 @@ namespace TerraFX.Interop.Windows
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public partial struct _Anonymous1_e__Union
+        internal partial struct _Anonymous1_e__Union
         {
             [FieldOffset(0)]
             [NativeTypeName("tagDEC::(anonymous struct at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/shared/wtypes.h:706:9)")]
@@ -86,7 +86,7 @@ namespace TerraFX.Interop.Windows
             [FieldOffset(0)]
             public ushort signscale;
 
-            public partial struct _Anonymous_e__Struct
+            internal partial struct _Anonymous_e__Struct
             {
                 public byte scale;
 
@@ -95,7 +95,7 @@ namespace TerraFX.Interop.Windows
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public partial struct _Anonymous2_e__Union
+        internal partial struct _Anonymous2_e__Union
         {
             [FieldOffset(0)]
             [NativeTypeName("tagDEC::(anonymous struct at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/shared/wtypes.h:714:9)")]
@@ -105,7 +105,7 @@ namespace TerraFX.Interop.Windows
             [NativeTypeName("ULONGLONG")]
             public ulong Lo64;
 
-            public partial struct _Anonymous_e__Struct
+            internal partial struct _Anonymous_e__Struct
             {
                 [NativeTypeName("ULONG")]
                 public uint Lo32;

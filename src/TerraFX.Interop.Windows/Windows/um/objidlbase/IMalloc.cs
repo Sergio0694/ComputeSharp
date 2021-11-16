@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00000002-0000-0000-C000-000000000046")]
     [NativeTypeName("struct IMalloc : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IMalloc : IMalloc.Interface
+    internal unsafe partial struct IMalloc : IMalloc.Interface
     {
         public void** lpVtbl;
 
@@ -104,7 +104,7 @@ namespace TerraFX.Interop.Windows
             void HeapMinimize();
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IMalloc*, Guid*, void**, int> QueryInterface;

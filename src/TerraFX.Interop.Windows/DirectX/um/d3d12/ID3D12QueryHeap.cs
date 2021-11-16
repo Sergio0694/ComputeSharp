@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("0D9658AE-ED45-469E-A61D-970EC583CAB4")]
     [NativeTypeName("struct ID3D12QueryHeap : ID3D12Pageable")]
     [NativeInheritance("ID3D12Pageable")]
-    public unsafe partial struct ID3D12QueryHeap : ID3D12QueryHeap.Interface
+    internal unsafe partial struct ID3D12QueryHeap : ID3D12QueryHeap.Interface
     {
         public void** lpVtbl;
 
@@ -79,7 +79,7 @@ namespace TerraFX.Interop.DirectX
         {
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID3D12QueryHeap*, Guid*, void**, int> QueryInterface;

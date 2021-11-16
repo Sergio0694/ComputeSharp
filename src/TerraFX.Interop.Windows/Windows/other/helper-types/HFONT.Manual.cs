@@ -4,7 +4,7 @@ using System;
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct HFONT : IEquatable<HFONT>
+    internal unsafe partial struct HFONT : IEquatable<HFONT>
     {
         public static explicit operator HFONT(HGDIOBJ value) => new HFONT(value.Value);
 

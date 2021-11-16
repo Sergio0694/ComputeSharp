@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("1BC6EA02-EF36-464F-BF0C-21CA39E5168A")]
     [NativeTypeName("struct IDXGIFactory4 : IDXGIFactory3")]
     [NativeInheritance("IDXGIFactory3")]
-    public unsafe partial struct IDXGIFactory4 : IDXGIFactory4.Interface
+    internal unsafe partial struct IDXGIFactory4 : IDXGIFactory4.Interface
     {
         public void** lpVtbl;
 
@@ -224,7 +224,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT EnumWarpAdapter([NativeTypeName("const IID &")] Guid* riid, void** ppvAdapter);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDXGIFactory4*, Guid*, void**, int> QueryInterface;

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public static partial class E
+    internal static partial class E
     {
         [NativeTypeName("#define E_UNEXPECTED _HRESULT_TYPEDEF_(0x8000FFFFL)")]
         public const int E_UNEXPECTED = unchecked((int)(0x8000FFFF));

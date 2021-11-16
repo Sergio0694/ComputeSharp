@@ -15,7 +15,7 @@ namespace TerraFX.Interop.Windows
     [Guid("04C75BF8-3CE1-473B-ACC5-3CC4F5E94999")]
     [NativeTypeName("struct IWICImageEncoder : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IWICImageEncoder : IWICImageEncoder.Interface
+    internal unsafe partial struct IWICImageEncoder : IWICImageEncoder.Interface
     {
         public void** lpVtbl;
 
@@ -75,7 +75,7 @@ namespace TerraFX.Interop.Windows
             HRESULT WriteThumbnail(ID2D1Image* pImage, IWICBitmapEncoder* pEncoder, [NativeTypeName("const WICImageParameters *")] WICImageParameters* pImageParameters);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IWICImageEncoder*, Guid*, void**, int> QueryInterface;

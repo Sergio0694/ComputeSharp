@@ -8,7 +8,7 @@ using static TerraFX.Interop.DirectX.D3D12_TEXTURE_COPY_TYPE;
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D3D12_TEXTURE_COPY_LOCATION
+    internal unsafe partial struct D3D12_TEXTURE_COPY_LOCATION
     {
         public D3D12_TEXTURE_COPY_LOCATION(ID3D12Resource* pRes)
         {

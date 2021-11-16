@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct CADATE
+    internal unsafe partial struct CADATE
     {
         [NativeTypeName("ULONG")]
         public uint cElems;

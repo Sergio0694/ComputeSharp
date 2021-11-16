@@ -7,7 +7,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct DXGI_ADAPTER_DESC1
+    internal unsafe partial struct DXGI_ADAPTER_DESC1
     {
         [NativeTypeName("WCHAR [128]")]
         public fixed ushort Description[128];

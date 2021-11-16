@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("727CAD4E-D6AF-4C9E-8A08-D695B11CAA49")]
     [NativeTypeName("struct IDWriteFontFileLoader : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IDWriteFontFileLoader : IDWriteFontFileLoader.Interface
+    internal unsafe partial struct IDWriteFontFileLoader : IDWriteFontFileLoader.Interface
     {
         public void** lpVtbl;
 
@@ -53,7 +53,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT CreateStreamFromKey([NativeTypeName("const void *")] void* fontFileReferenceKey, [NativeTypeName("UINT32")] uint fontFileReferenceKeySize, IDWriteFontFileStream** fontFileStream);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDWriteFontFileLoader*, Guid*, void**, int> QueryInterface;

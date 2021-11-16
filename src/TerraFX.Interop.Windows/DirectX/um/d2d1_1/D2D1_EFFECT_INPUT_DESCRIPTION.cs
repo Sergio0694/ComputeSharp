@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D2D1_EFFECT_INPUT_DESCRIPTION
+    internal unsafe partial struct D2D1_EFFECT_INPUT_DESCRIPTION
     {
         public ID2D1Effect* effect;
 

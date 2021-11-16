@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_STENCIL_OP
+    internal enum D3D12_STENCIL_OP
     {
         D3D12_STENCIL_OP_KEEP = 1,
         D3D12_STENCIL_OP_ZERO = 2,

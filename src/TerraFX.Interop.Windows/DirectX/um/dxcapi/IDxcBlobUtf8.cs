@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("3DA636C9-BA71-4024-A301-30CBF125305B")]
     [NativeTypeName("struct IDxcBlobUtf8 : IDxcBlobEncoding")]
     [NativeInheritance("IDxcBlobEncoding")]
-    public unsafe partial struct IDxcBlobUtf8 : IDxcBlobUtf8.Interface
+    internal unsafe partial struct IDxcBlobUtf8 : IDxcBlobUtf8.Interface
     {
         public void** lpVtbl;
 
@@ -90,7 +90,7 @@ namespace TerraFX.Interop.DirectX
             nuint GetStringLength();
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDxcBlobUtf8*, Guid*, void**, int> QueryInterface;

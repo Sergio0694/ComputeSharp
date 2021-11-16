@@ -7,7 +7,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DWRITE_HIT_TEST_METRICS
+    internal partial struct DWRITE_HIT_TEST_METRICS
     {
         [NativeTypeName("UINT32")]
         public uint textPosition;

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D_SIZE_F
+    internal partial struct D2D_SIZE_F
     {
         public float width;
 

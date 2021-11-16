@@ -8,7 +8,7 @@ using System;
 namespace TerraFX.Interop.DirectX
 {
     [Flags]
-    public enum DXGI_ADAPTER_FLAG : uint
+    internal enum DXGI_ADAPTER_FLAG : uint
     {
         DXGI_ADAPTER_FLAG_NONE = 0,
         DXGI_ADAPTER_FLAG_REMOTE = 1,

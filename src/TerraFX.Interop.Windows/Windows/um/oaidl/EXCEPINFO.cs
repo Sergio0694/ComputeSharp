@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct EXCEPINFO
+    internal unsafe partial struct EXCEPINFO
     {
         [NativeTypeName("WORD")]
         public ushort wCode;

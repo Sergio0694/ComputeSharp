@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct DxcBuffer
+    internal unsafe partial struct DxcBuffer
     {
         [NativeTypeName("LPCVOID")]
         public void* Ptr;

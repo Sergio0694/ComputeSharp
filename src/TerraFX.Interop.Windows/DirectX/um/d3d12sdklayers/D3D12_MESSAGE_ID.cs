@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_MESSAGE_ID
+    internal enum D3D12_MESSAGE_ID
     {
         D3D12_MESSAGE_ID_UNKNOWN = 0,
         D3D12_MESSAGE_ID_STRING_FROM_APPLICATION = 1,

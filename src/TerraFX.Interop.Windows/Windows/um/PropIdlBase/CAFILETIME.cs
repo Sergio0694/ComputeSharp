@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct CAFILETIME
+    internal unsafe partial struct CAFILETIME
     {
         [NativeTypeName("ULONG")]
         public uint cElems;

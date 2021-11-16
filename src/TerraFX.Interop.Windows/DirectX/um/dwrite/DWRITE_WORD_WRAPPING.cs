@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DWRITE_WORD_WRAPPING
+    internal enum DWRITE_WORD_WRAPPING
     {
         DWRITE_WORD_WRAPPING_WRAP = 0,
         DWRITE_WORD_WRAPPING_NO_WRAP = 1,

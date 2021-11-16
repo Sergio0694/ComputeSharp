@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public enum DESCKIND
+    internal enum DESCKIND
     {
         DESCKIND_NONE = 0,
         DESCKIND_FUNCDESC = (DESCKIND_NONE + 1),

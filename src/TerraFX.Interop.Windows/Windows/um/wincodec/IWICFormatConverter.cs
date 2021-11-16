@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00000301-A8F2-4877-BA0A-FD2B6645FB94")]
     [NativeTypeName("struct IWICFormatConverter : IWICBitmapSource")]
     [NativeInheritance("IWICBitmapSource")]
-    public unsafe partial struct IWICFormatConverter : IWICFormatConverter.Interface
+    internal unsafe partial struct IWICFormatConverter : IWICFormatConverter.Interface
     {
         public void** lpVtbl;
 
@@ -97,7 +97,7 @@ namespace TerraFX.Interop.Windows
             HRESULT CanConvert([NativeTypeName("REFWICPixelFormatGUID")] Guid* srcPixelFormat, [NativeTypeName("REFWICPixelFormatGUID")] Guid* dstPixelFormat, BOOL* pfCanConvert);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IWICFormatConverter*, Guid*, void**, int> QueryInterface;

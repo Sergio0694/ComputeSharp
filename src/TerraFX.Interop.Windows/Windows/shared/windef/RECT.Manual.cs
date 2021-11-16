@@ -7,7 +7,7 @@ using System;
 
 namespace TerraFX.Interop.Windows
 {
-    public partial struct RECT : IEquatable<RECT>
+    internal partial struct RECT : IEquatable<RECT>
     {
         public RECT([NativeTypeName("LONG")] int Left, [NativeTypeName("LONG")] int Top, [NativeTypeName("LONG")] int Right, [NativeTypeName("LONG")] int Bottom)
         {

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_TEXTURE_LAYOUT
+    internal enum D3D12_TEXTURE_LAYOUT
     {
         D3D12_TEXTURE_LAYOUT_UNKNOWN = 0,
         D3D12_TEXTURE_LAYOUT_ROW_MAJOR = 1,

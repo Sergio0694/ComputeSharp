@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public partial struct POINT
+    internal partial struct POINT
     {
         [NativeTypeName("LONG")]
         public int x;

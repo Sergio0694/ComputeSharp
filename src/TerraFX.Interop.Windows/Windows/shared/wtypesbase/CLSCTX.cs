@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public enum CLSCTX
+    internal enum CLSCTX
     {
         CLSCTX_INPROC_SERVER = 0x1,
         CLSCTX_INPROC_HANDLER = 0x2,

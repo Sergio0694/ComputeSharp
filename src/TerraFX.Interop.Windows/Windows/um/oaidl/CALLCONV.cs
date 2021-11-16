@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public enum CALLCONV
+    internal enum CALLCONV
     {
         CC_FASTCALL = 0,
         CC_CDECL = 1,

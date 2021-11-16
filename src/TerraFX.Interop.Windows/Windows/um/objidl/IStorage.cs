@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("0000000B-0000-0000-C000-000000000046")]
     [NativeTypeName("struct IStorage : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IStorage : IStorage.Interface
+    internal unsafe partial struct IStorage : IStorage.Interface
     {
         public void** lpVtbl;
 
@@ -192,7 +192,7 @@ namespace TerraFX.Interop.Windows
             HRESULT Stat(STATSTG* pstatstg, [NativeTypeName("DWORD")] uint grfStatFlag);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IStorage*, Guid*, void**, int> QueryInterface;

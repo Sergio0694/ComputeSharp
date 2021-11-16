@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_EXTEND_MODE : uint
+    internal enum D2D1_EXTEND_MODE : uint
     {
         D2D1_EXTEND_MODE_CLAMP = 0,
         D2D1_EXTEND_MODE_WRAP = 1,

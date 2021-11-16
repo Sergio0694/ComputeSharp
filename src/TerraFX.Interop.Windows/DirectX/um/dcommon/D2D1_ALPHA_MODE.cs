@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_ALPHA_MODE : uint
+    internal enum D2D1_ALPHA_MODE : uint
     {
         D2D1_ALPHA_MODE_UNKNOWN = 0,
         D2D1_ALPHA_MODE_PREMULTIPLIED = 1,

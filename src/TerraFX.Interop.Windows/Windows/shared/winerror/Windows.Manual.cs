@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public static partial class Windows
+    internal static partial class Windows
     {
         public static bool SUCCEEDED(HRESULT hr)
         {

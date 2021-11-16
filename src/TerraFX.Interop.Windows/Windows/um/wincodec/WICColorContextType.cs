@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.Windows
 {
-    public enum WICColorContextType
+    internal enum WICColorContextType
     {
         WICColorContextUninitialized = 0,
         WICColorContextProfile = 0x1,

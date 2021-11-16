@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DXGI_RGB
+    internal partial struct DXGI_RGB
     {
         public float Red;
 

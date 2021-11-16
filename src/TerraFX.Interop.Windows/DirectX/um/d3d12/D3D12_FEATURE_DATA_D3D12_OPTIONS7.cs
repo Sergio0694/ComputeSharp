@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D3D12_FEATURE_DATA_D3D12_OPTIONS7
+    internal partial struct D3D12_FEATURE_DATA_D3D12_OPTIONS7
     {
         public D3D12_MESH_SHADER_TIER MeshShaderTier;
 

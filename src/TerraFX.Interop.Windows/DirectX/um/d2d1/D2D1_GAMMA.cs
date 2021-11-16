@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_GAMMA : uint
+    internal enum D2D1_GAMMA : uint
     {
         D2D1_GAMMA_2_2 = 0,
         D2D1_GAMMA_1_0 = 1,

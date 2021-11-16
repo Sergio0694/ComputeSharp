@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("CEDB484A-D4E9-445A-B991-CA21CA157DC2")]
     [NativeTypeName("struct IDxcOperationResult : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IDxcOperationResult : IDxcOperationResult.Interface
+    internal unsafe partial struct IDxcOperationResult : IDxcOperationResult.Interface
     {
         public void** lpVtbl;
 
@@ -73,7 +73,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT GetErrorBuffer(IDxcBlobEncoding** ppErrors);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDxcOperationResult*, Guid*, void**, int> QueryInterface;

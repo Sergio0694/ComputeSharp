@@ -21,7 +21,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("E8F7FE7A-191C-466D-AD95-975678BDA998")]
     [NativeTypeName("struct ID2D1DeviceContext : ID2D1RenderTarget")]
     [NativeInheritance("ID2D1RenderTarget")]
-    public unsafe partial struct ID2D1DeviceContext : ID2D1DeviceContext.Interface
+    internal unsafe partial struct ID2D1DeviceContext : ID2D1DeviceContext.Interface
     {
         public void** lpVtbl;
 
@@ -924,7 +924,7 @@ namespace TerraFX.Interop.DirectX
             void FillOpacityMask(ID2D1Bitmap* opacityMask, ID2D1Brush* brush, [NativeTypeName("const D2D1_RECT_F *")] D2D_RECT_F* destinationRectangle = null, [NativeTypeName("const D2D1_RECT_F *")] D2D_RECT_F* sourceRectangle = null);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1DeviceContext*, Guid*, void**, int> QueryInterface;

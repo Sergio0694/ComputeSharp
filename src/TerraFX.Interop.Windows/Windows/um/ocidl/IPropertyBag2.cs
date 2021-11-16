@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("22F55882-280B-11D0-A8A9-00A0C90C2004")]
     [NativeTypeName("struct IPropertyBag2 : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IPropertyBag2 : IPropertyBag2.Interface
+    internal unsafe partial struct IPropertyBag2 : IPropertyBag2.Interface
     {
         public void** lpVtbl;
 
@@ -92,7 +92,7 @@ namespace TerraFX.Interop.Windows
             HRESULT LoadObject([NativeTypeName("LPCOLESTR")] ushort* pstrName, [NativeTypeName("DWORD")] uint dwHint, IUnknown* pUnkObject, IErrorLog* pErrLog);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IPropertyBag2*, Guid*, void**, int> QueryInterface;

@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("28506E39-EBF6-46A1-BB47-FD85565AB957")]
     [NativeTypeName("struct ID2D1DrawingStateBlock : ID2D1Resource")]
     [NativeInheritance("ID2D1Resource")]
-    public unsafe partial struct ID2D1DrawingStateBlock : ID2D1DrawingStateBlock.Interface
+    internal unsafe partial struct ID2D1DrawingStateBlock : ID2D1DrawingStateBlock.Interface
     {
         public void** lpVtbl;
 
@@ -90,7 +90,7 @@ namespace TerraFX.Interop.DirectX
             void GetTextRenderingParams(IDWriteRenderingParams** textRenderingParams);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1DrawingStateBlock*, Guid*, void**, int> QueryInterface;

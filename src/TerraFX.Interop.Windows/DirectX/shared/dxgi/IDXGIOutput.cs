@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("AE02EEDB-C735-4690-8D52-5A8DC20213AA")]
     [NativeTypeName("struct IDXGIOutput : IDXGIObject")]
     [NativeInheritance("IDXGIObject")]
-    public unsafe partial struct IDXGIOutput : IDXGIOutput.Interface
+    internal unsafe partial struct IDXGIOutput : IDXGIOutput.Interface
     {
         public void** lpVtbl;
 
@@ -191,7 +191,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT GetFrameStatistics(DXGI_FRAME_STATISTICS* pStats);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDXGIOutput*, Guid*, void**, int> QueryInterface;

@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D1_RENDER_TARGET_PROPERTIES
+    internal partial struct D2D1_RENDER_TARGET_PROPERTIES
     {
         public D2D1_RENDER_TARGET_TYPE type;
 

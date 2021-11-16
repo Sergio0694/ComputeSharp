@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D_SHADER_MODEL
+    internal enum D3D_SHADER_MODEL
     {
         D3D_SHADER_MODEL_5_1 = 0x51,
         D3D_SHADER_MODEL_6_0 = 0x60,

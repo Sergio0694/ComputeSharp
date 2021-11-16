@@ -19,7 +19,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("1C51BC64-DE61-46FD-9899-63A5D8F03950")]
     [NativeTypeName("struct ID2D1DCRenderTarget : ID2D1RenderTarget")]
     [NativeInheritance("ID2D1RenderTarget")]
-    public unsafe partial struct ID2D1DCRenderTarget : ID2D1DCRenderTarget.Interface
+    internal unsafe partial struct ID2D1DCRenderTarget : ID2D1DCRenderTarget.Interface
     {
         public void** lpVtbl;
 
@@ -518,7 +518,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT BindDC([NativeTypeName("const HDC")] HDC hDC, [NativeTypeName("const RECT *")] RECT* pSubRect);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID2D1DCRenderTarget*, Guid*, void**, int> QueryInterface;

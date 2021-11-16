@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_CAP_STYLE : uint
+    internal enum D2D1_CAP_STYLE : uint
     {
         D2D1_CAP_STYLE_FLAT = 0,
         D2D1_CAP_STYLE_SQUARE = 1,

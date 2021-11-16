@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct D2D_RECT_U
+    internal partial struct D2D_RECT_U
     {
         [NativeTypeName("UINT32")]
         public uint left;

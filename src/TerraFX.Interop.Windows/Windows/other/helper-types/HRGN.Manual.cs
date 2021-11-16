@@ -4,7 +4,7 @@ using System;
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct HRGN : IEquatable<HRGN>
+    internal unsafe partial struct HRGN : IEquatable<HRGN>
     {
         public static explicit operator HRGN(HGDIOBJ value) => new HRGN(value.Value);
 

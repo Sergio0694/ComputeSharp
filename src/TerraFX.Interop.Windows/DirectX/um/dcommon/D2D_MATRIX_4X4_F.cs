@@ -10,7 +10,7 @@ using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.Me
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D2D_MATRIX_4X4_F
+    internal unsafe partial struct D2D_MATRIX_4X4_F
     {
         [NativeTypeName("D2D_MATRIX_4X4_F::(anonymous union at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/dcommon.h:352:5)")]
         public _Anonymous_e__Union Anonymous;
@@ -169,7 +169,7 @@ namespace TerraFX.Interop.DirectX
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public unsafe partial struct _Anonymous_e__Union
+        internal unsafe partial struct _Anonymous_e__Union
         {
             [FieldOffset(0)]
             [NativeTypeName("D2D_MATRIX_4X4_F::(anonymous struct at C:/Program Files (x86)/Windows Kits/10/Include/10.0.20348.0/um/dcommon.h:354:9)")]
@@ -179,7 +179,7 @@ namespace TerraFX.Interop.DirectX
             [NativeTypeName("FLOAT [4][4]")]
             public fixed float m[4 * 4];
 
-            public partial struct _Anonymous_e__Struct
+            internal partial struct _Anonymous_e__Struct
             {
                 public float _11;
 

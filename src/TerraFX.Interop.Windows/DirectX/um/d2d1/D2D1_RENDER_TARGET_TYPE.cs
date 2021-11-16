@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_RENDER_TARGET_TYPE : uint
+    internal enum D2D1_RENDER_TARGET_TYPE : uint
     {
         D2D1_RENDER_TARGET_TYPE_DEFAULT = 0,
         D2D1_RENDER_TARGET_TYPE_SOFTWARE = 1,

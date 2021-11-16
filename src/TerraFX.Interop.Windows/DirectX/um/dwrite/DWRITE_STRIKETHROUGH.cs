@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct DWRITE_STRIKETHROUGH
+    internal unsafe partial struct DWRITE_STRIKETHROUGH
     {
         public float width;
 

@@ -8,7 +8,7 @@ using System;
 namespace TerraFX.Interop.DirectX
 {
     [Flags]
-    public enum D3D12_TILE_RANGE_FLAGS
+    internal enum D3D12_TILE_RANGE_FLAGS
     {
         D3D12_TILE_RANGE_FLAG_NONE = 0,
         D3D12_TILE_RANGE_FLAG_NULL = 1,

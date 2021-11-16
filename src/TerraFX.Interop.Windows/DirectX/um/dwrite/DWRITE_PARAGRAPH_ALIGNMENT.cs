@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum DWRITE_PARAGRAPH_ALIGNMENT
+    internal enum DWRITE_PARAGRAPH_ALIGNMENT
     {
         DWRITE_PARAGRAPH_ALIGNMENT_NEAR,
         DWRITE_PARAGRAPH_ALIGNMENT_FAR,

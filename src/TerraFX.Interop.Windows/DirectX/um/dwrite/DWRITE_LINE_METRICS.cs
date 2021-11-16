@@ -7,7 +7,7 @@ using TerraFX.Interop.Windows;
 
 namespace TerraFX.Interop.DirectX
 {
-    public partial struct DWRITE_LINE_METRICS
+    internal partial struct DWRITE_LINE_METRICS
     {
         [NativeTypeName("UINT32")]
         public uint length;

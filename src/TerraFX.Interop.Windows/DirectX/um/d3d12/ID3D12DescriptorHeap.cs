@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("8EFB471D-616C-4F49-90F7-127BB763FA51")]
     [NativeTypeName("struct ID3D12DescriptorHeap : ID3D12Pageable")]
     [NativeInheritance("ID3D12Pageable")]
-    public unsafe partial struct ID3D12DescriptorHeap : ID3D12DescriptorHeap.Interface
+    internal unsafe partial struct ID3D12DescriptorHeap : ID3D12DescriptorHeap.Interface
     {
         public void** lpVtbl;
 
@@ -111,7 +111,7 @@ namespace TerraFX.Interop.DirectX
             D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandleForHeapStart();
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID3D12DescriptorHeap*, Guid*, void**, int> QueryInterface;

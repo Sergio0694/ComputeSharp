@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2411E7E1-12AC-4CCF-BD14-9798E8534DC0")]
     [NativeTypeName("struct IDXGIAdapter : IDXGIObject")]
     [NativeInheritance("IDXGIObject")]
-    public unsafe partial struct IDXGIAdapter : IDXGIAdapter.Interface
+    internal unsafe partial struct IDXGIAdapter : IDXGIAdapter.Interface
     {
         public void** lpVtbl;
 
@@ -101,7 +101,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT CheckInterfaceSupport([NativeTypeName("const GUID &")] Guid* InterfaceName, LARGE_INTEGER* pUMDVersion);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDXGIAdapter*, Guid*, void**, int> QueryInterface;

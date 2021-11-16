@@ -8,7 +8,7 @@ using System;
 namespace TerraFX.Interop.DirectX
 {
     [Flags]
-    public enum D2D1_RENDER_TARGET_USAGE : uint
+    internal enum D2D1_RENDER_TARGET_USAGE : uint
     {
         D2D1_RENDER_TARGET_USAGE_NONE = 0x00000000,
         D2D1_RENDER_TARGET_USAGE_FORCE_BITMAP_REMOTING = 0x00000001,

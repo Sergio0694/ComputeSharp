@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("0742A90B-C387-483F-B946-30A7E4E61458")]
     [NativeTypeName("struct ID3D12InfoQueue : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct ID3D12InfoQueue : ID3D12InfoQueue.Interface
+    internal unsafe partial struct ID3D12InfoQueue : ID3D12InfoQueue.Interface
     {
         public void** lpVtbl;
 
@@ -405,7 +405,7 @@ namespace TerraFX.Interop.DirectX
             BOOL GetMuteDebugOutput();
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, Guid*, void**, int> QueryInterface;

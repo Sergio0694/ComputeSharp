@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D3D12_SAMPLER_FEEDBACK_TIER
+    internal enum D3D12_SAMPLER_FEEDBACK_TIER
     {
         D3D12_SAMPLER_FEEDBACK_TIER_NOT_SUPPORTED = 0,
         D3D12_SAMPLER_FEEDBACK_TIER_0_9 = 90,

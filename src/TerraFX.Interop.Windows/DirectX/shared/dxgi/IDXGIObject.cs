@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("AEC22FB8-76F3-4639-9BE0-28EB43A67A2E")]
     [NativeTypeName("struct IDXGIObject : IUnknown")]
     [NativeInheritance("IUnknown")]
-    public unsafe partial struct IDXGIObject : IDXGIObject.Interface
+    internal unsafe partial struct IDXGIObject : IDXGIObject.Interface
     {
         public void** lpVtbl;
 
@@ -83,7 +83,7 @@ namespace TerraFX.Interop.DirectX
             HRESULT GetParent([NativeTypeName("const IID &")] Guid* riid, void** ppParent);
         }
 
-        public partial struct Vtbl
+        internal partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
             public delegate* unmanaged[Stdcall]<IDXGIObject*, Guid*, void**, int> QueryInterface;

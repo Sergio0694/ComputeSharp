@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D2D1_LAYER_PARAMETERS
+    internal unsafe partial struct D2D1_LAYER_PARAMETERS
     {
         [NativeTypeName("D2D1_RECT_F")]
         public D2D_RECT_F contentBounds;

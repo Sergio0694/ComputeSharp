@@ -4,7 +4,7 @@ using System;
 
 namespace TerraFX.Interop.Windows
 {
-    public unsafe partial struct HICON : IComparable, IComparable<HICON>, IEquatable<HICON>, IFormattable
+    internal unsafe partial struct HICON : IComparable, IComparable<HICON>, IEquatable<HICON>, IFormattable
     {
         public readonly void* Value;
 

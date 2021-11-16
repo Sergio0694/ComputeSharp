@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public enum D2D1_UNIT_MODE : uint
+    internal enum D2D1_UNIT_MODE : uint
     {
         D2D1_UNIT_MODE_DIPS = 0,
         D2D1_UNIT_MODE_PIXELS = 1,

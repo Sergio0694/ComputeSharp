@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct DxcDefine
+    internal unsafe partial struct DxcDefine
     {
         [NativeTypeName("LPCWSTR")]
         public ushort* Name;

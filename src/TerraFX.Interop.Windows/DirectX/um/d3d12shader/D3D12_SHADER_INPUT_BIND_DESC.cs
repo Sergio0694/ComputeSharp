@@ -5,7 +5,7 @@
 
 namespace TerraFX.Interop.DirectX
 {
-    public unsafe partial struct D3D12_SHADER_INPUT_BIND_DESC
+    internal unsafe partial struct D3D12_SHADER_INPUT_BIND_DESC
     {
         [NativeTypeName("LPCSTR")]
         public sbyte* Name;
