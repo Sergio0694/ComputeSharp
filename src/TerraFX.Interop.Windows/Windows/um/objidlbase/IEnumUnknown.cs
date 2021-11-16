@@ -20,7 +20,7 @@ namespace TerraFX.Interop.Windows
         [VtblIndex(0)]
         public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
         {
-            return ((delegate* unmanaged<IEnumUnknown*, Guid*, void**, int>)(lpVtbl[0]))((IEnumUnknown*)Unsafe.AsPointer(ref this), riid, ppvObject);
+            return ((delegate* unmanaged[Stdcall]<IEnumUnknown*, Guid*, void**, int>)(lpVtbl[0]))((IEnumUnknown*)Unsafe.AsPointer(ref this), riid, ppvObject);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -28,7 +28,7 @@ namespace TerraFX.Interop.Windows
         [return: NativeTypeName("ULONG")]
         public uint AddRef()
         {
-            return ((delegate* unmanaged<IEnumUnknown*, uint>)(lpVtbl[1]))((IEnumUnknown*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IEnumUnknown*, uint>)(lpVtbl[1]))((IEnumUnknown*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -36,35 +36,35 @@ namespace TerraFX.Interop.Windows
         [return: NativeTypeName("ULONG")]
         public uint Release()
         {
-            return ((delegate* unmanaged<IEnumUnknown*, uint>)(lpVtbl[2]))((IEnumUnknown*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IEnumUnknown*, uint>)(lpVtbl[2]))((IEnumUnknown*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(3)]
         public HRESULT Next([NativeTypeName("ULONG")] uint celt, IUnknown** rgelt, [NativeTypeName("ULONG *")] uint* pceltFetched)
         {
-            return ((delegate* unmanaged<IEnumUnknown*, uint, IUnknown**, uint*, int>)(lpVtbl[3]))((IEnumUnknown*)Unsafe.AsPointer(ref this), celt, rgelt, pceltFetched);
+            return ((delegate* unmanaged[Stdcall]<IEnumUnknown*, uint, IUnknown**, uint*, int>)(lpVtbl[3]))((IEnumUnknown*)Unsafe.AsPointer(ref this), celt, rgelt, pceltFetched);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(4)]
         public HRESULT Skip([NativeTypeName("ULONG")] uint celt)
         {
-            return ((delegate* unmanaged<IEnumUnknown*, uint, int>)(lpVtbl[4]))((IEnumUnknown*)Unsafe.AsPointer(ref this), celt);
+            return ((delegate* unmanaged[Stdcall]<IEnumUnknown*, uint, int>)(lpVtbl[4]))((IEnumUnknown*)Unsafe.AsPointer(ref this), celt);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(5)]
         public HRESULT Reset()
         {
-            return ((delegate* unmanaged<IEnumUnknown*, int>)(lpVtbl[5]))((IEnumUnknown*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IEnumUnknown*, int>)(lpVtbl[5]))((IEnumUnknown*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(6)]
         public HRESULT Clone(IEnumUnknown** ppenum)
         {
-            return ((delegate* unmanaged<IEnumUnknown*, IEnumUnknown**, int>)(lpVtbl[6]))((IEnumUnknown*)Unsafe.AsPointer(ref this), ppenum);
+            return ((delegate* unmanaged[Stdcall]<IEnumUnknown*, IEnumUnknown**, int>)(lpVtbl[6]))((IEnumUnknown*)Unsafe.AsPointer(ref this), ppenum);
         }
 
         public interface Interface : IUnknown.Interface
@@ -85,25 +85,25 @@ namespace TerraFX.Interop.Windows
         public partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IEnumUnknown*, Guid*, void**, int> QueryInterface;
+            public delegate* unmanaged[Stdcall]<IEnumUnknown*, Guid*, void**, int> QueryInterface;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<IEnumUnknown*, uint> AddRef;
+            public delegate* unmanaged[Stdcall]<IEnumUnknown*, uint> AddRef;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<IEnumUnknown*, uint> Release;
+            public delegate* unmanaged[Stdcall]<IEnumUnknown*, uint> Release;
 
             [NativeTypeName("HRESULT (ULONG, IUnknown **, ULONG *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IEnumUnknown*, uint, IUnknown**, uint*, int> Next;
+            public delegate* unmanaged[Stdcall]<IEnumUnknown*, uint, IUnknown**, uint*, int> Next;
 
             [NativeTypeName("HRESULT (ULONG) __attribute__((stdcall))")]
-            public delegate* unmanaged<IEnumUnknown*, uint, int> Skip;
+            public delegate* unmanaged[Stdcall]<IEnumUnknown*, uint, int> Skip;
 
             [NativeTypeName("HRESULT () __attribute__((stdcall))")]
-            public delegate* unmanaged<IEnumUnknown*, int> Reset;
+            public delegate* unmanaged[Stdcall]<IEnumUnknown*, int> Reset;
 
             [NativeTypeName("HRESULT (IEnumUnknown **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IEnumUnknown*, IEnumUnknown**, int> Clone;
+            public delegate* unmanaged[Stdcall]<IEnumUnknown*, IEnumUnknown**, int> Clone;
         }
     }
 }

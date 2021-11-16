@@ -21,7 +21,7 @@ namespace TerraFX.Interop.DirectX
         [VtblIndex(0)]
         public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
         {
-            return ((delegate* unmanaged<IDWriteFontList*, Guid*, void**, int>)(lpVtbl[0]))((IDWriteFontList*)Unsafe.AsPointer(ref this), riid, ppvObject);
+            return ((delegate* unmanaged[Stdcall]<IDWriteFontList*, Guid*, void**, int>)(lpVtbl[0]))((IDWriteFontList*)Unsafe.AsPointer(ref this), riid, ppvObject);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -29,7 +29,7 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("ULONG")]
         public uint AddRef()
         {
-            return ((delegate* unmanaged<IDWriteFontList*, uint>)(lpVtbl[1]))((IDWriteFontList*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDWriteFontList*, uint>)(lpVtbl[1]))((IDWriteFontList*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -37,14 +37,14 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("ULONG")]
         public uint Release()
         {
-            return ((delegate* unmanaged<IDWriteFontList*, uint>)(lpVtbl[2]))((IDWriteFontList*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDWriteFontList*, uint>)(lpVtbl[2]))((IDWriteFontList*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(3)]
         public HRESULT GetFontCollection(IDWriteFontCollection** fontCollection)
         {
-            return ((delegate* unmanaged<IDWriteFontList*, IDWriteFontCollection**, int>)(lpVtbl[3]))((IDWriteFontList*)Unsafe.AsPointer(ref this), fontCollection);
+            return ((delegate* unmanaged[Stdcall]<IDWriteFontList*, IDWriteFontCollection**, int>)(lpVtbl[3]))((IDWriteFontList*)Unsafe.AsPointer(ref this), fontCollection);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -52,14 +52,14 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("UINT32")]
         public uint GetFontCount()
         {
-            return ((delegate* unmanaged<IDWriteFontList*, uint>)(lpVtbl[4]))((IDWriteFontList*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDWriteFontList*, uint>)(lpVtbl[4]))((IDWriteFontList*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(5)]
         public HRESULT GetFont([NativeTypeName("UINT32")] uint index, IDWriteFont** font)
         {
-            return ((delegate* unmanaged<IDWriteFontList*, uint, IDWriteFont**, int>)(lpVtbl[5]))((IDWriteFontList*)Unsafe.AsPointer(ref this), index, font);
+            return ((delegate* unmanaged[Stdcall]<IDWriteFontList*, uint, IDWriteFont**, int>)(lpVtbl[5]))((IDWriteFontList*)Unsafe.AsPointer(ref this), index, font);
         }
 
         public interface Interface : IUnknown.Interface
@@ -78,22 +78,22 @@ namespace TerraFX.Interop.DirectX
         public partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteFontList*, Guid*, void**, int> QueryInterface;
+            public delegate* unmanaged[Stdcall]<IDWriteFontList*, Guid*, void**, int> QueryInterface;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteFontList*, uint> AddRef;
+            public delegate* unmanaged[Stdcall]<IDWriteFontList*, uint> AddRef;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteFontList*, uint> Release;
+            public delegate* unmanaged[Stdcall]<IDWriteFontList*, uint> Release;
 
             [NativeTypeName("HRESULT (IDWriteFontCollection **) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteFontList*, IDWriteFontCollection**, int> GetFontCollection;
+            public delegate* unmanaged[Stdcall]<IDWriteFontList*, IDWriteFontCollection**, int> GetFontCollection;
 
             [NativeTypeName("UINT32 () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteFontList*, uint> GetFontCount;
+            public delegate* unmanaged[Stdcall]<IDWriteFontList*, uint> GetFontCount;
 
             [NativeTypeName("HRESULT (UINT32, IDWriteFont **) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteFontList*, uint, IDWriteFont**, int> GetFont;
+            public delegate* unmanaged[Stdcall]<IDWriteFontList*, uint, IDWriteFont**, int> GetFont;
         }
     }
 }

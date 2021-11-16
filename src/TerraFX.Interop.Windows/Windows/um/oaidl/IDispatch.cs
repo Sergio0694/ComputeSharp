@@ -20,7 +20,7 @@ namespace TerraFX.Interop.Windows
         [VtblIndex(0)]
         public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
         {
-            return ((delegate* unmanaged<IDispatch*, Guid*, void**, int>)(lpVtbl[0]))((IDispatch*)Unsafe.AsPointer(ref this), riid, ppvObject);
+            return ((delegate* unmanaged[Stdcall]<IDispatch*, Guid*, void**, int>)(lpVtbl[0]))((IDispatch*)Unsafe.AsPointer(ref this), riid, ppvObject);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -28,7 +28,7 @@ namespace TerraFX.Interop.Windows
         [return: NativeTypeName("ULONG")]
         public uint AddRef()
         {
-            return ((delegate* unmanaged<IDispatch*, uint>)(lpVtbl[1]))((IDispatch*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDispatch*, uint>)(lpVtbl[1]))((IDispatch*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -36,35 +36,35 @@ namespace TerraFX.Interop.Windows
         [return: NativeTypeName("ULONG")]
         public uint Release()
         {
-            return ((delegate* unmanaged<IDispatch*, uint>)(lpVtbl[2]))((IDispatch*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDispatch*, uint>)(lpVtbl[2]))((IDispatch*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(3)]
         public HRESULT GetTypeInfoCount(uint* pctinfo)
         {
-            return ((delegate* unmanaged<IDispatch*, uint*, int>)(lpVtbl[3]))((IDispatch*)Unsafe.AsPointer(ref this), pctinfo);
+            return ((delegate* unmanaged[Stdcall]<IDispatch*, uint*, int>)(lpVtbl[3]))((IDispatch*)Unsafe.AsPointer(ref this), pctinfo);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(4)]
         public HRESULT GetTypeInfo(uint iTInfo, [NativeTypeName("LCID")] uint lcid, ITypeInfo** ppTInfo)
         {
-            return ((delegate* unmanaged<IDispatch*, uint, uint, ITypeInfo**, int>)(lpVtbl[4]))((IDispatch*)Unsafe.AsPointer(ref this), iTInfo, lcid, ppTInfo);
+            return ((delegate* unmanaged[Stdcall]<IDispatch*, uint, uint, ITypeInfo**, int>)(lpVtbl[4]))((IDispatch*)Unsafe.AsPointer(ref this), iTInfo, lcid, ppTInfo);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(5)]
         public HRESULT GetIDsOfNames([NativeTypeName("const IID &")] Guid* riid, [NativeTypeName("LPOLESTR *")] ushort** rgszNames, uint cNames, [NativeTypeName("LCID")] uint lcid, [NativeTypeName("DISPID *")] int* rgDispId)
         {
-            return ((delegate* unmanaged<IDispatch*, Guid*, ushort**, uint, uint, int*, int>)(lpVtbl[5]))((IDispatch*)Unsafe.AsPointer(ref this), riid, rgszNames, cNames, lcid, rgDispId);
+            return ((delegate* unmanaged[Stdcall]<IDispatch*, Guid*, ushort**, uint, uint, int*, int>)(lpVtbl[5]))((IDispatch*)Unsafe.AsPointer(ref this), riid, rgszNames, cNames, lcid, rgDispId);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(6)]
         public HRESULT Invoke([NativeTypeName("DISPID")] int dispIdMember, [NativeTypeName("const IID &")] Guid* riid, [NativeTypeName("LCID")] uint lcid, [NativeTypeName("WORD")] ushort wFlags, DISPPARAMS* pDispParams, VARIANT* pVarResult, EXCEPINFO* pExcepInfo, uint* puArgErr)
         {
-            return ((delegate* unmanaged<IDispatch*, int, Guid*, uint, ushort, DISPPARAMS*, VARIANT*, EXCEPINFO*, uint*, int>)(lpVtbl[6]))((IDispatch*)Unsafe.AsPointer(ref this), dispIdMember, riid, lcid, wFlags, pDispParams, pVarResult, pExcepInfo, puArgErr);
+            return ((delegate* unmanaged[Stdcall]<IDispatch*, int, Guid*, uint, ushort, DISPPARAMS*, VARIANT*, EXCEPINFO*, uint*, int>)(lpVtbl[6]))((IDispatch*)Unsafe.AsPointer(ref this), dispIdMember, riid, lcid, wFlags, pDispParams, pVarResult, pExcepInfo, puArgErr);
         }
 
         public interface Interface : IUnknown.Interface
@@ -85,25 +85,25 @@ namespace TerraFX.Interop.Windows
         public partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDispatch*, Guid*, void**, int> QueryInterface;
+            public delegate* unmanaged[Stdcall]<IDispatch*, Guid*, void**, int> QueryInterface;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<IDispatch*, uint> AddRef;
+            public delegate* unmanaged[Stdcall]<IDispatch*, uint> AddRef;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<IDispatch*, uint> Release;
+            public delegate* unmanaged[Stdcall]<IDispatch*, uint> Release;
 
             [NativeTypeName("HRESULT (UINT *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDispatch*, uint*, int> GetTypeInfoCount;
+            public delegate* unmanaged[Stdcall]<IDispatch*, uint*, int> GetTypeInfoCount;
 
             [NativeTypeName("HRESULT (UINT, LCID, ITypeInfo **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDispatch*, uint, uint, ITypeInfo**, int> GetTypeInfo;
+            public delegate* unmanaged[Stdcall]<IDispatch*, uint, uint, ITypeInfo**, int> GetTypeInfo;
 
             [NativeTypeName("HRESULT (const IID &, LPOLESTR *, UINT, LCID, DISPID *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDispatch*, Guid*, ushort**, uint, uint, int*, int> GetIDsOfNames;
+            public delegate* unmanaged[Stdcall]<IDispatch*, Guid*, ushort**, uint, uint, int*, int> GetIDsOfNames;
 
             [NativeTypeName("HRESULT (DISPID, const IID &, LCID, WORD, DISPPARAMS *, VARIANT *, EXCEPINFO *, UINT *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDispatch*, int, Guid*, uint, ushort, DISPPARAMS*, VARIANT*, EXCEPINFO*, uint*, int> Invoke;
+            public delegate* unmanaged[Stdcall]<IDispatch*, int, Guid*, uint, ushort, DISPPARAMS*, VARIANT*, EXCEPINFO*, uint*, int> Invoke;
         }
     }
 }

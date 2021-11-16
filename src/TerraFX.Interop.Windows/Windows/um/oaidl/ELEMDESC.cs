@@ -5,6 +5,7 @@
 
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.MemoryMarshal;
 
 namespace TerraFX.Interop.Windows
 {

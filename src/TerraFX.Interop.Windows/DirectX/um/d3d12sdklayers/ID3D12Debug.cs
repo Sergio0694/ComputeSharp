@@ -21,7 +21,7 @@ namespace TerraFX.Interop.DirectX
         [VtblIndex(0)]
         public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
         {
-            return ((delegate* unmanaged<ID3D12Debug*, Guid*, void**, int>)(lpVtbl[0]))((ID3D12Debug*)Unsafe.AsPointer(ref this), riid, ppvObject);
+            return ((delegate* unmanaged[Stdcall]<ID3D12Debug*, Guid*, void**, int>)(lpVtbl[0]))((ID3D12Debug*)Unsafe.AsPointer(ref this), riid, ppvObject);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -29,7 +29,7 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("ULONG")]
         public uint AddRef()
         {
-            return ((delegate* unmanaged<ID3D12Debug*, uint>)(lpVtbl[1]))((ID3D12Debug*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12Debug*, uint>)(lpVtbl[1]))((ID3D12Debug*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -37,14 +37,14 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("ULONG")]
         public uint Release()
         {
-            return ((delegate* unmanaged<ID3D12Debug*, uint>)(lpVtbl[2]))((ID3D12Debug*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12Debug*, uint>)(lpVtbl[2]))((ID3D12Debug*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(3)]
         public void EnableDebugLayer()
         {
-            ((delegate* unmanaged<ID3D12Debug*, void>)(lpVtbl[3]))((ID3D12Debug*)Unsafe.AsPointer(ref this));
+            ((delegate* unmanaged[Stdcall]<ID3D12Debug*, void>)(lpVtbl[3]))((ID3D12Debug*)Unsafe.AsPointer(ref this));
         }
 
         public interface Interface : IUnknown.Interface
@@ -56,16 +56,16 @@ namespace TerraFX.Interop.DirectX
         public partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12Debug*, Guid*, void**, int> QueryInterface;
+            public delegate* unmanaged[Stdcall]<ID3D12Debug*, Guid*, void**, int> QueryInterface;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12Debug*, uint> AddRef;
+            public delegate* unmanaged[Stdcall]<ID3D12Debug*, uint> AddRef;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12Debug*, uint> Release;
+            public delegate* unmanaged[Stdcall]<ID3D12Debug*, uint> Release;
 
             [NativeTypeName("void () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12Debug*, void> EnableDebugLayer;
+            public delegate* unmanaged[Stdcall]<ID3D12Debug*, void> EnableDebugLayer;
         }
     }
 }

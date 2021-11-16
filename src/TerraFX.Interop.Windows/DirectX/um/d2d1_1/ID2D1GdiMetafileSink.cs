@@ -23,7 +23,7 @@ namespace TerraFX.Interop.DirectX
         [VtblIndex(0)]
         public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
         {
-            return ((delegate* unmanaged<ID2D1GdiMetafileSink*, Guid*, void**, int>)(lpVtbl[0]))((ID2D1GdiMetafileSink*)Unsafe.AsPointer(ref this), riid, ppvObject);
+            return ((delegate* unmanaged[Stdcall]<ID2D1GdiMetafileSink*, Guid*, void**, int>)(lpVtbl[0]))((ID2D1GdiMetafileSink*)Unsafe.AsPointer(ref this), riid, ppvObject);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -31,7 +31,7 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("ULONG")]
         public uint AddRef()
         {
-            return ((delegate* unmanaged<ID2D1GdiMetafileSink*, uint>)(lpVtbl[1]))((ID2D1GdiMetafileSink*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID2D1GdiMetafileSink*, uint>)(lpVtbl[1]))((ID2D1GdiMetafileSink*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -39,14 +39,14 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("ULONG")]
         public uint Release()
         {
-            return ((delegate* unmanaged<ID2D1GdiMetafileSink*, uint>)(lpVtbl[2]))((ID2D1GdiMetafileSink*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID2D1GdiMetafileSink*, uint>)(lpVtbl[2]))((ID2D1GdiMetafileSink*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(3)]
         public HRESULT ProcessRecord([NativeTypeName("DWORD")] uint recordType, [NativeTypeName("const void *")] void* recordData, [NativeTypeName("DWORD")] uint recordDataSize)
         {
-            return ((delegate* unmanaged<ID2D1GdiMetafileSink*, uint, void*, uint, int>)(lpVtbl[3]))((ID2D1GdiMetafileSink*)Unsafe.AsPointer(ref this), recordType, recordData, recordDataSize);
+            return ((delegate* unmanaged[Stdcall]<ID2D1GdiMetafileSink*, uint, void*, uint, int>)(lpVtbl[3]))((ID2D1GdiMetafileSink*)Unsafe.AsPointer(ref this), recordType, recordData, recordDataSize);
         }
 
         public interface Interface : IUnknown.Interface
@@ -58,16 +58,16 @@ namespace TerraFX.Interop.DirectX
         public partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID2D1GdiMetafileSink*, Guid*, void**, int> QueryInterface;
+            public delegate* unmanaged[Stdcall]<ID2D1GdiMetafileSink*, Guid*, void**, int> QueryInterface;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID2D1GdiMetafileSink*, uint> AddRef;
+            public delegate* unmanaged[Stdcall]<ID2D1GdiMetafileSink*, uint> AddRef;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID2D1GdiMetafileSink*, uint> Release;
+            public delegate* unmanaged[Stdcall]<ID2D1GdiMetafileSink*, uint> Release;
 
             [NativeTypeName("HRESULT (DWORD, const void *, DWORD) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID2D1GdiMetafileSink*, uint, void*, uint, int> ProcessRecord;
+            public delegate* unmanaged[Stdcall]<ID2D1GdiMetafileSink*, uint, void*, uint, int> ProcessRecord;
         }
     }
 }

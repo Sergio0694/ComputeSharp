@@ -21,7 +21,7 @@ namespace TerraFX.Interop.DirectX
         [VtblIndex(0)]
         public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, Guid*, void**, int>)(lpVtbl[0]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), riid, ppvObject);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, Guid*, void**, int>)(lpVtbl[0]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), riid, ppvObject);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -29,7 +29,7 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("ULONG")]
         public uint AddRef()
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, uint>)(lpVtbl[1]))((IDXGIFactory2*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, uint>)(lpVtbl[1]))((IDXGIFactory2*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -37,161 +37,161 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("ULONG")]
         public uint Release()
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, uint>)(lpVtbl[2]))((IDXGIFactory2*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, uint>)(lpVtbl[2]))((IDXGIFactory2*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(3)]
         public HRESULT SetPrivateData([NativeTypeName("const GUID &")] Guid* Name, uint DataSize, [NativeTypeName("const void *")] void* pData)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, Guid*, uint, void*, int>)(lpVtbl[3]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), Name, DataSize, pData);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, Guid*, uint, void*, int>)(lpVtbl[3]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), Name, DataSize, pData);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(4)]
         public HRESULT SetPrivateDataInterface([NativeTypeName("const GUID &")] Guid* Name, [NativeTypeName("const IUnknown *")] IUnknown* pUnknown)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, Guid*, IUnknown*, int>)(lpVtbl[4]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), Name, pUnknown);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, Guid*, IUnknown*, int>)(lpVtbl[4]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), Name, pUnknown);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(5)]
         public HRESULT GetPrivateData([NativeTypeName("const GUID &")] Guid* Name, uint* pDataSize, void* pData)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, Guid*, uint*, void*, int>)(lpVtbl[5]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), Name, pDataSize, pData);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, Guid*, uint*, void*, int>)(lpVtbl[5]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), Name, pDataSize, pData);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(6)]
         public HRESULT GetParent([NativeTypeName("const IID &")] Guid* riid, void** ppParent)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, Guid*, void**, int>)(lpVtbl[6]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), riid, ppParent);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, Guid*, void**, int>)(lpVtbl[6]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), riid, ppParent);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(7)]
         public HRESULT EnumAdapters(uint Adapter, IDXGIAdapter** ppAdapter)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, uint, IDXGIAdapter**, int>)(lpVtbl[7]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), Adapter, ppAdapter);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, uint, IDXGIAdapter**, int>)(lpVtbl[7]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), Adapter, ppAdapter);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(8)]
         public HRESULT MakeWindowAssociation(HWND WindowHandle, uint Flags)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, HWND, uint, int>)(lpVtbl[8]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), WindowHandle, Flags);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, HWND, uint, int>)(lpVtbl[8]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), WindowHandle, Flags);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(9)]
         public HRESULT GetWindowAssociation(HWND* pWindowHandle)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, HWND*, int>)(lpVtbl[9]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), pWindowHandle);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, HWND*, int>)(lpVtbl[9]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), pWindowHandle);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(10)]
         public HRESULT CreateSwapChain(IUnknown* pDevice, DXGI_SWAP_CHAIN_DESC* pDesc, IDXGISwapChain** ppSwapChain)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, IUnknown*, DXGI_SWAP_CHAIN_DESC*, IDXGISwapChain**, int>)(lpVtbl[10]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), pDevice, pDesc, ppSwapChain);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, IUnknown*, DXGI_SWAP_CHAIN_DESC*, IDXGISwapChain**, int>)(lpVtbl[10]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), pDevice, pDesc, ppSwapChain);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(11)]
         public HRESULT CreateSoftwareAdapter(HMODULE Module, IDXGIAdapter** ppAdapter)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, HMODULE, IDXGIAdapter**, int>)(lpVtbl[11]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), Module, ppAdapter);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, HMODULE, IDXGIAdapter**, int>)(lpVtbl[11]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), Module, ppAdapter);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(12)]
         public HRESULT EnumAdapters1(uint Adapter, IDXGIAdapter1** ppAdapter)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, uint, IDXGIAdapter1**, int>)(lpVtbl[12]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), Adapter, ppAdapter);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, uint, IDXGIAdapter1**, int>)(lpVtbl[12]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), Adapter, ppAdapter);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(13)]
         public BOOL IsCurrent()
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, int>)(lpVtbl[13]))((IDXGIFactory2*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, int>)(lpVtbl[13]))((IDXGIFactory2*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(14)]
         public BOOL IsWindowedStereoEnabled()
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, int>)(lpVtbl[14]))((IDXGIFactory2*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, int>)(lpVtbl[14]))((IDXGIFactory2*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(15)]
         public HRESULT CreateSwapChainForHwnd(IUnknown* pDevice, HWND hWnd, [NativeTypeName("const DXGI_SWAP_CHAIN_DESC1 *")] DXGI_SWAP_CHAIN_DESC1* pDesc, [NativeTypeName("const DXGI_SWAP_CHAIN_FULLSCREEN_DESC *")] DXGI_SWAP_CHAIN_FULLSCREEN_DESC* pFullscreenDesc, IDXGIOutput* pRestrictToOutput, IDXGISwapChain1** ppSwapChain)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, IUnknown*, HWND, DXGI_SWAP_CHAIN_DESC1*, DXGI_SWAP_CHAIN_FULLSCREEN_DESC*, IDXGIOutput*, IDXGISwapChain1**, int>)(lpVtbl[15]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), pDevice, hWnd, pDesc, pFullscreenDesc, pRestrictToOutput, ppSwapChain);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, IUnknown*, HWND, DXGI_SWAP_CHAIN_DESC1*, DXGI_SWAP_CHAIN_FULLSCREEN_DESC*, IDXGIOutput*, IDXGISwapChain1**, int>)(lpVtbl[15]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), pDevice, hWnd, pDesc, pFullscreenDesc, pRestrictToOutput, ppSwapChain);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(16)]
         public HRESULT CreateSwapChainForCoreWindow(IUnknown* pDevice, IUnknown* pWindow, [NativeTypeName("const DXGI_SWAP_CHAIN_DESC1 *")] DXGI_SWAP_CHAIN_DESC1* pDesc, IDXGIOutput* pRestrictToOutput, IDXGISwapChain1** ppSwapChain)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, IUnknown*, IUnknown*, DXGI_SWAP_CHAIN_DESC1*, IDXGIOutput*, IDXGISwapChain1**, int>)(lpVtbl[16]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), pDevice, pWindow, pDesc, pRestrictToOutput, ppSwapChain);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, IUnknown*, IUnknown*, DXGI_SWAP_CHAIN_DESC1*, IDXGIOutput*, IDXGISwapChain1**, int>)(lpVtbl[16]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), pDevice, pWindow, pDesc, pRestrictToOutput, ppSwapChain);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(17)]
         public HRESULT GetSharedResourceAdapterLuid(HANDLE hResource, LUID* pLuid)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, HANDLE, LUID*, int>)(lpVtbl[17]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), hResource, pLuid);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, HANDLE, LUID*, int>)(lpVtbl[17]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), hResource, pLuid);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(18)]
         public HRESULT RegisterStereoStatusWindow(HWND WindowHandle, uint wMsg, [NativeTypeName("DWORD *")] uint* pdwCookie)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, HWND, uint, uint*, int>)(lpVtbl[18]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), WindowHandle, wMsg, pdwCookie);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, HWND, uint, uint*, int>)(lpVtbl[18]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), WindowHandle, wMsg, pdwCookie);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(19)]
         public HRESULT RegisterStereoStatusEvent(HANDLE hEvent, [NativeTypeName("DWORD *")] uint* pdwCookie)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, HANDLE, uint*, int>)(lpVtbl[19]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), hEvent, pdwCookie);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, HANDLE, uint*, int>)(lpVtbl[19]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), hEvent, pdwCookie);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(20)]
         public void UnregisterStereoStatus([NativeTypeName("DWORD")] uint dwCookie)
         {
-            ((delegate* unmanaged<IDXGIFactory2*, uint, void>)(lpVtbl[20]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), dwCookie);
+            ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, uint, void>)(lpVtbl[20]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), dwCookie);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(21)]
         public HRESULT RegisterOcclusionStatusWindow(HWND WindowHandle, uint wMsg, [NativeTypeName("DWORD *")] uint* pdwCookie)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, HWND, uint, uint*, int>)(lpVtbl[21]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), WindowHandle, wMsg, pdwCookie);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, HWND, uint, uint*, int>)(lpVtbl[21]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), WindowHandle, wMsg, pdwCookie);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(22)]
         public HRESULT RegisterOcclusionStatusEvent(HANDLE hEvent, [NativeTypeName("DWORD *")] uint* pdwCookie)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, HANDLE, uint*, int>)(lpVtbl[22]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), hEvent, pdwCookie);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, HANDLE, uint*, int>)(lpVtbl[22]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), hEvent, pdwCookie);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(23)]
         public void UnregisterOcclusionStatus([NativeTypeName("DWORD")] uint dwCookie)
         {
-            ((delegate* unmanaged<IDXGIFactory2*, uint, void>)(lpVtbl[23]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), dwCookie);
+            ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, uint, void>)(lpVtbl[23]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), dwCookie);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(24)]
         public HRESULT CreateSwapChainForComposition(IUnknown* pDevice, [NativeTypeName("const DXGI_SWAP_CHAIN_DESC1 *")] DXGI_SWAP_CHAIN_DESC1* pDesc, IDXGIOutput* pRestrictToOutput, IDXGISwapChain1** ppSwapChain)
         {
-            return ((delegate* unmanaged<IDXGIFactory2*, IUnknown*, DXGI_SWAP_CHAIN_DESC1*, IDXGIOutput*, IDXGISwapChain1**, int>)(lpVtbl[24]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), pDevice, pDesc, pRestrictToOutput, ppSwapChain);
+            return ((delegate* unmanaged[Stdcall]<IDXGIFactory2*, IUnknown*, DXGI_SWAP_CHAIN_DESC1*, IDXGIOutput*, IDXGISwapChain1**, int>)(lpVtbl[24]))((IDXGIFactory2*)Unsafe.AsPointer(ref this), pDevice, pDesc, pRestrictToOutput, ppSwapChain);
         }
 
         public interface Interface : IDXGIFactory1.Interface
@@ -233,79 +233,79 @@ namespace TerraFX.Interop.DirectX
         public partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, Guid*, void**, int> QueryInterface;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, Guid*, void**, int> QueryInterface;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, uint> AddRef;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, uint> AddRef;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, uint> Release;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, uint> Release;
 
             [NativeTypeName("HRESULT (const GUID &, UINT, const void *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, Guid*, uint, void*, int> SetPrivateData;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, Guid*, uint, void*, int> SetPrivateData;
 
             [NativeTypeName("HRESULT (const GUID &, const IUnknown *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, Guid*, IUnknown*, int> SetPrivateDataInterface;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, Guid*, IUnknown*, int> SetPrivateDataInterface;
 
             [NativeTypeName("HRESULT (const GUID &, UINT *, void *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, Guid*, uint*, void*, int> GetPrivateData;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, Guid*, uint*, void*, int> GetPrivateData;
 
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, Guid*, void**, int> GetParent;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, Guid*, void**, int> GetParent;
 
             [NativeTypeName("HRESULT (UINT, IDXGIAdapter **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, uint, IDXGIAdapter**, int> EnumAdapters;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, uint, IDXGIAdapter**, int> EnumAdapters;
 
             [NativeTypeName("HRESULT (HWND, UINT) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, HWND, uint, int> MakeWindowAssociation;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, HWND, uint, int> MakeWindowAssociation;
 
             [NativeTypeName("HRESULT (HWND *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, HWND*, int> GetWindowAssociation;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, HWND*, int> GetWindowAssociation;
 
             [NativeTypeName("HRESULT (IUnknown *, DXGI_SWAP_CHAIN_DESC *, IDXGISwapChain **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, IUnknown*, DXGI_SWAP_CHAIN_DESC*, IDXGISwapChain**, int> CreateSwapChain;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, IUnknown*, DXGI_SWAP_CHAIN_DESC*, IDXGISwapChain**, int> CreateSwapChain;
 
             [NativeTypeName("HRESULT (HMODULE, IDXGIAdapter **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, HMODULE, IDXGIAdapter**, int> CreateSoftwareAdapter;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, HMODULE, IDXGIAdapter**, int> CreateSoftwareAdapter;
 
             [NativeTypeName("HRESULT (UINT, IDXGIAdapter1 **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, uint, IDXGIAdapter1**, int> EnumAdapters1;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, uint, IDXGIAdapter1**, int> EnumAdapters1;
 
             [NativeTypeName("BOOL () __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, int> IsCurrent;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, int> IsCurrent;
 
             [NativeTypeName("BOOL () __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, int> IsWindowedStereoEnabled;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, int> IsWindowedStereoEnabled;
 
             [NativeTypeName("HRESULT (IUnknown *, HWND, const DXGI_SWAP_CHAIN_DESC1 *, const DXGI_SWAP_CHAIN_FULLSCREEN_DESC *, IDXGIOutput *, IDXGISwapChain1 **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, IUnknown*, HWND, DXGI_SWAP_CHAIN_DESC1*, DXGI_SWAP_CHAIN_FULLSCREEN_DESC*, IDXGIOutput*, IDXGISwapChain1**, int> CreateSwapChainForHwnd;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, IUnknown*, HWND, DXGI_SWAP_CHAIN_DESC1*, DXGI_SWAP_CHAIN_FULLSCREEN_DESC*, IDXGIOutput*, IDXGISwapChain1**, int> CreateSwapChainForHwnd;
 
             [NativeTypeName("HRESULT (IUnknown *, IUnknown *, const DXGI_SWAP_CHAIN_DESC1 *, IDXGIOutput *, IDXGISwapChain1 **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, IUnknown*, IUnknown*, DXGI_SWAP_CHAIN_DESC1*, IDXGIOutput*, IDXGISwapChain1**, int> CreateSwapChainForCoreWindow;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, IUnknown*, IUnknown*, DXGI_SWAP_CHAIN_DESC1*, IDXGIOutput*, IDXGISwapChain1**, int> CreateSwapChainForCoreWindow;
 
             [NativeTypeName("HRESULT (HANDLE, LUID *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, HANDLE, LUID*, int> GetSharedResourceAdapterLuid;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, HANDLE, LUID*, int> GetSharedResourceAdapterLuid;
 
             [NativeTypeName("HRESULT (HWND, UINT, DWORD *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, HWND, uint, uint*, int> RegisterStereoStatusWindow;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, HWND, uint, uint*, int> RegisterStereoStatusWindow;
 
             [NativeTypeName("HRESULT (HANDLE, DWORD *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, HANDLE, uint*, int> RegisterStereoStatusEvent;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, HANDLE, uint*, int> RegisterStereoStatusEvent;
 
             [NativeTypeName("void (DWORD) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, uint, void> UnregisterStereoStatus;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, uint, void> UnregisterStereoStatus;
 
             [NativeTypeName("HRESULT (HWND, UINT, DWORD *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, HWND, uint, uint*, int> RegisterOcclusionStatusWindow;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, HWND, uint, uint*, int> RegisterOcclusionStatusWindow;
 
             [NativeTypeName("HRESULT (HANDLE, DWORD *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, HANDLE, uint*, int> RegisterOcclusionStatusEvent;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, HANDLE, uint*, int> RegisterOcclusionStatusEvent;
 
             [NativeTypeName("void (DWORD) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, uint, void> UnregisterOcclusionStatus;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, uint, void> UnregisterOcclusionStatus;
 
             [NativeTypeName("HRESULT (IUnknown *, const DXGI_SWAP_CHAIN_DESC1 *, IDXGIOutput *, IDXGISwapChain1 **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDXGIFactory2*, IUnknown*, DXGI_SWAP_CHAIN_DESC1*, IDXGIOutput*, IDXGISwapChain1**, int> CreateSwapChainForComposition;
+            public delegate* unmanaged[Stdcall]<IDXGIFactory2*, IUnknown*, DXGI_SWAP_CHAIN_DESC1*, IDXGIOutput*, IDXGISwapChain1**, int> CreateSwapChainForComposition;
         }
     }
 }

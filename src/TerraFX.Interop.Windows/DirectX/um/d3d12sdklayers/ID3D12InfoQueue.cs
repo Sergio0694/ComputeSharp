@@ -21,7 +21,7 @@ namespace TerraFX.Interop.DirectX
         [VtblIndex(0)]
         public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, Guid*, void**, int>)(lpVtbl[0]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), riid, ppvObject);
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, Guid*, void**, int>)(lpVtbl[0]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), riid, ppvObject);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -29,7 +29,7 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("ULONG")]
         public uint AddRef()
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, uint>)(lpVtbl[1]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, uint>)(lpVtbl[1]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -37,28 +37,28 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("ULONG")]
         public uint Release()
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, uint>)(lpVtbl[2]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, uint>)(lpVtbl[2]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(3)]
         public HRESULT SetMessageCountLimit([NativeTypeName("UINT64")] ulong MessageCountLimit)
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, ulong, int>)(lpVtbl[3]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), MessageCountLimit);
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, ulong, int>)(lpVtbl[3]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), MessageCountLimit);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(4)]
         public void ClearStoredMessages()
         {
-            ((delegate* unmanaged<ID3D12InfoQueue*, void>)(lpVtbl[4]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, void>)(lpVtbl[4]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(5)]
         public HRESULT GetMessage([NativeTypeName("UINT64")] ulong MessageIndex, D3D12_MESSAGE* pMessage, [NativeTypeName("SIZE_T *")] nuint* pMessageByteLength)
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, ulong, D3D12_MESSAGE*, nuint*, int>)(lpVtbl[5]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), MessageIndex, pMessage, pMessageByteLength);
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, ulong, D3D12_MESSAGE*, nuint*, int>)(lpVtbl[5]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), MessageIndex, pMessage, pMessageByteLength);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -66,7 +66,7 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("UINT64")]
         public ulong GetNumMessagesAllowedByStorageFilter()
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, ulong>)(lpVtbl[6]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, ulong>)(lpVtbl[6]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -74,7 +74,7 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("UINT64")]
         public ulong GetNumMessagesDeniedByStorageFilter()
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, ulong>)(lpVtbl[7]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, ulong>)(lpVtbl[7]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -82,7 +82,7 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("UINT64")]
         public ulong GetNumStoredMessages()
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, ulong>)(lpVtbl[8]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, ulong>)(lpVtbl[8]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -90,7 +90,7 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("UINT64")]
         public ulong GetNumStoredMessagesAllowedByRetrievalFilter()
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, ulong>)(lpVtbl[9]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, ulong>)(lpVtbl[9]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -98,7 +98,7 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("UINT64")]
         public ulong GetNumMessagesDiscardedByMessageCountLimit()
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, ulong>)(lpVtbl[10]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, ulong>)(lpVtbl[10]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -106,189 +106,189 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("UINT64")]
         public ulong GetMessageCountLimit()
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, ulong>)(lpVtbl[11]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, ulong>)(lpVtbl[11]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(12)]
         public HRESULT AddStorageFilterEntries(D3D12_INFO_QUEUE_FILTER* pFilter)
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, int>)(lpVtbl[12]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), pFilter);
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, int>)(lpVtbl[12]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), pFilter);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(13)]
         public HRESULT GetStorageFilter(D3D12_INFO_QUEUE_FILTER* pFilter, [NativeTypeName("SIZE_T *")] nuint* pFilterByteLength)
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, nuint*, int>)(lpVtbl[13]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), pFilter, pFilterByteLength);
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, nuint*, int>)(lpVtbl[13]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), pFilter, pFilterByteLength);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(14)]
         public void ClearStorageFilter()
         {
-            ((delegate* unmanaged<ID3D12InfoQueue*, void>)(lpVtbl[14]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, void>)(lpVtbl[14]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(15)]
         public HRESULT PushEmptyStorageFilter()
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, int>)(lpVtbl[15]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, int>)(lpVtbl[15]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(16)]
         public HRESULT PushCopyOfStorageFilter()
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, int>)(lpVtbl[16]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, int>)(lpVtbl[16]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(17)]
         public HRESULT PushStorageFilter(D3D12_INFO_QUEUE_FILTER* pFilter)
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, int>)(lpVtbl[17]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), pFilter);
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, int>)(lpVtbl[17]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), pFilter);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(18)]
         public void PopStorageFilter()
         {
-            ((delegate* unmanaged<ID3D12InfoQueue*, void>)(lpVtbl[18]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, void>)(lpVtbl[18]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(19)]
         public uint GetStorageFilterStackSize()
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, uint>)(lpVtbl[19]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, uint>)(lpVtbl[19]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(20)]
         public HRESULT AddRetrievalFilterEntries(D3D12_INFO_QUEUE_FILTER* pFilter)
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, int>)(lpVtbl[20]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), pFilter);
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, int>)(lpVtbl[20]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), pFilter);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(21)]
         public HRESULT GetRetrievalFilter(D3D12_INFO_QUEUE_FILTER* pFilter, [NativeTypeName("SIZE_T *")] nuint* pFilterByteLength)
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, nuint*, int>)(lpVtbl[21]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), pFilter, pFilterByteLength);
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, nuint*, int>)(lpVtbl[21]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), pFilter, pFilterByteLength);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(22)]
         public void ClearRetrievalFilter()
         {
-            ((delegate* unmanaged<ID3D12InfoQueue*, void>)(lpVtbl[22]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, void>)(lpVtbl[22]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(23)]
         public HRESULT PushEmptyRetrievalFilter()
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, int>)(lpVtbl[23]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, int>)(lpVtbl[23]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(24)]
         public HRESULT PushCopyOfRetrievalFilter()
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, int>)(lpVtbl[24]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, int>)(lpVtbl[24]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(25)]
         public HRESULT PushRetrievalFilter(D3D12_INFO_QUEUE_FILTER* pFilter)
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, int>)(lpVtbl[25]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), pFilter);
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, int>)(lpVtbl[25]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), pFilter);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(26)]
         public void PopRetrievalFilter()
         {
-            ((delegate* unmanaged<ID3D12InfoQueue*, void>)(lpVtbl[26]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, void>)(lpVtbl[26]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(27)]
         public uint GetRetrievalFilterStackSize()
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, uint>)(lpVtbl[27]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, uint>)(lpVtbl[27]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(28)]
         public HRESULT AddMessage(D3D12_MESSAGE_CATEGORY Category, D3D12_MESSAGE_SEVERITY Severity, D3D12_MESSAGE_ID ID, [NativeTypeName("LPCSTR")] sbyte* pDescription)
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, D3D12_MESSAGE_CATEGORY, D3D12_MESSAGE_SEVERITY, D3D12_MESSAGE_ID, sbyte*, int>)(lpVtbl[28]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), Category, Severity, ID, pDescription);
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_MESSAGE_CATEGORY, D3D12_MESSAGE_SEVERITY, D3D12_MESSAGE_ID, sbyte*, int>)(lpVtbl[28]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), Category, Severity, ID, pDescription);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(29)]
         public HRESULT AddApplicationMessage(D3D12_MESSAGE_SEVERITY Severity, [NativeTypeName("LPCSTR")] sbyte* pDescription)
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, D3D12_MESSAGE_SEVERITY, sbyte*, int>)(lpVtbl[29]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), Severity, pDescription);
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_MESSAGE_SEVERITY, sbyte*, int>)(lpVtbl[29]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), Severity, pDescription);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(30)]
         public HRESULT SetBreakOnCategory(D3D12_MESSAGE_CATEGORY Category, BOOL bEnable)
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, D3D12_MESSAGE_CATEGORY, BOOL, int>)(lpVtbl[30]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), Category, bEnable);
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_MESSAGE_CATEGORY, BOOL, int>)(lpVtbl[30]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), Category, bEnable);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(31)]
         public HRESULT SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY Severity, BOOL bEnable)
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, D3D12_MESSAGE_SEVERITY, BOOL, int>)(lpVtbl[31]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), Severity, bEnable);
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_MESSAGE_SEVERITY, BOOL, int>)(lpVtbl[31]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), Severity, bEnable);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(32)]
         public HRESULT SetBreakOnID(D3D12_MESSAGE_ID ID, BOOL bEnable)
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, D3D12_MESSAGE_ID, BOOL, int>)(lpVtbl[32]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), ID, bEnable);
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_MESSAGE_ID, BOOL, int>)(lpVtbl[32]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), ID, bEnable);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(33)]
         public BOOL GetBreakOnCategory(D3D12_MESSAGE_CATEGORY Category)
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, D3D12_MESSAGE_CATEGORY, int>)(lpVtbl[33]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), Category);
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_MESSAGE_CATEGORY, int>)(lpVtbl[33]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), Category);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(34)]
         public BOOL GetBreakOnSeverity(D3D12_MESSAGE_SEVERITY Severity)
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, D3D12_MESSAGE_SEVERITY, int>)(lpVtbl[34]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), Severity);
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_MESSAGE_SEVERITY, int>)(lpVtbl[34]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), Severity);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(35)]
         public BOOL GetBreakOnID(D3D12_MESSAGE_ID ID)
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, D3D12_MESSAGE_ID, int>)(lpVtbl[35]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), ID);
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_MESSAGE_ID, int>)(lpVtbl[35]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), ID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(36)]
         public void SetMuteDebugOutput(BOOL bMute)
         {
-            ((delegate* unmanaged<ID3D12InfoQueue*, BOOL, void>)(lpVtbl[36]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), bMute);
+            ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, BOOL, void>)(lpVtbl[36]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this), bMute);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(37)]
         public BOOL GetMuteDebugOutput()
         {
-            return ((delegate* unmanaged<ID3D12InfoQueue*, int>)(lpVtbl[37]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, int>)(lpVtbl[37]))((ID3D12InfoQueue*)Unsafe.AsPointer(ref this));
         }
 
         public interface Interface : IUnknown.Interface
@@ -408,118 +408,118 @@ namespace TerraFX.Interop.DirectX
         public partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, Guid*, void**, int> QueryInterface;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, Guid*, void**, int> QueryInterface;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, uint> AddRef;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, uint> AddRef;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, uint> Release;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, uint> Release;
 
             [NativeTypeName("HRESULT (UINT64) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, ulong, int> SetMessageCountLimit;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, ulong, int> SetMessageCountLimit;
 
             [NativeTypeName("void () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, void> ClearStoredMessages;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, void> ClearStoredMessages;
 
             [NativeTypeName("HRESULT (UINT64, D3D12_MESSAGE *, SIZE_T *) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, ulong, D3D12_MESSAGE*, nuint*, int> GetMessage;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, ulong, D3D12_MESSAGE*, nuint*, int> GetMessage;
 
             [NativeTypeName("UINT64 () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, ulong> GetNumMessagesAllowedByStorageFilter;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, ulong> GetNumMessagesAllowedByStorageFilter;
 
             [NativeTypeName("UINT64 () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, ulong> GetNumMessagesDeniedByStorageFilter;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, ulong> GetNumMessagesDeniedByStorageFilter;
 
             [NativeTypeName("UINT64 () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, ulong> GetNumStoredMessages;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, ulong> GetNumStoredMessages;
 
             [NativeTypeName("UINT64 () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, ulong> GetNumStoredMessagesAllowedByRetrievalFilter;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, ulong> GetNumStoredMessagesAllowedByRetrievalFilter;
 
             [NativeTypeName("UINT64 () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, ulong> GetNumMessagesDiscardedByMessageCountLimit;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, ulong> GetNumMessagesDiscardedByMessageCountLimit;
 
             [NativeTypeName("UINT64 () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, ulong> GetMessageCountLimit;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, ulong> GetMessageCountLimit;
 
             [NativeTypeName("HRESULT (D3D12_INFO_QUEUE_FILTER *) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, int> AddStorageFilterEntries;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, int> AddStorageFilterEntries;
 
             [NativeTypeName("HRESULT (D3D12_INFO_QUEUE_FILTER *, SIZE_T *) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, nuint*, int> GetStorageFilter;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, nuint*, int> GetStorageFilter;
 
             [NativeTypeName("void () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, void> ClearStorageFilter;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, void> ClearStorageFilter;
 
             [NativeTypeName("HRESULT () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, int> PushEmptyStorageFilter;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, int> PushEmptyStorageFilter;
 
             [NativeTypeName("HRESULT () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, int> PushCopyOfStorageFilter;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, int> PushCopyOfStorageFilter;
 
             [NativeTypeName("HRESULT (D3D12_INFO_QUEUE_FILTER *) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, int> PushStorageFilter;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, int> PushStorageFilter;
 
             [NativeTypeName("void () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, void> PopStorageFilter;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, void> PopStorageFilter;
 
             [NativeTypeName("UINT () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, uint> GetStorageFilterStackSize;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, uint> GetStorageFilterStackSize;
 
             [NativeTypeName("HRESULT (D3D12_INFO_QUEUE_FILTER *) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, int> AddRetrievalFilterEntries;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, int> AddRetrievalFilterEntries;
 
             [NativeTypeName("HRESULT (D3D12_INFO_QUEUE_FILTER *, SIZE_T *) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, nuint*, int> GetRetrievalFilter;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, nuint*, int> GetRetrievalFilter;
 
             [NativeTypeName("void () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, void> ClearRetrievalFilter;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, void> ClearRetrievalFilter;
 
             [NativeTypeName("HRESULT () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, int> PushEmptyRetrievalFilter;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, int> PushEmptyRetrievalFilter;
 
             [NativeTypeName("HRESULT () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, int> PushCopyOfRetrievalFilter;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, int> PushCopyOfRetrievalFilter;
 
             [NativeTypeName("HRESULT (D3D12_INFO_QUEUE_FILTER *) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, int> PushRetrievalFilter;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_INFO_QUEUE_FILTER*, int> PushRetrievalFilter;
 
             [NativeTypeName("void () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, void> PopRetrievalFilter;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, void> PopRetrievalFilter;
 
             [NativeTypeName("UINT () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, uint> GetRetrievalFilterStackSize;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, uint> GetRetrievalFilterStackSize;
 
             [NativeTypeName("HRESULT (D3D12_MESSAGE_CATEGORY, D3D12_MESSAGE_SEVERITY, D3D12_MESSAGE_ID, LPCSTR) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, D3D12_MESSAGE_CATEGORY, D3D12_MESSAGE_SEVERITY, D3D12_MESSAGE_ID, sbyte*, int> AddMessage;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_MESSAGE_CATEGORY, D3D12_MESSAGE_SEVERITY, D3D12_MESSAGE_ID, sbyte*, int> AddMessage;
 
             [NativeTypeName("HRESULT (D3D12_MESSAGE_SEVERITY, LPCSTR) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, D3D12_MESSAGE_SEVERITY, sbyte*, int> AddApplicationMessage;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_MESSAGE_SEVERITY, sbyte*, int> AddApplicationMessage;
 
             [NativeTypeName("HRESULT (D3D12_MESSAGE_CATEGORY, BOOL) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, D3D12_MESSAGE_CATEGORY, BOOL, int> SetBreakOnCategory;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_MESSAGE_CATEGORY, BOOL, int> SetBreakOnCategory;
 
             [NativeTypeName("HRESULT (D3D12_MESSAGE_SEVERITY, BOOL) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, D3D12_MESSAGE_SEVERITY, BOOL, int> SetBreakOnSeverity;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_MESSAGE_SEVERITY, BOOL, int> SetBreakOnSeverity;
 
             [NativeTypeName("HRESULT (D3D12_MESSAGE_ID, BOOL) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, D3D12_MESSAGE_ID, BOOL, int> SetBreakOnID;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_MESSAGE_ID, BOOL, int> SetBreakOnID;
 
             [NativeTypeName("BOOL (D3D12_MESSAGE_CATEGORY) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, D3D12_MESSAGE_CATEGORY, int> GetBreakOnCategory;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_MESSAGE_CATEGORY, int> GetBreakOnCategory;
 
             [NativeTypeName("BOOL (D3D12_MESSAGE_SEVERITY) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, D3D12_MESSAGE_SEVERITY, int> GetBreakOnSeverity;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_MESSAGE_SEVERITY, int> GetBreakOnSeverity;
 
             [NativeTypeName("BOOL (D3D12_MESSAGE_ID) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, D3D12_MESSAGE_ID, int> GetBreakOnID;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, D3D12_MESSAGE_ID, int> GetBreakOnID;
 
             [NativeTypeName("void (BOOL) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, BOOL, void> SetMuteDebugOutput;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, BOOL, void> SetMuteDebugOutput;
 
             [NativeTypeName("BOOL () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12InfoQueue*, int> GetMuteDebugOutput;
+            public delegate* unmanaged[Stdcall]<ID3D12InfoQueue*, int> GetMuteDebugOutput;
         }
     }
 }

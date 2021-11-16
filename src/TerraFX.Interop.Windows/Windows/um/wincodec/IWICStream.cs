@@ -20,7 +20,7 @@ namespace TerraFX.Interop.Windows
         [VtblIndex(0)]
         public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
         {
-            return ((delegate* unmanaged<IWICStream*, Guid*, void**, int>)(lpVtbl[0]))((IWICStream*)Unsafe.AsPointer(ref this), riid, ppvObject);
+            return ((delegate* unmanaged[Stdcall]<IWICStream*, Guid*, void**, int>)(lpVtbl[0]))((IWICStream*)Unsafe.AsPointer(ref this), riid, ppvObject);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -28,7 +28,7 @@ namespace TerraFX.Interop.Windows
         [return: NativeTypeName("ULONG")]
         public uint AddRef()
         {
-            return ((delegate* unmanaged<IWICStream*, uint>)(lpVtbl[1]))((IWICStream*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IWICStream*, uint>)(lpVtbl[1]))((IWICStream*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -36,112 +36,112 @@ namespace TerraFX.Interop.Windows
         [return: NativeTypeName("ULONG")]
         public uint Release()
         {
-            return ((delegate* unmanaged<IWICStream*, uint>)(lpVtbl[2]))((IWICStream*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IWICStream*, uint>)(lpVtbl[2]))((IWICStream*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(3)]
         public HRESULT Read(void* pv, [NativeTypeName("ULONG")] uint cb, [NativeTypeName("ULONG *")] uint* pcbRead)
         {
-            return ((delegate* unmanaged<IWICStream*, void*, uint, uint*, int>)(lpVtbl[3]))((IWICStream*)Unsafe.AsPointer(ref this), pv, cb, pcbRead);
+            return ((delegate* unmanaged[Stdcall]<IWICStream*, void*, uint, uint*, int>)(lpVtbl[3]))((IWICStream*)Unsafe.AsPointer(ref this), pv, cb, pcbRead);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(4)]
         public HRESULT Write([NativeTypeName("const void *")] void* pv, [NativeTypeName("ULONG")] uint cb, [NativeTypeName("ULONG *")] uint* pcbWritten)
         {
-            return ((delegate* unmanaged<IWICStream*, void*, uint, uint*, int>)(lpVtbl[4]))((IWICStream*)Unsafe.AsPointer(ref this), pv, cb, pcbWritten);
+            return ((delegate* unmanaged[Stdcall]<IWICStream*, void*, uint, uint*, int>)(lpVtbl[4]))((IWICStream*)Unsafe.AsPointer(ref this), pv, cb, pcbWritten);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(5)]
         public HRESULT Seek(LARGE_INTEGER dlibMove, [NativeTypeName("DWORD")] uint dwOrigin, ULARGE_INTEGER* plibNewPosition)
         {
-            return ((delegate* unmanaged<IWICStream*, LARGE_INTEGER, uint, ULARGE_INTEGER*, int>)(lpVtbl[5]))((IWICStream*)Unsafe.AsPointer(ref this), dlibMove, dwOrigin, plibNewPosition);
+            return ((delegate* unmanaged[Stdcall]<IWICStream*, LARGE_INTEGER, uint, ULARGE_INTEGER*, int>)(lpVtbl[5]))((IWICStream*)Unsafe.AsPointer(ref this), dlibMove, dwOrigin, plibNewPosition);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(6)]
         public HRESULT SetSize(ULARGE_INTEGER libNewSize)
         {
-            return ((delegate* unmanaged<IWICStream*, ULARGE_INTEGER, int>)(lpVtbl[6]))((IWICStream*)Unsafe.AsPointer(ref this), libNewSize);
+            return ((delegate* unmanaged[Stdcall]<IWICStream*, ULARGE_INTEGER, int>)(lpVtbl[6]))((IWICStream*)Unsafe.AsPointer(ref this), libNewSize);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(7)]
         public HRESULT CopyTo(IStream* pstm, ULARGE_INTEGER cb, ULARGE_INTEGER* pcbRead, ULARGE_INTEGER* pcbWritten)
         {
-            return ((delegate* unmanaged<IWICStream*, IStream*, ULARGE_INTEGER, ULARGE_INTEGER*, ULARGE_INTEGER*, int>)(lpVtbl[7]))((IWICStream*)Unsafe.AsPointer(ref this), pstm, cb, pcbRead, pcbWritten);
+            return ((delegate* unmanaged[Stdcall]<IWICStream*, IStream*, ULARGE_INTEGER, ULARGE_INTEGER*, ULARGE_INTEGER*, int>)(lpVtbl[7]))((IWICStream*)Unsafe.AsPointer(ref this), pstm, cb, pcbRead, pcbWritten);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(8)]
         public HRESULT Commit([NativeTypeName("DWORD")] uint grfCommitFlags)
         {
-            return ((delegate* unmanaged<IWICStream*, uint, int>)(lpVtbl[8]))((IWICStream*)Unsafe.AsPointer(ref this), grfCommitFlags);
+            return ((delegate* unmanaged[Stdcall]<IWICStream*, uint, int>)(lpVtbl[8]))((IWICStream*)Unsafe.AsPointer(ref this), grfCommitFlags);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(9)]
         public HRESULT Revert()
         {
-            return ((delegate* unmanaged<IWICStream*, int>)(lpVtbl[9]))((IWICStream*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IWICStream*, int>)(lpVtbl[9]))((IWICStream*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(10)]
         public HRESULT LockRegion(ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, [NativeTypeName("DWORD")] uint dwLockType)
         {
-            return ((delegate* unmanaged<IWICStream*, ULARGE_INTEGER, ULARGE_INTEGER, uint, int>)(lpVtbl[10]))((IWICStream*)Unsafe.AsPointer(ref this), libOffset, cb, dwLockType);
+            return ((delegate* unmanaged[Stdcall]<IWICStream*, ULARGE_INTEGER, ULARGE_INTEGER, uint, int>)(lpVtbl[10]))((IWICStream*)Unsafe.AsPointer(ref this), libOffset, cb, dwLockType);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(11)]
         public HRESULT UnlockRegion(ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, [NativeTypeName("DWORD")] uint dwLockType)
         {
-            return ((delegate* unmanaged<IWICStream*, ULARGE_INTEGER, ULARGE_INTEGER, uint, int>)(lpVtbl[11]))((IWICStream*)Unsafe.AsPointer(ref this), libOffset, cb, dwLockType);
+            return ((delegate* unmanaged[Stdcall]<IWICStream*, ULARGE_INTEGER, ULARGE_INTEGER, uint, int>)(lpVtbl[11]))((IWICStream*)Unsafe.AsPointer(ref this), libOffset, cb, dwLockType);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(12)]
         public HRESULT Stat(STATSTG* pstatstg, [NativeTypeName("DWORD")] uint grfStatFlag)
         {
-            return ((delegate* unmanaged<IWICStream*, STATSTG*, uint, int>)(lpVtbl[12]))((IWICStream*)Unsafe.AsPointer(ref this), pstatstg, grfStatFlag);
+            return ((delegate* unmanaged[Stdcall]<IWICStream*, STATSTG*, uint, int>)(lpVtbl[12]))((IWICStream*)Unsafe.AsPointer(ref this), pstatstg, grfStatFlag);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(13)]
         public HRESULT Clone(IStream** ppstm)
         {
-            return ((delegate* unmanaged<IWICStream*, IStream**, int>)(lpVtbl[13]))((IWICStream*)Unsafe.AsPointer(ref this), ppstm);
+            return ((delegate* unmanaged[Stdcall]<IWICStream*, IStream**, int>)(lpVtbl[13]))((IWICStream*)Unsafe.AsPointer(ref this), ppstm);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(14)]
         public HRESULT InitializeFromIStream(IStream* pIStream)
         {
-            return ((delegate* unmanaged<IWICStream*, IStream*, int>)(lpVtbl[14]))((IWICStream*)Unsafe.AsPointer(ref this), pIStream);
+            return ((delegate* unmanaged[Stdcall]<IWICStream*, IStream*, int>)(lpVtbl[14]))((IWICStream*)Unsafe.AsPointer(ref this), pIStream);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(15)]
         public HRESULT InitializeFromFilename([NativeTypeName("LPCWSTR")] ushort* wzFileName, [NativeTypeName("DWORD")] uint dwDesiredAccess)
         {
-            return ((delegate* unmanaged<IWICStream*, ushort*, uint, int>)(lpVtbl[15]))((IWICStream*)Unsafe.AsPointer(ref this), wzFileName, dwDesiredAccess);
+            return ((delegate* unmanaged[Stdcall]<IWICStream*, ushort*, uint, int>)(lpVtbl[15]))((IWICStream*)Unsafe.AsPointer(ref this), wzFileName, dwDesiredAccess);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(16)]
         public HRESULT InitializeFromMemory([NativeTypeName("WICInProcPointer")] byte* pbBuffer, [NativeTypeName("DWORD")] uint cbBufferSize)
         {
-            return ((delegate* unmanaged<IWICStream*, byte*, uint, int>)(lpVtbl[16]))((IWICStream*)Unsafe.AsPointer(ref this), pbBuffer, cbBufferSize);
+            return ((delegate* unmanaged[Stdcall]<IWICStream*, byte*, uint, int>)(lpVtbl[16]))((IWICStream*)Unsafe.AsPointer(ref this), pbBuffer, cbBufferSize);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(17)]
         public HRESULT InitializeFromIStreamRegion(IStream* pIStream, ULARGE_INTEGER ulOffset, ULARGE_INTEGER ulMaxSize)
         {
-            return ((delegate* unmanaged<IWICStream*, IStream*, ULARGE_INTEGER, ULARGE_INTEGER, int>)(lpVtbl[17]))((IWICStream*)Unsafe.AsPointer(ref this), pIStream, ulOffset, ulMaxSize);
+            return ((delegate* unmanaged[Stdcall]<IWICStream*, IStream*, ULARGE_INTEGER, ULARGE_INTEGER, int>)(lpVtbl[17]))((IWICStream*)Unsafe.AsPointer(ref this), pIStream, ulOffset, ulMaxSize);
         }
 
         public interface Interface : IStream.Interface
@@ -162,58 +162,58 @@ namespace TerraFX.Interop.Windows
         public partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IWICStream*, Guid*, void**, int> QueryInterface;
+            public delegate* unmanaged[Stdcall]<IWICStream*, Guid*, void**, int> QueryInterface;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<IWICStream*, uint> AddRef;
+            public delegate* unmanaged[Stdcall]<IWICStream*, uint> AddRef;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<IWICStream*, uint> Release;
+            public delegate* unmanaged[Stdcall]<IWICStream*, uint> Release;
 
             [NativeTypeName("HRESULT (void *, ULONG, ULONG *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IWICStream*, void*, uint, uint*, int> Read;
+            public delegate* unmanaged[Stdcall]<IWICStream*, void*, uint, uint*, int> Read;
 
             [NativeTypeName("HRESULT (const void *, ULONG, ULONG *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IWICStream*, void*, uint, uint*, int> Write;
+            public delegate* unmanaged[Stdcall]<IWICStream*, void*, uint, uint*, int> Write;
 
             [NativeTypeName("HRESULT (LARGE_INTEGER, DWORD, ULARGE_INTEGER *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IWICStream*, LARGE_INTEGER, uint, ULARGE_INTEGER*, int> Seek;
+            public delegate* unmanaged[Stdcall]<IWICStream*, LARGE_INTEGER, uint, ULARGE_INTEGER*, int> Seek;
 
             [NativeTypeName("HRESULT (ULARGE_INTEGER) __attribute__((stdcall))")]
-            public delegate* unmanaged<IWICStream*, ULARGE_INTEGER, int> SetSize;
+            public delegate* unmanaged[Stdcall]<IWICStream*, ULARGE_INTEGER, int> SetSize;
 
             [NativeTypeName("HRESULT (IStream *, ULARGE_INTEGER, ULARGE_INTEGER *, ULARGE_INTEGER *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IWICStream*, IStream*, ULARGE_INTEGER, ULARGE_INTEGER*, ULARGE_INTEGER*, int> CopyTo;
+            public delegate* unmanaged[Stdcall]<IWICStream*, IStream*, ULARGE_INTEGER, ULARGE_INTEGER*, ULARGE_INTEGER*, int> CopyTo;
 
             [NativeTypeName("HRESULT (DWORD) __attribute__((stdcall))")]
-            public delegate* unmanaged<IWICStream*, uint, int> Commit;
+            public delegate* unmanaged[Stdcall]<IWICStream*, uint, int> Commit;
 
             [NativeTypeName("HRESULT () __attribute__((stdcall))")]
-            public delegate* unmanaged<IWICStream*, int> Revert;
+            public delegate* unmanaged[Stdcall]<IWICStream*, int> Revert;
 
             [NativeTypeName("HRESULT (ULARGE_INTEGER, ULARGE_INTEGER, DWORD) __attribute__((stdcall))")]
-            public delegate* unmanaged<IWICStream*, ULARGE_INTEGER, ULARGE_INTEGER, uint, int> LockRegion;
+            public delegate* unmanaged[Stdcall]<IWICStream*, ULARGE_INTEGER, ULARGE_INTEGER, uint, int> LockRegion;
 
             [NativeTypeName("HRESULT (ULARGE_INTEGER, ULARGE_INTEGER, DWORD) __attribute__((stdcall))")]
-            public delegate* unmanaged<IWICStream*, ULARGE_INTEGER, ULARGE_INTEGER, uint, int> UnlockRegion;
+            public delegate* unmanaged[Stdcall]<IWICStream*, ULARGE_INTEGER, ULARGE_INTEGER, uint, int> UnlockRegion;
 
             [NativeTypeName("HRESULT (STATSTG *, DWORD) __attribute__((stdcall))")]
-            public delegate* unmanaged<IWICStream*, STATSTG*, uint, int> Stat;
+            public delegate* unmanaged[Stdcall]<IWICStream*, STATSTG*, uint, int> Stat;
 
             [NativeTypeName("HRESULT (IStream **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IWICStream*, IStream**, int> Clone;
+            public delegate* unmanaged[Stdcall]<IWICStream*, IStream**, int> Clone;
 
             [NativeTypeName("HRESULT (IStream *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IWICStream*, IStream*, int> InitializeFromIStream;
+            public delegate* unmanaged[Stdcall]<IWICStream*, IStream*, int> InitializeFromIStream;
 
             [NativeTypeName("HRESULT (LPCWSTR, DWORD) __attribute__((stdcall))")]
-            public delegate* unmanaged<IWICStream*, ushort*, uint, int> InitializeFromFilename;
+            public delegate* unmanaged[Stdcall]<IWICStream*, ushort*, uint, int> InitializeFromFilename;
 
             [NativeTypeName("HRESULT (WICInProcPointer, DWORD) __attribute__((stdcall))")]
-            public delegate* unmanaged<IWICStream*, byte*, uint, int> InitializeFromMemory;
+            public delegate* unmanaged[Stdcall]<IWICStream*, byte*, uint, int> InitializeFromMemory;
 
             [NativeTypeName("HRESULT (IStream *, ULARGE_INTEGER, ULARGE_INTEGER) __attribute__((stdcall))")]
-            public delegate* unmanaged<IWICStream*, IStream*, ULARGE_INTEGER, ULARGE_INTEGER, int> InitializeFromIStreamRegion;
+            public delegate* unmanaged[Stdcall]<IWICStream*, IStream*, ULARGE_INTEGER, ULARGE_INTEGER, int> InitializeFromIStreamRegion;
         }
     }
 }

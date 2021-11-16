@@ -21,7 +21,7 @@ namespace TerraFX.Interop.DirectX
         [VtblIndex(0)]
         public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
         {
-            return ((delegate* unmanaged<ID2D1Layer*, Guid*, void**, int>)(lpVtbl[0]))((ID2D1Layer*)Unsafe.AsPointer(ref this), riid, ppvObject);
+            return ((delegate* unmanaged[Stdcall]<ID2D1Layer*, Guid*, void**, int>)(lpVtbl[0]))((ID2D1Layer*)Unsafe.AsPointer(ref this), riid, ppvObject);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -29,7 +29,7 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("ULONG")]
         public uint AddRef()
         {
-            return ((delegate* unmanaged<ID2D1Layer*, uint>)(lpVtbl[1]))((ID2D1Layer*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID2D1Layer*, uint>)(lpVtbl[1]))((ID2D1Layer*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -37,14 +37,14 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("ULONG")]
         public uint Release()
         {
-            return ((delegate* unmanaged<ID2D1Layer*, uint>)(lpVtbl[2]))((ID2D1Layer*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID2D1Layer*, uint>)(lpVtbl[2]))((ID2D1Layer*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(3)]
         public void GetFactory(ID2D1Factory** factory)
         {
-            ((delegate* unmanaged<ID2D1Layer*, ID2D1Factory**, void>)(lpVtbl[3]))((ID2D1Layer*)Unsafe.AsPointer(ref this), factory);
+            ((delegate* unmanaged[Stdcall]<ID2D1Layer*, ID2D1Factory**, void>)(lpVtbl[3]))((ID2D1Layer*)Unsafe.AsPointer(ref this), factory);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -53,7 +53,7 @@ namespace TerraFX.Interop.DirectX
         public D2D_SIZE_F GetSize()
         {
             D2D_SIZE_F result;
-            return *((delegate* unmanaged<ID2D1Layer*, D2D_SIZE_F*, D2D_SIZE_F*>)(lpVtbl[4]))((ID2D1Layer*)Unsafe.AsPointer(ref this), &result);
+            return *((delegate* unmanaged[Stdcall]<ID2D1Layer*, D2D_SIZE_F*, D2D_SIZE_F*>)(lpVtbl[4]))((ID2D1Layer*)Unsafe.AsPointer(ref this), &result);
         }
 
         public interface Interface : ID2D1Resource.Interface
@@ -66,19 +66,19 @@ namespace TerraFX.Interop.DirectX
         public partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID2D1Layer*, Guid*, void**, int> QueryInterface;
+            public delegate* unmanaged[Stdcall]<ID2D1Layer*, Guid*, void**, int> QueryInterface;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID2D1Layer*, uint> AddRef;
+            public delegate* unmanaged[Stdcall]<ID2D1Layer*, uint> AddRef;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID2D1Layer*, uint> Release;
+            public delegate* unmanaged[Stdcall]<ID2D1Layer*, uint> Release;
 
             [NativeTypeName("void (ID2D1Factory **) const __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID2D1Layer*, ID2D1Factory**, void> GetFactory;
+            public delegate* unmanaged[Stdcall]<ID2D1Layer*, ID2D1Factory**, void> GetFactory;
 
             [NativeTypeName("D2D1_SIZE_F () const __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID2D1Layer*, D2D_SIZE_F*, D2D_SIZE_F*> GetSize;
+            public delegate* unmanaged[Stdcall]<ID2D1Layer*, D2D_SIZE_F*, D2D_SIZE_F*> GetSize;
         }
     }
 }

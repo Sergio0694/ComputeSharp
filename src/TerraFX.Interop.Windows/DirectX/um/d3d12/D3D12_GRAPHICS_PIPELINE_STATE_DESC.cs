@@ -5,8 +5,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using TerraFX.Interop.Windows;
+using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.MemoryMarshal;
 
 namespace TerraFX.Interop.DirectX
 {

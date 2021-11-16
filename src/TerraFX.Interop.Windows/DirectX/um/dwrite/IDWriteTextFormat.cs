@@ -21,7 +21,7 @@ namespace TerraFX.Interop.DirectX
         [VtblIndex(0)]
         public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, Guid*, void**, int>)(lpVtbl[0]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), riid, ppvObject);
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, Guid*, void**, int>)(lpVtbl[0]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), riid, ppvObject);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -29,7 +29,7 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("ULONG")]
         public uint AddRef()
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, uint>)(lpVtbl[1]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, uint>)(lpVtbl[1]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -37,126 +37,126 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("ULONG")]
         public uint Release()
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, uint>)(lpVtbl[2]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, uint>)(lpVtbl[2]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(3)]
         public HRESULT SetTextAlignment(DWRITE_TEXT_ALIGNMENT textAlignment)
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, DWRITE_TEXT_ALIGNMENT, int>)(lpVtbl[3]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), textAlignment);
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_TEXT_ALIGNMENT, int>)(lpVtbl[3]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), textAlignment);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(4)]
         public HRESULT SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT paragraphAlignment)
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, DWRITE_PARAGRAPH_ALIGNMENT, int>)(lpVtbl[4]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), paragraphAlignment);
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_PARAGRAPH_ALIGNMENT, int>)(lpVtbl[4]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), paragraphAlignment);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(5)]
         public HRESULT SetWordWrapping(DWRITE_WORD_WRAPPING wordWrapping)
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, DWRITE_WORD_WRAPPING, int>)(lpVtbl[5]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), wordWrapping);
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_WORD_WRAPPING, int>)(lpVtbl[5]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), wordWrapping);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(6)]
         public HRESULT SetReadingDirection(DWRITE_READING_DIRECTION readingDirection)
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, DWRITE_READING_DIRECTION, int>)(lpVtbl[6]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), readingDirection);
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_READING_DIRECTION, int>)(lpVtbl[6]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), readingDirection);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(7)]
         public HRESULT SetFlowDirection(DWRITE_FLOW_DIRECTION flowDirection)
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, DWRITE_FLOW_DIRECTION, int>)(lpVtbl[7]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), flowDirection);
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_FLOW_DIRECTION, int>)(lpVtbl[7]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), flowDirection);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(8)]
         public HRESULT SetIncrementalTabStop(float incrementalTabStop)
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, float, int>)(lpVtbl[8]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), incrementalTabStop);
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, float, int>)(lpVtbl[8]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), incrementalTabStop);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(9)]
         public HRESULT SetTrimming([NativeTypeName("const DWRITE_TRIMMING *")] DWRITE_TRIMMING* trimmingOptions, IDWriteInlineObject* trimmingSign)
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, DWRITE_TRIMMING*, IDWriteInlineObject*, int>)(lpVtbl[9]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), trimmingOptions, trimmingSign);
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_TRIMMING*, IDWriteInlineObject*, int>)(lpVtbl[9]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), trimmingOptions, trimmingSign);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(10)]
         public HRESULT SetLineSpacing(DWRITE_LINE_SPACING_METHOD lineSpacingMethod, float lineSpacing, float baseline)
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, DWRITE_LINE_SPACING_METHOD, float, float, int>)(lpVtbl[10]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), lineSpacingMethod, lineSpacing, baseline);
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_LINE_SPACING_METHOD, float, float, int>)(lpVtbl[10]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), lineSpacingMethod, lineSpacing, baseline);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(11)]
         public DWRITE_TEXT_ALIGNMENT GetTextAlignment()
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, DWRITE_TEXT_ALIGNMENT>)(lpVtbl[11]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_TEXT_ALIGNMENT>)(lpVtbl[11]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(12)]
         public DWRITE_PARAGRAPH_ALIGNMENT GetParagraphAlignment()
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, DWRITE_PARAGRAPH_ALIGNMENT>)(lpVtbl[12]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_PARAGRAPH_ALIGNMENT>)(lpVtbl[12]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(13)]
         public DWRITE_WORD_WRAPPING GetWordWrapping()
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, DWRITE_WORD_WRAPPING>)(lpVtbl[13]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_WORD_WRAPPING>)(lpVtbl[13]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(14)]
         public DWRITE_READING_DIRECTION GetReadingDirection()
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, DWRITE_READING_DIRECTION>)(lpVtbl[14]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_READING_DIRECTION>)(lpVtbl[14]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(15)]
         public DWRITE_FLOW_DIRECTION GetFlowDirection()
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, DWRITE_FLOW_DIRECTION>)(lpVtbl[15]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_FLOW_DIRECTION>)(lpVtbl[15]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(16)]
         public float GetIncrementalTabStop()
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, float>)(lpVtbl[16]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, float>)(lpVtbl[16]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(17)]
         public HRESULT GetTrimming(DWRITE_TRIMMING* trimmingOptions, IDWriteInlineObject** trimmingSign)
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, DWRITE_TRIMMING*, IDWriteInlineObject**, int>)(lpVtbl[17]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), trimmingOptions, trimmingSign);
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_TRIMMING*, IDWriteInlineObject**, int>)(lpVtbl[17]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), trimmingOptions, trimmingSign);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(18)]
         public HRESULT GetLineSpacing(DWRITE_LINE_SPACING_METHOD* lineSpacingMethod, float* lineSpacing, float* baseline)
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, DWRITE_LINE_SPACING_METHOD*, float*, float*, int>)(lpVtbl[18]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), lineSpacingMethod, lineSpacing, baseline);
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_LINE_SPACING_METHOD*, float*, float*, int>)(lpVtbl[18]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), lineSpacingMethod, lineSpacing, baseline);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(19)]
         public HRESULT GetFontCollection(IDWriteFontCollection** fontCollection)
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, IDWriteFontCollection**, int>)(lpVtbl[19]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), fontCollection);
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, IDWriteFontCollection**, int>)(lpVtbl[19]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), fontCollection);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -164,42 +164,42 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("UINT32")]
         public uint GetFontFamilyNameLength()
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, uint>)(lpVtbl[20]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, uint>)(lpVtbl[20]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(21)]
         public HRESULT GetFontFamilyName([NativeTypeName("WCHAR *")] ushort* fontFamilyName, [NativeTypeName("UINT32")] uint nameSize)
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, ushort*, uint, int>)(lpVtbl[21]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), fontFamilyName, nameSize);
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, ushort*, uint, int>)(lpVtbl[21]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), fontFamilyName, nameSize);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(22)]
         public DWRITE_FONT_WEIGHT GetFontWeight()
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, DWRITE_FONT_WEIGHT>)(lpVtbl[22]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_FONT_WEIGHT>)(lpVtbl[22]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(23)]
         public DWRITE_FONT_STYLE GetFontStyle()
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, DWRITE_FONT_STYLE>)(lpVtbl[23]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_FONT_STYLE>)(lpVtbl[23]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(24)]
         public DWRITE_FONT_STRETCH GetFontStretch()
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, DWRITE_FONT_STRETCH>)(lpVtbl[24]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_FONT_STRETCH>)(lpVtbl[24]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(25)]
         public float GetFontSize()
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, float>)(lpVtbl[25]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, float>)(lpVtbl[25]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -207,14 +207,14 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("UINT32")]
         public uint GetLocaleNameLength()
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, uint>)(lpVtbl[26]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, uint>)(lpVtbl[26]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(27)]
         public HRESULT GetLocaleName([NativeTypeName("WCHAR *")] ushort* localeName, [NativeTypeName("UINT32")] uint nameSize)
         {
-            return ((delegate* unmanaged<IDWriteTextFormat*, ushort*, uint, int>)(lpVtbl[27]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), localeName, nameSize);
+            return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, ushort*, uint, int>)(lpVtbl[27]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), localeName, nameSize);
         }
 
         public interface Interface : IUnknown.Interface
@@ -300,88 +300,88 @@ namespace TerraFX.Interop.DirectX
         public partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, Guid*, void**, int> QueryInterface;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, Guid*, void**, int> QueryInterface;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, uint> AddRef;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, uint> AddRef;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, uint> Release;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, uint> Release;
 
             [NativeTypeName("HRESULT (DWRITE_TEXT_ALIGNMENT) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, DWRITE_TEXT_ALIGNMENT, int> SetTextAlignment;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_TEXT_ALIGNMENT, int> SetTextAlignment;
 
             [NativeTypeName("HRESULT (DWRITE_PARAGRAPH_ALIGNMENT) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, DWRITE_PARAGRAPH_ALIGNMENT, int> SetParagraphAlignment;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_PARAGRAPH_ALIGNMENT, int> SetParagraphAlignment;
 
             [NativeTypeName("HRESULT (DWRITE_WORD_WRAPPING) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, DWRITE_WORD_WRAPPING, int> SetWordWrapping;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_WORD_WRAPPING, int> SetWordWrapping;
 
             [NativeTypeName("HRESULT (DWRITE_READING_DIRECTION) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, DWRITE_READING_DIRECTION, int> SetReadingDirection;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_READING_DIRECTION, int> SetReadingDirection;
 
             [NativeTypeName("HRESULT (DWRITE_FLOW_DIRECTION) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, DWRITE_FLOW_DIRECTION, int> SetFlowDirection;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_FLOW_DIRECTION, int> SetFlowDirection;
 
             [NativeTypeName("HRESULT (FLOAT) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, float, int> SetIncrementalTabStop;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, float, int> SetIncrementalTabStop;
 
             [NativeTypeName("HRESULT (const DWRITE_TRIMMING *, IDWriteInlineObject *) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, DWRITE_TRIMMING*, IDWriteInlineObject*, int> SetTrimming;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_TRIMMING*, IDWriteInlineObject*, int> SetTrimming;
 
             [NativeTypeName("HRESULT (DWRITE_LINE_SPACING_METHOD, FLOAT, FLOAT) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, DWRITE_LINE_SPACING_METHOD, float, float, int> SetLineSpacing;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_LINE_SPACING_METHOD, float, float, int> SetLineSpacing;
 
             [NativeTypeName("DWRITE_TEXT_ALIGNMENT () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, DWRITE_TEXT_ALIGNMENT> GetTextAlignment;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_TEXT_ALIGNMENT> GetTextAlignment;
 
             [NativeTypeName("DWRITE_PARAGRAPH_ALIGNMENT () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, DWRITE_PARAGRAPH_ALIGNMENT> GetParagraphAlignment;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_PARAGRAPH_ALIGNMENT> GetParagraphAlignment;
 
             [NativeTypeName("DWRITE_WORD_WRAPPING () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, DWRITE_WORD_WRAPPING> GetWordWrapping;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_WORD_WRAPPING> GetWordWrapping;
 
             [NativeTypeName("DWRITE_READING_DIRECTION () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, DWRITE_READING_DIRECTION> GetReadingDirection;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_READING_DIRECTION> GetReadingDirection;
 
             [NativeTypeName("DWRITE_FLOW_DIRECTION () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, DWRITE_FLOW_DIRECTION> GetFlowDirection;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_FLOW_DIRECTION> GetFlowDirection;
 
             [NativeTypeName("FLOAT () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, float> GetIncrementalTabStop;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, float> GetIncrementalTabStop;
 
             [NativeTypeName("HRESULT (DWRITE_TRIMMING *, IDWriteInlineObject **) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, DWRITE_TRIMMING*, IDWriteInlineObject**, int> GetTrimming;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_TRIMMING*, IDWriteInlineObject**, int> GetTrimming;
 
             [NativeTypeName("HRESULT (DWRITE_LINE_SPACING_METHOD *, FLOAT *, FLOAT *) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, DWRITE_LINE_SPACING_METHOD*, float*, float*, int> GetLineSpacing;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_LINE_SPACING_METHOD*, float*, float*, int> GetLineSpacing;
 
             [NativeTypeName("HRESULT (IDWriteFontCollection **) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, IDWriteFontCollection**, int> GetFontCollection;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, IDWriteFontCollection**, int> GetFontCollection;
 
             [NativeTypeName("UINT32 () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, uint> GetFontFamilyNameLength;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, uint> GetFontFamilyNameLength;
 
             [NativeTypeName("HRESULT (WCHAR *, UINT32) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, ushort*, uint, int> GetFontFamilyName;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, ushort*, uint, int> GetFontFamilyName;
 
             [NativeTypeName("DWRITE_FONT_WEIGHT () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, DWRITE_FONT_WEIGHT> GetFontWeight;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_FONT_WEIGHT> GetFontWeight;
 
             [NativeTypeName("DWRITE_FONT_STYLE () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, DWRITE_FONT_STYLE> GetFontStyle;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_FONT_STYLE> GetFontStyle;
 
             [NativeTypeName("DWRITE_FONT_STRETCH () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, DWRITE_FONT_STRETCH> GetFontStretch;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, DWRITE_FONT_STRETCH> GetFontStretch;
 
             [NativeTypeName("FLOAT () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, float> GetFontSize;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, float> GetFontSize;
 
             [NativeTypeName("UINT32 () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, uint> GetLocaleNameLength;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, uint> GetLocaleNameLength;
 
             [NativeTypeName("HRESULT (WCHAR *, UINT32) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDWriteTextFormat*, ushort*, uint, int> GetLocaleName;
+            public delegate* unmanaged[Stdcall]<IDWriteTextFormat*, ushort*, uint, int> GetLocaleName;
         }
     }
 }

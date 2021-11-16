@@ -21,7 +21,7 @@ namespace TerraFX.Interop.DirectX
         [VtblIndex(0)]
         public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
         {
-            return ((delegate* unmanaged<IDxcOperationResult*, Guid*, void**, int>)(lpVtbl[0]))((IDxcOperationResult*)Unsafe.AsPointer(ref this), riid, ppvObject);
+            return ((delegate* unmanaged[Stdcall]<IDxcOperationResult*, Guid*, void**, int>)(lpVtbl[0]))((IDxcOperationResult*)Unsafe.AsPointer(ref this), riid, ppvObject);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -29,7 +29,7 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("ULONG")]
         public uint AddRef()
         {
-            return ((delegate* unmanaged<IDxcOperationResult*, uint>)(lpVtbl[1]))((IDxcOperationResult*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDxcOperationResult*, uint>)(lpVtbl[1]))((IDxcOperationResult*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -37,28 +37,28 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("ULONG")]
         public uint Release()
         {
-            return ((delegate* unmanaged<IDxcOperationResult*, uint>)(lpVtbl[2]))((IDxcOperationResult*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IDxcOperationResult*, uint>)(lpVtbl[2]))((IDxcOperationResult*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(3)]
         public HRESULT GetStatus(HRESULT* pStatus)
         {
-            return ((delegate* unmanaged<IDxcOperationResult*, HRESULT*, int>)(lpVtbl[3]))((IDxcOperationResult*)Unsafe.AsPointer(ref this), pStatus);
+            return ((delegate* unmanaged[Stdcall]<IDxcOperationResult*, HRESULT*, int>)(lpVtbl[3]))((IDxcOperationResult*)Unsafe.AsPointer(ref this), pStatus);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(4)]
         public HRESULT GetResult(IDxcBlob** ppResult)
         {
-            return ((delegate* unmanaged<IDxcOperationResult*, IDxcBlob**, int>)(lpVtbl[4]))((IDxcOperationResult*)Unsafe.AsPointer(ref this), ppResult);
+            return ((delegate* unmanaged[Stdcall]<IDxcOperationResult*, IDxcBlob**, int>)(lpVtbl[4]))((IDxcOperationResult*)Unsafe.AsPointer(ref this), ppResult);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(5)]
         public HRESULT GetErrorBuffer(IDxcBlobEncoding** ppErrors)
         {
-            return ((delegate* unmanaged<IDxcOperationResult*, IDxcBlobEncoding**, int>)(lpVtbl[5]))((IDxcOperationResult*)Unsafe.AsPointer(ref this), ppErrors);
+            return ((delegate* unmanaged[Stdcall]<IDxcOperationResult*, IDxcBlobEncoding**, int>)(lpVtbl[5]))((IDxcOperationResult*)Unsafe.AsPointer(ref this), ppErrors);
         }
 
         public interface Interface : IUnknown.Interface
@@ -76,22 +76,22 @@ namespace TerraFX.Interop.DirectX
         public partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDxcOperationResult*, Guid*, void**, int> QueryInterface;
+            public delegate* unmanaged[Stdcall]<IDxcOperationResult*, Guid*, void**, int> QueryInterface;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<IDxcOperationResult*, uint> AddRef;
+            public delegate* unmanaged[Stdcall]<IDxcOperationResult*, uint> AddRef;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<IDxcOperationResult*, uint> Release;
+            public delegate* unmanaged[Stdcall]<IDxcOperationResult*, uint> Release;
 
             [NativeTypeName("HRESULT (HRESULT *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDxcOperationResult*, HRESULT*, int> GetStatus;
+            public delegate* unmanaged[Stdcall]<IDxcOperationResult*, HRESULT*, int> GetStatus;
 
             [NativeTypeName("HRESULT (IDxcBlob **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDxcOperationResult*, IDxcBlob**, int> GetResult;
+            public delegate* unmanaged[Stdcall]<IDxcOperationResult*, IDxcBlob**, int> GetResult;
 
             [NativeTypeName("HRESULT (IDxcBlobEncoding **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IDxcOperationResult*, IDxcBlobEncoding**, int> GetErrorBuffer;
+            public delegate* unmanaged[Stdcall]<IDxcOperationResult*, IDxcBlobEncoding**, int> GetErrorBuffer;
         }
     }
 }

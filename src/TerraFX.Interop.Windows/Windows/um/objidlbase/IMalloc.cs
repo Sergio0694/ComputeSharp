@@ -20,7 +20,7 @@ namespace TerraFX.Interop.Windows
         [VtblIndex(0)]
         public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
         {
-            return ((delegate* unmanaged<IMalloc*, Guid*, void**, int>)(lpVtbl[0]))((IMalloc*)Unsafe.AsPointer(ref this), riid, ppvObject);
+            return ((delegate* unmanaged[Stdcall]<IMalloc*, Guid*, void**, int>)(lpVtbl[0]))((IMalloc*)Unsafe.AsPointer(ref this), riid, ppvObject);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -28,7 +28,7 @@ namespace TerraFX.Interop.Windows
         [return: NativeTypeName("ULONG")]
         public uint AddRef()
         {
-            return ((delegate* unmanaged<IMalloc*, uint>)(lpVtbl[1]))((IMalloc*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IMalloc*, uint>)(lpVtbl[1]))((IMalloc*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -36,28 +36,28 @@ namespace TerraFX.Interop.Windows
         [return: NativeTypeName("ULONG")]
         public uint Release()
         {
-            return ((delegate* unmanaged<IMalloc*, uint>)(lpVtbl[2]))((IMalloc*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<IMalloc*, uint>)(lpVtbl[2]))((IMalloc*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(3)]
         public void* Alloc([NativeTypeName("SIZE_T")] nuint cb)
         {
-            return ((delegate* unmanaged<IMalloc*, nuint, void*>)(lpVtbl[3]))((IMalloc*)Unsafe.AsPointer(ref this), cb);
+            return ((delegate* unmanaged[Stdcall]<IMalloc*, nuint, void*>)(lpVtbl[3]))((IMalloc*)Unsafe.AsPointer(ref this), cb);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(4)]
         public void* Realloc(void* pv, [NativeTypeName("SIZE_T")] nuint cb)
         {
-            return ((delegate* unmanaged<IMalloc*, void*, nuint, void*>)(lpVtbl[4]))((IMalloc*)Unsafe.AsPointer(ref this), pv, cb);
+            return ((delegate* unmanaged[Stdcall]<IMalloc*, void*, nuint, void*>)(lpVtbl[4]))((IMalloc*)Unsafe.AsPointer(ref this), pv, cb);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(5)]
         public void Free(void* pv)
         {
-            ((delegate* unmanaged<IMalloc*, void*, void>)(lpVtbl[5]))((IMalloc*)Unsafe.AsPointer(ref this), pv);
+            ((delegate* unmanaged[Stdcall]<IMalloc*, void*, void>)(lpVtbl[5]))((IMalloc*)Unsafe.AsPointer(ref this), pv);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -65,21 +65,21 @@ namespace TerraFX.Interop.Windows
         [return: NativeTypeName("SIZE_T")]
         public nuint GetSize(void* pv)
         {
-            return ((delegate* unmanaged<IMalloc*, void*, nuint>)(lpVtbl[6]))((IMalloc*)Unsafe.AsPointer(ref this), pv);
+            return ((delegate* unmanaged[Stdcall]<IMalloc*, void*, nuint>)(lpVtbl[6]))((IMalloc*)Unsafe.AsPointer(ref this), pv);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(7)]
         public int DidAlloc(void* pv)
         {
-            return ((delegate* unmanaged<IMalloc*, void*, int>)(lpVtbl[7]))((IMalloc*)Unsafe.AsPointer(ref this), pv);
+            return ((delegate* unmanaged[Stdcall]<IMalloc*, void*, int>)(lpVtbl[7]))((IMalloc*)Unsafe.AsPointer(ref this), pv);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(8)]
         public void HeapMinimize()
         {
-            ((delegate* unmanaged<IMalloc*, void>)(lpVtbl[8]))((IMalloc*)Unsafe.AsPointer(ref this));
+            ((delegate* unmanaged[Stdcall]<IMalloc*, void>)(lpVtbl[8]))((IMalloc*)Unsafe.AsPointer(ref this));
         }
 
         public interface Interface : IUnknown.Interface
@@ -107,31 +107,31 @@ namespace TerraFX.Interop.Windows
         public partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged<IMalloc*, Guid*, void**, int> QueryInterface;
+            public delegate* unmanaged[Stdcall]<IMalloc*, Guid*, void**, int> QueryInterface;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<IMalloc*, uint> AddRef;
+            public delegate* unmanaged[Stdcall]<IMalloc*, uint> AddRef;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<IMalloc*, uint> Release;
+            public delegate* unmanaged[Stdcall]<IMalloc*, uint> Release;
 
             [NativeTypeName("void *(SIZE_T) __attribute__((stdcall))")]
-            public delegate* unmanaged<IMalloc*, nuint, void*> Alloc;
+            public delegate* unmanaged[Stdcall]<IMalloc*, nuint, void*> Alloc;
 
             [NativeTypeName("void *(void *, SIZE_T) __attribute__((stdcall))")]
-            public delegate* unmanaged<IMalloc*, void*, nuint, void*> Realloc;
+            public delegate* unmanaged[Stdcall]<IMalloc*, void*, nuint, void*> Realloc;
 
             [NativeTypeName("void (void *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IMalloc*, void*, void> Free;
+            public delegate* unmanaged[Stdcall]<IMalloc*, void*, void> Free;
 
             [NativeTypeName("SIZE_T (void *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IMalloc*, void*, nuint> GetSize;
+            public delegate* unmanaged[Stdcall]<IMalloc*, void*, nuint> GetSize;
 
             [NativeTypeName("int (void *) __attribute__((stdcall))")]
-            public delegate* unmanaged<IMalloc*, void*, int> DidAlloc;
+            public delegate* unmanaged[Stdcall]<IMalloc*, void*, int> DidAlloc;
 
             [NativeTypeName("void () __attribute__((stdcall))")]
-            public delegate* unmanaged<IMalloc*, void> HeapMinimize;
+            public delegate* unmanaged[Stdcall]<IMalloc*, void> HeapMinimize;
         }
     }
 }

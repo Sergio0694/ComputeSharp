@@ -21,7 +21,7 @@ namespace TerraFX.Interop.DirectX
         [VtblIndex(0)]
         public HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject)
         {
-            return ((delegate* unmanaged<ID3D12Debug1*, Guid*, void**, int>)(lpVtbl[0]))((ID3D12Debug1*)Unsafe.AsPointer(ref this), riid, ppvObject);
+            return ((delegate* unmanaged[Stdcall]<ID3D12Debug1*, Guid*, void**, int>)(lpVtbl[0]))((ID3D12Debug1*)Unsafe.AsPointer(ref this), riid, ppvObject);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -29,7 +29,7 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("ULONG")]
         public uint AddRef()
         {
-            return ((delegate* unmanaged<ID3D12Debug1*, uint>)(lpVtbl[1]))((ID3D12Debug1*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12Debug1*, uint>)(lpVtbl[1]))((ID3D12Debug1*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -37,28 +37,28 @@ namespace TerraFX.Interop.DirectX
         [return: NativeTypeName("ULONG")]
         public uint Release()
         {
-            return ((delegate* unmanaged<ID3D12Debug1*, uint>)(lpVtbl[2]))((ID3D12Debug1*)Unsafe.AsPointer(ref this));
+            return ((delegate* unmanaged[Stdcall]<ID3D12Debug1*, uint>)(lpVtbl[2]))((ID3D12Debug1*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(3)]
         public void EnableDebugLayer()
         {
-            ((delegate* unmanaged<ID3D12Debug1*, void>)(lpVtbl[3]))((ID3D12Debug1*)Unsafe.AsPointer(ref this));
+            ((delegate* unmanaged[Stdcall]<ID3D12Debug1*, void>)(lpVtbl[3]))((ID3D12Debug1*)Unsafe.AsPointer(ref this));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(4)]
         public void SetEnableGPUBasedValidation(BOOL Enable)
         {
-            ((delegate* unmanaged<ID3D12Debug1*, BOOL, void>)(lpVtbl[4]))((ID3D12Debug1*)Unsafe.AsPointer(ref this), Enable);
+            ((delegate* unmanaged[Stdcall]<ID3D12Debug1*, BOOL, void>)(lpVtbl[4]))((ID3D12Debug1*)Unsafe.AsPointer(ref this), Enable);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(5)]
         public void SetEnableSynchronizedCommandQueueValidation(BOOL Enable)
         {
-            ((delegate* unmanaged<ID3D12Debug1*, BOOL, void>)(lpVtbl[5]))((ID3D12Debug1*)Unsafe.AsPointer(ref this), Enable);
+            ((delegate* unmanaged[Stdcall]<ID3D12Debug1*, BOOL, void>)(lpVtbl[5]))((ID3D12Debug1*)Unsafe.AsPointer(ref this), Enable);
         }
 
         public interface Interface : IUnknown.Interface
@@ -76,22 +76,22 @@ namespace TerraFX.Interop.DirectX
         public partial struct Vtbl
         {
             [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12Debug1*, Guid*, void**, int> QueryInterface;
+            public delegate* unmanaged[Stdcall]<ID3D12Debug1*, Guid*, void**, int> QueryInterface;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12Debug1*, uint> AddRef;
+            public delegate* unmanaged[Stdcall]<ID3D12Debug1*, uint> AddRef;
 
             [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12Debug1*, uint> Release;
+            public delegate* unmanaged[Stdcall]<ID3D12Debug1*, uint> Release;
 
             [NativeTypeName("void () __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12Debug1*, void> EnableDebugLayer;
+            public delegate* unmanaged[Stdcall]<ID3D12Debug1*, void> EnableDebugLayer;
 
             [NativeTypeName("void (BOOL) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12Debug1*, BOOL, void> SetEnableGPUBasedValidation;
+            public delegate* unmanaged[Stdcall]<ID3D12Debug1*, BOOL, void> SetEnableGPUBasedValidation;
 
             [NativeTypeName("void (BOOL) __attribute__((stdcall))")]
-            public delegate* unmanaged<ID3D12Debug1*, BOOL, void> SetEnableSynchronizedCommandQueueValidation;
+            public delegate* unmanaged[Stdcall]<ID3D12Debug1*, BOOL, void> SetEnableSynchronizedCommandQueueValidation;
         }
     }
 }
