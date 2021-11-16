@@ -1,8 +1,8 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-#if !NET6_0
-using RuntimeHelpers = ComputeSharp.SourceGenerators.Helpers.RuntimeHelpers;
-using MemoryMarshal = ComputeSharp.SourceGenerators.Helpers.MemoryMarshal;
+#if !NET6_0_OR_GREATER
+using RuntimeHelpers = ComputeSharp.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
+using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.MemoryMarshal;
 #endif
 
 #nullable enable
@@ -392,7 +392,11 @@ public unsafe partial struct Bool2
     /// <inheritdoc/>
     public override readonly string ToString()
     {
+#if NET6_0_OR_GREATER
         return string.Create(null, stackalloc char[32], $"<{this.x}, {this.y}>");
+#else
+        return $"<{this.x}, {this.y}>";
+#endif
     }
 
 #endif

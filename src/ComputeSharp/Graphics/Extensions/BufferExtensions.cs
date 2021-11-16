@@ -3,6 +3,9 @@ using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
 using ComputeSharp.Resources;
 using Microsoft.Toolkit.Diagnostics;
+#if !NET6_0_OR_GREATER
+using GC = ComputeSharp.NetStandard.System.GC;
+#endif
 
 namespace ComputeSharp;
 

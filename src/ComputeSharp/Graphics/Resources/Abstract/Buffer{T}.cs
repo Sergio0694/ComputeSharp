@@ -1,6 +1,5 @@
 ﻿using System.Buffers;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using ComputeSharp.Core.Helpers;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Extensions;
@@ -11,6 +10,11 @@ using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_FEATURE;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
+#if NET6_0_OR_GREATER
+using MemoryMarshal = System.Runtime.InteropServices.MemoryMarshal;
+#else
+using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.MemoryMarshal;
+#endif
 
 namespace ComputeSharp.Resources;
 

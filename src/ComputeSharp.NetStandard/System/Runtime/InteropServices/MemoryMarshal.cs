@@ -23,6 +23,17 @@ internal static class MemoryMarshal
     }
 
     /// <summary>
+    /// Returns a reference to the 0th element of <paramref name="array"/>. If the array is empty, returns a reference
+    /// to where the 0th element would have been stored. Such a reference may be used for pinning but must never be dereferenced.
+    /// </summary>
+    /// <exception cref="NullReferenceException"><paramref name="array"/> is <see langword="null"/>.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ref T GetArrayDataReference<T>(T[] array)
+    {
+        return ref global::System.Runtime.InteropServices.MemoryMarshal.GetReference(array.AsSpan());
+    }
+
+    /// <summary>
     /// Creates a new <see cref="Span{T}"/> from a given reference.
     /// </summary>
     /// <typeparam name="T">The type of reference to wrap.</typeparam>

@@ -15,7 +15,10 @@ namespace ComputeSharp;
 /// </para>
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct Rg32 : IEquatable<Rg32>, ISpanFormattable, IUnorm<Vector2>, IUnorm<Float2>
+public struct Rg32 : IEquatable<Rg32>, IUnorm<Vector2>, IUnorm<Float2>
+#if NET6_0_OR_GREATER
+    , ISpanFormattable
+#endif
 {
     /// <summary>
     /// The red component.
@@ -86,6 +89,7 @@ public struct Rg32 : IEquatable<Rg32>, ISpanFormattable, IUnorm<Vector2>, IUnorm
     /// <inheritdoc/>
     public override readonly string ToString() => $"{nameof(Rg32)}({this.R}, {this.G})";
 
+#if NET6_0_OR_GREATER
     /// <inheritdoc/>
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
@@ -97,4 +101,5 @@ public struct Rg32 : IEquatable<Rg32>, ISpanFormattable, IUnorm<Vector2>, IUnorm
     {
         return destination.TryWrite(provider, $"{nameof(Rg32)}({this.R}, {this.G})", out charsWritten);
     }
+#endif
 }

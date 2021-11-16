@@ -14,7 +14,10 @@ namespace ComputeSharp;
 /// </para>
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct R8 : IEquatable<R8>, ISpanFormattable, IUnorm<float>
+public struct R8 : IEquatable<R8>, IUnorm<float>
+#if NET6_0_OR_GREATER
+    , ISpanFormattable
+#endif
 {
     /// <summary>
     /// The red component.
@@ -78,6 +81,7 @@ public struct R8 : IEquatable<R8>, ISpanFormattable, IUnorm<float>
     /// <inheritdoc/>
     public override readonly string ToString() => $"{nameof(R8)}({this.R})";
 
+#if NET6_0_OR_GREATER
     /// <inheritdoc/>
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
@@ -89,4 +93,5 @@ public struct R8 : IEquatable<R8>, ISpanFormattable, IUnorm<float>
     {
         return destination.TryWrite(provider, $"{nameof(R8)}({this.R})", out charsWritten);
     }
+#endif
 }

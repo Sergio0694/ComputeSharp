@@ -48,17 +48,19 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ComputeSharp.Sample.FSharp"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Sample.FSharp.Shaders", "samples\ComputeSharp.Sample.FSharp.Shaders\ComputeSharp.Sample.FSharp.Shaders.csproj", "{1F37A704-3CDF-45BB-8114-ED9137E5F2CF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TerraFX.Interop.Windows", "src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.csproj", "{A2F9F841-854C-4341-B2C1-7A0A72EBEC16}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Polyfills", "Polyfills", "{8DCE343F-BA78-4FE1-B562-B57C603A8BAA}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.NetStandard", "src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.shproj", "{A5997814-D8D2-4541-87AC-C3E53CAA67C0}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TerraFX.Interop.Windows", "src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.shproj", "{514FF00E-BBF0-4D55-A47C-EEEB6208ADCE}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{314eb353-e7e3-4146-8111-685cc83ec1de}*SharedItemsImports = 5
+		src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems*{314eb353-e7e3-4146-8111-685cc83ec1de}*SharedItemsImports = 5
+		src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems*{514ff00e-bbf0-4d55-a47c-eeeb6208adce}*SharedItemsImports = 13
 		samples\ComputeSharp.Sample.Shared\ComputeSharp.Sample.Shared.projitems*{7048deea-0a6f-46a0-b951-b682a8f1cb75}*SharedItemsImports = 5
 		samples\ComputeSharp.Sample.Shared\ComputeSharp.Sample.Shared.projitems*{8cefc324-ca6c-4845-9ad9-70b92bd87057}*SharedItemsImports = 13
-		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{a2f9f841-854c-4341-b2c1-7a0a72ebec16}*SharedItemsImports = 5
 		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{a5997814-d8d2-4541-87ac-c3e53caa67c0}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -164,14 +166,6 @@ Global
 		{1F37A704-3CDF-45BB-8114-ED9137E5F2CF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1F37A704-3CDF-45BB-8114-ED9137E5F2CF}.Release|x64.ActiveCfg = Release|Any CPU
 		{1F37A704-3CDF-45BB-8114-ED9137E5F2CF}.Release|x64.Build.0 = Release|Any CPU
-		{A2F9F841-854C-4341-B2C1-7A0A72EBEC16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A2F9F841-854C-4341-B2C1-7A0A72EBEC16}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A2F9F841-854C-4341-B2C1-7A0A72EBEC16}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{A2F9F841-854C-4341-B2C1-7A0A72EBEC16}.Debug|x64.Build.0 = Debug|Any CPU
-		{A2F9F841-854C-4341-B2C1-7A0A72EBEC16}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A2F9F841-854C-4341-B2C1-7A0A72EBEC16}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A2F9F841-854C-4341-B2C1-7A0A72EBEC16}.Release|x64.ActiveCfg = Release|Any CPU
-		{A2F9F841-854C-4341-B2C1-7A0A72EBEC16}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -189,6 +183,7 @@ Global
 		{7C625EC4-F599-4350-A915-F046DF2406D3} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 		{1F37A704-3CDF-45BB-8114-ED9137E5F2CF} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 		{A5997814-D8D2-4541-87AC-C3E53CAA67C0} = {8DCE343F-BA78-4FE1-B562-B57C603A8BAA}
+		{514FF00E-BBF0-4D55-A47C-EEEB6208ADCE} = {8DCE343F-BA78-4FE1-B562-B57C603A8BAA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4664C5E3-0340-4E22-BCFD-98AAEDF5F2DC}

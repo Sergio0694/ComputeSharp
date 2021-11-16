@@ -48,14 +48,12 @@ public readonly struct Bool
         return Value.ToString();
     }
 
-#if !SOURCE_GENERATOR
-
+#if NET6_0_OR_GREATER
     /// <inheritdoc cref="bool.TryFormat(Span{char}, out int)"/>
     public bool TryFormat(Span<char> destination, out int charsWritten)
     {
         return Value.TryFormat(destination, out charsWritten);
     }
-
 #endif
 
     /// <summary>

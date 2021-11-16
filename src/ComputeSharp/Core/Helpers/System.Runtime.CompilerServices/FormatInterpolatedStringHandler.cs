@@ -24,7 +24,7 @@ internal ref struct FormatInterpolatedStringHandler
     private readonly string? format;
 
     /// <summary>
-    /// Optional provider to pass to <see cref="IFormattable.ToString(string?, IFormatProvider?)"/> or <see cref="ISpanFormattable.TryFormat(Span{char}, out int, ReadOnlySpan{char}, IFormatProvider?)"/> calls.
+    /// Optional provider to pass to <see cref="IFormattable.ToString(string?, IFormatProvider?)"/> calls.
     /// </summary>
     private readonly IFormatProvider? formatProvider;
 
@@ -95,7 +95,11 @@ internal ref struct FormatInterpolatedStringHandler
     /// </remarks>
     public string ToStringAndClear()
     {
+#if NET6_0_OR_GREATER
         string result = new(characters.Slice(0, position));
+#else
+        string result = characters.Slice(0, position).ToString();
+#endif
         char[]? toReturn = arrayToReturnToPool;
 
         this = default;
@@ -142,7 +146,11 @@ internal ref struct FormatInterpolatedStringHandler
             {
                 Unsafe.WriteUnaligned(
                     ref Unsafe.As<char, byte>(ref Unsafe.Add(ref MemoryMarshal.GetReference(chars), pos)),
+#if NET6_0_OR_GREATER
                     Unsafe.ReadUnaligned<int>(ref Unsafe.As<char, byte>(ref Unsafe.AsRef(in value.GetPinnableReference()))));
+#else
+                    Unsafe.ReadUnaligned<int>(ref Unsafe.As<char, byte>(ref MemoryMarshal.GetReference(value.AsSpan()))));
+#endif
 
                 position = pos + 2;
             }
@@ -162,7 +170,11 @@ internal ref struct FormatInterpolatedStringHandler
     /// <param name="value">The string to write.</param>
     private void AppendStringDirect(string value)
     {
+#if NET6_0_OR_GREATER
         if (value.TryCopyTo(characters.Slice(position)))
+#else
+        if (value.AsSpan().TryCopyTo(characters.Slice(position)))
+#endif
         {
             position += value.Length;
         }
@@ -186,7 +198,11 @@ internal ref struct FormatInterpolatedStringHandler
     /// </summary>
     /// <param name="value">The value to write.</param>
     public void AppendFormatted<T>(T value)
+#if NET6_0_OR_GREATER
         where T : ISpanFormattable
+#else
+        where T : IFormattable
+#endif
     {
         if (hasCustomFormatter)
         {
@@ -194,6 +210,7 @@ internal ref struct FormatInterpolatedStringHandler
             return;
         }
 
+#if NET6_0_OR_GREATER
         int charsWritten;
 
         while (!value.TryFormat(characters.Slice(position), out charsWritten, format, formatProvider))
@@ -202,6 +219,9 @@ internal ref struct FormatInterpolatedStringHandler
         }
 
         position += charsWritten;
+#else
+        AppendStringDirect(value.ToString(format, formatProvider));
+#endif
     }
 
     /// <summary>
@@ -222,7 +242,6 @@ internal ref struct FormatInterpolatedStringHandler
     /// <param name="format">The format string.</param>
     [MethodImpl(MethodImplOptions.NoInlining)]
     private void AppendCustomFormatter<T>(T value, string? format)
-        where T : ISpanFormattable
     {
         ICustomFormatter? formatter = (ICustomFormatter?)formatProvider?.GetFormat(typeof(ICustomFormatter));
 
@@ -241,7 +260,11 @@ internal ref struct FormatInterpolatedStringHandler
     {
         Grow(value.Length);
 
+#if NET6_0_OR_GREATER
         value.CopyTo(characters.Slice(position));
+#else
+        value.AsSpan().CopyTo(characters.Slice(position));
+#endif
 
         position += value.Length;
     }
@@ -271,7 +294,11 @@ internal ref struct FormatInterpolatedStringHandler
     private void GrowCore(uint requiredMinCapacity)
     {
         uint newCapacity = Math.Max(requiredMinCapacity, Math.Min((uint)characters.Length * 2, 0x3FFFFFDF));
+#if NET6_0_OR_GREATER
         int arraySize = (int)Math.Clamp(newCapacity, MinimumArrayPoolLength, int.MaxValue);
+#else
+        int arraySize = (int)Math.Min(Math.Max(newCapacity, MinimumArrayPoolLength), int.MaxValue);
+#endif
         char[] newArray = ArrayPool<char>.Shared.Rent(arraySize);
 
         characters.Slice(0, position).CopyTo(newArray);

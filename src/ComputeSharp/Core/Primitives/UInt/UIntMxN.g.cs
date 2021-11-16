@@ -1,8 +1,8 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-#if !NET6_0
-using RuntimeHelpers = ComputeSharp.SourceGenerators.Helpers.RuntimeHelpers;
-using MemoryMarshal = ComputeSharp.SourceGenerators.Helpers.MemoryMarshal;
+#if !NET6_0_OR_GREATER
+using RuntimeHelpers = ComputeSharp.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
+using MemoryMarshal = ComputeSharp.NetStandard.System.Runtime.InteropServices.MemoryMarshal;
 #endif
 
 namespace ComputeSharp;

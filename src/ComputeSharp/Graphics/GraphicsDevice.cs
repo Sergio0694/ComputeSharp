@@ -375,7 +375,11 @@ public sealed unsafe class GraphicsDevice : NativeObject
         // Execute the command list
         d3D12CommandQueue->ExecuteCommandLists(1, commandList.GetD3D12CommandListAddressOf());
 
+#if NET6_0_OR_GREATER
         ulong updatedFenceValue = Interlocked.Increment(ref d3D12FenceValue);
+#else
+        ulong updatedFenceValue = (ulong)Interlocked.Increment(ref Unsafe.As<ulong, long>(ref d3D12FenceValue));
+#endif
 
         // Signal to the target fence with the updated value. Note that incrementing the
         // target fence value to signal must be done after executing the command list.
