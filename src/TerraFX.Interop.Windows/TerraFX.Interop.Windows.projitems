@@ -35,12 +35,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_2\IDXGISwapChain1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_3\DirectX.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_3\DXGI.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_3\DXGI_MATRIX_3X2_F.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_3\IDXGIFactory3.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_3\IDXGISwapChain2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_4\IDXGIFactory4.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_4\IDXGISwapChain3.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_5\DXGI_FEATURE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_5\IDXGIFactory5.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_6\DXGI_GPU_PREFERENCE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_6\IDXGIFactory6.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgicommon\DXGI_COLOR_SPACE_TYPE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgicommon\DXGI_RATIONAL.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgicommon\DXGI_RATIONAL.Manual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgicommon\DXGI_SAMPLE_DESC.cs" />
@@ -55,6 +59,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgitype\DXGI_RGB.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgitype\DXGI_RGB.Manual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgitype\DXGI_RGBA.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi\DXGI.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi\DXGI_ADAPTER_DESC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi\DXGI_ADAPTER_DESC1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi\DXGI_ADAPTER_FLAG.cs" />
@@ -63,6 +68,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi\DXGI_OUTPUT_DESC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi\DXGI_SURFACE_DESC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi\DXGI_SWAP_CHAIN_DESC.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi\DXGI_SWAP_CHAIN_FLAG.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi\DXGI_SWAP_EFFECT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi\IDXGIAdapter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi\IDXGIAdapter1.cs" />
@@ -606,6 +612,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\PropIdlBase\CAUL.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\PropIdlBase\PROPVARIANT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\PropIdlBase\VERSIONEDSTREAM.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\um\synchapi\Windows.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\Unknwnbase\IUnknown.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\wincodec\CLSID.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\wincodec\GUID.cs" />
@@ -651,5 +658,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\winnt\LUID.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\winnt\ULARGE_INTEGER.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\winnt\Windows.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WinRT\um\windows.ui.xaml.media.dxinterop\ISwapChainPanelNative.cs" />
   </ItemGroup>
 </Project>
