@@ -1,4 +1,6 @@
-﻿using ComputeSharp.Core.Extensions;
+﻿#if USE_D3D12MA
+
+using ComputeSharp.Core.Extensions;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -196,3 +198,5 @@ internal static unsafe class AllocatorExtensions
         return allocation.Move();
     }
 }
+
+#endif
