@@ -306,19 +306,30 @@ public static class GraphicsDeviceExtensions
     /// <typeparam name="T">The type of items to store in the texture.</typeparam>
     /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-    /// <param name="type">The type of texture to allocate.</param>
+    /// <param name="textureType">The type of texture to allocate.</param>
+    /// <param name="inputType">The type of filepath to use.</param>
     /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
     /// <returns>A <see cref="Texture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
     [Pure]
-    public static Texture2D<T> LoadTexture2D<T, TPixel>(this GraphicsDevice device, Type type, ReadOnlySpan<char> filename)
+    public static Texture2D<T> LoadTexture2D<T, TPixel>(this GraphicsDevice device, Type textureType, Type inputType, string filename)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
     {
-        return type switch
+        return textureType switch
         {
-            _ when type == typeof(ReadOnlyTexture2D<,>) => device.LoadReadOnlyTexture2D<T, TPixel>(filename),
-            _ when type == typeof(ReadWriteTexture2D<,>) => device.LoadReadWriteTexture2D<T, TPixel>(filename),
-            _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
+            _ when textureType == typeof(ReadOnlyTexture2D<,>) => inputType switch
+            {
+                _ when inputType == typeof(string) => device.LoadReadOnlyTexture2D<T, TPixel>(filename),
+                _ when inputType == typeof(ReadOnlySpan<char>) => device.LoadReadOnlyTexture2D<T, TPixel>(filename.AsSpan()),
+                _ => throw new ArgumentException($"Invalid input type: {inputType}", nameof(inputType))
+            },
+            _ when textureType == typeof(ReadWriteTexture2D<,>) => inputType switch
+            {
+                _ when inputType == typeof(string) => device.LoadReadWriteTexture2D<T, TPixel>(filename),
+                _ when inputType == typeof(ReadOnlySpan<char>) => device.LoadReadWriteTexture2D<T, TPixel>(filename.AsSpan()),
+                _ => throw new ArgumentException($"Invalid input type: {inputType}", nameof(inputType))
+            },
+            _ => throw new ArgumentException($"Invalid texture type: {textureType}", nameof(textureType))
         };
     }
 
@@ -342,5 +353,51 @@ public static class GraphicsDeviceExtensions
             _ when type == typeof(ReadWriteTexture2D<,>) => device.LoadReadWriteTexture2D<T, TPixel>(buffer),
             _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
         };
+    }
+
+    /// <summary>
+    /// Saves a texture to a specified file.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="texture">The texture to save to an image.</param>
+    /// <param name="inputType">The type of filepath to use.</param>
+    /// <param name="filename">The filename of the image file to save.</param>
+    public static void Save<T>(this Texture2D<T> texture, Type inputType, string filename)
+        where T : unmanaged
+    {
+        switch (inputType)
+        {
+            case var _ when inputType == typeof(string):
+                texture.Save(filename);
+                break;
+            case var _ when inputType == typeof(ReadOnlySpan<char>):
+                texture.Save(filename.AsSpan());
+                break;
+            default:
+                throw new ArgumentException($"Invalid input type: {inputType}", nameof(inputType));
+        }
+    }
+
+    /// <summary>
+    /// Saves a texture to a specified file.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="texture">The texture to save to an image.</param>
+    /// <param name="inputType">The type of filepath to use.</param>
+    /// <param name="filename">The filename of the image file to save.</param>
+    public static void Save<T>(this ReadBackTexture2D<T> texture, Type inputType, string filename)
+        where T : unmanaged
+    {
+        switch (inputType)
+        {
+            case var _ when inputType == typeof(string):
+                texture.Save(filename);
+                break;
+            case var _ when inputType == typeof(ReadOnlySpan<char>):
+                texture.Save(filename.AsSpan());
+                break;
+            default:
+                throw new ArgumentException($"Invalid input type: {inputType}", nameof(inputType));
+        }
     }
 }

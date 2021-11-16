@@ -1,6 +1,7 @@
 ﻿using System;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Resources;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace ComputeSharp;
 
@@ -53,6 +54,20 @@ public static class ReadBackTexture2DExtensions
         where T : unmanaged
     {
         source.CopyTo(destination, sourceOffsetX, sourceOffsetY, destinationOffsetX, destinationOffsetY, width, height);
+    }
+
+    /// <summary>
+    /// Saves a texture to a specified file.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="texture">The texture to save to an image.</param>
+    /// <param name="filename">The filename of the image file to save.</param>
+    public static void Save<T>(this ReadBackTexture2D<T> texture, string filename)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(filename, nameof(filename));
+
+        WICHelper.Instance.SaveTexture(texture.View, filename.AsSpan());
     }
 
     /// <summary>

@@ -541,6 +541,20 @@ public static class Texture2DExtensions
     /// <typeparam name="T">The type of items to store in the texture.</typeparam>
     /// <param name="texture">The texture to save to an image.</param>
     /// <param name="filename">The filename of the image file to save.</param>
+    public static void Save<T>(this Texture2D<T> texture, string filename)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(filename, nameof(filename));
+
+        texture.Save(filename.AsSpan());
+    }
+
+    /// <summary>
+    /// Saves a texture to a specified file.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="texture">The texture to save to an image.</param>
+    /// <param name="filename">The filename of the image file to save.</param>
     public static void Save<T>(this Texture2D<T> texture, ReadOnlySpan<char> filename)
         where T : unmanaged
     {
