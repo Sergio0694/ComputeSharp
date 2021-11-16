@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Extensions;
-using TerraFX.Interop;
+using TerraFX.Interop.DirectX;
 
 namespace ComputeSharp.Graphics.Resources.Interop;
 

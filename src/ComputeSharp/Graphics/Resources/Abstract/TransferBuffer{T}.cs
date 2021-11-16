@@ -5,7 +5,8 @@ using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
-using TerraFX.Interop;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
 namespace ComputeSharp.Resources;
@@ -20,7 +21,7 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IMemoryOwner<T>
     /// <summary>
     /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
     /// </summary>
-    private UniquePtr<D3D12MA_Allocation> allocation;
+    private ComPtr<D3D12MA_Allocation> allocation;
 
     /// <summary>
     /// The <see cref="ID3D12Resource"/> instance currently mapped.

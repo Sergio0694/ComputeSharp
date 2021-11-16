@@ -7,11 +7,12 @@ using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Graphics.Resources.Interop;
 using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
-using TerraFX.Interop;
-using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
-using static TerraFX.Interop.D3D12_RESOURCE_STATES;
-using static TerraFX.Interop.D3D12_SRV_DIMENSION;
-using static TerraFX.Interop.D3D12_UAV_DIMENSION;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
+using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
+using static TerraFX.Interop.DirectX.D3D12_RESOURCE_STATES;
+using static TerraFX.Interop.DirectX.D3D12_SRV_DIMENSION;
+using static TerraFX.Interop.DirectX.D3D12_UAV_DIMENSION;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
 #pragma warning disable CS0618
@@ -28,7 +29,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
     /// <summary>
     /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
     /// </summary>
-    private UniquePtr<D3D12MA_Allocation> allocation;
+    private ComPtr<D3D12MA_Allocation> allocation;
 
     /// <summary>
     /// The <see cref="ID3D12Resource"/> instance currently mapped.
@@ -74,9 +75,9 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
     {
         device.ThrowIfDisposed();
 
-        Guard.IsBetweenOrEqualTo(width, 1, Windows.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, Windows.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(height));
-        Guard.IsBetweenOrEqualTo(depth, 1, Windows.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(depth));
+        Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(width));
+        Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(height));
+        Guard.IsBetweenOrEqualTo(depth, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(depth));
 
         if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), d3D12FormatSupport))
         {
@@ -188,7 +189,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
             out ulong rowSizeInBytes,
             out ulong totalSizeInBytes);
 
-        using UniquePtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(
+        using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(
             GraphicsDevice.Pool,
             ResourceType.ReadBack,
             AllocationMode.Default,
@@ -427,7 +428,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
             out ulong rowSizeInBytes,
             out ulong totalSizeInBytes);
 
-        using UniquePtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(
+        using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(
             GraphicsDevice.Pool,
             ResourceType.Upload,
             AllocationMode.Default,

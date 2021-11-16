@@ -2,8 +2,8 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using Microsoft.Toolkit.Diagnostics;
-using TerraFX.Interop;
-using static TerraFX.Interop.DXGI_FORMAT;
+using TerraFX.Interop.DirectX;
+using static TerraFX.Interop.DirectX.DXGI_FORMAT;
 
 namespace ComputeSharp.Graphics.Helpers;
 

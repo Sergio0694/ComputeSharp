@@ -9,11 +9,12 @@ using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
-using TerraFX.Interop;
-using static TerraFX.Interop.D3D12_COMMAND_LIST_TYPE;
-using static TerraFX.Interop.D3D12_FEATURE;
-using static TerraFX.Interop.D3D12_FORMAT_SUPPORT1;
-using static TerraFX.Interop.DXGI_ADAPTER_FLAG;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
+using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
+using static TerraFX.Interop.DirectX.D3D12_FEATURE;
+using static TerraFX.Interop.DirectX.D3D12_FORMAT_SUPPORT1;
+using static TerraFX.Interop.DirectX.DXGI_ADAPTER_FLAG;
 
 namespace ComputeSharp;
 
@@ -76,12 +77,12 @@ public sealed unsafe class GraphicsDevice : NativeObject
     /// <summary>
     /// The <see cref="D3D12MA_Allocator"/> in use associated to the current device.
     /// </summary>
-    private ReferenceCountPtr<D3D12MA_Allocator> allocator;
+    private ComPtr<D3D12MA_Allocator> allocator;
 
     /// <summary>
     /// The <see cref="D3D12MA_Pool"/> instance in use, if <see cref="IsCacheCoherentUMA"/> is <see langword="true"/>.
     /// </summary>
-    private ReferenceCountPtr<D3D12MA_Pool> pool;
+    private ComPtr<D3D12MA_Pool> pool;
 
     /// <summary>
     /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="ID3D12Device"/>.
@@ -259,8 +260,8 @@ public sealed unsafe class GraphicsDevice : NativeObject
     /// </summary>
     internal void UnregisterAllocatedResource()
     {
-        this.pool.Dispose();
-        this.allocator.Dispose();
+        this.pool.Release();
+        this.allocator.Release();
     }
 
     /// <inheritdoc cref="ID3D12DescriptorHandleAllocator.Rent"/>

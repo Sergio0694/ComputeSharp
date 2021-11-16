@@ -4,8 +4,8 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
-using TerraFX.Interop;
-using static TerraFX.Interop.D3D12_MESSAGE_SEVERITY;
+using TerraFX.Interop.DirectX;
+using static TerraFX.Interop.DirectX.D3D12_MESSAGE_SEVERITY;
 
 namespace ComputeSharp.Graphics.Helpers;
 

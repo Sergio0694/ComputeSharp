@@ -2,17 +2,17 @@
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
-using ComputeSharp.Interop;
-using TerraFX.Interop;
-using static TerraFX.Interop.D3D12_COMMAND_QUEUE_FLAGS;
-using static TerraFX.Interop.D3D12_COMMAND_QUEUE_PRIORITY;
-using static TerraFX.Interop.D3D12_DESCRIPTOR_HEAP_FLAGS;
-using static TerraFX.Interop.D3D12_DESCRIPTOR_HEAP_TYPE;
-using static TerraFX.Interop.D3D12_FEATURE;
-using static TerraFX.Interop.D3D12_FENCE_FLAGS;
-using static TerraFX.Interop.D3D12_MESSAGE_ID;
-using static TerraFX.Interop.D3D12_SRV_DIMENSION;
-using static TerraFX.Interop.D3D12_UAV_DIMENSION;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
+using static TerraFX.Interop.DirectX.D3D12_COMMAND_QUEUE_FLAGS;
+using static TerraFX.Interop.DirectX.D3D12_COMMAND_QUEUE_PRIORITY;
+using static TerraFX.Interop.DirectX.D3D12_DESCRIPTOR_HEAP_FLAGS;
+using static TerraFX.Interop.DirectX.D3D12_DESCRIPTOR_HEAP_TYPE;
+using static TerraFX.Interop.DirectX.D3D12_FEATURE;
+using static TerraFX.Interop.DirectX.D3D12_FENCE_FLAGS;
+using static TerraFX.Interop.DirectX.D3D12_MESSAGE_ID;
+using static TerraFX.Interop.DirectX.D3D12_SRV_DIMENSION;
+using static TerraFX.Interop.DirectX.D3D12_UAV_DIMENSION;
 
 namespace ComputeSharp.Graphics.Extensions;
 
@@ -27,9 +27,9 @@ internal static unsafe class ID3D12DeviceExtensions
     /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the allocator.</param>
     /// <param name="dxgiAdapter">The <see cref="IDXGIAdapter"/> that <paramref name="d3D12Device"/> was created from.</param>
     /// <returns>A <see cref="D3D12MA_Allocator"/> instance to create resources on the device in use.</returns>
-    public static ReferenceCountPtr<D3D12MA_Allocator> CreateAllocator(this ref ID3D12Device d3D12Device, IDXGIAdapter* dxgiAdapter)
+    public static ComPtr<D3D12MA_Allocator> CreateAllocator(this ref ID3D12Device d3D12Device, IDXGIAdapter* dxgiAdapter)
     {
-        using ReferenceCountPtr<D3D12MA_Allocator> allocator = default;
+        using ComPtr<D3D12MA_Allocator> allocator = default;
 
         D3D12MA_ALLOCATOR_DESC allocatorDesc = default;
         allocatorDesc.pDevice = (ID3D12Device*)Unsafe.AsPointer(ref d3D12Device);
@@ -176,7 +176,7 @@ internal static unsafe class ID3D12DeviceExtensions
     {
         D3D12_SHADER_RESOURCE_VIEW_DESC d3D12ShaderResourceViewDescription = default;
         d3D12ShaderResourceViewDescription.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-        d3D12ShaderResourceViewDescription.Shader4ComponentMapping = Windows.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+        d3D12ShaderResourceViewDescription.Shader4ComponentMapping = D3D12.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
         d3D12ShaderResourceViewDescription.Buffer.NumElements = bufferSize;
         d3D12ShaderResourceViewDescription.Buffer.StructureByteStride = elementSize;
 
@@ -201,7 +201,7 @@ internal static unsafe class ID3D12DeviceExtensions
         D3D12_SHADER_RESOURCE_VIEW_DESC d3D12ShaderResourceViewDescription = default;
         d3D12ShaderResourceViewDescription.ViewDimension = d3D12SrvDimension;
         d3D12ShaderResourceViewDescription.Format = dxgiFormat;
-        d3D12ShaderResourceViewDescription.Shader4ComponentMapping = Windows.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+        d3D12ShaderResourceViewDescription.Shader4ComponentMapping = D3D12.D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
         d3D12ShaderResourceViewDescription.Texture2D.MipLevels = uint.MaxValue;
 
         d3D12Device.CreateShaderResourceView(d3D12Resource, &d3D12ShaderResourceViewDescription, d3D12CpuDescriptorHandle);

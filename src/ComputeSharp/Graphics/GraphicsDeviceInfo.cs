@@ -1,5 +1,5 @@
-﻿using TerraFX.Interop;
-using static TerraFX.Interop.DXGI_ADAPTER_FLAG;
+﻿using TerraFX.Interop.DirectX;
+using static TerraFX.Interop.DirectX.DXGI_ADAPTER_FLAG;
 
 namespace ComputeSharp;
 

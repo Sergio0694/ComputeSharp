@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
-using TerraFX.Interop;
+using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.SwapChain.Backend;
 
@@ -51,7 +51,7 @@ internal unsafe static class Win32ApplicationRunner
     {
         Win32ApplicationRunner.application = application;
 
-        IntPtr hInstance = Windows.GetModuleHandleW(null);
+        HMODULE hInstance = Windows.GetModuleHandleW(null);
 
         fixed (char* name = Assembly.GetExecutingAssembly().FullName)
         fixed (char* windowTitle = application.GetType().ToString())
@@ -60,10 +60,10 @@ internal unsafe static class Win32ApplicationRunner
             WNDCLASSEXW windowClassEx = new()
             {
                 cbSize = (uint)sizeof(WNDCLASSEXW),
-                style = Windows.CS_HREDRAW | Windows.CS_VREDRAW,
+                style = CS.CS_HREDRAW | CS.CS_VREDRAW,
                 lpfnWndProc = &WindowProc,
                 hInstance = hInstance,
-                hCursor = Windows.LoadCursorW(IntPtr.Zero, Windows.IDC_ARROW),
+                hCursor = Windows.LoadCursorW(HINSTANCE.NULL, IDC.IDC_ARROW),
                 lpszClassName = (ushort*)name
             };
 
@@ -73,7 +73,7 @@ internal unsafe static class Win32ApplicationRunner
             Rectangle windowRect = new(0, 0, 1280, 720);
 
             // Set the target window size
-            _ = Windows.AdjustWindowRect((RECT*)&windowRect, Windows.WS_OVERLAPPEDWINDOW, Windows.FALSE);
+            _ = Windows.AdjustWindowRect((RECT*)&windowRect, WS.WS_OVERLAPPEDWINDOW, Windows.FALSE);
 
             uint height = (uint)(windowRect.Bottom - windowRect.Top);
             uint width = (uint)(windowRect.Right - windowRect.Left);
@@ -83,7 +83,7 @@ internal unsafe static class Win32ApplicationRunner
                 0,
                 windowClassEx.lpszClassName,
                 (ushort*)windowTitle,
-                Windows.WS_OVERLAPPEDWINDOW,
+                WS.WS_OVERLAPPEDWINDOW,
                 Windows.CW_USEDEFAULT,
                 Windows.CW_USEDEFAULT,
                 (int)width,
@@ -107,7 +107,7 @@ internal unsafe static class Win32ApplicationRunner
         application.OnInitialize(hwnd);
 
         // Display the window
-        _ = Windows.ShowWindow(hwnd, Windows.SW_SHOWDEFAULT);
+        _ = Windows.ShowWindow(hwnd, SW.SW_SHOWDEFAULT);
 
         MSG msg = default;
 
@@ -137,9 +137,9 @@ internal unsafe static class Win32ApplicationRunner
         renderThread.Start((application, tokenSource.Token));
 
         // Process any messages in the queue
-        while (msg.message != Windows.WM_QUIT)
+        while (msg.message != WM.WM_QUIT)
         {
-            if (Windows.PeekMessageW(&msg, HWND.NULL, 0, 0, Windows.PM_REMOVE) != 0)
+            if (Windows.PeekMessageW(&msg, HWND.NULL, 0, 0, PM.PM_REMOVE) != 0)
             {
                 _ = Windows.TranslateMessage(&msg);
                 _ = Windows.DispatchMessageW(&msg);
@@ -150,7 +150,7 @@ internal unsafe static class Win32ApplicationRunner
             }
 
             // Also listen to Escape and 'Q' to quit
-            if (msg.message == Windows.WM_KEYUP && (msg.wParam == Windows.VK_ESCAPE || msg.wParam == 'Q'))
+            if (msg.message == WM.WM_KEYUP && (msg.wParam == (WPARAM)VK.VK_ESCAPE || msg.wParam == 'Q'))
             {
                 _ = Windows.DestroyWindow(hwnd);
             }
@@ -173,12 +173,12 @@ internal unsafe static class Win32ApplicationRunner
     /// <param name="lParam">Additional message information (the contents depend on the value of <paramref name="uMsg"/>).</param>
     /// <returns>The result of the message processing for the input message.</returns>
     [UnmanagedCallersOnly]
-    private static nint WindowProc(IntPtr hwnd, uint uMsg, nuint wParam, nint lParam)
+    private static LRESULT WindowProc(HWND hwnd, uint uMsg, WPARAM wParam, LPARAM lParam)
     {
         switch (uMsg)
         {
             // Change the paused state on window activation
-            case Windows.WM_ACTIVATE:
+            case WM.WM_ACTIVATE:
             {
                 if (Windows.LOWORD(wParam) == Windows.WA_INACTIVE)
                 {
@@ -192,9 +192,9 @@ internal unsafe static class Win32ApplicationRunner
             }
 
             // Change the paused state when ESC is pressed
-            case Windows.WM_KEYDOWN:
+            case WM.WM_KEYDOWN:
             {
-                if ((ConsoleKey)wParam == ConsoleKey.Escape)
+                if (wParam == (byte)ConsoleKey.Escape)
                 {
 
                     if (isPaused)
@@ -213,7 +213,7 @@ internal unsafe static class Win32ApplicationRunner
             }
 
             // Window resize started
-            case Windows.WM_ENTERSIZEMOVE:
+            case WM.WM_ENTERSIZEMOVE:
             {
                 isResizing = true;
 
@@ -221,7 +221,7 @@ internal unsafe static class Win32ApplicationRunner
             }
 
             // Window resize completed
-            case Windows.WM_EXITSIZEMOVE:
+            case WM.WM_EXITSIZEMOVE:
             {
                 isResizing = false;
                 application.OnResize();
@@ -230,9 +230,9 @@ internal unsafe static class Win32ApplicationRunner
             }
 
             // Size update
-            case Windows.WM_SIZE:
+            case WM.WM_SIZE:
             {
-                if (!isResizing && wParam != Windows.SIZE_MINIMIZED)
+                if (!isResizing && wParam != (byte)Windows.SIZE_MINIMIZED)
                 {
                     application.OnResize();
                 }
@@ -241,13 +241,13 @@ internal unsafe static class Win32ApplicationRunner
             }
 
             // Size and position of the window (needed to enable the borderless mode)
-            case Windows.WM_NCCALCSIZE:
+            case WM.WM_NCCALCSIZE:
             {
                 return 0;
             }
 
             // Enable dragging the window
-            case Windows.WM_NCHITTEST:
+            case WM.WM_NCHITTEST:
             {
                 POINT point;
                 RECT rect;
@@ -292,7 +292,7 @@ internal unsafe static class Win32ApplicationRunner
             }
 
             // Restore the drop shadow
-            case Windows.WM_DWMCOMPOSITIONCHANGED:
+            case WM.WM_DWMCOMPOSITIONCHANGED:
             {
                 MARGINS margins = default;
                 margins.cxLeftWidth = -1;
@@ -306,7 +306,7 @@ internal unsafe static class Win32ApplicationRunner
             }
 
             // Shutdown
-            case Windows.WM_DESTROY:
+            case WM.WM_DESTROY:
             {
                 Windows.PostQuitMessage(0);
                 return 0;

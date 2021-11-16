@@ -1,7 +1,8 @@
 ﻿using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Interop;
-using TerraFX.Interop;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Shaders.Translation.Models;
 
