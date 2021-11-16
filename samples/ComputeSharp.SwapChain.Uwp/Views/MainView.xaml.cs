@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
@@ -22,5 +23,11 @@ public sealed partial class MainView : UserControl
     private void ShaderSelectionPanel_Tapped(object sender, TappedRoutedEventArgs e)
     {
         Root.Children.Remove(ShaderSelectionPanel);
+    }
+
+    // Updates the size of the shaders list panel
+    private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        ShadersListContainerPanel.Height = Math.Round(e.NewSize.Height * 0.35);
     }
 }

@@ -176,7 +176,7 @@
     <PackageReference Include="Microsoft.Toolkit.Mvvm">
       <Version>7.1.1</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Core">
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Primitives">
       <Version>7.1.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Media">
