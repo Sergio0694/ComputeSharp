@@ -45,14 +45,11 @@
                 </Border.Background>
 
                 <!--Shadow panel with the shaders list-->
-                <controls:DropShadowPanel
-                    ShadowOpacity="1"
-                    BlurRadius="20"
-                    OffsetY="-2"
-                    OffsetX="-12"
-                    IsMasked="True"
+                <Border
+                    Height="320"
+                    Margin="-20,0,-20,0"
+                    Background="#FF222222"
                     HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
                     VerticalAlignment="Bottom">
                     <animations:Implicit.ShowAnimations>
                         <animations:TranslationAnimation Duration="0:0:0.5" From="0,320,0" To="0"/>
@@ -60,74 +57,77 @@
                     <animations:Implicit.HideAnimations>
                         <animations:TranslationAnimation Duration="0:0:0.5" From="0" To="0,320,0"/>
                     </animations:Implicit.HideAnimations>
-                    <Border
-                        Height="320"
-                        Margin="-20,0,-20,0"
-                        Background="#FF222222">
+                    <ui:Effects.Shadow>
+                        <media:AttachedCardShadow
+                            BlurRadius="20"
+                            CornerRadius="0"
+                            Color="Black"
+                            Offset="-12,-2"
+                            Opacity="1"/>
+                    </ui:Effects.Shadow>
 
-                        <!--Shaders list-->
-                        <ListView
-                            ItemsSource="{x:Bind ViewModel.ComputeShaderOptions}"
-                            SelectionMode="Single"
-                            SelectedItem="{x:Bind ViewModel.SelectedComputeShader, Mode=TwoWay}"
-                            ScrollViewer.HorizontalScrollMode="Enabled" 
-                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                            ScrollViewer.VerticalScrollMode="Disabled"
-                            ScrollViewer.VerticalScrollBarVisibility="Hidden">
-                            <ListView.Resources>
+                    <!--Shaders list-->
+                    <ListView
+                        ItemsSource="{x:Bind ViewModel.ComputeShaderOptions}"
+                        SelectionMode="Single"
+                        SelectedItem="{x:Bind ViewModel.SelectedComputeShader, Mode=TwoWay}"
+                        ScrollViewer.HorizontalScrollMode="Enabled" 
+                        ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                        ScrollViewer.VerticalScrollMode="Disabled"
+                        ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                        <ListView.Resources>
 
-                                <!--Lightweight styling to remove the selection background with the accent color, and
-                                to remove the padding and stretch the list items to occupy all the available space-->
-                                <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent"/>
-                                <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent"/>
-                                <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Transparent"/>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                                    <Setter Property="VerticalAlignment" Value="Stretch"/>
-                                    <Setter Property="Padding" Value="0"/>
-                                </Style>
-                            </ListView.Resources>
-                            <ListView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <ItemsStackPanel Orientation="Horizontal"/>
-                                </ItemsPanelTemplate>
-                            </ListView.ItemsPanel>
-                            <ListView.ItemTemplate>
+                            <!--Lightweight styling to remove the selection background with the accent color, and
+                            to remove the padding and stretch the list items to occupy all the available space-->
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="Transparent"/>
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="Transparent"/>
+                            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPressed" Color="Transparent"/>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                                <Setter Property="Padding" Value="0"/>
+                            </Style>
+                        </ListView.Resources>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
 
-                                <!--Shader template-->
-                                <DataTemplate x:DataType="models:ComputeShader">
-                                    <Grid
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Stretch"
-                                        ui:UIElementExtensions.ClipToBounds="True">
+                            <!--Shader template-->
+                            <DataTemplate x:DataType="models:ComputeShader">
+                                <Grid
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    ui:UIElementExtensions.ClipToBounds="True">
 
-                                        <!--Shader preview-->
-                                        <computesharp:ComputeShaderPanel
-                                            Width="568"
-                                            ShaderRunner="{x:Bind ShaderRunner}"/>
+                                    <!--Shader preview-->
+                                    <computesharp:ComputeShaderPanel
+                                        Width="568"
+                                        ShaderRunner="{x:Bind ShaderRunner}"/>
 
-                                        <!--Note: here we have a selection property to work around {x:Bind} not working correctly outside of the
-                                            current template scope. Once that's fixed in WinUI 3, this can be rewritten as a multi-binding like this:
-                                            Visibility="{x:Bind system:Object.ReferenceEquals((local:ComputeShader), ViewModel.SelectedComputeShader), Mode=OneWay}".
-                                            When that is working, the ComputeShader.IsSelected property can also be removed, as it will no longer be needed.-->
-                                        <Border
-                                            BorderThickness="4"
-                                            BorderBrush="White"
-                                            Visibility="{x:Bind IsSelected, Mode=OneWay}">
-                                            <Polygon
-                                                VerticalAlignment="Top"
-                                                HorizontalAlignment="Right"
-                                                Points="0,0 32,0 32,32"
-                                                Fill="White"/>
-                                        </Border>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </Border>
-                </controls:DropShadowPanel>
+                                    <!--Note: here we have a selection property to work around {x:Bind} not working correctly outside of the
+                                        current template scope. Once that's fixed in WinUI 3, this can be rewritten as a multi-binding like this:
+                                        Visibility="{x:Bind system:Object.ReferenceEquals((local:ComputeShader), ViewModel.SelectedComputeShader), Mode=OneWay}".
+                                        When that is working, the ComputeShader.IsSelected property can also be removed, as it will no longer be needed.-->
+                                    <Border
+                                        BorderThickness="4"
+                                        BorderBrush="White"
+                                        Visibility="{x:Bind IsSelected, Mode=OneWay}">
+                                        <Polygon
+                                            VerticalAlignment="Top"
+                                            HorizontalAlignment="Right"
+                                            Points="0,0 32,0 32,32"
+                                            Fill="White"/>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Border>
             </Border>
         </Grid.Resources>
 
