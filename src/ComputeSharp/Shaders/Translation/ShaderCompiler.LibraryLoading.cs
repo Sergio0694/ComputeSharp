@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if false
+
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Toolkit.Diagnostics;
@@ -67,3 +69,5 @@ internal sealed unsafe partial class ShaderCompiler
         };
     }
 }
+
+#endif
