@@ -35,7 +35,7 @@
 
   <!-- Ignore the warnings on the .NET Standard 2.0 profile -->
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <NoWarn>$(NoWarn);1591</NoWarn>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
   <Choose>
