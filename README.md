@@ -3,7 +3,7 @@
 
 # What is it?
 
-**ComputeSharp** is a .NET 6 library to run C# code in parallel on the GPU through DX12 and dynamically generated HLSL compute shaders. The available APIs let you access GPU devices, allocate GPU buffers and textures, move data between them and the RAM, write compute shaders entirely in C# and have them run on the GPU. The goal of this project is to make GPU computing easy to use for all .NET developers! 🚀
+**ComputeSharp** is a .NET library to run C# code in parallel on the GPU through DX12 and dynamically generated HLSL compute shaders. The available APIs let you access GPU devices, allocate GPU buffers and textures, move data between them and the RAM, write compute shaders entirely in C# and have them run on the GPU. The goal of this project is to make GPU computing easy to use for all .NET developers! 🚀
 
 # What can it actually do?
 
@@ -339,10 +339,10 @@ The `InteropServices` class is also used by the swap chain sample to access the 
 # Requirements
 
 The **ComputeSharp** library has the following requirements:
-- .NET 6
-- Windows x64
+- .NET Standard 2.0 or .NET 6
+- Windows x64 or ARM64
 
-Additionally, in order to compile the library or a project using it, you need a recent build of Visual Studio 2019 or another IDE that has support for Roslyn source generators, as **ComputeSharp** relies on this feature to create the HLSL shader sources and to extract other shader metadata that is necessary to setup and execute the code at runtime. You can learn more about source generators [here](https://devblogs.microsoft.com/dotnet/introducing-c-source-generators/).
+Additionally, in order to compile the library or a project using it, you need Visual Studio 2022 or another IDE with the .NET 6 SDK installed and support for source generators, as **ComputeSharp** relies on this feature to create the HLSL shader sources and to extract other shader metadata that is necessary to setup and execute the code at runtime. You can learn more about source generators [here](https://devblogs.microsoft.com/dotnet/introducing-c-source-generators/). You also need support for .NET Framework 4.7.2 in order to build and run all test projects and sample projects.
 
 # F# support
 
