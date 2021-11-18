@@ -26,7 +26,7 @@ namespace ComputeSharp.Resources;
 public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper.IGraphicsResource
     where T : unmanaged
 {
-#if USE_D3D12MA
+#if NET6_0_OR_GREATER
     /// <summary>
     /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
     /// </summary>
@@ -88,7 +88,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
 
         GraphicsDevice = device;
 
-#if USE_D3D12MA
+#if NET6_0_OR_GREATER
         this.allocation = device.Allocator->CreateResource(
             device.Pool,
             resourceType,
@@ -203,7 +203,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
             out ulong rowSizeInBytes,
             out ulong totalSizeInBytes);
 
-#if USE_D3D12MA
+#if NET6_0_OR_GREATER
         using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(
             GraphicsDevice.Pool,
             ResourceType.ReadBack,
@@ -450,7 +450,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
             out ulong rowSizeInBytes,
             out ulong totalSizeInBytes);
 
-#if USE_D3D12MA
+#if NET6_0_OR_GREATER
         using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(
             GraphicsDevice.Pool,
             ResourceType.Upload,
@@ -585,7 +585,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
     protected override void OnDispose()
     {
         this.d3D12Resource.Dispose();
-#if USE_D3D12MA
+#if NET6_0_OR_GREATER
         this.allocation.Dispose();
 #endif
 

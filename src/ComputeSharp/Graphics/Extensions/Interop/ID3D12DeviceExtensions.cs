@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
-#if USE_D3D12MA
+#if NET6_0_OR_GREATER
 using System.Runtime.CompilerServices;
 #endif
 using ComputeSharp.Core.Extensions;
-#if !USE_D3D12MA
+#if !NET6_0_OR_GREATER
 using ComputeSharp.Graphics.Resources.Enums;
 using Microsoft.Toolkit.Diagnostics;
 #endif
@@ -12,19 +12,19 @@ using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_COMMAND_QUEUE_FLAGS;
 using static TerraFX.Interop.DirectX.D3D12_COMMAND_QUEUE_PRIORITY;
-#if !USE_D3D12MA
+#if !NET6_0_OR_GREATER
 using static TerraFX.Interop.DirectX.D3D12_CPU_PAGE_PROPERTY;
 #endif
 using static TerraFX.Interop.DirectX.D3D12_DESCRIPTOR_HEAP_FLAGS;
 using static TerraFX.Interop.DirectX.D3D12_DESCRIPTOR_HEAP_TYPE;
 using static TerraFX.Interop.DirectX.D3D12_FEATURE;
 using static TerraFX.Interop.DirectX.D3D12_FENCE_FLAGS;
-#if !USE_D3D12MA
+#if !NET6_0_OR_GREATER
 using static TerraFX.Interop.DirectX.D3D12_HEAP_FLAGS;
 using static TerraFX.Interop.DirectX.D3D12_MEMORY_POOL;
 #endif
 using static TerraFX.Interop.DirectX.D3D12_MESSAGE_ID;
-#if !USE_D3D12MA
+#if !NET6_0_OR_GREATER
 using static TerraFX.Interop.DirectX.D3D12_HEAP_TYPE;
 using static TerraFX.Interop.DirectX.D3D12_RESOURCE_FLAGS;
 using static TerraFX.Interop.DirectX.D3D12_RESOURCE_STATES;
@@ -39,7 +39,7 @@ namespace ComputeSharp.Graphics.Extensions;
 /// </summary>
 internal static unsafe class ID3D12DeviceExtensions
 {
-#if USE_D3D12MA
+#if NET6_0_OR_GREATER
     /// <summary>
     /// Creates a <see cref="D3D12MA_Allocator"/> instance for a given device.
     /// </summary>

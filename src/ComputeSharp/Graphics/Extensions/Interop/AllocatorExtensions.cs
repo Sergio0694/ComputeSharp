@@ -1,4 +1,4 @@
-﻿#if USE_D3D12MA
+﻿#if NET6_0_OR_GREATER
 
 using ComputeSharp.Core.Extensions;
 using Microsoft.Toolkit.Diagnostics;
