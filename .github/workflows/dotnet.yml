@@ -7,7 +7,7 @@ jobs:
   # Build the ComputeSharp project directly. This is the project that
   # would be built when running any of the local samples or unit tests.
   build-project:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
@@ -23,7 +23,7 @@ jobs:
   run-tests:
     if: success()
     needs: [build-project]
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
@@ -61,7 +61,7 @@ jobs:
   run-samples:
     if: success()
     needs: [run-tests]
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
@@ -85,6 +85,12 @@ jobs:
     - name: Run ComputeSharp.Sample (.NET Core 3.1)
       run: samples\ComputeSharp.Sample\bin\x64\Release\netcoreapp3.1\win-x64\ComputeSharp.Sample.exe
       shell: cmd
+    - name: Build ComputeSharp.Sample (.NET Framework 4.7.2)
+      run: dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release -f net472 /p:Platform=x64
+      shell: cmd
+    - name: Run ComputeSharp.Sample (.NET Framework 4.7.2)
+      run: samples\ComputeSharp.Sample\bin\x64\Release\net472\ComputeSharp.Sample.exe
+      shell: cmd
     - name: Build ComputeSharp.Sample.FSharp
       run: dotnet build samples\ComputeSharp.Sample.FSharp\ComputeSharp.Sample.FSharp.fsproj -c Release
       shell: cmd
@@ -103,6 +109,12 @@ jobs:
     - name: Run ComputeSharp.ImageProcessing.csproj (.NET Core 3.1)
       run: samples\ComputeSharp.ImageProcessing\bin\x64\Release\netcoreapp3.1\win-x64\ComputeSharp.ImageProcessing.exe
       shell: cmd
+    - name: Build ComputeSharp.ImageProcessing.csproj (.NET Framework 4.7.2)
+      run: dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release -f net472 /p:Platform=x64
+      shell: cmd
+    - name: Run ComputeSharp.ImageProcessing.csproj (.NET Framework 4.7.2)
+      run: samples\ComputeSharp.ImageProcessing\bin\x64\Release\net472\ComputeSharp.ImageProcessing.exe
+      shell: cmd
     - name: Build ComputeSharp.Benchmark.csproj
       run: dotnet build samples\ComputeSharp.Benchmark\ComputeSharp.Benchmark.csproj -c Release
       shell: cmd
@@ -113,7 +125,7 @@ jobs:
   # Buils the .msbuildproj project to generate the NuGet package.
   # This workflow also uploads the resulting package as an artifact.
   build-package:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
@@ -136,7 +148,7 @@ jobs:
   verify-package:
     if: success()
     needs: [build-package]
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
@@ -164,6 +176,12 @@ jobs:
     - name: Run ComputeSharp.Sample.NuGet (.NET Core 3.1)
       run: samples\ComputeSharp.Sample.NuGet\bin\Release\netcoreapp3.1\win-x64\ComputeSharp.Sample.NuGet.exe
       shell: cmd
+    - name: Build ComputeSharp.Sample.NuGet (.NET Framework 4.7.2)
+      run: dotnet build samples\ComputeSharp.Sample.NuGet\ComputeSharp.Sample.NuGet.csproj -c Release -f net472 /p:Platform=x64
+      shell: cmd
+    - name: Run ComputeSharp.Sample.NuGet (.NET Framework 4.7.2)
+      run: samples\ComputeSharp.Sample.NuGet\bin\x64\Release\net472\ComputeSharp.Sample.NuGet.exe
+      shell: cmd
 
   # Run the extra tests to validate a number of build and publishing configurations.
   # This is used to ensure the native dependencies can always be loaded correctly
@@ -171,7 +189,7 @@ jobs:
   verify-libs:
     if: success()
     needs: [verify-package]
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
