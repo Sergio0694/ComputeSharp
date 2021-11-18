@@ -205,8 +205,8 @@ public sealed partial class HlslBokehBlurProcessor
 
                 // Fill in the complex kernel values
                 Unsafe.Add(ref baseRef, i) = new Complex64(
-                    MathF.Exp(-a * value) * MathF.Cos(b * value),
-                    MathF.Exp(-a * value) * MathF.Sin(b * value));
+                    (float)(Math.Exp(-a * value) * Math.Cos(b * value)),
+                    (float)(Math.Exp(-a * value) * Math.Sin(b * value)));
             }
 
             return kernel;
@@ -245,7 +245,7 @@ public sealed partial class HlslBokehBlurProcessor
             }
 
             // Normalize the kernels
-            float scalar = 1f / MathF.Sqrt(total);
+            float scalar = 1f / (float)Math.Sqrt(total);
 
             for (int i = 0; i < kernelsSpan.Length; i++)
             {
