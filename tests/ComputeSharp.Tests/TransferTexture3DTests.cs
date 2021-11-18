@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
@@ -104,7 +105,7 @@ public partial class TransferTexture3DTests
 
     [CombinatorialTestMethod]
     [AllDevices]
-    public void Allocate_UploadTexture3D_Copy_Full(Device device)
+    public unsafe void Allocate_UploadTexture3D_Copy_Full(Device device)
     {
         using UploadTexture3D<int> uploadTexture3D = device.Get().AllocateUploadTexture3D<int>(256, 256, 16);
 
@@ -126,14 +127,17 @@ public partial class TransferTexture3DTests
         Assert.AreEqual(uploadTexture3D.Height, result.GetLength(1));
         Assert.AreEqual(uploadTexture3D.Depth, result.GetLength(0));
 
-        for (int i = 0; i < uploadTexture3D.Depth; i++)
+        fixed (int* p = result)
         {
-            for (int j = 0; j < uploadTexture3D.Height; j++)
+            for (int i = 0; i < uploadTexture3D.Depth; i++)
             {
-                Span<int> sourceRow = uploadTexture3D.View.GetRowSpan(j, i);
-                Span<int> destinationRow = result.AsSpan2D(i).GetRowSpan(j);
+                for (int j = 0; j < uploadTexture3D.Height; j++)
+                {
+                    Span<int> sourceRow = uploadTexture3D.View.GetRowSpan(j, i);
+                    Span<int> destinationRow = new(Unsafe.AsPointer(ref result[i, j, 0]), result.GetLength(2));
 
-                Assert.IsTrue(sourceRow.SequenceEqual(destinationRow));
+                    Assert.IsTrue(sourceRow.SequenceEqual(destinationRow));
+                }
             }
         }
     }
@@ -145,7 +149,7 @@ public partial class TransferTexture3DTests
     [Data(0, 128, 0, 189, 67, 8)]
     [Data(0, 0, 15, 32, 64, 1)]
     [Data(97, 33, 4, 128, 99, 7)]
-    public void Allocate_UploadTexture3D_Copy_Range(Device device, int x, int y, int z, int width, int height, int depth)
+    public unsafe void Allocate_UploadTexture3D_Copy_Range(Device device, int x, int y, int z, int width, int height, int depth)
     {
         using UploadTexture3D<int> uploadTexture3D = device.Get().AllocateUploadTexture3D<int>(256, 256, 16);
 
@@ -163,30 +167,30 @@ public partial class TransferTexture3DTests
 
         int[,,] result = readOnlyTexture3D.ToArray();
 
-        for (int i = 0; i < depth; i++)
+        fixed (int* p = result)
         {
-            for (int j = 0; j < height; j++)
+            for (int i = 0; i < depth; i++)
             {
-                Span<int> sourceRow = uploadTexture3D.View.GetRowSpan(j + y, i + z).Slice(x, width);
-                Span<int> destinationRow = result.AsSpan2D(i).GetRowSpan(j).Slice(0, width);
+                for (int j = 0; j < height; j++)
+                {
+                    Span<int> sourceRow = uploadTexture3D.View.GetRowSpan(j + y, i + z).Slice(x, width);
+                    Span<int> destinationRow = new Span<int>(Unsafe.AsPointer(ref result[i, j, 0]), result.GetLength(2)).Slice(0, width);
 
-                Assert.IsTrue(sourceRow.SequenceEqual(destinationRow));
+                    Assert.IsTrue(sourceRow.SequenceEqual(destinationRow));
+                }
             }
         }
     }
 
     [CombinatorialTestMethod]
     [AllDevices]
-    public void Allocate_ReadBackTexture3D_Copy_Full(Device device)
+    public unsafe void Allocate_ReadBackTexture3D_Copy_Full(Device device)
     {
         int[,,] source = new int[16, 256, 256];
 
-        for (int i = 0; i < 16; i++)
+        fixed (int* p = source)
         {
-            for (int j = 0; j < 256; j++)
-            {
-                new Random(i * 5381 + j).NextBytes(source.AsSpan2D(i).GetRowSpan(j).AsBytes());
-            }
+            new Random(42).NextBytes(new Span<int>(p, source.Length).AsBytes());
         }
 
         using ReadOnlyTexture3D<int> readOnlyTexture3D = device.Get().AllocateReadOnlyTexture3D(source);
@@ -198,14 +202,17 @@ public partial class TransferTexture3DTests
         Assert.AreEqual(readBackTexture3D.Height, 256);
         Assert.AreEqual(readBackTexture3D.Depth, 16);
 
-        for (int i = 0; i < readBackTexture3D.Depth; i++)
+        fixed (int* p = source)
         {
-            for (int j = 0; j < readBackTexture3D.Height; j++)
+            for (int i = 0; i < readBackTexture3D.Depth; i++)
             {
-                Span<int> sourceRow = source.AsSpan2D(i).GetRowSpan(j);
-                Span<int> destinationRow = readBackTexture3D.View.GetRowSpan(j, i);
+                for (int j = 0; j < readBackTexture3D.Height; j++)
+                {
+                    Span<int> sourceRow = new(Unsafe.AsPointer(ref source[i, j, 0]), source.GetLength(2));
+                    Span<int> destinationRow = readBackTexture3D.View.GetRowSpan(j, i);
 
-                Assert.IsTrue(sourceRow.SequenceEqual(destinationRow));
+                    Assert.IsTrue(sourceRow.SequenceEqual(destinationRow));
+                }
             }
         }
     }
@@ -217,16 +224,13 @@ public partial class TransferTexture3DTests
     [Data(0, 128, 0, 189, 67, 8)]
     [Data(0, 0, 15, 32, 64, 1)]
     [Data(97, 33, 4, 128, 99, 7)]
-    public void Allocate_ReadBackTexture3D_Copy_Range(Device device, int x, int y, int z, int width, int height, int depth)
+    public unsafe void Allocate_ReadBackTexture3D_Copy_Range(Device device, int x, int y, int z, int width, int height, int depth)
     {
         int[,,] source = new int[16, 256, 256];
 
-        for (int i = 0; i < 16; i++)
+        fixed (int* p = source)
         {
-            for (int j = 0; j < 256; j++)
-            {
-                new Random(i * 5381 + j).NextBytes(source.AsSpan2D(i).GetRowSpan(j).AsBytes());
-            }
+            new Random(42).NextBytes(new Span<int>(p, source.Length).AsBytes());
         }
 
         using ReadOnlyTexture3D<int> readOnlyTexture3D = device.Get().AllocateReadOnlyTexture3D(source);
@@ -234,14 +238,17 @@ public partial class TransferTexture3DTests
 
         readOnlyTexture3D.CopyTo(readBackTexture3D, x, y, z, width, height, depth);
 
-        for (int i = 0; i < depth; i++)
+        fixed (int* p = source)
         {
-            for (int j = 0; j < height; j++)
+            for (int i = 0; i < depth; i++)
             {
-                Span<int> sourceRow = source.AsSpan2D(i + z).GetRowSpan(j + y).Slice(x, width);
-                Span<int> destinationRow = readBackTexture3D.View.GetRowSpan(j, i).Slice(0, width);
+                for (int j = 0; j < height; j++)
+                {
+                    Span<int> sourceRow = new Span<int>(Unsafe.AsPointer(ref source[i + z, j + y, 0]), source.GetLength(2)).Slice(x, width);
+                    Span<int> destinationRow = readBackTexture3D.View.GetRowSpan(j, i).Slice(0, width);
 
-                Assert.IsTrue(sourceRow.SequenceEqual(destinationRow));
+                    Assert.IsTrue(sourceRow.SequenceEqual(destinationRow));
+                }
             }
         }
     }
