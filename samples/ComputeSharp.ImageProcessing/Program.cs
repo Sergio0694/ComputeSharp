@@ -28,9 +28,16 @@ class Program
             using Image copy = image.Clone(c => c.ApplyProcessor(effect.Processor));
 
             Console.WriteLine($">> Saving {effect.Name} to disk");
-            string targetPath = Path.Combine(
-                Path.GetRelativePath(Path.GetDirectoryName(path)!, @"..\..\..\"),
-                $"{Path.GetFileNameWithoutExtension(path)}_{effect.Name}{Path.GetExtension(path)}");
+
+            string targetPath = Path.GetDirectoryName(path)!;
+
+            while (Path.GetFileName(targetPath) != "ComputeSharp.ImageProcessing")
+            {
+                targetPath = Path.GetDirectoryName(targetPath)!;
+            }
+
+            targetPath = Path.Combine(targetPath, $"{Path.GetFileNameWithoutExtension(path)}_{effect.Name}{Path.GetExtension(path)}");
+
             copy.Save(targetPath);
         }
     }

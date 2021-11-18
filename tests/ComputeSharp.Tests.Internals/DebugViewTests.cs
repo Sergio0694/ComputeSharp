@@ -226,7 +226,7 @@ public partial class DebugViewTests
         {
             for (int j = 0; j < width; j++)
             {
-                data[i, j] = random.NextSingle();
+                data[i, j] = (float)random.NextDouble();
             }
         }
 
@@ -279,7 +279,7 @@ public partial class DebugViewTests
             {
                 for (int j = 0; j < width; j++)
                 {
-                    data[k, i, j] = random.NextSingle();
+                    data[k, i, j] = (float)random.NextDouble();
                 }
             }
         }

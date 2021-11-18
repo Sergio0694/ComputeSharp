@@ -17,7 +17,10 @@ namespace ComputeSharp;
 /// </summary>
 /// <remarks>This struct is fully mutable.</remarks>
 [StructLayout(LayoutKind.Sequential)]
-public struct Rgba64 : IEquatable<Rgba64>, ISpanFormattable, IUnorm<Vector4>, IUnorm<Float4>
+public struct Rgba64 : IEquatable<Rgba64>, IUnorm<Vector4>, IUnorm<Float4>
+#if NET6_0_OR_GREATER
+    , ISpanFormattable
+#endif
 {
     /// <summary>
     /// The red component.
@@ -118,6 +121,7 @@ public struct Rgba64 : IEquatable<Rgba64>, ISpanFormattable, IUnorm<Vector4>, IU
     /// <inheritdoc/>
     public override readonly string ToString() => $"{nameof(Rgba64)}({this.R}, {this.G}, {this.B}, {this.A})";
 
+#if NET6_0_OR_GREATER
     /// <inheritdoc/>
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
@@ -129,4 +133,5 @@ public struct Rgba64 : IEquatable<Rgba64>, ISpanFormattable, IUnorm<Vector4>, IU
     {
         return destination.TryWrite(provider, $"{nameof(Rgba64)}({this.R}, {this.G}, {this.B}, {this.A})", out charsWritten);
     }
+#endif
 }

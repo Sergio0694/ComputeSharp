@@ -1,16 +1,42 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <OutputPath>bin\Release</OutputPath>
     <DocumentationFile>ComputeSharp.xml</DocumentationFile>
     <Description>ComputeSharp</Description>
+    <Platforms>AnyCPU;x64;ARM64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit.Diagnostics" Version="7.1.1" />
+  </ItemGroup>
+
+  <!-- .NET 6 uses the NuGet packages for TerraFX -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
     <PackageReference Include="TerraFX.Interop.D3D12MemoryAllocator" Version="2.0.0-beta3" />
   </ItemGroup>
+
+  <!-- .NET Standard 2.0 uses a local fork -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+  </ItemGroup>
+
+  <!-- Shared project with .NET Standard 2.0 polyfills -->
+  <Import Condition="'$(TargetFramework)' == 'netstandard2.0'"
+          Project="..\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems"
+          Label="Shared" />
+    
+  <!-- Shared project with TerraFX.Interop.Windows fork -->
+  <Import Condition="'$(TargetFramework)' == 'netstandard2.0'"
+          Project="..\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems"
+          Label="Shared" />
+
+  <!-- Ignore the warnings on the .NET Standard 2.0 profile -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
 
   <Choose>
 

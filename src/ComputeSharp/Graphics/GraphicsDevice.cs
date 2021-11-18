@@ -74,6 +74,7 @@ public sealed unsafe class GraphicsDevice : NativeObject
     /// </summary>
     private ulong nextD3D12CopyFenceValue;
 
+#if NET6_0_OR_GREATER
     /// <summary>
     /// The <see cref="D3D12MA_Allocator"/> in use associated to the current device.
     /// </summary>
@@ -83,6 +84,7 @@ public sealed unsafe class GraphicsDevice : NativeObject
     /// The <see cref="D3D12MA_Pool"/> instance in use, if <see cref="IsCacheCoherentUMA"/> is <see langword="true"/>.
     /// </summary>
     private ComPtr<D3D12MA_Pool> pool;
+#endif
 
     /// <summary>
     /// Creates a new <see cref="GraphicsDevice"/> instance for the input <see cref="ID3D12Device"/>.
@@ -118,12 +120,14 @@ public sealed unsafe class GraphicsDevice : NativeObject
 
         IsCacheCoherentUMA = d3D12Architecture1Data.CacheCoherentUMA != 0;
 
+#if NET6_0_OR_GREATER
         this.allocator = d3D12Device->CreateAllocator(dxgiAdapter);
 
         if (IsCacheCoherentUMA)
         {
             this.pool = this.allocator.Get()->CreatePoolForCacheCoherentUMA();
         }
+#endif
     }
 
     /// <summary>
@@ -167,6 +171,7 @@ public sealed unsafe class GraphicsDevice : NativeObject
     /// </summary>
     internal ID3D12Device* D3D12Device => this.d3D12Device;
 
+#if NET6_0_OR_GREATER
     /// <summary>
     /// Gets the underlying <see cref="D3D12MA_Allocator"/> wrapped by the current instance.
     /// </summary>
@@ -176,6 +181,7 @@ public sealed unsafe class GraphicsDevice : NativeObject
     /// Gets the underlying <see cref="D3D12MA_Pool"/> wrapped by the current instance, if any.
     /// </summary>
     internal D3D12MA_Pool* Pool => this.pool;
+#endif
 
     /// <summary>
     /// Gets whether or not the current device has a cache coherent UMA architecture.
@@ -251,8 +257,10 @@ public sealed unsafe class GraphicsDevice : NativeObject
     /// </summary>
     internal void RegisterAllocatedResource()
     {
+#if NET6_0_OR_GREATER
         this.pool.AddRef();
         this.allocator.AddRef();
+#endif
     }
 
     /// <summary>
@@ -260,8 +268,10 @@ public sealed unsafe class GraphicsDevice : NativeObject
     /// </summary>
     internal void UnregisterAllocatedResource()
     {
+#if NET6_0_OR_GREATER
         this.pool.Release();
         this.allocator.Release();
+#endif
     }
 
     /// <inheritdoc cref="ID3D12DescriptorHandleAllocator.Rent"/>
@@ -365,7 +375,11 @@ public sealed unsafe class GraphicsDevice : NativeObject
         // Execute the command list
         d3D12CommandQueue->ExecuteCommandLists(1, commandList.GetD3D12CommandListAddressOf());
 
+#if NET6_0_OR_GREATER
         ulong updatedFenceValue = Interlocked.Increment(ref d3D12FenceValue);
+#else
+        ulong updatedFenceValue = (ulong)Interlocked.Increment(ref Unsafe.As<ulong, long>(ref d3D12FenceValue));
+#endif
 
         // Signal to the target fence with the updated value. Note that incrementing the
         // target fence value to signal must be done after executing the command list.
@@ -394,8 +408,10 @@ public sealed unsafe class GraphicsDevice : NativeObject
         this.computeCommandListPool.Dispose();
         this.copyCommandListPool.Dispose();
         this.shaderResourceViewDescriptorAllocator.Dispose();
+#if NET6_0_OR_GREATER
         this.pool.Dispose();
         this.allocator.Dispose();
+#endif
     }
 
     /// <inheritdoc/>

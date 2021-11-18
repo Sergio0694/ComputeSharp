@@ -3,6 +3,7 @@ using System.Diagnostics.Contracts;
 using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Resources;
+using Microsoft.Toolkit.Diagnostics;
 
 #pragma warning disable CS0618
 
@@ -1079,6 +1080,24 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
     /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
     [Pure]
+    public static ReadOnlyTexture2D<T, TPixel> LoadReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, string filename)
+        where T : unmanaged, IUnorm<TPixel>
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(filename, nameof(filename));
+
+        return device.LoadReadOnlyTexture2D<T, TPixel>(filename.AsSpan());
+    }
+
+    /// <summary>
+    /// Loads a new readonly 2D texture with the contents of the specified file.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
+    /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+    [Pure]
     public static ReadOnlyTexture2D<T, TPixel> LoadReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<char> filename)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -1112,6 +1131,24 @@ public static partial class GraphicsDeviceExtensions
         upload.CopyTo(texture);
 
         return texture;
+    }
+
+    /// <summary>
+    /// Loads a new writeable 2D texture with the contents of the specified file.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
+    /// <returns>A <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+    [Pure]
+    public static ReadWriteTexture2D<T, TPixel> LoadReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, string filename)
+        where T : unmanaged, IUnorm<TPixel>
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(filename, nameof(filename));
+
+        return device.LoadReadWriteTexture2D<T, TPixel>(filename.AsSpan());
     }
 
     /// <summary>

@@ -152,7 +152,7 @@ public class ShadersTests
 
         using (ReadWriteTexture2D<Rgba32, float4> texture = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(imageInfo.Width, imageInfo.Height))
         {
-            if (shaderType.IsAssignableTo(typeof(IComputeShader)))
+            if (typeof(IComputeShader).IsAssignableFrom(shaderType))
             {
                 static void RunComputeShader<T>(ReadWriteTexture2D<Rgba32, float4> texture)
                     where T : struct, IComputeShader
@@ -219,7 +219,7 @@ public class ShadersTests
 
         using (ReadWriteTexture2D<Rgba32, float4> texture = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(imageInfo.Width, imageInfo.Height))
         {
-            if (shaderType.IsAssignableTo(typeof(IComputeShader)))
+            if (typeof(IComputeShader).IsAssignableFrom(shaderType))
             {
                 Assert.AreEqual(typeof(TCompute), shaderType);
 

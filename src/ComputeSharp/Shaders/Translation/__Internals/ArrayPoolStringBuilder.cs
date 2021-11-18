@@ -67,7 +67,11 @@ public ref struct ArrayPoolStringBuilder
     {
         EnsureCapacity(value.Length);
 
+#if NET6_0_OR_GREATER
         value.CopyTo(this.array.AsSpan(this.index));
+#else
+        value.AsSpan().CopyTo(this.array.AsSpan(this.index));
+#endif
 
         this.index += value.Length;
     }
@@ -78,6 +82,7 @@ public ref struct ArrayPoolStringBuilder
     /// <param name="value">The input value to write.</param>
     public void Append(int value)
     {
+#if NET6_0_OR_GREATER
         int charsWritten;
 
         while (!value.TryFormat(this.array.AsSpan(this.index), out charsWritten))
@@ -86,6 +91,9 @@ public ref struct ArrayPoolStringBuilder
         }
 
         this.index += charsWritten;
+#else
+        Append(value.ToString());
+#endif
     }
 
     /// <summary>

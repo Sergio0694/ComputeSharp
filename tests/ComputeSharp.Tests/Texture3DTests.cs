@@ -203,20 +203,26 @@ public partial class Texture3DTests
     [Data(0, 60, 2, 64, 4, 1)]
     [Data(63, 2, 0, 1, 60, 2)]
     [Data(2, 63, 1, 60, 1, 2)]
-    public void GetData_RangeToVoid_Ok(Device device, Type textureType, int x, int y, int z, int width, int height, int depth)
+    public unsafe void GetData_RangeToVoid_Ok(Device device, Type textureType, int x, int y, int z, int width, int height, int depth)
     {
         int[,,] array = new int[3, 64, 64];
 
-        foreach (var item in array.AsSpan().Enumerate())
+        fixed (int* p = array)
         {
-            item.Value = item.Index;
+            foreach (var item in new Span<int>(p, array.Length).Enumerate())
+            {
+                item.Value = item.Index;
+            }
         }
 
         using Texture3D<int> texture = device.Get().AllocateTexture3D(textureType, array);
 
         int[,,] result = new int[depth, height, width];
 
-        texture.CopyTo(result.AsSpan(), x, y, z, width, height, depth);
+        fixed (int* p = result)
+        {
+            texture.CopyTo(new Span<int>(p, result.Length), x, y, z, width, height, depth);
+        }
 
         for (int k = 0; k < depth; k++)
         {

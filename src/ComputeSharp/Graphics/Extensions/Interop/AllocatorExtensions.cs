@@ -1,4 +1,6 @@
-﻿using ComputeSharp.Core.Extensions;
+﻿#if NET6_0_OR_GREATER
+
+using ComputeSharp.Core.Extensions;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -196,3 +198,5 @@ internal static unsafe class AllocatorExtensions
         return allocation.Move();
     }
 }
+
+#endif

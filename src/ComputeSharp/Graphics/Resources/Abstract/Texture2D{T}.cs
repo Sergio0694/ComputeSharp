@@ -26,10 +26,12 @@ namespace ComputeSharp.Resources;
 public unsafe abstract class Texture2D<T> : NativeObject, GraphicsResourceHelper.IGraphicsResource
     where T : unmanaged
 {
+#if NET6_0_OR_GREATER
     /// <summary>
     /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
     /// </summary>
     private ComPtr<D3D12MA_Allocation> allocation;
+#endif
 
     /// <summary>
     /// The <see cref="ID3D12Resource"/> instance currently mapped.
@@ -84,6 +86,7 @@ public unsafe abstract class Texture2D<T> : NativeObject, GraphicsResourceHelper
 
         GraphicsDevice = device;
 
+#if NET6_0_OR_GREATER
         this.allocation = device.Allocator->CreateResource(
             device.Pool,
             resourceType,
@@ -94,6 +97,16 @@ public unsafe abstract class Texture2D<T> : NativeObject, GraphicsResourceHelper
             out this.d3D12ResourceState);
 
         this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
+#else
+        this.d3D12Resource = device.D3D12Device->CreateCommittedResource(
+            resourceType,
+            allocationMode,
+            DXGIFormatHelper.GetForType<T>(),
+            (uint)width,
+            (uint)height,
+            device.IsCacheCoherentUMA,
+            out this.d3D12ResourceState);
+#endif
 
         this.d3D12CommandListType = this.d3D12ResourceState == D3D12_RESOURCE_STATE_COMMON
             ? D3D12_COMMAND_LIST_TYPE_COPY
@@ -174,6 +187,7 @@ public unsafe abstract class Texture2D<T> : NativeObject, GraphicsResourceHelper
             out ulong rowSizeInBytes,
             out ulong totalSizeInBytes);
 
+#if NET6_0_OR_GREATER
         using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(
             GraphicsDevice.Pool,
             ResourceType.ReadBack,
@@ -181,6 +195,13 @@ public unsafe abstract class Texture2D<T> : NativeObject, GraphicsResourceHelper
             totalSizeInBytes);
 
         using ComPtr<ID3D12Resource> d3D12Resource = new(allocation.Get()->GetResource());
+#else
+        using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(
+            ResourceType.ReadBack,
+            AllocationMode.Default,
+            totalSizeInBytes,
+            GraphicsDevice.IsCacheCoherentUMA);
+#endif
 
         using (CommandList copyCommandList = new(GraphicsDevice, this.d3D12CommandListType))
         {
@@ -387,6 +408,7 @@ public unsafe abstract class Texture2D<T> : NativeObject, GraphicsResourceHelper
             out ulong rowSizeInBytes,
             out ulong totalSizeInBytes);
 
+#if NET6_0_OR_GREATER
         using ComPtr<D3D12MA_Allocation> allocation = GraphicsDevice.Allocator->CreateResource(
             GraphicsDevice.Pool,
             ResourceType.Upload,
@@ -394,6 +416,13 @@ public unsafe abstract class Texture2D<T> : NativeObject, GraphicsResourceHelper
             totalSizeInBytes);
 
         using ComPtr<ID3D12Resource> d3D12Resource = new(allocation.Get()->GetResource());
+#else
+        using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(
+            ResourceType.Upload,
+            AllocationMode.Default,
+            totalSizeInBytes,
+            GraphicsDevice.IsCacheCoherentUMA);
+#endif
 
         using (ID3D12ResourceMap resource = d3D12Resource.Get()->Map())
         fixed (void* sourcePointer = &source)
@@ -503,7 +532,9 @@ public unsafe abstract class Texture2D<T> : NativeObject, GraphicsResourceHelper
     protected override void OnDispose()
     {
         this.d3D12Resource.Dispose();
+#if NET6_0_OR_GREATER
         this.allocation.Dispose();
+#endif
 
         if (GraphicsDevice is GraphicsDevice device)
         {

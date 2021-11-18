@@ -17,9 +17,13 @@ public interface IShader
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
     int GetDispatchId()
+#if NET6_0_OR_GREATER
     {
         throw new NotImplementedException();
     }
+#else
+    ;
+#endif
 
     /// <summary>
     /// Loads the dispatch data for the shader.
@@ -34,9 +38,13 @@ public interface IShader
     [Obsolete("This method is not intended to be called directly by user code")]
     void LoadDispatchData<TDataLoader>(ref TDataLoader loader, GraphicsDevice device, int x, int y, int z)
         where TDataLoader : struct, IDispatchDataLoader
+#if NET6_0_OR_GREATER
     {
         throw new NotImplementedException();
     }
+#else
+    ;
+#endif
 
     /// <summary>
     /// Loads an opaque metadata handle from the metadata of the current shader.
@@ -48,9 +56,13 @@ public interface IShader
     [Obsolete("This method is not intended to be called directly by user code")]
     void LoadDispatchMetadata<TMetadataLoader>(ref TMetadataLoader loader, out IntPtr result)
         where TMetadataLoader : struct, IDispatchMetadataLoader
+#if NET6_0_OR_GREATER
     {
         throw new NotImplementedException();
     }
+#else
+    ;
+#endif
 
     /// <summary>
     /// Builds the HLSL source code for the current shader instance.
@@ -62,7 +74,11 @@ public interface IShader
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be called directly by user code")]
     void BuildHlslString(out ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ)
+#if NET6_0_OR_GREATER
     {
         throw new NotImplementedException();
     }
+#else
+    ;
+#endif
 }

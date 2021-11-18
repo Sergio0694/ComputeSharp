@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net472;netcoreapp3.1;net6.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
+    <Platforms>AnyCPU;x64;ARM64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +21,18 @@
                       ReferenceOutputAssembly="false"
                       PrivateAssets="contentfiles;build"/>
   </ItemGroup>
+
+  <!-- When the .NET Standard 2.0 version of ComputeSharp is resolved, the TerraFX APIs are internal, as they
+       are referenced from the shared project. The same reference is needed here to make all tests build fine. -->
+  <Import Condition="'$(TargetFramework)' != 'net6.0'"
+          Project="..\..\src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems" />
+  <Import Condition="'$(TargetFramework)' != 'net6.0'"
+          Project="..\..\src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" />
+
+  <!-- Only when the local TerraFX is referenced, ignore warnings from there -->
+  <PropertyGroup Condition="'$(TargetFramework)' != 'net6.0'">
+    <NoWarn>$(NoWarn);CS0649</NoWarn>
+  </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Primitives\Complex64.cs" Link="Imaging\Primitives\Complex64.cs" />

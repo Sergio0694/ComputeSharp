@@ -4,6 +4,9 @@ using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_DESCRIPTOR_HEAP_TYPE;
+#if !NET6_0_OR_GREATER
+using GC = ComputeSharp.NetStandard.System.GC;
+#endif
 
 namespace ComputeSharp.Graphics.Commands.Interop;
 

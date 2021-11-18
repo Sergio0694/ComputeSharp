@@ -46,7 +46,7 @@ public class NativeLibrariesResolverTests
     {
         CleanSampleProject(configuration, rid);
 
-        Assert.AreEqual(0, Exec(SampleProjectDirectory!, "dotnet", $"run -c {configuration} {ToOption(rid)}"));
+        Assert.AreEqual(0, Exec(SampleProjectDirectory!, "dotnet", $"run -c {configuration} -f net6.0 {ToOption(rid)}"));
     }
 
     [TestMethod]
@@ -123,7 +123,7 @@ public class NativeLibrariesResolverTests
         // Furthermore, only publishing in Release mode is tested.
         CleanSampleProject(Configuration.Release, RID.Win_x64);
 
-        Exec(SampleProjectDirectory!, "dotnet", $"publish -c Release -r win-x64 {ToOption(publishMode)} {ToOption(deploymentMode)} {ToOption(nativeLibsDeploymentMode)} /bl");
+        Exec(SampleProjectDirectory!, "dotnet", $"publish -c Release -f net6.0 -r win-x64 {ToOption(publishMode)} {ToOption(deploymentMode)} {ToOption(nativeLibsDeploymentMode)} /bl");
 
         string pathToAppHost = Path.Combine("bin", $"Release", "net6.0", "win-x64", "publish", "ComputeSharp.Sample.NuGet.exe");
 

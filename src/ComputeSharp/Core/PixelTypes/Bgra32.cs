@@ -18,7 +18,10 @@ namespace ComputeSharp;
 /// </summary>
 /// <remarks>This struct is fully mutable.</remarks>
 [StructLayout(LayoutKind.Sequential)]
-public struct Bgra32 : IEquatable<Bgra32>, ISpanFormattable, IUnorm<Vector4>, IUnorm<Float4>
+public struct Bgra32 : IEquatable<Bgra32>, IUnorm<Vector4>, IUnorm<Float4>
+#if NET6_0_OR_GREATER
+    , ISpanFormattable
+#endif
 {
     /// <summary>
     /// The blue component.
@@ -119,6 +122,7 @@ public struct Bgra32 : IEquatable<Bgra32>, ISpanFormattable, IUnorm<Vector4>, IU
     /// <inheritdoc />
     public override readonly string ToString() => $"{nameof(Bgra32)}({this.B}, {this.G}, {this.R}, {this.A})";
 
+#if NET6_0_OR_GREATER
     /// <inheritdoc />
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
@@ -130,4 +134,5 @@ public struct Bgra32 : IEquatable<Bgra32>, ISpanFormattable, IUnorm<Vector4>, IU
     {
         return destination.TryWrite(provider, $"{nameof(Bgra32)}({this.B}, {this.G}, {this.R}, {this.A})", out charsWritten);
     }
+#endif
 }

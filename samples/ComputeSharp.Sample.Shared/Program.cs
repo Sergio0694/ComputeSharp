@@ -59,7 +59,7 @@ partial class Program
 
         for (int i = 0; i < height; i++)
         {
-            var row = array[(i * width)..((i + 1) * width)];
+            var row = array.AsSpan(i * width, width).ToArray();
             var text = string.Join(",", row.Select(x => x.ToString(CultureInfo.InvariantCulture).PadLeft(numberWidth)));
 
             Console.WriteLine(text);

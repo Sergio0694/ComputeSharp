@@ -41,7 +41,7 @@ internal readonly unsafe struct ShaderDispatchMetadataLoader : IDispatchMetadata
             *(ComPtr<ID3D12RootSignature>*)p = this.d3D12Device->CreateRootSignature(
                 MemoryMarshal.Read<int>(serializedMetadata),
                 MemoryMarshal.Cast<ResourceDescriptor, D3D12_DESCRIPTOR_RANGE1>(resourceDescriptors),
-                MemoryMarshal.Read<bool>(serializedMetadata[4..]));
+                MemoryMarshal.Read<bool>(serializedMetadata.Slice(4)));
         }
     }
 }

@@ -18,10 +18,12 @@ namespace ComputeSharp.Resources;
 public abstract unsafe class TransferBuffer<T> : NativeObject, IMemoryOwner<T>
     where T : unmanaged
 {
+#if NET6_0_OR_GREATER
     /// <summary>
     /// The <see cref="D3D12MA_Allocation"/> instance used to retrieve <see cref="d3D12Resource"/>.
     /// </summary>
     private ComPtr<D3D12MA_Allocation> allocation;
+#endif
 
     /// <summary>
     /// The <see cref="ID3D12Resource"/> instance currently mapped.
@@ -52,8 +54,12 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IMemoryOwner<T>
 
         ulong sizeInBytes = (uint)length * (uint)sizeof(T);
 
+#if NET6_0_OR_GREATER
         this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, sizeInBytes);
         this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
+#else
+        this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, allocationMode, sizeInBytes, device.IsCacheCoherentUMA);
+#endif
 
         device.RegisterAllocatedResource();
 
@@ -110,7 +116,9 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IMemoryOwner<T>
     protected override void OnDispose()
     {
         this.d3D12Resource.Dispose();
+#if NET6_0_OR_GREATER
         this.allocation.Dispose();
+#endif
 
         if (GraphicsDevice is GraphicsDevice device)
         {

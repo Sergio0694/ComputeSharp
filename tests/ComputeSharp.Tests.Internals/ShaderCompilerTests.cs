@@ -1,4 +1,5 @@
-﻿using ComputeSharp.Exceptions;
+﻿using System;
+using ComputeSharp.Exceptions;
 using ComputeSharp.Shaders.Translation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TerraFX.Interop.DirectX;
@@ -32,7 +33,7 @@ public class ShaderCompilerTests
     [TestMethod]
     public void CompileTest_Ok()
     {
-        using ComPtr<IDxcBlob> dxcBlob = ShaderCompiler.Instance.CompileShader(ShaderSource);
+        using ComPtr<IDxcBlob> dxcBlob = ShaderCompiler.Instance.CompileShader(ShaderSource.AsSpan());
     }
 
     [TestMethod]
@@ -41,6 +42,6 @@ public class ShaderCompilerTests
     {
         var faultyShader = ShaderSource.Replace("ids.x", "ids.X");
 
-        using ComPtr<IDxcBlob> dxcBlob = ShaderCompiler.Instance.CompileShader(faultyShader);
+        using ComPtr<IDxcBlob> dxcBlob = ShaderCompiler.Instance.CompileShader(faultyShader.AsSpan());
     }
 }

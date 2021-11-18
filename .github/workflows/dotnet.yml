@@ -7,15 +7,14 @@ jobs:
   # Build the ComputeSharp project directly. This is the project that
   # would be built when running any of the local samples or unit tests.
   build-project:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
-    - name: Setup .NET SDK
+    - name: Setup .NET 6 SDK
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        include-prerelease: true
     - name: Build
       run: dotnet build src\ComputeSharp\ComputeSharp.csproj -c Release
       shell: cmd
@@ -24,20 +23,35 @@ jobs:
   run-tests:
     if: success()
     needs: [build-project]
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
-    - name: Setup .NET SDK
+    - name: Setup .NET Core 3.1 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    - name: Setup .NET 6 SDK
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        include-prerelease: true
-    - name: Run ComputeSharp.Tests
-      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -v n -l "console;verbosity=detailed"
+    - name: Run ComputeSharp.Tests (.NET 6)
+      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
       shell: cmd
-    - name: Run ComputeSharp.Tests.Internals
-      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -v n -l "console;verbosity=detailed"
+    - name: Run ComputeSharp.Tests.Internals (.NET 6)
+      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -c Release -f net6.0 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests (.NET Core 3.1)
+      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release -f netcoreapp3.1 /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.Internals (.NET Core 3.1)
+      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -c Release -f netcoreapp3.1 /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests (.NET Framework 4.7.2)
+      run: dotnet test tests\ComputeSharp.Tests\ComputeSharp.Tests.csproj -c Release -f net472 /p:Platform=x64 -v n -l "console;verbosity=detailed"
+      shell: cmd
+    - name: Run ComputeSharp.Tests.Internals (.NET Framework 4.7.2)
+      run: dotnet test tests\ComputeSharp.Tests.Internals\ComputeSharp.Tests.Internals.csproj -c Release -f net472 /p:Platform=x64 -v n -l "console;verbosity=detailed"
       shell: cmd
     - name: Run ComputeSharp.Tests.SourceGenerators
       run: dotnet test tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
@@ -47,20 +61,35 @@ jobs:
   run-samples:
     if: success()
     needs: [run-tests]
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
-    - name: Setup .NET SDK
+    - name: Setup .NET Core 3.1 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    - name: Setup .NET 6 SDK
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        include-prerelease: true
-    - name: Build ComputeSharp.Sample
-      run: dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release
+    - name: Build ComputeSharp.Sample (.NET 6)
+      run: dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release -f net6.0
       shell: cmd
-    - name: Run ComputeSharp.Sample
+    - name: Run ComputeSharp.Sample (.NET 6)
       run: dotnet samples\ComputeSharp.Sample\bin\Release\net6.0\ComputeSharp.Sample.dll
+      shell: cmd
+    - name: Build ComputeSharp.Sample (.NET Core 3.1)
+      run: dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release -f netcoreapp3.1 /p:Platform=x64 -r win-x64
+      shell: cmd
+    - name: Run ComputeSharp.Sample (.NET Core 3.1)
+      run: samples\ComputeSharp.Sample\bin\x64\Release\netcoreapp3.1\win-x64\ComputeSharp.Sample.exe
+      shell: cmd
+    - name: Build ComputeSharp.Sample (.NET Framework 4.7.2)
+      run: dotnet build samples\ComputeSharp.Sample\ComputeSharp.Sample.csproj -c Release -f net472 /p:Platform=x64
+      shell: cmd
+    - name: Run ComputeSharp.Sample (.NET Framework 4.7.2)
+      run: samples\ComputeSharp.Sample\bin\x64\Release\net472\ComputeSharp.Sample.exe
       shell: cmd
     - name: Build ComputeSharp.Sample.FSharp
       run: dotnet build samples\ComputeSharp.Sample.FSharp\ComputeSharp.Sample.FSharp.fsproj -c Release
@@ -68,11 +97,23 @@ jobs:
     - name: Run ComputeSharp.Sample.FSharp
       run: dotnet samples\ComputeSharp.Sample.FSharp\bin\Release\net6.0\ComputeSharp.Sample.FSharp.dll
       shell: cmd
-    - name: Build ComputeSharp.ImageProcessing.csproj
-      run: dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release
+    - name: Build ComputeSharp.ImageProcessing.csproj (.NET 6)
+      run: dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release -f net6.0
       shell: cmd
-    - name: Run ComputeSharp.ImageProcessing.csproj
+    - name: Run ComputeSharp.ImageProcessing.csproj (.NET 6)
       run: dotnet samples\ComputeSharp.ImageProcessing\bin\Release\net6.0\ComputeSharp.ImageProcessing.dll
+      shell: cmd
+    - name: Build ComputeSharp.ImageProcessing.csproj (.NET Core 3.1)
+      run: dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release -f netcoreapp3.1 /p:Platform=x64 -r win-x64
+      shell: cmd
+    - name: Run ComputeSharp.ImageProcessing.csproj (.NET Core 3.1)
+      run: samples\ComputeSharp.ImageProcessing\bin\x64\Release\netcoreapp3.1\win-x64\ComputeSharp.ImageProcessing.exe
+      shell: cmd
+    - name: Build ComputeSharp.ImageProcessing.csproj (.NET Framework 4.7.2)
+      run: dotnet build samples\ComputeSharp.ImageProcessing\ComputeSharp.ImageProcessing.csproj -c Release -f net472 /p:Platform=x64
+      shell: cmd
+    - name: Run ComputeSharp.ImageProcessing.csproj (.NET Framework 4.7.2)
+      run: samples\ComputeSharp.ImageProcessing\bin\x64\Release\net472\ComputeSharp.ImageProcessing.exe
       shell: cmd
     - name: Build ComputeSharp.Benchmark.csproj
       run: dotnet build samples\ComputeSharp.Benchmark\ComputeSharp.Benchmark.csproj -c Release
@@ -84,15 +125,14 @@ jobs:
   # Buils the .msbuildproj project to generate the NuGet package.
   # This workflow also uploads the resulting package as an artifact.
   build-package:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
-    - name: Setup .NET SDK
+    - name: Setup .NET 6 SDK
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        include-prerelease: true
     - name: Build
       run: dotnet build src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj -c Release /p:ContinuousIntegrationBuild=True
       shell: cmd
@@ -108,15 +148,14 @@ jobs:
   verify-package:
     if: success()
     needs: [build-package]
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
-    - name: Setup .NET SDK
+    - name: Setup .NET 6 SDK
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        include-prerelease: true
     - name: Create local NuGet feed
       run: mkdir src\ComputeSharp.Package\bin\Release
       shell: cmd
@@ -125,11 +164,23 @@ jobs:
       with:
         name: ComputeSharp.nupkg
         path: src\ComputeSharp.Package\bin\Release\ComputeSharp.nupkg
-    - name: Build ComputeSharp.Sample.NuGet
-      run: dotnet build samples\ComputeSharp.Sample.NuGet\ComputeSharp.Sample.NuGet.csproj -c Release
+    - name: Build ComputeSharp.Sample.NuGet (.NET 6)
+      run: dotnet build samples\ComputeSharp.Sample.NuGet\ComputeSharp.Sample.NuGet.csproj -c Release -f net6.0
       shell: cmd
-    - name: Run ComputeSharp.Sample.NuGet
+    - name: Run ComputeSharp.Sample.NuGet (.NET 6)
       run: dotnet samples\ComputeSharp.Sample.NuGet\bin\Release\net6.0\ComputeSharp.Sample.NuGet.dll
+      shell: cmd
+    - name: Build ComputeSharp.Sample.NuGet (.NET Core 3.1)
+      run: dotnet build samples\ComputeSharp.Sample.NuGet\ComputeSharp.Sample.NuGet.csproj -c Release -f netcoreapp3.1 -r win-x64
+      shell: cmd
+    - name: Run ComputeSharp.Sample.NuGet (.NET Core 3.1)
+      run: samples\ComputeSharp.Sample.NuGet\bin\Release\netcoreapp3.1\win-x64\ComputeSharp.Sample.NuGet.exe
+      shell: cmd
+    - name: Build ComputeSharp.Sample.NuGet (.NET Framework 4.7.2)
+      run: dotnet build samples\ComputeSharp.Sample.NuGet\ComputeSharp.Sample.NuGet.csproj -c Release -f net472 /p:Platform=x64
+      shell: cmd
+    - name: Run ComputeSharp.Sample.NuGet (.NET Framework 4.7.2)
+      run: samples\ComputeSharp.Sample.NuGet\bin\x64\Release\net472\ComputeSharp.Sample.NuGet.exe
       shell: cmd
 
   # Run the extra tests to validate a number of build and publishing configurations.
@@ -138,15 +189,14 @@ jobs:
   verify-libs:
     if: success()
     needs: [verify-package]
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
-    - name: Setup .NET SDK
+    - name: Setup .NET 6 SDK
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        include-prerelease: true
     - name: Run ComputeSharp.Tests.NativeLibrariesResolver
       run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj -v n -l "console;verbosity=detailed"
       shell: cmd

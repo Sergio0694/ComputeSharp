@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
-using System.IO;
 using System.Runtime.CompilerServices;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.Windows;
+#if NET6_0_OR_GREATER
+using Path = System.IO.Path;
+#else
+using Path = ComputeSharp.NetStandard.System.IO.Path;
+#endif
 
 namespace ComputeSharp.Graphics.Helpers;
 

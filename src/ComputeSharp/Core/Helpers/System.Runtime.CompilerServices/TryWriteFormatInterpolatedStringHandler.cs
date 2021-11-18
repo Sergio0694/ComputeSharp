@@ -27,7 +27,7 @@ internal ref struct TryWriteFormatInterpolatedStringHandler
     private string? formatAsString;
 
     /// <summary>
-    /// Optional provider to pass to <see cref="IFormattable.ToString(string?, IFormatProvider?)"/> or <see cref="ISpanFormattable.TryFormat(Span{char}, out int, ReadOnlySpan{char}, IFormatProvider?)"/> calls.
+    /// Optional provider to pass to <see cref="IFormattable.ToString(string?, IFormatProvider?)"/> calls.
     /// </summary>
     private readonly IFormatProvider? formatProvider;
 
@@ -129,7 +129,11 @@ internal ref struct TryWriteFormatInterpolatedStringHandler
             {
                 Unsafe.WriteUnaligned(
                     ref Unsafe.As<char, byte>(ref Unsafe.Add(ref MemoryMarshal.GetReference(destination), pos)),
+#if NET6_0_OR_GREATER
                     Unsafe.ReadUnaligned<int>(ref Unsafe.As<char, byte>(ref Unsafe.AsRef(in value.GetPinnableReference()))));
+#else
+                    Unsafe.ReadUnaligned<int>(ref Unsafe.As<char, byte>(ref MemoryMarshal.GetReference(value.AsSpan()))));
+#endif
 
                 position = pos + 2;
 
@@ -149,7 +153,11 @@ internal ref struct TryWriteFormatInterpolatedStringHandler
     /// <returns>Whether the value could be appended to the span.</returns>
     private bool AppendStringDirect(string value)
     {
+#if NET6_0_OR_GREATER
         if (value.TryCopyTo(destination.Slice(position)))
+#else
+        if (value.AsSpan().TryCopyTo(destination.Slice(position)))
+#endif
         {
             position += value.Length;
             return true;
@@ -163,13 +171,18 @@ internal ref struct TryWriteFormatInterpolatedStringHandler
     /// </summary>
     /// <param name="value">The value to write.</param>
     public bool AppendFormatted<T>(T value)
+#if NET6_0_OR_GREATER
         where T : ISpanFormattable
+#else
+        where T : IFormattable
+#endif
     {
         if (hasCustomFormatter)
         {
             return AppendCustomFormatter(value, formatAsString ??= format.ToString());
         }
 
+#if NET6_0_OR_GREATER
         int charsWritten;
 
         if (value.TryFormat(destination.Slice(position), out charsWritten, format, formatProvider))
@@ -180,6 +193,9 @@ internal ref struct TryWriteFormatInterpolatedStringHandler
         }
 
         return Fail();
+#else
+        return AppendStringDirect(value.ToString(formatAsString ??= format.ToString(), formatProvider));
+#endif
     }
 
     /// <summary>
@@ -198,7 +214,11 @@ internal ref struct TryWriteFormatInterpolatedStringHandler
             return true;
         }
 
+#if NET6_0_OR_GREATER
         if (value.TryCopyTo(destination.Slice(position)))
+#else
+        if (value.AsSpan().TryCopyTo(destination.Slice(position)))
+#endif
         {
             position += value.Length;
 

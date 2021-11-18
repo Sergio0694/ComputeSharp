@@ -80,13 +80,13 @@ public sealed partial class HlslGaussianBlurProcessor
         private static float Gaussian(float x, float sigma)
         {
             const float Numerator = 1.0f;
-            float denominator = MathF.Sqrt(2 * MathF.PI) * sigma;
+            float denominator = (float)(Math.Sqrt(2 * Math.PI) * sigma);
 
             float exponentNumerator = -x * x;
             float exponentDenominator = 2 * sigma * sigma;
 
             float left = Numerator / denominator;
-            float right = MathF.Exp(exponentNumerator / exponentDenominator);
+            float right = (float)Math.Exp(exponentNumerator / exponentDenominator);
 
             return left * right;
         }
