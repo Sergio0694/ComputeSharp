@@ -1,9 +1,18 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
-    <TargetFramework>uap10.0.17763</TargetFramework>
-    <TargetPlatformVersion>10.0.19041.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <TargetFrameworks>uap10.0.17763</TargetFrameworks>
+    <TargetPlatformBaseVersion>10.0</TargetPlatformBaseVersion>
+    <TargetPlatformRevision>19041</TargetPlatformRevision>
+    <TargetPlatformMinRevision>17763</TargetPlatformMinRevision>
+    <TargetPlatformVersion>$(TargetPlatformBaseVersion).$(TargetPlatformRevision).0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>$(TargetPlatformBaseVersion).$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
+    <DebugType>Portable</DebugType>
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
+    <IsPackable>true</IsPackable>
+    <IsPublishable>true</IsPublishable>
+    <ExtrasEnableDefaultXamlItems>true</ExtrasEnableDefaultXamlItems>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <RootNamespace>ComputeSharp.Uwp</RootNamespace>
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win10-x64;win-arm64</RuntimeIdentifiers>
@@ -25,13 +34,16 @@
     <PackageIcon>icon.png</PackageIcon>
     <PackageIconUrl>https://user-images.githubusercontent.com/10199417/110238403-b8811080-7f41-11eb-8cfe-e47e7e58f05b.png</PackageIconUrl>
     <PackageTags>dotnet net netcore netstandard winui uwp windows windowsapps csharp library graphics shader hlsl compute gpu performance parallel</PackageTags>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="..\ComputeSharp.Package\icon.png" PackFolder="\" Visible="False" />
+    <None Include="..\ComputeSharp.Package\icon.png" Pack="true" PackagePath="\icon.png" Visible="False" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />
+    <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" Version="2.0.0" />
   </ItemGroup>
+
 </Project>

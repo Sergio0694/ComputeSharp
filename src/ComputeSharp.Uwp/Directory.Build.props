@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <ItemGroup>    
+    <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.66" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Import Project="..\..\Directory.Build.props" />
+</Project>
