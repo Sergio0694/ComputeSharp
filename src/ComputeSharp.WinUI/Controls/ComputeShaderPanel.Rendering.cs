@@ -4,9 +4,11 @@ using System.Threading;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Interop;
 using ComputeSharp.WinUI.Helpers;
-using TerraFX.Interop;
+using TerraFX.Interop.DirectX;
+using TerraFX.Interop.Windows;
+using TerraFX.Interop.WinRT;
 using WinRT;
-using FX = TerraFX.Interop.Windows;
+using Win32 = TerraFX.Interop.Windows.Windows;
 
 #pragma warning disable CS0420
 
@@ -63,7 +65,7 @@ public sealed partial class ComputeShaderPanel
     /// <summary>
     /// The awaitable object for <see cref="IDXGISwapChain1.Present"/> calls.
     /// </summary>
-    private IntPtr frameLatencyWaitableObject;
+    private HANDLE frameLatencyWaitableObject;
 
     /// <summary>
     /// The first buffer within <see cref="dxgiSwapChain2"/>.
@@ -155,7 +157,7 @@ public sealed partial class ComputeShaderPanel
         // Get the underlying ID3D12Device in use
         fixed (ID3D12Device** d3D12Device = this.d3D12Device)
         {
-            InteropServices.TryGetID3D12Device(Gpu.Default, FX.__uuidof<ID3D12Device>(), (void**)d3D12Device).Assert();
+            InteropServices.TryGetID3D12Device(Gpu.Default, Win32.__uuidof<ID3D12Device>(), (void**)d3D12Device).Assert();
         }
 
         // Create the direct command queue to use
@@ -169,7 +171,7 @@ public sealed partial class ComputeShaderPanel
 
             this.d3D12Device.Get()->CreateCommandQueue(
                 &d3D12CommandQueueDesc,
-                FX.__uuidof<ID3D12CommandQueue>(),
+                Win32.__uuidof<ID3D12CommandQueue>(),
                 (void**)d3D12CommandQueue).Assert();
         }
 
@@ -179,14 +181,14 @@ public sealed partial class ComputeShaderPanel
             this.d3D12Device.Get()->CreateFence(
                 0,
                 D3D12_FENCE_FLAGS.D3D12_FENCE_FLAG_NONE,
-                FX.__uuidof<ID3D12Fence>(),
+                Win32.__uuidof<ID3D12Fence>(),
                 (void**)d3D12Fence).Assert();
         }
 
         // Create the swap chain to display frames
         using (ComPtr<IDXGIFactory2> dxgiFactory2 = default)
         {
-            FX.CreateDXGIFactory2(FX.DXGI_CREATE_FACTORY_DEBUG, FX.__uuidof<IDXGIFactory2>(), (void**)dxgiFactory2.GetAddressOf()).Assert();
+            DirectX.CreateDXGIFactory2(DXGI.DXGI_CREATE_FACTORY_DEBUG, Win32.__uuidof<IDXGIFactory2>(), (void**)dxgiFactory2.GetAddressOf()).Assert();
 
             DXGI_SWAP_CHAIN_DESC1 dxgiSwapChainDesc1 = default;
             dxgiSwapChainDesc1.AlphaMode = DXGI_ALPHA_MODE.DXGI_ALPHA_MODE_IGNORE;
@@ -199,7 +201,7 @@ public sealed partial class ComputeShaderPanel
             dxgiSwapChainDesc1.Scaling = DXGI_SCALING.DXGI_SCALING_STRETCH;
             dxgiSwapChainDesc1.Stereo = 0;
             dxgiSwapChainDesc1.SwapEffect = DXGI_SWAP_EFFECT.DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
-            dxgiSwapChainDesc1.BufferUsage = FX.DXGI_USAGE_RENDER_TARGET_OUTPUT;
+            dxgiSwapChainDesc1.BufferUsage = DXGI.DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
             using ComPtr<IDXGISwapChain1> dxgiSwapChain1 = default;
 
@@ -223,7 +225,7 @@ public sealed partial class ComputeShaderPanel
         {
             this.d3D12Device.Get()->CreateCommandAllocator(
                 D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_DIRECT,
-                FX.__uuidof<ID3D12CommandAllocator>(),
+                Win32.__uuidof<ID3D12CommandAllocator>(),
                 (void**)d3D12CommandAllocator).Assert();
         }
 
@@ -235,7 +237,7 @@ public sealed partial class ComputeShaderPanel
                 D3D12_COMMAND_LIST_TYPE.D3D12_COMMAND_LIST_TYPE_DIRECT,
                 this.d3D12CommandAllocator,
                 null,
-                FX.__uuidof<ID3D12GraphicsCommandList>(),
+                Win32.__uuidof<ID3D12GraphicsCommandList>(),
                 (void**)d3D12GraphicsCommandList).Assert();
         }
 
@@ -305,8 +307,8 @@ public sealed partial class ComputeShaderPanel
         fixed (ID3D12Resource** d3D12Resource0 = this.d3D12Resource0)
         fixed (ID3D12Resource** d3D12Resource1 = this.d3D12Resource1)
         {
-            this.dxgiSwapChain2.Get()->GetBuffer(0, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0).Assert();
-            this.dxgiSwapChain2.Get()->GetBuffer(1, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1).Assert();
+            this.dxgiSwapChain2.Get()->GetBuffer(0, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0).Assert();
+            this.dxgiSwapChain2.Get()->GetBuffer(1, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1).Assert();
         }
 
         // Get the index of the initial back buffer
@@ -355,12 +357,12 @@ public sealed partial class ComputeShaderPanel
     /// </summary>
     private unsafe void OnPresent()
     {
-        _ = FX.WaitForSingleObjectEx(frameLatencyWaitableObject, 1000, 1);
+        _ = Win32.WaitForSingleObjectEx(frameLatencyWaitableObject, 1000, 1);
 
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 
         // Get the underlying ID3D12Resource pointer for the texture
-        InteropServices.TryGetID3D12Resource(this.texture!, FX.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf()).Assert();
+        InteropServices.TryGetID3D12Resource(this.texture!, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf()).Assert();
 
         // Get the target back buffer to update
         ID3D12Resource* d3D12ResourceBackBuffer = this.currentBufferIndex switch
