@@ -59,9 +59,9 @@ public sealed partial class ComputeShaderPanel
     private ComPtr<ID3D12GraphicsCommandList> d3D12GraphicsCommandList;
 
     /// <summary>
-    /// The <see cref="IDXGISwapChain2"/> instance used to display content onto the target window.
+    /// The <see cref="IDXGISwapChain3"/> instance used to display content onto the target window.
     /// </summary>
-    private ComPtr<IDXGISwapChain2> dxgiSwapChain2;
+    private ComPtr<IDXGISwapChain3> dxgiSwapChain3;
 
     /// <summary>
     /// The awaitable object for <see cref="IDXGISwapChain1.Present"/> calls.
@@ -69,12 +69,12 @@ public sealed partial class ComputeShaderPanel
     private HANDLE frameLatencyWaitableObject;
 
     /// <summary>
-    /// The first buffer within <see cref="dxgiSwapChain2"/>.
+    /// The first buffer within <see cref="dxgiSwapChain3"/>.
     /// </summary>
     private ComPtr<ID3D12Resource> d3D12Resource0;
 
     /// <summary>
-    /// The second buffer within <see cref="dxgiSwapChain2"/>.
+    /// The second buffer within <see cref="dxgiSwapChain3"/>.
     /// </summary>
     private ComPtr<ID3D12Resource> d3D12Resource1;
 
@@ -212,14 +212,14 @@ public sealed partial class ComputeShaderPanel
                 null,
                 (IDXGISwapChain1**)&dxgiSwapChain1).Assert();
 
-            fixed (IDXGISwapChain2** dxgiSwapChain2 = this.dxgiSwapChain2)
+            fixed (IDXGISwapChain3** dxgiSwapChain3 = this.dxgiSwapChain3)
             {
-                dxgiSwapChain1.CopyTo(dxgiSwapChain2).Assert();
+                dxgiSwapChain1.CopyTo(dxgiSwapChain3).Assert();
             }
         }
 
         // Get the awaitable object to synchronizize present calls
-        this.frameLatencyWaitableObject = this.dxgiSwapChain2.Get()->GetFrameLatencyWaitableObject();
+        this.frameLatencyWaitableObject = this.dxgiSwapChain3.Get()->GetFrameLatencyWaitableObject();
 
         // Create the command allocator to use
         fixed (ID3D12CommandAllocator** d3D12CommandAllocator = this.d3D12CommandAllocator)
@@ -256,11 +256,12 @@ public sealed partial class ComputeShaderPanel
             &iSwapChainPanelNativeUuid,
             (void**)&swapChainPanelNative).Assert();
 
-        using ComPtr<IDXGISwapChain> idxgiSwapChain = default;
+        using (ComPtr<IDXGISwapChain> idxgiSwapChain = default)
+        {
+            this.dxgiSwapChain3.CopyTo(&idxgiSwapChain).Assert();
 
-        this.dxgiSwapChain2.CopyTo(&idxgiSwapChain).Assert();
-
-        swapChainPanelNative.Get()->SetSwapChain(idxgiSwapChain.Get()).Assert();
+            swapChainPanelNative.Get()->SetSwapChain(idxgiSwapChain.Get()).Assert();
+        }
 
         GC.KeepAlive(this);
     }
@@ -290,7 +291,7 @@ public sealed partial class ComputeShaderPanel
         this.d3D12Resource1.Dispose();
 
         // Resize the swap chain buffers
-        this.dxgiSwapChain2.Get()->ResizeBuffers(
+        this.dxgiSwapChain3.Get()->ResizeBuffers(
             2,
             (uint)Math.Max(Math.Ceiling(this.width * this.compositionScaleX * this.targetResolutionScale), 1.0),
             (uint)Math.Max(Math.Ceiling(this.height * this.compositionScaleY * this.targetResolutionScale), 1.0),
@@ -302,23 +303,18 @@ public sealed partial class ComputeShaderPanel
         transformMatrix._11 = (1 / this.compositionScaleX) * (1 / this.targetResolutionScale);
         transformMatrix._22 = (1 / this.compositionScaleY) * (1 / this.targetResolutionScale);
 
-        this.dxgiSwapChain2.Get()->SetMatrixTransform(&transformMatrix).Assert();
+        this.dxgiSwapChain3.Get()->SetMatrixTransform(&transformMatrix).Assert();
 
         // Retrieve the back buffers for the swap chain
         fixed (ID3D12Resource** d3D12Resource0 = this.d3D12Resource0)
         fixed (ID3D12Resource** d3D12Resource1 = this.d3D12Resource1)
         {
-            this.dxgiSwapChain2.Get()->GetBuffer(0, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0).Assert();
-            this.dxgiSwapChain2.Get()->GetBuffer(1, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1).Assert();
+            this.dxgiSwapChain3.Get()->GetBuffer(0, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0).Assert();
+            this.dxgiSwapChain3.Get()->GetBuffer(1, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1).Assert();
         }
 
         // Get the index of the initial back buffer
-        using (ComPtr<IDXGISwapChain3> dxgiSwapChain3 = default)
-        {
-            this.dxgiSwapChain2.CopyTo(dxgiSwapChain3.GetAddressOf()).Assert();
-
-            this.currentBufferIndex = dxgiSwapChain3.Get()->GetCurrentBackBufferIndex();
-        }
+        this.currentBufferIndex = this.dxgiSwapChain3.Get()->GetCurrentBackBufferIndex();
 
         this.texture?.Dispose();
 
@@ -417,7 +413,7 @@ public sealed partial class ComputeShaderPanel
         this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), this.nextD3D12FenceValue).Assert();
 
         // Present the new frame
-        this.dxgiSwapChain2.Get()->Present(0, 0).Assert();
+        this.dxgiSwapChain3.Get()->Present(0, 0).Assert();
 
         if (this.nextD3D12FenceValue > this.d3D12Fence.Get()->GetCompletedValue())
         {
@@ -521,7 +517,7 @@ public sealed partial class ComputeShaderPanel
         this.d3D12Fence.Dispose();
         this.d3D12CommandAllocator.Dispose();
         this.d3D12GraphicsCommandList.Dispose();
-        this.dxgiSwapChain2.Dispose();
+        this.dxgiSwapChain3.Dispose();
         this.d3D12Resource0.Dispose();
         this.d3D12Resource1.Dispose();
         this.texture?.Dispose();
