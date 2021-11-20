@@ -62,14 +62,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Uwp", "src\Com
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.SwapChain.Uwp", "samples\ComputeSharp.SwapChain.Uwp\ComputeSharp.SwapChain.Uwp.csproj", "{FBD388A5-7855-4408-98FF-E689F509DB5A}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.UI", "src\ComputeSharp.UI\ComputeSharp.UI.shproj", "{0C82EDE1-5B8A-4DF3-87DA-700B29D5E265}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{0c82ede1-5b8a-4df3-87da-700b29d5e265}*SharedItemsImports = 13
 		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{314eb353-e7e3-4146-8111-685cc83ec1de}*SharedItemsImports = 5
 		src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems*{314eb353-e7e3-4146-8111-685cc83ec1de}*SharedItemsImports = 5
 		src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems*{514ff00e-bbf0-4d55-a47c-eeeb6208adce}*SharedItemsImports = 13
 		samples\ComputeSharp.Sample.Shared\ComputeSharp.Sample.Shared.projitems*{7048deea-0a6f-46a0-b951-b682a8f1cb75}*SharedItemsImports = 5
 		samples\ComputeSharp.Sample.Shared\ComputeSharp.Sample.Shared.projitems*{8cefc324-ca6c-4845-9ad9-70b92bd87057}*SharedItemsImports = 13
 		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{a5997814-d8d2-4541-87ac-c3e53caa67c0}*SharedItemsImports = 13
+		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{fa18ba9f-76bf-4de0-8d24-02fc7657e6cb}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

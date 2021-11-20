@@ -94,22 +94,22 @@ public sealed partial class ComputeShaderPanel
     private volatile bool isResizePending;
 
     /// <summary>
-    /// The backing store for <see cref="ActualWidth"/> for the render thread.
+    /// The backing store for <see cref="Microsoft.UI.Xaml.FrameworkElement.ActualWidth"/> for the render thread.
     /// </summary>
     private volatile float width;
 
     /// <summary>
-    /// The backing store for <see cref="ActualHeight"/> for the render thread.
+    /// The backing store for <see cref="Microsoft.UI.Xaml.FrameworkElement.ActualHeight"/> for the render thread.
     /// </summary>
     private volatile float height;
 
     /// <summary>
-    /// The backing store for <see cref="CompositionScaleX"/> for the render thread.
+    /// The backing store for <see cref="Microsoft.UI.Xaml.Controls.SwapChainPanel.CompositionScaleX"/> for the render thread.
     /// </summary>
     private volatile float compositionScaleX;
 
     /// <summary>
-    /// The backing store for <see cref="CompositionScaleY"/> for the render thread.
+    /// The backing store for <see cref="Microsoft.UI.Xaml.Controls.SwapChainPanel.CompositionScaleY"/> for the render thread.
     /// </summary>
     private volatile float compositionScaleY;
 
