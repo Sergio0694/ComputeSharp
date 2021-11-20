@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("5009834F-2D6A-41CE-9E1B-17C5AFF7A782")]
     [NativeTypeName("struct IWICBitmapFlipRotator : IWICBitmapSource")]
     [NativeInheritance("IWICBitmapSource")]
-    internal unsafe partial struct IWICBitmapFlipRotator : IWICBitmapFlipRotator.Interface
+    internal unsafe partial struct IWICBitmapFlipRotator
     {
         public void** lpVtbl;
 
@@ -79,12 +79,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT Initialize(IWICBitmapSource* pISource, WICBitmapTransformOptions options)
         {
             return ((delegate* unmanaged[Stdcall]<IWICBitmapFlipRotator*, IWICBitmapSource*, WICBitmapTransformOptions, int>)(lpVtbl[8]))((IWICBitmapFlipRotator*)Unsafe.AsPointer(ref this), pISource, options);
-        }
-
-        public interface Interface : IWICBitmapSource.Interface
-        {
-            [VtblIndex(8)]
-            HRESULT Initialize(IWICBitmapSource* pISource, WICBitmapTransformOptions options);
         }
     }
 }

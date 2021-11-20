@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("9C906818-31D7-4FD3-A151-7C5E225DB55A")]
     [NativeTypeName("struct IDWriteTextFormat : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IDWriteTextFormat : IDWriteTextFormat.Interface
+    internal unsafe partial struct IDWriteTextFormat
     {
         public void** lpVtbl;
 
@@ -215,86 +215,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT GetLocaleName([NativeTypeName("WCHAR *")] ushort* localeName, [NativeTypeName("UINT32")] uint nameSize)
         {
             return ((delegate* unmanaged[Stdcall]<IDWriteTextFormat*, ushort*, uint, int>)(lpVtbl[27]))((IDWriteTextFormat*)Unsafe.AsPointer(ref this), localeName, nameSize);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT SetTextAlignment(DWRITE_TEXT_ALIGNMENT textAlignment);
-
-            [VtblIndex(4)]
-            HRESULT SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT paragraphAlignment);
-
-            [VtblIndex(5)]
-            HRESULT SetWordWrapping(DWRITE_WORD_WRAPPING wordWrapping);
-
-            [VtblIndex(6)]
-            HRESULT SetReadingDirection(DWRITE_READING_DIRECTION readingDirection);
-
-            [VtblIndex(7)]
-            HRESULT SetFlowDirection(DWRITE_FLOW_DIRECTION flowDirection);
-
-            [VtblIndex(8)]
-            HRESULT SetIncrementalTabStop(float incrementalTabStop);
-
-            [VtblIndex(9)]
-            HRESULT SetTrimming([NativeTypeName("const DWRITE_TRIMMING *")] DWRITE_TRIMMING* trimmingOptions, IDWriteInlineObject* trimmingSign);
-
-            [VtblIndex(10)]
-            HRESULT SetLineSpacing(DWRITE_LINE_SPACING_METHOD lineSpacingMethod, float lineSpacing, float baseline);
-
-            [VtblIndex(11)]
-            DWRITE_TEXT_ALIGNMENT GetTextAlignment();
-
-            [VtblIndex(12)]
-            DWRITE_PARAGRAPH_ALIGNMENT GetParagraphAlignment();
-
-            [VtblIndex(13)]
-            DWRITE_WORD_WRAPPING GetWordWrapping();
-
-            [VtblIndex(14)]
-            DWRITE_READING_DIRECTION GetReadingDirection();
-
-            [VtblIndex(15)]
-            DWRITE_FLOW_DIRECTION GetFlowDirection();
-
-            [VtblIndex(16)]
-            float GetIncrementalTabStop();
-
-            [VtblIndex(17)]
-            HRESULT GetTrimming(DWRITE_TRIMMING* trimmingOptions, IDWriteInlineObject** trimmingSign);
-
-            [VtblIndex(18)]
-            HRESULT GetLineSpacing(DWRITE_LINE_SPACING_METHOD* lineSpacingMethod, float* lineSpacing, float* baseline);
-
-            [VtblIndex(19)]
-            HRESULT GetFontCollection(IDWriteFontCollection** fontCollection);
-
-            [VtblIndex(20)]
-            [return: NativeTypeName("UINT32")]
-            uint GetFontFamilyNameLength();
-
-            [VtblIndex(21)]
-            HRESULT GetFontFamilyName([NativeTypeName("WCHAR *")] ushort* fontFamilyName, [NativeTypeName("UINT32")] uint nameSize);
-
-            [VtblIndex(22)]
-            DWRITE_FONT_WEIGHT GetFontWeight();
-
-            [VtblIndex(23)]
-            DWRITE_FONT_STYLE GetFontStyle();
-
-            [VtblIndex(24)]
-            DWRITE_FONT_STRETCH GetFontStretch();
-
-            [VtblIndex(25)]
-            float GetFontSize();
-
-            [VtblIndex(26)]
-            [return: NativeTypeName("UINT32")]
-            uint GetLocaleNameLength();
-
-            [VtblIndex(27)]
-            HRESULT GetLocaleName([NativeTypeName("WCHAR *")] ushort* localeName, [NativeTypeName("UINT32")] uint nameSize);
         }
     }
 }

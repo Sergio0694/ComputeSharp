@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00020402-0000-0000-C000-000000000046")]
     [NativeTypeName("struct ITypeLib : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct ITypeLib : ITypeLib.Interface
+    internal unsafe partial struct ITypeLib
     {
         public void** lpVtbl;
 
@@ -107,39 +107,6 @@ namespace TerraFX.Interop.Windows
         public void ReleaseTLibAttr(TLIBATTR* pTLibAttr)
         {
             ((delegate* unmanaged[Stdcall]<ITypeLib*, TLIBATTR*, void>)(lpVtbl[12]))((ITypeLib*)Unsafe.AsPointer(ref this), pTLibAttr);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            uint GetTypeInfoCount();
-
-            [VtblIndex(4)]
-            HRESULT GetTypeInfo(uint index, ITypeInfo** ppTInfo);
-
-            [VtblIndex(5)]
-            HRESULT GetTypeInfoType(uint index, TYPEKIND* pTKind);
-
-            [VtblIndex(6)]
-            HRESULT GetTypeInfoOfGuid([NativeTypeName("const GUID &")] Guid* guid, ITypeInfo** ppTinfo);
-
-            [VtblIndex(7)]
-            HRESULT GetLibAttr(TLIBATTR** ppTLibAttr);
-
-            [VtblIndex(8)]
-            HRESULT GetTypeComp(ITypeComp** ppTComp);
-
-            [VtblIndex(9)]
-            HRESULT GetDocumentation(int index, [NativeTypeName("BSTR *")] ushort** pBstrName, [NativeTypeName("BSTR *")] ushort** pBstrDocString, [NativeTypeName("DWORD *")] uint* pdwHelpContext, [NativeTypeName("BSTR *")] ushort** pBstrHelpFile);
-
-            [VtblIndex(10)]
-            HRESULT IsName([NativeTypeName("LPOLESTR")] ushort* szNameBuf, [NativeTypeName("ULONG")] uint lHashVal, BOOL* pfName);
-
-            [VtblIndex(11)]
-            HRESULT FindName([NativeTypeName("LPOLESTR")] ushort* szNameBuf, [NativeTypeName("ULONG")] uint lHashVal, ITypeInfo** ppTInfo, [NativeTypeName("MEMBERID *")] int* rgMemId, ushort* pcFound);
-
-            [VtblIndex(12)]
-            void ReleaseTLibAttr(TLIBATTR* pTLibAttr);
         }
     }
 }

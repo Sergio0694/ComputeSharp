@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD906A6-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1GeometryGroup : ID2D1Geometry")]
     [NativeInheritance("ID2D1Geometry")]
-    internal unsafe partial struct ID2D1GeometryGroup : ID2D1GeometryGroup.Interface
+    internal unsafe partial struct ID2D1GeometryGroup
     {
         public void** lpVtbl;
 
@@ -218,19 +218,6 @@ namespace TerraFX.Interop.DirectX
         public void GetSourceGeometries(ID2D1Geometry** geometries, [NativeTypeName("UINT32")] uint geometriesCount)
         {
             ((delegate* unmanaged[Stdcall]<ID2D1GeometryGroup*, ID2D1Geometry**, uint, void>)(lpVtbl[19]))((ID2D1GeometryGroup*)Unsafe.AsPointer(ref this), geometries, geometriesCount);
-        }
-
-        public interface Interface : ID2D1Geometry.Interface
-        {
-            [VtblIndex(17)]
-            D2D1_FILL_MODE GetFillMode();
-
-            [VtblIndex(18)]
-            [return: NativeTypeName("UINT32")]
-            uint GetSourceGeometryCount();
-
-            [VtblIndex(19)]
-            void GetSourceGeometries(ID2D1Geometry** geometries, [NativeTypeName("UINT32")] uint geometriesCount);
         }
     }
 }

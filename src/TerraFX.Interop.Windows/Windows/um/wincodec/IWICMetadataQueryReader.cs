@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("30989668-E1C9-4597-B395-458EEDB808DF")]
     [NativeTypeName("struct IWICMetadataQueryReader : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IWICMetadataQueryReader : IWICMetadataQueryReader.Interface
+    internal unsafe partial struct IWICMetadataQueryReader
     {
         public void** lpVtbl;
 
@@ -65,21 +65,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT GetEnumerator(IEnumString** ppIEnumString)
         {
             return ((delegate* unmanaged[Stdcall]<IWICMetadataQueryReader*, IEnumString**, int>)(lpVtbl[6]))((IWICMetadataQueryReader*)Unsafe.AsPointer(ref this), ppIEnumString);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT GetContainerFormat(Guid* pguidContainerFormat);
-
-            [VtblIndex(4)]
-            HRESULT GetLocation(uint cchMaxLength, [NativeTypeName("WCHAR *")] ushort* wzNamespace, uint* pcchActualLength);
-
-            [VtblIndex(5)]
-            HRESULT GetMetadataByName([NativeTypeName("LPCWSTR")] ushort* wzName, PROPVARIANT* pvarValue);
-
-            [VtblIndex(6)]
-            HRESULT GetEnumerator(IEnumString** ppIEnumString);
         }
     }
 }

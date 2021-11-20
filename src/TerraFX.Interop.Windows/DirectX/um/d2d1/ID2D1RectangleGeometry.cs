@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD906A2-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1RectangleGeometry : ID2D1Geometry")]
     [NativeInheritance("ID2D1Geometry")]
-    internal unsafe partial struct ID2D1RectangleGeometry : ID2D1RectangleGeometry.Interface
+    internal unsafe partial struct ID2D1RectangleGeometry
     {
         public void** lpVtbl;
 
@@ -203,12 +203,6 @@ namespace TerraFX.Interop.DirectX
         public void GetRect([NativeTypeName("D2D1_RECT_F *")] D2D_RECT_F* rect)
         {
             ((delegate* unmanaged[Stdcall]<ID2D1RectangleGeometry*, D2D_RECT_F*, void>)(lpVtbl[17]))((ID2D1RectangleGeometry*)Unsafe.AsPointer(ref this), rect);
-        }
-
-        public interface Interface : ID2D1Geometry.Interface
-        {
-            [VtblIndex(17)]
-            void GetRect([NativeTypeName("D2D1_RECT_F *")] D2D_RECT_F* rect);
         }
     }
 }

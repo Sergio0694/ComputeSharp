@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00020401-0000-0000-C000-000000000046")]
     [NativeTypeName("struct ITypeInfo : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct ITypeInfo : ITypeInfo.Interface
+    internal unsafe partial struct ITypeInfo
     {
         public void** lpVtbl;
 
@@ -170,66 +170,6 @@ namespace TerraFX.Interop.Windows
         public void ReleaseVarDesc(VARDESC* pVarDesc)
         {
             ((delegate* unmanaged[Stdcall]<ITypeInfo*, VARDESC*, void>)(lpVtbl[21]))((ITypeInfo*)Unsafe.AsPointer(ref this), pVarDesc);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT GetTypeAttr(TYPEATTR** ppTypeAttr);
-
-            [VtblIndex(4)]
-            HRESULT GetTypeComp(ITypeComp** ppTComp);
-
-            [VtblIndex(5)]
-            HRESULT GetFuncDesc(uint index, FUNCDESC** ppFuncDesc);
-
-            [VtblIndex(6)]
-            HRESULT GetVarDesc(uint index, VARDESC** ppVarDesc);
-
-            [VtblIndex(7)]
-            HRESULT GetNames([NativeTypeName("MEMBERID")] int memid, [NativeTypeName("BSTR *")] ushort** rgBstrNames, uint cMaxNames, uint* pcNames);
-
-            [VtblIndex(8)]
-            HRESULT GetRefTypeOfImplType(uint index, [NativeTypeName("HREFTYPE *")] uint* pRefType);
-
-            [VtblIndex(9)]
-            HRESULT GetImplTypeFlags(uint index, int* pImplTypeFlags);
-
-            [VtblIndex(10)]
-            HRESULT GetIDsOfNames([NativeTypeName("LPOLESTR *")] ushort** rgszNames, uint cNames, [NativeTypeName("MEMBERID *")] int* pMemId);
-
-            [VtblIndex(11)]
-            HRESULT Invoke([NativeTypeName("PVOID")] void* pvInstance, [NativeTypeName("MEMBERID")] int memid, [NativeTypeName("WORD")] ushort wFlags, DISPPARAMS* pDispParams, VARIANT* pVarResult, EXCEPINFO* pExcepInfo, uint* puArgErr);
-
-            [VtblIndex(12)]
-            HRESULT GetDocumentation([NativeTypeName("MEMBERID")] int memid, [NativeTypeName("BSTR *")] ushort** pBstrName, [NativeTypeName("BSTR *")] ushort** pBstrDocString, [NativeTypeName("DWORD *")] uint* pdwHelpContext, [NativeTypeName("BSTR *")] ushort** pBstrHelpFile);
-
-            [VtblIndex(13)]
-            HRESULT GetDllEntry([NativeTypeName("MEMBERID")] int memid, INVOKEKIND invKind, [NativeTypeName("BSTR *")] ushort** pBstrDllName, [NativeTypeName("BSTR *")] ushort** pBstrName, [NativeTypeName("WORD *")] ushort* pwOrdinal);
-
-            [VtblIndex(14)]
-            HRESULT GetRefTypeInfo([NativeTypeName("HREFTYPE")] uint hRefType, ITypeInfo** ppTInfo);
-
-            [VtblIndex(15)]
-            HRESULT AddressOfMember([NativeTypeName("MEMBERID")] int memid, INVOKEKIND invKind, [NativeTypeName("PVOID *")] void** ppv);
-
-            [VtblIndex(16)]
-            HRESULT CreateInstance(IUnknown* pUnkOuter, [NativeTypeName("const IID &")] Guid* riid, [NativeTypeName("PVOID *")] void** ppvObj);
-
-            [VtblIndex(17)]
-            HRESULT GetMops([NativeTypeName("MEMBERID")] int memid, [NativeTypeName("BSTR *")] ushort** pBstrMops);
-
-            [VtblIndex(18)]
-            HRESULT GetContainingTypeLib(ITypeLib** ppTLib, uint* pIndex);
-
-            [VtblIndex(19)]
-            void ReleaseTypeAttr(TYPEATTR* pTypeAttr);
-
-            [VtblIndex(20)]
-            void ReleaseFuncDesc(FUNCDESC* pFuncDesc);
-
-            [VtblIndex(21)]
-            void ReleaseVarDesc(VARDESC* pVarDesc);
         }
     }
 }

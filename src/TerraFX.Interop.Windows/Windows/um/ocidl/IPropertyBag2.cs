@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("22F55882-280B-11D0-A8A9-00A0C90C2004")]
     [NativeTypeName("struct IPropertyBag2 : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IPropertyBag2 : IPropertyBag2.Interface
+    internal unsafe partial struct IPropertyBag2
     {
         public void** lpVtbl;
 
@@ -72,24 +72,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT LoadObject([NativeTypeName("LPCOLESTR")] ushort* pstrName, [NativeTypeName("DWORD")] uint dwHint, IUnknown* pUnkObject, IErrorLog* pErrLog)
         {
             return ((delegate* unmanaged[Stdcall]<IPropertyBag2*, ushort*, uint, IUnknown*, IErrorLog*, int>)(lpVtbl[7]))((IPropertyBag2*)Unsafe.AsPointer(ref this), pstrName, dwHint, pUnkObject, pErrLog);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT Read([NativeTypeName("ULONG")] uint cProperties, PROPBAG2* pPropBag, IErrorLog* pErrLog, VARIANT* pvarValue, HRESULT* phrError);
-
-            [VtblIndex(4)]
-            HRESULT Write([NativeTypeName("ULONG")] uint cProperties, PROPBAG2* pPropBag, VARIANT* pvarValue);
-
-            [VtblIndex(5)]
-            HRESULT CountProperties([NativeTypeName("ULONG *")] uint* pcProperties);
-
-            [VtblIndex(6)]
-            HRESULT GetPropertyInfo([NativeTypeName("ULONG")] uint iProperty, [NativeTypeName("ULONG")] uint cProperties, PROPBAG2* pPropBag, [NativeTypeName("ULONG *")] uint* pcProperties);
-
-            [VtblIndex(7)]
-            HRESULT LoadObject([NativeTypeName("LPCOLESTR")] ushort* pstrName, [NativeTypeName("DWORD")] uint dwHint, IUnknown* pUnkObject, IErrorLog* pErrLog);
         }
     }
 }

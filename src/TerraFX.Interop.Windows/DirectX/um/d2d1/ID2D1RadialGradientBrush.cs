@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD906AC-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1RadialGradientBrush : ID2D1Brush")]
     [NativeInheritance("ID2D1Brush")]
-    internal unsafe partial struct ID2D1RadialGradientBrush : ID2D1RadialGradientBrush.Interface
+    internal unsafe partial struct ID2D1RadialGradientBrush
     {
         public void** lpVtbl;
 
@@ -140,38 +140,6 @@ namespace TerraFX.Interop.DirectX
         public void GetGradientStopCollection(ID2D1GradientStopCollection** gradientStopCollection)
         {
             ((delegate* unmanaged[Stdcall]<ID2D1RadialGradientBrush*, ID2D1GradientStopCollection**, void>)(lpVtbl[16]))((ID2D1RadialGradientBrush*)Unsafe.AsPointer(ref this), gradientStopCollection);
-        }
-
-        public interface Interface : ID2D1Brush.Interface
-        {
-            [VtblIndex(8)]
-            void SetCenter([NativeTypeName("D2D1_POINT_2F")] D2D_POINT_2F center);
-
-            [VtblIndex(9)]
-            void SetGradientOriginOffset([NativeTypeName("D2D1_POINT_2F")] D2D_POINT_2F gradientOriginOffset);
-
-            [VtblIndex(10)]
-            void SetRadiusX(float radiusX);
-
-            [VtblIndex(11)]
-            void SetRadiusY(float radiusY);
-
-            [VtblIndex(12)]
-            [return: NativeTypeName("D2D1_POINT_2F")]
-            D2D_POINT_2F GetCenter();
-
-            [VtblIndex(13)]
-            [return: NativeTypeName("D2D1_POINT_2F")]
-            D2D_POINT_2F GetGradientOriginOffset();
-
-            [VtblIndex(14)]
-            float GetRadiusX();
-
-            [VtblIndex(15)]
-            float GetRadiusY();
-
-            [VtblIndex(16)]
-            void GetGradientStopCollection(ID2D1GradientStopCollection** gradientStopCollection);
         }
     }
 }

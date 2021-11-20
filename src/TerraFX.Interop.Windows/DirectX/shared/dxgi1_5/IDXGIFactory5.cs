@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("7632E1F5-EE65-4DCA-87FD-84CD75F8838D")]
     [NativeTypeName("struct IDXGIFactory5 : IDXGIFactory4")]
     [NativeInheritance("IDXGIFactory4")]
-    internal unsafe partial struct IDXGIFactory5 : IDXGIFactory5.Interface
+    internal unsafe partial struct IDXGIFactory5
     {
         public void** lpVtbl;
 
@@ -220,12 +220,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT CheckFeatureSupport(DXGI_FEATURE Feature, void* pFeatureSupportData, uint FeatureSupportDataSize)
         {
             return ((delegate* unmanaged[Stdcall]<IDXGIFactory5*, DXGI_FEATURE, void*, uint, int>)(lpVtbl[28]))((IDXGIFactory5*)Unsafe.AsPointer(ref this), Feature, pFeatureSupportData, FeatureSupportDataSize);
-        }
-
-        public interface Interface : IDXGIFactory4.Interface
-        {
-            [VtblIndex(28)]
-            HRESULT CheckFeatureSupport(DXGI_FEATURE Feature, void* pFeatureSupportData, uint FeatureSupportDataSize);
         }
     }
 }

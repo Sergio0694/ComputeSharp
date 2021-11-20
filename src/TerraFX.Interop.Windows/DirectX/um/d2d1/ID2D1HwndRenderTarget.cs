@@ -19,7 +19,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD90698-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1HwndRenderTarget : ID2D1RenderTarget")]
     [NativeInheritance("ID2D1RenderTarget")]
-    internal unsafe partial struct ID2D1HwndRenderTarget : ID2D1HwndRenderTarget.Interface
+    internal unsafe partial struct ID2D1HwndRenderTarget
     {
         public void** lpVtbl;
 
@@ -524,18 +524,6 @@ namespace TerraFX.Interop.DirectX
         public HWND GetHwnd()
         {
             return ((HWND)(((delegate* unmanaged[Stdcall]<ID2D1HwndRenderTarget*, void*>)(lpVtbl[59]))((ID2D1HwndRenderTarget*)Unsafe.AsPointer(ref this))));
-        }
-
-        public interface Interface : ID2D1RenderTarget.Interface
-        {
-            [VtblIndex(57)]
-            D2D1_WINDOW_STATE CheckWindowState();
-
-            [VtblIndex(58)]
-            HRESULT Resize([NativeTypeName("const D2D1_SIZE_U *")] D2D_SIZE_U* pixelSize);
-
-            [VtblIndex(59)]
-            HWND GetHwnd();
         }
     }
 }

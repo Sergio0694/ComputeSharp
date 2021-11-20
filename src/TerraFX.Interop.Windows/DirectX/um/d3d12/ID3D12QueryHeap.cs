@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("0D9658AE-ED45-469E-A61D-970EC583CAB4")]
     [NativeTypeName("struct ID3D12QueryHeap : ID3D12Pageable")]
     [NativeInheritance("ID3D12Pageable")]
-    internal unsafe partial struct ID3D12QueryHeap : ID3D12QueryHeap.Interface
+    internal unsafe partial struct ID3D12QueryHeap
     {
         public void** lpVtbl;
 
@@ -73,10 +73,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT GetDevice([NativeTypeName("const IID &")] Guid* riid, void** ppvDevice)
         {
             return ((delegate* unmanaged[Stdcall]<ID3D12QueryHeap*, Guid*, void**, int>)(lpVtbl[7]))((ID3D12QueryHeap*)Unsafe.AsPointer(ref this), riid, ppvDevice);
-        }
-
-        public interface Interface : ID3D12Pageable.Interface
-        {
         }
     }
 }

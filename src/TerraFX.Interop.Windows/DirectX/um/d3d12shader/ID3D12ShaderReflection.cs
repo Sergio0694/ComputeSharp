@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("5A58797D-A72C-478D-8BA2-EFC6B0EFE88E")]
     [NativeTypeName("struct ID3D12ShaderReflection : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct ID3D12ShaderReflection : ID3D12ShaderReflection.Interface
+    internal unsafe partial struct ID3D12ShaderReflection
     {
         public void** lpVtbl;
 
@@ -172,67 +172,6 @@ namespace TerraFX.Interop.DirectX
         public ulong GetRequiresFlags()
         {
             return ((delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, ulong>)(lpVtbl[21]))((ID3D12ShaderReflection*)Unsafe.AsPointer(ref this));
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT GetDesc(D3D12_SHADER_DESC* pDesc);
-
-            [VtblIndex(4)]
-            ID3D12ShaderReflectionConstantBuffer* GetConstantBufferByIndex(uint Index);
-
-            [VtblIndex(5)]
-            ID3D12ShaderReflectionConstantBuffer* GetConstantBufferByName([NativeTypeName("LPCSTR")] sbyte* Name);
-
-            [VtblIndex(6)]
-            HRESULT GetResourceBindingDesc(uint ResourceIndex, D3D12_SHADER_INPUT_BIND_DESC* pDesc);
-
-            [VtblIndex(7)]
-            HRESULT GetInputParameterDesc(uint ParameterIndex, D3D12_SIGNATURE_PARAMETER_DESC* pDesc);
-
-            [VtblIndex(8)]
-            HRESULT GetOutputParameterDesc(uint ParameterIndex, D3D12_SIGNATURE_PARAMETER_DESC* pDesc);
-
-            [VtblIndex(9)]
-            HRESULT GetPatchConstantParameterDesc(uint ParameterIndex, D3D12_SIGNATURE_PARAMETER_DESC* pDesc);
-
-            [VtblIndex(10)]
-            ID3D12ShaderReflectionVariable* GetVariableByName([NativeTypeName("LPCSTR")] sbyte* Name);
-
-            [VtblIndex(11)]
-            HRESULT GetResourceBindingDescByName([NativeTypeName("LPCSTR")] sbyte* Name, D3D12_SHADER_INPUT_BIND_DESC* pDesc);
-
-            [VtblIndex(12)]
-            uint GetMovInstructionCount();
-
-            [VtblIndex(13)]
-            uint GetMovcInstructionCount();
-
-            [VtblIndex(14)]
-            uint GetConversionInstructionCount();
-
-            [VtblIndex(15)]
-            uint GetBitwiseInstructionCount();
-
-            [VtblIndex(16)]
-            D3D_PRIMITIVE GetGSInputPrimitive();
-
-            [VtblIndex(17)]
-            BOOL IsSampleFrequencyShader();
-
-            [VtblIndex(18)]
-            uint GetNumInterfaceSlots();
-
-            [VtblIndex(19)]
-            HRESULT GetMinFeatureLevel([NativeTypeName("enum D3D_FEATURE_LEVEL *")] D3D_FEATURE_LEVEL* pLevel);
-
-            [VtblIndex(20)]
-            uint GetThreadGroupSize(uint* pSizeX, uint* pSizeY, uint* pSizeZ);
-
-            [VtblIndex(21)]
-            [return: NativeTypeName("UINT64")]
-            ulong GetRequiresFlags();
         }
     }
 }

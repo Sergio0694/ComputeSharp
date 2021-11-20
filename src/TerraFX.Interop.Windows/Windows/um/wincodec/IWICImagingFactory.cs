@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("EC5EC8A9-C395-4314-9C77-54D7A935FF70")]
     [NativeTypeName("struct IWICImagingFactory : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IWICImagingFactory : IWICImagingFactory.Interface
+    internal unsafe partial struct IWICImagingFactory
     {
         public void** lpVtbl;
 
@@ -212,84 +212,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT CreateQueryWriterFromReader(IWICMetadataQueryReader* pIQueryReader, [NativeTypeName("const GUID *")] Guid* pguidVendor, IWICMetadataQueryWriter** ppIQueryWriter)
         {
             return ((delegate* unmanaged[Stdcall]<IWICImagingFactory*, IWICMetadataQueryReader*, Guid*, IWICMetadataQueryWriter**, int>)(lpVtbl[27]))((IWICImagingFactory*)Unsafe.AsPointer(ref this), pIQueryReader, pguidVendor, ppIQueryWriter);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT CreateDecoderFromFilename([NativeTypeName("LPCWSTR")] ushort* wzFilename, [NativeTypeName("const GUID *")] Guid* pguidVendor, [NativeTypeName("DWORD")] uint dwDesiredAccess, WICDecodeOptions metadataOptions, IWICBitmapDecoder** ppIDecoder);
-
-            [VtblIndex(4)]
-            HRESULT CreateDecoderFromStream(IStream* pIStream, [NativeTypeName("const GUID *")] Guid* pguidVendor, WICDecodeOptions metadataOptions, IWICBitmapDecoder** ppIDecoder);
-
-            [VtblIndex(5)]
-            HRESULT CreateDecoderFromFileHandle([NativeTypeName("ULONG_PTR")] nuint hFile, [NativeTypeName("const GUID *")] Guid* pguidVendor, WICDecodeOptions metadataOptions, IWICBitmapDecoder** ppIDecoder);
-
-            [VtblIndex(6)]
-            HRESULT CreateComponentInfo([NativeTypeName("const IID &")] Guid* clsidComponent, IWICComponentInfo** ppIInfo);
-
-            [VtblIndex(7)]
-            HRESULT CreateDecoder([NativeTypeName("const GUID &")] Guid* guidContainerFormat, [NativeTypeName("const GUID *")] Guid* pguidVendor, IWICBitmapDecoder** ppIDecoder);
-
-            [VtblIndex(8)]
-            HRESULT CreateEncoder([NativeTypeName("const GUID &")] Guid* guidContainerFormat, [NativeTypeName("const GUID *")] Guid* pguidVendor, IWICBitmapEncoder** ppIEncoder);
-
-            [VtblIndex(9)]
-            HRESULT CreatePalette(IWICPalette** ppIPalette);
-
-            [VtblIndex(10)]
-            HRESULT CreateFormatConverter(IWICFormatConverter** ppIFormatConverter);
-
-            [VtblIndex(11)]
-            HRESULT CreateBitmapScaler(IWICBitmapScaler** ppIBitmapScaler);
-
-            [VtblIndex(12)]
-            HRESULT CreateBitmapClipper(IWICBitmapClipper** ppIBitmapClipper);
-
-            [VtblIndex(13)]
-            HRESULT CreateBitmapFlipRotator(IWICBitmapFlipRotator** ppIBitmapFlipRotator);
-
-            [VtblIndex(14)]
-            HRESULT CreateStream(IWICStream** ppIWICStream);
-
-            [VtblIndex(15)]
-            HRESULT CreateColorContext(IWICColorContext** ppIWICColorContext);
-
-            [VtblIndex(16)]
-            HRESULT CreateColorTransformer(IWICColorTransform** ppIWICColorTransform);
-
-            [VtblIndex(17)]
-            HRESULT CreateBitmap(uint uiWidth, uint uiHeight, [NativeTypeName("REFWICPixelFormatGUID")] Guid* pixelFormat, WICBitmapCreateCacheOption option, IWICBitmap** ppIBitmap);
-
-            [VtblIndex(18)]
-            HRESULT CreateBitmapFromSource(IWICBitmapSource* pIBitmapSource, WICBitmapCreateCacheOption option, IWICBitmap** ppIBitmap);
-
-            [VtblIndex(19)]
-            HRESULT CreateBitmapFromSourceRect(IWICBitmapSource* pIBitmapSource, uint x, uint y, uint width, uint height, IWICBitmap** ppIBitmap);
-
-            [VtblIndex(20)]
-            HRESULT CreateBitmapFromMemory(uint uiWidth, uint uiHeight, [NativeTypeName("REFWICPixelFormatGUID")] Guid* pixelFormat, uint cbStride, uint cbBufferSize, byte* pbBuffer, IWICBitmap** ppIBitmap);
-
-            [VtblIndex(21)]
-            HRESULT CreateBitmapFromHBITMAP(HBITMAP hBitmap, HPALETTE hPalette, WICBitmapAlphaChannelOption options, IWICBitmap** ppIBitmap);
-
-            [VtblIndex(22)]
-            HRESULT CreateBitmapFromHICON(HICON hIcon, IWICBitmap** ppIBitmap);
-
-            [VtblIndex(23)]
-            HRESULT CreateComponentEnumerator([NativeTypeName("DWORD")] uint componentTypes, [NativeTypeName("DWORD")] uint options, IEnumUnknown** ppIEnumUnknown);
-
-            [VtblIndex(24)]
-            HRESULT CreateFastMetadataEncoderFromDecoder(IWICBitmapDecoder* pIDecoder, IWICFastMetadataEncoder** ppIFastEncoder);
-
-            [VtblIndex(25)]
-            HRESULT CreateFastMetadataEncoderFromFrameDecode(IWICBitmapFrameDecode* pIFrameDecoder, IWICFastMetadataEncoder** ppIFastEncoder);
-
-            [VtblIndex(26)]
-            HRESULT CreateQueryWriter([NativeTypeName("const GUID &")] Guid* guidMetadataFormat, [NativeTypeName("const GUID *")] Guid* pguidVendor, IWICMetadataQueryWriter** ppIQueryWriter);
-
-            [VtblIndex(27)]
-            HRESULT CreateQueryWriterFromReader(IWICMetadataQueryReader* pIQueryReader, [NativeTypeName("const GUID *")] Guid* pguidVendor, IWICMetadataQueryWriter** ppIQueryWriter);
         }
     }
 }

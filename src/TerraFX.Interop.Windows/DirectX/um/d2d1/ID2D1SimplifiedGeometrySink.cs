@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD9069E-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1SimplifiedGeometrySink : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct ID2D1SimplifiedGeometrySink : ID2D1SimplifiedGeometrySink.Interface
+    internal unsafe partial struct ID2D1SimplifiedGeometrySink
     {
         public void** lpVtbl;
 
@@ -87,30 +87,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT Close()
         {
             return ((delegate* unmanaged[Stdcall]<ID2D1SimplifiedGeometrySink*, int>)(lpVtbl[9]))((ID2D1SimplifiedGeometrySink*)Unsafe.AsPointer(ref this));
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            void SetFillMode(D2D1_FILL_MODE fillMode);
-
-            [VtblIndex(4)]
-            void SetSegmentFlags(D2D1_PATH_SEGMENT vertexFlags);
-
-            [VtblIndex(5)]
-            void BeginFigure([NativeTypeName("D2D1_POINT_2F")] D2D_POINT_2F startPoint, D2D1_FIGURE_BEGIN figureBegin);
-
-            [VtblIndex(6)]
-            void AddLines([NativeTypeName("const D2D1_POINT_2F *")] D2D_POINT_2F* points, [NativeTypeName("UINT32")] uint pointsCount);
-
-            [VtblIndex(7)]
-            void AddBeziers([NativeTypeName("const D2D1_BEZIER_SEGMENT *")] D2D1_BEZIER_SEGMENT* beziers, [NativeTypeName("UINT32")] uint beziersCount);
-
-            [VtblIndex(8)]
-            void EndFigure(D2D1_FIGURE_END figureEnd);
-
-            [VtblIndex(9)]
-            HRESULT Close();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("6D4865FE-0AB8-4D91-8F62-5DD6BE34A3E0")]
     [NativeTypeName("struct IDWriteFontFileStream : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IDWriteFontFileStream : IDWriteFontFileStream.Interface
+    internal unsafe partial struct IDWriteFontFileStream
     {
         public void** lpVtbl;
 
@@ -66,21 +66,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT GetLastWriteTime([NativeTypeName("UINT64 *")] ulong* lastWriteTime)
         {
             return ((delegate* unmanaged[Stdcall]<IDWriteFontFileStream*, ulong*, int>)(lpVtbl[6]))((IDWriteFontFileStream*)Unsafe.AsPointer(ref this), lastWriteTime);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT ReadFileFragment([NativeTypeName("const void **")] void** fragmentStart, [NativeTypeName("UINT64")] ulong fileOffset, [NativeTypeName("UINT64")] ulong fragmentSize, void** fragmentContext);
-
-            [VtblIndex(4)]
-            void ReleaseFileFragment(void* fragmentContext);
-
-            [VtblIndex(5)]
-            HRESULT GetFileSize([NativeTypeName("UINT64 *")] ulong* fileSize);
-
-            [VtblIndex(6)]
-            HRESULT GetLastWriteTime([NativeTypeName("UINT64 *")] ulong* lastWriteTime);
         }
     }
 }

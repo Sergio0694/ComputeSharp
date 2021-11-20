@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("6102DEE4-AF59-4B09-B999-B44D73F09B24")]
     [NativeTypeName("struct ID3D12CommandAllocator : ID3D12Pageable")]
     [NativeInheritance("ID3D12Pageable")]
-    internal unsafe partial struct ID3D12CommandAllocator : ID3D12CommandAllocator.Interface
+    internal unsafe partial struct ID3D12CommandAllocator
     {
         public void** lpVtbl;
 
@@ -80,12 +80,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT Reset()
         {
             return ((delegate* unmanaged[Stdcall]<ID3D12CommandAllocator*, int>)(lpVtbl[8]))((ID3D12CommandAllocator*)Unsafe.AsPointer(ref this));
-        }
-
-        public interface Interface : ID3D12Pageable.Interface
-        {
-            [VtblIndex(8)]
-            HRESULT Reset();
         }
     }
 }

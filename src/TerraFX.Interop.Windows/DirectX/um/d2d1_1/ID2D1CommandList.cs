@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("B4F34A19-2383-4D76-94F6-EC343657C3DC")]
     [NativeTypeName("struct ID2D1CommandList : ID2D1Image")]
     [NativeInheritance("ID2D1Image")]
-    internal unsafe partial struct ID2D1CommandList : ID2D1CommandList.Interface
+    internal unsafe partial struct ID2D1CommandList
     {
         public void** lpVtbl;
 
@@ -59,15 +59,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT Close()
         {
             return ((delegate* unmanaged[Stdcall]<ID2D1CommandList*, int>)(lpVtbl[5]))((ID2D1CommandList*)Unsafe.AsPointer(ref this));
-        }
-
-        public interface Interface : ID2D1Image.Interface
-        {
-            [VtblIndex(4)]
-            HRESULT Stream(ID2D1CommandSink* sink);
-
-            [VtblIndex(5)]
-            HRESULT Close();
         }
     }
 }

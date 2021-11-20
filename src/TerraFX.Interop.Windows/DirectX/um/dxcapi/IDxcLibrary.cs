@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("E5204DC7-D18C-4C3C-BDFB-851673980FE7")]
     [NativeTypeName("struct IDxcLibrary : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IDxcLibrary : IDxcLibrary.Interface
+    internal unsafe partial struct IDxcLibrary
     {
         public void** lpVtbl;
 
@@ -108,39 +108,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT GetBlobAsUtf16(IDxcBlob* pBlob, IDxcBlobEncoding** pBlobEncoding)
         {
             return ((delegate* unmanaged[Stdcall]<IDxcLibrary*, IDxcBlob*, IDxcBlobEncoding**, int>)(lpVtbl[12]))((IDxcLibrary*)Unsafe.AsPointer(ref this), pBlob, pBlobEncoding);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT SetMalloc(IMalloc* pMalloc);
-
-            [VtblIndex(4)]
-            HRESULT CreateBlobFromBlob(IDxcBlob* pBlob, [NativeTypeName("UINT32")] uint offset, [NativeTypeName("UINT32")] uint length, IDxcBlob** ppResult);
-
-            [VtblIndex(5)]
-            HRESULT CreateBlobFromFile([NativeTypeName("LPCWSTR")] ushort* pFileName, [NativeTypeName("UINT32 *")] uint* codePage, IDxcBlobEncoding** pBlobEncoding);
-
-            [VtblIndex(6)]
-            HRESULT CreateBlobWithEncodingFromPinned([NativeTypeName("LPCVOID")] void* pText, [NativeTypeName("UINT32")] uint size, [NativeTypeName("UINT32")] uint codePage, IDxcBlobEncoding** pBlobEncoding);
-
-            [VtblIndex(7)]
-            HRESULT CreateBlobWithEncodingOnHeapCopy([NativeTypeName("LPCVOID")] void* pText, [NativeTypeName("UINT32")] uint size, [NativeTypeName("UINT32")] uint codePage, IDxcBlobEncoding** pBlobEncoding);
-
-            [VtblIndex(8)]
-            HRESULT CreateBlobWithEncodingOnMalloc([NativeTypeName("LPCVOID")] void* pText, IMalloc* pIMalloc, [NativeTypeName("UINT32")] uint size, [NativeTypeName("UINT32")] uint codePage, IDxcBlobEncoding** pBlobEncoding);
-
-            [VtblIndex(9)]
-            HRESULT CreateIncludeHandler(IDxcIncludeHandler** ppResult);
-
-            [VtblIndex(10)]
-            HRESULT CreateStreamFromBlobReadOnly(IDxcBlob* pBlob, IStream** ppStream);
-
-            [VtblIndex(11)]
-            HRESULT GetBlobAsUtf8(IDxcBlob* pBlob, IDxcBlobEncoding** pBlobEncoding);
-
-            [VtblIndex(12)]
-            HRESULT GetBlobAsUtf16(IDxcBlob* pBlob, IDxcBlobEncoding** pBlobEncoding);
         }
     }
 }

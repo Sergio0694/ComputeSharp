@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD906A7-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1GradientStopCollection : ID2D1Resource")]
     [NativeInheritance("ID2D1Resource")]
-    internal unsafe partial struct ID2D1GradientStopCollection : ID2D1GradientStopCollection.Interface
+    internal unsafe partial struct ID2D1GradientStopCollection
     {
         public void** lpVtbl;
 
@@ -74,22 +74,6 @@ namespace TerraFX.Interop.DirectX
         public D2D1_EXTEND_MODE GetExtendMode()
         {
             return ((delegate* unmanaged[Stdcall]<ID2D1GradientStopCollection*, D2D1_EXTEND_MODE>)(lpVtbl[7]))((ID2D1GradientStopCollection*)Unsafe.AsPointer(ref this));
-        }
-
-        public interface Interface : ID2D1Resource.Interface
-        {
-            [VtblIndex(4)]
-            [return: NativeTypeName("UINT32")]
-            uint GetGradientStopCount();
-
-            [VtblIndex(5)]
-            void GetGradientStops(D2D1_GRADIENT_STOP* gradientStops, [NativeTypeName("UINT32")] uint gradientStopsCount);
-
-            [VtblIndex(6)]
-            D2D1_GAMMA GetColorInterpolationGamma();
-
-            [VtblIndex(7)]
-            D2D1_EXTEND_MODE GetExtendMode();
         }
     }
 }

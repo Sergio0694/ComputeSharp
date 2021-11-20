@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("E87A44C4-B76E-4C47-8B09-298EB12A2714")]
     [NativeTypeName("struct IWICBitmapCodecInfo : IWICComponentInfo")]
     [NativeInheritance("IWICComponentInfo")]
-    internal unsafe partial struct IWICBitmapCodecInfo : IWICBitmapCodecInfo.Interface
+    internal unsafe partial struct IWICBitmapCodecInfo
     {
         public void** lpVtbl;
 
@@ -177,45 +177,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT MatchesMimeType([NativeTypeName("LPCWSTR")] ushort* wzMimeType, BOOL* pfMatches)
         {
             return ((delegate* unmanaged[Stdcall]<IWICBitmapCodecInfo*, ushort*, BOOL*, int>)(lpVtbl[22]))((IWICBitmapCodecInfo*)Unsafe.AsPointer(ref this), wzMimeType, pfMatches);
-        }
-
-        public interface Interface : IWICComponentInfo.Interface
-        {
-            [VtblIndex(11)]
-            HRESULT GetContainerFormat(Guid* pguidContainerFormat);
-
-            [VtblIndex(12)]
-            HRESULT GetPixelFormats(uint cFormats, Guid* pguidPixelFormats, uint* pcActual);
-
-            [VtblIndex(13)]
-            HRESULT GetColorManagementVersion(uint cchColorManagementVersion, [NativeTypeName("WCHAR *")] ushort* wzColorManagementVersion, uint* pcchActual);
-
-            [VtblIndex(14)]
-            HRESULT GetDeviceManufacturer(uint cchDeviceManufacturer, [NativeTypeName("WCHAR *")] ushort* wzDeviceManufacturer, uint* pcchActual);
-
-            [VtblIndex(15)]
-            HRESULT GetDeviceModels(uint cchDeviceModels, [NativeTypeName("WCHAR *")] ushort* wzDeviceModels, uint* pcchActual);
-
-            [VtblIndex(16)]
-            HRESULT GetMimeTypes(uint cchMimeTypes, [NativeTypeName("WCHAR *")] ushort* wzMimeTypes, uint* pcchActual);
-
-            [VtblIndex(17)]
-            HRESULT GetFileExtensions(uint cchFileExtensions, [NativeTypeName("WCHAR *")] ushort* wzFileExtensions, uint* pcchActual);
-
-            [VtblIndex(18)]
-            HRESULT DoesSupportAnimation(BOOL* pfSupportAnimation);
-
-            [VtblIndex(19)]
-            HRESULT DoesSupportChromakey(BOOL* pfSupportChromakey);
-
-            [VtblIndex(20)]
-            HRESULT DoesSupportLossless(BOOL* pfSupportLossless);
-
-            [VtblIndex(21)]
-            HRESULT DoesSupportMultiframe(BOOL* pfSupportMultiframe);
-
-            [VtblIndex(22)]
-            HRESULT MatchesMimeType([NativeTypeName("LPCWSTR")] ushort* wzMimeType, BOOL* pfMatches);
         }
     }
 }

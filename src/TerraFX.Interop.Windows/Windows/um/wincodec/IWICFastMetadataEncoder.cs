@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("B84E2C09-78C9-4AC4-8BD3-524AE1663A2F")]
     [NativeTypeName("struct IWICFastMetadataEncoder : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IWICFastMetadataEncoder : IWICFastMetadataEncoder.Interface
+    internal unsafe partial struct IWICFastMetadataEncoder
     {
         public void** lpVtbl;
 
@@ -51,15 +51,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT GetMetadataQueryWriter(IWICMetadataQueryWriter** ppIMetadataQueryWriter)
         {
             return ((delegate* unmanaged[Stdcall]<IWICFastMetadataEncoder*, IWICMetadataQueryWriter**, int>)(lpVtbl[4]))((IWICFastMetadataEncoder*)Unsafe.AsPointer(ref this), ppIMetadataQueryWriter);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT Commit();
-
-            [VtblIndex(4)]
-            HRESULT GetMetadataQueryWriter(IWICMetadataQueryWriter** ppIMetadataQueryWriter);
         }
     }
 }

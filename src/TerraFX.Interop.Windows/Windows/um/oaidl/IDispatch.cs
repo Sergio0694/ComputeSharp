@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00020400-0000-0000-C000-000000000046")]
     [NativeTypeName("struct IDispatch : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IDispatch : IDispatch.Interface
+    internal unsafe partial struct IDispatch
     {
         public void** lpVtbl;
 
@@ -65,21 +65,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT Invoke([NativeTypeName("DISPID")] int dispIdMember, [NativeTypeName("const IID &")] Guid* riid, [NativeTypeName("LCID")] uint lcid, [NativeTypeName("WORD")] ushort wFlags, DISPPARAMS* pDispParams, VARIANT* pVarResult, EXCEPINFO* pExcepInfo, uint* puArgErr)
         {
             return ((delegate* unmanaged[Stdcall]<IDispatch*, int, Guid*, uint, ushort, DISPPARAMS*, VARIANT*, EXCEPINFO*, uint*, int>)(lpVtbl[6]))((IDispatch*)Unsafe.AsPointer(ref this), dispIdMember, riid, lcid, wFlags, pDispParams, pVarResult, pExcepInfo, puArgErr);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT GetTypeInfoCount(uint* pctinfo);
-
-            [VtblIndex(4)]
-            HRESULT GetTypeInfo(uint iTInfo, [NativeTypeName("LCID")] uint lcid, ITypeInfo** ppTInfo);
-
-            [VtblIndex(5)]
-            HRESULT GetIDsOfNames([NativeTypeName("const IID &")] Guid* riid, [NativeTypeName("LPOLESTR *")] ushort** rgszNames, uint cNames, [NativeTypeName("LCID")] uint lcid, [NativeTypeName("DISPID *")] int* rgDispId);
-
-            [VtblIndex(6)]
-            HRESULT Invoke([NativeTypeName("DISPID")] int dispIdMember, [NativeTypeName("const IID &")] Guid* riid, [NativeTypeName("LCID")] uint lcid, [NativeTypeName("WORD")] ushort wFlags, DISPPARAMS* pDispParams, VARIANT* pVarResult, EXCEPINFO* pExcepInfo, uint* puArgErr);
         }
     }
 }

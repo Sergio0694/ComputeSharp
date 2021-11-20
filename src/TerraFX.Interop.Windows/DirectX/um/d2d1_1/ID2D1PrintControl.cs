@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2C1D867D-C290-41C8-AE7E-34A98702E9A5")]
     [NativeTypeName("struct ID2D1PrintControl : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct ID2D1PrintControl : ID2D1PrintControl.Interface
+    internal unsafe partial struct ID2D1PrintControl
     {
         public void** lpVtbl;
 
@@ -52,15 +52,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT Close()
         {
             return ((delegate* unmanaged[Stdcall]<ID2D1PrintControl*, int>)(lpVtbl[4]))((ID2D1PrintControl*)Unsafe.AsPointer(ref this));
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT AddPage(ID2D1CommandList* commandList, D2D_SIZE_F pageSize, IStream* pagePrintTicketStream, [NativeTypeName("D2D1_TAG *")] ulong* tag1 = null, [NativeTypeName("D2D1_TAG *")] ulong* tag2 = null);
-
-            [VtblIndex(4)]
-            HRESULT Close();
         }
     }
 }

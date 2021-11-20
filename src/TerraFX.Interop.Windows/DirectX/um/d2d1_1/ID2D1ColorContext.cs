@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("1C4820BB-5771-4518-A581-2FE4DD0EC657")]
     [NativeTypeName("struct ID2D1ColorContext : ID2D1Resource")]
     [NativeInheritance("ID2D1Resource")]
-    internal unsafe partial struct ID2D1ColorContext : ID2D1ColorContext.Interface
+    internal unsafe partial struct ID2D1ColorContext
     {
         public void** lpVtbl;
 
@@ -67,19 +67,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT GetProfile(byte* profile, [NativeTypeName("UINT32")] uint profileSize)
         {
             return ((delegate* unmanaged[Stdcall]<ID2D1ColorContext*, byte*, uint, int>)(lpVtbl[6]))((ID2D1ColorContext*)Unsafe.AsPointer(ref this), profile, profileSize);
-        }
-
-        public interface Interface : ID2D1Resource.Interface
-        {
-            [VtblIndex(4)]
-            D2D1_COLOR_SPACE GetColorSpace();
-
-            [VtblIndex(5)]
-            [return: NativeTypeName("UINT32")]
-            uint GetProfileSize();
-
-            [VtblIndex(6)]
-            HRESULT GetProfile(byte* profile, [NativeTypeName("UINT32")] uint profileSize);
         }
     }
 }

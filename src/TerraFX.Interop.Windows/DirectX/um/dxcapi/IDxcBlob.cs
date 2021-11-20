@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("8BA5FB08-5195-40E2-AC58-0D989C3A0102")]
     [NativeTypeName("struct IDxcBlob : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IDxcBlob : IDxcBlob.Interface
+    internal unsafe partial struct IDxcBlob
     {
         public void** lpVtbl;
 
@@ -54,17 +54,6 @@ namespace TerraFX.Interop.DirectX
         public nuint GetBufferSize()
         {
             return ((delegate* unmanaged[Stdcall]<IDxcBlob*, nuint>)(lpVtbl[4]))((IDxcBlob*)Unsafe.AsPointer(ref this));
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            [return: NativeTypeName("LPVOID")]
-            void* GetBufferPointer();
-
-            [VtblIndex(4)]
-            [return: NativeTypeName("SIZE_T")]
-            nuint GetBufferSize();
         }
     }
 }

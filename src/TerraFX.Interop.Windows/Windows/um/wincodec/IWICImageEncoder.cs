@@ -15,7 +15,7 @@ namespace TerraFX.Interop.Windows
     [Guid("04C75BF8-3CE1-473B-ACC5-3CC4F5E94999")]
     [NativeTypeName("struct IWICImageEncoder : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IWICImageEncoder : IWICImageEncoder.Interface
+    internal unsafe partial struct IWICImageEncoder
     {
         public void** lpVtbl;
 
@@ -61,18 +61,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT WriteThumbnail(ID2D1Image* pImage, IWICBitmapEncoder* pEncoder, [NativeTypeName("const WICImageParameters *")] WICImageParameters* pImageParameters)
         {
             return ((delegate* unmanaged[Stdcall]<IWICImageEncoder*, ID2D1Image*, IWICBitmapEncoder*, WICImageParameters*, int>)(lpVtbl[5]))((IWICImageEncoder*)Unsafe.AsPointer(ref this), pImage, pEncoder, pImageParameters);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT WriteFrame(ID2D1Image* pImage, IWICBitmapFrameEncode* pFrameEncode, [NativeTypeName("const WICImageParameters *")] WICImageParameters* pImageParameters);
-
-            [VtblIndex(4)]
-            HRESULT WriteFrameThumbnail(ID2D1Image* pImage, IWICBitmapFrameEncode* pFrameEncode, [NativeTypeName("const WICImageParameters *")] WICImageParameters* pImageParameters);
-
-            [VtblIndex(5)]
-            HRESULT WriteThumbnail(ID2D1Image* pImage, IWICBitmapEncoder* pEncoder, [NativeTypeName("const WICImageParameters *")] WICImageParameters* pImageParameters);
         }
     }
 }

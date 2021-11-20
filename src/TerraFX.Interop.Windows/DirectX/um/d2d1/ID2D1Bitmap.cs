@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("A2296057-EA42-4099-983B-539FB6505426")]
     [NativeTypeName("struct ID2D1Bitmap : ID2D1Image")]
     [NativeInheritance("ID2D1Image")]
-    internal unsafe partial struct ID2D1Bitmap : ID2D1Bitmap.Interface
+    internal unsafe partial struct ID2D1Bitmap
     {
         public void** lpVtbl;
 
@@ -99,32 +99,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT CopyFromMemory([NativeTypeName("const D2D1_RECT_U *")] D2D_RECT_U* dstRect, [NativeTypeName("const void *")] void* srcData, [NativeTypeName("UINT32")] uint pitch)
         {
             return ((delegate* unmanaged[Stdcall]<ID2D1Bitmap*, D2D_RECT_U*, void*, uint, int>)(lpVtbl[10]))((ID2D1Bitmap*)Unsafe.AsPointer(ref this), dstRect, srcData, pitch);
-        }
-
-        public interface Interface : ID2D1Image.Interface
-        {
-            [VtblIndex(4)]
-            [return: NativeTypeName("D2D1_SIZE_F")]
-            D2D_SIZE_F GetSize();
-
-            [VtblIndex(5)]
-            [return: NativeTypeName("D2D1_SIZE_U")]
-            D2D_SIZE_U GetPixelSize();
-
-            [VtblIndex(6)]
-            D2D1_PIXEL_FORMAT GetPixelFormat();
-
-            [VtblIndex(7)]
-            void GetDpi(float* dpiX, float* dpiY);
-
-            [VtblIndex(8)]
-            HRESULT CopyFromBitmap([NativeTypeName("const D2D1_POINT_2U *")] D2D_POINT_2U* destPoint, ID2D1Bitmap* bitmap, [NativeTypeName("const D2D1_RECT_U *")] D2D_RECT_U* srcRect);
-
-            [VtblIndex(9)]
-            HRESULT CopyFromRenderTarget([NativeTypeName("const D2D1_POINT_2U *")] D2D_POINT_2U* destPoint, ID2D1RenderTarget* renderTarget, [NativeTypeName("const D2D1_RECT_U *")] D2D_RECT_U* srcRect);
-
-            [VtblIndex(10)]
-            HRESULT CopyFromMemory([NativeTypeName("const D2D1_RECT_U *")] D2D_RECT_U* dstRect, [NativeTypeName("const void *")] void* srcData, [NativeTypeName("UINT32")] uint pitch);
         }
     }
 }

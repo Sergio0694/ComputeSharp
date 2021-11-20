@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD906AB-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1LinearGradientBrush : ID2D1Brush")]
     [NativeInheritance("ID2D1Brush")]
-    internal unsafe partial struct ID2D1LinearGradientBrush : ID2D1LinearGradientBrush.Interface
+    internal unsafe partial struct ID2D1LinearGradientBrush
     {
         public void** lpVtbl;
 
@@ -112,26 +112,6 @@ namespace TerraFX.Interop.DirectX
         public void GetGradientStopCollection(ID2D1GradientStopCollection** gradientStopCollection)
         {
             ((delegate* unmanaged[Stdcall]<ID2D1LinearGradientBrush*, ID2D1GradientStopCollection**, void>)(lpVtbl[12]))((ID2D1LinearGradientBrush*)Unsafe.AsPointer(ref this), gradientStopCollection);
-        }
-
-        public interface Interface : ID2D1Brush.Interface
-        {
-            [VtblIndex(8)]
-            void SetStartPoint([NativeTypeName("D2D1_POINT_2F")] D2D_POINT_2F startPoint);
-
-            [VtblIndex(9)]
-            void SetEndPoint([NativeTypeName("D2D1_POINT_2F")] D2D_POINT_2F endPoint);
-
-            [VtblIndex(10)]
-            [return: NativeTypeName("D2D1_POINT_2F")]
-            D2D_POINT_2F GetStartPoint();
-
-            [VtblIndex(11)]
-            [return: NativeTypeName("D2D1_POINT_2F")]
-            D2D_POINT_2F GetEndPoint();
-
-            [VtblIndex(12)]
-            void GetGradientStopCollection(ID2D1GradientStopCollection** gradientStopCollection);
         }
     }
 }

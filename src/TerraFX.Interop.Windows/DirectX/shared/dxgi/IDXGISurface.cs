@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("CAFCB56C-6AC3-4889-BF47-9E23BBD260EC")]
     [NativeTypeName("struct IDXGISurface : IDXGIDeviceSubObject")]
     [NativeInheritance("IDXGIDeviceSubObject")]
-    internal unsafe partial struct IDXGISurface : IDXGISurface.Interface
+    internal unsafe partial struct IDXGISurface
     {
         public void** lpVtbl;
 
@@ -94,18 +94,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT Unmap()
         {
             return ((delegate* unmanaged[Stdcall]<IDXGISurface*, int>)(lpVtbl[10]))((IDXGISurface*)Unsafe.AsPointer(ref this));
-        }
-
-        public interface Interface : IDXGIDeviceSubObject.Interface
-        {
-            [VtblIndex(8)]
-            HRESULT GetDesc(DXGI_SURFACE_DESC* pDesc);
-
-            [VtblIndex(9)]
-            HRESULT Map(DXGI_MAPPED_RECT* pLockedRect, uint MapFlags);
-
-            [VtblIndex(10)]
-            HRESULT Unmap();
         }
     }
 }

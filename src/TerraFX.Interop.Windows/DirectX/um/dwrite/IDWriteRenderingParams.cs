@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2F0DA53A-2ADD-47CD-82EE-D9EC34688E75")]
     [NativeTypeName("struct IDWriteRenderingParams : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IDWriteRenderingParams : IDWriteRenderingParams.Interface
+    internal unsafe partial struct IDWriteRenderingParams
     {
         public void** lpVtbl;
 
@@ -73,24 +73,6 @@ namespace TerraFX.Interop.DirectX
         public DWRITE_RENDERING_MODE GetRenderingMode()
         {
             return ((delegate* unmanaged[Stdcall]<IDWriteRenderingParams*, DWRITE_RENDERING_MODE>)(lpVtbl[7]))((IDWriteRenderingParams*)Unsafe.AsPointer(ref this));
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            float GetGamma();
-
-            [VtblIndex(4)]
-            float GetEnhancedContrast();
-
-            [VtblIndex(5)]
-            float GetClearTypeLevel();
-
-            [VtblIndex(6)]
-            DWRITE_PIXEL_GEOMETRY GetPixelGeometry();
-
-            [VtblIndex(7)]
-            DWRITE_RENDERING_MODE GetRenderingMode();
         }
     }
 }

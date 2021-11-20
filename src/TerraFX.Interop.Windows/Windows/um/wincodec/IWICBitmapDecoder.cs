@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("9EDDE9E7-8DEE-47EA-99DF-E6FAF2ED44BF")]
     [NativeTypeName("struct IWICBitmapDecoder : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IWICBitmapDecoder : IWICBitmapDecoder.Interface
+    internal unsafe partial struct IWICBitmapDecoder
     {
         public void** lpVtbl;
 
@@ -114,42 +114,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT GetFrame(uint index, IWICBitmapFrameDecode** ppIBitmapFrame)
         {
             return ((delegate* unmanaged[Stdcall]<IWICBitmapDecoder*, uint, IWICBitmapFrameDecode**, int>)(lpVtbl[13]))((IWICBitmapDecoder*)Unsafe.AsPointer(ref this), index, ppIBitmapFrame);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT QueryCapability(IStream* pIStream, [NativeTypeName("DWORD *")] uint* pdwCapability);
-
-            [VtblIndex(4)]
-            HRESULT Initialize(IStream* pIStream, WICDecodeOptions cacheOptions);
-
-            [VtblIndex(5)]
-            HRESULT GetContainerFormat(Guid* pguidContainerFormat);
-
-            [VtblIndex(6)]
-            HRESULT GetDecoderInfo(IWICBitmapDecoderInfo** ppIDecoderInfo);
-
-            [VtblIndex(7)]
-            HRESULT CopyPalette(IWICPalette* pIPalette);
-
-            [VtblIndex(8)]
-            HRESULT GetMetadataQueryReader(IWICMetadataQueryReader** ppIMetadataQueryReader);
-
-            [VtblIndex(9)]
-            HRESULT GetPreview(IWICBitmapSource** ppIBitmapSource);
-
-            [VtblIndex(10)]
-            HRESULT GetColorContexts(uint cCount, IWICColorContext** ppIColorContexts, uint* pcActualCount);
-
-            [VtblIndex(11)]
-            HRESULT GetThumbnail(IWICBitmapSource** ppIThumbnail);
-
-            [VtblIndex(12)]
-            HRESULT GetFrameCount(uint* pCount);
-
-            [VtblIndex(13)]
-            HRESULT GetFrame(uint index, IWICBitmapFrameDecode** ppIBitmapFrame);
         }
     }
 }

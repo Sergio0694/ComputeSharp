@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("C36A797C-EC80-4F0A-8985-A7B2475082D1")]
     [NativeTypeName("struct ID3D12CommandSignature : ID3D12Pageable")]
     [NativeInheritance("ID3D12Pageable")]
-    internal unsafe partial struct ID3D12CommandSignature : ID3D12CommandSignature.Interface
+    internal unsafe partial struct ID3D12CommandSignature
     {
         public void** lpVtbl;
 
@@ -73,10 +73,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT GetDevice([NativeTypeName("const IID &")] Guid* riid, void** ppvDevice)
         {
             return ((delegate* unmanaged[Stdcall]<ID3D12CommandSignature*, Guid*, void**, int>)(lpVtbl[7]))((ID3D12CommandSignature*)Unsafe.AsPointer(ref this), riid, ppvDevice);
-        }
-
-        public interface Interface : ID3D12Pageable.Interface
-        {
         }
     }
 }

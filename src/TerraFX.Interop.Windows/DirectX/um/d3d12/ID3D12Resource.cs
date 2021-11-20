@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("696442BE-A72E-4059-BC79-5B5C98040FAD")]
     [NativeTypeName("struct ID3D12Resource : ID3D12Pageable")]
     [NativeInheritance("ID3D12Pageable")]
-    internal unsafe partial struct ID3D12Resource : ID3D12Resource.Interface
+    internal unsafe partial struct ID3D12Resource
     {
         public void** lpVtbl;
 
@@ -124,31 +124,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT GetHeapProperties(D3D12_HEAP_PROPERTIES* pHeapProperties, D3D12_HEAP_FLAGS* pHeapFlags)
         {
             return ((delegate* unmanaged[Stdcall]<ID3D12Resource*, D3D12_HEAP_PROPERTIES*, D3D12_HEAP_FLAGS*, int>)(lpVtbl[14]))((ID3D12Resource*)Unsafe.AsPointer(ref this), pHeapProperties, pHeapFlags);
-        }
-
-        public interface Interface : ID3D12Pageable.Interface
-        {
-            [VtblIndex(8)]
-            HRESULT Map(uint Subresource, [NativeTypeName("const D3D12_RANGE *")] D3D12_RANGE* pReadRange, void** ppData);
-
-            [VtblIndex(9)]
-            void Unmap(uint Subresource, [NativeTypeName("const D3D12_RANGE *")] D3D12_RANGE* pWrittenRange);
-
-            [VtblIndex(10)]
-            D3D12_RESOURCE_DESC GetDesc();
-
-            [VtblIndex(11)]
-            [return: NativeTypeName("D3D12_GPU_VIRTUAL_ADDRESS")]
-            ulong GetGPUVirtualAddress();
-
-            [VtblIndex(12)]
-            HRESULT WriteToSubresource(uint DstSubresource, [NativeTypeName("const D3D12_BOX *")] D3D12_BOX* pDstBox, [NativeTypeName("const void *")] void* pSrcData, uint SrcRowPitch, uint SrcDepthPitch);
-
-            [VtblIndex(13)]
-            HRESULT ReadFromSubresource(void* pDstData, uint DstRowPitch, uint DstDepthPitch, uint SrcSubresource, [NativeTypeName("const D3D12_BOX *")] D3D12_BOX* pSrcBox);
-
-            [VtblIndex(14)]
-            HRESULT GetHeapProperties(D3D12_HEAP_PROPERTIES* pHeapProperties, D3D12_HEAP_FLAGS* pHeapFlags);
         }
     }
 }

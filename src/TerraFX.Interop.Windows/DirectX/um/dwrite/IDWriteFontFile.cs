@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("739D886A-CEF5-47DC-8769-1A8B41BEBBB0")]
     [NativeTypeName("struct IDWriteFontFile : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IDWriteFontFile : IDWriteFontFile.Interface
+    internal unsafe partial struct IDWriteFontFile
     {
         public void** lpVtbl;
 
@@ -59,18 +59,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT Analyze(BOOL* isSupportedFontType, DWRITE_FONT_FILE_TYPE* fontFileType, DWRITE_FONT_FACE_TYPE* fontFaceType, [NativeTypeName("UINT32 *")] uint* numberOfFaces)
         {
             return ((delegate* unmanaged[Stdcall]<IDWriteFontFile*, BOOL*, DWRITE_FONT_FILE_TYPE*, DWRITE_FONT_FACE_TYPE*, uint*, int>)(lpVtbl[5]))((IDWriteFontFile*)Unsafe.AsPointer(ref this), isSupportedFontType, fontFileType, fontFaceType, numberOfFaces);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT GetReferenceKey([NativeTypeName("const void **")] void** fontFileReferenceKey, [NativeTypeName("UINT32 *")] uint* fontFileReferenceKeySize);
-
-            [VtblIndex(4)]
-            HRESULT GetLoader(IDWriteFontFileLoader** fontFileLoader);
-
-            [VtblIndex(5)]
-            HRESULT Analyze(BOOL* isSupportedFontType, DWRITE_FONT_FILE_TYPE* fontFileType, DWRITE_FONT_FACE_TYPE* fontFaceType, [NativeTypeName("UINT32 *")] uint* numberOfFaces);
         }
     }
 }

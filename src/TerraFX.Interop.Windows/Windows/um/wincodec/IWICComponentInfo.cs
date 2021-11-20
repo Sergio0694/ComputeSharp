@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("23BC3F0A-698B-4357-886B-F24D50671334")]
     [NativeTypeName("struct IWICComponentInfo : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IWICComponentInfo : IWICComponentInfo.Interface
+    internal unsafe partial struct IWICComponentInfo
     {
         public void** lpVtbl;
 
@@ -93,33 +93,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT GetFriendlyName(uint cchFriendlyName, [NativeTypeName("WCHAR *")] ushort* wzFriendlyName, uint* pcchActual)
         {
             return ((delegate* unmanaged[Stdcall]<IWICComponentInfo*, uint, ushort*, uint*, int>)(lpVtbl[10]))((IWICComponentInfo*)Unsafe.AsPointer(ref this), cchFriendlyName, wzFriendlyName, pcchActual);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT GetComponentType(WICComponentType* pType);
-
-            [VtblIndex(4)]
-            HRESULT GetCLSID([NativeTypeName("CLSID *")] Guid* pclsid);
-
-            [VtblIndex(5)]
-            HRESULT GetSigningStatus([NativeTypeName("DWORD *")] uint* pStatus);
-
-            [VtblIndex(6)]
-            HRESULT GetAuthor(uint cchAuthor, [NativeTypeName("WCHAR *")] ushort* wzAuthor, uint* pcchActual);
-
-            [VtblIndex(7)]
-            HRESULT GetVendorGUID(Guid* pguidVendor);
-
-            [VtblIndex(8)]
-            HRESULT GetVersion(uint cchVersion, [NativeTypeName("WCHAR *")] ushort* wzVersion, uint* pcchActual);
-
-            [VtblIndex(9)]
-            HRESULT GetSpecVersion(uint cchSpecVersion, [NativeTypeName("WCHAR *")] ushort* wzSpecVersion, uint* pcchActual);
-
-            [VtblIndex(10)]
-            HRESULT GetFriendlyName(uint cchFriendlyName, [NativeTypeName("WCHAR *")] ushort* wzFriendlyName, uint* pcchActual);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD9069D-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1StrokeStyle : ID2D1Resource")]
     [NativeInheritance("ID2D1Resource")]
-    internal unsafe partial struct ID2D1StrokeStyle : ID2D1StrokeStyle.Interface
+    internal unsafe partial struct ID2D1StrokeStyle
     {
         public void** lpVtbl;
 
@@ -109,37 +109,6 @@ namespace TerraFX.Interop.DirectX
         public void GetDashes(float* dashes, [NativeTypeName("UINT32")] uint dashesCount)
         {
             ((delegate* unmanaged[Stdcall]<ID2D1StrokeStyle*, float*, uint, void>)(lpVtbl[12]))((ID2D1StrokeStyle*)Unsafe.AsPointer(ref this), dashes, dashesCount);
-        }
-
-        public interface Interface : ID2D1Resource.Interface
-        {
-            [VtblIndex(4)]
-            D2D1_CAP_STYLE GetStartCap();
-
-            [VtblIndex(5)]
-            D2D1_CAP_STYLE GetEndCap();
-
-            [VtblIndex(6)]
-            D2D1_CAP_STYLE GetDashCap();
-
-            [VtblIndex(7)]
-            float GetMiterLimit();
-
-            [VtblIndex(8)]
-            D2D1_LINE_JOIN GetLineJoin();
-
-            [VtblIndex(9)]
-            float GetDashOffset();
-
-            [VtblIndex(10)]
-            D2D1_DASH_STYLE GetDashStyle();
-
-            [VtblIndex(11)]
-            [return: NativeTypeName("UINT32")]
-            uint GetDashesCount();
-
-            [VtblIndex(12)]
-            void GetDashes(float* dashes, [NativeTypeName("UINT32")] uint dashesCount);
         }
     }
 }

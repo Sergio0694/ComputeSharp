@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD906C1-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1TessellationSink : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct ID2D1TessellationSink : ID2D1TessellationSink.Interface
+    internal unsafe partial struct ID2D1TessellationSink
     {
         public void** lpVtbl;
 
@@ -52,15 +52,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT Close()
         {
             return ((delegate* unmanaged[Stdcall]<ID2D1TessellationSink*, int>)(lpVtbl[4]))((ID2D1TessellationSink*)Unsafe.AsPointer(ref this));
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            void AddTriangles([NativeTypeName("const D2D1_TRIANGLE *")] D2D1_TRIANGLE* triangles, [NativeTypeName("UINT32")] uint trianglesCount);
-
-            [VtblIndex(4)]
-            HRESULT Close();
         }
     }
 }

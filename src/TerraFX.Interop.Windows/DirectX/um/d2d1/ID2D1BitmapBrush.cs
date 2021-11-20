@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD906AA-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1BitmapBrush : ID2D1Brush")]
     [NativeInheritance("ID2D1Brush")]
-    internal unsafe partial struct ID2D1BitmapBrush : ID2D1BitmapBrush.Interface
+    internal unsafe partial struct ID2D1BitmapBrush
     {
         public void** lpVtbl;
 
@@ -129,33 +129,6 @@ namespace TerraFX.Interop.DirectX
         public void GetBitmap(ID2D1Bitmap** bitmap)
         {
             ((delegate* unmanaged[Stdcall]<ID2D1BitmapBrush*, ID2D1Bitmap**, void>)(lpVtbl[15]))((ID2D1BitmapBrush*)Unsafe.AsPointer(ref this), bitmap);
-        }
-
-        public interface Interface : ID2D1Brush.Interface
-        {
-            [VtblIndex(8)]
-            void SetExtendModeX(D2D1_EXTEND_MODE extendModeX);
-
-            [VtblIndex(9)]
-            void SetExtendModeY(D2D1_EXTEND_MODE extendModeY);
-
-            [VtblIndex(10)]
-            void SetInterpolationMode(D2D1_BITMAP_INTERPOLATION_MODE interpolationMode);
-
-            [VtblIndex(11)]
-            void SetBitmap(ID2D1Bitmap* bitmap);
-
-            [VtblIndex(12)]
-            D2D1_EXTEND_MODE GetExtendModeX();
-
-            [VtblIndex(13)]
-            D2D1_EXTEND_MODE GetExtendModeY();
-
-            [VtblIndex(14)]
-            D2D1_BITMAP_INTERPOLATION_MODE GetInterpolationMode();
-
-            [VtblIndex(15)]
-            void GetBitmap(ID2D1Bitmap** bitmap);
         }
     }
 }

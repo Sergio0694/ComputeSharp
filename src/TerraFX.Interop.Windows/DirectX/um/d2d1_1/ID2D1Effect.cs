@@ -14,7 +14,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("28211A43-7D89-476F-8181-2D6159B220AD")]
     [NativeTypeName("struct ID2D1Effect : ID2D1Properties")]
     [NativeInheritance("ID2D1Properties")]
-    internal unsafe partial struct ID2D1Effect : ID2D1Effect.Interface
+    internal unsafe partial struct ID2D1Effect
     {
         public void** lpVtbl;
 
@@ -192,25 +192,6 @@ namespace TerraFX.Interop.DirectX
         public void GetOutput(ID2D1Image** outputImage)
         {
             ((delegate* unmanaged[Stdcall]<ID2D1Effect*, ID2D1Image**, void>)(lpVtbl[18]))((ID2D1Effect*)Unsafe.AsPointer(ref this), outputImage);
-        }
-
-        public interface Interface : ID2D1Properties.Interface
-        {
-            [VtblIndex(14)]
-            void SetInput([NativeTypeName("UINT32")] uint index, ID2D1Image* input, [Optional, DefaultParameterValue(1)] BOOL invalidate);
-
-            [VtblIndex(15)]
-            HRESULT SetInputCount([NativeTypeName("UINT32")] uint inputCount);
-
-            [VtblIndex(16)]
-            void GetInput([NativeTypeName("UINT32")] uint index, ID2D1Image** input);
-
-            [VtblIndex(17)]
-            [return: NativeTypeName("UINT32")]
-            uint GetInputCount();
-
-            [VtblIndex(18)]
-            void GetOutput(ID2D1Image** outputImage);
         }
     }
 }

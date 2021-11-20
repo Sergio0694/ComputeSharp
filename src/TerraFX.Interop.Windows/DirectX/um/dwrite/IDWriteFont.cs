@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("ACD16696-8C14-4F5D-877E-FE3FC1D32737")]
     [NativeTypeName("struct IDWriteFont : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IDWriteFont : IDWriteFont.Interface
+    internal unsafe partial struct IDWriteFont
     {
         public void** lpVtbl;
 
@@ -115,42 +115,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT CreateFontFace(IDWriteFontFace** fontFace)
         {
             return ((delegate* unmanaged[Stdcall]<IDWriteFont*, IDWriteFontFace**, int>)(lpVtbl[13]))((IDWriteFont*)Unsafe.AsPointer(ref this), fontFace);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT GetFontFamily(IDWriteFontFamily** fontFamily);
-
-            [VtblIndex(4)]
-            DWRITE_FONT_WEIGHT GetWeight();
-
-            [VtblIndex(5)]
-            DWRITE_FONT_STRETCH GetStretch();
-
-            [VtblIndex(6)]
-            DWRITE_FONT_STYLE GetStyle();
-
-            [VtblIndex(7)]
-            BOOL IsSymbolFont();
-
-            [VtblIndex(8)]
-            HRESULT GetFaceNames(IDWriteLocalizedStrings** names);
-
-            [VtblIndex(9)]
-            HRESULT GetInformationalStrings(DWRITE_INFORMATIONAL_STRING_ID informationalStringID, IDWriteLocalizedStrings** informationalStrings, BOOL* exists);
-
-            [VtblIndex(10)]
-            DWRITE_FONT_SIMULATIONS GetSimulations();
-
-            [VtblIndex(11)]
-            void GetMetrics(DWRITE_FONT_METRICS* fontMetrics);
-
-            [VtblIndex(12)]
-            HRESULT HasCharacter([NativeTypeName("UINT32")] uint unicodeValue, BOOL* exists);
-
-            [VtblIndex(13)]
-            HRESULT CreateFontFace(IDWriteFontFace** fontFace);
         }
     }
 }

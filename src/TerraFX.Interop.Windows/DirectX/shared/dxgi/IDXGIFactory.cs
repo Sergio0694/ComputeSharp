@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("7B7166EC-21C7-44AE-B21A-C9AE321AE369")]
     [NativeTypeName("struct IDXGIFactory : IDXGIObject")]
     [NativeInheritance("IDXGIObject")]
-    internal unsafe partial struct IDXGIFactory : IDXGIFactory.Interface
+    internal unsafe partial struct IDXGIFactory
     {
         public void** lpVtbl;
 
@@ -101,24 +101,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT CreateSoftwareAdapter(HMODULE Module, IDXGIAdapter** ppAdapter)
         {
             return ((delegate* unmanaged[Stdcall]<IDXGIFactory*, HMODULE, IDXGIAdapter**, int>)(lpVtbl[11]))((IDXGIFactory*)Unsafe.AsPointer(ref this), Module, ppAdapter);
-        }
-
-        public interface Interface : IDXGIObject.Interface
-        {
-            [VtblIndex(7)]
-            HRESULT EnumAdapters(uint Adapter, IDXGIAdapter** ppAdapter);
-
-            [VtblIndex(8)]
-            HRESULT MakeWindowAssociation(HWND WindowHandle, uint Flags);
-
-            [VtblIndex(9)]
-            HRESULT GetWindowAssociation(HWND* pWindowHandle);
-
-            [VtblIndex(10)]
-            HRESULT CreateSwapChain(IUnknown* pDevice, DXGI_SWAP_CHAIN_DESC* pDesc, IDXGISwapChain** ppSwapChain);
-
-            [VtblIndex(11)]
-            HRESULT CreateSoftwareAdapter(HMODULE Module, IDXGIAdapter** ppAdapter);
         }
     }
 }

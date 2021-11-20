@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("A84CEE02-3EEA-4EEE-A827-87C1A02A0FCC")]
     [NativeTypeName("struct IDWriteFontCollection : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IDWriteFontCollection : IDWriteFontCollection.Interface
+    internal unsafe partial struct IDWriteFontCollection
     {
         public void** lpVtbl;
 
@@ -67,22 +67,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT GetFontFromFontFace(IDWriteFontFace* fontFace, IDWriteFont** font)
         {
             return ((delegate* unmanaged[Stdcall]<IDWriteFontCollection*, IDWriteFontFace*, IDWriteFont**, int>)(lpVtbl[6]))((IDWriteFontCollection*)Unsafe.AsPointer(ref this), fontFace, font);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            [return: NativeTypeName("UINT32")]
-            uint GetFontFamilyCount();
-
-            [VtblIndex(4)]
-            HRESULT GetFontFamily([NativeTypeName("UINT32")] uint index, IDWriteFontFamily** fontFamily);
-
-            [VtblIndex(5)]
-            HRESULT FindFamilyName([NativeTypeName("const WCHAR *")] ushort* familyName, [NativeTypeName("UINT32 *")] uint* index, BOOL* exists);
-
-            [VtblIndex(6)]
-            HRESULT GetFontFromFontFace(IDWriteFontFace* fontFace, IDWriteFont** font);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("7F61FC7D-950D-467F-B3E3-3C02FB49187C")]
     [NativeTypeName("struct IDxcIncludeHandler : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IDxcIncludeHandler : IDxcIncludeHandler.Interface
+    internal unsafe partial struct IDxcIncludeHandler
     {
         public void** lpVtbl;
 
@@ -45,12 +45,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT LoadSource([NativeTypeName("LPCWSTR")] ushort* pFilename, IDxcBlob** ppIncludeSource)
         {
             return ((delegate* unmanaged[Stdcall]<IDxcIncludeHandler*, ushort*, IDxcBlob**, int>)(lpVtbl[3]))((IDxcIncludeHandler*)Unsafe.AsPointer(ref this), pFilename, ppIncludeSource);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT LoadSource([NativeTypeName("LPCWSTR")] ushort* pFilename, IDxcBlob** ppIncludeSource);
         }
     }
 }

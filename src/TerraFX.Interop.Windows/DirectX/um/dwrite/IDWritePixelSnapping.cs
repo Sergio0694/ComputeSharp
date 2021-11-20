@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("EAF3A2DA-ECF4-4D24-B644-B34F6842024B")]
     [NativeTypeName("struct IDWritePixelSnapping : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IDWritePixelSnapping : IDWritePixelSnapping.Interface
+    internal unsafe partial struct IDWritePixelSnapping
     {
         public void** lpVtbl;
 
@@ -59,18 +59,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT GetPixelsPerDip(void* clientDrawingContext, float* pixelsPerDip)
         {
             return ((delegate* unmanaged[Stdcall]<IDWritePixelSnapping*, void*, float*, int>)(lpVtbl[5]))((IDWritePixelSnapping*)Unsafe.AsPointer(ref this), clientDrawingContext, pixelsPerDip);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT IsPixelSnappingDisabled(void* clientDrawingContext, BOOL* isDisabled);
-
-            [VtblIndex(4)]
-            HRESULT GetCurrentTransform(void* clientDrawingContext, DWRITE_MATRIX* transform);
-
-            [VtblIndex(5)]
-            HRESULT GetPixelsPerDip(void* clientDrawingContext, float* pixelsPerDip);
         }
     }
 }

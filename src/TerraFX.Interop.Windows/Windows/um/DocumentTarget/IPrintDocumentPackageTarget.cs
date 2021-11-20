@@ -14,7 +14,7 @@ namespace TerraFX.Interop.Windows
     [Guid("1B8EFEC4-3019-4C27-964E-367202156906")]
     [NativeTypeName("struct IPrintDocumentPackageTarget : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IPrintDocumentPackageTarget : IPrintDocumentPackageTarget.Interface
+    internal unsafe partial struct IPrintDocumentPackageTarget
     {
         public void** lpVtbl;
 
@@ -60,18 +60,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT Cancel()
         {
             return ((delegate* unmanaged[Stdcall]<IPrintDocumentPackageTarget*, int>)(lpVtbl[5]))((IPrintDocumentPackageTarget*)Unsafe.AsPointer(ref this));
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT GetPackageTargetTypes([NativeTypeName("UINT32 *")] uint* targetCount, Guid** targetTypes);
-
-            [VtblIndex(4)]
-            HRESULT GetPackageTarget([NativeTypeName("const GUID &")] Guid* guidTargetType, [NativeTypeName("const IID &")] Guid* riid, void** ppvTarget);
-
-            [VtblIndex(5)]
-            HRESULT Cancel();
         }
     }
 }

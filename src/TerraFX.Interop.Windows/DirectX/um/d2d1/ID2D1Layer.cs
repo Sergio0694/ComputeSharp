@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD9069B-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1Layer : ID2D1Resource")]
     [NativeInheritance("ID2D1Resource")]
-    internal unsafe partial struct ID2D1Layer : ID2D1Layer.Interface
+    internal unsafe partial struct ID2D1Layer
     {
         public void** lpVtbl;
 
@@ -54,13 +54,6 @@ namespace TerraFX.Interop.DirectX
         {
             D2D_SIZE_F result;
             return *((delegate* unmanaged[Stdcall]<ID2D1Layer*, D2D_SIZE_F*, D2D_SIZE_F*>)(lpVtbl[4]))((ID2D1Layer*)Unsafe.AsPointer(ref this), &result);
-        }
-
-        public interface Interface : ID2D1Resource.Interface
-        {
-            [VtblIndex(4)]
-            [return: NativeTypeName("D2D1_SIZE_F")]
-            D2D_SIZE_F GetSize();
         }
     }
 }

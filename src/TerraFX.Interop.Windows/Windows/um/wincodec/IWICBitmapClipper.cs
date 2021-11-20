@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("E4FBCF03-223D-4E81-9333-D635556DD1B5")]
     [NativeTypeName("struct IWICBitmapClipper : IWICBitmapSource")]
     [NativeInheritance("IWICBitmapSource")]
-    internal unsafe partial struct IWICBitmapClipper : IWICBitmapClipper.Interface
+    internal unsafe partial struct IWICBitmapClipper
     {
         public void** lpVtbl;
 
@@ -79,12 +79,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT Initialize(IWICBitmapSource* pISource, [NativeTypeName("const WICRect *")] WICRect* prc)
         {
             return ((delegate* unmanaged[Stdcall]<IWICBitmapClipper*, IWICBitmapSource*, WICRect*, int>)(lpVtbl[8]))((IWICBitmapClipper*)Unsafe.AsPointer(ref this), pISource, prc);
-        }
-
-        public interface Interface : IWICBitmapSource.Interface
-        {
-            [VtblIndex(8)]
-            HRESULT Initialize(IWICBitmapSource* pISource, [NativeTypeName("const WICRect *")] WICRect* prc);
         }
     }
 }

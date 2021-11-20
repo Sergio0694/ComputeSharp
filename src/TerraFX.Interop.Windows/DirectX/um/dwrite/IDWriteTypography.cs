@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("55F1112B-1DC2-4B3C-9541-F46894ED85B6")]
     [NativeTypeName("struct IDWriteTypography : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IDWriteTypography : IDWriteTypography.Interface
+    internal unsafe partial struct IDWriteTypography
     {
         public void** lpVtbl;
 
@@ -60,19 +60,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT GetFontFeature([NativeTypeName("UINT32")] uint fontFeatureIndex, DWRITE_FONT_FEATURE* fontFeature)
         {
             return ((delegate* unmanaged[Stdcall]<IDWriteTypography*, uint, DWRITE_FONT_FEATURE*, int>)(lpVtbl[5]))((IDWriteTypography*)Unsafe.AsPointer(ref this), fontFeatureIndex, fontFeature);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT AddFontFeature(DWRITE_FONT_FEATURE fontFeature);
-
-            [VtblIndex(4)]
-            [return: NativeTypeName("UINT32")]
-            uint GetFontFeatureCount();
-
-            [VtblIndex(5)]
-            HRESULT GetFontFeature([NativeTypeName("UINT32")] uint fontFeatureIndex, DWRITE_FONT_FEATURE* fontFeature);
         }
     }
 }

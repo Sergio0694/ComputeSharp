@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("A721791A-0DEF-4D06-BD91-2118BF1DB10B")]
     [NativeTypeName("struct IWICMetadataQueryWriter : IWICMetadataQueryReader")]
     [NativeInheritance("IWICMetadataQueryReader")]
-    internal unsafe partial struct IWICMetadataQueryWriter : IWICMetadataQueryWriter.Interface
+    internal unsafe partial struct IWICMetadataQueryWriter
     {
         public void** lpVtbl;
 
@@ -79,15 +79,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT RemoveMetadataByName([NativeTypeName("LPCWSTR")] ushort* wzName)
         {
             return ((delegate* unmanaged[Stdcall]<IWICMetadataQueryWriter*, ushort*, int>)(lpVtbl[8]))((IWICMetadataQueryWriter*)Unsafe.AsPointer(ref this), wzName);
-        }
-
-        public interface Interface : IWICMetadataQueryReader.Interface
-        {
-            [VtblIndex(7)]
-            HRESULT SetMetadataByName([NativeTypeName("LPCWSTR")] ushort* wzName, [NativeTypeName("const PROPVARIANT *")] PROPVARIANT* pvarValue);
-
-            [VtblIndex(8)]
-            HRESULT RemoveMetadataByName([NativeTypeName("LPCWSTR")] ushort* wzName);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("5F49804D-7024-4D43-BFA9-D25984F53849")]
     [NativeTypeName("struct IDWriteFontFace : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IDWriteFontFace : IDWriteFontFace.Interface
+    internal unsafe partial struct IDWriteFontFace
     {
         public void** lpVtbl;
 
@@ -145,56 +145,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT GetGdiCompatibleGlyphMetrics(float emSize, float pixelsPerDip, [NativeTypeName("const DWRITE_MATRIX *")] DWRITE_MATRIX* transform, BOOL useGdiNatural, [NativeTypeName("const UINT16 *")] ushort* glyphIndices, [NativeTypeName("UINT32")] uint glyphCount, DWRITE_GLYPH_METRICS* glyphMetrics, [Optional] BOOL isSideways)
         {
             return ((delegate* unmanaged[Stdcall]<IDWriteFontFace*, float, float, DWRITE_MATRIX*, BOOL, ushort*, uint, DWRITE_GLYPH_METRICS*, BOOL, int>)(lpVtbl[17]))((IDWriteFontFace*)Unsafe.AsPointer(ref this), emSize, pixelsPerDip, transform, useGdiNatural, glyphIndices, glyphCount, glyphMetrics, isSideways);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            DWRITE_FONT_FACE_TYPE GetType();
-
-            [VtblIndex(4)]
-            HRESULT GetFiles([NativeTypeName("UINT32 *")] uint* numberOfFiles, IDWriteFontFile** fontFiles);
-
-            [VtblIndex(5)]
-            [return: NativeTypeName("UINT32")]
-            uint GetIndex();
-
-            [VtblIndex(6)]
-            DWRITE_FONT_SIMULATIONS GetSimulations();
-
-            [VtblIndex(7)]
-            BOOL IsSymbolFont();
-
-            [VtblIndex(8)]
-            void GetMetrics(DWRITE_FONT_METRICS* fontFaceMetrics);
-
-            [VtblIndex(9)]
-            [return: NativeTypeName("UINT16")]
-            ushort GetGlyphCount();
-
-            [VtblIndex(10)]
-            HRESULT GetDesignGlyphMetrics([NativeTypeName("const UINT16 *")] ushort* glyphIndices, [NativeTypeName("UINT32")] uint glyphCount, DWRITE_GLYPH_METRICS* glyphMetrics, [Optional] BOOL isSideways);
-
-            [VtblIndex(11)]
-            HRESULT GetGlyphIndices([NativeTypeName("const UINT32 *")] uint* codePoints, [NativeTypeName("UINT32")] uint codePointCount, [NativeTypeName("UINT16 *")] ushort* glyphIndices);
-
-            [VtblIndex(12)]
-            HRESULT TryGetFontTable([NativeTypeName("UINT32")] uint openTypeTableTag, [NativeTypeName("const void **")] void** tableData, [NativeTypeName("UINT32 *")] uint* tableSize, void** tableContext, BOOL* exists);
-
-            [VtblIndex(13)]
-            void ReleaseFontTable(void* tableContext);
-
-            [VtblIndex(14)]
-            HRESULT GetGlyphRunOutline(float emSize, [NativeTypeName("const UINT16 *")] ushort* glyphIndices, [NativeTypeName("const FLOAT *")] float* glyphAdvances, [NativeTypeName("const DWRITE_GLYPH_OFFSET *")] DWRITE_GLYPH_OFFSET* glyphOffsets, [NativeTypeName("UINT32")] uint glyphCount, BOOL isSideways, BOOL isRightToLeft, [NativeTypeName("IDWriteGeometrySink *")] ID2D1SimplifiedGeometrySink* geometrySink);
-
-            [VtblIndex(15)]
-            HRESULT GetRecommendedRenderingMode(float emSize, float pixelsPerDip, DWRITE_MEASURING_MODE measuringMode, IDWriteRenderingParams* renderingParams, DWRITE_RENDERING_MODE* renderingMode);
-
-            [VtblIndex(16)]
-            HRESULT GetGdiCompatibleMetrics(float emSize, float pixelsPerDip, [NativeTypeName("const DWRITE_MATRIX *")] DWRITE_MATRIX* transform, DWRITE_FONT_METRICS* fontFaceMetrics);
-
-            [VtblIndex(17)]
-            HRESULT GetGdiCompatibleGlyphMetrics(float emSize, float pixelsPerDip, [NativeTypeName("const DWRITE_MATRIX *")] DWRITE_MATRIX* transform, BOOL useGdiNatural, [NativeTypeName("const UINT16 *")] ushort* glyphIndices, [NativeTypeName("UINT32")] uint glyphCount, DWRITE_GLYPH_METRICS* glyphMetrics, [Optional] BOOL isSideways);
         }
     }
 }

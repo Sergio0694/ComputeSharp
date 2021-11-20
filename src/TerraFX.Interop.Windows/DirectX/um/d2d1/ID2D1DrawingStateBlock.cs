@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("28506E39-EBF6-46A1-BB47-FD85565AB957")]
     [NativeTypeName("struct ID2D1DrawingStateBlock : ID2D1Resource")]
     [NativeInheritance("ID2D1Resource")]
-    internal unsafe partial struct ID2D1DrawingStateBlock : ID2D1DrawingStateBlock.Interface
+    internal unsafe partial struct ID2D1DrawingStateBlock
     {
         public void** lpVtbl;
 
@@ -73,21 +73,6 @@ namespace TerraFX.Interop.DirectX
         public void GetTextRenderingParams(IDWriteRenderingParams** textRenderingParams)
         {
             ((delegate* unmanaged[Stdcall]<ID2D1DrawingStateBlock*, IDWriteRenderingParams**, void>)(lpVtbl[7]))((ID2D1DrawingStateBlock*)Unsafe.AsPointer(ref this), textRenderingParams);
-        }
-
-        public interface Interface : ID2D1Resource.Interface
-        {
-            [VtblIndex(4)]
-            void GetDescription(D2D1_DRAWING_STATE_DESCRIPTION* stateDescription);
-
-            [VtblIndex(5)]
-            void SetDescription([NativeTypeName("const D2D1_DRAWING_STATE_DESCRIPTION *")] D2D1_DRAWING_STATE_DESCRIPTION* stateDescription);
-
-            [VtblIndex(6)]
-            void SetTextRenderingParams(IDWriteRenderingParams* textRenderingParams = null);
-
-            [VtblIndex(7)]
-            void GetTextRenderingParams(IDWriteRenderingParams** textRenderingParams);
         }
     }
 }

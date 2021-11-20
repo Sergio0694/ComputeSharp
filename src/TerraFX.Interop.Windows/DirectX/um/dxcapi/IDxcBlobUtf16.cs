@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("A3F84EAB-0FAA-497E-A39C-EE6ED60B2D84")]
     [NativeTypeName("struct IDxcBlobUtf16 : IDxcBlobEncoding")]
     [NativeInheritance("IDxcBlobEncoding")]
-    internal unsafe partial struct IDxcBlobUtf16 : IDxcBlobUtf16.Interface
+    internal unsafe partial struct IDxcBlobUtf16
     {
         public void** lpVtbl;
 
@@ -77,17 +77,6 @@ namespace TerraFX.Interop.DirectX
         public nuint GetStringLength()
         {
             return ((delegate* unmanaged[Stdcall]<IDxcBlobUtf16*, nuint>)(lpVtbl[7]))((IDxcBlobUtf16*)Unsafe.AsPointer(ref this));
-        }
-
-        public interface Interface : IDxcBlobEncoding.Interface
-        {
-            [VtblIndex(6)]
-            [return: NativeTypeName("LPCWSTR")]
-            ushort* GetStringPointer();
-
-            [VtblIndex(7)]
-            [return: NativeTypeName("SIZE_T")]
-            nuint GetStringLength();
         }
     }
 }

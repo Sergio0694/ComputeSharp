@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00000121-A8F2-4877-BA0A-FD2B6645FB94")]
     [NativeTypeName("struct IWICBitmap : IWICBitmapSource")]
     [NativeInheritance("IWICBitmapSource")]
-    internal unsafe partial struct IWICBitmap : IWICBitmap.Interface
+    internal unsafe partial struct IWICBitmap
     {
         public void** lpVtbl;
 
@@ -93,18 +93,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT SetResolution(double dpiX, double dpiY)
         {
             return ((delegate* unmanaged[Stdcall]<IWICBitmap*, double, double, int>)(lpVtbl[10]))((IWICBitmap*)Unsafe.AsPointer(ref this), dpiX, dpiY);
-        }
-
-        public interface Interface : IWICBitmapSource.Interface
-        {
-            [VtblIndex(8)]
-            HRESULT Lock([NativeTypeName("const WICRect *")] WICRect* prcLock, [NativeTypeName("DWORD")] uint flags, IWICBitmapLock** ppILock);
-
-            [VtblIndex(9)]
-            HRESULT SetPalette(IWICPalette* pIPalette);
-
-            [VtblIndex(10)]
-            HRESULT SetResolution(double dpiX, double dpiY);
         }
     }
 }

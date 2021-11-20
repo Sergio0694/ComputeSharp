@@ -15,7 +15,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("25483823-CD46-4C7D-86CA-47AA95B837BD")]
     [NativeTypeName("struct IDXGIFactory3 : IDXGIFactory2")]
     [NativeInheritance("IDXGIFactory2")]
-    internal unsafe partial struct IDXGIFactory3 : IDXGIFactory3.Interface
+    internal unsafe partial struct IDXGIFactory3
     {
         public void** lpVtbl;
 
@@ -201,12 +201,6 @@ namespace TerraFX.Interop.DirectX
         public uint GetCreationFlags()
         {
             return ((delegate* unmanaged[Stdcall]<IDXGIFactory3*, uint>)(lpVtbl[25]))((IDXGIFactory3*)Unsafe.AsPointer(ref this));
-        }
-
-        public interface Interface : IDXGIFactory2.Interface
-        {
-            [VtblIndex(25)]
-            uint GetCreationFlags();
         }
     }
 }

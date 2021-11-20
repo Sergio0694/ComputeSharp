@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("3B16811B-6A43-4EC9-A813-3D930C13B940")]
     [NativeTypeName("struct IWICBitmapFrameDecode : IWICBitmapSource")]
     [NativeInheritance("IWICBitmapSource")]
-    internal unsafe partial struct IWICBitmapFrameDecode : IWICBitmapFrameDecode.Interface
+    internal unsafe partial struct IWICBitmapFrameDecode
     {
         public void** lpVtbl;
 
@@ -93,18 +93,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT GetThumbnail(IWICBitmapSource** ppIThumbnail)
         {
             return ((delegate* unmanaged[Stdcall]<IWICBitmapFrameDecode*, IWICBitmapSource**, int>)(lpVtbl[10]))((IWICBitmapFrameDecode*)Unsafe.AsPointer(ref this), ppIThumbnail);
-        }
-
-        public interface Interface : IWICBitmapSource.Interface
-        {
-            [VtblIndex(8)]
-            HRESULT GetMetadataQueryReader(IWICMetadataQueryReader** ppIMetadataQueryReader);
-
-            [VtblIndex(9)]
-            HRESULT GetColorContexts(uint cCount, IWICColorContext** ppIColorContexts, uint* pcActualCount);
-
-            [VtblIndex(10)]
-            HRESULT GetThumbnail(IWICBitmapSource** ppIThumbnail);
         }
     }
 }

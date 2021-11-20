@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("0000000B-0000-0000-C000-000000000046")]
     [NativeTypeName("struct IStorage : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IStorage : IStorage.Interface
+    internal unsafe partial struct IStorage
     {
         public void** lpVtbl;
 
@@ -142,54 +142,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT Stat(STATSTG* pstatstg, [NativeTypeName("DWORD")] uint grfStatFlag)
         {
             return ((delegate* unmanaged[Stdcall]<IStorage*, STATSTG*, uint, int>)(lpVtbl[17]))((IStorage*)Unsafe.AsPointer(ref this), pstatstg, grfStatFlag);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT CreateStream([NativeTypeName("const OLECHAR *")] ushort* pwcsName, [NativeTypeName("DWORD")] uint grfMode, [NativeTypeName("DWORD")] uint reserved1, [NativeTypeName("DWORD")] uint reserved2, IStream** ppstm);
-
-            [VtblIndex(4)]
-            HRESULT OpenStream([NativeTypeName("const OLECHAR *")] ushort* pwcsName, void* reserved1, [NativeTypeName("DWORD")] uint grfMode, [NativeTypeName("DWORD")] uint reserved2, IStream** ppstm);
-
-            [VtblIndex(5)]
-            HRESULT CreateStorage([NativeTypeName("const OLECHAR *")] ushort* pwcsName, [NativeTypeName("DWORD")] uint grfMode, [NativeTypeName("DWORD")] uint reserved1, [NativeTypeName("DWORD")] uint reserved2, IStorage** ppstg);
-
-            [VtblIndex(6)]
-            HRESULT OpenStorage([NativeTypeName("const OLECHAR *")] ushort* pwcsName, IStorage* pstgPriority, [NativeTypeName("DWORD")] uint grfMode, [NativeTypeName("SNB")] ushort** snbExclude, [NativeTypeName("DWORD")] uint reserved, IStorage** ppstg);
-
-            [VtblIndex(7)]
-            HRESULT CopyTo([NativeTypeName("DWORD")] uint ciidExclude, [NativeTypeName("const IID *")] Guid* rgiidExclude, [NativeTypeName("SNB")] ushort** snbExclude, IStorage* pstgDest);
-
-            [VtblIndex(8)]
-            HRESULT MoveElementTo([NativeTypeName("const OLECHAR *")] ushort* pwcsName, IStorage* pstgDest, [NativeTypeName("const OLECHAR *")] ushort* pwcsNewName, [NativeTypeName("DWORD")] uint grfFlags);
-
-            [VtblIndex(9)]
-            HRESULT Commit([NativeTypeName("DWORD")] uint grfCommitFlags);
-
-            [VtblIndex(10)]
-            HRESULT Revert();
-
-            [VtblIndex(11)]
-            HRESULT EnumElements([NativeTypeName("DWORD")] uint reserved1, void* reserved2, [NativeTypeName("DWORD")] uint reserved3, IEnumSTATSTG** ppenum);
-
-            [VtblIndex(12)]
-            HRESULT DestroyElement([NativeTypeName("const OLECHAR *")] ushort* pwcsName);
-
-            [VtblIndex(13)]
-            HRESULT RenameElement([NativeTypeName("const OLECHAR *")] ushort* pwcsOldName, [NativeTypeName("const OLECHAR *")] ushort* pwcsNewName);
-
-            [VtblIndex(14)]
-            HRESULT SetElementTimes([NativeTypeName("const OLECHAR *")] ushort* pwcsName, [NativeTypeName("const FILETIME *")] FILETIME* pctime, [NativeTypeName("const FILETIME *")] FILETIME* patime, [NativeTypeName("const FILETIME *")] FILETIME* pmtime);
-
-            [VtblIndex(15)]
-            HRESULT SetClass([NativeTypeName("const IID &")] Guid* clsid);
-
-            [VtblIndex(16)]
-            HRESULT SetStateBits([NativeTypeName("DWORD")] uint grfStateBits, [NativeTypeName("DWORD")] uint grfMask);
-
-            [VtblIndex(17)]
-            HRESULT Stat(STATSTG* pstatstg, [NativeTypeName("DWORD")] uint grfStatFlag);
         }
     }
 }

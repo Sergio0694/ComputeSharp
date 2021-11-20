@@ -16,7 +16,7 @@ namespace TerraFX.Interop.WinRT
     [Guid("F92F19D2-3ADE-45A6-A20C-F6F1EA90554B")]
     [NativeTypeName("struct ISwapChainPanelNative : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct ISwapChainPanelNative : ISwapChainPanelNative.Interface
+    internal unsafe partial struct ISwapChainPanelNative
     {
         public void** lpVtbl;
 
@@ -48,12 +48,6 @@ namespace TerraFX.Interop.WinRT
         public HRESULT SetSwapChain(IDXGISwapChain* swapChain)
         {
             return ((delegate* unmanaged[Stdcall]<ISwapChainPanelNative*, IDXGISwapChain*, int>)(lpVtbl[3]))((ISwapChainPanelNative*)Unsafe.AsPointer(ref this), swapChain);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT SetSwapChain(IDXGISwapChain* swapChain);
         }
     }
 }

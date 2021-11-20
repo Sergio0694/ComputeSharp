@@ -10,7 +10,7 @@ using TerraFX.Interop.Windows;
 namespace TerraFX.Interop.DirectX
 {
     [Guid("8337A8A6-A216-444A-B2F4-314733A73AEA")]
-    internal unsafe partial struct ID3D12ShaderReflectionVariable : ID3D12ShaderReflectionVariable.Interface
+    internal unsafe partial struct ID3D12ShaderReflectionVariable
     {
         public void** lpVtbl;
 

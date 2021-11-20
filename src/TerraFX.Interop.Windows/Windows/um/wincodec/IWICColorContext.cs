@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("3C613A02-34B2-44EA-9A7C-45AEA9C6FD6D")]
     [NativeTypeName("struct IWICColorContext : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IWICColorContext : IWICColorContext.Interface
+    internal unsafe partial struct IWICColorContext
     {
         public void** lpVtbl;
 
@@ -79,27 +79,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT GetExifColorSpace(uint* pValue)
         {
             return ((delegate* unmanaged[Stdcall]<IWICColorContext*, uint*, int>)(lpVtbl[8]))((IWICColorContext*)Unsafe.AsPointer(ref this), pValue);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT InitializeFromFilename([NativeTypeName("LPCWSTR")] ushort* wzFilename);
-
-            [VtblIndex(4)]
-            HRESULT InitializeFromMemory([NativeTypeName("const BYTE *")] byte* pbBuffer, uint cbBufferSize);
-
-            [VtblIndex(5)]
-            HRESULT InitializeFromExifColorSpace(uint value);
-
-            [VtblIndex(6)]
-            HRESULT GetType(WICColorContextType* pType);
-
-            [VtblIndex(7)]
-            HRESULT GetProfileBytes(uint cbBuffer, byte* pbBuffer, uint* pcbActual);
-
-            [VtblIndex(8)]
-            HRESULT GetExifColorSpace(uint* pValue);
         }
     }
 }

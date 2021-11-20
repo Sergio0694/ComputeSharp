@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("8339FDE3-106F-47AB-8373-1C6295EB10B3")]
     [NativeTypeName("struct IDWriteInlineObject : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IDWriteInlineObject : IDWriteInlineObject.Interface
+    internal unsafe partial struct IDWriteInlineObject
     {
         public void** lpVtbl;
 
@@ -66,21 +66,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT GetBreakConditions(DWRITE_BREAK_CONDITION* breakConditionBefore, DWRITE_BREAK_CONDITION* breakConditionAfter)
         {
             return ((delegate* unmanaged[Stdcall]<IDWriteInlineObject*, DWRITE_BREAK_CONDITION*, DWRITE_BREAK_CONDITION*, int>)(lpVtbl[6]))((IDWriteInlineObject*)Unsafe.AsPointer(ref this), breakConditionBefore, breakConditionAfter);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT Draw(void* clientDrawingContext, IDWriteTextRenderer* renderer, float originX, float originY, BOOL isSideways, BOOL isRightToLeft, IUnknown* clientDrawingEffect);
-
-            [VtblIndex(4)]
-            HRESULT GetMetrics(DWRITE_INLINE_OBJECT_METRICS* metrics);
-
-            [VtblIndex(5)]
-            HRESULT GetOverhangMetrics(DWRITE_OVERHANG_METRICS* overhangs);
-
-            [VtblIndex(6)]
-            HRESULT GetBreakConditions(DWRITE_BREAK_CONDITION* breakConditionBefore, DWRITE_BREAK_CONDITION* breakConditionAfter);
         }
     }
 }

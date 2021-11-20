@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("DA20D8EF-812A-4C43-9802-62EC4ABD7ADD")]
     [NativeTypeName("struct IDWriteFontFamily : IDWriteFontList")]
     [NativeInheritance("IDWriteFontList")]
-    internal unsafe partial struct IDWriteFontFamily : IDWriteFontFamily.Interface
+    internal unsafe partial struct IDWriteFontFamily
     {
         public void** lpVtbl;
 
@@ -81,18 +81,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT GetMatchingFonts(DWRITE_FONT_WEIGHT weight, DWRITE_FONT_STRETCH stretch, DWRITE_FONT_STYLE style, IDWriteFontList** matchingFonts)
         {
             return ((delegate* unmanaged[Stdcall]<IDWriteFontFamily*, DWRITE_FONT_WEIGHT, DWRITE_FONT_STRETCH, DWRITE_FONT_STYLE, IDWriteFontList**, int>)(lpVtbl[8]))((IDWriteFontFamily*)Unsafe.AsPointer(ref this), weight, stretch, style, matchingFonts);
-        }
-
-        public interface Interface : IDWriteFontList.Interface
-        {
-            [VtblIndex(6)]
-            HRESULT GetFamilyNames(IDWriteLocalizedStrings** names);
-
-            [VtblIndex(7)]
-            HRESULT GetFirstMatchingFont(DWRITE_FONT_WEIGHT weight, DWRITE_FONT_STRETCH stretch, DWRITE_FONT_STYLE style, IDWriteFont** matchingFont);
-
-            [VtblIndex(8)]
-            HRESULT GetMatchingFonts(DWRITE_FONT_WEIGHT weight, DWRITE_FONT_STRETCH stretch, DWRITE_FONT_STYLE style, IDWriteFontList** matchingFonts);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00020403-0000-0000-C000-000000000046")]
     [NativeTypeName("struct ITypeComp : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct ITypeComp : ITypeComp.Interface
+    internal unsafe partial struct ITypeComp
     {
         public void** lpVtbl;
 
@@ -51,15 +51,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT BindType([NativeTypeName("LPOLESTR")] ushort* szName, [NativeTypeName("ULONG")] uint lHashVal, ITypeInfo** ppTInfo, ITypeComp** ppTComp)
         {
             return ((delegate* unmanaged[Stdcall]<ITypeComp*, ushort*, uint, ITypeInfo**, ITypeComp**, int>)(lpVtbl[4]))((ITypeComp*)Unsafe.AsPointer(ref this), szName, lHashVal, ppTInfo, ppTComp);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT Bind([NativeTypeName("LPOLESTR")] ushort* szName, [NativeTypeName("ULONG")] uint lHashVal, [NativeTypeName("WORD")] ushort wFlags, ITypeInfo** ppTInfo, DESCKIND* pDescKind, BINDPTR* pBindPtr);
-
-            [VtblIndex(4)]
-            HRESULT BindType([NativeTypeName("LPOLESTR")] ushort* szName, [NativeTypeName("ULONG")] uint lHashVal, ITypeInfo** ppTInfo, ITypeComp** ppTComp);
         }
     }
 }

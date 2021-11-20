@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("2CD906C2-12E2-11DC-9FED-001143A055F9")]
     [NativeTypeName("struct ID2D1Mesh : ID2D1Resource")]
     [NativeInheritance("ID2D1Resource")]
-    internal unsafe partial struct ID2D1Mesh : ID2D1Mesh.Interface
+    internal unsafe partial struct ID2D1Mesh
     {
         public void** lpVtbl;
 
@@ -52,12 +52,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT Open(ID2D1TessellationSink** tessellationSink)
         {
             return ((delegate* unmanaged[Stdcall]<ID2D1Mesh*, ID2D1TessellationSink**, int>)(lpVtbl[4]))((ID2D1Mesh*)Unsafe.AsPointer(ref this), tessellationSink);
-        }
-
-        public interface Interface : ID2D1Resource.Interface
-        {
-            [VtblIndex(4)]
-            HRESULT Open(ID2D1TessellationSink** tessellationSink);
         }
     }
 }

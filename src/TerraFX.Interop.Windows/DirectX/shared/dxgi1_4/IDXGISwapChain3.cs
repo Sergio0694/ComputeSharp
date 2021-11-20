@@ -15,7 +15,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("94D99BDB-F1F8-4AB0-B236-7DA0170EDAB1")]
     [NativeTypeName("struct IDXGISwapChain3 : IDXGISwapChain2")]
     [NativeInheritance("IDXGISwapChain2")]
-    internal unsafe partial struct IDXGISwapChain3 : IDXGISwapChain3.Interface
+    internal unsafe partial struct IDXGISwapChain3
     {
         public void** lpVtbl;
 
@@ -299,21 +299,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT ResizeBuffers1(uint BufferCount, uint Width, uint Height, DXGI_FORMAT Format, uint SwapChainFlags, [NativeTypeName("const UINT *")] uint* pCreationNodeMask, [NativeTypeName("IUnknown *const *")] IUnknown** ppPresentQueue)
         {
             return ((delegate* unmanaged[Stdcall]<IDXGISwapChain3*, uint, uint, uint, DXGI_FORMAT, uint, uint*, IUnknown**, int>)(lpVtbl[39]))((IDXGISwapChain3*)Unsafe.AsPointer(ref this), BufferCount, Width, Height, Format, SwapChainFlags, pCreationNodeMask, ppPresentQueue);
-        }
-
-        public interface Interface : IDXGISwapChain2.Interface
-        {
-            [VtblIndex(36)]
-            uint GetCurrentBackBufferIndex();
-
-            [VtblIndex(37)]
-            HRESULT CheckColorSpaceSupport(DXGI_COLOR_SPACE_TYPE ColorSpace, uint* pColorSpaceSupport);
-
-            [VtblIndex(38)]
-            HRESULT SetColorSpace1(DXGI_COLOR_SPACE_TYPE ColorSpace);
-
-            [VtblIndex(39)]
-            HRESULT ResizeBuffers1(uint BufferCount, uint Width, uint Height, DXGI_FORMAT Format, uint SwapChainFlags, [NativeTypeName("const UINT *")] uint* pCreationNodeMask, [NativeTypeName("IUnknown *const *")] IUnknown** ppPresentQueue);
         }
     }
 }

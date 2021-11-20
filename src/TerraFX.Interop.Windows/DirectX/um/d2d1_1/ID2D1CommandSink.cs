@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("54D7898A-A061-40A7-BEC7-E465BCBA2C4F")]
     [NativeTypeName("struct ID2D1CommandSink : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct ID2D1CommandSink : ID2D1CommandSink.Interface
+    internal unsafe partial struct ID2D1CommandSink
     {
         public void** lpVtbl;
 
@@ -213,84 +213,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT PopLayer()
         {
             return ((delegate* unmanaged[Stdcall]<ID2D1CommandSink*, int>)(lpVtbl[27]))((ID2D1CommandSink*)Unsafe.AsPointer(ref this));
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT BeginDraw();
-
-            [VtblIndex(4)]
-            HRESULT EndDraw();
-
-            [VtblIndex(5)]
-            HRESULT SetAntialiasMode(D2D1_ANTIALIAS_MODE antialiasMode);
-
-            [VtblIndex(6)]
-            HRESULT SetTags([NativeTypeName("D2D1_TAG")] ulong tag1, [NativeTypeName("D2D1_TAG")] ulong tag2);
-
-            [VtblIndex(7)]
-            HRESULT SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE textAntialiasMode);
-
-            [VtblIndex(8)]
-            HRESULT SetTextRenderingParams(IDWriteRenderingParams* textRenderingParams);
-
-            [VtblIndex(9)]
-            HRESULT SetTransform([NativeTypeName("const D2D1_MATRIX_3X2_F *")] D2D_MATRIX_3X2_F* transform);
-
-            [VtblIndex(10)]
-            HRESULT SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND primitiveBlend);
-
-            [VtblIndex(11)]
-            HRESULT SetUnitMode(D2D1_UNIT_MODE unitMode);
-
-            [VtblIndex(12)]
-            HRESULT Clear([NativeTypeName("const D2D1_COLOR_F *")] DXGI_RGBA* color);
-
-            [VtblIndex(13)]
-            HRESULT DrawGlyphRun([NativeTypeName("D2D1_POINT_2F")] D2D_POINT_2F baselineOrigin, [NativeTypeName("const DWRITE_GLYPH_RUN *")] DWRITE_GLYPH_RUN* glyphRun, [NativeTypeName("const DWRITE_GLYPH_RUN_DESCRIPTION *")] DWRITE_GLYPH_RUN_DESCRIPTION* glyphRunDescription, ID2D1Brush* foregroundBrush, DWRITE_MEASURING_MODE measuringMode);
-
-            [VtblIndex(14)]
-            HRESULT DrawLine([NativeTypeName("D2D1_POINT_2F")] D2D_POINT_2F point0, [NativeTypeName("D2D1_POINT_2F")] D2D_POINT_2F point1, ID2D1Brush* brush, float strokeWidth, ID2D1StrokeStyle* strokeStyle);
-
-            [VtblIndex(15)]
-            HRESULT DrawGeometry(ID2D1Geometry* geometry, ID2D1Brush* brush, float strokeWidth, ID2D1StrokeStyle* strokeStyle);
-
-            [VtblIndex(16)]
-            HRESULT DrawRectangle([NativeTypeName("const D2D1_RECT_F *")] D2D_RECT_F* rect, ID2D1Brush* brush, float strokeWidth, ID2D1StrokeStyle* strokeStyle);
-
-            [VtblIndex(17)]
-            HRESULT DrawBitmap(ID2D1Bitmap* bitmap, [NativeTypeName("const D2D1_RECT_F *")] D2D_RECT_F* destinationRectangle, float opacity, D2D1_INTERPOLATION_MODE interpolationMode, [NativeTypeName("const D2D1_RECT_F *")] D2D_RECT_F* sourceRectangle, [NativeTypeName("const D2D1_MATRIX_4X4_F *")] D2D_MATRIX_4X4_F* perspectiveTransform);
-
-            [VtblIndex(18)]
-            HRESULT DrawImage(ID2D1Image* image, [NativeTypeName("const D2D1_POINT_2F *")] D2D_POINT_2F* targetOffset, [NativeTypeName("const D2D1_RECT_F *")] D2D_RECT_F* imageRectangle, D2D1_INTERPOLATION_MODE interpolationMode, D2D1_COMPOSITE_MODE compositeMode);
-
-            [VtblIndex(19)]
-            HRESULT DrawGdiMetafile(ID2D1GdiMetafile* gdiMetafile, [NativeTypeName("const D2D1_POINT_2F *")] D2D_POINT_2F* targetOffset);
-
-            [VtblIndex(20)]
-            HRESULT FillMesh(ID2D1Mesh* mesh, ID2D1Brush* brush);
-
-            [VtblIndex(21)]
-            HRESULT FillOpacityMask(ID2D1Bitmap* opacityMask, ID2D1Brush* brush, [NativeTypeName("const D2D1_RECT_F *")] D2D_RECT_F* destinationRectangle, [NativeTypeName("const D2D1_RECT_F *")] D2D_RECT_F* sourceRectangle);
-
-            [VtblIndex(22)]
-            HRESULT FillGeometry(ID2D1Geometry* geometry, ID2D1Brush* brush, ID2D1Brush* opacityBrush);
-
-            [VtblIndex(23)]
-            HRESULT FillRectangle([NativeTypeName("const D2D1_RECT_F *")] D2D_RECT_F* rect, ID2D1Brush* brush);
-
-            [VtblIndex(24)]
-            HRESULT PushAxisAlignedClip([NativeTypeName("const D2D1_RECT_F *")] D2D_RECT_F* clipRect, D2D1_ANTIALIAS_MODE antialiasMode);
-
-            [VtblIndex(25)]
-            HRESULT PushLayer([NativeTypeName("const D2D1_LAYER_PARAMETERS1 *")] D2D1_LAYER_PARAMETERS1* layerParameters1, ID2D1Layer* layer);
-
-            [VtblIndex(26)]
-            HRESULT PopAxisAlignedClip();
-
-            [VtblIndex(27)]
-            HRESULT PopLayer();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("A898A84C-3873-4588-B08B-EBBF978DF041")]
     [NativeTypeName("struct ID2D1Bitmap1 : ID2D1Bitmap")]
     [NativeInheritance("ID2D1Bitmap")]
-    internal unsafe partial struct ID2D1Bitmap1 : ID2D1Bitmap1.Interface
+    internal unsafe partial struct ID2D1Bitmap1
     {
         public void** lpVtbl;
 
@@ -134,24 +134,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT Unmap()
         {
             return ((delegate* unmanaged[Stdcall]<ID2D1Bitmap1*, int>)(lpVtbl[15]))((ID2D1Bitmap1*)Unsafe.AsPointer(ref this));
-        }
-
-        public interface Interface : ID2D1Bitmap.Interface
-        {
-            [VtblIndex(11)]
-            void GetColorContext(ID2D1ColorContext** colorContext);
-
-            [VtblIndex(12)]
-            D2D1_BITMAP_OPTIONS GetOptions();
-
-            [VtblIndex(13)]
-            HRESULT GetSurface(IDXGISurface** dxgiSurface);
-
-            [VtblIndex(14)]
-            HRESULT Map(D2D1_MAP_OPTIONS options, D2D1_MAPPED_RECT* mappedRect);
-
-            [VtblIndex(15)]
-            HRESULT Unmap();
         }
     }
 }

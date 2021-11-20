@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("53737037-6D14-410B-9BFE-0B182BB70961")]
     [NativeTypeName("struct IDWriteTextLayout : IDWriteTextFormat")]
     [NativeInheritance("IDWriteTextFormat")]
-    internal unsafe partial struct IDWriteTextLayout : IDWriteTextLayout.Interface
+    internal unsafe partial struct IDWriteTextLayout
     {
         public void** lpVtbl;
 
@@ -488,126 +488,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT HitTestTextRange([NativeTypeName("UINT32")] uint textPosition, [NativeTypeName("UINT32")] uint textLength, float originX, float originY, DWRITE_HIT_TEST_METRICS* hitTestMetrics, [NativeTypeName("UINT32")] uint maxHitTestMetricsCount, [NativeTypeName("UINT32 *")] uint* actualHitTestMetricsCount)
         {
             return ((delegate* unmanaged[Stdcall]<IDWriteTextLayout*, uint, uint, float, float, DWRITE_HIT_TEST_METRICS*, uint, uint*, int>)(lpVtbl[66]))((IDWriteTextLayout*)Unsafe.AsPointer(ref this), textPosition, textLength, originX, originY, hitTestMetrics, maxHitTestMetricsCount, actualHitTestMetricsCount);
-        }
-
-        public interface Interface : IDWriteTextFormat.Interface
-        {
-            [VtblIndex(28)]
-            HRESULT SetMaxWidth(float maxWidth);
-
-            [VtblIndex(29)]
-            HRESULT SetMaxHeight(float maxHeight);
-
-            [VtblIndex(30)]
-            HRESULT SetFontCollection(IDWriteFontCollection* fontCollection, DWRITE_TEXT_RANGE textRange);
-
-            [VtblIndex(31)]
-            HRESULT SetFontFamilyName([NativeTypeName("const WCHAR *")] ushort* fontFamilyName, DWRITE_TEXT_RANGE textRange);
-
-            [VtblIndex(32)]
-            HRESULT SetFontWeight(DWRITE_FONT_WEIGHT fontWeight, DWRITE_TEXT_RANGE textRange);
-
-            [VtblIndex(33)]
-            HRESULT SetFontStyle(DWRITE_FONT_STYLE fontStyle, DWRITE_TEXT_RANGE textRange);
-
-            [VtblIndex(34)]
-            HRESULT SetFontStretch(DWRITE_FONT_STRETCH fontStretch, DWRITE_TEXT_RANGE textRange);
-
-            [VtblIndex(35)]
-            HRESULT SetFontSize(float fontSize, DWRITE_TEXT_RANGE textRange);
-
-            [VtblIndex(36)]
-            HRESULT SetUnderline(BOOL hasUnderline, DWRITE_TEXT_RANGE textRange);
-
-            [VtblIndex(37)]
-            HRESULT SetStrikethrough(BOOL hasStrikethrough, DWRITE_TEXT_RANGE textRange);
-
-            [VtblIndex(38)]
-            HRESULT SetDrawingEffect(IUnknown* drawingEffect, DWRITE_TEXT_RANGE textRange);
-
-            [VtblIndex(39)]
-            HRESULT SetInlineObject(IDWriteInlineObject* inlineObject, DWRITE_TEXT_RANGE textRange);
-
-            [VtblIndex(40)]
-            HRESULT SetTypography(IDWriteTypography* typography, DWRITE_TEXT_RANGE textRange);
-
-            [VtblIndex(41)]
-            HRESULT SetLocaleName([NativeTypeName("const WCHAR *")] ushort* localeName, DWRITE_TEXT_RANGE textRange);
-
-            [VtblIndex(42)]
-            float GetMaxWidth();
-
-            [VtblIndex(43)]
-            float GetMaxHeight();
-
-            [VtblIndex(44)]
-            HRESULT GetFontCollection([NativeTypeName("UINT32")] uint currentPosition, IDWriteFontCollection** fontCollection, DWRITE_TEXT_RANGE* textRange = null);
-
-            [VtblIndex(45)]
-            HRESULT GetFontFamilyNameLength([NativeTypeName("UINT32")] uint currentPosition, [NativeTypeName("UINT32 *")] uint* nameLength, DWRITE_TEXT_RANGE* textRange = null);
-
-            [VtblIndex(46)]
-            HRESULT GetFontFamilyName([NativeTypeName("UINT32")] uint currentPosition, [NativeTypeName("WCHAR *")] ushort* fontFamilyName, [NativeTypeName("UINT32")] uint nameSize, DWRITE_TEXT_RANGE* textRange = null);
-
-            [VtblIndex(47)]
-            HRESULT GetFontWeight([NativeTypeName("UINT32")] uint currentPosition, DWRITE_FONT_WEIGHT* fontWeight, DWRITE_TEXT_RANGE* textRange = null);
-
-            [VtblIndex(48)]
-            HRESULT GetFontStyle([NativeTypeName("UINT32")] uint currentPosition, DWRITE_FONT_STYLE* fontStyle, DWRITE_TEXT_RANGE* textRange = null);
-
-            [VtblIndex(49)]
-            HRESULT GetFontStretch([NativeTypeName("UINT32")] uint currentPosition, DWRITE_FONT_STRETCH* fontStretch, DWRITE_TEXT_RANGE* textRange = null);
-
-            [VtblIndex(50)]
-            HRESULT GetFontSize([NativeTypeName("UINT32")] uint currentPosition, float* fontSize, DWRITE_TEXT_RANGE* textRange = null);
-
-            [VtblIndex(51)]
-            HRESULT GetUnderline([NativeTypeName("UINT32")] uint currentPosition, BOOL* hasUnderline, DWRITE_TEXT_RANGE* textRange = null);
-
-            [VtblIndex(52)]
-            HRESULT GetStrikethrough([NativeTypeName("UINT32")] uint currentPosition, BOOL* hasStrikethrough, DWRITE_TEXT_RANGE* textRange = null);
-
-            [VtblIndex(53)]
-            HRESULT GetDrawingEffect([NativeTypeName("UINT32")] uint currentPosition, IUnknown** drawingEffect, DWRITE_TEXT_RANGE* textRange = null);
-
-            [VtblIndex(54)]
-            HRESULT GetInlineObject([NativeTypeName("UINT32")] uint currentPosition, IDWriteInlineObject** inlineObject, DWRITE_TEXT_RANGE* textRange = null);
-
-            [VtblIndex(55)]
-            HRESULT GetTypography([NativeTypeName("UINT32")] uint currentPosition, IDWriteTypography** typography, DWRITE_TEXT_RANGE* textRange = null);
-
-            [VtblIndex(56)]
-            HRESULT GetLocaleNameLength([NativeTypeName("UINT32")] uint currentPosition, [NativeTypeName("UINT32 *")] uint* nameLength, DWRITE_TEXT_RANGE* textRange = null);
-
-            [VtblIndex(57)]
-            HRESULT GetLocaleName([NativeTypeName("UINT32")] uint currentPosition, [NativeTypeName("WCHAR *")] ushort* localeName, [NativeTypeName("UINT32")] uint nameSize, DWRITE_TEXT_RANGE* textRange = null);
-
-            [VtblIndex(58)]
-            HRESULT Draw(void* clientDrawingContext, IDWriteTextRenderer* renderer, float originX, float originY);
-
-            [VtblIndex(59)]
-            HRESULT GetLineMetrics(DWRITE_LINE_METRICS* lineMetrics, [NativeTypeName("UINT32")] uint maxLineCount, [NativeTypeName("UINT32 *")] uint* actualLineCount);
-
-            [VtblIndex(60)]
-            HRESULT GetMetrics(DWRITE_TEXT_METRICS* textMetrics);
-
-            [VtblIndex(61)]
-            HRESULT GetOverhangMetrics(DWRITE_OVERHANG_METRICS* overhangs);
-
-            [VtblIndex(62)]
-            HRESULT GetClusterMetrics(DWRITE_CLUSTER_METRICS* clusterMetrics, [NativeTypeName("UINT32")] uint maxClusterCount, [NativeTypeName("UINT32 *")] uint* actualClusterCount);
-
-            [VtblIndex(63)]
-            HRESULT DetermineMinWidth(float* minWidth);
-
-            [VtblIndex(64)]
-            HRESULT HitTestPoint(float pointX, float pointY, BOOL* isTrailingHit, BOOL* isInside, DWRITE_HIT_TEST_METRICS* hitTestMetrics);
-
-            [VtblIndex(65)]
-            HRESULT HitTestTextPosition([NativeTypeName("UINT32")] uint textPosition, BOOL isTrailingHit, float* pointX, float* pointY, DWRITE_HIT_TEST_METRICS* hitTestMetrics);
-
-            [VtblIndex(66)]
-            HRESULT HitTestTextRange([NativeTypeName("UINT32")] uint textPosition, [NativeTypeName("UINT32")] uint textLength, float originX, float originY, DWRITE_HIT_TEST_METRICS* hitTestMetrics, [NativeTypeName("UINT32")] uint maxHitTestMetricsCount, [NativeTypeName("UINT32 *")] uint* actualHitTestMetricsCount);
         }
     }
 }

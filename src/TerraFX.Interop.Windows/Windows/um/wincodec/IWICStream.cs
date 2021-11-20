@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("135FF860-22B7-4DDF-B0F6-218F4F299A43")]
     [NativeTypeName("struct IWICStream : IStream")]
     [NativeInheritance("IStream")]
-    internal unsafe partial struct IWICStream : IWICStream.Interface
+    internal unsafe partial struct IWICStream
     {
         public void** lpVtbl;
 
@@ -142,21 +142,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT InitializeFromIStreamRegion(IStream* pIStream, ULARGE_INTEGER ulOffset, ULARGE_INTEGER ulMaxSize)
         {
             return ((delegate* unmanaged[Stdcall]<IWICStream*, IStream*, ULARGE_INTEGER, ULARGE_INTEGER, int>)(lpVtbl[17]))((IWICStream*)Unsafe.AsPointer(ref this), pIStream, ulOffset, ulMaxSize);
-        }
-
-        public interface Interface : IStream.Interface
-        {
-            [VtblIndex(14)]
-            HRESULT InitializeFromIStream(IStream* pIStream);
-
-            [VtblIndex(15)]
-            HRESULT InitializeFromFilename([NativeTypeName("LPCWSTR")] ushort* wzFileName, [NativeTypeName("DWORD")] uint dwDesiredAccess);
-
-            [VtblIndex(16)]
-            HRESULT InitializeFromMemory([NativeTypeName("WICInProcPointer")] byte* pbBuffer, [NativeTypeName("DWORD")] uint cbBufferSize);
-
-            [VtblIndex(17)]
-            HRESULT InitializeFromIStreamRegion(IStream* pIStream, ULARGE_INTEGER ulOffset, ULARGE_INTEGER ulMaxSize);
         }
     }
 }

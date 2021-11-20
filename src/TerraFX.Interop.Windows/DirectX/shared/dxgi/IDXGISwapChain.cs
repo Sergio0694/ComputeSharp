@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("310D36A0-D2E7-4C0A-AA04-6A9D23B8886A")]
     [NativeTypeName("struct IDXGISwapChain : IDXGIDeviceSubObject")]
     [NativeInheritance("IDXGIDeviceSubObject")]
-    internal unsafe partial struct IDXGISwapChain : IDXGISwapChain.Interface
+    internal unsafe partial struct IDXGISwapChain
     {
         public void** lpVtbl;
 
@@ -143,39 +143,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT GetLastPresentCount(uint* pLastPresentCount)
         {
             return ((delegate* unmanaged[Stdcall]<IDXGISwapChain*, uint*, int>)(lpVtbl[17]))((IDXGISwapChain*)Unsafe.AsPointer(ref this), pLastPresentCount);
-        }
-
-        public interface Interface : IDXGIDeviceSubObject.Interface
-        {
-            [VtblIndex(8)]
-            HRESULT Present(uint SyncInterval, uint Flags);
-
-            [VtblIndex(9)]
-            HRESULT GetBuffer(uint Buffer, [NativeTypeName("const IID &")] Guid* riid, void** ppSurface);
-
-            [VtblIndex(10)]
-            HRESULT SetFullscreenState(BOOL Fullscreen, IDXGIOutput* pTarget);
-
-            [VtblIndex(11)]
-            HRESULT GetFullscreenState(BOOL* pFullscreen, IDXGIOutput** ppTarget);
-
-            [VtblIndex(12)]
-            HRESULT GetDesc(DXGI_SWAP_CHAIN_DESC* pDesc);
-
-            [VtblIndex(13)]
-            HRESULT ResizeBuffers(uint BufferCount, uint Width, uint Height, DXGI_FORMAT NewFormat, uint SwapChainFlags);
-
-            [VtblIndex(14)]
-            HRESULT ResizeTarget([NativeTypeName("const DXGI_MODE_DESC *")] DXGI_MODE_DESC* pNewTargetParameters);
-
-            [VtblIndex(15)]
-            HRESULT GetContainingOutput(IDXGIOutput** ppOutput);
-
-            [VtblIndex(16)]
-            HRESULT GetFrameStatistics(DXGI_FRAME_STATISTICS* pStats);
-
-            [VtblIndex(17)]
-            HRESULT GetLastPresentCount(uint* pLastPresentCount);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("D8CD007F-D08F-4191-9BFC-236EA7F0E4B5")]
     [NativeTypeName("struct IWICBitmapDecoderInfo : IWICBitmapCodecInfo")]
     [NativeInheritance("IWICBitmapCodecInfo")]
-    internal unsafe partial struct IWICBitmapDecoderInfo : IWICBitmapDecoderInfo.Interface
+    internal unsafe partial struct IWICBitmapDecoderInfo
     {
         public void** lpVtbl;
 
@@ -198,18 +198,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT CreateInstance(IWICBitmapDecoder** ppIBitmapDecoder)
         {
             return ((delegate* unmanaged[Stdcall]<IWICBitmapDecoderInfo*, IWICBitmapDecoder**, int>)(lpVtbl[25]))((IWICBitmapDecoderInfo*)Unsafe.AsPointer(ref this), ppIBitmapDecoder);
-        }
-
-        public interface Interface : IWICBitmapCodecInfo.Interface
-        {
-            [VtblIndex(23)]
-            HRESULT GetPatterns(uint cbSizePatterns, WICBitmapPattern* pPatterns, uint* pcPatterns, uint* pcbPatternsActual);
-
-            [VtblIndex(24)]
-            HRESULT MatchesPattern(IStream* pIStream, BOOL* pfMatches);
-
-            [VtblIndex(25)]
-            HRESULT CreateInstance(IWICBitmapDecoder** ppIBitmapDecoder);
         }
     }
 }

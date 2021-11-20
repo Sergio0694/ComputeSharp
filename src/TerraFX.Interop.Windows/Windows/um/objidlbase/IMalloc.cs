@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00000002-0000-0000-C000-000000000046")]
     [NativeTypeName("struct IMalloc : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IMalloc : IMalloc.Interface
+    internal unsafe partial struct IMalloc
     {
         public void** lpVtbl;
 
@@ -80,28 +80,6 @@ namespace TerraFX.Interop.Windows
         public void HeapMinimize()
         {
             ((delegate* unmanaged[Stdcall]<IMalloc*, void>)(lpVtbl[8]))((IMalloc*)Unsafe.AsPointer(ref this));
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            void* Alloc([NativeTypeName("SIZE_T")] nuint cb);
-
-            [VtblIndex(4)]
-            void* Realloc(void* pv, [NativeTypeName("SIZE_T")] nuint cb);
-
-            [VtblIndex(5)]
-            void Free(void* pv);
-
-            [VtblIndex(6)]
-            [return: NativeTypeName("SIZE_T")]
-            nuint GetSize(void* pv);
-
-            [VtblIndex(7)]
-            int DidAlloc(void* pv);
-
-            [VtblIndex(8)]
-            void HeapMinimize();
         }
     }
 }

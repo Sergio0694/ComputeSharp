@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 namespace TerraFX.Interop.Windows
 {
     [Guid("00000000-0000-0000-C000-000000000046")]
-    internal unsafe partial struct IUnknown : IUnknown.Interface
+    internal unsafe partial struct IUnknown
     {
         public void** lpVtbl;
 
@@ -35,20 +35,6 @@ namespace TerraFX.Interop.Windows
         public uint Release()
         {
             return ((delegate* unmanaged[Stdcall]<IUnknown*, uint>)(lpVtbl[2]))((IUnknown*)Unsafe.AsPointer(ref this));
-        }
-
-        public interface Interface
-        {
-            [VtblIndex(0)]
-            HRESULT QueryInterface([NativeTypeName("const IID &")] Guid* riid, void** ppvObject);
-
-            [VtblIndex(1)]
-            [return: NativeTypeName("ULONG")]
-            uint AddRef();
-
-            [VtblIndex(2)]
-            [return: NativeTypeName("ULONG")]
-            uint Release();
         }
     }
 }
