@@ -7,4 +7,25 @@
     <Copyright>Copyright (c) 2021 Sergio Pedri</Copyright>
     <NoWarn>$(NoWarn);MSB3270</NoWarn>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <PackageVersion>2.0.0</PackageVersion>
+    <RepositoryUrl>https://github.com/Sergio0694/ComputeSharp/</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <ProjectUrl>https://github.com/Sergio0694/ComputeSharp/</ProjectUrl>    
+    <Authors>Sergio Pedri</Authors>
+    <Owners>Sergio Pedri</Owners>
+    <Copyright>Copyright (c) 2021 Sergio Pedri</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageIconUrl>https://user-images.githubusercontent.com/10199417/110238403-b8811080-7f41-11eb-8cfe-e47e7e58f05b.png</PackageIconUrl>
+    <PackageTags>dotnet net netcore netstandard csharp library graphics directx shader hlsl compute gpu performance parallel windows</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>    
+    <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.66" PrivateAssets="all" />
+  </ItemGroup>
 </Project>

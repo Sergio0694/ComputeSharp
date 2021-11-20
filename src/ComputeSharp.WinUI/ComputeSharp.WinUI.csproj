@@ -12,22 +12,11 @@
     <PackageId>ComputeSharp.WinUI</PackageId>
     <Title>ComputeSharp.WinUI</Title>
     <Description>A WinUI 3 library with controls to render DX12 shaders powered by ComputeSharp</Description>
-    <PackageVersion>2.0.0</PackageVersion>
-    <RepositoryUrl>https://github.com/Sergio0694/ComputeSharp.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <ProjectUrl>https://github.com/Sergio0694/ComputeSharp</ProjectUrl>
-    <Authors>Sergio Pedri</Authors>
-    <Owners>Sergio Pedri</Owners>
-    <Copyright>Copyright (c) 2021 Sergio Pedri</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageIcon>icon.png</PackageIcon>
-    <PackageIconUrl>https://user-images.githubusercontent.com/10199417/110238403-b8811080-7f41-11eb-8cfe-e47e7e58f05b.png</PackageIconUrl>
-    <PackageTags>dotnet net netcore netstandard winui winui3 wasdk windows windowsapps csharp library graphics shader hlsl compute gpu performance parallel</PackageTags>
+    <PackageTags>$(PackageTags) winui winui3 wasdk</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="..\ComputeSharp.Package\icon.png" PackFolder="\" Visible="False" />
+    <None Include="..\ComputeSharp.Package\icon.png" Pack="true" PackagePath="\icon.png" Visible="False" />
   </ItemGroup>
 
   <ItemGroup>
