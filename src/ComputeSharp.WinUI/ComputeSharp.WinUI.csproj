@@ -6,6 +6,9 @@
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win10-x64;win10-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
+
+    <!-- Ignore warnings about the BuildTools package being in prerelease -->
+    <NoWarn>$(NoWarn);NU5104</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
