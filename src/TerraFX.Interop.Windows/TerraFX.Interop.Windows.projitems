@@ -33,7 +33,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_3\DirectX.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_3\DXGI.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_3\DXGI_MATRIX_3X2_F.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_3\IDXGISwapChain2.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_4\IDXGIFactory4.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_4\IDXGISwapChain3.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_5\DXGI_FEATURE.cs" />

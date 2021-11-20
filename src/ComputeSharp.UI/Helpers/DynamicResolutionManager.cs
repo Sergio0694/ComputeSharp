@@ -1,8 +1,14 @@
 ﻿using System;
+#if !WINDOWS_UWP
 using System.Runtime.InteropServices;
+#endif
 using System.Threading;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.Uwp.Helpers;
+#else
 namespace ComputeSharp.WinUI.Helpers;
+#endif
 
 /// <summary>
 /// A helper type that is responsible for applying dynamic resolution changes.
@@ -68,7 +74,14 @@ internal unsafe ref struct DynamicResolutionManager
         manager.frameTimeOffset = 0;
         manager.slidingFrameTimeWindowSum = TargetFrameTimeInTicksFor60fps * SlidingFrameTimeWindowLength;
 
+#if WINDOWS_UWP
+        fixed (long* p = &manager.frameTimesInTicks[0])
+        {
+            new Span<long>(p, SlidingFrameTimeWindowLength).Fill(TargetFrameTimeInTicksFor60fps);
+        }
+#else
         MemoryMarshal.CreateSpan(ref manager.frameTimesInTicks[0], SlidingFrameTimeWindowLength).Fill(TargetFrameTimeInTicksFor60fps);
+#endif
     }
 
     /// <summary>

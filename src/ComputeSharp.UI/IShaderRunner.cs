@@ -1,6 +1,10 @@
 ﻿using System;
 
+#if WINDOWS_UWP
+namespace ComputeSharp.Uwp;
+#else
 namespace ComputeSharp.WinUI;
+#endif
 
 /// <summary>
 /// An interface for a shader runner to be used with <see cref="ComputeShaderPanel"/>.

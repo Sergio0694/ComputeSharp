@@ -1,7 +1,14 @@
-﻿using Microsoft.UI.Xaml;
+﻿#if WINDOWS_UWP
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+
+namespace ComputeSharp.Uwp;
+#else
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace ComputeSharp.WinUI;
+#endif
 
 /// <summary>
 /// A custom <see cref="SwapChainPanel"/> that can be used to render animated backgrounds.

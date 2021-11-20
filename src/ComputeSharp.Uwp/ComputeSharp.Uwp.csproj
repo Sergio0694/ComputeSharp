@@ -30,7 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" Version="2.0.0" />
+    <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />
   </ItemGroup>
 
+  <Import Project="..\ComputeSharp.UI\ComputeSharp.UI.projitems" Label="Shared" />
 </Project>

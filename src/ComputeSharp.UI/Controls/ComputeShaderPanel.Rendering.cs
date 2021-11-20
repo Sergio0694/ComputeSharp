@@ -1,19 +1,32 @@
 ﻿using System;
 using System.Diagnostics;
+#if WINDOWS_UWP
+using System.Runtime.InteropServices;
+#endif
 using System.Threading;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
+#if WINDOWS_UWP
+using ComputeSharp.Uwp.Helpers;
+#else
 using ComputeSharp.WinUI.Helpers;
+#endif
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using TerraFX.Interop.WinRT;
+#if !WINDOWS_UWP
 using WinRT;
+#endif
 using Win32 = TerraFX.Interop.Windows.Windows;
 
 #pragma warning disable CS0420
 
+#if WINDOWS_UWP
+namespace ComputeSharp.Uwp;
+#else
 namespace ComputeSharp.WinUI;
+#endif
 
 /// <inheritdoc cref="ComputeShaderPanel"/>
 public sealed partial class ComputeShaderPanel
@@ -64,7 +77,7 @@ public sealed partial class ComputeShaderPanel
     private ComPtr<IDXGISwapChain3> dxgiSwapChain3;
 
     /// <summary>
-    /// The awaitable object for <see cref="IDXGISwapChain1.Present"/> calls.
+    /// The awaitable object for <see cref="IDXGISwapChain3.Present"/> calls.
     /// </summary>
     private HANDLE frameLatencyWaitableObject;
 
@@ -94,22 +107,22 @@ public sealed partial class ComputeShaderPanel
     private volatile bool isResizePending;
 
     /// <summary>
-    /// The backing store for <see cref="Microsoft.UI.Xaml.FrameworkElement.ActualWidth"/> for the render thread.
+    /// The backing store for the actual width for the render thread.
     /// </summary>
     private volatile float width;
 
     /// <summary>
-    /// The backing store for <see cref="Microsoft.UI.Xaml.FrameworkElement.ActualHeight"/> for the render thread.
+    /// The backing store for the actual height for the render thread.
     /// </summary>
     private volatile float height;
 
     /// <summary>
-    /// The backing store for <see cref="Microsoft.UI.Xaml.Controls.SwapChainPanel.CompositionScaleX"/> for the render thread.
+    /// The backing store for the current composition scale on the X axis for the render thread.
     /// </summary>
     private volatile float compositionScaleX;
 
     /// <summary>
-    /// The backing store for <see cref="Microsoft.UI.Xaml.Controls.SwapChainPanel.CompositionScaleY"/> for the render thread.
+    /// The backing store for the current composition scale on the Y axis for the render thread.
     /// </summary>
     private volatile float compositionScaleY;
 
@@ -249,12 +262,20 @@ public sealed partial class ComputeShaderPanel
         // IDXGISwapChain reference just created and set that as the swap chain panel to use.
         using ComPtr<ISwapChainPanelNative> swapChainPanelNative = default;
 
+#if WINDOWS_UWP
+        IUnknown* swapChainPanel = (IUnknown*)Marshal.GetIUnknownForObject(this);
+
+        swapChainPanel->QueryInterface(
+            Win32.__uuidof<ISwapChainPanelNative>(),
+            (void**)&swapChainPanelNative).Assert();
+#else
         IUnknown* swapChainPanel = (IUnknown*)((IWinRTObject)this).NativeObject.ThisPtr;
         Guid iSwapChainPanelNativeUuid = new(0x63AAD0B8, 0x7C24, 0x40FF, 0x85, 0xA8, 0x64, 0x0D, 0x94, 0x4C, 0xC3, 0x25);
 
         swapChainPanel->QueryInterface(
             &iSwapChainPanelNativeUuid,
             (void**)&swapChainPanelNative).Assert();
+#endif
 
         using (ComPtr<IDXGISwapChain> idxgiSwapChain = default)
         {

@@ -1,7 +1,13 @@
 ﻿using System;
-using Microsoft.UI.Xaml;
+#if WINDOWS_UWP
+using Windows.UI.Xaml;
 
+namespace ComputeSharp.Uwp;
+#else
+
+using Microsoft.UI.Xaml;
 namespace ComputeSharp.WinUI;
+#endif
 
 /// <inheritdoc cref="ComputeShaderPanel"/>
 public sealed unsafe partial class ComputeShaderPanel
