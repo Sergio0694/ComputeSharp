@@ -125,6 +125,8 @@ jobs:
   # Buils the .msbuildproj project to generate the NuGet package.
   # This workflow also uploads the resulting package as an artifact.
   build-package:
+    if: success()
+    needs: [build-project]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -203,6 +205,8 @@ jobs:
 
   # Build the WinUI project
   build-project-winui:
+    if: success()
+    needs: [build-project]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -223,7 +227,7 @@ jobs:
   # This workflow also uploads the resulting package as an artifact.
   build-package-winui:
     if: success()
-    needs: [build-project-winui]
+    needs: [build-project-winui, verify-package]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -266,6 +270,8 @@ jobs:
 
   # Build the UWP project
   build-project-uwp:
+    if: success()
+    needs: [build-project]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -286,7 +292,7 @@ jobs:
   # This workflow also uploads the resulting package as an artifact, like the WinUI one.
   build-package-uwp:
     if: success()
-    needs: [build-project-uwp]
+    needs: [build-project-uwp, verify-package]
     runs-on: windows-2022
     steps:
     - name: Git checkout
