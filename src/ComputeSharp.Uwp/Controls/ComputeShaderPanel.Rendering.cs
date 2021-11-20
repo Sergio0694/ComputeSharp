@@ -65,7 +65,7 @@ public sealed partial class ComputeShaderPanel
     private ComPtr<IDXGISwapChain2> dxgiSwapChain2;
 
     /// <summary>
-    /// The awaitable object for <see cref="IDXGISwapChain1.Present"/> calls.
+    /// The awaitable object for <see cref="IDXGISwapChain2.Present"/> calls.
     /// </summary>
     private HANDLE frameLatencyWaitableObject;
 

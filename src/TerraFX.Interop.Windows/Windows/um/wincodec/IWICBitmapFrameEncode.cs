@@ -41,9 +41,9 @@ namespace TerraFX.Interop.Windows
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(3)]
-        public HRESULT Initialize(IPropertyBag2* pIEncoderOptions)
+        public HRESULT Initialize(void* pIEncoderOptions)
         {
-            return ((delegate* unmanaged[Stdcall]<IWICBitmapFrameEncode*, IPropertyBag2*, int>)(lpVtbl[3]))((IWICBitmapFrameEncode*)Unsafe.AsPointer(ref this), pIEncoderOptions);
+            return ((delegate* unmanaged[Stdcall]<IWICBitmapFrameEncode*, void*, int>)(lpVtbl[3]))((IWICBitmapFrameEncode*)Unsafe.AsPointer(ref this), pIEncoderOptions);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -65,13 +65,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT SetPixelFormat([NativeTypeName("WICPixelFormatGUID *")] Guid* pPixelFormat)
         {
             return ((delegate* unmanaged[Stdcall]<IWICBitmapFrameEncode*, Guid*, int>)(lpVtbl[6]))((IWICBitmapFrameEncode*)Unsafe.AsPointer(ref this), pPixelFormat);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [VtblIndex(7)]
-        public HRESULT SetColorContexts(uint cCount, IWICColorContext** ppIColorContext)
-        {
-            return ((delegate* unmanaged[Stdcall]<IWICBitmapFrameEncode*, uint, IWICColorContext**, int>)(lpVtbl[7]))((IWICBitmapFrameEncode*)Unsafe.AsPointer(ref this), cCount, ppIColorContext);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -107,13 +100,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT Commit()
         {
             return ((delegate* unmanaged[Stdcall]<IWICBitmapFrameEncode*, int>)(lpVtbl[12]))((IWICBitmapFrameEncode*)Unsafe.AsPointer(ref this));
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [VtblIndex(13)]
-        public HRESULT GetMetadataQueryWriter(IWICMetadataQueryWriter** ppIMetadataQueryWriter)
-        {
-            return ((delegate* unmanaged[Stdcall]<IWICBitmapFrameEncode*, IWICMetadataQueryWriter**, int>)(lpVtbl[13]))((IWICBitmapFrameEncode*)Unsafe.AsPointer(ref this), ppIMetadataQueryWriter);
         }
     }
 }
