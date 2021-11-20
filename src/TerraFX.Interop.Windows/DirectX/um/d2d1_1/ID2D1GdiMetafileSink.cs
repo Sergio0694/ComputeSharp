@@ -54,20 +54,5 @@ namespace TerraFX.Interop.DirectX
             [VtblIndex(3)]
             HRESULT ProcessRecord([NativeTypeName("DWORD")] uint recordType, [NativeTypeName("const void *")] void* recordData, [NativeTypeName("DWORD")] uint recordDataSize);
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1GdiMetafileSink*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1GdiMetafileSink*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1GdiMetafileSink*, uint> Release;
-
-            [NativeTypeName("HRESULT (DWORD, const void *, DWORD) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1GdiMetafileSink*, uint, void*, uint, int> ProcessRecord;
-        }
     }
 }

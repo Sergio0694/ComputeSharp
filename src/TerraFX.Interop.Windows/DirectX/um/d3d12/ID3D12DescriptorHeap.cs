@@ -110,41 +110,5 @@ namespace TerraFX.Interop.DirectX
             [VtblIndex(10)]
             D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandleForHeapStart();
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12DescriptorHeap*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12DescriptorHeap*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12DescriptorHeap*, uint> Release;
-
-            [NativeTypeName("HRESULT (const GUID &, UINT *, void *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12DescriptorHeap*, Guid*, uint*, void*, int> GetPrivateData;
-
-            [NativeTypeName("HRESULT (const GUID &, UINT, const void *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12DescriptorHeap*, Guid*, uint, void*, int> SetPrivateData;
-
-            [NativeTypeName("HRESULT (const GUID &, const IUnknown *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12DescriptorHeap*, Guid*, IUnknown*, int> SetPrivateDataInterface;
-
-            [NativeTypeName("HRESULT (LPCWSTR) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12DescriptorHeap*, ushort*, int> SetName;
-
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12DescriptorHeap*, Guid*, void**, int> GetDevice;
-
-            [NativeTypeName("D3D12_DESCRIPTOR_HEAP_DESC () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12DescriptorHeap*, D3D12_DESCRIPTOR_HEAP_DESC*, D3D12_DESCRIPTOR_HEAP_DESC*> GetDesc;
-
-            [NativeTypeName("D3D12_CPU_DESCRIPTOR_HANDLE () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12DescriptorHeap*, D3D12_CPU_DESCRIPTOR_HANDLE*, D3D12_CPU_DESCRIPTOR_HANDLE*> GetCPUDescriptorHandleForHeapStart;
-
-            [NativeTypeName("D3D12_GPU_DESCRIPTOR_HANDLE () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12DescriptorHeap*, D3D12_GPU_DESCRIPTOR_HANDLE*, D3D12_GPU_DESCRIPTOR_HANDLE*> GetGPUDescriptorHandleForHeapStart;
-        }
     }
 }

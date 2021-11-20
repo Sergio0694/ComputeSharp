@@ -96,32 +96,5 @@ namespace TerraFX.Interop.DirectX
             [VtblIndex(7)]
             HRESULT AddDefines([NativeTypeName("const DxcDefine *")] DxcDefine* pDefines, [NativeTypeName("UINT32")] uint defineCount);
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcCompilerArgs*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcCompilerArgs*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcCompilerArgs*, uint> Release;
-
-            [NativeTypeName("LPCWSTR *() __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcCompilerArgs*, ushort**> GetArguments;
-
-            [NativeTypeName("UINT32 () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcCompilerArgs*, uint> GetCount;
-
-            [NativeTypeName("HRESULT (LPCWSTR *, UINT32) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcCompilerArgs*, ushort**, uint, int> AddArguments;
-
-            [NativeTypeName("HRESULT (LPCSTR *, UINT32) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcCompilerArgs*, sbyte**, uint, int> AddArgumentsUTF8;
-
-            [NativeTypeName("HRESULT (const DxcDefine *, UINT32) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcCompilerArgs*, DxcDefine*, uint, int> AddDefines;
-        }
     }
 }

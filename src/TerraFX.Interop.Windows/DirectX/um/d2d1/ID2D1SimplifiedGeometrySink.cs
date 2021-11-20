@@ -112,38 +112,5 @@ namespace TerraFX.Interop.DirectX
             [VtblIndex(9)]
             HRESULT Close();
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1SimplifiedGeometrySink*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1SimplifiedGeometrySink*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1SimplifiedGeometrySink*, uint> Release;
-
-            [NativeTypeName("void (D2D1_FILL_MODE) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1SimplifiedGeometrySink*, D2D1_FILL_MODE, void> SetFillMode;
-
-            [NativeTypeName("void (D2D1_PATH_SEGMENT) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1SimplifiedGeometrySink*, D2D1_PATH_SEGMENT, void> SetSegmentFlags;
-
-            [NativeTypeName("void (D2D1_POINT_2F, D2D1_FIGURE_BEGIN) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1SimplifiedGeometrySink*, D2D_POINT_2F, D2D1_FIGURE_BEGIN, void> BeginFigure;
-
-            [NativeTypeName("void (const D2D1_POINT_2F *, UINT32) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1SimplifiedGeometrySink*, D2D_POINT_2F*, uint, void> AddLines;
-
-            [NativeTypeName("void (const D2D1_BEZIER_SEGMENT *, UINT32) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1SimplifiedGeometrySink*, D2D1_BEZIER_SEGMENT*, uint, void> AddBeziers;
-
-            [NativeTypeName("void (D2D1_FIGURE_END) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1SimplifiedGeometrySink*, D2D1_FIGURE_END, void> EndFigure;
-
-            [NativeTypeName("HRESULT () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1SimplifiedGeometrySink*, int> Close;
-        }
     }
 }

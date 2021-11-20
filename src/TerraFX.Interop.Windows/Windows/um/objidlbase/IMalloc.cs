@@ -103,35 +103,5 @@ namespace TerraFX.Interop.Windows
             [VtblIndex(8)]
             void HeapMinimize();
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IMalloc*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IMalloc*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IMalloc*, uint> Release;
-
-            [NativeTypeName("void *(SIZE_T) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IMalloc*, nuint, void*> Alloc;
-
-            [NativeTypeName("void *(void *, SIZE_T) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IMalloc*, void*, nuint, void*> Realloc;
-
-            [NativeTypeName("void (void *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IMalloc*, void*, void> Free;
-
-            [NativeTypeName("SIZE_T (void *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IMalloc*, void*, nuint> GetSize;
-
-            [NativeTypeName("int (void *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IMalloc*, void*, int> DidAlloc;
-
-            [NativeTypeName("void () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IMalloc*, void> HeapMinimize;
-        }
     }
 }

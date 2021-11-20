@@ -121,41 +121,5 @@ namespace TerraFX.Interop.Windows
             [VtblIndex(10)]
             HRESULT GetFriendlyName(uint cchFriendlyName, [NativeTypeName("WCHAR *")] ushort* wzFriendlyName, uint* pcchActual);
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICComponentInfo*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICComponentInfo*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICComponentInfo*, uint> Release;
-
-            [NativeTypeName("HRESULT (WICComponentType *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICComponentInfo*, WICComponentType*, int> GetComponentType;
-
-            [NativeTypeName("HRESULT (CLSID *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICComponentInfo*, Guid*, int> GetCLSID;
-
-            [NativeTypeName("HRESULT (DWORD *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICComponentInfo*, uint*, int> GetSigningStatus;
-
-            [NativeTypeName("HRESULT (UINT, WCHAR *, UINT *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICComponentInfo*, uint, ushort*, uint*, int> GetAuthor;
-
-            [NativeTypeName("HRESULT (GUID *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICComponentInfo*, Guid*, int> GetVendorGUID;
-
-            [NativeTypeName("HRESULT (UINT, WCHAR *, UINT *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICComponentInfo*, uint, ushort*, uint*, int> GetVersion;
-
-            [NativeTypeName("HRESULT (UINT, WCHAR *, UINT *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICComponentInfo*, uint, ushort*, uint*, int> GetSpecVersion;
-
-            [NativeTypeName("HRESULT (UINT, WCHAR *, UINT *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICComponentInfo*, uint, ushort*, uint*, int> GetFriendlyName;
-        }
     }
 }

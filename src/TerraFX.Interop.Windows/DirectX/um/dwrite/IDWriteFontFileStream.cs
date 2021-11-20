@@ -82,29 +82,5 @@ namespace TerraFX.Interop.DirectX
             [VtblIndex(6)]
             HRESULT GetLastWriteTime([NativeTypeName("UINT64 *")] ulong* lastWriteTime);
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDWriteFontFileStream*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDWriteFontFileStream*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDWriteFontFileStream*, uint> Release;
-
-            [NativeTypeName("HRESULT (const void **, UINT64, UINT64, void **) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDWriteFontFileStream*, void**, ulong, ulong, void**, int> ReadFileFragment;
-
-            [NativeTypeName("void (void *) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDWriteFontFileStream*, void*, void> ReleaseFileFragment;
-
-            [NativeTypeName("HRESULT (UINT64 *) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDWriteFontFileStream*, ulong*, int> GetFileSize;
-
-            [NativeTypeName("HRESULT (UINT64 *) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDWriteFontFileStream*, ulong*, int> GetLastWriteTime;
-        }
     }
 }

@@ -66,23 +66,5 @@ namespace TerraFX.Interop.DirectX
             [return: NativeTypeName("SIZE_T")]
             nuint GetBufferSize();
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcBlob*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcBlob*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcBlob*, uint> Release;
-
-            [NativeTypeName("LPVOID () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcBlob*, void*> GetBufferPointer;
-
-            [NativeTypeName("SIZE_T () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcBlob*, nuint> GetBufferSize;
-        }
     }
 }

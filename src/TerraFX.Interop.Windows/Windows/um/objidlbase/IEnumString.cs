@@ -81,29 +81,5 @@ namespace TerraFX.Interop.Windows
             [VtblIndex(6)]
             HRESULT Clone(IEnumString** ppenum);
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IEnumString*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IEnumString*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IEnumString*, uint> Release;
-
-            [NativeTypeName("HRESULT (ULONG, LPOLESTR *, ULONG *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IEnumString*, uint, ushort**, uint*, int> Next;
-
-            [NativeTypeName("HRESULT (ULONG) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IEnumString*, uint, int> Skip;
-
-            [NativeTypeName("HRESULT () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IEnumString*, int> Reset;
-
-            [NativeTypeName("HRESULT (IEnumString **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IEnumString*, IEnumString**, int> Clone;
-        }
     }
 }

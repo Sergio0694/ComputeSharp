@@ -150,53 +150,5 @@ namespace TerraFX.Interop.DirectX
             [VtblIndex(14)]
             HRESULT GetHeapProperties(D3D12_HEAP_PROPERTIES* pHeapProperties, D3D12_HEAP_FLAGS* pHeapFlags);
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12Resource*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12Resource*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12Resource*, uint> Release;
-
-            [NativeTypeName("HRESULT (const GUID &, UINT *, void *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12Resource*, Guid*, uint*, void*, int> GetPrivateData;
-
-            [NativeTypeName("HRESULT (const GUID &, UINT, const void *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12Resource*, Guid*, uint, void*, int> SetPrivateData;
-
-            [NativeTypeName("HRESULT (const GUID &, const IUnknown *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12Resource*, Guid*, IUnknown*, int> SetPrivateDataInterface;
-
-            [NativeTypeName("HRESULT (LPCWSTR) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12Resource*, ushort*, int> SetName;
-
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12Resource*, Guid*, void**, int> GetDevice;
-
-            [NativeTypeName("HRESULT (UINT, const D3D12_RANGE *, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12Resource*, uint, D3D12_RANGE*, void**, int> Map;
-
-            [NativeTypeName("void (UINT, const D3D12_RANGE *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12Resource*, uint, D3D12_RANGE*, void> Unmap;
-
-            [NativeTypeName("D3D12_RESOURCE_DESC () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12Resource*, D3D12_RESOURCE_DESC*, D3D12_RESOURCE_DESC*> GetDesc;
-
-            [NativeTypeName("D3D12_GPU_VIRTUAL_ADDRESS () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12Resource*, ulong> GetGPUVirtualAddress;
-
-            [NativeTypeName("HRESULT (UINT, const D3D12_BOX *, const void *, UINT, UINT) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12Resource*, uint, D3D12_BOX*, void*, uint, uint, int> WriteToSubresource;
-
-            [NativeTypeName("HRESULT (void *, UINT, UINT, UINT, const D3D12_BOX *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12Resource*, void*, uint, uint, uint, D3D12_BOX*, int> ReadFromSubresource;
-
-            [NativeTypeName("HRESULT (D3D12_HEAP_PROPERTIES *, D3D12_HEAP_FLAGS *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12Resource*, D3D12_HEAP_PROPERTIES*, D3D12_HEAP_FLAGS*, int> GetHeapProperties;
-        }
     }
 }

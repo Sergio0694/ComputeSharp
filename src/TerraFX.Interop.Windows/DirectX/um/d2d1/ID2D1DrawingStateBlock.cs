@@ -89,32 +89,5 @@ namespace TerraFX.Interop.DirectX
             [VtblIndex(7)]
             void GetTextRenderingParams(IDWriteRenderingParams** textRenderingParams);
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1DrawingStateBlock*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1DrawingStateBlock*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1DrawingStateBlock*, uint> Release;
-
-            [NativeTypeName("void (ID2D1Factory **) const __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1DrawingStateBlock*, ID2D1Factory**, void> GetFactory;
-
-            [NativeTypeName("void (D2D1_DRAWING_STATE_DESCRIPTION *) const __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1DrawingStateBlock*, D2D1_DRAWING_STATE_DESCRIPTION*, void> GetDescription;
-
-            [NativeTypeName("void (const D2D1_DRAWING_STATE_DESCRIPTION *) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1DrawingStateBlock*, D2D1_DRAWING_STATE_DESCRIPTION*, void> SetDescription;
-
-            [NativeTypeName("void (IDWriteRenderingParams *) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1DrawingStateBlock*, IDWriteRenderingParams*, void> SetTextRenderingParams;
-
-            [NativeTypeName("void (IDWriteRenderingParams **) const __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1DrawingStateBlock*, IDWriteRenderingParams**, void> GetTextRenderingParams;
-        }
     }
 }

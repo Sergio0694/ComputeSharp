@@ -69,26 +69,5 @@ namespace TerraFX.Interop.DirectX
             [VtblIndex(5)]
             HRESULT Close();
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1CommandList*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1CommandList*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1CommandList*, uint> Release;
-
-            [NativeTypeName("void (ID2D1Factory **) const __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1CommandList*, ID2D1Factory**, void> GetFactory;
-
-            [NativeTypeName("HRESULT (ID2D1CommandSink *) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1CommandList*, ID2D1CommandSink*, int> Stream;
-
-            [NativeTypeName("HRESULT () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID2D1CommandList*, int> Close;
-        }
     }
 }

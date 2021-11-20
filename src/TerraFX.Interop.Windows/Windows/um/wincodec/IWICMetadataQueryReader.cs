@@ -81,29 +81,5 @@ namespace TerraFX.Interop.Windows
             [VtblIndex(6)]
             HRESULT GetEnumerator(IEnumString** ppIEnumString);
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICMetadataQueryReader*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICMetadataQueryReader*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICMetadataQueryReader*, uint> Release;
-
-            [NativeTypeName("HRESULT (GUID *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICMetadataQueryReader*, Guid*, int> GetContainerFormat;
-
-            [NativeTypeName("HRESULT (UINT, WCHAR *, UINT *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICMetadataQueryReader*, uint, ushort*, uint*, int> GetLocation;
-
-            [NativeTypeName("HRESULT (LPCWSTR, PROPVARIANT *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICMetadataQueryReader*, ushort*, PROPVARIANT*, int> GetMetadataByName;
-
-            [NativeTypeName("HRESULT (IEnumString **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICMetadataQueryReader*, IEnumString**, int> GetEnumerator;
-        }
     }
 }

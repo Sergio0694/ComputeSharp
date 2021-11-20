@@ -74,26 +74,5 @@ namespace TerraFX.Interop.DirectX
             [VtblIndex(5)]
             HRESULT GetFont([NativeTypeName("UINT32")] uint index, IDWriteFont** font);
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDWriteFontList*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDWriteFontList*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDWriteFontList*, uint> Release;
-
-            [NativeTypeName("HRESULT (IDWriteFontCollection **) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDWriteFontList*, IDWriteFontCollection**, int> GetFontCollection;
-
-            [NativeTypeName("UINT32 () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDWriteFontList*, uint> GetFontCount;
-
-            [NativeTypeName("HRESULT (UINT32, IDWriteFont **) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDWriteFontList*, uint, IDWriteFont**, int> GetFont;
-        }
     }
 }

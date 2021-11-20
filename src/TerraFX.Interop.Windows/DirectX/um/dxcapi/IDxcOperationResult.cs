@@ -72,26 +72,5 @@ namespace TerraFX.Interop.DirectX
             [VtblIndex(5)]
             HRESULT GetErrorBuffer(IDxcBlobEncoding** ppErrors);
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcOperationResult*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcOperationResult*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcOperationResult*, uint> Release;
-
-            [NativeTypeName("HRESULT (HRESULT *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcOperationResult*, HRESULT*, int> GetStatus;
-
-            [NativeTypeName("HRESULT (IDxcBlob **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcOperationResult*, IDxcBlob**, int> GetResult;
-
-            [NativeTypeName("HRESULT (IDxcBlobEncoding **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcOperationResult*, IDxcBlobEncoding**, int> GetErrorBuffer;
-        }
     }
 }

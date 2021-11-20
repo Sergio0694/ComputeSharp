@@ -55,20 +55,5 @@ namespace TerraFX.Interop.WinRT
             [VtblIndex(3)]
             HRESULT SetSwapChain(IDXGISwapChain* swapChain);
         }
-
-        public partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ISwapChainPanelNative*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ISwapChainPanelNative*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ISwapChainPanelNative*, uint> Release;
-
-            [NativeTypeName("HRESULT (IDXGISwapChain *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ISwapChainPanelNative*, IDXGISwapChain*, int> SetSwapChain;
-        }
     }
 }

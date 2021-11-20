@@ -141,47 +141,5 @@ namespace TerraFX.Interop.Windows
             [VtblIndex(12)]
             void ReleaseTLibAttr(TLIBATTR* pTLibAttr);
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ITypeLib*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ITypeLib*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ITypeLib*, uint> Release;
-
-            [NativeTypeName("UINT () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ITypeLib*, uint> GetTypeInfoCount;
-
-            [NativeTypeName("HRESULT (UINT, ITypeInfo **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ITypeLib*, uint, ITypeInfo**, int> GetTypeInfo;
-
-            [NativeTypeName("HRESULT (UINT, TYPEKIND *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ITypeLib*, uint, TYPEKIND*, int> GetTypeInfoType;
-
-            [NativeTypeName("HRESULT (const GUID &, ITypeInfo **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ITypeLib*, Guid*, ITypeInfo**, int> GetTypeInfoOfGuid;
-
-            [NativeTypeName("HRESULT (TLIBATTR **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ITypeLib*, TLIBATTR**, int> GetLibAttr;
-
-            [NativeTypeName("HRESULT (ITypeComp **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ITypeLib*, ITypeComp**, int> GetTypeComp;
-
-            [NativeTypeName("HRESULT (INT, BSTR *, BSTR *, DWORD *, BSTR *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ITypeLib*, int, ushort**, ushort**, uint*, ushort**, int> GetDocumentation;
-
-            [NativeTypeName("HRESULT (LPOLESTR, ULONG, BOOL *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ITypeLib*, ushort*, uint, BOOL*, int> IsName;
-
-            [NativeTypeName("HRESULT (LPOLESTR, ULONG, ITypeInfo **, MEMBERID *, USHORT *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ITypeLib*, ushort*, uint, ITypeInfo**, int*, ushort*, int> FindName;
-
-            [NativeTypeName("void (TLIBATTR *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ITypeLib*, TLIBATTR*, void> ReleaseTLibAttr;
-        }
     }
 }

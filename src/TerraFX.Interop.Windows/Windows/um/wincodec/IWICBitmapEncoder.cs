@@ -141,47 +141,5 @@ namespace TerraFX.Interop.Windows
             [VtblIndex(12)]
             HRESULT GetMetadataQueryWriter(IWICMetadataQueryWriter** ppIMetadataQueryWriter);
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapEncoder*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapEncoder*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapEncoder*, uint> Release;
-
-            [NativeTypeName("HRESULT (IStream *, WICBitmapEncoderCacheOption) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapEncoder*, IStream*, WICBitmapEncoderCacheOption, int> Initialize;
-
-            [NativeTypeName("HRESULT (GUID *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapEncoder*, Guid*, int> GetContainerFormat;
-
-            [NativeTypeName("HRESULT (IWICBitmapEncoderInfo **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapEncoder*, IWICBitmapEncoderInfo**, int> GetEncoderInfo;
-
-            [NativeTypeName("HRESULT (UINT, IWICColorContext **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapEncoder*, uint, IWICColorContext**, int> SetColorContexts;
-
-            [NativeTypeName("HRESULT (IWICPalette *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapEncoder*, IWICPalette*, int> SetPalette;
-
-            [NativeTypeName("HRESULT (IWICBitmapSource *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapEncoder*, IWICBitmapSource*, int> SetThumbnail;
-
-            [NativeTypeName("HRESULT (IWICBitmapSource *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapEncoder*, IWICBitmapSource*, int> SetPreview;
-
-            [NativeTypeName("HRESULT (IWICBitmapFrameEncode **, IPropertyBag2 **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapEncoder*, IWICBitmapFrameEncode**, IPropertyBag2**, int> CreateNewFrame;
-
-            [NativeTypeName("HRESULT () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapEncoder*, int> Commit;
-
-            [NativeTypeName("HRESULT (IWICMetadataQueryWriter **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapEncoder*, IWICMetadataQueryWriter**, int> GetMetadataQueryWriter;
-        }
     }
 }

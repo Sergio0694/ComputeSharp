@@ -56,20 +56,5 @@ namespace TerraFX.Interop.DirectX
             [VtblIndex(3)]
             uint GetInterfaceSlot(uint uArrayIndex);
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (D3D12_SHADER_VARIABLE_DESC *) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflectionVariable*, D3D12_SHADER_VARIABLE_DESC*, int> GetDesc;
-
-            [NativeTypeName("ID3D12ShaderReflectionType *() __attribute__((nothrow)) __attribute__((stdcall))")]
-            public new delegate* unmanaged[Stdcall]<ID3D12ShaderReflectionVariable*, ID3D12ShaderReflectionType*> GetType;
-
-            [NativeTypeName("ID3D12ShaderReflectionConstantBuffer *() __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflectionVariable*, ID3D12ShaderReflectionConstantBuffer*> GetBuffer;
-
-            [NativeTypeName("UINT (UINT) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflectionVariable*, uint, uint> GetInterfaceSlot;
-        }
     }
 }

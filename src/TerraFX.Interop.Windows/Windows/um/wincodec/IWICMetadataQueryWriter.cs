@@ -89,35 +89,5 @@ namespace TerraFX.Interop.Windows
             [VtblIndex(8)]
             HRESULT RemoveMetadataByName([NativeTypeName("LPCWSTR")] ushort* wzName);
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICMetadataQueryWriter*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICMetadataQueryWriter*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICMetadataQueryWriter*, uint> Release;
-
-            [NativeTypeName("HRESULT (GUID *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICMetadataQueryWriter*, Guid*, int> GetContainerFormat;
-
-            [NativeTypeName("HRESULT (UINT, WCHAR *, UINT *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICMetadataQueryWriter*, uint, ushort*, uint*, int> GetLocation;
-
-            [NativeTypeName("HRESULT (LPCWSTR, PROPVARIANT *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICMetadataQueryWriter*, ushort*, PROPVARIANT*, int> GetMetadataByName;
-
-            [NativeTypeName("HRESULT (IEnumString **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICMetadataQueryWriter*, IEnumString**, int> GetEnumerator;
-
-            [NativeTypeName("HRESULT (LPCWSTR, const PROPVARIANT *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICMetadataQueryWriter*, ushort*, PROPVARIANT*, int> SetMetadataByName;
-
-            [NativeTypeName("HRESULT (LPCWSTR) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICMetadataQueryWriter*, ushort*, int> RemoveMetadataByName;
-        }
     }
 }

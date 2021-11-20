@@ -101,35 +101,5 @@ namespace TerraFX.Interop.Windows
             [VtblIndex(8)]
             HRESULT GetExifColorSpace(uint* pValue);
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICColorContext*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICColorContext*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICColorContext*, uint> Release;
-
-            [NativeTypeName("HRESULT (LPCWSTR) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICColorContext*, ushort*, int> InitializeFromFilename;
-
-            [NativeTypeName("HRESULT (const BYTE *, UINT) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICColorContext*, byte*, uint, int> InitializeFromMemory;
-
-            [NativeTypeName("HRESULT (UINT) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICColorContext*, uint, int> InitializeFromExifColorSpace;
-
-            [NativeTypeName("HRESULT (WICColorContextType *) __attribute__((stdcall))")]
-            public new delegate* unmanaged[Stdcall]<IWICColorContext*, WICColorContextType*, int> GetType;
-
-            [NativeTypeName("HRESULT (UINT, BYTE *, UINT *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICColorContext*, uint, byte*, uint*, int> GetProfileBytes;
-
-            [NativeTypeName("HRESULT (UINT *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICColorContext*, uint*, int> GetExifColorSpace;
-        }
     }
 }

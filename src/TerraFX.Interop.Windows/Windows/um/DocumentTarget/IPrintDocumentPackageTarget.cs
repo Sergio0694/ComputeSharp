@@ -73,26 +73,5 @@ namespace TerraFX.Interop.Windows
             [VtblIndex(5)]
             HRESULT Cancel();
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IPrintDocumentPackageTarget*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IPrintDocumentPackageTarget*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IPrintDocumentPackageTarget*, uint> Release;
-
-            [NativeTypeName("HRESULT (UINT32 *, GUID **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IPrintDocumentPackageTarget*, uint*, Guid**, int> GetPackageTargetTypes;
-
-            [NativeTypeName("HRESULT (const GUID &, const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IPrintDocumentPackageTarget*, Guid*, Guid*, void**, int> GetPackageTarget;
-
-            [NativeTypeName("HRESULT () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IPrintDocumentPackageTarget*, int> Cancel;
-        }
     }
 }

@@ -141,47 +141,5 @@ namespace TerraFX.Interop.Windows
             [VtblIndex(12)]
             HRESULT HasAlpha(BOOL* pfHasAlpha);
         }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICPalette*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICPalette*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICPalette*, uint> Release;
-
-            [NativeTypeName("HRESULT (WICBitmapPaletteType, BOOL) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICPalette*, WICBitmapPaletteType, BOOL, int> InitializePredefined;
-
-            [NativeTypeName("HRESULT (WICColor *, UINT) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICPalette*, uint*, uint, int> InitializeCustom;
-
-            [NativeTypeName("HRESULT (IWICBitmapSource *, UINT, BOOL) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICPalette*, IWICBitmapSource*, uint, BOOL, int> InitializeFromBitmap;
-
-            [NativeTypeName("HRESULT (IWICPalette *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICPalette*, IWICPalette*, int> InitializeFromPalette;
-
-            [NativeTypeName("HRESULT (WICBitmapPaletteType *) __attribute__((stdcall))")]
-            public new delegate* unmanaged[Stdcall]<IWICPalette*, WICBitmapPaletteType*, int> GetType;
-
-            [NativeTypeName("HRESULT (UINT *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICPalette*, uint*, int> GetColorCount;
-
-            [NativeTypeName("HRESULT (UINT, WICColor *, UINT *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICPalette*, uint, uint*, uint*, int> GetColors;
-
-            [NativeTypeName("HRESULT (BOOL *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICPalette*, BOOL*, int> IsBlackWhite;
-
-            [NativeTypeName("HRESULT (BOOL *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICPalette*, BOOL*, int> IsGrayscale;
-
-            [NativeTypeName("HRESULT (BOOL *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICPalette*, BOOL*, int> HasAlpha;
-        }
     }
 }
