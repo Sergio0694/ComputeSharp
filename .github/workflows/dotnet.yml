@@ -215,9 +215,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        include-prerelease: true
     - name: Build
-      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /p:Configuration=Release /p:Platform=x64
+      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore,build /p:Configuration=Release
       shell: cmd
 
   # Build the WinUI project again to generate a NuGet package from it.
@@ -231,26 +230,23 @@ jobs:
       uses: actions/checkout@v2
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.3
-      with:
-        vs-prerelease: true
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        include-prerelease: true
     - name: Build
-      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /p:Configuration=Release /p:Platform=x64
+      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore,build /p:Configuration=Release
       shell: cmd
     - name: Pack
-      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:pack /p:Configuration=Release /p:Platform=x64
+      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:pack /p:Configuration=Release /p:ContinuousIntegrationBuild=True
       shell: cmd
     - name: Upload package artifact
       uses: actions/upload-artifact@v2
       with:
         name: ComputeSharp.WinUI.nupkg
-        path: src\ComputeSharp.WinUI\bin\x64\Release\*.nupkg
+        path: src\ComputeSharp.WinUI\bin\Release\*.nupkg
 
-  # Build all the local WinUI samples to ensure they build with no errors
+  # Build the local WinUI sample to ensure it builds with no errors
   build-samples-winui:
     if: success()
     needs: [build-project-winui]
@@ -260,13 +256,13 @@ jobs:
       uses: actions/checkout@v2
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.3
-      with:
-        vs-prerelease: true
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        include-prerelease: true
-    - name: Build ComputeSharp.Sample
+    - name: Restore ComputeSharp.SwapChain.WinUI sample
       run: msbuild samples\ComputeSharp.SwapChain.WinUI\ComputeSharp.SwapChain.WinUI.csproj -t:restore /p:Configuration=Release /p:Platform=x64
       shell: cmd
+    - name: Build ComputeSharp.SwapChain.WinUI sample
+      run: msbuild samples\ComputeSharp.SwapChain.WinUI\ComputeSharp.SwapChain.WinUI.csproj -t:build /p:Configuration=Release /p:Platform=x64
+      shell: cmd # the build of the sample has to be a separate step, as '-t:restore,build' causes the build to fail
