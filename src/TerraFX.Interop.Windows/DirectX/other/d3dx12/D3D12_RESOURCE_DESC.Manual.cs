@@ -58,21 +58,6 @@ namespace TerraFX.Interop.DirectX
 
         public ushort ArraySize => ((Dimension != D3D12_RESOURCE_DIMENSION_TEXTURE3D) ? DepthOrArraySize : (ushort)(1));
 
-        public byte GetPlaneCount(ID3D12Device* pDevice)
-        {
-            return D3D12GetFormatPlaneCount(pDevice, Format);
-        }
-
-        public uint GetSubresources(ID3D12Device* pDevice)
-        {
-            return MipLevels * (uint)ArraySize * GetPlaneCount(pDevice);
-        }
-
-        public uint CalcSubresource(uint MipSlice, uint ArraySlice, uint PlaneSlice)
-        {
-            return D3D12CalcSubresource(MipSlice, ArraySlice, PlaneSlice, MipLevels, ArraySize);
-        }
-
         public static bool operator ==([NativeTypeName("const D3D12_RESOURCE_DESC &")] in D3D12_RESOURCE_DESC l, [NativeTypeName("const D3D12_RESOURCE_DESC &")] in D3D12_RESOURCE_DESC r)
         {
             return (l.Dimension == r.Dimension)

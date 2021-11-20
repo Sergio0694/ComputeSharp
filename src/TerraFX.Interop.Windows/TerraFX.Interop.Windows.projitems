@@ -25,7 +25,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\other\d3dx12\D3D12_STATIC_SAMPLER_DESC.Manual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\other\d3dx12\D3D12_TEXTURE_COPY_LOCATION.Manual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\other\d3dx12\D3D12_VERSIONED_ROOT_SIGNATURE_DESC.Manual.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DirectX\other\d3dx12\DirectX.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_2\DXGI_ALPHA_MODE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_2\DXGI_PRESENT_PARAMETERS.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_2\DXGI_SCALING.cs" />

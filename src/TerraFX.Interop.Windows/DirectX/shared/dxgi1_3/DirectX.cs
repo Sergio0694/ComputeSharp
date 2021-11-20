@@ -15,9 +15,5 @@ namespace TerraFX.Interop.DirectX
         [SupportedOSPlatform("windows8.1")]
         [DllImport("dxgi", ExactSpelling = true)]
         public static extern HRESULT CreateDXGIFactory2(uint Flags, [NativeTypeName("const IID &")] Guid* riid, void** ppFactory);
-
-        [SupportedOSPlatform("windows8.1")]
-        [DllImport("dxgi", ExactSpelling = true)]
-        public static extern HRESULT DXGIGetDebugInterface1(uint Flags, [NativeTypeName("const IID &")] Guid* riid, void** pDebug);
     }
 }
