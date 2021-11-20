@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>ComputeSharp.WinUI</RootNamespace>
+    <Platforms>x64;ARM64</Platforms>
+    <RuntimeIdentifiers>win10-x64;win10-arm64</RuntimeIdentifiers>
+    <UseWinUI>true</UseWinUI>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>ComputeSharp.WinUI</PackageId>
+    <Title>ComputeSharp.WinUI</Title>
+    <Description>A WinUI 3 library with controls to render DX12 shaders powered by ComputeSharp</Description>
+    <PackageTags>$(PackageTags) winui winui3 wasdk</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\ComputeSharp.Package\icon.png" Pack="true" PackagePath="\icon.png" Visible="False" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22504-preview" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />
+  </ItemGroup>
+</Project>

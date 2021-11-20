@@ -1,0 +1,20 @@
+{
+  "solution": {
+    "path": "ComputeSharp.sln",
+    "projects": [
+      "samples\\ComputeSharp.Benchmark\\ComputeSharp.Benchmark.csproj",
+      "samples\\ComputeSharp.ImageProcessing\\ComputeSharp.ImageProcessing.csproj",
+      "samples\\ComputeSharp.Sample.FSharp.Shaders\\ComputeSharp.Sample.FSharp.Shaders.csproj",
+      "samples\\ComputeSharp.Sample.FSharp\\ComputeSharp.Sample.FSharp.fsproj",
+      "samples\\ComputeSharp.Sample.Shared\\ComputeSharp.Sample.Shared.shproj",
+      "samples\\ComputeSharp.Sample\\ComputeSharp.Sample.csproj",
+      "samples\\ComputeSharp.SwapChain\\ComputeSharp.SwapChain.csproj",
+      "src\\ComputeSharp.SourceGenerators\\ComputeSharp.SourceGenerators.csproj",
+      "src\\ComputeSharp\\ComputeSharp.csproj",
+      "tests\\ComputeSharp.Tests.Internals\\ComputeSharp.Tests.Internals.csproj",
+      "tests\\ComputeSharp.Tests.NativeLibrariesResolver\\ComputeSharp.Tests.NativeLibrariesResolver.csproj",
+      "tests\\ComputeSharp.Tests.SourceGenerators\\ComputeSharp.Tests.SourceGenerators.csproj",
+      "tests\\ComputeSharp.Tests\\ComputeSharp.Tests.csproj"
+    ]
+  }
+}

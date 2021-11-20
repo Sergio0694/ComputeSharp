@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <OutputPath>bin\Release</OutputPath>
@@ -298,5 +297,4 @@
       <LastGenOutput>UIntMxN.g.cs</LastGenOutput>
     </None>
   </ItemGroup>
-
 </Project>

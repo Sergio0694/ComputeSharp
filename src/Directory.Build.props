@@ -1,10 +1,5 @@
 <Project>
-  <PropertyGroup>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-  </PropertyGroup>
-
-  <ItemGroup>    
-    <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.66" PrivateAssets="all" />
+  <ItemGroup>
     <PackageReference Include="NuGetizer" Version="0.7.5" PrivateAssets="all" />
   </ItemGroup>
 

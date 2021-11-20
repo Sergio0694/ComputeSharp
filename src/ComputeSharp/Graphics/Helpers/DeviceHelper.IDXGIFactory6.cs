@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using ComputeSharp.Core.Extensions;
 using TerraFX.Interop.DirectX;
@@ -31,11 +30,13 @@ internal static partial class DeviceHelper
     /// Creates a new <see cref="IDXGIFactory6"/> instance to be used to enumerate devices.
     /// </summary>
     /// <param name="dxgiFactory6">The resulting <see cref="IDXGIFactory6"/> instance.</param>
-    private static unsafe void CreateDXGIFactory6(IDXGIFactory6** dxgiFactory6)
+    internal static unsafe void CreateDXGIFactory6(IDXGIFactory6** dxgiFactory6)
     {
         using ComPtr<IDXGIFactory4> dxgiFactory4 = default;
 
+#if DEBUG
         EnableDebugMode();
+#endif
 
         DirectX.CreateDXGIFactory2(IDXGIFactoryCreationFlags, Windows.__uuidof<IDXGIFactory4>(), dxgiFactory4.GetVoidAddressOf()).Assert();
 
@@ -58,10 +59,10 @@ internal static partial class DeviceHelper
         return;
     }
 
+#if DEBUG
     /// <summary>
     /// Enables the debug layer for DirectX APIs.
     /// </summary>
-    [Conditional("DEBUG")]
     private static unsafe void EnableDebugMode()
     {
         using ComPtr<ID3D12Debug> d3D12Debug = default;
@@ -77,6 +78,7 @@ internal static partial class DeviceHelper
             d3D12Debug1.Get()->SetEnableSynchronizedCommandQueueValidation(Windows.TRUE);
         }
     }
+#endif
 
     /// <summary>
     /// A custom <see cref="IDXGIFactory6"/> fallback implementation to use on systems with no support for it.

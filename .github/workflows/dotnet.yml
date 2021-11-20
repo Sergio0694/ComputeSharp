@@ -19,7 +19,7 @@ jobs:
       run: dotnet build src\ComputeSharp\ComputeSharp.csproj -c Release
       shell: cmd
 
-  # Run all the unit tests referencing the ComputeSharp project directly.
+  # Run all the unit tests referencing the ComputeSharp project directly
   run-tests:
     if: success()
     needs: [build-project]
@@ -57,7 +57,7 @@ jobs:
       run: dotnet test tests\ComputeSharp.Tests.SourceGenerators\ComputeSharp.Tests.SourceGenerators.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
 
-  # Run all the local samples to ensure they build and run with no errors.
+  # Run all the local samples to ensure they build and run with no errors
   run-samples:
     if: success()
     needs: [run-tests]
@@ -200,3 +200,69 @@ jobs:
     - name: Run ComputeSharp.Tests.NativeLibrariesResolver
       run: dotnet test tests\ComputeSharp.Tests.NativeLibrariesResolver\ComputeSharp.Tests.NativeLibrariesResolver.csproj -v n -l "console;verbosity=detailed"
       shell: cmd
+
+  # Build the WinUI panel project
+  build-project-winui:
+    runs-on: windows-2022
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.3
+      with:
+        vs-prerelease: true
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Build
+      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore,build /p:Configuration=Release
+      shell: cmd
+
+  # Build the WinUI project again to generate a NuGet package from it.
+  # This workflow also uploads the resulting package as an artifact.
+  build-package-winui:
+    if: success()
+    needs: [build-project-winui]
+    runs-on: windows-2022
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.3
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Build
+      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore,build /p:Configuration=Release
+      shell: cmd
+    - name: Pack
+      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:pack /p:Configuration=Release /p:ContinuousIntegrationBuild=True
+      shell: cmd
+    - name: Upload package artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ComputeSharp.WinUI.nupkg
+        path: src\ComputeSharp.WinUI\bin\Release\*.nupkg
+
+  # Build the local WinUI sample to ensure it builds with no errors
+  build-samples-winui:
+    if: success()
+    needs: [build-project-winui]
+    runs-on: windows-2022
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.3
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore ComputeSharp.SwapChain.WinUI sample
+      run: msbuild samples\ComputeSharp.SwapChain.WinUI\ComputeSharp.SwapChain.WinUI.csproj -t:restore /p:Configuration=Release /p:Platform=x64
+      shell: cmd
+    - name: Build ComputeSharp.SwapChain.WinUI sample
+      run: msbuild samples\ComputeSharp.SwapChain.WinUI\ComputeSharp.SwapChain.WinUI.csproj -t:build /p:Configuration=Release /p:Platform=x64
+      shell: cmd # the build of the sample has to be a separate step, as '-t:restore,build' causes the build to fail
