@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using ComputeSharp.Core.Extensions;
+using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
 using ComputeSharp.WinUI.Helpers;
 using TerraFX.Interop.DirectX;
@@ -186,9 +187,9 @@ public sealed partial class ComputeShaderPanel
         }
 
         // Create the swap chain to display frames
-        using (ComPtr<IDXGIFactory2> dxgiFactory2 = default)
+        using (ComPtr<IDXGIFactory6> dxgiFactory6 = default)
         {
-            DirectX.CreateDXGIFactory2(DXGI.DXGI_CREATE_FACTORY_DEBUG, Win32.__uuidof<IDXGIFactory2>(), (void**)dxgiFactory2.GetAddressOf()).Assert();
+            DeviceHelper.CreateDXGIFactory6(dxgiFactory6.GetAddressOf());
 
             DXGI_SWAP_CHAIN_DESC1 dxgiSwapChainDesc1 = default;
             dxgiSwapChainDesc1.AlphaMode = DXGI_ALPHA_MODE.DXGI_ALPHA_MODE_IGNORE;
@@ -205,7 +206,7 @@ public sealed partial class ComputeShaderPanel
 
             using ComPtr<IDXGISwapChain1> dxgiSwapChain1 = default;
 
-            dxgiFactory2.Get()->CreateSwapChainForComposition(
+            dxgiFactory6.Get()->CreateSwapChainForComposition(
                 (IUnknown*)this.d3D12CommandQueue.Get(),
                 &dxgiSwapChainDesc1,
                 null,
