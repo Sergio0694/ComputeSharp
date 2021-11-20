@@ -336,7 +336,8 @@ internal static class HlslKnownTypes
     /// <summary>
     /// Gets the mapped HLSL-compatible type name for the input type name.
     /// </summary>
-    /// <param name="name">The input type name to map.</param>
+    /// <param name="originalName">The input type name to map.</param>
+    /// <param name="mappedName">The resulting mapped type name, if found.</param>
     /// <returns>The HLSL-compatible type name that can be used in an HLSL shader.</returns>
     public static bool TryGetMappedName(string originalName, out string? mappedName)
     {

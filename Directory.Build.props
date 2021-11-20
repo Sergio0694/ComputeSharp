@@ -3,6 +3,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Company>Sergio Pedri</Company>
     <Copyright>Copyright (c) 2021 Sergio Pedri</Copyright>
     <NoWarn>$(NoWarn);MSB3270</NoWarn>

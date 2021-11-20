@@ -266,6 +266,7 @@ public static class GraphicsDeviceExtensions
     /// <typeparam name="T">The type of items in the texture.</typeparam>
     /// <param name="device">The target <see cref="GraphicsDevice"/> instance to allocate the texture for.</param>
     /// <param name="type">The type of texture to allocate.</param>
+    /// <param name="data">The input 3D array to use as source data for the texture.</param>
     /// <returns>A <see cref="Texture2D{T}"/> instance of the requested size.</returns>
     [Pure]
     public static Texture3D<T> AllocateTexture3D<T>(this GraphicsDevice device, Type type, T[,,] data)
@@ -309,7 +310,7 @@ public static class GraphicsDeviceExtensions
     /// <param name="textureType">The type of texture to allocate.</param>
     /// <param name="inputType">The type of filepath to use.</param>
     /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
-    /// <returns>A <see cref="Texture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+    /// <returns>A <see cref="Texture2D{T}"/> instance with the contents of the specified file.</returns>
     [Pure]
     public static Texture2D<T> LoadTexture2D<T, TPixel>(this GraphicsDevice device, Type textureType, Type inputType, string filename)
         where T : unmanaged, IUnorm<TPixel>
@@ -341,7 +342,7 @@ public static class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
     /// <param name="type">The type of texture to allocate.</param>
     /// <param name="buffer">The buffer with the image data to load and decode into the texture.</param>
-    /// <returns>A <see cref="Texture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+    /// <returns>A <see cref="Texture2D{T}"/> instance with the contents of the specified file.</returns>
     [Pure]
     public static Texture2D<T> LoadTexture2D<T, TPixel>(this GraphicsDevice device, Type type, byte[] buffer)
         where T : unmanaged, IUnorm<TPixel>

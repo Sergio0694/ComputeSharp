@@ -11,7 +11,7 @@ internal static class DiagnosticsExtensions
     /// <summary>
     /// Adds a new diagnostics to the current compilation.
     /// </summary>
-    /// <param name="context">The <see cref="GeneratorEditContext"/> instance currently in use.</param>
+    /// <param name="context">The <see cref="GeneratorExecutionContext"/> instance currently in use.</param>
     /// <param name="descriptor">The input <see cref="DiagnosticDescriptor"/> for the diagnostics to create.</param>
     /// <param name="symbol">The source <see cref="ISymbol"/> to attach the diagnostics to.</param>
     /// <param name="args">The optional arguments for the formatted message to include.</param>
@@ -27,7 +27,7 @@ internal static class DiagnosticsExtensions
     /// <summary>
     /// Adds a new diagnostics to the current compilation.
     /// </summary>
-    /// <param name="context">The <see cref="GeneratorEditContext"/> instance currently in use.</param>
+    /// <param name="context">The <see cref="GeneratorExecutionContext"/> instance currently in use.</param>
     /// <param name="descriptor">The input <see cref="DiagnosticDescriptor"/> for the diagnostics to create.</param>
     /// <param name="node">The source <see cref="SyntaxNode"/> to attach the diagnostics to.</param>
     /// <param name="args">The optional arguments for the formatted message to include.</param>

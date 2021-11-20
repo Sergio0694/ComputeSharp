@@ -4,7 +4,7 @@ using Microsoft.UI.Xaml.Input;
 namespace ComputeSharp.SwapChain.WinUI.Views;
 
 /// <summary>
-/// A view for <see cref="MainViewModel"/>.
+/// A view for <see cref="ComputeSharp.SwapChain.WinUI.ViewModels.MainViewModel"/>.
 /// </summary>
 public sealed partial class MainWindow : Window
 {

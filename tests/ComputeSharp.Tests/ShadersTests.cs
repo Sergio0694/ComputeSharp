@@ -136,7 +136,6 @@ public class ShadersTests
     /// <summary>
     /// Executes a given test for a specified shader.
     /// </summary>
-    /// <typeparam name="T">The type of shader to test.</typeparam>
     /// <param name="device">The device to use.</param>
     /// <param name="shaderType">The type of shader being executed.</param>
     /// <param name="delta">The comparison delta.</param>
@@ -194,7 +193,8 @@ public class ShadersTests
     /// <summary>
     /// Executes a given test for a specified shader.
     /// </summary>
-    /// <typeparam name="T">The type of shader to test.</typeparam>
+    /// <typeparam name="TCompute">The type of compute shader to test.</typeparam>
+    /// <typeparam name="TPixel">The type of pixel shader to test.</typeparam>
     /// <param name="device">The device to use.</param>
     /// <param name="shaderType">The type of shader being executed.</param>
     /// <param name="computeFactory">The factory of compute shaders.</param>

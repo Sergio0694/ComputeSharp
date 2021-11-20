@@ -3,7 +3,7 @@
 namespace ComputeSharp.Tests.Attributes;
 
 /// <summary>
-/// An attribute to use with <see cref="CombinatorialAttribute"/> adding additional arbitrary input data.
+/// An attribute to use with <see cref="CombinatorialTestMethodAttribute"/> adding additional arbitrary input data.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
 public sealed class AdditionalDataAttribute : Attribute

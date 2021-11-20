@@ -56,7 +56,7 @@ public sealed partial class HlslBokehBlurProcessor
         private readonly float KernelsScale;
 
         /// <summary>
-        /// The mapping of initialized complex kernels and parameters, to speed up the initialization of new <see cref="HlslBokehBlurProcessor{TPixel}"/> instances.
+        /// The mapping of initialized complex kernels and parameters, to speed up the initialization of new <see cref="HlslBokehBlurProcessor"/> instances.
         /// </summary>
         private static readonly ConcurrentDictionary<(int Radius, int ComponentsCount), (Vector4[] Parameters, float Scale, Complex64[][] Kernels)> Cache = new();
 

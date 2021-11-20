@@ -114,7 +114,7 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
     public bool IsGroupIdsUsed { get; private set; }
 
     /// <summary>
-    /// Gets whether or not the shader uses <see cref="GroupIds.Index/> at least once.
+    /// Gets whether or not the shader uses <see cref="GroupIds.Index"/> at least once.
     /// </summary>
     public bool IsGroupIdsIndexUsed { get; private set; }
 

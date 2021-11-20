@@ -18,7 +18,7 @@ public static class ImagingExtensions
     /// Creates a new <see cref="Image{TPixel}"/> instance with the specified texture data.
     /// </summary>
     /// <typeparam name="TFrom">The input pixel format used in the texture.</typeparam>
-    /// <typeparam name="To">The target pixel format for the returned image.</typeparam>
+    /// <typeparam name="TTo">The target pixel format for the returned image.</typeparam>
     /// <param name="texture">The source <see cref="Texture2D{T}"/> instance to read data from.</param>
     /// <returns>An image with the data from the input texture.</returns>
     [Pure]

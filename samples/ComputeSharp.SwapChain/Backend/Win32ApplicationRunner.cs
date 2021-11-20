@@ -39,13 +39,10 @@ internal unsafe static class Win32ApplicationRunner
     private static Thread renderThread = null!;
 
     /// <summary>
-    /// Runs a specified application and starts the main loop to update its state.
-    /// This is the entry point for a given application of type <typeparamref name="T"/>, and it should be
-    /// called as soon as the process is launched, excluding any other additional initialization needed.
-    /// <para>To launch an application, simply add this line to the project being used:</para>
-    /// <c>Win32ApplicationRunner.Run&lt;MyApplication>();</c>
+    /// Runs a specified application and starts the main loop to update its state. This is the entry point for a given application,
+    /// and it should be called as soon as the process is launched, excluding any other additional initialization needed.
     /// </summary>
-    /// <typeparam name="T">The type of application being launched.</typeparam>
+    /// <param name="application">The input application instance to run.</param>
     /// <returns>The exit code for the application.</returns>
     public static int Run(Win32Application application)
     {
