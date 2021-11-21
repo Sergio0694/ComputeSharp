@@ -239,8 +239,11 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Build
-      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore,build,pack /p:Configuration=Release /p:ContinuousIntegrationBuild=True
+      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:restore /p:Configuration=Release /p:ContinuousIntegrationBuild=True
       shell: cmd
+    - name: Build
+      run: msbuild src\ComputeSharp.WinUI\ComputeSharp.WinUI.csproj -t:pack /p:Configuration=Release /p:ContinuousIntegrationBuild=True
+      shell: cmd # Packing needs to be done separately and with no previous build target for it to work correctly
     - name: Upload package artifact
       uses: actions/upload-artifact@v2
       with:
