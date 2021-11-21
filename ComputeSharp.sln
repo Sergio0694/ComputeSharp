@@ -64,8 +64,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputeSharp.SwapChain.Uwp"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.UI", "src\ComputeSharp.UI\ComputeSharp.UI.shproj", "{0C82EDE1-5B8A-4DF3-87DA-700B29D5E265}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.SwapChain.Shaders.Shared", "samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.shproj", "{0800BD51-499D-44C2-9417-FD1F7FDFE9C4}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{0071701e-b9c5-4098-be5f-ef556c4553c6}*SharedItemsImports = 5
+		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{0800bd51-499d-44c2-9417-fd1f7fdfe9c4}*SharedItemsImports = 13
 		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{0c82ede1-5b8a-4df3-87da-700b29d5e265}*SharedItemsImports = 13
 		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{314eb353-e7e3-4146-8111-685cc83ec1de}*SharedItemsImports = 5
 		src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems*{314eb353-e7e3-4146-8111-685cc83ec1de}*SharedItemsImports = 5
@@ -74,7 +78,9 @@ Global
 		samples\ComputeSharp.Sample.Shared\ComputeSharp.Sample.Shared.projitems*{8cefc324-ca6c-4845-9ad9-70b92bd87057}*SharedItemsImports = 13
 		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{a5997814-d8d2-4541-87ac-c3e53caa67c0}*SharedItemsImports = 13
 		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{afaafdc9-be42-45d4-8c79-0ee8c8edbf52}*SharedItemsImports = 5
+		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{e7c9247d-016b-4819-af9f-0e9b3591e04b}*SharedItemsImports = 5
 		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{fa18ba9f-76bf-4de0-8d24-02fc7657e6cb}*SharedItemsImports = 5
+		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{fbd388a5-7855-4408-98ff-e689f509db5a}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -309,6 +315,7 @@ Global
 		{514FF00E-BBF0-4D55-A47C-EEEB6208ADCE} = {8DCE343F-BA78-4FE1-B562-B57C603A8BAA}
 		{0071701E-B9C5-4098-BE5F-EF556C4553C6} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 		{FBD388A5-7855-4408-98FF-E689F509DB5A} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
+		{0800BD51-499D-44C2-9417-FD1F7FDFE9C4} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4664C5E3-0340-4E22-BCFD-98AAEDF5F2DC}

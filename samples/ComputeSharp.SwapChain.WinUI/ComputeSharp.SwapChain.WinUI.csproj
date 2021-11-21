@@ -32,19 +32,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\ComputeSharp.SwapChain\Shaders\ColorfulInfinity.cs" Link="Shaders\ColorfulInfinity.cs" />
-    <Compile Include="..\ComputeSharp.SwapChain\Shaders\ContouredLayers.cs" Link="Shaders\ContouredLayers.cs" />
-    <Compile Include="..\ComputeSharp.SwapChain\Shaders\ExtrudedTruchetPattern.cs" Link="Shaders\ExtrudedTruchetPattern.cs" />
-    <Compile Include="..\ComputeSharp.SwapChain\Shaders\FractalTiling.cs" Link="Shaders\FractalTiling.cs" />
-    <Compile Include="..\ComputeSharp.SwapChain\Shaders\MengerJourney.cs" Link="Shaders\MengerJourney.cs" />
-    <Compile Include="..\ComputeSharp.SwapChain\Shaders\TwoTiledTruchet.cs" Link="Shaders\TwoTiledTruchet.cs" />
-    <Compile Include="..\ComputeSharp.SwapChain\Shaders\Octagrams.cs" Link="Shaders\Octagrams.cs" />
-    <Compile Include="..\ComputeSharp.SwapChain\Shaders\ProteanClouds.cs" Link="Shaders\ProteanClouds.cs" />
-    <Compile Include="..\ComputeSharp.SwapChain\Shaders\PyramidPattern.cs" Link="Shaders\PyramidPattern.cs" />
-    <Compile Include="..\ComputeSharp.SwapChain\Shaders\TriangleGridContouring.cs" Link="Shaders\TriangleGridContouring.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22504-preview" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="7.1.2" />
@@ -60,4 +47,6 @@
                       ReferenceOutputAssembly="false"
                       PrivateAssets="contentfiles;build" />
   </ItemGroup>
+
+  <Import Project="..\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems" Label="Shared" />
 </Project>
