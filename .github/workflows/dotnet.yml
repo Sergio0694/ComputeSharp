@@ -4,8 +4,28 @@ on: [push, pull_request]
 
 jobs:
 
-  # Build the whole ComputeSharp solution project directly
-  build-solution:
+  # Build the whole ComputeSharp solution, in Debug
+  build-solution-debug:
+    runs-on: windows-2022
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.3
+    - name: Setup .NET Core 3.1 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+    - name: Setup .NET 6 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Build
+      run: msbuild -t:restore,build /p:Configuration=Debug /p:Platform=x64
+      shell: cmd
+
+  # Build the whole ComputeSharp solution, in Release
+  build-solution-release:
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -27,7 +47,7 @@ jobs:
   # Run all the unit tests referencing the ComputeSharp project directly
   run-tests:
     if: success()
-    needs: [build-solution]
+    needs: [build-solution-debug, build-solution-release]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -131,7 +151,7 @@ jobs:
   # This workflow also uploads the resulting package as an artifact.
   build-package:
     if: success()
-    needs: [build-solution]
+    needs: [build-solution-debug, build-solution-release]
     runs-on: windows-2022
     steps:
     - name: Git checkout
