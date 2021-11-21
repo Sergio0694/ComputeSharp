@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("29038F61-3839-4626-91FD-086879011A05")]
     [NativeTypeName("struct IDXGIAdapter1 : IDXGIAdapter")]
     [NativeInheritance("IDXGIAdapter")]
-    internal unsafe partial struct IDXGIAdapter1 : IDXGIAdapter1.Interface
+    internal unsafe partial struct IDXGIAdapter1
     {
         public void** lpVtbl;
 
@@ -94,48 +94,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT GetDesc1(DXGI_ADAPTER_DESC1* pDesc)
         {
             return ((delegate* unmanaged[Stdcall]<IDXGIAdapter1*, DXGI_ADAPTER_DESC1*, int>)(lpVtbl[10]))((IDXGIAdapter1*)Unsafe.AsPointer(ref this), pDesc);
-        }
-
-        public interface Interface : IDXGIAdapter.Interface
-        {
-            [VtblIndex(10)]
-            HRESULT GetDesc1(DXGI_ADAPTER_DESC1* pDesc);
-        }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIAdapter1*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIAdapter1*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIAdapter1*, uint> Release;
-
-            [NativeTypeName("HRESULT (const GUID &, UINT, const void *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIAdapter1*, Guid*, uint, void*, int> SetPrivateData;
-
-            [NativeTypeName("HRESULT (const GUID &, const IUnknown *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIAdapter1*, Guid*, IUnknown*, int> SetPrivateDataInterface;
-
-            [NativeTypeName("HRESULT (const GUID &, UINT *, void *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIAdapter1*, Guid*, uint*, void*, int> GetPrivateData;
-
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIAdapter1*, Guid*, void**, int> GetParent;
-
-            [NativeTypeName("HRESULT (UINT, IDXGIOutput **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIAdapter1*, uint, IDXGIOutput**, int> EnumOutputs;
-
-            [NativeTypeName("HRESULT (DXGI_ADAPTER_DESC *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIAdapter1*, DXGI_ADAPTER_DESC*, int> GetDesc;
-
-            [NativeTypeName("HRESULT (const GUID &, LARGE_INTEGER *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIAdapter1*, Guid*, LARGE_INTEGER*, int> CheckInterfaceSupport;
-
-            [NativeTypeName("HRESULT (DXGI_ADAPTER_DESC1 *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIAdapter1*, DXGI_ADAPTER_DESC1*, int> GetDesc1;
         }
     }
 }

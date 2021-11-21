@@ -3,6 +3,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Company>Sergio Pedri</Company>
     <Copyright>Copyright (c) 2021 Sergio Pedri</Copyright>
     <NoWarn>$(NoWarn);MSB3270</NoWarn>
@@ -23,9 +24,15 @@
     <PackageIcon>icon.png</PackageIcon>
     <PackageIconUrl>https://user-images.githubusercontent.com/10199417/110238403-b8811080-7f41-11eb-8cfe-e47e7e58f05b.png</PackageIconUrl>
     <PackageTags>dotnet net netcore netstandard csharp library graphics directx shader hlsl compute gpu performance parallel windows</PackageTags>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>    
-    <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.66" PrivateAssets="all" />
+    <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- Needed for deterministic builds -->
+  <ItemGroup>
+    <SourceRoot Include="$(MSBuildThisFileDirectory)/"/>
   </ItemGroup>
 </Project>

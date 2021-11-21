@@ -13,8 +13,5 @@ namespace TerraFX.Interop.DirectX
     {
         [DllImport("dxcompiler", ExactSpelling = true)]
         public static extern HRESULT DxcCreateInstance([NativeTypeName("const IID &")] Guid* rclsid, [NativeTypeName("const IID &")] Guid* riid, [NativeTypeName("LPVOID *")] void** ppv);
-
-        [DllImport("dxcompiler", ExactSpelling = true)]
-        public static extern HRESULT DxcCreateInstance2(IMalloc* pMalloc, [NativeTypeName("const IID &")] Guid* rclsid, [NativeTypeName("const IID &")] Guid* riid, [NativeTypeName("LPVOID *")] void** ppv);
     }
 }

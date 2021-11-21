@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00000301-A8F2-4877-BA0A-FD2B6645FB94")]
     [NativeTypeName("struct IWICFormatConverter : IWICBitmapSource")]
     [NativeInheritance("IWICBitmapSource")]
-    internal unsafe partial struct IWICFormatConverter : IWICFormatConverter.Interface
+    internal unsafe partial struct IWICFormatConverter
     {
         public void** lpVtbl;
 
@@ -86,48 +86,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT CanConvert([NativeTypeName("REFWICPixelFormatGUID")] Guid* srcPixelFormat, [NativeTypeName("REFWICPixelFormatGUID")] Guid* dstPixelFormat, BOOL* pfCanConvert)
         {
             return ((delegate* unmanaged[Stdcall]<IWICFormatConverter*, Guid*, Guid*, BOOL*, int>)(lpVtbl[9]))((IWICFormatConverter*)Unsafe.AsPointer(ref this), srcPixelFormat, dstPixelFormat, pfCanConvert);
-        }
-
-        public interface Interface : IWICBitmapSource.Interface
-        {
-            [VtblIndex(8)]
-            HRESULT Initialize(IWICBitmapSource* pISource, [NativeTypeName("REFWICPixelFormatGUID")] Guid* dstFormat, WICBitmapDitherType dither, IWICPalette* pIPalette, double alphaThresholdPercent, WICBitmapPaletteType paletteTranslate);
-
-            [VtblIndex(9)]
-            HRESULT CanConvert([NativeTypeName("REFWICPixelFormatGUID")] Guid* srcPixelFormat, [NativeTypeName("REFWICPixelFormatGUID")] Guid* dstPixelFormat, BOOL* pfCanConvert);
-        }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICFormatConverter*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICFormatConverter*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICFormatConverter*, uint> Release;
-
-            [NativeTypeName("HRESULT (UINT *, UINT *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICFormatConverter*, uint*, uint*, int> GetSize;
-
-            [NativeTypeName("HRESULT (WICPixelFormatGUID *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICFormatConverter*, Guid*, int> GetPixelFormat;
-
-            [NativeTypeName("HRESULT (double *, double *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICFormatConverter*, double*, double*, int> GetResolution;
-
-            [NativeTypeName("HRESULT (IWICPalette *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICFormatConverter*, IWICPalette*, int> CopyPalette;
-
-            [NativeTypeName("HRESULT (const WICRect *, UINT, UINT, BYTE *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICFormatConverter*, WICRect*, uint, uint, byte*, int> CopyPixels;
-
-            [NativeTypeName("HRESULT (IWICBitmapSource *, REFWICPixelFormatGUID, WICBitmapDitherType, IWICPalette *, double, WICBitmapPaletteType) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICFormatConverter*, IWICBitmapSource*, Guid*, WICBitmapDitherType, IWICPalette*, double, WICBitmapPaletteType, int> Initialize;
-
-            [NativeTypeName("HRESULT (REFWICPixelFormatGUID, REFWICPixelFormatGUID, BOOL *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICFormatConverter*, Guid*, Guid*, BOOL*, int> CanConvert;
         }
     }
 }

@@ -21,7 +21,7 @@ internal static class SyntaxFactoryHelper
     /// </code>
     /// </para>
     /// </summary>
-    /// <param name="values">The input sequence of <see cref="string"/> groups.</param>
+    /// <param name="groups">The input sequence of <see cref="string"/> groups.</param>
     /// <returns>An <see cref="ArrayCreationExpressionSyntax"/> instance with the described contents.</returns>
     [Pure]
     public static ArrayCreationExpressionSyntax NestedArrayExpression(IEnumerable<(string A, string B)> groups)

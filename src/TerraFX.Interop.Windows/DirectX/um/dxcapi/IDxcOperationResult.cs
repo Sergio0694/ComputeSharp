@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("CEDB484A-D4E9-445A-B991-CA21CA157DC2")]
     [NativeTypeName("struct IDxcOperationResult : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IDxcOperationResult : IDxcOperationResult.Interface
+    internal unsafe partial struct IDxcOperationResult
     {
         public void** lpVtbl;
 
@@ -59,39 +59,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT GetErrorBuffer(IDxcBlobEncoding** ppErrors)
         {
             return ((delegate* unmanaged[Stdcall]<IDxcOperationResult*, IDxcBlobEncoding**, int>)(lpVtbl[5]))((IDxcOperationResult*)Unsafe.AsPointer(ref this), ppErrors);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT GetStatus(HRESULT* pStatus);
-
-            [VtblIndex(4)]
-            HRESULT GetResult(IDxcBlob** ppResult);
-
-            [VtblIndex(5)]
-            HRESULT GetErrorBuffer(IDxcBlobEncoding** ppErrors);
-        }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcOperationResult*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcOperationResult*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcOperationResult*, uint> Release;
-
-            [NativeTypeName("HRESULT (HRESULT *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcOperationResult*, HRESULT*, int> GetStatus;
-
-            [NativeTypeName("HRESULT (IDxcBlob **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcOperationResult*, IDxcBlob**, int> GetResult;
-
-            [NativeTypeName("HRESULT (IDxcBlobEncoding **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDxcOperationResult*, IDxcBlobEncoding**, int> GetErrorBuffer;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("765A30F3-F624-4C6F-A828-ACE948622445")]
     [NativeTypeName("struct ID3D12PipelineState : ID3D12Pageable")]
     [NativeInheritance("ID3D12Pageable")]
-    internal unsafe partial struct ID3D12PipelineState : ID3D12PipelineState.Interface
+    internal unsafe partial struct ID3D12PipelineState
     {
         public void** lpVtbl;
 
@@ -80,42 +80,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT GetCachedBlob(ID3DBlob** ppBlob)
         {
             return ((delegate* unmanaged[Stdcall]<ID3D12PipelineState*, ID3DBlob**, int>)(lpVtbl[8]))((ID3D12PipelineState*)Unsafe.AsPointer(ref this), ppBlob);
-        }
-
-        public interface Interface : ID3D12Pageable.Interface
-        {
-            [VtblIndex(8)]
-            HRESULT GetCachedBlob(ID3DBlob** ppBlob);
-        }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12PipelineState*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12PipelineState*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12PipelineState*, uint> Release;
-
-            [NativeTypeName("HRESULT (const GUID &, UINT *, void *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12PipelineState*, Guid*, uint*, void*, int> GetPrivateData;
-
-            [NativeTypeName("HRESULT (const GUID &, UINT, const void *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12PipelineState*, Guid*, uint, void*, int> SetPrivateData;
-
-            [NativeTypeName("HRESULT (const GUID &, const IUnknown *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12PipelineState*, Guid*, IUnknown*, int> SetPrivateDataInterface;
-
-            [NativeTypeName("HRESULT (LPCWSTR) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12PipelineState*, ushort*, int> SetName;
-
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12PipelineState*, Guid*, void**, int> GetDevice;
-
-            [NativeTypeName("HRESULT (ID3DBlob **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12PipelineState*, ID3DBlob**, int> GetCachedBlob;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("5A58797D-A72C-478D-8BA2-EFC6B0EFE88E")]
     [NativeTypeName("struct ID3D12ShaderReflection : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct ID3D12ShaderReflection : ID3D12ShaderReflection.Interface
+    internal unsafe partial struct ID3D12ShaderReflection
     {
         public void** lpVtbl;
 
@@ -45,62 +45,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT GetDesc(D3D12_SHADER_DESC* pDesc)
         {
             return ((delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, D3D12_SHADER_DESC*, int>)(lpVtbl[3]))((ID3D12ShaderReflection*)Unsafe.AsPointer(ref this), pDesc);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [VtblIndex(4)]
-        public ID3D12ShaderReflectionConstantBuffer* GetConstantBufferByIndex(uint Index)
-        {
-            return ((delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, uint, ID3D12ShaderReflectionConstantBuffer*>)(lpVtbl[4]))((ID3D12ShaderReflection*)Unsafe.AsPointer(ref this), Index);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [VtblIndex(5)]
-        public ID3D12ShaderReflectionConstantBuffer* GetConstantBufferByName([NativeTypeName("LPCSTR")] sbyte* Name)
-        {
-            return ((delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, sbyte*, ID3D12ShaderReflectionConstantBuffer*>)(lpVtbl[5]))((ID3D12ShaderReflection*)Unsafe.AsPointer(ref this), Name);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [VtblIndex(6)]
-        public HRESULT GetResourceBindingDesc(uint ResourceIndex, D3D12_SHADER_INPUT_BIND_DESC* pDesc)
-        {
-            return ((delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, uint, D3D12_SHADER_INPUT_BIND_DESC*, int>)(lpVtbl[6]))((ID3D12ShaderReflection*)Unsafe.AsPointer(ref this), ResourceIndex, pDesc);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [VtblIndex(7)]
-        public HRESULT GetInputParameterDesc(uint ParameterIndex, D3D12_SIGNATURE_PARAMETER_DESC* pDesc)
-        {
-            return ((delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, uint, D3D12_SIGNATURE_PARAMETER_DESC*, int>)(lpVtbl[7]))((ID3D12ShaderReflection*)Unsafe.AsPointer(ref this), ParameterIndex, pDesc);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [VtblIndex(8)]
-        public HRESULT GetOutputParameterDesc(uint ParameterIndex, D3D12_SIGNATURE_PARAMETER_DESC* pDesc)
-        {
-            return ((delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, uint, D3D12_SIGNATURE_PARAMETER_DESC*, int>)(lpVtbl[8]))((ID3D12ShaderReflection*)Unsafe.AsPointer(ref this), ParameterIndex, pDesc);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [VtblIndex(9)]
-        public HRESULT GetPatchConstantParameterDesc(uint ParameterIndex, D3D12_SIGNATURE_PARAMETER_DESC* pDesc)
-        {
-            return ((delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, uint, D3D12_SIGNATURE_PARAMETER_DESC*, int>)(lpVtbl[9]))((ID3D12ShaderReflection*)Unsafe.AsPointer(ref this), ParameterIndex, pDesc);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [VtblIndex(10)]
-        public ID3D12ShaderReflectionVariable* GetVariableByName([NativeTypeName("LPCSTR")] sbyte* Name)
-        {
-            return ((delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, sbyte*, ID3D12ShaderReflectionVariable*>)(lpVtbl[10]))((ID3D12ShaderReflection*)Unsafe.AsPointer(ref this), Name);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [VtblIndex(11)]
-        public HRESULT GetResourceBindingDescByName([NativeTypeName("LPCSTR")] sbyte* Name, D3D12_SHADER_INPUT_BIND_DESC* pDesc)
-        {
-            return ((delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, sbyte*, D3D12_SHADER_INPUT_BIND_DESC*, int>)(lpVtbl[11]))((ID3D12ShaderReflection*)Unsafe.AsPointer(ref this), Name, pDesc);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -172,136 +116,6 @@ namespace TerraFX.Interop.DirectX
         public ulong GetRequiresFlags()
         {
             return ((delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, ulong>)(lpVtbl[21]))((ID3D12ShaderReflection*)Unsafe.AsPointer(ref this));
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT GetDesc(D3D12_SHADER_DESC* pDesc);
-
-            [VtblIndex(4)]
-            ID3D12ShaderReflectionConstantBuffer* GetConstantBufferByIndex(uint Index);
-
-            [VtblIndex(5)]
-            ID3D12ShaderReflectionConstantBuffer* GetConstantBufferByName([NativeTypeName("LPCSTR")] sbyte* Name);
-
-            [VtblIndex(6)]
-            HRESULT GetResourceBindingDesc(uint ResourceIndex, D3D12_SHADER_INPUT_BIND_DESC* pDesc);
-
-            [VtblIndex(7)]
-            HRESULT GetInputParameterDesc(uint ParameterIndex, D3D12_SIGNATURE_PARAMETER_DESC* pDesc);
-
-            [VtblIndex(8)]
-            HRESULT GetOutputParameterDesc(uint ParameterIndex, D3D12_SIGNATURE_PARAMETER_DESC* pDesc);
-
-            [VtblIndex(9)]
-            HRESULT GetPatchConstantParameterDesc(uint ParameterIndex, D3D12_SIGNATURE_PARAMETER_DESC* pDesc);
-
-            [VtblIndex(10)]
-            ID3D12ShaderReflectionVariable* GetVariableByName([NativeTypeName("LPCSTR")] sbyte* Name);
-
-            [VtblIndex(11)]
-            HRESULT GetResourceBindingDescByName([NativeTypeName("LPCSTR")] sbyte* Name, D3D12_SHADER_INPUT_BIND_DESC* pDesc);
-
-            [VtblIndex(12)]
-            uint GetMovInstructionCount();
-
-            [VtblIndex(13)]
-            uint GetMovcInstructionCount();
-
-            [VtblIndex(14)]
-            uint GetConversionInstructionCount();
-
-            [VtblIndex(15)]
-            uint GetBitwiseInstructionCount();
-
-            [VtblIndex(16)]
-            D3D_PRIMITIVE GetGSInputPrimitive();
-
-            [VtblIndex(17)]
-            BOOL IsSampleFrequencyShader();
-
-            [VtblIndex(18)]
-            uint GetNumInterfaceSlots();
-
-            [VtblIndex(19)]
-            HRESULT GetMinFeatureLevel([NativeTypeName("enum D3D_FEATURE_LEVEL *")] D3D_FEATURE_LEVEL* pLevel);
-
-            [VtblIndex(20)]
-            uint GetThreadGroupSize(uint* pSizeX, uint* pSizeY, uint* pSizeZ);
-
-            [VtblIndex(21)]
-            [return: NativeTypeName("UINT64")]
-            ulong GetRequiresFlags();
-        }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, uint> Release;
-
-            [NativeTypeName("HRESULT (D3D12_SHADER_DESC *) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, D3D12_SHADER_DESC*, int> GetDesc;
-
-            [NativeTypeName("ID3D12ShaderReflectionConstantBuffer *(UINT) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, uint, ID3D12ShaderReflectionConstantBuffer*> GetConstantBufferByIndex;
-
-            [NativeTypeName("ID3D12ShaderReflectionConstantBuffer *(LPCSTR) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, sbyte*, ID3D12ShaderReflectionConstantBuffer*> GetConstantBufferByName;
-
-            [NativeTypeName("HRESULT (UINT, D3D12_SHADER_INPUT_BIND_DESC *) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, uint, D3D12_SHADER_INPUT_BIND_DESC*, int> GetResourceBindingDesc;
-
-            [NativeTypeName("HRESULT (UINT, D3D12_SIGNATURE_PARAMETER_DESC *) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, uint, D3D12_SIGNATURE_PARAMETER_DESC*, int> GetInputParameterDesc;
-
-            [NativeTypeName("HRESULT (UINT, D3D12_SIGNATURE_PARAMETER_DESC *) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, uint, D3D12_SIGNATURE_PARAMETER_DESC*, int> GetOutputParameterDesc;
-
-            [NativeTypeName("HRESULT (UINT, D3D12_SIGNATURE_PARAMETER_DESC *) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, uint, D3D12_SIGNATURE_PARAMETER_DESC*, int> GetPatchConstantParameterDesc;
-
-            [NativeTypeName("ID3D12ShaderReflectionVariable *(LPCSTR) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, sbyte*, ID3D12ShaderReflectionVariable*> GetVariableByName;
-
-            [NativeTypeName("HRESULT (LPCSTR, D3D12_SHADER_INPUT_BIND_DESC *) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, sbyte*, D3D12_SHADER_INPUT_BIND_DESC*, int> GetResourceBindingDescByName;
-
-            [NativeTypeName("UINT () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, uint> GetMovInstructionCount;
-
-            [NativeTypeName("UINT () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, uint> GetMovcInstructionCount;
-
-            [NativeTypeName("UINT () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, uint> GetConversionInstructionCount;
-
-            [NativeTypeName("UINT () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, uint> GetBitwiseInstructionCount;
-
-            [NativeTypeName("D3D_PRIMITIVE () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, D3D_PRIMITIVE> GetGSInputPrimitive;
-
-            [NativeTypeName("BOOL () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, int> IsSampleFrequencyShader;
-
-            [NativeTypeName("UINT () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, uint> GetNumInterfaceSlots;
-
-            [NativeTypeName("HRESULT (enum D3D_FEATURE_LEVEL *) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, D3D_FEATURE_LEVEL*, int> GetMinFeatureLevel;
-
-            [NativeTypeName("UINT (UINT *, UINT *, UINT *) __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, uint*, uint*, uint*, uint> GetThreadGroupSize;
-
-            [NativeTypeName("UINT64 () __attribute__((nothrow)) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<ID3D12ShaderReflection*, ulong> GetRequiresFlags;
         }
     }
 }

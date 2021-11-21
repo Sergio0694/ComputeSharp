@@ -3,7 +3,7 @@
 namespace ComputeSharp.Tests.Attributes;
 
 /// <summary>
-/// An attribute to use with <see cref="CombinatorialAttribute"/> targeting a specific resource type.
+/// An attribute to use with <see cref="CombinatorialTestMethodAttribute"/> targeting a specific resource type.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
 public sealed class ResourceAttribute : Attribute

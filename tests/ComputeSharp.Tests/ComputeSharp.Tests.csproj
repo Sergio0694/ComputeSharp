@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.1" />
+    <PackageReference Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.7" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.7" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
@@ -29,6 +29,8 @@
   <Import Condition="'$(TargetFramework)' != 'net6.0'"
           Project="..\..\src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" />
 
+  <Import Project="..\..\samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems" Label="Shared" />
+
   <!-- Only when the local TerraFX is referenced, ignore warnings from there -->
   <PropertyGroup Condition="'$(TargetFramework)' != 'net6.0'">
     <NoWarn>$(NoWarn);CS0649</NoWarn>
@@ -40,18 +42,6 @@
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslBokehBlurProcessor{TPixel}.cs" Link="Imaging\Processors\HlslBokehBlurProcessor{TPixel}.cs" />
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor.cs" />
     <Compile Include="..\..\samples\ComputeSharp.ImageProcessing\Processors\HlslGaussianBlurProcessor{TPixel}.cs" Link="Imaging\Processors\HlslGaussianBlurProcessor{TPixel}.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\HelloWorld.cs" Link="Shaders\Pixel\HelloWorld.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ColorfulInfinity.cs" Link="Shaders\Pixel\ColorfulInfinity.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ContouredLayers.cs" Link="Shaders\Pixel\ContouredLayers.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\FourColorGradient.cs" Link="Shaders\Pixel\FourColorGradient.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ExtrudedTruchetPattern.cs" Link="Shaders\Pixel\ExtrudedTruchetPattern.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\FractalTiling.cs" Link="Shaders\Pixel\FractalTiling.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\MengerJourney.cs" Link="Shaders\Pixel\MengerJourney.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\TwoTiledTruchet.cs" Link="Shaders\Pixel\TwoTiledTruchet.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\Octagrams.cs" Link="Shaders\Pixel\Octagrams.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\ProteanClouds.cs" Link="Shaders\Pixel\ProteanClouds.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\PyramidPattern.cs" Link="Shaders\Pixel\PyramidPattern.cs" />
-    <Compile Include="..\..\samples\ComputeSharp.SwapChain\Shaders\TriangleGridContouring.cs" Link="Shaders\Pixel\TriangleGridContouring.cs" />
   </ItemGroup>
 
   <ItemGroup>

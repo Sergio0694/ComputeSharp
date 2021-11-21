@@ -1404,8 +1404,7 @@ public class DiagnosticsTests
     /// </summary>
     /// <typeparam name="TGenerator">The generator type to use.</typeparam>
     /// <param name="source">The input source to process.</param>
-    /// <param name="index">The target index to check in the resulting output.</param>
-    /// <param name="expectedBody">The expected body to compare with the generated code.</param>
+    /// <param name="diagnosticsIds">The expected diagnostics ids to be generated.</param>
     private static void VerifyGeneratedDiagnostics<TGenerator>(string source, params string[] diagnosticsIds)
         where TGenerator : class, ISourceGenerator, new()
     {

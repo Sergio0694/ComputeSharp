@@ -76,7 +76,7 @@ internal sealed class SwapChainApplication<T> : Win32Application
     private bool isResizePending;
 
     /// <summary>
-    /// Creates a new <see cref="SwapChainApplication"/> instance with the specified parameters.
+    /// Creates a new <see cref="SwapChainApplication{T}"/> instance with the specified parameters.
     /// </summary>
     /// <param name="shaderFactory">The <see cref="Func{T1, TResult}"/> instance used to create shaders to run.</param>
     public SwapChainApplication(Func<TimeSpan, T> shaderFactory)

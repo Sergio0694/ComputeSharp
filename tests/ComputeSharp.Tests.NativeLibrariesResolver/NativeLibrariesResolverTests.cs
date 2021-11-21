@@ -13,7 +13,7 @@ public class NativeLibrariesResolverTests
     /// <summary>
     /// Performs static initialization for the assembly before any unit tests are run.
     /// </summary>
-    /// <param name="context">The <see cref="TestContext"/> for the test runner instance in use.</param>
+    /// <param name="_">The <see cref="TestContext"/> for the test runner instance in use.</param>
     [AssemblyInitialize]
     public static void Initialize(TestContext _)
     {

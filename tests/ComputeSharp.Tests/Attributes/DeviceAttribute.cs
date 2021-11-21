@@ -4,7 +4,7 @@ using ComputeSharp.Tests.Extensions;
 namespace ComputeSharp.Tests.Attributes;
 
 /// <summary>
-/// An attribute to use with <see cref="CombinatorialAttribute"/> adding a specific <see cref="Extensions.Device"/> input.
+/// An attribute to use with <see cref="CombinatorialTestMethodAttribute"/> adding a specific <see cref="Extensions.Device"/> input.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 public sealed class DeviceAttribute : Attribute

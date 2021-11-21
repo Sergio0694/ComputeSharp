@@ -13,7 +13,7 @@ namespace TerraFX.Interop.DirectX
     [Guid("1BC6EA02-EF36-464F-BF0C-21CA39E5168A")]
     [NativeTypeName("struct IDXGIFactory4 : IDXGIFactory3")]
     [NativeInheritance("IDXGIFactory3")]
-    internal unsafe partial struct IDXGIFactory4 : IDXGIFactory4.Interface
+    internal unsafe partial struct IDXGIFactory4
     {
         public void** lpVtbl;
 
@@ -90,20 +90,6 @@ namespace TerraFX.Interop.DirectX
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [VtblIndex(10)]
-        public HRESULT CreateSwapChain(IUnknown* pDevice, DXGI_SWAP_CHAIN_DESC* pDesc, IDXGISwapChain** ppSwapChain)
-        {
-            return ((delegate* unmanaged[Stdcall]<IDXGIFactory4*, IUnknown*, DXGI_SWAP_CHAIN_DESC*, IDXGISwapChain**, int>)(lpVtbl[10]))((IDXGIFactory4*)Unsafe.AsPointer(ref this), pDevice, pDesc, ppSwapChain);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [VtblIndex(11)]
-        public HRESULT CreateSoftwareAdapter(HMODULE Module, IDXGIAdapter** ppAdapter)
-        {
-            return ((delegate* unmanaged[Stdcall]<IDXGIFactory4*, HMODULE, IDXGIAdapter**, int>)(lpVtbl[11]))((IDXGIFactory4*)Unsafe.AsPointer(ref this), Module, ppAdapter);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(12)]
         public HRESULT EnumAdapters1(uint Adapter, IDXGIAdapter1** ppAdapter)
         {
@@ -122,13 +108,6 @@ namespace TerraFX.Interop.DirectX
         public BOOL IsWindowedStereoEnabled()
         {
             return ((delegate* unmanaged[Stdcall]<IDXGIFactory4*, int>)(lpVtbl[14]))((IDXGIFactory4*)Unsafe.AsPointer(ref this));
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [VtblIndex(15)]
-        public HRESULT CreateSwapChainForHwnd(IUnknown* pDevice, HWND hWnd, [NativeTypeName("const DXGI_SWAP_CHAIN_DESC1 *")] DXGI_SWAP_CHAIN_DESC1* pDesc, [NativeTypeName("const DXGI_SWAP_CHAIN_FULLSCREEN_DESC *")] DXGI_SWAP_CHAIN_FULLSCREEN_DESC* pFullscreenDesc, IDXGIOutput* pRestrictToOutput, IDXGISwapChain1** ppSwapChain)
-        {
-            return ((delegate* unmanaged[Stdcall]<IDXGIFactory4*, IUnknown*, HWND, DXGI_SWAP_CHAIN_DESC1*, DXGI_SWAP_CHAIN_FULLSCREEN_DESC*, IDXGIOutput*, IDXGISwapChain1**, int>)(lpVtbl[15]))((IDXGIFactory4*)Unsafe.AsPointer(ref this), pDevice, hWnd, pDesc, pFullscreenDesc, pRestrictToOutput, ppSwapChain);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -213,102 +192,6 @@ namespace TerraFX.Interop.DirectX
         public HRESULT EnumWarpAdapter([NativeTypeName("const IID &")] Guid* riid, void** ppvAdapter)
         {
             return ((delegate* unmanaged[Stdcall]<IDXGIFactory4*, Guid*, void**, int>)(lpVtbl[27]))((IDXGIFactory4*)Unsafe.AsPointer(ref this), riid, ppvAdapter);
-        }
-
-        public interface Interface : IDXGIFactory3.Interface
-        {
-            [VtblIndex(26)]
-            HRESULT EnumAdapterByLuid(LUID AdapterLuid, [NativeTypeName("const IID &")] Guid* riid, void** ppvAdapter);
-
-            [VtblIndex(27)]
-            HRESULT EnumWarpAdapter([NativeTypeName("const IID &")] Guid* riid, void** ppvAdapter);
-        }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, uint> Release;
-
-            [NativeTypeName("HRESULT (const GUID &, UINT, const void *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, Guid*, uint, void*, int> SetPrivateData;
-
-            [NativeTypeName("HRESULT (const GUID &, const IUnknown *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, Guid*, IUnknown*, int> SetPrivateDataInterface;
-
-            [NativeTypeName("HRESULT (const GUID &, UINT *, void *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, Guid*, uint*, void*, int> GetPrivateData;
-
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, Guid*, void**, int> GetParent;
-
-            [NativeTypeName("HRESULT (UINT, IDXGIAdapter **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, uint, IDXGIAdapter**, int> EnumAdapters;
-
-            [NativeTypeName("HRESULT (HWND, UINT) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, HWND, uint, int> MakeWindowAssociation;
-
-            [NativeTypeName("HRESULT (HWND *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, HWND*, int> GetWindowAssociation;
-
-            [NativeTypeName("HRESULT (IUnknown *, DXGI_SWAP_CHAIN_DESC *, IDXGISwapChain **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, IUnknown*, DXGI_SWAP_CHAIN_DESC*, IDXGISwapChain**, int> CreateSwapChain;
-
-            [NativeTypeName("HRESULT (HMODULE, IDXGIAdapter **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, HMODULE, IDXGIAdapter**, int> CreateSoftwareAdapter;
-
-            [NativeTypeName("HRESULT (UINT, IDXGIAdapter1 **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, uint, IDXGIAdapter1**, int> EnumAdapters1;
-
-            [NativeTypeName("BOOL () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, int> IsCurrent;
-
-            [NativeTypeName("BOOL () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, int> IsWindowedStereoEnabled;
-
-            [NativeTypeName("HRESULT (IUnknown *, HWND, const DXGI_SWAP_CHAIN_DESC1 *, const DXGI_SWAP_CHAIN_FULLSCREEN_DESC *, IDXGIOutput *, IDXGISwapChain1 **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, IUnknown*, HWND, DXGI_SWAP_CHAIN_DESC1*, DXGI_SWAP_CHAIN_FULLSCREEN_DESC*, IDXGIOutput*, IDXGISwapChain1**, int> CreateSwapChainForHwnd;
-
-            [NativeTypeName("HRESULT (IUnknown *, IUnknown *, const DXGI_SWAP_CHAIN_DESC1 *, IDXGIOutput *, IDXGISwapChain1 **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, IUnknown*, IUnknown*, DXGI_SWAP_CHAIN_DESC1*, IDXGIOutput*, IDXGISwapChain1**, int> CreateSwapChainForCoreWindow;
-
-            [NativeTypeName("HRESULT (HANDLE, LUID *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, HANDLE, LUID*, int> GetSharedResourceAdapterLuid;
-
-            [NativeTypeName("HRESULT (HWND, UINT, DWORD *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, HWND, uint, uint*, int> RegisterStereoStatusWindow;
-
-            [NativeTypeName("HRESULT (HANDLE, DWORD *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, HANDLE, uint*, int> RegisterStereoStatusEvent;
-
-            [NativeTypeName("void (DWORD) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, uint, void> UnregisterStereoStatus;
-
-            [NativeTypeName("HRESULT (HWND, UINT, DWORD *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, HWND, uint, uint*, int> RegisterOcclusionStatusWindow;
-
-            [NativeTypeName("HRESULT (HANDLE, DWORD *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, HANDLE, uint*, int> RegisterOcclusionStatusEvent;
-
-            [NativeTypeName("void (DWORD) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, uint, void> UnregisterOcclusionStatus;
-
-            [NativeTypeName("HRESULT (IUnknown *, const DXGI_SWAP_CHAIN_DESC1 *, IDXGIOutput *, IDXGISwapChain1 **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, IUnknown*, DXGI_SWAP_CHAIN_DESC1*, IDXGIOutput*, IDXGISwapChain1**, int> CreateSwapChainForComposition;
-
-            [NativeTypeName("UINT () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, uint> GetCreationFlags;
-
-            [NativeTypeName("HRESULT (LUID, const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, LUID, Guid*, void**, int> EnumAdapterByLuid;
-
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IDXGIFactory4*, Guid*, void**, int> EnumWarpAdapter;
         }
     }
 }

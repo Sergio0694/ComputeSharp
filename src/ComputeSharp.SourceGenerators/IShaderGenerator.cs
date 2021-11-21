@@ -147,7 +147,7 @@ public sealed partial class IShaderGenerator : ISourceGenerator
     /// <summary>
     /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>GetDispatchId</c> method.
     /// </summary>
-    /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
+    /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for the input struct declaration.</param>
     /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>GetDispatchId</c> method.</returns>
     private static partial MethodDeclarationSyntax CreateGetDispatchIdMethod(INamedTypeSymbol structDeclarationSymbol);
 
@@ -155,7 +155,7 @@ public sealed partial class IShaderGenerator : ISourceGenerator
     /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchDataMethod</c> method.
     /// </summary>
     /// <param name="context">The input <see cref="GeneratorExecutionContext"/> instance to use.</param>
-    /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
+    /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for the input struct declaration.</param>
     /// <param name="discoveredResources">The collection of discovered resources in the current shader type.</param>
     /// <param name="root32BitConstantsCount">The total number of 32 bit root constants being loaded for the current shader type.</param>
     /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchDataMethod</c> method.</returns>

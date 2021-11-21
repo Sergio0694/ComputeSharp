@@ -12,7 +12,7 @@ namespace TerraFX.Interop.Windows
     [Guid("00000120-A8F2-4877-BA0A-FD2B6645FB94")]
     [NativeTypeName("struct IWICBitmapSource : IUnknown")]
     [NativeInheritance("IUnknown")]
-    internal unsafe partial struct IWICBitmapSource : IWICBitmapSource.Interface
+    internal unsafe partial struct IWICBitmapSource
     {
         public void** lpVtbl;
 
@@ -72,51 +72,6 @@ namespace TerraFX.Interop.Windows
         public HRESULT CopyPixels([NativeTypeName("const WICRect *")] WICRect* prc, uint cbStride, uint cbBufferSize, byte* pbBuffer)
         {
             return ((delegate* unmanaged[Stdcall]<IWICBitmapSource*, WICRect*, uint, uint, byte*, int>)(lpVtbl[7]))((IWICBitmapSource*)Unsafe.AsPointer(ref this), prc, cbStride, cbBufferSize, pbBuffer);
-        }
-
-        public interface Interface : IUnknown.Interface
-        {
-            [VtblIndex(3)]
-            HRESULT GetSize(uint* puiWidth, uint* puiHeight);
-
-            [VtblIndex(4)]
-            HRESULT GetPixelFormat([NativeTypeName("WICPixelFormatGUID *")] Guid* pPixelFormat);
-
-            [VtblIndex(5)]
-            HRESULT GetResolution(double* pDpiX, double* pDpiY);
-
-            [VtblIndex(6)]
-            HRESULT CopyPalette(IWICPalette* pIPalette);
-
-            [VtblIndex(7)]
-            HRESULT CopyPixels([NativeTypeName("const WICRect *")] WICRect* prc, uint cbStride, uint cbBufferSize, byte* pbBuffer);
-        }
-
-        internal partial struct Vtbl
-        {
-            [NativeTypeName("HRESULT (const IID &, void **) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapSource*, Guid*, void**, int> QueryInterface;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapSource*, uint> AddRef;
-
-            [NativeTypeName("ULONG () __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapSource*, uint> Release;
-
-            [NativeTypeName("HRESULT (UINT *, UINT *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapSource*, uint*, uint*, int> GetSize;
-
-            [NativeTypeName("HRESULT (WICPixelFormatGUID *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapSource*, Guid*, int> GetPixelFormat;
-
-            [NativeTypeName("HRESULT (double *, double *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapSource*, double*, double*, int> GetResolution;
-
-            [NativeTypeName("HRESULT (IWICPalette *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapSource*, IWICPalette*, int> CopyPalette;
-
-            [NativeTypeName("HRESULT (const WICRect *, UINT, UINT, BYTE *) __attribute__((stdcall))")]
-            public delegate* unmanaged[Stdcall]<IWICBitmapSource*, WICRect*, uint, uint, byte*, int> CopyPixels;
         }
     }
 }
