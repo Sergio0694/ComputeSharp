@@ -338,11 +338,18 @@ The `InteropServices` class is also used by the swap chain sample to access the 
 
 # Requirements
 
-The **ComputeSharp** library has the following requirements:
-- .NET Standard 2.0 or .NET 6
+Building and running **ComputeSharp** from the .NET solution filter has the following prerequisites:
+- Visual Studio 2022
+- .NET 6 SDK
+- .NET Core 3.1 SDK
+- .NET Framework 4.7.2 targeting pack
 - Windows x64 or ARM64
 
-Additionally, in order to compile the library or a project using it, you need Visual Studio 2022 or another IDE with the .NET 6 SDK installed and support for source generators, as **ComputeSharp** relies on this feature to create the HLSL shader sources and to extract other shader metadata that is necessary to setup and execute the code at runtime. You can learn more about source generators [here](https://devblogs.microsoft.com/dotnet/introducing-c-source-generators/). You also need support for .NET Framework 4.7.2 in order to build and run all test projects and sample projects.
+Additionally, in order to also build and run all UWP and WinUI 3 projects, these components need to be installed:
+
+- UWP development workload
+- Windows 10 SDKs 17763 and 19041
+- Windows App SDK extension for VS2022
 
 # F# support
 
