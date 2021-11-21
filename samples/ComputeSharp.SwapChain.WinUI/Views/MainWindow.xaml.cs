@@ -1,10 +1,11 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Input;
 
 namespace ComputeSharp.SwapChain.WinUI.Views;
 
 /// <summary>
-/// A view for <see cref="ComputeSharp.SwapChain.WinUI.ViewModels.MainViewModel"/>.
+/// A view for <see cref="ViewModels.MainViewModel"/>.
 /// </summary>
 public sealed partial class MainWindow : Window
 {
@@ -27,5 +28,11 @@ public sealed partial class MainWindow : Window
     private void ShaderSelectionPanel_Tapped(object sender, TappedRoutedEventArgs e)
     {
         Root.Children.Remove(ShaderSelectionPanel);
+    }
+
+    // Updates the size of the shaders list panel
+    private void UserControl_SizeChanged(object sender, WindowSizeChangedEventArgs e)
+    {
+        ShadersListContainerPanel.Height = Math.Round(e.Size.Height * 0.35);
     }
 }
