@@ -12,8 +12,8 @@
     Version="1.0.0.0" />
 
   <Properties>
-    <DisplayName>ComputeSharp.SwapChain.WinUI</DisplayName>
-    <PublisherDisplayName>Sergio</PublisherDisplayName>
+    <DisplayName>ComputeSharp Sample App (WinUI 3)</DisplayName>
+    <PublisherDisplayName>Sergio Pedri</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -31,13 +31,13 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="ComputeSharp.SwapChain.WinUI"
-        Description="ComputeSharp.SwapChain.WinUI"
-        BackgroundColor="transparent"
+        DisplayName="ComputeSharp Sample App (WinUI 3)"
+        Description="A sample app for ComputeSharp and its WinUI 3 shader panels"
+        BackgroundColor="#005491"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"  Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
+        <uap:SplashScreen Image="Assets\SplashScreen.png"  BackgroundColor="transparent"/>
       </uap:VisualElements>
     </Application>
   </Applications>
