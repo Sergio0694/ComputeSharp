@@ -9,6 +9,7 @@
       "samples\\ComputeSharp.Sample.Shared\\ComputeSharp.Sample.Shared.shproj",
       "samples\\ComputeSharp.Sample\\ComputeSharp.Sample.csproj",
       "samples\\ComputeSharp.SwapChain\\ComputeSharp.SwapChain.csproj",
+      "samples\\ComputeSharp.SwapChain.Shaders.Shared\\ComputeSharp.SwapChain.Shaders.Shared.csproj",
       "src\\ComputeSharp.SourceGenerators\\ComputeSharp.SourceGenerators.csproj",
       "src\\ComputeSharp\\ComputeSharp.csproj",
       "tests\\ComputeSharp.Tests.Internals\\ComputeSharp.Tests.Internals.csproj",
