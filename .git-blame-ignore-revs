@@ -9,3 +9,6 @@ ee0d3a7b68e95a9c3e569d582b4efc8aa7fd4d4a
 
 # Remove leftover nested namespace blocks
 c6252ee1c9041e6f4a407816e551455c9d545a53
+
+# Apply XAML styler refactor pass to UWP/WinUI 3 samples
+e608db8a7f727abda72bde9c538d12b3b4319f55
