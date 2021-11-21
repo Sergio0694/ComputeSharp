@@ -206,6 +206,18 @@
                 </Button.Flyout>
             </Button>
         </StackPanel>
+        
+        <!--Close button-->
+        <Button
+            Padding="20"
+            Margin="48"
+            CornerRadius="9999"
+            ToolTipService.ToolTip="Close"
+            Click="CloseButton_Click"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Right">
+            <SymbolIcon Symbol="Cancel"/>
+        </Button>
 
         <!--Invisible title bar-->
         <Rectangle
