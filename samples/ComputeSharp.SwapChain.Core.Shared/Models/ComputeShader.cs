@@ -1,7 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+#if WINDOWS_UWP
+using ComputeSharp.Uwp;
+#else
 using ComputeSharp.WinUI;
+#endif
 
-namespace ComputeSharp.SwapChain.WinUI.Models;
+#nullable enable
+
+namespace ComputeSharp.SwapChain.Core.Models;
 
 /// <summary>
 /// A model for a compute shader.

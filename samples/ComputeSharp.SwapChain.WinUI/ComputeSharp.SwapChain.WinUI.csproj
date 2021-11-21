@@ -49,4 +49,6 @@
   </ItemGroup>
 
   <Import Project="..\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems" Label="Shared" />
+
+  <Import Project="..\ComputeSharp.SwapChain.Core.Shared\ComputeSharp.SwapChain.Core.Shared.projitems" Label="Shared" />
 </Project>

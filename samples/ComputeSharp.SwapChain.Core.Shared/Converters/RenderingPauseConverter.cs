@@ -1,6 +1,10 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿#if WINDOWS_UWP
+using Windows.UI.Xaml.Controls;
+#else
+using Microsoft.UI.Xaml.Controls;
+#endif
 
-namespace ComputeSharp.SwapChain.WinUI.Converters;
+namespace ComputeSharp.SwapChain.Core.Converters;
 
 /// <summary>
 /// A class with some static converters for rendering state.

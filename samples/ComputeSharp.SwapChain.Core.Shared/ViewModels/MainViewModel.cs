@@ -1,12 +1,18 @@
 ﻿using System.Collections.Generic;
-using ComputeSharp.SwapChain.Shaders;
-using ComputeSharp.SwapChain.WinUI.Models;
-using ComputeSharp.WinUI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ComputeSharp.SwapChain.WinUI.Shaders.Runners;
+using ComputeSharp.SwapChain.Core.Models;
+using ComputeSharp.SwapChain.Core.Shaders.Runners;
+using ComputeSharp.SwapChain.Shaders;
+#if WINDOWS_UWP
+using ComputeSharp.Uwp;
+#else
+using ComputeSharp.WinUI;
+#endif
 
-namespace ComputeSharp.SwapChain.WinUI.ViewModels;
+#nullable enable
+
+namespace ComputeSharp.SwapChain.Core.ViewModels;
 
 /// <summary>
 /// The viewmodel for for a view that allows users to select shaders and customize settings.

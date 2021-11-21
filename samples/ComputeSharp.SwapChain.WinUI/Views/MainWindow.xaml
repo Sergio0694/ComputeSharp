@@ -9,9 +9,9 @@
     xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
     xmlns:media="using:CommunityToolkit.WinUI.UI.Media"
     xmlns:computesharp="using:ComputeSharp.WinUI"
-    xmlns:converters="using:ComputeSharp.SwapChain.WinUI.Converters"
-    xmlns:viewmodels="using:ComputeSharp.SwapChain.WinUI.ViewModels"
-    xmlns:models="using:ComputeSharp.SwapChain.WinUI.Models"
+    xmlns:converters="using:ComputeSharp.SwapChain.Core.Converters"
+    xmlns:viewmodels="using:ComputeSharp.SwapChain.Core.ViewModels"
+    xmlns:models="using:ComputeSharp.SwapChain.Core.Models"
     mc:Ignorable="d"
     SizeChanged="UserControl_SizeChanged">
 

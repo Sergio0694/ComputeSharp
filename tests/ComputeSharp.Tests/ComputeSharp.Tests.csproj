@@ -29,6 +29,8 @@
   <Import Condition="'$(TargetFramework)' != 'net6.0'"
           Project="..\..\src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" />
 
+  <Import Project="..\..\samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems" Label="Shared" />
+
   <!-- Only when the local TerraFX is referenced, ignore warnings from there -->
   <PropertyGroup Condition="'$(TargetFramework)' != 'net6.0'">
     <NoWarn>$(NoWarn);CS0649</NoWarn>

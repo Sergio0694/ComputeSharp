@@ -1,4 +1,4 @@
-﻿namespace ComputeSharp.SwapChain.WinUI.Converters;
+﻿namespace ComputeSharp.SwapChain.Core.Converters;
 
 /// <summary>
 /// A class with some static converters for resolution scale settings.
