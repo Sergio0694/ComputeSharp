@@ -16,6 +16,7 @@
     <RootNamespace>ComputeSharp.Uwp</RootNamespace>
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win10-x64;win-arm64</RuntimeIdentifiers>
+    <NoWarn>$(NoWarn);NETSDK1023</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -27,6 +28,10 @@
 
   <ItemGroup>
     <None Include="..\ComputeSharp.Package\icon.png" Pack="true" PackagePath="\icon.png" Visible="False" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.13" />
   </ItemGroup>
 
   <ItemGroup>

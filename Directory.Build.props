@@ -28,7 +28,7 @@
   </PropertyGroup>
 
   <ItemGroup>    
-    <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.66" PrivateAssets="all" />
+    <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1" PrivateAssets="all" />
   </ItemGroup>
 
   <!-- Needed for deterministic builds -->
