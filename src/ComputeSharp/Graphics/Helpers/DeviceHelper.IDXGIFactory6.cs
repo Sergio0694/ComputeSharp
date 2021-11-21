@@ -130,7 +130,7 @@ internal static partial class DeviceHelper
         /// <param name="dxgiFactory6">The resulting <see cref="IDXGIFactory6"/> instance.</param>
         public static void Create(IDXGIFactory4* dxgiFactory4, IDXGIFactory6** dxgiFactory6)
         {
-            IDXGIFactory4As6Backcompat* @this = (IDXGIFactory4As6Backcompat*)Marshal.AllocHGlobal(sizeof(IDXGIFactory4As6Backcompat));
+            IDXGIFactory4As6Backcompat* @this = (IDXGIFactory4As6Backcompat*)NativeMemory.Alloc((nuint)sizeof(IDXGIFactory4As6Backcompat));
 
             @this->lpVtbl = Vtbl;
             @this->dxgiFactory4 = dxgiFactory4;
@@ -156,7 +156,7 @@ internal static partial class DeviceHelper
         {
             @this->dxgiFactory4->Release();
 
-            Marshal.FreeHGlobal((IntPtr)@this);
+            NativeMemory.Free(@this);
 
             return 0;
         }

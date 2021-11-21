@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\SkipLocalsInitAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\InteropServices\MemoryMarshal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\RuntimeHelpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\InteropServices\NativeMemory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\Versioning\OSPlatformAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\Versioning\SupportedOSVersionAttribute.cs" />
   </ItemGroup>

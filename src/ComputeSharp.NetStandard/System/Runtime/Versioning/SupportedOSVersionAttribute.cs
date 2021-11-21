@@ -22,7 +22,6 @@
                 AttributeTargets.Struct,
                 AllowMultiple = true,
                 Inherited = false)]
-
 internal sealed class SupportedOSPlatformAttribute : OSPlatformAttribute
 {
     public SupportedOSPlatformAttribute(string platformName)
