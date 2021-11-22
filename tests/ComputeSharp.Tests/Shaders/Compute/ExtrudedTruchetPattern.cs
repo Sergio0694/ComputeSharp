@@ -79,7 +79,7 @@ internal readonly partial struct ExtrudedTruchetPattern : IComputeShader
 
         float rnd = Hlsl.Frac(Hlsl.Sin(Hlsl.Dot(ip, new float2(1, 113))) * 45758.5453f);
 
-        if (rnd < .5) p.Y = -p.Y;
+        if (rnd < 0.5f) p.Y = -p.Y;
 
         float d = Hlsl.Min(Distance(p - 0.5f * sc), Distance(p + 0.5f * sc)) - 0.5f * sc;
 
@@ -203,7 +203,7 @@ internal readonly partial struct ExtrudedTruchetPattern : IComputeShader
         {
             d = M(o + r * t);
 
-            if (Hlsl.Abs(d) < .001) break;
+            if (Hlsl.Abs(d) < 0.001f) break;
 
             t += d * 0.7f;
             glow += 0.2f / (1.0f + Hlsl.Abs(d) * 5.0f);
@@ -269,8 +269,6 @@ internal readonly partial struct ExtrudedTruchetPattern : IComputeShader
 
             if (Mod(iuv2.X + iuv2.Y + 1.0f, 2.0f) > 0.5f)
             {
-                float tmp = pat; pat = pat2; pat2 = tmp;
-
                 oCol = col2;
                 ht = 0.05f;
             }
