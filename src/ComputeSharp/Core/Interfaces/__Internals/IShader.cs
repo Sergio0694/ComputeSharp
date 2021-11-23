@@ -81,4 +81,24 @@ public interface IShader
 #else
     ;
 #endif
+
+    /// <summary>
+    /// Tries to retrieve the precompiled bytecode for the current shader.
+    /// </summary>
+    /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
+    /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
+    /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
+    /// <param name="bytecode">The resulting bytecode, if found.</param>
+    /// <returns>Whether or not a precompiled bytecode was found.</returns>
+    /// <remarks>The underlying buffer for <paramref name="bytecode"/>, if found, can be assumed to always be pinned.</remarks>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This method is not intended to be used directly by user code")]
+    bool TryGetBytecode(int threadsX, int threadsY, int threadsZ, out ReadOnlySpan<byte> bytecode)
+#if NET6_0_OR_GREATER
+    {
+        throw new NotImplementedException();
+    }
+#else
+    ;
+#endif
 }

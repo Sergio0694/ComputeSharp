@@ -25,7 +25,7 @@ internal static class ShaderRunner<T>
     /// <summary>
     /// The mapping used to cache and reuse compiled shaders.
     /// </summary>
-    private static readonly Dictionary<ShaderKey, CachedShader> ShadersCache = new();
+    private static readonly Dictionary<ShaderKey, ICachedShader> ShadersCache = new();
 
     /// <summary>
     /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
@@ -129,7 +129,7 @@ internal static class ShaderRunner<T>
         lock (ShadersCache)
         {
             // Get or preload the shader
-            if (!ShadersCache.TryGetValue(key, out CachedShader? shaderData))
+            if (!ShadersCache.TryGetValue(key, out ICachedShader? shaderData))
             {
                 LoadShader(threadsX, threadsY, threadsZ, ref shader, out shaderData);
 
@@ -183,7 +183,7 @@ internal static class ShaderRunner<T>
         lock (ShadersCache)
         {
             // Get or preload the shader
-            if (!ShadersCache.TryGetValue(key, out CachedShader? shaderData))
+            if (!ShadersCache.TryGetValue(key, out ICachedShader? shaderData))
             {
                 LoadShader(threadsX, threadsY, 1, ref shader, out shaderData);
 
@@ -222,27 +222,34 @@ internal static class ShaderRunner<T>
     /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
     /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-    /// <param name="shaderData">The <see cref="CachedShader"/> instance to return with the cached shader data.</param>
+    /// <param name="shaderData">The <see cref="ICachedShader"/> instance to return with the cached shader data.</param>
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static unsafe void LoadShader(int threadsX, int threadsY, int threadsZ, ref T shader, out CachedShader shaderData)
+    private static unsafe void LoadShader(int threadsX, int threadsY, int threadsZ, ref T shader, out ICachedShader shaderData)
     {
-        shader.BuildHlslString(out ArrayPoolStringBuilder builder, threadsX, threadsY, threadsZ);
+        if (shader.TryGetBytecode(threadsX, threadsY, threadsZ, out ReadOnlySpan<byte> bytecode))
+        {
+            shaderData = new ICachedShader.Embedded(bytecode);
+        }
+        else
+        {
+            shader.BuildHlslString(out ArrayPoolStringBuilder builder, threadsX, threadsY, threadsZ);
 
-        using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.CompileShader(builder.WrittenSpan);
+            using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.CompileShader(builder.WrittenSpan);
 
-        builder.Dispose();
+            builder.Dispose();
 
-        shaderData = new CachedShader(dxcBlobBytecode.Get());
+            shaderData = new ICachedShader.Dynamic(dxcBlobBytecode.Get());
+        }
     }
 
     /// <summary>
     /// Creates and caches a <see cref="PipelineData"/> instance for a given shader.
     /// </summary>
     /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
-    /// <param name="shaderData">The <see cref="CachedShader"/> instance with the data on the loaded shader.</param>
+    /// <param name="shaderData">The <see cref="ICachedShader"/> instance with the data on the loaded shader.</param>
     /// <param name="pipelineData">The resulting <see cref="PipelineData"/> instance to use to run the shader.</param>
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static unsafe void CreatePipelineData(GraphicsDevice device, CachedShader shaderData, out PipelineData pipelineData)
+    private static unsafe void CreatePipelineData(GraphicsDevice device, ICachedShader shaderData, out PipelineData pipelineData)
     {
         using ComPtr<ID3D12RootSignature> d3D12RootSignature = default;
 
