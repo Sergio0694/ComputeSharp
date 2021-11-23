@@ -4,6 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackSymbols>false</PackSymbols>
     <Description>ComputeSharp.SourceGenerators</Description>
+    <NoWarn>$(NoWarn);CS1591;CS0649</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -14,63 +15,61 @@
       manually linking the source files from ComputeSharp\Core in here. We only need them to extract metadata
       and to match members based on full name, so the types being in the generator assembly are not an issue.-->
   <ItemGroup>
-    <Compile Include="..\ComputeSharp.NetStandard\System\Runtime\CompilerServices\RuntimeHelpers.cs" Link="Helpers\RuntimeHelpers.cs" />
-    <Compile Include="..\ComputeSharp.NetStandard\System\Runtime\InteropServices\MemoryMarshal.cs" Link="Helpers\MemoryMarshal.cs" />
-    <Compile Include="..\ComputeSharp\Core\Attributes\AutoConstructorAttribute.cs" Link="Core\Attributes\AutoConstructorAttribute.cs" />
-    <Compile Include="..\ComputeSharp\Core\Attributes\GroupSharedAttribute.cs" Link="Core\Attributes\GroupSharedAttribute.cs" />
-    <Compile Include="..\ComputeSharp\Core\Attributes\ShaderMethodAttribute.cs" Link="Core\Attributes\ShaderMethodAttribute.cs" />
-    <Compile Include="..\ComputeSharp\Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" Link="Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" />
-    <Compile Include="..\ComputeSharp\Core\Dispatch\DispatchSize.cs" Link="Core\Dispatch\DispatchSize.cs" />
-    <Compile Include="..\ComputeSharp\Core\Dispatch\GridIds.cs" Link="Core\Dispatch\GridIds.cs" />
-    <Compile Include="..\ComputeSharp\Core\Dispatch\GroupIds.cs" Link="Core\Dispatch\GroupIds.cs" />
-    <Compile Include="..\ComputeSharp\Core\Dispatch\GroupSize.cs" Link="Core\Dispatch\GroupSize.cs" />
-    <Compile Include="..\ComputeSharp\Core\Dispatch\ThreadIds.cs" Link="Core\Dispatch\ThreadIds.cs" />
-    <Compile Include="..\ComputeSharp\Core\Dispatch\ThreadIds.Normalized.cs" Link="Core\Dispatch\ThreadIds.Normalized.cs" />
-    <Compile Include="..\ComputeSharp\Core\Exceptions\InvalidExecutionContextException.cs" Link="Core\Exceptions\InvalidExecutionContextException.cs" />
-    <Compile Include="..\ComputeSharp\Core\Extensions\MethodInfoExtensions.cs" Link="Core\Extensions\MethodInfoExtensions.cs" />
-    <Compile Include="..\ComputeSharp\Core\Helpers\AlignmentHelper.cs" Link="Core\Helpers\AlignmentHelper.cs" />
-    <Compile Include="..\ComputeSharp\Core\Interfaces\IComputeShader.cs" Link="Core\Interfaces\IComputeShader.cs" />
-    <Compile Include="..\ComputeSharp\Core\Interfaces\IPixelShader{TPixel}.cs" Link="Core\Interfaces\IPixelShader{TPixel}.cs" />
-    <Compile Include="..\ComputeSharp\Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" Link="Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" />
-    <Compile Include="..\ComputeSharp\Core\Intrinsics\Hlsl.cs" Link="Core\Intrinsics\Hlsl.cs" />
-    <Compile Include="..\ComputeSharp\Core\Intrinsics\Hlsl.g.cs" Link="Core\Intrinsics\Hlsl.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Bool\Bool.cs" Link="Core\Primitives\Bool\Bool.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Bool\Bool2.cs" Link="Core\Primitives\Bool\Bool2.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Bool\Bool3.cs" Link="Core\Primitives\Bool\Bool3.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Bool\Bool4.cs" Link="Core\Primitives\Bool\Bool4.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Bool\Bool2.g.cs" Link="Core\Primitives\Bool\Bool2.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Bool\Bool3.g.cs" Link="Core\Primitives\Bool\Bool3.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Bool\Bool4.g.cs" Link="Core\Primitives\Bool\Bool4.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Bool\BoolMxN.g.cs" Link="Core\Primitives\Bool\BoolMxN.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Double\Double2.cs" Link="Core\Primitives\Double\Double2.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Double\Double3.cs" Link="Core\Primitives\Double\Double3.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Double\Double4.cs" Link="Core\Primitives\Double\Double4.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Double\Double2.g.cs" Link="Core\Primitives\Double\Double2.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Double\Double3.g.cs" Link="Core\Primitives\Double\Double3.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Double\Double4.g.cs" Link="Core\Primitives\Double\Double4.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Double\DoubleMxN.g.cs" Link="Core\Primitives\Double\DoubleMxN.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Float\Float2.cs" Link="Core\Primitives\Float\Float2.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Float\Float3.cs" Link="Core\Primitives\Float\Float3.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Float\Float4.cs" Link="Core\Primitives\Float\Float4.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Float\Float2.g.cs" Link="Core\Primitives\Float\Float2.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Float\Float3.g.cs" Link="Core\Primitives\Float\Float3.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Float\Float4.g.cs" Link="Core\Primitives\Float\Float4.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Float\FloatMxN.g.cs" Link="Core\Primitives\Float\FloatMxN.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Int\Int2.cs" Link="Core\Primitives\Int\Int2.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Int\Int3.cs" Link="Core\Primitives\Int\Int3.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Int\Int4.cs" Link="Core\Primitives\Int\Int4.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Int\Int2.g.cs" Link="Core\Primitives\Int\Int2.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Int\Int3.g.cs" Link="Core\Primitives\Int\Int3.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Int\Int4.g.cs" Link="Core\Primitives\Int\Int4.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\Int\IntMxN.g.cs" Link="Core\Primitives\Int\IntMxN.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\UInt\UInt2.cs" Link="Core\Primitives\UInt\UInt2.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\UInt\UInt3.cs" Link="Core\Primitives\UInt\UInt3.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\UInt\UInt4.cs" Link="Core\Primitives\UInt\UInt4.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\UInt\UInt2.g.cs" Link="Core\Primitives\UInt\UInt2.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\UInt\UInt3.g.cs" Link="Core\Primitives\UInt\UInt3.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\UInt\UInt4.g.cs" Link="Core\Primitives\UInt\UInt4.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\UInt\UIntMxN.g.cs" Link="Core\Primitives\UInt\UIntMxN.g.cs" />
-    <Compile Include="..\ComputeSharp\Core\Primitives\MatrixIndex.cs" Link="Core\Primitives\MatrixIndex.cs" />
+    <Compile Include="..\ComputeSharp\Core\Attributes\AutoConstructorAttribute.cs" Link="ComputeSharp\Core\Attributes\AutoConstructorAttribute.cs" />
+    <Compile Include="..\ComputeSharp\Core\Attributes\GroupSharedAttribute.cs" Link="ComputeSharp\Core\Attributes\GroupSharedAttribute.cs" />
+    <Compile Include="..\ComputeSharp\Core\Attributes\ShaderMethodAttribute.cs" Link="ComputeSharp\Core\Attributes\ShaderMethodAttribute.cs" />
+    <Compile Include="..\ComputeSharp\Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" Link="ComputeSharp\Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" />
+    <Compile Include="..\ComputeSharp\Core\Dispatch\DispatchSize.cs" Link="ComputeSharp\Core\Dispatch\DispatchSize.cs" />
+    <Compile Include="..\ComputeSharp\Core\Dispatch\GridIds.cs" Link="ComputeSharp\Core\Dispatch\GridIds.cs" />
+    <Compile Include="..\ComputeSharp\Core\Dispatch\GroupIds.cs" Link="ComputeSharp\Core\Dispatch\GroupIds.cs" />
+    <Compile Include="..\ComputeSharp\Core\Dispatch\GroupSize.cs" Link="ComputeSharp\Core\Dispatch\GroupSize.cs" />
+    <Compile Include="..\ComputeSharp\Core\Dispatch\ThreadIds.cs" Link="ComputeSharp\Core\Dispatch\ThreadIds.cs" />
+    <Compile Include="..\ComputeSharp\Core\Dispatch\ThreadIds.Normalized.cs" Link="ComputeSharp\Core\Dispatch\ThreadIds.Normalized.cs" />
+    <Compile Include="..\ComputeSharp\Core\Exceptions\InvalidExecutionContextException.cs" Link="ComputeSharp\Core\Exceptions\InvalidExecutionContextException.cs" />
+    <Compile Include="..\ComputeSharp\Core\Extensions\MethodInfoExtensions.cs" Link="ComputeSharp\Core\Extensions\MethodInfoExtensions.cs" />
+    <Compile Include="..\ComputeSharp\Core\Helpers\AlignmentHelper.cs" Link="ComputeSharp\Core\Helpers\AlignmentHelper.cs" />
+    <Compile Include="..\ComputeSharp\Core\Interfaces\IComputeShader.cs" Link="ComputeSharp\Core\Interfaces\IComputeShader.cs" />
+    <Compile Include="..\ComputeSharp\Core\Interfaces\IPixelShader{TPixel}.cs" Link="ComputeSharp\Core\Interfaces\IPixelShader{TPixel}.cs" />
+    <Compile Include="..\ComputeSharp\Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" Link="ComputeSharp\Core\Intrinsics\Attributes\HlslIntrinsicNameAttribute.cs" />
+    <Compile Include="..\ComputeSharp\Core\Intrinsics\Hlsl.cs" Link="ComputeSharp\Core\Intrinsics\Hlsl.cs" />
+    <Compile Include="..\ComputeSharp\Core\Intrinsics\Hlsl.g.cs" Link="ComputeSharp\Core\Intrinsics\Hlsl.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Bool\Bool.cs" Link="ComputeSharp\Core\Primitives\Bool\Bool.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Bool\Bool2.cs" Link="ComputeSharp\Core\Primitives\Bool\Bool2.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Bool\Bool3.cs" Link="ComputeSharp\Core\Primitives\Bool\Bool3.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Bool\Bool4.cs" Link="ComputeSharp\Core\Primitives\Bool\Bool4.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Bool\Bool2.g.cs" Link="ComputeSharp\Core\Primitives\Bool\Bool2.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Bool\Bool3.g.cs" Link="ComputeSharp\Core\Primitives\Bool\Bool3.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Bool\Bool4.g.cs" Link="ComputeSharp\Core\Primitives\Bool\Bool4.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Bool\BoolMxN.g.cs" Link="ComputeSharp\Core\Primitives\Bool\BoolMxN.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Double\Double2.cs" Link="ComputeSharp\Core\Primitives\Double\Double2.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Double\Double3.cs" Link="ComputeSharp\Core\Primitives\Double\Double3.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Double\Double4.cs" Link="ComputeSharp\Core\Primitives\Double\Double4.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Double\Double2.g.cs" Link="ComputeSharp\Core\Primitives\Double\Double2.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Double\Double3.g.cs" Link="ComputeSharp\Core\Primitives\Double\Double3.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Double\Double4.g.cs" Link="ComputeSharp\Core\Primitives\Double\Double4.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Double\DoubleMxN.g.cs" Link="ComputeSharp\Core\Primitives\Double\DoubleMxN.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Float\Float2.cs" Link="ComputeSharp\Core\Primitives\Float\Float2.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Float\Float3.cs" Link="ComputeSharp\Core\Primitives\Float\Float3.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Float\Float4.cs" Link="ComputeSharp\Core\Primitives\Float\Float4.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Float\Float2.g.cs" Link="ComputeSharp\Core\Primitives\Float\Float2.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Float\Float3.g.cs" Link="ComputeSharp\Core\Primitives\Float\Float3.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Float\Float4.g.cs" Link="ComputeSharp\Core\Primitives\Float\Float4.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Float\FloatMxN.g.cs" Link="ComputeSharp\Core\Primitives\Float\FloatMxN.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Int\Int2.cs" Link="ComputeSharp\Core\Primitives\Int\Int2.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Int\Int3.cs" Link="ComputeSharp\Core\Primitives\Int\Int3.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Int\Int4.cs" Link="ComputeSharp\Core\Primitives\Int\Int4.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Int\Int2.g.cs" Link="ComputeSharp\Core\Primitives\Int\Int2.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Int\Int3.g.cs" Link="ComputeSharp\Core\Primitives\Int\Int3.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Int\Int4.g.cs" Link="ComputeSharp\Core\Primitives\Int\Int4.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\Int\IntMxN.g.cs" Link="ComputeSharp\Core\Primitives\Int\IntMxN.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\UInt\UInt2.cs" Link="ComputeSharp\Core\Primitives\UInt\UInt2.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\UInt\UInt3.cs" Link="ComputeSharp\Core\Primitives\UInt\UInt3.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\UInt\UInt4.cs" Link="ComputeSharp\Core\Primitives\UInt\UInt4.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\UInt\UInt2.g.cs" Link="ComputeSharp\Core\Primitives\UInt\UInt2.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\UInt\UInt3.g.cs" Link="ComputeSharp\Core\Primitives\UInt\UInt3.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\UInt\UInt4.g.cs" Link="ComputeSharp\Core\Primitives\UInt\UInt4.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\UInt\UIntMxN.g.cs" Link="ComputeSharp\Core\Primitives\UInt\UIntMxN.g.cs" />
+    <Compile Include="..\ComputeSharp\Core\Primitives\MatrixIndex.cs" Link="ComputeSharp\Core\Primitives\MatrixIndex.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -82,12 +81,23 @@
     <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
   </ItemGroup>
 
+  <!-- Pregenerated file with global using directives -->
   <ItemGroup>
     <Compile Remove="EmbeddedResources\GlobalUsingDirectives.cs" />
+    <EmbeddedResource Include="EmbeddedResources\GlobalUsingDirectives.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="EmbeddedResources\GlobalUsingDirectives.cs" />
+    <EmbeddedResource Include="..\ComputeSharp\Libraries\x64\dxcompiler.dll" Link="ComputeSharp\Libraries\x64\dxcompiler.dll" />
+    <EmbeddedResource Include="..\ComputeSharp\Libraries\x64\dxil.dll" Link="ComputeSharp\Libraries\x64\dxil.dll" />
+    <EmbeddedResource Include="..\ComputeSharp\Libraries\arm64\dxcompiler.dll" Link="ComputeSharp\Libraries\arm64\dxcompiler.dll" />
+    <EmbeddedResource Include="..\ComputeSharp\Libraries\arm64\dxil.dll" Link="ComputeSharp\Libraries\arm64\dxil.dll" />
   </ItemGroup>
+
+  <!-- Shared project with .NET Standard 2.0 polyfills -->
+  <Import Project="..\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems" Label="Shared" />
+
+  <!-- Shared project with TerraFX.Interop.Windows fork -->
+  <Import Project="..\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems" Label="Shared" />
 
 </Project>
