@@ -16,6 +16,7 @@
       and to match members based on full name, so the types being in the generator assembly are not an issue.-->
   <ItemGroup>
     <Compile Include="..\ComputeSharp\Core\Attributes\AutoConstructorAttribute.cs" Link="ComputeSharp\Core\Attributes\AutoConstructorAttribute.cs" />
+    <Compile Include="..\ComputeSharp\Core\Attributes\EmbeddedBytecodeAttribute.cs" Link="ComputeSharp\Core\Attributes\EmbeddedBytecodeAttribute.cs" />
     <Compile Include="..\ComputeSharp\Core\Attributes\GroupSharedAttribute.cs" Link="ComputeSharp\Core\Attributes\GroupSharedAttribute.cs" />
     <Compile Include="..\ComputeSharp\Core\Attributes\ShaderMethodAttribute.cs" Link="ComputeSharp\Core\Attributes\ShaderMethodAttribute.cs" />
     <Compile Include="..\ComputeSharp\Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" Link="ComputeSharp\Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" />
@@ -70,6 +71,9 @@
     <Compile Include="..\ComputeSharp\Core\Primitives\UInt\UInt4.g.cs" Link="ComputeSharp\Core\Primitives\UInt\UInt4.g.cs" />
     <Compile Include="..\ComputeSharp\Core\Primitives\UInt\UIntMxN.g.cs" Link="ComputeSharp\Core\Primitives\UInt\UIntMxN.g.cs" />
     <Compile Include="..\ComputeSharp\Core\Primitives\MatrixIndex.cs" Link="ComputeSharp\Core\Primitives\MatrixIndex.cs" />
+    <Compile Include="..\ComputeSharp\Graphics\Extensions\Interop\ComPtrExtensions.cs" Link="ComputeSharp\Graphics\Extensions\Interop\ComPtrExtensions.cs" />
+    <Compile Include="..\ComputeSharp\Shaders\Exceptions\HlslCompilationException.cs" Link="ComputeSharp\Shaders\Exceptions\HlslCompilationException.cs" />
+    <Compile Include="..\ComputeSharp\Shaders\Translation\ShaderCompiler.cs" Link="ComputeSharp\Shaders\Translation\ShaderCompiler.cs" />
   </ItemGroup>
 
   <ItemGroup>

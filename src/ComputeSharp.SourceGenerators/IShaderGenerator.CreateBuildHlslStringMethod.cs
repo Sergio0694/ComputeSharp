@@ -29,7 +29,8 @@ public sealed partial class IShaderGenerator
         StructDeclarationSyntax structDeclaration,
         INamedTypeSymbol structDeclarationSymbol,
         out string? implicitTextureType,
-        out bool isSamplerUsed)
+        out bool isSamplerUsed,
+        out string hlslSource)
     {
         // Properties are not supported
         DetectAndReportPropertyDeclarations(context, structDeclarationSymbol);
@@ -70,7 +71,8 @@ public sealed partial class IShaderGenerator
             accessesStaticSampler,
             sharedBuffers,
             processedMethods,
-            entryPoint);
+            entryPoint,
+            out hlslSource);
 
         implicitTextureType = pixelShaderTextureType;
         isSamplerUsed = accessesStaticSampler;
@@ -472,6 +474,7 @@ public sealed partial class IShaderGenerator
     /// <param name="sharedBuffers">The sequence of shared buffers declared by the shader.</param>
     /// <param name="processedMethods">The sequence of processed methods used by the shader.</param>
     /// <param name="executeMethod">The body of the entry point of the shader.</param>
+    /// <param name="hlslSource">The generated HLSL source code (ignoring captured delegates, if present).</param>
     /// <returns>The series of statements to build the HLSL source to compile to execute the current shader.</returns>
     private static IEnumerable<StatementSyntax> GenerateRenderMethodBody(
         IEnumerable<(string Name, string Value)> definedConstants,
@@ -483,34 +486,41 @@ public sealed partial class IShaderGenerator
         bool isSamplerUsed,
         IEnumerable<(string Name, string Type, int? Count)> sharedBuffers,
         IEnumerable<(string Signature, string Definition)> processedMethods,
-        string executeMethod)
+        string executeMethod,
+        out string hlslSource)
     {
         List<StatementSyntax> statements = new();
-        StringBuilder textBuilder = new();
+        StringBuilder chunkedTextBuilder = new();
+        StringBuilder aggregateTextBuilder = new();
         int capturedDelegates = 0;
         int prologueStatements = 0;
         int sizeHint = 64;
 
         void AppendLF()
         {
-            textBuilder.Append('\n');
+            chunkedTextBuilder.Append('\n');
         }
 
         void AppendLine(string text)
         {
-            textBuilder.Append(text);
+            chunkedTextBuilder.Append(text);
         }
 
         void AppendLineAndLF(string text)
         {
-            textBuilder.Append(text);
-            textBuilder.Append('\n');
+            chunkedTextBuilder.Append(text);
+            chunkedTextBuilder.Append('\n');
         }
 
         void AppendCharacterAndLF(char c)
         {
-            textBuilder.Append(c);
-            textBuilder.Append('\n');
+            chunkedTextBuilder.Append(c);
+            chunkedTextBuilder.Append('\n');
+        }
+
+        void AppendThreadNumIdentifier(string name)
+        {
+            aggregateTextBuilder.Append(name);
         }
 
         void AppendParsedStatement(string text)
@@ -522,17 +532,21 @@ public sealed partial class IShaderGenerator
 
         void FlushText()
         {
-            if (textBuilder.Length > 0)
+            if (chunkedTextBuilder.Length > 0)
             {
-                sizeHint += textBuilder.Length;
+                string chunkedText = chunkedTextBuilder.ToString();
+
+                aggregateTextBuilder.Append(chunkedText);
+
+                sizeHint += chunkedTextBuilder.Length;
 
                 statements.Add(
                     ExpressionStatement(
                         InvocationExpression(
                             MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, IdentifierName("builder"), IdentifierName("Append")))
-                            .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(textBuilder.ToString()))))));
+                            .AddArgumentListArguments(Argument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(chunkedText))))));
 
-                textBuilder.Clear();
+                chunkedTextBuilder.Clear();
             }
         }
 
@@ -608,12 +622,15 @@ public sealed partial class IShaderGenerator
         AppendLF();
         AppendLine("#define __GroupSize__get_X ");
         AppendParsedStatement("builder.Append(threadsX);");
+        AppendThreadNumIdentifier("<THREADSX>");
         AppendLF();
         AppendLine("#define __GroupSize__get_Y ");
         AppendParsedStatement("builder.Append(threadsY);");
+        AppendThreadNumIdentifier("<THREADSY>");
         AppendLF();
         AppendLine("#define __GroupSize__get_Z ");
         AppendParsedStatement("builder.Append(threadsZ);");
+        AppendThreadNumIdentifier("<THREADSZ>");
         AppendLF();
 
         // Define declarations
@@ -809,6 +826,8 @@ public sealed partial class IShaderGenerator
                         Argument(LiteralExpression(
                             SyntaxKind.NumericLiteralExpression,
                             Literal(sizeHint)))))));
+
+        hlslSource = aggregateTextBuilder.ToString();
 
         return statements;
     }

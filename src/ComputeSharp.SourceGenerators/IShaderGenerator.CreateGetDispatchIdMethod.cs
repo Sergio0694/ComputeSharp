@@ -16,7 +16,7 @@ namespace ComputeSharp.SourceGenerators;
 public sealed partial class IShaderGenerator
 {
     /// <inheritdoc/>
-    private static partial MethodDeclarationSyntax CreateGetDispatchIdMethod(INamedTypeSymbol structDeclarationSymbol)
+    private static partial MethodDeclarationSyntax CreateGetDispatchIdMethod(INamedTypeSymbol structDeclarationSymbol, out bool isDynamicShader)
     {
         // This code produces a method declaration as follows:
         //
@@ -30,22 +30,25 @@ public sealed partial class IShaderGenerator
                 Identifier("GetDispatchId"))
             .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.__Internals.{nameof(IShader)}")))
             .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
-            .WithBody(GetShaderHashCodeBody(structDeclarationSymbol));
+            .WithBody(GetShaderHashCodeBody(structDeclarationSymbol, out isDynamicShader));
     }
 
     /// <summary>
     /// Gets a <see cref="BlockSyntax"/> instance with the logic to compute the hashcode of a given shader type.
     /// </summary>
     /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+    /// <param name="isDynamicShader">Indicates whether or not the shader is dynamic (ie. captures delegates).</param>
     /// <returns>The <see cref="BlockSyntax"/> instance to hash the input shader.</returns>
     [Pure]
-    private static BlockSyntax GetShaderHashCodeBody(INamedTypeSymbol structDeclarationSymbol)
+    private static BlockSyntax GetShaderHashCodeBody(INamedTypeSymbol structDeclarationSymbol, out bool isDynamicShader)
     {
         var delegateFields = structDeclarationSymbol
             .GetMembers()
             .OfType<IFieldSymbol>()
             .Where(static m => m.Type is INamedTypeSymbol { TypeKind: TypeKind.Delegate, IsStatic: false })
             .ToImmutableArray();
+
+        isDynamicShader = delegateFields.Length > 0;
 
         if (delegateFields.Length == 0)
         {
