@@ -18,6 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)System\Path.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\InterpolatedStringHandlerArgumentAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\InterpolatedStringHandlerAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\IsExternalInit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\SkipLocalsInitAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\InteropServices\MemoryMarshal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\RuntimeHelpers.cs" />
