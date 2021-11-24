@@ -60,7 +60,7 @@ public sealed partial class IShaderGenerator : ISourceGenerator
         MethodDeclarationSyntax loadDispatchDataMethod = CreateLoadDispatchDataMethod(context, structDeclarationSymbol, out var discoveredResources, out int root32BitConstants);
         MethodDeclarationSyntax buildHlslStringMethod = CreateBuildHlslStringMethod(context, structDeclaration, structDeclarationSymbol, out string? implicitTextureType, out bool isSamplerUsed, out string hlslSource);
         MethodDeclarationSyntax loadDispatchMetadataMethod = CreateLoadDispatchMetadataMethod(implicitTextureType, discoveredResources, root32BitConstants, isSamplerUsed);
-        MethodDeclarationSyntax tryGetBytecodeMethod = CreateTryGetBytecodeMethod(context, structDeclaration, structDeclarationSymbol, isDynamicShader, hlslSource);
+        MethodDeclarationSyntax tryGetBytecodeMethod = CreateTryGetBytecodeMethod(context, structDeclaration, structDeclarationSymbol, isDynamicShader, hlslSource, out string? bytecodeLiterals);
 
         // Reorder the method declarations to respect the order in the interface definition
         MethodDeclarationSyntax[] methods =
@@ -142,6 +142,12 @@ public sealed partial class IShaderGenerator : ISourceGenerator
             .NormalizeWhitespace(eol: "\n")
             .ToFullString();
 
+        // Insert the bytecode literals, if needed
+        if (bytecodeLiterals is not null)
+        {
+            source = source.Replace("__EMBEDDED_SHADER_BYTECODE", bytecodeLiterals);
+        }
+
         // Add the method source attribute
         context.AddSource(structDeclarationSymbol.GetGeneratedFileName(), SourceText.From(source, Encoding.UTF8));
     }
@@ -208,11 +214,13 @@ public sealed partial class IShaderGenerator : ISourceGenerator
     /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
     /// <param name="isDynamicShader">Indicates whether or not the shader is dynamic (ie. captures delegates).</param>
     /// <param name="hlslSource">The generated HLSL source code (ignoring captured delegates, if present).</param>
+    /// <param name="bytecodeLiterals">The resulting bytecode literals to insert into the final source code.</param>
     /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslString</c> method.</returns>
     private static partial MethodDeclarationSyntax CreateTryGetBytecodeMethod(
         GeneratorExecutionContext context,
         StructDeclarationSyntax structDeclaration,
         INamedTypeSymbol structDeclarationSymbol,
         bool isDynamicShader,
-        string hlslSource);
+        string hlslSource,
+        out string? bytecodeLiterals);
 }

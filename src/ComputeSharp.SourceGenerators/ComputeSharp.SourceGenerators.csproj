@@ -74,6 +74,7 @@
     <Compile Include="..\ComputeSharp\Graphics\Extensions\Interop\ComPtrExtensions.cs" Link="ComputeSharp\Graphics\Extensions\Interop\ComPtrExtensions.cs" />
     <Compile Include="..\ComputeSharp\Shaders\Exceptions\HlslCompilationException.cs" Link="ComputeSharp\Shaders\Exceptions\HlslCompilationException.cs" />
     <Compile Include="..\ComputeSharp\Shaders\Translation\ShaderCompiler.cs" Link="ComputeSharp\Shaders\Translation\ShaderCompiler.cs" />
+    <Compile Include="..\ComputeSharp\Shaders\Translation\__Internals\ArrayPoolStringBuilder.cs" Link="ComputeSharp\Shaders\Translation\__Internals\ArrayPoolStringBuilder.cs" />
   </ItemGroup>
 
   <ItemGroup>
