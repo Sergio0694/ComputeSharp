@@ -5,6 +5,7 @@
     <DocumentationFile>ComputeSharp.xml</DocumentationFile>
     <Description>ComputeSharp</Description>
     <Platforms>AnyCPU;x64;ARM64</Platforms>
+    <DisableShaderCompilationSupport>false</DisableShaderCompilationSupport>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,7 +38,15 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
+  <!-- Define DISABLE_RUNTIME_SHADER_COMPILATION_SUPPORT if requested -->
+  <PropertyGroup Condition="'$(DisableShaderCompilationSupport)' == 'true'">
+    <DefineConstants>$(DefineConstants);DISABLE_RUNTIME_SHADER_COMPILATION_SUPPORT</DefineConstants>
+  </PropertyGroup>
+
   <Choose>
+
+    <!-- Skip bundling any native library if support is disabled -->
+    <When Condition="'$(DisableShaderCompilationSupport)' == 'true'"/>
 
     <!-- When building locally for x64/ARM64 (using the project through a project reference),
          just copy the right native libraries to the output directory, with no subfolders. -->

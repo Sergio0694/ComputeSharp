@@ -4,6 +4,12 @@
     <TargetFrameworks>net472;netcoreapp3.1;net6.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <Platforms>AnyCPU;x64;ARM64</Platforms>
+    <DisableShaderCompilationSupport>false</DisableShaderCompilationSupport>
+  </PropertyGroup>
+
+  <!-- Define DISABLE_RUNTIME_SHADER_COMPILATION_SUPPORT if requested -->
+  <PropertyGroup Condition="'$(DisableShaderCompilationSupport)' == 'true'">
+    <DefineConstants>$(DefineConstants);DISABLE_RUNTIME_SHADER_COMPILATION_SUPPORT</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

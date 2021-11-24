@@ -4,7 +4,9 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Shaders.Dispatching;
 using ComputeSharp.Shaders.Extensions;
+#if !DISABLE_RUNTIME_SHADER_COMPILATION_SUPPORT
 using ComputeSharp.Shaders.Translation;
+#endif
 using ComputeSharp.Shaders.Translation.Models;
 using ComputeSharp.__Internals;
 using Microsoft.Toolkit.Diagnostics;
@@ -232,6 +234,11 @@ internal static class ShaderRunner<T>
         }
         else
         {
+#if DISABLE_RUNTIME_SHADER_COMPILATION_SUPPORT
+            ThrowHelper.ThrowNotSupportedException("Runtime shader compilation is not supported by the current configuration.");
+
+            shaderData = null!;
+#else
             shader.BuildHlslString(out ArrayPoolStringBuilder builder, threadsX, threadsY, threadsZ);
 
             using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.CompileShader(builder.WrittenSpan);
@@ -239,6 +246,7 @@ internal static class ShaderRunner<T>
             builder.Dispose();
 
             shaderData = new ICachedShader.Dynamic(dxcBlobBytecode.Get());
+#endif
         }
     }
 

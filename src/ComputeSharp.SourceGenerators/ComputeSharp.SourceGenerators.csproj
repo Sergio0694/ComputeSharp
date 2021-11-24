@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DefineConstants>SOURCE_GENERATOR</DefineConstants>
+    <DefineConstants>$(DefineConstants);SOURCE_GENERATOR</DefineConstants>
   </PropertyGroup>
 
   <!--The source generator cannot contain package references or project references, so instead we're just

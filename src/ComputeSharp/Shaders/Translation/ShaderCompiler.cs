@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !DISABLE_RUNTIME_SHADER_COMPILATION_SUPPORT
+
+using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
@@ -153,3 +155,5 @@ internal sealed unsafe partial class ShaderCompiler
         throw new HlslCompilationException(message);
     }
 }
+
+#endif
