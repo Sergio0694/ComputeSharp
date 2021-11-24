@@ -13,7 +13,7 @@ public sealed class UnsupportedDoubleOperationsException : InvalidOperationExcep
     /// Creates a new <see cref="UnsupportedDoubleOperationsException"/> instance.
     /// </summary>
     /// <param name="message">The message that describes the error.</param>
-    public UnsupportedDoubleOperationsException(string message)
+    private UnsupportedDoubleOperationsException(string message)
         : base(message)
     {
     }
