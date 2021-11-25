@@ -3,19 +3,27 @@ using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using TerraFX.Interop.Windows;
 
+#pragma warning disable CS0649
+
 namespace ComputeSharp;
 
 /// <summary>
 /// A locally unique identifier for a graphics device.
 /// </summary>
 public readonly struct Luid : IEquatable<Luid>
+#if NET6_0_OR_GREATER
+    , ISpanFormattable
+#endif
 {
-    #pragma warning disable CS0649
-
+    /// <summary>
+    /// The low bits of the luid.
+    /// </summary>
     private readonly uint lowPart;
-    private readonly int highPart;
 
-    #pragma warning restore
+    /// <summary>
+    /// The high bits of the luid.
+    /// </summary>
+    private readonly int highPart;
 
     /// <summary>
     /// Creates a new <see cref="Luid"/> instance from a raw <see cref="LUID"/> value.
@@ -60,6 +68,21 @@ public readonly struct Luid : IEquatable<Luid>
     {
         return (((long)this.highPart) << 32 | this.lowPart).ToString();
     }
+
+#if NET6_0_OR_GREATER
+    /// <inheritdoc/>
+    [Pure]
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        return (((long)this.highPart) << 32 | this.lowPart).ToString(format, formatProvider);
+    }
+
+    /// <inheritdoc/>
+    public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    {
+        return (((long)this.highPart) << 32 | this.lowPart).TryFormat(destination, out charsWritten, format, provider);
+    }
+#endif
 
     /// <summary>
     /// Check whether two <see cref="Luid"/> values are equal.
