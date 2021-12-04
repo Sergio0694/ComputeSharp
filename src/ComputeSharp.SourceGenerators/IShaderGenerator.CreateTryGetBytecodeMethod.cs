@@ -30,7 +30,6 @@ public sealed partial class IShaderGenerator
     /// <inheritdoc/>
     private static partial MethodDeclarationSyntax CreateTryGetBytecodeMethod(
         GeneratorExecutionContext context,
-        StructDeclarationSyntax structDeclaration,
         INamedTypeSymbol structDeclarationSymbol,
         bool isDynamicShader,
         string hlslSource,
