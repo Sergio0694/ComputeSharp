@@ -13,7 +13,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-public sealed partial class IShaderGenerator
+public sealed partial class IShaderGenerator2
 {
     /// <summary>
     /// Extracts the names of all instance fields of a <see cref="System.Delegate"/> type.

@@ -13,8 +13,11 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace ComputeSharp.SourceGenerators;
 
-/// <inheritdoc/>
-public sealed partial class IShaderGenerator : IIncrementalGenerator
+/// <summary>
+/// A source generator creating data loaders for <see cref="IComputeShader"/> and <see cref="IPixelShader{TPixel}"/> types.
+/// </summary>
+[Generator]
+public sealed partial class IShaderGenerator2 : IIncrementalGenerator
 {
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
@@ -91,7 +94,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
             if (interfaceSymbol.IsGenericType &&
                 interfaceSymbol.Name == nameof(IPixelShader<byte>) &&
-                SymbolEqualityComparer.Default.Equals(interfaceSymbol, interfaceSymbol.ConstructUnboundGenericType()))
+                SymbolEqualityComparer.Default.Equals(interfaceSymbol.ConstructedFrom, iPixelShaderSymbol))
             {
                 return typeof(IPixelShader<>);
             }

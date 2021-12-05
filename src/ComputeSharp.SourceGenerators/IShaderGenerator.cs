@@ -65,7 +65,7 @@ public sealed partial class IShaderGenerator : ISourceGenerator
         // Reorder the method declarations to respect the order in the interface definition
         MethodDeclarationSyntax[] methods =
         {
-            getDispatchIdMethod,
+            // getDispatchIdMethod,
             loadDispatchDataMethod,
             loadDispatchMetadataMethod,
             buildHlslStringMethod,
