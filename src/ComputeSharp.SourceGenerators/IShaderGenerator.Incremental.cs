@@ -48,26 +48,50 @@ public sealed partial class IShaderGenerator2 : IIncrementalGenerator
             context.CompilationProvider
             .Select(static (compilation, token) => compilation.GetTypeByMetadataName(typeof(IPixelShader<>).FullName))!;
 
-        // Filter struct declarations that implement a shader interface, and also gather the shader type
-        IncrementalValuesProvider<(StructDeclarationSyntax Syntax, INamedTypeSymbol Symbol, Type Type)> shaderDeclarations =
+        // Filter struct declarations that implement a shader interface, and also gather the hierarchy info and shader type
+        IncrementalValuesProvider<(StructDeclarationSyntax Syntax, INamedTypeSymbol Symbol, HierarchyInfo Hierarchy, Type Type)> shaderDeclarations =
             structDeclarations
             .Combine(iComputeShaderSymbol.Combine(iPixelShaderSymbol))
             .Select(static (item, token) => (item.Left, Type: GetShaderType(item.Left.Symbol, item.Right.Left, item.Right.Right)))
             .Where(static item => item.Type is not null)
-            .Select(static (item, token) => (item.Left.Syntax, item.Left.Symbol, item.Type!));
+            .Select(static (item, token) => (item.Left.Syntax, item.Left.Symbol, HierarchyInfo.From(item.Left.Symbol), item.Type!));
 
         // Get the hierarchy info and delegate field names for each shader type
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, ImmutableArray<string> Delegates)> hierarchyInfoAndShaderFieldNames =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, ImmutableArray<string> Delegates)> hierarchyInfoAndDelegateFieldNames =
             shaderDeclarations
-            .Select(static (item, token) => (HierarchyInfo.From(item.Symbol), GetDelegateFieldNames(item.Symbol)));
+            .Select(static (item, token) => (item.Hierarchy, GetDelegateFieldNames(item.Symbol)));
 
         // Generate the GetDispatchId() methods
-        context.RegisterSourceOutput(hierarchyInfoAndShaderFieldNames.Combine(canUseSkipLocalsInit), static (context, item) =>
+        context.RegisterSourceOutput(hierarchyInfoAndDelegateFieldNames.Combine(canUseSkipLocalsInit), static (context, item) =>
         {
             MethodDeclarationSyntax getDispatchIdMethod = CreateGetDispatchIdMethod(item.Left.Delegates);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, getDispatchIdMethod, item.Right);
 
             context.AddSource($"{item.Left.Hierarchy.FilenameHint}.GetDispatchId", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
+        });
+
+        // Get the hierarchy info and captured field infos for each shader type
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, Type Type, ImmutableArray<FieldInfo> FieldInfos, int ResourceCount, int Root32BitConstantCount)> hierarchyInfoAndCaptureFieldInfos =
+            shaderDeclarations
+            .Select(static (item, token) => (
+                item.Hierarchy,
+                item.Type,
+                FieldInfos: GetCapturedFieldInfos(item.Symbol, item.Type, out int resourceCount, out int root32BitConstantCount),
+                ResourceCount: resourceCount,
+                Root32BitConstantCount: root32BitConstantCount));
+
+        // Generate the LoadDispatchData() methods
+        context.RegisterSourceOutput(hierarchyInfoAndCaptureFieldInfos.Combine(canUseSkipLocalsInit), static (context, item) =>
+        {
+            MethodDeclarationSyntax loadDispatchDataMethod = CreateLoadDispatchDataMethod(
+                context,
+                item.Left.Type,
+                item.Left.FieldInfos,
+                item.Left.ResourceCount,
+                item.Left.Root32BitConstantCount);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, loadDispatchDataMethod, item.Right);
+
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.LoadDispatchData", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
         });
     }
 
