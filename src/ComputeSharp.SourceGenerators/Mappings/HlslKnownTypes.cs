@@ -150,6 +150,26 @@ internal static class HlslKnownTypes
     }
 
     /// <summary>
+    /// Checks whether or not a given type name matches a writeable typed resource type.
+    /// </summary>
+    /// <param name="typeName">The input type name to check.</param>
+    /// <returns>Whether or not <paramref name="typeName"/> represents a writeable typed resource type.</returns>
+    public static bool IsReadWriteTypedResourceType(string typeName)
+    {
+        return typeName switch
+        {
+            "ComputeSharp.ReadWriteBuffer`1" or
+            "ComputeSharp.ReadWriteTexture2D`1" or
+            "ComputeSharp.ReadWriteTexture2D`2" or
+            "ComputeSharp.ReadWriteTexture3D`1" or
+            "ComputeSharp.ReadWriteTexture3D`2" or
+            "ComputeSharp.IReadWriteTexture2D`1" or
+            "ComputeSharp.IReadWriteTexture3D`1" => true,
+            _ => false,
+        };
+    }
+
+    /// <summary>
     /// Checks whether or not a given type name matches a typed resource type.
     /// </summary>
     /// <param name="typeName">The input type name to check.</param>
