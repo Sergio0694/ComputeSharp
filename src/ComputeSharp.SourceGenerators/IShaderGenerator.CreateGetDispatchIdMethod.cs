@@ -9,19 +9,25 @@ namespace ComputeSharp.SourceGenerators;
 public sealed partial class IShaderGenerator
 {
     /// <summary>
-    /// Extracts the names of all instance fields of a <see cref="System.Delegate"/> type.
+    /// A helper with all logic to generate the <c>GetDispatchId</c> method.
     /// </summary>
-    /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
-    /// <returns>The names of all <see cref="System.Delegate"/> instance fields within <paramref name="structDeclarationSymbol"/>.</returns>
-    [Pure]
-    private static ImmutableArray<string> GetDelegateFieldNames(INamedTypeSymbol structDeclarationSymbol)
+    private static partial class GetDispatchId
     {
-        return
-            structDeclarationSymbol
-            .GetMembers()
-            .OfType<IFieldSymbol>()
-            .Where(static member => member.Type is INamedTypeSymbol { TypeKind: TypeKind.Delegate, IsStatic: false })
-            .Select(static member => member.Name)
-            .ToImmutableArray();
+        /// <summary>
+        /// Extracts the names of all instance fields of a <see cref="System.Delegate"/> type.
+        /// </summary>
+        /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
+        /// <returns>The names of all <see cref="System.Delegate"/> instance fields within <paramref name="structDeclarationSymbol"/>.</returns>
+        [Pure]
+        public static ImmutableArray<string> GetInfo(INamedTypeSymbol structDeclarationSymbol)
+        {
+            return
+                structDeclarationSymbol
+                .GetMembers()
+                .OfType<IFieldSymbol>()
+                .Where(static member => member.Type is INamedTypeSymbol { TypeKind: TypeKind.Delegate, IsStatic: false })
+                .Select(static member => member.Name)
+                .ToImmutableArray();
+        }
     }
 }

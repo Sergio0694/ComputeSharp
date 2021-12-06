@@ -69,8 +69,8 @@ public sealed partial class ShaderMethodSourceGenerator : ISourceGenerator
 
         // Explore the syntax tree and extract the processed info
         var (invokeMethod, processedMethods) = GetProcessedMethods(context, methodDeclaration, semanticModel, discoveredTypes, constantDefinitions);
-        var processedTypes = IShaderGenerator.GetDeclaredTypes(discoveredTypes);
-        var processedConstants = IShaderGenerator.GetDefinedConstants(constantDefinitions);
+        var processedTypes = IShaderGenerator.BuildHlslString.GetDeclaredTypes(discoveredTypes);
+        var processedConstants = IShaderGenerator.BuildHlslString.GetDefinedConstants(constantDefinitions);
 
         // Create the compilation unit with the source attribute
         var source =

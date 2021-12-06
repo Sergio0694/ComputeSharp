@@ -17,171 +17,177 @@ namespace ComputeSharp.SourceGenerators;
 public sealed partial class IShaderGenerator
 {
     /// <summary>
-    /// Explores a given type hierarchy and generates statements to load fields.
+    /// A helper with all logic to generate the <c>LoadDispatchData</c> method.
     /// </summary>
-    /// <param name="structDeclarationSymbol">The current shader type being explored.</param>
-    /// <param name="shaderInterfaceType">The type of shader interface urrently being processed.</param>
-    /// <param name="resourceCount">The total number of captured resources in the shader.</param>
-    /// <param name="root32BitConstantCount">The total number of needed 32 bit constants in the shader root signature.</param>
-    /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
-    /// <returns>The sequence of <see cref="FieldInfo"/> instances for all captured resources and values.</returns>
-    private static ImmutableArray<FieldInfo> GetCapturedFieldInfos(
-        ITypeSymbol structDeclarationSymbol,
-        Type shaderInterfaceType,
-        out int resourceCount,
-        out int root32BitConstantCount,
-        out ImmutableArray<Diagnostic> diagnostics)
+    private static partial class LoadDispatchData
     {
-        // Helper method that uses boxes instead of ref-s (illegal in enumerators)
-        static IEnumerable<FieldInfo> GetCapturedFieldInfos(
-            ITypeSymbol currentTypeSymbol,
-            ImmutableArray<string> fieldPath,
-            StrongBox<int> resourceOffset,
-            StrongBox<int> rawDataOffset)
+        /// <summary>
+        /// Explores a given type hierarchy and generates statements to load fields.
+        /// </summary>
+        /// <param name="structDeclarationSymbol">The current shader type being explored.</param>
+        /// <param name="shaderInterfaceType">The type of shader interface urrently being processed.</param>
+        /// <param name="resourceCount">The total number of captured resources in the shader.</param>
+        /// <param name="root32BitConstantCount">The total number of needed 32 bit constants in the shader root signature.</param>
+        /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
+        /// <returns>The sequence of <see cref="FieldInfo"/> instances for all captured resources and values.</returns>
+        public static ImmutableArray<FieldInfo> GetInfo(
+            ITypeSymbol structDeclarationSymbol,
+            Type shaderInterfaceType,
+            out int resourceCount,
+            out int root32BitConstantCount,
+            out ImmutableArray<Diagnostic> diagnostics)
         {
-            bool isFirstField = true;
-
-            foreach (
-               IFieldSymbol fieldSymbol in
-               from fieldSymbol in currentTypeSymbol.GetMembers().OfType<IFieldSymbol>()
-               where fieldSymbol.Type is INamedTypeSymbol { IsStatic: false } &&
-                     !fieldSymbol.IsConst && !fieldSymbol.IsStatic &&
-                     !fieldSymbol.IsFixedSizeBuffer
-               select fieldSymbol)
+            // Helper method that uses boxes instead of ref-s (illegal in enumerators)
+            static IEnumerable<FieldInfo> GetCapturedFieldInfos(
+                ITypeSymbol currentTypeSymbol,
+                ImmutableArray<string> fieldPath,
+                StrongBox<int> resourceOffset,
+                StrongBox<int> rawDataOffset)
             {
-                string fieldName = fieldSymbol.Name;
-                string typeName = fieldSymbol.Type.GetFullMetadataName();
+                bool isFirstField = true;
 
-                // Disambiguates the name of target fields against the current input parameters
-                if (fieldName is "loader" or "device" or "x" or "y" or "z")
+                foreach (
+                   IFieldSymbol fieldSymbol in
+                   from fieldSymbol in currentTypeSymbol.GetMembers().OfType<IFieldSymbol>()
+                   where fieldSymbol.Type is INamedTypeSymbol { IsStatic: false } &&
+                         !fieldSymbol.IsConst && !fieldSymbol.IsStatic &&
+                         !fieldSymbol.IsFixedSizeBuffer
+                   select fieldSymbol)
                 {
-                    fieldName = $"this.{fieldName}";
-                }
+                    string fieldName = fieldSymbol.Name;
+                    string typeName = fieldSymbol.Type.GetFullMetadataName();
 
-                // The first item in each nested struct needs to be aligned to 16 bytes
-                if (isFirstField && fieldPath.Length > 0)
-                {
-                    rawDataOffset.Value = AlignmentHelper.Pad(rawDataOffset.Value, 16);
-
-                    isFirstField = false;
-                }
-
-                if (HlslKnownTypes.IsTypedResourceType(typeName))
-                {
-                    yield return new FieldInfo.Resource(fieldName, typeName, resourceOffset.Value++);
-                }
-                else if (HlslKnownTypes.IsKnownHlslType(typeName))
-                {
-                    yield return GetHlslKnownTypeFieldInfo(fieldPath.Add(fieldName), typeName, ref rawDataOffset.Value);
-                }
-                else if (fieldSymbol.Type.IsUnmanagedType)
-                {
-                    // Custom struct type defined by the user
-                    foreach (var fieldInfo in GetCapturedFieldInfos(fieldSymbol.Type, fieldPath.Add(fieldName), resourceOffset, rawDataOffset))
+                    // Disambiguates the name of target fields against the current input parameters
+                    if (fieldName is "loader" or "device" or "x" or "y" or "z")
                     {
-                        yield return fieldInfo;
+                        fieldName = $"this.{fieldName}";
+                    }
+
+                    // The first item in each nested struct needs to be aligned to 16 bytes
+                    if (isFirstField && fieldPath.Length > 0)
+                    {
+                        rawDataOffset.Value = AlignmentHelper.Pad(rawDataOffset.Value, 16);
+
+                        isFirstField = false;
+                    }
+
+                    if (HlslKnownTypes.IsTypedResourceType(typeName))
+                    {
+                        yield return new FieldInfo.Resource(fieldName, typeName, resourceOffset.Value++);
+                    }
+                    else if (HlslKnownTypes.IsKnownHlslType(typeName))
+                    {
+                        yield return GetHlslKnownTypeFieldInfo(fieldPath.Add(fieldName), typeName, ref rawDataOffset.Value);
+                    }
+                    else if (fieldSymbol.Type.IsUnmanagedType)
+                    {
+                        // Custom struct type defined by the user
+                        foreach (var fieldInfo in GetCapturedFieldInfos(fieldSymbol.Type, fieldPath.Add(fieldName), resourceOffset, rawDataOffset))
+                        {
+                            yield return fieldInfo;
+                        }
                     }
                 }
             }
-        }
 
-        ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
+            ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
 
-        // Setup the resource and byte offsets for tracking. Pixel shaders have only two
-        // implicitly captured int values, as they're always dispatched over a 2D texture.
-        bool isComputeShader = shaderInterfaceType == typeof(IComputeShader);
-        int initialRawDataOffset = sizeof(int) * (isComputeShader ? 3 : 2);
-        StrongBox<int> resourceOffsetAsBox = new();
-        StrongBox<int> rawDataOffsetAsBox = new(initialRawDataOffset);
+            // Setup the resource and byte offsets for tracking. Pixel shaders have only two
+            // implicitly captured int values, as they're always dispatched over a 2D texture.
+            bool isComputeShader = shaderInterfaceType == typeof(IComputeShader);
+            int initialRawDataOffset = sizeof(int) * (isComputeShader ? 3 : 2);
+            StrongBox<int> resourceOffsetAsBox = new();
+            StrongBox<int> rawDataOffsetAsBox = new(initialRawDataOffset);
 
-        // Traverse all shader fields and gather info, and update the tracking offsets
-        ImmutableArray<FieldInfo> fieldInfos = GetCapturedFieldInfos(
-            structDeclarationSymbol,
-            ImmutableArray<string>.Empty,
-            resourceOffsetAsBox,
-            rawDataOffsetAsBox).ToImmutableArray();
+            // Traverse all shader fields and gather info, and update the tracking offsets
+            ImmutableArray<FieldInfo> fieldInfos = GetCapturedFieldInfos(
+                structDeclarationSymbol,
+                ImmutableArray<string>.Empty,
+                resourceOffsetAsBox,
+                rawDataOffsetAsBox).ToImmutableArray();
 
-        resourceCount = resourceOffsetAsBox.Value;
+            resourceCount = resourceOffsetAsBox.Value;
 
-        // After all the captured fields have been processed, ansure the reported byte size for
-        // the local variables is padded to a multiple of a 32 bit value. This is necessary to
-        // enable loading all the dispatch data after reinterpreting it to a sequence of values
-        // of size 32 bits (via SetComputeRoot32BitConstants), without reading out of bounds.
-        root32BitConstantCount = AlignmentHelper.Pad(rawDataOffsetAsBox.Value, sizeof(int)) / sizeof(int);
+            // After all the captured fields have been processed, ansure the reported byte size for
+            // the local variables is padded to a multiple of a 32 bit value. This is necessary to
+            // enable loading all the dispatch data after reinterpreting it to a sequence of values
+            // of size 32 bits (via SetComputeRoot32BitConstants), without reading out of bounds.
+            root32BitConstantCount = AlignmentHelper.Pad(rawDataOffsetAsBox.Value, sizeof(int)) / sizeof(int);
 
-        // A shader root signature has a maximum size of 64 DWORDs, so 256 bytes.
-        // Loaded values in the root signature have the following costs:
-        //  - Root constants cost 1 DWORD each, since they are 32-bit values.
-        //  - Descriptor tables cost 1 DWORD each.
-        //  - Root descriptors (64-bit GPU virtual addresses) cost 2 DWORDs each.
-        // So here we check whether the current signature respects that constraint,
-        // and emit a build error otherwise. For more info on this, see the docs here:
-        // https://docs.microsoft.com/windows/win32/direct3d12/root-signature-limits.
-        int rootSignatureDwordSize = root32BitConstantCount + resourceCount;
+            // A shader root signature has a maximum size of 64 DWORDs, so 256 bytes.
+            // Loaded values in the root signature have the following costs:
+            //  - Root constants cost 1 DWORD each, since they are 32-bit values.
+            //  - Descriptor tables cost 1 DWORD each.
+            //  - Root descriptors (64-bit GPU virtual addresses) cost 2 DWORDs each.
+            // So here we check whether the current signature respects that constraint,
+            // and emit a build error otherwise. For more info on this, see the docs here:
+            // https://docs.microsoft.com/windows/win32/direct3d12/root-signature-limits.
+            int rootSignatureDwordSize = root32BitConstantCount + resourceCount;
 
-        if (rootSignatureDwordSize > 64)
-        {
-            builder.Add(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
-        }
-
-        diagnostics = builder.ToImmutable();
-
-        return fieldInfos;
-    }
-
-    /// <summary>
-    /// Gets info on a given captured HLSL primitive type (either a scalar, a vector or a matrix).
-    /// </summary>
-    /// <param name="fieldPath">The current path of the field with respect to the shader instance.</param>
-    /// <param name="typeName">The type name currently being read.</param>
-    /// <param name="rawDataOffset">The current offset within the loaded data buffer.</param>
-    private static FieldInfo GetHlslKnownTypeFieldInfo(
-        ImmutableArray<string> fieldPath,
-        string typeName,
-        ref int rawDataOffset)
-    {
-        // For scalar, vector and linear matrix types, serialize the value normally.
-        // Only the initial alignment needs to be considered, while data is packed.
-        var (fieldSize, fieldPack) = HlslKnownSizes.GetTypeInfo(typeName);
-
-        // Check if the current type is a matrix type with more than one row. In this
-        // case, each row is aligned as if it was a separate array, so the start of
-        // each row needs to be at a multiple of 16 bytes (a float4 register).
-        if (HlslKnownTypes.IsNonLinearMatrixType(typeName, out string? elementName, out int rows, out int columns))
-        {
-            ImmutableArray<int>.Builder builder = ImmutableArray.CreateBuilder<int>(rows);
-
-            for (int j = 0; j < rows; j++)
+            if (rootSignatureDwordSize > 64)
             {
-                int startingRawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
-
-                builder.Add(startingRawDataOffset);
-
-                rawDataOffset = startingRawDataOffset + fieldPack * columns;
+                builder.Add(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
             }
 
-            return new FieldInfo.NonLinearMatrix(
-                fieldPath,
-                typeName,
-                elementName!,
-                rows,
-                columns,
-                builder.MoveToImmutable());
+            diagnostics = builder.ToImmutable();
+
+            return fieldInfos;
         }
-        else
+
+        /// <summary>
+        /// Gets info on a given captured HLSL primitive type (either a scalar, a vector or a matrix).
+        /// </summary>
+        /// <param name="fieldPath">The current path of the field with respect to the shader instance.</param>
+        /// <param name="typeName">The type name currently being read.</param>
+        /// <param name="rawDataOffset">The current offset within the loaded data buffer.</param>
+        private static FieldInfo GetHlslKnownTypeFieldInfo(
+            ImmutableArray<string> fieldPath,
+            string typeName,
+            ref int rawDataOffset)
         {
-            // Calculate the right offset with 16-bytes padding (HLSL constant buffer).
-            // Since we're in a constant buffer, we need to both pad the starting offset
-            // to be aligned to the packing size of the type, and also to align the initial
-            // offset to ensure that values do not cross 16 bytes boundaries either.
-            int startingRawDataOffset = AlignmentHelper.AlignToBoundary(
-                AlignmentHelper.Pad(rawDataOffset, fieldPack),
-                fieldSize,
-                16);
+            // For scalar, vector and linear matrix types, serialize the value normally.
+            // Only the initial alignment needs to be considered, while data is packed.
+            var (fieldSize, fieldPack) = HlslKnownSizes.GetTypeInfo(typeName);
 
-            rawDataOffset = startingRawDataOffset + fieldSize;
+            // Check if the current type is a matrix type with more than one row. In this
+            // case, each row is aligned as if it was a separate array, so the start of
+            // each row needs to be at a multiple of 16 bytes (a float4 register).
+            if (HlslKnownTypes.IsNonLinearMatrixType(typeName, out string? elementName, out int rows, out int columns))
+            {
+                ImmutableArray<int>.Builder builder = ImmutableArray.CreateBuilder<int>(rows);
 
-            return new FieldInfo.Primitive(fieldPath, typeName, startingRawDataOffset);
+                for (int j = 0; j < rows; j++)
+                {
+                    int startingRawDataOffset = AlignmentHelper.Pad(rawDataOffset, 16);
+
+                    builder.Add(startingRawDataOffset);
+
+                    rawDataOffset = startingRawDataOffset + fieldPack * columns;
+                }
+
+                return new FieldInfo.NonLinearMatrix(
+                    fieldPath,
+                    typeName,
+                    elementName!,
+                    rows,
+                    columns,
+                    builder.MoveToImmutable());
+            }
+            else
+            {
+                // Calculate the right offset with 16-bytes padding (HLSL constant buffer).
+                // Since we're in a constant buffer, we need to both pad the starting offset
+                // to be aligned to the packing size of the type, and also to align the initial
+                // offset to ensure that values do not cross 16 bytes boundaries either.
+                int startingRawDataOffset = AlignmentHelper.AlignToBoundary(
+                    AlignmentHelper.Pad(rawDataOffset, fieldPack),
+                    fieldSize,
+                    16);
+
+                rawDataOffset = startingRawDataOffset + fieldSize;
+
+                return new FieldInfo.Primitive(fieldPath, typeName, startingRawDataOffset);
+            }
         }
     }
 }
