@@ -73,34 +73,55 @@ public sealed partial class IShaderGenerator2 : IIncrementalGenerator
             context.AddSource($"{item.Left.Hierarchy.FilenameHint}.GetDispatchId", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
         });
 
-        // Get the hierarchy info and captured field infos for each shader type
-        IncrementalValuesProvider<Result<DispatchDataInfo>> dispatchDataInfoWithErrors =
+        // Get the dispatch data and HLSL source info. This info is computed on the same step
+        // as parts are shared in following sub-branches in the incremental generator pipeline.
+        IncrementalValuesProvider<(Result<DispatchDataInfo> Dispatch, Result<HlslSourceInfo> Hlsl)> shaderInfoWithErrors =
             shaderDeclarations
+            .Combine(context.CompilationProvider)
             .Select(static (item, token) =>
             {
+                // GetDispatchId() data
                 ImmutableArray<FieldInfo> fieldInfos = GetCapturedFieldInfos(
-                    item.Symbol,
-                    item.Type,
+                    item.Left.Symbol,
+                    item.Left.Type,
                     out int resourceCount,
                     out int root32BitConstantCount,
-                    out ImmutableArray<Diagnostic> diagnostics);
+                    out ImmutableArray<Diagnostic> dispatchDataDiagnostics);
 
-                return new Result<DispatchDataInfo>(new DispatchDataInfo(
-                    item.Hierarchy,
-                    item.Type,
+                Result<DispatchDataInfo> dispatchDataInfo = new(new DispatchDataInfo(
+                    item.Left.Hierarchy,
+                    item.Left.Type,
                     fieldInfos,
                     resourceCount,
                     root32BitConstantCount),
-                    diagnostics);
+                    dispatchDataDiagnostics);
+
+                // BuildHlslString() info
+                HlslSourceInfo hlslSourceInfo = GetNonDynamicHlslSourceInfo(
+                    item.Right,
+                    item.Left.Syntax,
+                    item.Left.Symbol,
+                    out ImmutableArray<Diagnostic> hlslSourceDiagnostics);
+
+                return (
+                    dispatchDataInfo,
+                    new Result<HlslSourceInfo>(hlslSourceInfo, hlslSourceDiagnostics));
             });
 
-        // Output the diagnostics from the previous step
-        context.ReportDiagnostics(dispatchDataInfoWithErrors.Select(static (item, token) => item.Errors));
+        // Output the diagnostics
+        context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.Dispatch.Errors));
+        context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.Hlsl.Errors));
+
+        // Filter all items to enable caching at a coarse level, and remove diagnostics
+        IncrementalValuesProvider<(DispatchDataInfo Dispatch, HlslSourceInfo Hlsl)> shaderInfo =
+            shaderInfoWithErrors
+            .Select(static (item, token) => (item.Dispatch.Value, item.Hlsl.Value))
+            .WithComparers(DispatchDataInfo.Comparer.Default, HlslSourceInfo.Comparer.Default);
 
         // Get a filtered sequence to enable caching
         IncrementalValuesProvider<DispatchDataInfo> dispatchDataInfo =
-            dispatchDataInfoWithErrors
-            .Select(static (item, token) => item.Value)
+            shaderInfo
+            .Select(static (item, token) => item.Dispatch)
             .WithComparer(DispatchDataInfo.Comparer.Default);
 
         // Generate the LoadDispatchData() methods
@@ -114,34 +135,16 @@ public sealed partial class IShaderGenerator2 : IIncrementalGenerator
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, loadDispatchDataMethod, item.Right);
 
             context.AddSource($"{item.Left.Hierarchy.FilenameHint}.LoadDispatchData", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
-        });
-
-        // Get the HLSL source info
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, Result<HlslSourceInfo> Result)> hlslSourceInfoWithErrors =
-            shaderDeclarations
-            .Combine(context.CompilationProvider)
-            .Select(static (item, token) =>
-            {
-                HlslSourceInfo hlslInfo = GetNonDynamicHlslSourceInfo(
-                    item.Right,
-                    item.Left.Syntax,
-                    item.Left.Symbol,
-                    out ImmutableArray<Diagnostic> diagnostics);
-
-                return (item.Left.Hierarchy, new Result<HlslSourceInfo>(hlslInfo, diagnostics));
-            });
-
-        // Output the diagnostics
-        context.ReportDiagnostics(hlslSourceInfoWithErrors.Select(static (item, token) => item.Result.Errors));
+        }); 
 
         // Get the filtered sequence to enable caching
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslSourceInfo SourceInfo)> dynamicSourceInfo =
-            hlslSourceInfoWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.Result.Value))
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslSourceInfo SourceInfo)> hlslSourceInfo =
+            shaderInfo
+            .Select(static (item, token) => (item.Dispatch.Hierarchy, item.Hlsl))
             .WithComparers(HierarchyInfo.Comparer.Default, HlslSourceInfo.Comparer.Default);
 
         // Generate the BuildHlslString() methods
-        context.RegisterSourceOutput(dynamicSourceInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
+        context.RegisterSourceOutput(hlslSourceInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
         {
             MethodDeclarationSyntax buildHlslStringMethod = CreateBuildHlslStringMethod(item.Left.SourceInfo);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, item.Right);
@@ -151,17 +154,14 @@ public sealed partial class IShaderGenerator2 : IIncrementalGenerator
 
         // Get the dispatch metadata info
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchMetadataInfo MetadataInfo)> dispatchMetadataInfo =
-            dispatchDataInfo
-            .Collect()
-            .Combine(dynamicSourceInfo.Collect())
-            .SelectMany(static (item, token) => item.Left.Zip(item.Right, static (left, right) => (DataInfo: left, right.SourceInfo)))
+            shaderInfo
             .Select(static (item, token) => (
-                item.DataInfo.Hierarchy,
+                item.Dispatch.Hierarchy,
                 GetDispatchMetadataInfo(
-                    item.DataInfo.Root32BitConstantCount,
-                    item.SourceInfo.ImplicitTextureType is not null,
-                    item.SourceInfo.IsSamplerUsed,
-                    item.DataInfo.FieldInfos)))
+                    item.Dispatch.Root32BitConstantCount,
+                    item.Hlsl.ImplicitTextureType is not null,
+                    item.Hlsl.IsSamplerUsed,
+                    item.Dispatch.FieldInfos)))
             .WithComparers(HierarchyInfo.Comparer.Default, DispatchMetadataInfo.Comparer.Default);
 
         // Generate the LoadDispatchMetadata() methods
