@@ -251,4 +251,22 @@ public sealed partial class IShaderGenerator2
 
         return statements.ToImmutable();
     }
+
+    /// <summary>
+    /// Produces the non dynamic HLSL source (concatenating all generated HLSL source chunks).
+    /// </summary>
+    /// <param name="hlslSourceInfo">The input <see cref="HlslSourceInfo"/> instance to use.</param>
+    /// <returns>The non dynamic HLSL source code.</returns>
+    private static string GetNonDynamicHlslSource(HlslSourceInfo hlslSourceInfo)
+    {
+        return
+            hlslSourceInfo.HeaderAndThreadsX + "<THREADSX>" +
+            hlslSourceInfo.ThreadsY + "<THREADSY>" +
+            hlslSourceInfo.ThreadsZ + "<THREADSZ>" +
+            hlslSourceInfo.Defines +
+            hlslSourceInfo.StaticFieldsAndDeclaredTypes +
+            hlslSourceInfo.CapturedFieldsAndResourcesAndForwardDeclarations +
+            hlslSourceInfo.CapturedMethods +
+            hlslSourceInfo.EntryPoint;
+    }
 }
