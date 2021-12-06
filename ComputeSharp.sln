@@ -84,6 +84,8 @@ Global
 		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{afaafdc9-be42-45d4-8c79-0ee8c8edbf52}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{e7c9247d-016b-4819-af9f-0e9b3591e04b}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{e91f4d24-922a-4921-a8d7-9c45a143c45d}*SharedItemsImports = 5
+		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{eb52cb67-4162-4722-874b-44ea8da5450e}*SharedItemsImports = 5
+		src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems*{eb52cb67-4162-4722-874b-44ea8da5450e}*SharedItemsImports = 5
 		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{fa18ba9f-76bf-4de0-8d24-02fc7657e6cb}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Core.Shared\ComputeSharp.SwapChain.Core.Shared.projitems*{fbd388a5-7855-4408-98ff-e689f509db5a}*SharedItemsImports = 4
 		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{fbd388a5-7855-4408-98ff-e689f509db5a}*SharedItemsImports = 4

@@ -1,10 +1,18 @@
 ﻿using System;
+#if !DISABLE_RUNTIME_SHADER_COMPILATION_SUPPORT
 using System.Runtime.CompilerServices;
+#endif
 using ComputeSharp.__Internals;
+#if !DISABLE_RUNTIME_SHADER_COMPILATION_SUPPORT
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Shaders.Translation;
+#else
+using Microsoft.Toolkit.Diagnostics;
+#endif
+#if !DISABLE_RUNTIME_SHADER_COMPILATION_SUPPORT
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
+#endif
 
 #pragma warning disable CS0618
 
@@ -102,6 +110,11 @@ public static class ReflectionServices
     private static unsafe void GetNonGenericShaderInfo<T>(in T shader, out ShaderInfo shaderInfo)
         where T : struct, IShader
     {
+#if DISABLE_RUNTIME_SHADER_COMPILATION_SUPPORT
+        ThrowHelper.ThrowNotSupportedException("Runtime shader compilation is not supported by the current configuration.");
+
+        shaderInfo = default;
+#else
         Unsafe.AsRef(in shader).BuildHlslString(out ArrayPoolStringBuilder shaderSource, 1, 1, 1);
 
         using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.CompileShader(shaderSource.WrittenSpan);
@@ -155,5 +168,6 @@ public static class ReflectionServices
         Unsafe.AsRef(shaderInfo.MovcInstructionCount) = d3D12ShaderReflection.Get()->GetMovcInstructionCount();
         Unsafe.AsRef(shaderInfo.MovInstructionCount) = d3D12ShaderReflection.Get()->GetMovInstructionCount();
         Unsafe.AsRef(shaderInfo.InterfaceSlotCount) = d3D12ShaderReflection.Get()->GetNumInterfaceSlots();
+#endif
     }
 }

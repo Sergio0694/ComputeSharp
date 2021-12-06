@@ -1399,6 +1399,76 @@ public class DiagnosticsTests
         VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0047");
     }
 
+    [TestMethod]
+    public void EmbeddedBytecodeWithDynamicShader()
+    {
+        string source = @"
+        using System;
+        using ComputeSharp;
+
+        namespace ComputeSharp
+        {
+            public interface IComputeShader { }
+            public class ReadWriteBuffer<T> { }
+            public class EmbeddedBytecodeAttribute : Attribute { }
+        }
+
+        namespace MyFancyApp.Sample
+        {
+            [EmbeddedBytecode]
+            public struct MyShader : IComputeShader
+            {
+                public ReadWriteBuffer<float> buffer;
+                public Action action;
+
+                public void Execute()
+                {
+                }
+            }
+        }";
+
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0048");
+    }
+
+    [TestMethod]
+    [DataRow(-1, 1, 1)]
+    [DataRow(1, -1, 1)]
+    [DataRow(1, 1, -1)]
+    [DataRow(1050, 1, 1)]
+    [DataRow(1, 1050, 1)]
+    [DataRow(1, 1, 70)]
+    public void InvalidEmbeddedBytecodeThreadIds(int threadsX, int threadsY, int threadsZ)
+    {
+        string source = $@"
+        using System;
+        using ComputeSharp;
+
+        namespace ComputeSharp
+        {{
+            public interface IComputeShader {{ }}
+            public class ReadWriteBuffer<T> {{ }}
+            public class EmbeddedBytecodeAttribute : Attribute
+            {{
+                public EmbeddedBytecodeAttribute(int threadsX, int threadsY, int threadsZ) {{ }}
+            }}
+        }}
+
+        namespace MyFancyApp.Sample
+        {{
+            [EmbeddedBytecode({threadsX}, {threadsY}, {threadsZ})]
+            public struct MyShader : IComputeShader
+            {{
+                public ReadWriteBuffer<float> buffer;
+
+                public void Execute()
+                {{
+                }}
+            }}
+        }}";
+
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0049");
+    }
+
     /// <summary>
     /// Verifies the output of a source generator.
     /// </summary>

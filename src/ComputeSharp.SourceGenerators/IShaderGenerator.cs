@@ -56,10 +56,11 @@ public sealed partial class IShaderGenerator : ISourceGenerator
     private static void OnExecute(GeneratorExecutionContext context, StructDeclarationSyntax structDeclaration, INamedTypeSymbol structDeclarationSymbol)
     {
         // Create the required interface methods for the current shader type
-        MethodDeclarationSyntax getDispatchIdMethod = CreateGetDispatchIdMethod(structDeclarationSymbol);
+        MethodDeclarationSyntax getDispatchIdMethod = CreateGetDispatchIdMethod(structDeclarationSymbol, out bool isDynamicShader);
         MethodDeclarationSyntax loadDispatchDataMethod = CreateLoadDispatchDataMethod(context, structDeclarationSymbol, out var discoveredResources, out int root32BitConstants);
-        MethodDeclarationSyntax buildHlslStringMethod = CreateBuildHlslStringMethod(context, structDeclaration, structDeclarationSymbol, out string? implicitTextureType, out bool isSamplerUsed);
+        MethodDeclarationSyntax buildHlslStringMethod = CreateBuildHlslStringMethod(context, structDeclaration, structDeclarationSymbol, out string? implicitTextureType, out bool isSamplerUsed, out string hlslSource);
         MethodDeclarationSyntax loadDispatchMetadataMethod = CreateLoadDispatchMetadataMethod(implicitTextureType, discoveredResources, root32BitConstants, isSamplerUsed);
+        MethodDeclarationSyntax tryGetBytecodeMethod = CreateTryGetBytecodeMethod(context, structDeclarationSymbol, isDynamicShader, hlslSource, out string? bytecodeLiterals);
 
         // Reorder the method declarations to respect the order in the interface definition
         MethodDeclarationSyntax[] methods =
@@ -67,7 +68,8 @@ public sealed partial class IShaderGenerator : ISourceGenerator
             getDispatchIdMethod,
             loadDispatchDataMethod,
             loadDispatchMetadataMethod,
-            buildHlslStringMethod
+            buildHlslStringMethod,
+            tryGetBytecodeMethod
         };
 
         // Method attributes
@@ -140,6 +142,12 @@ public sealed partial class IShaderGenerator : ISourceGenerator
             .NormalizeWhitespace(eol: "\n")
             .ToFullString();
 
+        // Insert the bytecode literals, if needed
+        if (bytecodeLiterals is not null)
+        {
+            source = source.Replace("__EMBEDDED_SHADER_BYTECODE", bytecodeLiterals);
+        }
+
         // Add the method source attribute
         context.AddSource(structDeclarationSymbol.GetGeneratedFileName(), SourceText.From(source, Encoding.UTF8));
     }
@@ -148,8 +156,9 @@ public sealed partial class IShaderGenerator : ISourceGenerator
     /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>GetDispatchId</c> method.
     /// </summary>
     /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for the input struct declaration.</param>
+    /// <param name="isDynamicShader">Indicates whether or not the shader is dynamic (ie. captures delegates).</param>
     /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>GetDispatchId</c> method.</returns>
-    private static partial MethodDeclarationSyntax CreateGetDispatchIdMethod(INamedTypeSymbol structDeclarationSymbol);
+    private static partial MethodDeclarationSyntax CreateGetDispatchIdMethod(INamedTypeSymbol structDeclarationSymbol, out bool isDynamicShader);
 
     /// <summary>
     /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchDataMethod</c> method.
@@ -173,13 +182,15 @@ public sealed partial class IShaderGenerator : ISourceGenerator
     /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
     /// <param name="implicitTextureType">The implicit texture type, if available (if the shader is a pixel shader).</param>
     /// <param name="isSamplerUsed">Whether or not the current shader type requires a static sampler to be available.</param>
+    /// <param name="hlslSource">The generated HLSL source code (ignoring captured delegates, if present).</param>
     /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslString</c> method.</returns>
     private static partial MethodDeclarationSyntax CreateBuildHlslStringMethod(
         GeneratorExecutionContext context,
         StructDeclarationSyntax structDeclaration,
         INamedTypeSymbol structDeclarationSymbol,
         out string? implicitTextureType,
-        out bool isSamplerUsed);
+        out bool isSamplerUsed,
+        out string hlslSource);
 
     /// <summary>
     /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchMetadata</c> method.
@@ -194,4 +205,20 @@ public sealed partial class IShaderGenerator : ISourceGenerator
         IReadOnlyCollection<string> discoveredResources,
         int root32BitConstantsCount,
         bool isSamplerUsed);
+
+    /// <summary>
+    /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>TryGetBytecode</c> method.
+    /// </summary>
+    /// <param name="context">The input <see cref="GeneratorExecutionContext"/> instance to use.</param>
+    /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for the shader type.</param>
+    /// <param name="isDynamicShader">Indicates whether or not the shader is dynamic (ie. captures delegates).</param>
+    /// <param name="hlslSource">The generated HLSL source code (ignoring captured delegates, if present).</param>
+    /// <param name="bytecodeLiterals">The resulting bytecode literals to insert into the final source code.</param>
+    /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslString</c> method.</returns>
+    private static partial MethodDeclarationSyntax CreateTryGetBytecodeMethod(
+        GeneratorExecutionContext context,
+        INamedTypeSymbol structDeclarationSymbol,
+        bool isDynamicShader,
+        string hlslSource,
+        out string? bytecodeLiterals);
 }
