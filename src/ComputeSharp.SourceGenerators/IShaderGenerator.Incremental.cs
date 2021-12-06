@@ -59,14 +59,15 @@ public sealed partial class IShaderGenerator2 : IIncrementalGenerator
             .Select(static (item, token) => (item.Left.Syntax, item.Left.Symbol, HierarchyInfo.From(item.Left.Symbol), item.Type!));
 
         // Get the hierarchy info and delegate field names for each shader type
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, ImmutableArray<string> Delegates)> hierarchyInfoAndDelegateFieldNames =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchIdInfo Info)> hierarchyAndDispatchIdInfo =
             shaderDeclarations
-            .Select(static (item, token) => (item.Hierarchy, GetDelegateFieldNames(item.Symbol)));
+            .Select(static (item, token) => (item.Hierarchy, new DispatchIdInfo(GetDelegateFieldNames(item.Symbol))))
+            .WithComparers(HierarchyInfo.Comparer.Default, DispatchIdInfo.Comparer.Default);
 
         // Generate the GetDispatchId() methods
-        context.RegisterSourceOutput(hierarchyInfoAndDelegateFieldNames.Combine(canUseSkipLocalsInit), static (context, item) =>
+        context.RegisterSourceOutput(hierarchyAndDispatchIdInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
         {
-            MethodDeclarationSyntax getDispatchIdMethod = CreateGetDispatchIdMethod(item.Left.Delegates);
+            MethodDeclarationSyntax getDispatchIdMethod = CreateGetDispatchIdMethod(item.Left.Info.Delegates);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, getDispatchIdMethod, item.Right);
 
             context.AddSource($"{item.Left.Hierarchy.FilenameHint}.GetDispatchId", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
@@ -99,7 +100,8 @@ public sealed partial class IShaderGenerator2 : IIncrementalGenerator
         // Get a filtered sequence to enable caching
         IncrementalValuesProvider<DispatchDataInfo> dispatchDataInfo =
             dispatchDataInfoWithErrors
-            .Select(static (item, token) => item.Value);
+            .Select(static (item, token) => item.Value)
+            .WithComparer(DispatchDataInfo.Comparer.Default);
 
         // Generate the LoadDispatchData() methods
         context.RegisterSourceOutput(dispatchDataInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
