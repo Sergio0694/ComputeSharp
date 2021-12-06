@@ -152,7 +152,7 @@ public sealed partial class IShaderGenerator
                 //    e.Message);
             }
 
-        End:
+            End:
             diagnostics = builder.ToImmutable();
 
             return bytecode;
