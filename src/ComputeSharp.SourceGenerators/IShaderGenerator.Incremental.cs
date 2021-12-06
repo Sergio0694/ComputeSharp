@@ -113,6 +113,26 @@ public sealed partial class IShaderGenerator2 : IIncrementalGenerator
 
             context.AddSource($"{item.Left.Hierarchy.FilenameHint}.LoadDispatchData", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
         });
+
+        // Get the HLSL source info
+        IncrementalValuesProvider<Result<(NonDynamicHlslSourceInfo SourceInfo, string? ImplicitTextureType, bool IsSamplerUsed)>> hlslSourceInfo =
+            shaderDeclarations
+            .Combine(context.CompilationProvider)
+            .Select(static (item, token) =>
+            {
+                (NonDynamicHlslSourceInfo SourceInfo, string? ImplicitTextureType, bool IsSamplerUsed) hlslInfo = GetNonDynamicHlslSourceInfo(
+                    item.Right,
+                    item.Left.Syntax,
+                    item.Left.Symbol,
+                    out ImmutableArray<Diagnostic> diagnostics);
+
+                return new Result<(NonDynamicHlslSourceInfo, string?, bool)>(hlslInfo, diagnostics);
+            });
+
+        // Output the diagnostics
+        context.ReportDiagnostics(hlslSourceInfo.Select(static (item, token) => item.Errors));
+
+
     }
 
     /// <summary>

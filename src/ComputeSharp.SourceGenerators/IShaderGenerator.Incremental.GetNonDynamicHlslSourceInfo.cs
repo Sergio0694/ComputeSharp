@@ -29,17 +29,18 @@ public sealed partial class IShaderGenerator2
     /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
     /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> node to process.</param>
     /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
+    /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
     /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslString</c> method.</returns>
-    /// <inheritdoc/>
-    private static ((NonDynamicHlslSourceInfo SourceInfo, string? ImplicitTextureType, bool IsSamplerUsed), ImmutableArray<Diagnostic> Diagnostics) GetNonDynamicHlslSourceInfo(
+    private static (NonDynamicHlslSourceInfo SourceInfo, string? ImplicitTextureType, bool IsSamplerUsed) GetNonDynamicHlslSourceInfo(
         Compilation compilation,
         StructDeclarationSyntax structDeclaration,
-        INamedTypeSymbol structDeclarationSymbol)
+        INamedTypeSymbol structDeclarationSymbol,
+        out ImmutableArray<Diagnostic> diagnostics)
     {
-        ImmutableArray<Diagnostic>.Builder diagnostics = ImmutableArray.CreateBuilder<Diagnostic>();
+        ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
 
         // Properties are not supported
-        DetectAndReportPropertyDeclarations(diagnostics, structDeclarationSymbol);
+        DetectAndReportPropertyDeclarations(builder, structDeclarationSymbol);
 
         // We need to sets to track all discovered custom types and static methods
         HashSet<INamedTypeSymbol> discoveredTypes = new(SymbolEqualityComparer.Default);
@@ -49,7 +50,7 @@ public sealed partial class IShaderGenerator2
         // A given type can only represent a single shader type
         if (structDeclarationSymbol.AllInterfaces.Count(static interfaceSymbol => interfaceSymbol is { Name: nameof(IComputeShader) } or { IsGenericType: true, Name: nameof(IPixelShader<byte>) }) > 1)
         {
-            diagnostics.Add(MultipleShaderTypesImplemented, structDeclarationSymbol, structDeclarationSymbol);
+            builder.Add(MultipleShaderTypesImplemented, structDeclarationSymbol, structDeclarationSymbol);
         }
 
         // Explore the syntax tree and extract the processed info
@@ -57,13 +58,13 @@ public sealed partial class IShaderGenerator2
         var pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: nameof(IPixelShader<byte>) });
         var isComputeShader = pixelShaderSymbol is null;
         var implicitTextureType = isComputeShader ? null : HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!);
-        var instanceFields = GetInstanceFields(diagnostics, structDeclarationSymbol, discoveredTypes, isComputeShader);
-        var sharedBuffers = GetSharedBuffers(diagnostics, structDeclarationSymbol, discoveredTypes);
-        var (entryPoint, processedMethods, isSamplerUsed) = GetProcessedMethods(diagnostics, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, constantDefinitions, isComputeShader);
+        var instanceFields = GetInstanceFields(builder, structDeclarationSymbol, discoveredTypes, isComputeShader);
+        var sharedBuffers = GetSharedBuffers(builder, structDeclarationSymbol, discoveredTypes);
+        var (entryPoint, processedMethods, isSamplerUsed) = GetProcessedMethods(builder, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, constantDefinitions, isComputeShader);
         var implicitSamplerField = isSamplerUsed ? ("SamplerState", "__sampler") : default((string, string)?);
         var declaredTypes = GetDeclaredTypes(discoveredTypes);
         var definedConstants = GetDefinedConstants(constantDefinitions);
-        var staticFields = GetStaticFields(diagnostics, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
+        var staticFields = GetStaticFields(builder, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
 
         // Get the HLSL source data with the intermediate info
         NonDynamicHlslSourceInfo sourceInfo = GetNonDynamicHlslSourceInfo(
@@ -78,7 +79,9 @@ public sealed partial class IShaderGenerator2
             isSamplerUsed,
             entryPoint);
 
-        return ((sourceInfo, implicitTextureType, isSamplerUsed), diagnostics.ToImmutable());
+        diagnostics = builder.ToImmutable();
+
+        return (sourceInfo, implicitTextureType, isSamplerUsed);
     }
 
     /// <summary>
