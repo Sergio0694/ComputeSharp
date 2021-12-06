@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using ComputeSharp.__Internals;
 using ComputeSharp.Core.Helpers;
+using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Mappings;
 using ComputeSharp.SourceGenerators.Models;
@@ -24,16 +25,18 @@ public sealed partial class IShaderGenerator2
     /// <summary>
     /// Explores a given type hierarchy and generates statements to load fields.
     /// </summary>
-    /// <param name="currentTypeSymbol">The current type being explored.</param>
+    /// <param name="structDeclarationSymbol">The current shader type being explored.</param>
     /// <param name="shaderInterfaceType">The type of shader interface urrently being processed.</param>
     /// <param name="resourceCount">The total number of captured resources in the shader.</param>
     /// <param name="root32BitConstantCount">The total number of needed 32 bit constants in the shader root signature.</param>
+    /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
     /// <returns>The sequence of <see cref="FieldInfo"/> instances for all captured resources and values.</returns>
     private static ImmutableArray<FieldInfo> GetCapturedFieldInfos(
-        ITypeSymbol currentTypeSymbol,
+        ITypeSymbol structDeclarationSymbol,
         Type shaderInterfaceType,
         out int resourceCount,
-        out int root32BitConstantCount)
+        out int root32BitConstantCount,
+        out ImmutableArray<Diagnostic> diagnostics)
     {
         // Helper method that uses boxes instead of ref-s (illegal in enumerators)
         static IEnumerable<FieldInfo> GetCapturedFieldInfos(
@@ -88,6 +91,8 @@ public sealed partial class IShaderGenerator2
             }
         }
 
+        ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
+
         // Setup the resource and byte offsets for tracking. Pixel shaders have only two
         // implicitly captured int values, as they're always dispatched over a 2D texture.
         bool isComputeShader = shaderInterfaceType == typeof(IComputeShader);
@@ -97,7 +102,7 @@ public sealed partial class IShaderGenerator2
 
         // Traverse all shader fields and gather info, and update the tracking offsets
         ImmutableArray<FieldInfo> fieldInfos = GetCapturedFieldInfos(
-            currentTypeSymbol,
+            structDeclarationSymbol,
             ImmutableArray<string>.Empty,
             resourceOffsetAsBox,
             rawDataOffsetAsBox).ToImmutableArray();
@@ -109,6 +114,23 @@ public sealed partial class IShaderGenerator2
         // enable loading all the dispatch data after reinterpreting it to a sequence of values
         // of size 32 bits (via SetComputeRoot32BitConstants), without reading out of bounds.
         root32BitConstantCount = AlignmentHelper.Pad(rawDataOffsetAsBox.Value, sizeof(int)) / sizeof(int);
+
+        // A shader root signature has a maximum size of 64 DWORDs, so 256 bytes.
+        // Loaded values in the root signature have the following costs:
+        //  - Root constants cost 1 DWORD each, since they are 32-bit values.
+        //  - Descriptor tables cost 1 DWORD each.
+        //  - Root descriptors (64-bit GPU virtual addresses) cost 2 DWORDs each.
+        // So here we check whether the current signature respects that constraint,
+        // and emit a build error otherwise. For more info on this, see the docs here:
+        // https://docs.microsoft.com/windows/win32/direct3d12/root-signature-limits.
+        int rootSignatureDwordSize = root32BitConstantCount + resourceCount;
+
+        if (rootSignatureDwordSize > 64)
+        {
+            builder.Add(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
+        }
+
+        diagnostics = builder.ToImmutable();
 
         return fieldInfos;
     }
@@ -317,23 +339,6 @@ public sealed partial class IShaderGenerator2
                     }
                     break;
             }
-        }
-
-        // A shader root signature has a maximum size of 64 DWORDs, so 256 bytes.
-        // Loaded values in the root signature have the following costs:
-        //  - Root constants cost 1 DWORD each, since they are 32-bit values.
-        //  - Descriptor tables cost 1 DWORD each.
-        //  - Root descriptors (64-bit GPU virtual addresses) cost 2 DWORDs each.
-        // So here we check whether the current signature respects that constraint,
-        // and emit a build error otherwise. For more info on this, see the docs here:
-        // https://docs.microsoft.com/windows/win32/direct3d12/root-signature-limits.
-        int rootSignatureDwordSize = root32BitConstantsCount + resourceCount;
-
-        if (rootSignatureDwordSize > 64)
-        {
-            // TODO
-            //context.ReportDiagnostic(ShaderDispatchDataSizeExceeded, structDeclarationSymbol, structDeclarationSymbol);
-            context.ReportDiagnostic(Diagnostic.Create(ShaderDispatchDataSizeExceeded, null));
         }
 
         // global::System.Span<uint> span0 = stackalloc uint[<VARIABLES>];

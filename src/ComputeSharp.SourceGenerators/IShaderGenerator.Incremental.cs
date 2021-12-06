@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
+using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -71,17 +72,36 @@ public sealed partial class IShaderGenerator2 : IIncrementalGenerator
         });
 
         // Get the hierarchy info and captured field infos for each shader type
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, Type Type, ImmutableArray<FieldInfo> FieldInfos, int ResourceCount, int Root32BitConstantCount)> hierarchyInfoAndCaptureFieldInfos =
+        IncrementalValuesProvider<Result<DispatchDataInfo>> dispatchDataInfoWithErrors =
             shaderDeclarations
-            .Select(static (item, token) => (
-                item.Hierarchy,
-                item.Type,
-                FieldInfos: GetCapturedFieldInfos(item.Symbol, item.Type, out int resourceCount, out int root32BitConstantCount),
-                ResourceCount: resourceCount,
-                Root32BitConstantCount: root32BitConstantCount));
+            .Select(static (item, token) =>
+            {
+                ImmutableArray<FieldInfo> fieldInfos = GetCapturedFieldInfos(
+                    item.Symbol,
+                    item.Type,
+                    out int resourceCount,
+                    out int root32BitConstantCount,
+                    out ImmutableArray<Diagnostic> diagnostics);
+
+                return new Result<DispatchDataInfo>(new DispatchDataInfo(
+                    item.Hierarchy,
+                    item.Type,
+                    fieldInfos,
+                    resourceCount,
+                    root32BitConstantCount),
+                    diagnostics);
+            });
+
+        // Output the diagnostics from the previous step
+        context.ReportDiagnostics(dispatchDataInfoWithErrors.Select(static (item, token) => item.Errors));
+
+        // Get a filtered sequence to enable caching
+        IncrementalValuesProvider<DispatchDataInfo> dispatchDataInfo =
+            dispatchDataInfoWithErrors
+            .Select(static (item, token) => item.Value);
 
         // Generate the LoadDispatchData() methods
-        context.RegisterSourceOutput(hierarchyInfoAndCaptureFieldInfos.Combine(canUseSkipLocalsInit), static (context, item) =>
+        context.RegisterSourceOutput(dispatchDataInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
         {
             MethodDeclarationSyntax loadDispatchDataMethod = CreateLoadDispatchDataMethod(
                 context,
