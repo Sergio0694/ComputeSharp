@@ -19,7 +19,7 @@ namespace ComputeSharp.SourceGenerators;
 /// A source generator creating data loaders for <see cref="IComputeShader"/> and <see cref="IPixelShader{TPixel}"/> types.
 /// </summary>
 [Generator]
-public sealed partial class IShaderGenerator2 : IIncrementalGenerator
+public sealed partial class IShaderGenerator : IIncrementalGenerator
 {
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)

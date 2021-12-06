@@ -20,7 +20,7 @@ using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-public sealed partial class IShaderGenerator2
+public sealed partial class IShaderGenerator
 {
     /// <summary>
     /// Gets the thread ids values for a given shader type, if available.

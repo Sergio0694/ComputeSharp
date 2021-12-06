@@ -5,7 +5,7 @@ using ComputeSharp.SourceGenerators.Models;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-public sealed partial class IShaderGenerator2
+public sealed partial class IShaderGenerator
 {
     /// <summary>
     /// Gets the data related to the shader metadata for a given shader type.

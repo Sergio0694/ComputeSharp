@@ -21,7 +21,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-public sealed partial class IShaderGenerator2
+public sealed partial class IShaderGenerator
 {
     /// <summary>
     /// Gathers all necessary information on a transpiled HLSL source for a given shader type.

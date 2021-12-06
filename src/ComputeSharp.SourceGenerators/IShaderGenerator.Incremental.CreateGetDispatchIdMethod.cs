@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-public sealed partial class IShaderGenerator2
+public sealed partial class IShaderGenerator
 {
     /// <summary>
     /// Extracts the names of all instance fields of a <see cref="System.Delegate"/> type.

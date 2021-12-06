@@ -14,7 +14,7 @@ using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 namespace ComputeSharp.SourceGenerators;
 
 /// <inheritdoc/>
-public sealed partial class IShaderGenerator2
+public sealed partial class IShaderGenerator
 {
     /// <summary>
     /// Explores a given type hierarchy and generates statements to load fields.

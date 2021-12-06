@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Text;
 using ComputeSharp.__Internals;
 using ComputeSharp.SourceGenerators.Diagnostics;
@@ -70,8 +69,8 @@ public sealed partial class ShaderMethodSourceGenerator : ISourceGenerator
 
         // Explore the syntax tree and extract the processed info
         var (invokeMethod, processedMethods) = GetProcessedMethods(context, methodDeclaration, semanticModel, discoveredTypes, constantDefinitions);
-        var processedTypes = IShaderGenerator.GetProcessedTypes(discoveredTypes).ToArray();
-        var processedConstants = IShaderGenerator.GetProcessedConstants(constantDefinitions);
+        var processedTypes = IShaderGenerator.GetDeclaredTypes(discoveredTypes);
+        var processedConstants = IShaderGenerator.GetDefinedConstants(constantDefinitions);
 
         // Create the compilation unit with the source attribute
         var source =
