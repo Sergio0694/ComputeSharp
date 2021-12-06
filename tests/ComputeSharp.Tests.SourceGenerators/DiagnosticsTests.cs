@@ -1410,12 +1410,15 @@ public class DiagnosticsTests
         {
             public interface IComputeShader { }
             public class ReadWriteBuffer<T> { }
-            public class EmbeddedBytecodeAttribute : Attribute { }
+            public class EmbeddedBytecodeAttribute : Attribute
+            {
+                public EmbeddedBytecodeAttribute(int threadsX, int threadsY, int threadsZ) { }
+            }
         }
 
         namespace MyFancyApp.Sample
         {
-            [EmbeddedBytecode]
+            [EmbeddedBytecode(8, 8, 1)]
             public struct MyShader : IComputeShader
             {
                 public ReadWriteBuffer<float> buffer;
@@ -1476,7 +1479,7 @@ public class DiagnosticsTests
     /// <param name="source">The input source to process.</param>
     /// <param name="diagnosticsIds">The expected diagnostics ids to be generated.</param>
     private static void VerifyGeneratedDiagnostics<TGenerator>(string source, params string[] diagnosticsIds)
-        where TGenerator : class, ISourceGenerator, new()
+        where TGenerator : class, IIncrementalGenerator, new()
     {
         SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source);
 
@@ -1488,7 +1491,7 @@ public class DiagnosticsTests
 
         CSharpCompilation compilation = CSharpCompilation.Create("original", new SyntaxTree[] { syntaxTree }, references, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
-        ISourceGenerator generator = new TGenerator();
+        IIncrementalGenerator generator = new TGenerator();
 
         CSharpGeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
 
