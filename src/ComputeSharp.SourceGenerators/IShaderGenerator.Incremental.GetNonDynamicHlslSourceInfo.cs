@@ -58,7 +58,7 @@ public sealed partial class IShaderGenerator2
         var pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: nameof(IPixelShader<byte>) });
         var isComputeShader = pixelShaderSymbol is null;
         var implicitTextureType = isComputeShader ? null : HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!);
-        var nonDelegateInstanceFields = GetInstanceFields(builder, structDeclarationSymbol, discoveredTypes, isComputeShader);
+        var (resourceFields, valueFields) = GetInstanceFields(builder, structDeclarationSymbol, discoveredTypes, isComputeShader);
         var delegateInstanceFields = GetDelegateFieldNames(structDeclarationSymbol);
         var sharedBuffers = GetSharedBuffers(builder, structDeclarationSymbol, discoveredTypes);
         var (entryPoint, processedMethods, isSamplerUsed) = GetProcessedMethods(builder, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, constantDefinitions, isComputeShader);
@@ -73,7 +73,8 @@ public sealed partial class IShaderGenerator2
         return GetNonDynamicHlslSourceInfo(
             definedConstants,
             declaredTypes,
-            nonDelegateInstanceFields,
+            resourceFields,
+            valueFields,
             delegateInstanceFields,
             staticFields,
             sharedBuffers,
@@ -93,13 +94,17 @@ public sealed partial class IShaderGenerator2
     /// <param name="isComputeShader">Indicates whether or not <paramref name="structDeclarationSymbol"/> represents a compute shader.</param>
     /// <returns>A sequence of captured fields in <paramref name="structDeclarationSymbol"/>.</returns>
     [Pure]
-    private static ImmutableArray<(string MetadataName, string Name, string HlslType)> GetInstanceFields(
-        ImmutableArray<Diagnostic>.Builder diagnostics,
-        INamedTypeSymbol structDeclarationSymbol,
-        ICollection<INamedTypeSymbol> types,
-        bool isComputeShader)
+    private static (
+        ImmutableArray<(string MetadataName, string Name, string HlslType)>,
+        ImmutableArray<(string Name, string HlslType)>)
+        GetInstanceFields(
+            ImmutableArray<Diagnostic>.Builder diagnostics,
+            INamedTypeSymbol structDeclarationSymbol,
+            ICollection<INamedTypeSymbol> types,
+            bool isComputeShader)
     {
-        ImmutableArray<(string, string, string)>.Builder builder = ImmutableArray.CreateBuilder<(string, string, string)>();
+        ImmutableArray<(string, string, string)>.Builder resources = ImmutableArray.CreateBuilder<(string, string, string)>();
+        ImmutableArray<(string, string)>.Builder values = ImmutableArray.CreateBuilder<(string, string)>();
         bool hlslResourceFound = false;
 
         foreach (var fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>())
@@ -126,6 +131,9 @@ public sealed partial class IShaderGenerator2
             }
 
             string metadataName = typeSymbol.GetFullMetadataName();
+            string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
+
+            _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
 
             // Allowed fields must be either resources, unmanaged values or delegates
             if (HlslKnownTypes.IsTypedResourceType(metadataName))
@@ -137,6 +145,9 @@ public sealed partial class IShaderGenerator2
                 {
                     types.Add((INamedTypeSymbol)typeSymbol.TypeArguments[0]);
                 }
+
+                // Add the current mapping for the name (if the name used a reserved keyword)
+                resources.Add((metadataName, mapping ?? fieldSymbol.Name, typeName));
             }
             else if (!typeSymbol.IsUnmanagedType &&
                      typeSymbol.TypeKind != TypeKind.Delegate)
@@ -146,19 +157,16 @@ public sealed partial class IShaderGenerator2
 
                 continue;
             }
-            else if (typeSymbol.IsUnmanagedType &&
-                     !HlslKnownTypes.IsKnownHlslType(metadataName))
+            else if (typeSymbol.IsUnmanagedType)
             {
                 // Track the type if it's a custom struct
-                types.Add(typeSymbol);
-            }
+                if (!HlslKnownTypes.IsKnownHlslType(metadataName))
+                {
+                    types.Add(typeSymbol);
+                }
 
-            string typeName = HlslKnownTypes.GetMappedName(typeSymbol);
-
-            _ = HlslKnownKeywords.TryGetMappedName(fieldSymbol.Name, out string? mapping);
-
-            // Yield back the current mapping for the name (if the name used a reserved keyword)
-            builder.Add((metadataName, mapping ?? fieldSymbol.Name, typeName));
+                values.Add((mapping ?? fieldSymbol.Name, typeName));
+            }            
         }
 
         // If the shader is a compute one (so no implicit output texture), it has to contain at least one resource
@@ -167,7 +175,7 @@ public sealed partial class IShaderGenerator2
             diagnostics.Add(MissingShaderResources, structDeclarationSymbol, structDeclarationSymbol);
         }
 
-        return builder.ToImmutable();
+        return (resources.ToImmutable(), values.ToImmutable());
     }
 
     /// <summary>
@@ -484,7 +492,8 @@ public sealed partial class IShaderGenerator2
     /// </summary>
     /// <param name="definedConstants">The sequence of defined constants for the shader.</param>
     /// <param name="declaredTypes">The sequence of declared types used by the shader.</param>
-    /// <param name="instanceFields">The sequence of instance fields for the current shader.</param>
+    /// <param name="resourceFields">The sequence of resource instance fields for the current shader.</param>
+    /// <param name="valueFields">The sequence of value instance fields for the current shader.</param>
     /// <param name="delegateInstanceFields">The sequence of delegate fields for the current shader.</param>
     /// <param name="staticFields">The sequence of static fields referenced by the shader.</param>
     /// <param name="sharedBuffers">The sequence of shared buffers declared by the shader.</param>
@@ -497,7 +506,8 @@ public sealed partial class IShaderGenerator2
     private static HlslSourceInfo GetNonDynamicHlslSourceInfo(
         ImmutableArray<(string Name, string Value)> definedConstants,
         ImmutableArray<(string Name, string Definition)> declaredTypes,
-        ImmutableArray<(string MetadataName, string Name, string HlslType)> instanceFields,
+        ImmutableArray<(string MetadataName, string Name, string HlslType)> resourceFields,
+        ImmutableArray<(string Name, string HlslType)> valueFields,
         ImmutableArray<string> delegateInstanceFields,
         ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> staticFields,
         ImmutableArray<(string Name, string Type, int? Count)> sharedBuffers,
@@ -614,7 +624,7 @@ public sealed partial class IShaderGenerator2
         }
 
         // User-defined values
-        foreach (var (_, fieldName, fieldType) in instanceFields.Where(static t => !HlslKnownTypes.IsTypedResourceType(t.MetadataName)))
+        foreach (var (fieldName, fieldType) in valueFields)
         {
             AppendLineAndLF($"    {fieldType} {fieldName};");
         }
@@ -640,7 +650,7 @@ public sealed partial class IShaderGenerator2
         }
 
         // Resources
-        foreach (var (metadataName, fieldName, fieldType) in instanceFields)
+        foreach (var (metadataName, fieldName, fieldType) in resourceFields)
         {
             if (HlslKnownTypes.IsConstantBufferType(metadataName))
             {
