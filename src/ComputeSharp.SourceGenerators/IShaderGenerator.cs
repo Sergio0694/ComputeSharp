@@ -67,7 +67,7 @@ public sealed partial class IShaderGenerator : ISourceGenerator
         {
             // getDispatchIdMethod,
             // loadDispatchDataMethod,
-            loadDispatchMetadataMethod,
+            //loadDispatchMetadataMethod,
             //buildHlslStringMethod,
             tryGetBytecodeMethod
         };

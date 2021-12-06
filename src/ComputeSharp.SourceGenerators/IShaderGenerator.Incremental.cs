@@ -148,6 +148,30 @@ public sealed partial class IShaderGenerator2 : IIncrementalGenerator
 
             context.AddSource($"{item.Left.Hierarchy.FilenameHint}.BuildHlslString", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
         });
+
+        // Get the dispatch metadata info
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, DispatchMetadataInfo MetadataInfo)> dispatchMetadataInfo =
+            dispatchDataInfo
+            .Collect()
+            .Combine(dynamicSourceInfo.Collect())
+            .SelectMany(static (item, token) => item.Left.Zip(item.Right, static (left, right) => (DataInfo: left, right.SourceInfo)))
+            .Select(static (item, token) => (
+                item.DataInfo.Hierarchy,
+                GetDispatchMetadataInfo(
+                    item.DataInfo.Root32BitConstantCount,
+                    item.SourceInfo.ImplicitTextureType is not null,
+                    item.SourceInfo.IsSamplerUsed,
+                    item.DataInfo.FieldInfos)))
+            .WithComparers(HierarchyInfo.Comparer.Default, DispatchMetadataInfo.Comparer.Default);
+
+        // Generate the LoadDispatchMetadata() methods
+        context.RegisterSourceOutput(dispatchMetadataInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
+        {
+            MethodDeclarationSyntax buildHlslStringMethod = CreateLoadDispatchMetadataMethod(item.Left.MetadataInfo);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, item.Right);
+
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.LoadDispatchMetadata", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
+        });
     }
 
     /// <summary>
