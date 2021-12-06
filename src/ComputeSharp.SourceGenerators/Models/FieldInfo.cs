@@ -1,4 +1,7 @@
-﻿using System.Collections.Immutable;
+﻿using ComputeSharp.SourceGenerators.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace ComputeSharp.SourceGenerators.Models;
 
@@ -39,4 +42,96 @@ internal abstract record FieldInfo
         int Rows,
         int Columns,
         ImmutableArray<int> Offsets) : FieldInfo;
+
+    /// <summary>
+    /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="FieldInfo"/>.
+    /// </summary>
+    public sealed class Comparer : IEqualityComparer<FieldInfo>
+    {
+        /// <summary>
+        /// The singleton <see cref="Comparer"/> instance.
+        /// </summary>
+        public static Comparer Default { get; } = new();
+
+        /// <inheritdoc/>
+        public bool Equals(FieldInfo? x, FieldInfo? y)
+        {
+            if (x is null && y is null)
+            {
+                return true;
+            }
+
+            if (x is null || y is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(x, y))
+            {
+                return true;
+            }
+
+            if (x is Resource resourceX && y is Resource resourceY)
+            {
+                return
+                    resourceX.FieldName == resourceY.FieldName &&
+                    resourceX.TypeName == resourceY.TypeName &&
+                    resourceX.Offset == resourceY.Offset;
+            }
+            else if (x is Primitive primitiveX && y is Primitive primitiveY)
+            {
+                return
+                    primitiveX.FieldPath.SequenceEqual(primitiveY.FieldPath) &&
+                    primitiveX.TypeName == primitiveY.TypeName &&
+                    primitiveX.Offset == primitiveY.Offset;
+            }
+            else if (x is NonLinearMatrix matrixX && y is NonLinearMatrix matrixY)
+            {
+                return
+                    matrixX.FieldPath.SequenceEqual(matrixY.FieldPath) &&
+                    matrixX.TypeName == matrixY.TypeName &&
+                    matrixX.ElementName == matrixY.ElementName &&
+                    matrixX.Rows == matrixY.Rows &&
+                    matrixY.Columns == matrixY.Columns &&
+                    matrixX.Offsets.SequenceEqual(matrixY.Offsets);
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc/>
+        public int GetHashCode(FieldInfo obj)
+        {
+            switch (obj)
+            {
+                case Resource resource:
+                    return HashCode.Combine(resource.FieldName, resource.TypeName, resource.Offset);
+                case Primitive primitive:
+                {
+                    HashCode hashCode = default;
+
+                    hashCode.AddRange(primitive.FieldPath);
+                    hashCode.Add(primitive.TypeName);
+                    hashCode.Add(primitive.Offset);
+
+                    return hashCode.ToHashCode();
+                }
+                case NonLinearMatrix matrix:
+                {
+                    HashCode hashCode = default;
+
+                    hashCode.AddRange(matrix.FieldPath);
+                    hashCode.Add(matrix.TypeName);
+                    hashCode.Add(matrix.ElementName);
+                    hashCode.Add(matrix.Rows);
+                    hashCode.Add(matrix.Columns);
+                    hashCode.AddRange(matrix.Offsets);
+
+                    return hashCode.ToHashCode();
+                }
+                default:
+                    return 0;
+            }
+        }
+    }
 }

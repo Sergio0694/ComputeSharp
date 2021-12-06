@@ -70,7 +70,7 @@ internal sealed record HierarchyInfo(string FilenameHint, string Namespace, Immu
             return
                 x.FilenameHint == y.FilenameHint &&
                 x.Namespace == y.Namespace &&
-                x.Names.AsSpan().SequenceEqual(y.Names.AsSpan());
+                x.Names.SequenceEqual(y.Names);
         }
 
         /// <inheritdoc/>

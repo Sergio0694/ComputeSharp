@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ComputeSharp.SourceGenerators.Extensions;
+using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace ComputeSharp.SourceGenerators.Models;
@@ -16,4 +18,56 @@ internal sealed record DispatchDataInfo(
     Type Type,
     ImmutableArray<FieldInfo> FieldInfos,
     int ResourceCount,
-    int Root32BitConstantCount);
+    int Root32BitConstantCount)
+{
+    /// <summary>
+    /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="DispatchDataInfo"/>.
+    /// </summary>
+    public sealed class Comparer : IEqualityComparer<DispatchDataInfo>
+    {
+        /// <summary>
+        /// The singleton <see cref="Comparer"/> instance.
+        /// </summary>
+        public static Comparer Default { get; } = new();
+
+        /// <inheritdoc/>
+        public bool Equals(DispatchDataInfo? x, DispatchDataInfo? y)
+        {
+            if (x is null && y is null)
+            {
+                return true;
+            }
+
+            if (x is null || y is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(x, y))
+            {
+                return true;
+            }
+
+            return
+                HierarchyInfo.Comparer.Default.Equals(x.Hierarchy, y.Hierarchy) &&
+                x.Type == y.Type &&
+                x.FieldInfos.SequenceEqual(y.FieldInfos, FieldInfo.Comparer.Default) &&
+                x.ResourceCount == y.ResourceCount &&
+                x.Root32BitConstantCount == y.Root32BitConstantCount;
+        }
+
+        /// <inheritdoc/>
+        public int GetHashCode(DispatchDataInfo obj)
+        {
+            HashCode hashCode = default;
+
+            hashCode.Add(HierarchyInfo.Comparer.Default.GetHashCode(obj.Hierarchy));
+            hashCode.Add(obj.Type);
+            hashCode.AddRange(obj.FieldInfos, FieldInfo.Comparer.Default);
+            hashCode.Add(obj.ResourceCount);
+            hashCode.Add(obj.Root32BitConstantCount);
+
+            return hashCode.ToHashCode();
+        }
+    }
+}

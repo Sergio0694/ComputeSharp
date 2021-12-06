@@ -77,10 +77,10 @@ internal sealed record HlslSourceInfo(
                 x.EntryPoint == y.EntryPoint &&
                 x.ImplicitTextureType == y.ImplicitTextureType &&
                 x.IsSamplerUsed == y.IsSamplerUsed &&
-                x.DefinedTypes.AsSpan().SequenceEqual(y.DefinedTypes.AsSpan()) &&
-                x.DefinedConstants.AsSpan().SequenceEqual(y.DefinedTypes.AsSpan()) &&
-                x.MethodSignatures.AsSpan().SequenceEqual(y.MethodSignatures.AsSpan()) &&
-                x.Delegates.AsSpan().SequenceEqual(y.Delegates.AsSpan());
+                x.DefinedTypes.SequenceEqual(y.DefinedTypes) &&
+                x.DefinedConstants.SequenceEqual(y.DefinedTypes) &&
+                x.MethodSignatures.SequenceEqual(y.MethodSignatures) &&
+                x.Delegates.SequenceEqual(y.Delegates);
         }
 
         /// <inheritdoc/>
