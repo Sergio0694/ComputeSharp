@@ -34,7 +34,7 @@ internal static class HashCodeExtensions
     {
         foreach (T item in items)
         {
-            hashCode.Add(comparer.GetHashCode(item));
+            hashCode.Add(item, comparer);
         }
     }
 }

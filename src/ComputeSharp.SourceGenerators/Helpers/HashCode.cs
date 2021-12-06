@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
@@ -30,7 +29,6 @@ internal struct HashCode
     /// Initializes the default seed.
     /// </summary>
     /// <returns>A random seed.</returns>
-    [Pure]
     private static unsafe uint GenerateGlobalSeed()
     {
         byte[] bytes = new byte[4];
@@ -40,9 +38,15 @@ internal struct HashCode
         return BitConverter.ToUInt32(bytes, 0);
     }
 
-    public static int Combine<T1>(T1 value1)
+    /// <summary>
+    /// Combines a value into a hash code.
+    /// </summary>
+    /// <typeparam name="T1">The type of the value to combine into the hash code.</typeparam>
+    /// <param name="value">The value to combine into the hash code.</param>
+    /// <returns>The hash code that represents the value.</returns>
+    public static int Combine<T1>(T1 value)
     {
-        uint hc1 = (uint)(value1?.GetHashCode() ?? 0);
+        uint hc1 = (uint)(value?.GetHashCode() ?? 0);
         uint hash = MixEmptyState();
 
         hash += 4;
@@ -52,6 +56,14 @@ internal struct HashCode
         return (int)hash;
     }
 
+    /// <summary>
+    /// Combines two values into a hash code.
+    /// </summary>
+    /// <typeparam name="T1">The type of the first value to combine into the hash code.</typeparam>
+    /// <typeparam name="T2">The type of the second value to combine into the hash code.</typeparam>
+    /// <param name="value1">The first value to combine into the hash code.</param>
+    /// <param name="value2">The second value to combine into the hash code.</param>
+    /// <returns>The hash code that represents the values.</returns>
     public static int Combine<T1, T2>(T1 value1, T2 value2)
     {
         uint hc1 = (uint)(value1?.GetHashCode() ?? 0);
@@ -66,6 +78,16 @@ internal struct HashCode
         return (int)hash;
     }
 
+    /// <summary>
+    /// Combines three values into a hash code.
+    /// </summary>
+    /// <typeparam name="T1">The type of the first value to combine into the hash code.</typeparam>
+    /// <typeparam name="T2">The type of the second value to combine into the hash code.</typeparam>
+    /// <typeparam name="T3">The type of the third value to combine into the hash code.</typeparam>
+    /// <param name="value1">The first value to combine into the hash code.</param>
+    /// <param name="value2">The second value to combine into the hash code.</param>
+    /// <param name="value3">The third value to combine into the hash code.</param>
+    /// <returns>The hash code that represents the values.</returns>
     public static int Combine<T1, T2, T3>(T1 value1, T2 value2, T3 value3)
     {
         uint hc1 = (uint)(value1?.GetHashCode() ?? 0);
@@ -82,6 +104,18 @@ internal struct HashCode
         return (int)hash;
     }
 
+    /// <summary>
+    /// Combines four values into a hash code.
+    /// </summary>
+    /// <typeparam name="T1">The type of the first value to combine into the hash code.</typeparam>
+    /// <typeparam name="T2">The type of the second value to combine into the hash code.</typeparam>
+    /// <typeparam name="T3">The type of the third value to combine into the hash code.</typeparam>
+    /// <typeparam name="T4">The type of the fourth value to combine into the hash code.</typeparam>
+    /// <param name="value1">The first value to combine into the hash code.</param>
+    /// <param name="value2">The second value to combine into the hash code.</param>
+    /// <param name="value3">The third value to combine into the hash code.</param>
+    /// <param name="value4">The fourth value to combine into the hash code.</param>
+    /// <returns>The hash code that represents the values.</returns>
     public static int Combine<T1, T2, T3, T4>(T1 value1, T2 value2, T3 value3, T4 value4)
     {
         uint hc1 = (uint)(value1?.GetHashCode() ?? 0);
@@ -104,6 +138,20 @@ internal struct HashCode
         return (int)hash;
     }
 
+    /// <summary>
+    /// Combines five values into a hash code.
+    /// </summary>
+    /// <typeparam name="T1">The type of the first value to combine into the hash code.</typeparam>
+    /// <typeparam name="T2">The type of the second value to combine into the hash code.</typeparam>
+    /// <typeparam name="T3">The type of the third value to combine into the hash code.</typeparam>
+    /// <typeparam name="T4">The type of the fourth value to combine into the hash code.</typeparam>
+    /// <typeparam name="T5">The type of the fifth value to combine into the hash code.</typeparam>
+    /// <param name="value1">The first value to combine into the hash code.</param>
+    /// <param name="value2">The second value to combine into the hash code.</param>
+    /// <param name="value3">The third value to combine into the hash code.</param>
+    /// <param name="value4">The fourth value to combine into the hash code.</param>
+    /// <param name="value5">The fifth value to combine into the hash code.</param>
+    /// <returns>The hash code that represents the values.</returns>
     public static int Combine<T1, T2, T3, T4, T5>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5)
     {
         uint hc1 = (uint)(value1?.GetHashCode() ?? 0);
@@ -128,6 +176,22 @@ internal struct HashCode
         return (int)hash;
     }
 
+    /// <summary>
+    /// Combines six values into a hash code.
+    /// </summary>
+    /// <typeparam name="T1">The type of the first value to combine into the hash code.</typeparam>
+    /// <typeparam name="T2">The type of the second value to combine into the hash code.</typeparam>
+    /// <typeparam name="T3">The type of the third value to combine into the hash code.</typeparam>
+    /// <typeparam name="T4">The type of the fourth value to combine into the hash code.</typeparam>
+    /// <typeparam name="T5">The type of the fifth value to combine into the hash code.</typeparam>
+    /// <typeparam name="T6">The type of the sixth value to combine into the hash code.</typeparam>
+    /// <param name="value1">The first value to combine into the hash code.</param>
+    /// <param name="value2">The second value to combine into the hash code.</param>
+    /// <param name="value3">The third value to combine into the hash code.</param>
+    /// <param name="value4">The fourth value to combine into the hash code.</param>
+    /// <param name="value5">The fifth value to combine into the hash code.</param>
+    /// <param name="value6">The sixth value to combine into the hash code.</param>
+    /// <returns>The hash code that represents the values.</returns>
     public static int Combine<T1, T2, T3, T4, T5, T6>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6)
     {
         uint hc1 = (uint)(value1?.GetHashCode() ?? 0);
@@ -154,6 +218,24 @@ internal struct HashCode
         return (int)hash;
     }
 
+    /// <summary>
+    /// Combines seven values into a hash code.
+    /// </summary>
+    /// <typeparam name="T1">The type of the first value to combine into the hash code.</typeparam>
+    /// <typeparam name="T2">The type of the second value to combine into the hash code.</typeparam>
+    /// <typeparam name="T3">The type of the third value to combine into the hash code.</typeparam>
+    /// <typeparam name="T4">The type of the fourth value to combine into the hash code.</typeparam>
+    /// <typeparam name="T5">The type of the fifth value to combine into the hash code.</typeparam>
+    /// <typeparam name="T6">The type of the sixth value to combine into the hash code.</typeparam>
+    /// <typeparam name="T7">The type of the seventh value to combine into the hash code.</typeparam>
+    /// <param name="value1">The first value to combine into the hash code.</param>
+    /// <param name="value2">The second value to combine into the hash code.</param>
+    /// <param name="value3">The third value to combine into the hash code.</param>
+    /// <param name="value4">The fourth value to combine into the hash code.</param>
+    /// <param name="value5">The fifth value to combine into the hash code.</param>
+    /// <param name="value6">The sixth value to combine into the hash code.</param>
+    /// <param name="value7">The seventh value to combine into the hash code.</param>
+    /// <returns>The hash code that represents the values.</returns>
     public static int Combine<T1, T2, T3, T4, T5, T6, T7>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7)
     {
         uint hc1 = (uint)(value1?.GetHashCode() ?? 0);
@@ -182,6 +264,26 @@ internal struct HashCode
         return (int)hash;
     }
 
+    /// <summary>
+    /// Combines eight values into a hash code.
+    /// </summary>
+    /// <typeparam name="T1">The type of the first value to combine into the hash code.</typeparam>
+    /// <typeparam name="T2">The type of the second value to combine into the hash code.</typeparam>
+    /// <typeparam name="T3">The type of the third value to combine into the hash code.</typeparam>
+    /// <typeparam name="T4">The type of the fourth value to combine into the hash code.</typeparam>
+    /// <typeparam name="T5">The type of the fifth value to combine into the hash code.</typeparam>
+    /// <typeparam name="T6">The type of the sixth value to combine into the hash code.</typeparam>
+    /// <typeparam name="T7">The type of the seventh value to combine into the hash code.</typeparam>
+    /// <typeparam name="T8">The type of the eigth value to combine into the hash code.</typeparam>
+    /// <param name="value1">The first value to combine into the hash code.</param>
+    /// <param name="value2">The second value to combine into the hash code.</param>
+    /// <param name="value3">The third value to combine into the hash code.</param>
+    /// <param name="value4">The fourth value to combine into the hash code.</param>
+    /// <param name="value5">The fifth value to combine into the hash code.</param>
+    /// <param name="value6">The sixth value to combine into the hash code.</param>
+    /// <param name="value7">The seventh value to combine into the hash code.</param>
+    /// <param name="value8">The eigth value to combine into the hash code.</param>
+    /// <returns>The hash code that represents the values.</returns>
     public static int Combine<T1, T2, T3, T4, T5, T6, T7, T8>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8)
     {
         uint hc1 = (uint)(value1?.GetHashCode() ?? 0);
@@ -213,6 +315,49 @@ internal struct HashCode
         return (int)hash;
     }
 
+    /// <summary>
+    /// Adds a single value to the current hash.
+    /// </summary>
+    /// <typeparam name="T">The type of the value to add into the hash code.</typeparam>
+    /// <param name="value">The value to add into the hash code.</param>
+    public void Add<T>(T value)
+    {
+        Add(value?.GetHashCode() ?? 0);
+    }
+
+    /// <summary>
+    /// Adds a single value to the current hash.
+    /// </summary>
+    /// <typeparam name="T">The type of the value to add into the hash code.</typeparam>
+    /// <param name="value">The value to add into the hash code.</param>
+    /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> instance to use.</param>
+    public void Add<T>(T value, IEqualityComparer<T>? comparer)
+    {
+        Add(value is null ? 0 : (comparer?.GetHashCode(value) ?? value.GetHashCode()));
+    }
+
+    /// <summary>
+    /// Adds a span of bytes to the hash code.
+    /// </summary>
+    /// <param name="value">The span.</param>
+    public void AddBytes(ReadOnlySpan<byte> value)
+    {
+        ref byte pos = ref MemoryMarshal.GetReference(value);
+        ref byte end = ref Unsafe.Add(ref pos, value.Length);
+
+        while ((nint)Unsafe.ByteOffset(ref pos, ref end) >= sizeof(int))
+        {
+            Add(Unsafe.ReadUnaligned<int>(ref pos));
+            pos = ref Unsafe.Add(ref pos, sizeof(int));
+        }
+
+        while (Unsafe.IsAddressLessThan(ref pos, ref end))
+        {
+            Add((int)pos);
+            pos = ref Unsafe.Add(ref pos, 1);
+        }
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void Initialize(out uint v1, out uint v2, out uint v3, out uint v4)
     {
@@ -240,6 +385,7 @@ internal struct HashCode
         return RotateLeft(v1, 1) + RotateLeft(v2, 7) + RotateLeft(v3, 12) + RotateLeft(v4, 18);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static uint MixEmptyState()
     {
         return seed + Prime5;
@@ -255,40 +401,6 @@ internal struct HashCode
         hash ^= hash >> 16;
 
         return hash;
-    }
-
-    public void Add<T>(T value)
-    {
-        Add(value?.GetHashCode() ?? 0);
-    }
-
-    public void Add<T>(T value, IEqualityComparer<T>? comparer)
-    {
-        Add(value is null ? 0 : (comparer?.GetHashCode(value) ?? value.GetHashCode()));
-    }
-
-    /// <summary>Adds a span of bytes to the hash code.</summary>
-    /// <param name="value">The span.</param>
-    /// <remarks>
-    /// This method does not guarantee that the result of adding a span of bytes will match
-    /// the result of adding the same bytes individually.
-    /// </remarks>
-    public void AddBytes(ReadOnlySpan<byte> value)
-    {
-        ref byte pos = ref MemoryMarshal.GetReference(value);
-        ref byte end = ref Unsafe.Add(ref pos, value.Length);
-
-        while ((nint)Unsafe.ByteOffset(ref pos, ref end) >= sizeof(int))
-        {
-            Add(Unsafe.ReadUnaligned<int>(ref pos));
-            pos = ref Unsafe.Add(ref pos, sizeof(int));
-        }
-
-        while (Unsafe.IsAddressLessThan(ref pos, ref end))
-        {
-            Add((int)pos);
-            pos = ref Unsafe.Add(ref pos, 1);
-        }
     }
 
     private void Add(int value)
@@ -323,6 +435,10 @@ internal struct HashCode
         }
     }
 
+    /// <summary>
+    /// Gets the resulting hashcode from the current instance.
+    /// </summary>
+    /// <returns>The resulting hashcode from the current instance.</returns>
     public int ToHashCode()
     {
         uint length = this.length;
