@@ -24,14 +24,14 @@ namespace ComputeSharp.SourceGenerators;
 public sealed partial class IShaderGenerator2
 {
     /// <summary>
-    /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslString</c> method.
+    /// Gathers all necessary information on a transpiled HLSL source for a given shader type.
     /// </summary>
     /// <param name="compilation">The input <see cref="Compilation"/> object currently in use.</param>
     /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> node to process.</param>
     /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
     /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
-    /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslString</c> method.</returns>
-    private static (NonDynamicHlslSourceInfo SourceInfo, string? ImplicitTextureType, bool IsSamplerUsed) GetNonDynamicHlslSourceInfo(
+    /// <returns>The resulting info on the processed shader.</returns>
+    private static HlslSourceInfo GetNonDynamicHlslSourceInfo(
         Compilation compilation,
         StructDeclarationSyntax structDeclaration,
         INamedTypeSymbol structDeclarationSymbol,
@@ -58,7 +58,8 @@ public sealed partial class IShaderGenerator2
         var pixelShaderSymbol = structDeclarationSymbol.AllInterfaces.FirstOrDefault(static interfaceSymbol => interfaceSymbol is { IsGenericType: true, Name: nameof(IPixelShader<byte>) });
         var isComputeShader = pixelShaderSymbol is null;
         var implicitTextureType = isComputeShader ? null : HlslKnownTypes.GetMappedNameForPixelShaderType(pixelShaderSymbol!);
-        var instanceFields = GetInstanceFields(builder, structDeclarationSymbol, discoveredTypes, isComputeShader);
+        var nonDelegateInstanceFields = GetInstanceFields(builder, structDeclarationSymbol, discoveredTypes, isComputeShader);
+        var delegateInstanceFields = GetDelegateFieldNames(structDeclarationSymbol);
         var sharedBuffers = GetSharedBuffers(builder, structDeclarationSymbol, discoveredTypes);
         var (entryPoint, processedMethods, isSamplerUsed) = GetProcessedMethods(builder, structDeclaration, structDeclarationSymbol, semanticModelProvider, discoveredTypes, staticMethods, constantDefinitions, isComputeShader);
         var implicitSamplerField = isSamplerUsed ? ("SamplerState", "__sampler") : default((string, string)?);
@@ -66,11 +67,14 @@ public sealed partial class IShaderGenerator2
         var definedConstants = GetDefinedConstants(constantDefinitions);
         var staticFields = GetStaticFields(builder, semanticModelProvider, structDeclaration, structDeclarationSymbol, discoveredTypes, constantDefinitions);
 
+        diagnostics = builder.ToImmutable();
+
         // Get the HLSL source data with the intermediate info
-        NonDynamicHlslSourceInfo sourceInfo = GetNonDynamicHlslSourceInfo(
+        return GetNonDynamicHlslSourceInfo(
             definedConstants,
             declaredTypes,
-            instanceFields,
+            nonDelegateInstanceFields,
+            delegateInstanceFields,
             staticFields,
             sharedBuffers,
             processedMethods,
@@ -78,10 +82,6 @@ public sealed partial class IShaderGenerator2
             implicitTextureType,
             isSamplerUsed,
             entryPoint);
-
-        diagnostics = builder.ToImmutable();
-
-        return (sourceInfo, implicitTextureType, isSamplerUsed);
     }
 
     /// <summary>
@@ -485,6 +485,7 @@ public sealed partial class IShaderGenerator2
     /// <param name="definedConstants">The sequence of defined constants for the shader.</param>
     /// <param name="declaredTypes">The sequence of declared types used by the shader.</param>
     /// <param name="instanceFields">The sequence of instance fields for the current shader.</param>
+    /// <param name="delegateInstanceFields">The sequence of delegate fields for the current shader.</param>
     /// <param name="staticFields">The sequence of static fields referenced by the shader.</param>
     /// <param name="sharedBuffers">The sequence of shared buffers declared by the shader.</param>
     /// <param name="processedMethods">The sequence of processed methods used by the shader.</param>
@@ -493,10 +494,11 @@ public sealed partial class IShaderGenerator2
     /// <param name="isSamplerUsed">Whether the static sampler is used by the shader.</param>
     /// <param name="executeMethod">The body of the entry point of the shader.</param>
     /// <returns>The series of statements to build the HLSL source to compile to execute the current shader.</returns>
-    private static NonDynamicHlslSourceInfo GetNonDynamicHlslSourceInfo(
+    private static HlslSourceInfo GetNonDynamicHlslSourceInfo(
         ImmutableArray<(string Name, string Value)> definedConstants,
         ImmutableArray<(string Name, string Definition)> declaredTypes,
         ImmutableArray<(string MetadataName, string Name, string HlslType)> instanceFields,
+        ImmutableArray<string> delegateInstanceFields,
         ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> staticFields,
         ImmutableArray<(string Name, string Type, int? Count)> sharedBuffers,
         ImmutableArray<(string Signature, string Definition)> processedMethods,
@@ -703,6 +705,11 @@ public sealed partial class IShaderGenerator2
             capturedFieldsAndResourcesAndForwardDeclarations,
             capturedMethods,
             entryPoint,
-            processedMethods.Select(static m => m.Signature).ToImmutableArray());
+            implicitTextureType,
+            isSamplerUsed,
+            declaredTypes.Select(static t => t.Name).ToImmutableArray(),
+            definedConstants.Select(static c => c.Name).ToImmutableArray(),
+            processedMethods.Select(static m => m.Signature).ToImmutableArray(),
+            delegateInstanceFields);
     }
 }

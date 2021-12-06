@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using ComputeSharp.SourceGenerators.Extensions;
@@ -38,22 +39,44 @@ internal sealed record HierarchyInfo(string FilenameHint, string Namespace, Immu
             names.ToImmutable());
     }
 
-    /// <inheritdoc/>
-    [Pure]
-    public bool Equals(HierarchyInfo? other)
+    /// <summary>
+    /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="HierarchyInfo"/>.
+    /// </summary>
+    public sealed class Comparer : IEqualityComparer<HierarchyInfo>
     {
-        return
-            other is not null &&
-            (ReferenceEquals(this, other) ||
-             (Namespace == other.Namespace &&
-              (Names == other.Names ||
-               Names.AsSpan().SequenceEqual(other.Names.AsSpan()))));
-    }
+        /// <summary>
+        /// The singleton <see cref="Comparer"/> instance.
+        /// </summary>
+        public static Comparer Default { get; } = new();
 
-    /// <inheritdoc/>
-    [Pure]
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Namespace, Names, Names[0]);
+        /// <inheritdoc/>
+        public bool Equals(HierarchyInfo? x, HierarchyInfo? y)
+        {
+            if (x is null && y is null)
+            {
+                return true;
+            }
+
+            if (x is null || y is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(x, y))
+            {
+                return true;
+            }
+
+            return
+                x.FilenameHint == y.FilenameHint &&
+                x.Namespace == y.Namespace &&
+                x.Names.AsSpan().SequenceEqual(y.Names.AsSpan());
+        }
+
+        /// <inheritdoc/>
+        public int GetHashCode(HierarchyInfo obj)
+        {
+            return HashCode.Combine(obj.Namespace, obj.Names, obj.Names[0]);
+        }
     }
 }

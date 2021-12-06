@@ -194,14 +194,12 @@ public sealed partial class IShaderGenerator2
     /// <summary>
     /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchDataMethod</c> method.
     /// </summary>
-    /// <param name="context">The input <see cref="SourceProductionContext"/> instance to use.</param>
     /// <param name="shaderInterfaceType">The type of shader interface urrently being processed.</param>
     /// <param name="fieldInfos">The array of <see cref="FieldInfo"/> values for all captured fields.</param>
     /// <param name="resourceCount">The total number of captured resources in the shader.</param>
     /// <param name="root32BitConstantsCount">The total number of needed 32 bit constants in the shader root signature.</param>
     /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>LoadDispatchDataMethod</c> method.</returns>
     private static MethodDeclarationSyntax CreateLoadDispatchDataMethod(
-        SourceProductionContext context,
         Type shaderInterfaceType,
         ImmutableArray<FieldInfo> fieldInfos,
         int resourceCount,
@@ -228,20 +226,18 @@ public sealed partial class IShaderGenerator2
                 Parameter(Identifier("x")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
                 Parameter(Identifier("y")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
                 Parameter(Identifier("z")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))))
-            .WithBody(Block(GetDispatchDataLoadingStatements(context, shaderInterfaceType, fieldInfos, resourceCount, root32BitConstantsCount)));
+            .WithBody(Block(GetDispatchDataLoadingStatements(shaderInterfaceType, fieldInfos, resourceCount, root32BitConstantsCount)));
     }
 
     /// <summary>
     /// Gets a sequence of statements to load the dispatch data for a given shader.
     /// </summary>
-    /// <param name="context">The current generator context in use.</param>
     /// <param name="shaderInterfaceType">The type of shader interface urrently being processed.</param>
     /// <param name="fieldInfos">The array of <see cref="FieldInfo"/> values for all captured fields.</param>
     /// <param name="resourceCount">The total number of captured resources in the shader.</param>
     /// <param name="root32BitConstantsCount">The total number of needed 32 bit constants in the shader root signature.</param>
     /// <returns>The sequence of <see cref="StatementSyntax"/> instances to load shader dispatch data.</returns>
     private static ImmutableArray<StatementSyntax> GetDispatchDataLoadingStatements(
-        SourceProductionContext context,
         Type shaderInterfaceType,
         ImmutableArray<FieldInfo> fieldInfos,
         int resourceCount,

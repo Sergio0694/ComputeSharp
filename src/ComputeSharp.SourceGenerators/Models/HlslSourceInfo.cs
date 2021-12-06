@@ -1,11 +1,12 @@
-﻿using System;
+﻿using ComputeSharp.SourceGenerators.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace ComputeSharp.SourceGenerators.Models;
 
 /// <summary>
-/// A model for extracted info on a processed HLSL shader, excluding dynamic information.
+/// A model for extracted info on a processed HLSL shader.
 /// </summary>
 /// <param name="HeaderAndThreadsX">The shader generated header and <c>threadsX</c> count declaration.</param>
 /// <param name="ThreadsY">The <c>threadsY</c> count declaration.</param>
@@ -15,8 +16,13 @@ namespace ComputeSharp.SourceGenerators.Models;
 /// <param name="CapturedFieldsAndResourcesAndForwardDeclarations">The captured fields, and method forward declarations.</param>
 /// <param name="CapturedMethods">The captured method implementations.</param>
 /// <param name="EntryPoint">The shader entry point.</param>
+/// <param name="ImplicitTextureType">The type of the implicit texture type, if any.</param>
+/// <param name="IsSamplerUsed">Whether or not the static sampler is used.</param>
+/// <param name="DefinedTypes">The names of declared types.</param>
+/// <param name="DefinedConstants">The names of defined constants.</param>
 /// <param name="MethodSignatures">The signatures for captured methods.</param>
-internal sealed record NonDynamicHlslSourceInfo(
+/// <param name="Delegates">The list of delegate fields.</param>
+internal sealed record HlslSourceInfo(
     string HeaderAndThreadsX,
     string ThreadsY,
     string ThreadsZ,
@@ -25,15 +31,25 @@ internal sealed record NonDynamicHlslSourceInfo(
     string CapturedFieldsAndResourcesAndForwardDeclarations,
     string CapturedMethods,
     string EntryPoint,
-    ImmutableArray<string> MethodSignatures)
+    string? ImplicitTextureType,
+    bool IsSamplerUsed,
+    ImmutableArray<string> DefinedTypes,
+    ImmutableArray<string> DefinedConstants,
+    ImmutableArray<string> MethodSignatures,
+    ImmutableArray<string> Delegates)
 {
     /// <summary>
-    /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="NonDynamicHlslSourceInfo"/>.
+    /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="HlslSourceInfo"/>.
     /// </summary>
-    public sealed class Comparer : IEqualityComparer<NonDynamicHlslSourceInfo>
+    public sealed class Comparer : IEqualityComparer<HlslSourceInfo>
     {
+        /// <summary>
+        /// The singleton <see cref="Comparer"/> instance.
+        /// </summary>
+        public static Comparer Default { get; } = new();
+
         /// <inheritdoc/>
-        public bool Equals(NonDynamicHlslSourceInfo? x, NonDynamicHlslSourceInfo? y)
+        public bool Equals(HlslSourceInfo? x, HlslSourceInfo? y)
         {
             if (x is null && y is null)
             {
@@ -59,11 +75,16 @@ internal sealed record NonDynamicHlslSourceInfo(
                 x.CapturedFieldsAndResourcesAndForwardDeclarations == y.CapturedFieldsAndResourcesAndForwardDeclarations &&
                 x.CapturedMethods == y.CapturedMethods &&
                 x.EntryPoint == y.EntryPoint &&
-                x.MethodSignatures.AsSpan().SequenceEqual(y.MethodSignatures.AsSpan());
+                x.ImplicitTextureType == y.ImplicitTextureType &&
+                x.IsSamplerUsed == y.IsSamplerUsed &&
+                x.DefinedTypes.AsSpan().SequenceEqual(y.DefinedTypes.AsSpan()) &&
+                x.DefinedConstants.AsSpan().SequenceEqual(y.DefinedTypes.AsSpan()) &&
+                x.MethodSignatures.AsSpan().SequenceEqual(y.MethodSignatures.AsSpan()) &&
+                x.Delegates.AsSpan().SequenceEqual(y.Delegates.AsSpan());
         }
 
         /// <inheritdoc/>
-        public int GetHashCode(NonDynamicHlslSourceInfo obj)
+        public int GetHashCode(HlslSourceInfo obj)
         {
             HashCode hashCode = default;
 
@@ -75,11 +96,12 @@ internal sealed record NonDynamicHlslSourceInfo(
             hashCode.Add(obj.CapturedFieldsAndResourcesAndForwardDeclarations);
             hashCode.Add(obj.CapturedMethods);
             hashCode.Add(obj.EntryPoint);
-
-            foreach (string signature in obj.MethodSignatures)
-            {
-                hashCode.Add(signature);
-            }
+            hashCode.Add(obj.ImplicitTextureType);
+            hashCode.Add(obj.IsSamplerUsed);
+            hashCode.AddRange(obj.DefinedTypes);
+            hashCode.AddRange(obj.DefinedConstants);
+            hashCode.AddRange(obj.MethodSignatures);
+            hashCode.AddRange(obj.Delegates);
 
             return hashCode.ToHashCode();
         }

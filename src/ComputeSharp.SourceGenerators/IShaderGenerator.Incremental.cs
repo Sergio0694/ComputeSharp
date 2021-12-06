@@ -5,6 +5,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using ComputeSharp.SourceGenerators.Diagnostics;
+using ComputeSharp.SourceGenerators.Extensions;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -104,7 +105,6 @@ public sealed partial class IShaderGenerator2 : IIncrementalGenerator
         context.RegisterSourceOutput(dispatchDataInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
         {
             MethodDeclarationSyntax loadDispatchDataMethod = CreateLoadDispatchDataMethod(
-                context,
                 item.Left.Type,
                 item.Left.FieldInfos,
                 item.Left.ResourceCount,
@@ -115,24 +115,37 @@ public sealed partial class IShaderGenerator2 : IIncrementalGenerator
         });
 
         // Get the HLSL source info
-        IncrementalValuesProvider<Result<(NonDynamicHlslSourceInfo SourceInfo, string? ImplicitTextureType, bool IsSamplerUsed)>> hlslSourceInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, Result<HlslSourceInfo> Result)> hlslSourceInfoWithErrors =
             shaderDeclarations
             .Combine(context.CompilationProvider)
             .Select(static (item, token) =>
             {
-                (NonDynamicHlslSourceInfo SourceInfo, string? ImplicitTextureType, bool IsSamplerUsed) hlslInfo = GetNonDynamicHlslSourceInfo(
+                HlslSourceInfo hlslInfo = GetNonDynamicHlslSourceInfo(
                     item.Right,
                     item.Left.Syntax,
                     item.Left.Symbol,
                     out ImmutableArray<Diagnostic> diagnostics);
 
-                return new Result<(NonDynamicHlslSourceInfo, string?, bool)>(hlslInfo, diagnostics);
+                return (item.Left.Hierarchy, new Result<HlslSourceInfo>(hlslInfo, diagnostics));
             });
 
         // Output the diagnostics
-        context.ReportDiagnostics(hlslSourceInfo.Select(static (item, token) => item.Errors));
+        context.ReportDiagnostics(hlslSourceInfoWithErrors.Select(static (item, token) => item.Result.Errors));
 
+        // Get the filtered sequence to enable caching
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslSourceInfo SourceInfo)> dynamicSourceInfo =
+            hlslSourceInfoWithErrors
+            .Select(static (item, token) => (item.Hierarchy, item.Result.Value))
+            .WithComparers(HierarchyInfo.Comparer.Default, HlslSourceInfo.Comparer.Default);
 
+        // Generate the BuildHlslString() methods
+        context.RegisterSourceOutput(dynamicSourceInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
+        {
+            MethodDeclarationSyntax buildHlslStringMethod = CreateBuildHlslStringMethod(item.Left.SourceInfo);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, item.Right);
+
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.BuildHlslString", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
+        });
     }
 
     /// <summary>
