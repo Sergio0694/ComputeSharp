@@ -8,11 +8,13 @@ using System.Runtime.InteropServices;
 using ComputeSharp.__Internals;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Shaders.Translation;
+using ComputeSharp.SourceGenerators.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
+using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 #pragma warning disable CS0618
@@ -52,51 +54,40 @@ public sealed partial class IShaderGenerator
                 Parameter(Identifier("threadsY")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
                 Parameter(Identifier("threadsZ")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
                 Parameter(Identifier("bytecode")).AddModifiers(Token(SyntaxKind.OutKeyword)).WithType(IdentifierName("global::System.ReadOnlySpan<byte>")))
-            .WithBody(GetShaderBytecodeBody(structDeclarationSymbol, isDynamicShader, hlslSource, out bytecodeLiterals));
+            .WithBody(GetShaderBytecodeBody(context, structDeclarationSymbol, isDynamicShader, hlslSource, out bytecodeLiterals));
     }
 
     /// <summary>
     /// Gets a <see cref="BlockSyntax"/> instance with the logic to try to get a compiled shader bytecode.
     /// </summary>
+    /// <param name="context">The current generator context in use.</param>
     /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
     /// <param name="isDynamicShader">Indicates whether or not the shader is dynamic (ie. captures delegates).</param>
     /// <param name="hlslSource">The generated HLSL source code (ignoring captured delegates, if present).</param>
     /// <param name="bytecodeLiterals">The resulting bytecode literals to insert into the final source code.</param>
     /// <returns>The <see cref="BlockSyntax"/> instance to hash the input shader.</returns>
     [Pure]
-    private static unsafe BlockSyntax GetShaderBytecodeBody(INamedTypeSymbol structDeclarationSymbol, bool isDynamicShader, string hlslSource, out string? bytecodeLiterals)
+    private static unsafe BlockSyntax GetShaderBytecodeBody(
+        GeneratorExecutionContext context,
+        INamedTypeSymbol structDeclarationSymbol,
+        bool isDynamicShader,
+        string hlslSource,
+        out string? bytecodeLiterals)
     {
         AttributeData? attribute = structDeclarationSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass is { Name: nameof(EmbeddedBytecodeAttribute) });
 
         // No embedded shader was requested
         if (attribute is null)
         {
-            bytecodeLiterals = null;
-
-            // This code produces a method declaration as follows:
-            //
-            // bytecode = default;
-            //
-            // return false;
-            return
-                Block(
-                ExpressionStatement(
-                    AssignmentExpression(
-                        SyntaxKind.SimpleAssignmentExpression,
-                        IdentifierName("bytecode"),
-                        LiteralExpression(SyntaxKind.DefaultLiteralExpression, Token(SyntaxKind.DefaultKeyword)))),
-                ReturnStatement(
-                    LiteralExpression(
-                        SyntaxKind.FalseLiteralExpression)));
+            goto Failure;
         }
 
         // If the current shader is dynamic, emit a diagnostic error
         if (isDynamicShader)
         {
-            bytecodeLiterals = null;
+            context.ReportDiagnostic(EmbeddedBytecodeWithDynamicShader, structDeclarationSymbol, structDeclarationSymbol);
 
-            // TODO
-            return Block();
+            goto Failure;
         }
 
         // Validate the thread number arguments
@@ -107,16 +98,16 @@ public sealed partial class IShaderGenerator
             threadsY is < 1 or > 1024 ||
             threadsZ is < 1 or > 64)
         {
-            bytecodeLiterals = null;
+            context.ReportDiagnostic(InvalidEmbeddedBytecodeThreadIds, structDeclarationSymbol, structDeclarationSymbol);
 
-            // TODO
-            return Block();
+            goto Failure;
         }
-
-        LoadNativeDxcLibraries();
 
         try
         {
+            // Try to load dxcompiler.dll and dxil.dll
+            LoadNativeDxcLibraries();
+
             // Replace the actual thread num values
             hlslSource = hlslSource.Replace("<THREADSX>", threadsX.ToString()).Replace("<THREADSY>", threadsY.ToString()).Replace("<THREADSZ>", threadsZ.ToString());
 
@@ -184,20 +175,42 @@ public sealed partial class IShaderGenerator
                         LiteralExpression(SyntaxKind.DefaultLiteralExpression, Token(SyntaxKind.DefaultKeyword)))),
                 ReturnStatement(LiteralExpression(SyntaxKind.FalseLiteralExpression)));
         }
-        catch (Win32Exception)
+        catch (Win32Exception e)
         {
-            bytecodeLiterals = null;
-
-            // TODO
-            return Block();
+            context.ReportDiagnostic(
+                EmbeddedBytecodeFailedWithWin32Exception,
+                structDeclarationSymbol,
+                structDeclarationSymbol,
+                e.HResult,
+                e.Message);
         }
-        catch (HlslCompilationException)
+        catch (HlslCompilationException e)
         {
-            bytecodeLiterals = null;
-
-            // TODO
-            return Block();
+            context.ReportDiagnostic(
+                EmbeddedBytecodeFailedWithHlslCompilationException,
+                structDeclarationSymbol,
+                structDeclarationSymbol,
+                e.Message);
         }
+
+        Failure:
+        bytecodeLiterals = null;
+
+        // This code produces a method declaration as follows:
+        //
+        // bytecode = default;
+        //
+        // return false;
+        return
+            Block(
+            ExpressionStatement(
+                AssignmentExpression(
+                    SyntaxKind.SimpleAssignmentExpression,
+                    IdentifierName("bytecode"),
+                    LiteralExpression(SyntaxKind.DefaultLiteralExpression, Token(SyntaxKind.DefaultKeyword)))),
+            ReturnStatement(
+                LiteralExpression(
+                    SyntaxKind.FalseLiteralExpression)));
     }
 
     /// <summary>
