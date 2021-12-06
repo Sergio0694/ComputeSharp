@@ -14,7 +14,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     {
         var updatedNode = (AnonymousObjectCreationExpressionSyntax)base.VisitAnonymousObjectCreationExpression(node)!;
 
-        Context.ReportDiagnostic(AnonymousObjectCreationExpression, node);
+        Diagnostics.Add(AnonymousObjectCreationExpression, node);
 
         return updatedNode;
     }
@@ -22,7 +22,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitAwaitExpression(AwaitExpressionSyntax node)
     {
-        Context.ReportDiagnostic(AwaitExpression, node);
+        Diagnostics.Add(AwaitExpression, node);
 
         return base.VisitAwaitExpression(node);
     }
@@ -30,7 +30,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitCheckedExpression(CheckedExpressionSyntax node)
     {
-        Context.ReportDiagnostic(CheckedExpression, node);
+        Diagnostics.Add(CheckedExpression, node);
 
         return base.VisitCheckedExpression(node);
     }
@@ -38,7 +38,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitCheckedStatement(CheckedStatementSyntax node)
     {
-        Context.ReportDiagnostic(CheckedStatement, node);
+        Diagnostics.Add(CheckedStatement, node);
 
         return base.VisitCheckedStatement(node);
     }
@@ -46,7 +46,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitFixedStatement(FixedStatementSyntax node)
     {
-        Context.ReportDiagnostic(FixedStatement, node);
+        Diagnostics.Add(FixedStatement, node);
 
         return base.VisitFixedStatement(node);
     }
@@ -54,7 +54,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitForEachStatement(ForEachStatementSyntax node)
     {
-        Context.ReportDiagnostic(ForEachStatement, node);
+        Diagnostics.Add(ForEachStatement, node);
 
         return base.VisitForEachStatement(node);
     }
@@ -62,7 +62,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitForEachVariableStatement(ForEachVariableStatementSyntax node)
     {
-        Context.ReportDiagnostic(ForEachStatement, node);
+        Diagnostics.Add(ForEachStatement, node);
 
         return base.VisitForEachVariableStatement(node);
     }
@@ -70,7 +70,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitLockStatement(LockStatementSyntax node)
     {
-        Context.ReportDiagnostic(LockStatement, node);
+        Diagnostics.Add(LockStatement, node);
 
         return base.VisitLockStatement(node);
     }
@@ -78,7 +78,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitQueryExpression(QueryExpressionSyntax node)
     {
-        Context.ReportDiagnostic(QueryExpression, node);
+        Diagnostics.Add(QueryExpression, node);
 
         return base.VisitQueryExpression(node);
     }
@@ -86,7 +86,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitRangeExpression(RangeExpressionSyntax node)
     {
-        Context.ReportDiagnostic(RangeExpression, node);
+        Diagnostics.Add(RangeExpression, node);
 
         return base.VisitRangeExpression(node);
     }
@@ -94,7 +94,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitRecursivePattern(RecursivePatternSyntax node)
     {
-        Context.ReportDiagnostic(RecursivePattern, node);
+        Diagnostics.Add(RecursivePattern, node);
 
         return base.VisitRecursivePattern(node);
     }
@@ -102,7 +102,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitRefType(RefTypeSyntax node)
     {
-        Context.ReportDiagnostic(RefType, node);
+        Diagnostics.Add(RefType, node);
 
         return base.VisitRefType(node);
     }
@@ -110,7 +110,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitRelationalPattern(RelationalPatternSyntax node)
     {
-        Context.ReportDiagnostic(RelationalPattern, node);
+        Diagnostics.Add(RelationalPattern, node);
 
         return base.VisitRelationalPattern(node);
     }
@@ -118,7 +118,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitSizeOfExpression(SizeOfExpressionSyntax node)
     {
-        Context.ReportDiagnostic(SizeOfExpression, node);
+        Diagnostics.Add(SizeOfExpression, node);
 
         return base.VisitSizeOfExpression(node);
     }
@@ -126,7 +126,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitStackAllocArrayCreationExpression(StackAllocArrayCreationExpressionSyntax node)
     {
-        Context.ReportDiagnostic(StackAllocArrayCreationExpression, node);
+        Diagnostics.Add(StackAllocArrayCreationExpression, node);
 
         return base.VisitStackAllocArrayCreationExpression(node);
     }
@@ -134,7 +134,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitThrowExpression(ThrowExpressionSyntax node)
     {
-        Context.ReportDiagnostic(ThrowExpressionOrStatement, node);
+        Diagnostics.Add(ThrowExpressionOrStatement, node);
 
         return base.VisitThrowExpression(node);
     }
@@ -142,7 +142,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitThrowStatement(ThrowStatementSyntax node)
     {
-        Context.ReportDiagnostic(ThrowExpressionOrStatement, node);
+        Diagnostics.Add(ThrowExpressionOrStatement, node);
 
         return base.VisitThrowStatement(node);
     }
@@ -150,7 +150,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitTryStatement(TryStatementSyntax node)
     {
-        Context.ReportDiagnostic(TryStatement, node);
+        Diagnostics.Add(TryStatement, node);
 
         return base.VisitTryStatement(node);
     }
@@ -158,7 +158,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitTupleType(TupleTypeSyntax node)
     {
-        Context.ReportDiagnostic(TupleType, node);
+        Diagnostics.Add(TupleType, node);
 
         return base.VisitTupleType(node);
     }
@@ -166,7 +166,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitUsingStatement(UsingStatementSyntax node)
     {
-        Context.ReportDiagnostic(UsingStatementOrDeclaration, node);
+        Diagnostics.Add(UsingStatementOrDeclaration, node);
 
         return base.VisitUsingStatement(node);
     }
@@ -174,7 +174,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitYieldStatement(YieldStatementSyntax node)
     {
-        Context.ReportDiagnostic(YieldStatement, node);
+        Diagnostics.Add(YieldStatement, node);
 
         return base.VisitYieldStatement(node);
     }
@@ -182,7 +182,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitFunctionPointerType(FunctionPointerTypeSyntax node)
     {
-        Context.ReportDiagnostic(FunctionPointer, node);
+        Diagnostics.Add(FunctionPointer, node);
 
         return base.VisitFunctionPointerType(node);
     }
@@ -190,7 +190,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitPointerType(PointerTypeSyntax node)
     {
-        Context.ReportDiagnostic(PointerType, node);
+        Diagnostics.Add(PointerType, node);
 
         return base.VisitPointerType(node);
     }
@@ -198,7 +198,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <inheritdoc/>
     public override SyntaxNode? VisitUnsafeStatement(UnsafeStatementSyntax node)
     {
-        Context.ReportDiagnostic(UnsafeStatement, node);
+        Diagnostics.Add(UnsafeStatement, node);
 
         return base.VisitUnsafeStatement(node);
     }

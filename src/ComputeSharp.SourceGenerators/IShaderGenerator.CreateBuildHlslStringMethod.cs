@@ -239,7 +239,7 @@ public sealed partial class IShaderGenerator
                         false => $"static {HlslKnownTypes.GetMappedName(typeSymbol)}"
                     };
 
-                    StaticFieldRewriter2 staticFieldRewriter = new(
+                    StaticFieldRewriter staticFieldRewriter = new(
                         semanticModel,
                         discoveredTypes,
                         constantDefinitions,
@@ -360,7 +360,7 @@ public sealed partial class IShaderGenerator
                      methodDeclarationSymbol.Parameters.Length == 0);
 
                 // Create the source rewriter for the current method
-                ShaderSourceRewriter2 shaderSourceRewriter = new(
+                ShaderSourceRewriter shaderSourceRewriter = new(
                     structDeclarationSymbol,
                     semanticModel,
                     discoveredTypes,
@@ -388,8 +388,8 @@ public sealed partial class IShaderGenerator
                 {
                     processedMethod = isComputeShader switch
                     {
-                        true => new ExecuteMethodRewriter2.Compute(shaderSourceRewriter).Visit(processedMethod)!,
-                        false => new ExecuteMethodRewriter2.Pixel(shaderSourceRewriter).Visit(processedMethod)!
+                        true => new ExecuteMethodRewriter.Compute(shaderSourceRewriter).Visit(processedMethod)!,
+                        false => new ExecuteMethodRewriter.Pixel(shaderSourceRewriter).Visit(processedMethod)!
                     };
 
                     entryPoint = processedMethod.NormalizeWhitespace(eol: "\n").ToFullString();

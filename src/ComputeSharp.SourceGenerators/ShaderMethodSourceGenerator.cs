@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Text;
 using ComputeSharp.__Internals;
@@ -109,8 +110,14 @@ public sealed partial class ShaderMethodSourceGenerator : ISourceGenerator
         IDictionary<IFieldSymbol, string> constantDefinitions)
     {
         Dictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods = new(SymbolEqualityComparer.Default);
+        ImmutableArray<Diagnostic>.Builder diagnostics = ImmutableArray.CreateBuilder<Diagnostic>();
 
-        ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, discoveredTypes, staticMethods, constantDefinitions, context);
+        ShaderSourceRewriter shaderSourceRewriter = new(semanticModel, discoveredTypes, staticMethods, constantDefinitions, diagnostics);
+
+        foreach (Diagnostic diagnostic in diagnostics.ToImmutable())
+        {
+            context.ReportDiagnostic(diagnostic);
+        }
 
         // Rewrite the method syntax tree
         var targetMethod = shaderSourceRewriter

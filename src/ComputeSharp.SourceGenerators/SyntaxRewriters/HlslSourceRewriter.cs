@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using ComputeSharp.SourceGenerators.Diagnostics;
@@ -37,9 +38,9 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     protected readonly IDictionary<IFieldSymbol, string> ConstantDefinitions;
 
     /// <summary>
-    /// The current generator context in use.
+    /// The collection of produced <see cref="Diagnostic"/> instances.
     /// </summary>
-    protected readonly GeneratorExecutionContext Context;
+    protected readonly ImmutableArray<Diagnostic>.Builder Diagnostics;
 
     /// <summary>
     /// Creates a new <see cref="HlslSourceRewriter"/> instance with the specified parameters.
@@ -47,17 +48,17 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
     /// <param name="semanticModel">The <see cref="Microsoft.CodeAnalysis.SemanticModel"/> instance for the target syntax tree.</param>
     /// <param name="discoveredTypes">The set of discovered custom types.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
-    /// <param name="context">The current generator context in use.</param>
+    /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
     protected HlslSourceRewriter(
         SemanticModelProvider semanticModel,
         ICollection<INamedTypeSymbol> discoveredTypes,
         IDictionary<IFieldSymbol, string> constantDefinitions,
-        GeneratorExecutionContext context)
+        ImmutableArray<Diagnostic>.Builder diagnostics)
     {
         SemanticModel = semanticModel;
         DiscoveredTypes = discoveredTypes;
         ConstantDefinitions = constantDefinitions;
-        Context = context;
+        Diagnostics = diagnostics;
     }
 
     /// <summary>
@@ -80,7 +81,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
 
         if (SemanticModel.For(node).GetTypeInfo(node.Type).Type is ITypeSymbol { IsUnmanagedType: false } type)
         {
-            Context.ReportDiagnostic(InvalidObjectDeclaration, node, type);
+            Diagnostics.Add(InvalidObjectDeclaration, node, type);
         }
 
         // If var is used, replace it with the explicit type
@@ -99,7 +100,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
 
         if (SemanticModel.For(node).GetTypeInfo(node).Type is ITypeSymbol { IsUnmanagedType: false } type)
         {
-            Context.ReportDiagnostic(InvalidObjectCreationExpression, node, type);
+            Diagnostics.Add(InvalidObjectCreationExpression, node, type);
         }
 
         updatedNode = updatedNode.ReplaceAndTrackType(updatedNode.Type, node, SemanticModel.For(node), DiscoveredTypes);
@@ -135,7 +136,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
 
         if (SemanticModel.For(node).GetTypeInfo(node).Type is ITypeSymbol { IsUnmanagedType: false } type)
         {
-            Context.ReportDiagnostic(InvalidObjectCreationExpression, node, type);
+            Diagnostics.Add(InvalidObjectCreationExpression, node, type);
         }
 
         TypeSyntax explicitType = IdentifierName("").ReplaceAndTrackType(node, SemanticModel.For(node), DiscoveredTypes);
@@ -214,7 +215,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
         }
         else if (updatedNode.IsKind(SyntaxKind.StringLiteralExpression))
         {
-            Context.ReportDiagnostic(StringLiteralExpression, node);
+            Diagnostics.Add(StringLiteralExpression, node);
         }
 
         return updatedNode;
@@ -276,7 +277,7 @@ internal abstract partial class HlslSourceRewriter : CSharpSyntaxRewriter
                     if (SemanticModel.For(node).GetOperation(argument.Expression) is not IFieldReferenceOperation fieldReference ||
                         !HlslKnownMembers.IsKnownMatrixIndex(fieldReference.Field.GetFullMetadataName()))
                     {
-                        Context.ReportDiagnostic(NonConstantMatrixSwizzledIndex, argument);
+                        Diagnostics.Add(NonConstantMatrixSwizzledIndex, argument);
 
                         isValid = false;
                     }
