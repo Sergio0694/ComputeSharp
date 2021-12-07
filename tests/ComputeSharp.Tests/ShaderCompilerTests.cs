@@ -193,6 +193,27 @@ namespace ComputeSharp.Tests
         {
             ReflectionServices.GetShaderInfo<LoopWithVarCounterShader>(out var info);
         }
+
+        [TestMethod]
+        public void DoublePrecisionSupport()
+        {
+            ReflectionServices.GetShaderInfo<DoublePrecisionSupportShader>(out var info);
+
+            Assert.IsTrue(info.RequiresDoublePrecisionSupport);
+        }
+
+        [AutoConstructor]
+        public readonly partial struct DoublePrecisionSupportShader : IComputeShader
+        {
+            public readonly ReadWriteBuffer<double> buffer;
+            public readonly double factor;
+
+            /// <inheritdoc/>
+            public void Execute()
+            {
+                buffer[ThreadIds.X] *= factor + 3.14;
+            }
+        }
     }
 }
 
