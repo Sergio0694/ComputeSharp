@@ -53,6 +53,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi\IDXGIOutput.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi\IDXGISwapChain.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d2d1\D2D1_FEATURE_LEVEL.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d11shader\D3D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d11\D3D11.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12sdklayers\D3D12_INFO_QUEUE_FILTER.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3d12sdklayers\D3D12_INFO_QUEUE_FILTER_DESC.cs" />

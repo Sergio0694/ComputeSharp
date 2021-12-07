@@ -124,4 +124,9 @@ public readonly struct ShaderInfo
     /// The number of interface slots used.
     /// </summary>
     public readonly uint InterfaceSlotCount;
+
+    /// <summary>
+    /// Indicates whether support for double precision floating point numbers is required.
+    /// </summary>
+    public readonly bool RequiresDoublePrecisionSupport;
 }
