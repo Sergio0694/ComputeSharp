@@ -38,21 +38,18 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                     Symbol: (INamedTypeSymbol?)context.SemanticModel.GetDeclaredSymbol(context.Node, token)))
             .Where(static pair => pair.Symbol is not null)!;
 
-        // Get the symbol for the IComputeShader interface
-        IncrementalValueProvider<INamedTypeSymbol> iComputeShaderSymbol =
+        // Get the symbol for the IComputeShader and IPixelShader<TPixel> interfaces
+        IncrementalValueProvider<(INamedTypeSymbol Compute, INamedTypeSymbol Pixel) > shaderInterfaces =
             context.CompilationProvider
-            .Select(static (compilation, token) => compilation.GetTypeByMetadataName(typeof(IComputeShader).FullName))!;
-
-        // Get the symbol for the IPixelShader<TPixel> interface
-        IncrementalValueProvider<INamedTypeSymbol> iPixelShaderSymbol =
-            context.CompilationProvider
-            .Select(static (compilation, token) => compilation.GetTypeByMetadataName(typeof(IPixelShader<>).FullName))!;
+            .Select(static (compilation, token) => (
+                Compute: compilation.GetTypeByMetadataName(typeof(IComputeShader).FullName)!,
+                Pixel: compilation.GetTypeByMetadataName(typeof(IPixelShader<>).FullName)!));
 
         // Filter struct declarations that implement a shader interface, and also gather the hierarchy info and shader type
         IncrementalValuesProvider<(StructDeclarationSyntax Syntax, INamedTypeSymbol Symbol, HierarchyInfo Hierarchy, Type Type)> shaderDeclarations =
             structDeclarations
-            .Combine(iComputeShaderSymbol.Combine(iPixelShaderSymbol))
-            .Select(static (item, token) => (item.Left, Type: GetShaderType(item.Left.Symbol, item.Right.Left, item.Right.Right)))
+            .Combine(shaderInterfaces)
+            .Select(static (item, token) => (item.Left, Type: GetShaderType(item.Left.Symbol, item.Right.Compute, item.Right.Pixel)))
             .Where(static item => item.Type is not null)
             .Select(static (item, token) => (item.Left.Syntax, item.Left.Symbol, HierarchyInfo.From(item.Left.Symbol), item.Type!));
 
@@ -71,30 +68,24 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             context.AddSource($"{item.Hierarchy.FilenameHint}.GetDispatchId", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
         });
 
-        // Get the [EmbeddedBytecode] attribute
-        IncrementalValueProvider<INamedTypeSymbol> embeddedBytecodeSymbol =
-            context.CompilationProvider
-            .Select(static (compilation, token) => compilation.GetTypeByMetadataName(typeof(EmbeddedBytecodeAttribute).FullName)!);
-
         // Get the dispatch data, HLSL source and embedded bytecode info. This info is computed on the
         // same step as parts are shared in following sub-branches in the incremental generator pipeline.
         IncrementalValuesProvider<(Result<DispatchDataInfo> Dispatch, Result<HlslSourceInfo> Hlsl, Result<ThreadIdsInfo> ThreadIds)> shaderInfoWithErrors =
             shaderDeclarations
             .Combine(context.CompilationProvider)
-            .Combine(embeddedBytecodeSymbol)
             .Select(static (item, token) =>
             {
                 // LoadDispatchData() info
                 ImmutableArray<FieldInfo> fieldInfos = LoadDispatchData.GetInfo(
-                    item.Left.Left.Symbol,
-                    item.Left.Left.Type,
+                    item.Left.Symbol,
+                    item.Left.Type,
                     out int resourceCount,
                     out int root32BitConstantCount,
                     out ImmutableArray<Diagnostic> dispatchDataDiagnostics);
 
                 Result<DispatchDataInfo> dispatchDataInfo = new(new DispatchDataInfo(
-                    item.Left.Left.Hierarchy,
-                    item.Left.Left.Type,
+                    item.Left.Hierarchy,
+                    item.Left.Type,
                     fieldInfos,
                     resourceCount,
                     root32BitConstantCount),
@@ -102,15 +93,14 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
                 // BuildHlslString() info
                 HlslSourceInfo hlslSourceInfo = BuildHlslString.GetInfo(
-                    item.Left.Right,
-                    item.Left.Left.Syntax,
-                    item.Left.Left.Symbol,
+                    item.Right,
+                    item.Left.Syntax,
+                    item.Left.Symbol,
                     out ImmutableArray<Diagnostic> hlslSourceDiagnostics);
 
                 // TryGetBytecode() info
                 ThreadIdsInfo threadIds = TryGetBytecode.GetInfo(
-                    item.Right,
-                    item.Left.Left.Symbol,
+                    item.Left.Symbol,
                     !hlslSourceInfo.Delegates.IsEmpty,
                     out ImmutableArray<Diagnostic> threadIdsDiagnostics);
 

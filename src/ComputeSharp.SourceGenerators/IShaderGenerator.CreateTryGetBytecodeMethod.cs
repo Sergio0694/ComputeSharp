@@ -30,20 +30,18 @@ public sealed partial class IShaderGenerator
         /// <summary>
         /// Gets the thread ids values for a given shader type, if available.
         /// </summary>
-        /// <param name="embeddedBytecodeAttribute">The <see cref="INamedTypeSymbol"/> instance for the attribute.</param>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="isDynamicShader">Indicates whether or not the shader is dynamic (ie. captures delegates).</param>
         /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
         /// <returns>The thread ids for the precompiled shader, if available.</returns>
         public static ThreadIdsInfo GetInfo(
-            INamedTypeSymbol embeddedBytecodeAttribute,
             INamedTypeSymbol structDeclarationSymbol,
             bool isDynamicShader,
             out ImmutableArray<Diagnostic> diagnostics)
         {
             AttributeData? attribute = structDeclarationSymbol
                 .GetAttributes()
-                .FirstOrDefault(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, embeddedBytecodeAttribute));
+                .FirstOrDefault(static a => a.AttributeClass?.ToDisplayString() == typeof(EmbeddedBytecodeAttribute).FullName);
 
             if (attribute is null)
             {

@@ -119,7 +119,7 @@ public sealed partial class IShaderGenerator
                     continue;
                 }
 
-                AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass is { Name: nameof(GroupSharedAttribute) });
+                AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass?.ToDisplayString() == typeof(GroupSharedAttribute).FullName);
 
                 // Group shared fields must be static
                 if (attribute is not null)
@@ -215,7 +215,7 @@ public sealed partial class IShaderGenerator
                         continue;
                     }
 
-                    AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass is { Name: nameof(GroupSharedAttribute) });
+                    AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass?.ToDisplayString() == typeof(GroupSharedAttribute).FullName);
 
                     if (attribute is not null)
                     {
@@ -276,7 +276,7 @@ public sealed partial class IShaderGenerator
                     continue;
                 }
 
-                AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass is { Name: nameof(GroupSharedAttribute) });
+                AttributeData? attribute = fieldSymbol.GetAttributes().FirstOrDefault(static a => a.AttributeClass?.ToDisplayString() == typeof(GroupSharedAttribute).FullName);
 
                 if (attribute is null)
                 {
