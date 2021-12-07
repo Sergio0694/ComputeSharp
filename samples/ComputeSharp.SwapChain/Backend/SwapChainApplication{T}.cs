@@ -90,7 +90,7 @@ internal sealed class SwapChainApplication<T> : Win32Application
         // Get the underlying ID3D12Device in use
         fixed (ID3D12Device** d3D12Device = this.d3D12Device)
         {
-            _ = InteropServices.TryGetID3D12Device(Gpu.Default, Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device);
+            _ = InteropServices.TryGetID3D12Device(GraphicsDevice.Default, Windows.__uuidof<ID3D12Device>(), (void**)d3D12Device);
         }
 
         // Create the direct command queue to use
@@ -217,7 +217,7 @@ internal sealed class SwapChainApplication<T> : Win32Application
         D3D12_RESOURCE_DESC d3D12Resource0Description = this.d3D12Resource0.Get()->GetDesc();
 
         // Create the 2D texture to use to generate frames to display
-        this.texture = Gpu.Default.AllocateReadWriteTexture2D<Rgba32, float4>(
+        this.texture = GraphicsDevice.Default.AllocateReadWriteTexture2D<Rgba32, float4>(
             (int)d3D12Resource0Description.Width,
             (int)d3D12Resource0Description.Height);
     }
@@ -233,7 +233,7 @@ internal sealed class SwapChainApplication<T> : Win32Application
         }
 
         // Generate the new frame
-        Gpu.Default.ForEach(this.texture!, this.shaderFactory(time));
+        GraphicsDevice.Default.ForEach(this.texture!, this.shaderFactory(time));
 
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 

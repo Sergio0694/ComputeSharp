@@ -171,7 +171,7 @@ public sealed partial class ComputeShaderPanel
         // Get the underlying ID3D12Device in use
         fixed (ID3D12Device** d3D12Device = this.d3D12Device)
         {
-            InteropServices.TryGetID3D12Device(Gpu.Default, Win32.__uuidof<ID3D12Device>(), (void**)d3D12Device).Assert();
+            InteropServices.TryGetID3D12Device(GraphicsDevice.Default, Win32.__uuidof<ID3D12Device>(), (void**)d3D12Device).Assert();
         }
 
         // Create the direct command queue to use
@@ -342,7 +342,7 @@ public sealed partial class ComputeShaderPanel
         D3D12_RESOURCE_DESC d3D12Resource0Description = this.d3D12Resource0.Get()->GetDesc();
 
         // Create the 2D texture to use to generate frames to display
-        this.texture = Gpu.Default.AllocateReadWriteTexture2D<Rgba32, Float4>(
+        this.texture = GraphicsDevice.Default.AllocateReadWriteTexture2D<Rgba32, Float4>(
             (int)d3D12Resource0Description.Width,
             (int)d3D12Resource0Description.Height);
     }

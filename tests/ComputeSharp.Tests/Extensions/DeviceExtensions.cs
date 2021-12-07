@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ComputeSharp.Tests.Extensions;
 
 /// <summary>
-/// A helper class for testing <see cref="Gpu"/> APIs.
+/// A helper class for testing <see cref="GraphicsDevice"/> APIs.
 /// </summary>
 public static class DeviceExtensions
 {
@@ -19,8 +19,8 @@ public static class DeviceExtensions
     {
         GraphicsDevice? device = type switch
         {
-            Device.Discrete => Gpu.QueryDevices(info => info.IsHardwareAccelerated).FirstOrDefault(),
-            Device.Warp => Gpu.QueryDevices(info => !info.IsHardwareAccelerated).First(),
+            Device.Discrete => GraphicsDevice.QueryDevices(info => info.IsHardwareAccelerated).FirstOrDefault(),
+            Device.Warp => GraphicsDevice.QueryDevices(info => !info.IsHardwareAccelerated).First(),
             _ => ThrowHelper.ThrowArgumentException<GraphicsDevice>("Invalid device")
         };
 

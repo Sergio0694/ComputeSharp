@@ -32,12 +32,12 @@ let main _ =
     let array = [| for i in 1 .. 100 -> (float32)i |]
 
     // Create the graphics buffer
-    use buffer = Gpu.Default.AllocateReadWriteBuffer(array)
+    use buffer = GraphicsDevice.Default.AllocateReadWriteBuffer(array)
 
     let shader = new MultiplyByTwo(buffer)
 
     // Run the shader (passed by reference)
-    Gpu.Default.For(100, &shader)
+    GraphicsDevice.Default.For(100, &shader)
 
     // Print the initial matrix
     printMatrix array 10 10 "BEFORE"

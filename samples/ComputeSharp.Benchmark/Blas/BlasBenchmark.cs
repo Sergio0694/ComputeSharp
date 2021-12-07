@@ -100,10 +100,10 @@ public class BlasBenchmark : IDisposable
         B = CreateRandomArray(P);
         Y = CreateRandomArray(C * N * P);
 
-        BufferX = Gpu.Default.AllocateReadOnlyBuffer(X);
-        BufferW = Gpu.Default.AllocateReadOnlyBuffer(W);
-        BufferB = Gpu.Default.AllocateReadOnlyBuffer(B);
-        BufferY = Gpu.Default.AllocateReadWriteBuffer(Y);
+        BufferX = GraphicsDevice.Default.AllocateReadOnlyBuffer(X);
+        BufferW = GraphicsDevice.Default.AllocateReadOnlyBuffer(W);
+        BufferB = GraphicsDevice.Default.AllocateReadOnlyBuffer(B);
+        BufferY = GraphicsDevice.Default.AllocateReadWriteBuffer(Y);
 
         Cpu();
         GpuWithNoTemporaryBuffers();
@@ -140,7 +140,7 @@ public class BlasBenchmark : IDisposable
     [Benchmark]
     public void GpuWithNoTemporaryBuffers()
     {
-        BlasHelpers.FullyConnectedForwardGpu(Gpu.Default, C, N, M, P, BufferX!, BufferW!, BufferB!, BufferY!);
+        BlasHelpers.FullyConnectedForwardGpu(GraphicsDevice.Default, C, N, M, P, BufferX!, BufferW!, BufferB!, BufferY!);
     }
 
     /// <summary>
@@ -149,12 +149,12 @@ public class BlasBenchmark : IDisposable
     [Benchmark]
     public void GpuWithTemporaryBuffers()
     {
-        using ReadOnlyBuffer<float> x = Gpu.Default.AllocateReadOnlyBuffer(X!);
-        using ReadOnlyBuffer<float> w = Gpu.Default.AllocateReadOnlyBuffer(W!);
-        using ReadOnlyBuffer<float> b = Gpu.Default.AllocateReadOnlyBuffer(B!);
-        using ReadWriteBuffer<float> y = Gpu.Default.AllocateReadWriteBuffer<float>(Y!.Length);
+        using ReadOnlyBuffer<float> x = GraphicsDevice.Default.AllocateReadOnlyBuffer(X!);
+        using ReadOnlyBuffer<float> w = GraphicsDevice.Default.AllocateReadOnlyBuffer(W!);
+        using ReadOnlyBuffer<float> b = GraphicsDevice.Default.AllocateReadOnlyBuffer(B!);
+        using ReadWriteBuffer<float> y = GraphicsDevice.Default.AllocateReadWriteBuffer<float>(Y!.Length);
 
-        BlasHelpers.FullyConnectedForwardGpu(Gpu.Default, C, N, M, P, x, w, b, y);
+        BlasHelpers.FullyConnectedForwardGpu(GraphicsDevice.Default, C, N, M, P, x, w, b, y);
 
         y.CopyTo(Y);
     }

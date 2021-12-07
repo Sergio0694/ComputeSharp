@@ -5,10 +5,8 @@ using ComputeSharp.Graphics.Helpers;
 
 namespace ComputeSharp;
 
-/// <summary>
-/// A <see langword="class"/> that acts as an entry-point for all the library APIs, exposing the available GPU devices.
-/// </summary>
-public static class Gpu
+/// <inheritdoc/>
+partial class GraphicsDevice
 {
     /// <summary>
     /// Gets the default <see cref="GraphicsDevice"/> instance for the current machine.

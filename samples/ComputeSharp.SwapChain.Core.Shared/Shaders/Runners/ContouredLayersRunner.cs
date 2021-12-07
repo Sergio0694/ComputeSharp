@@ -29,9 +29,9 @@ public sealed class ContouredLayersRunner : IShaderRunner
         {
             string filename = Path.Combine(Package.Current.InstalledLocation.Path, "Assets", "Textures", "RustyMetal.png");
 
-            this.texture = Gpu.Default.LoadReadOnlyTexture2D<Rgba32, Float4>(filename);
+            this.texture = GraphicsDevice.Default.LoadReadOnlyTexture2D<Rgba32, Float4>(filename);
         }
 
-        Gpu.Default.ForEach(texture, new ContouredLayers((float)timespan.TotalSeconds, this.texture));
+        GraphicsDevice.Default.ForEach(texture, new ContouredLayers((float)timespan.TotalSeconds, this.texture));
     }
 }

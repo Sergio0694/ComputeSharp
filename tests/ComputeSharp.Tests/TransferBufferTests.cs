@@ -74,8 +74,8 @@ public partial class TransferBufferTests
     {
         GraphicsDevice? gpu = device switch
         {
-            Device.Discrete => Gpu.QueryDevices(info => info.IsHardwareAccelerated).FirstOrDefault(),
-            Device.Warp => Gpu.QueryDevices(info => !info.IsHardwareAccelerated).First(),
+            Device.Discrete => GraphicsDevice.QueryDevices(info => info.IsHardwareAccelerated).FirstOrDefault(),
+            Device.Warp => GraphicsDevice.QueryDevices(info => !info.IsHardwareAccelerated).First(),
             _ => throw new ArgumentException(nameof(device))
         };
 

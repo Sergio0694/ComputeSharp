@@ -11,10 +11,10 @@ partial class Program
         float[] array = Enumerable.Range(1, 100).Select(static i => (float)i).ToArray();
 
         // Create the graphics buffer
-        using ReadWriteBuffer<float> gpuBuffer = Gpu.Default.AllocateReadWriteBuffer(array);
+        using ReadWriteBuffer<float> gpuBuffer = GraphicsDevice.Default.AllocateReadWriteBuffer(array);
 
         // Run the shader
-        Gpu.Default.For(100, new MainKernel(gpuBuffer));
+        GraphicsDevice.Default.For(100, new MainKernel(gpuBuffer));
 
         // Print the initial matrix
         PrintMatrix(array, 10, 10, "BEFORE");

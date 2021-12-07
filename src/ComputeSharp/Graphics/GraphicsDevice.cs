@@ -22,7 +22,7 @@ namespace ComputeSharp;
 /// A <see langword="class"/> that represents an <see cref="ID3D12Device"/> instance that can be used to run compute shaders.
 /// </summary>
 [DebuggerDisplay("{ToString(),raw}")]
-public sealed unsafe class GraphicsDevice : NativeObject
+public sealed unsafe partial class GraphicsDevice : NativeObject
 {
     /// <summary>
     /// The underlying <see cref="ID3D12Device"/> wrapped by the current instance.
