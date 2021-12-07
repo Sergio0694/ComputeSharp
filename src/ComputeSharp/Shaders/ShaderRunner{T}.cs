@@ -228,7 +228,7 @@ internal static class ShaderRunner<T>
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static unsafe void LoadShader(int threadsX, int threadsY, int threadsZ, ref T shader, out ICachedShader shaderData)
     {
-        if (shader.TryGetBytecode(threadsX, threadsY, threadsZ, out ReadOnlySpan<byte> bytecode))
+        if (Unsafe.NullRef<T>().TryGetBytecode(threadsX, threadsY, threadsZ, out ReadOnlySpan<byte> bytecode))
         {
             shaderData = new ICachedShader.Embedded(bytecode);
         }
