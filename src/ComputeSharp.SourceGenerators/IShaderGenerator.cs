@@ -71,7 +71,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
         // Get the dispatch data, HLSL source and embedded bytecode info. This info is computed on the
         // same step as parts are shared in following sub-branches in the incremental generator pipeline.
-        IncrementalValuesProvider<(Result<DispatchDataInfo> Dispatch, Result<HlslSourceInfo> Hlsl, Result<ThreadIdsInfo> ThreadIds)> shaderInfoWithErrors =
+        IncrementalValuesProvider<(Result<DispatchDataInfo> Dispatch, Result<HlslShaderSourceInfo> Hlsl, Result<ThreadIdsInfo> ThreadIds)> shaderInfoWithErrors =
             shaderDeclarations
             .Combine(context.CompilationProvider)
             .Select(static (item, token) =>
@@ -93,7 +93,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                     dispatchDataDiagnostics);
 
                 // BuildHlslString() info
-                HlslSourceInfo hlslSourceInfo = BuildHlslString.GetInfo(
+                HlslShaderSourceInfo hlslSourceInfo = BuildHlslString.GetInfo(
                     item.Right,
                     item.Left.Syntax,
                     item.Left.Symbol,
@@ -107,7 +107,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
                 return (
                     dispatchDataInfo,
-                    new Result<HlslSourceInfo>(hlslSourceInfo, hlslSourceDiagnostics),
+                    new Result<HlslShaderSourceInfo>(hlslSourceInfo, hlslSourceDiagnostics),
                     new Result<ThreadIdsInfo>(threadIds, threadIdsDiagnostics));
             });
 
@@ -117,10 +117,10 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         context.ReportDiagnostics(shaderInfoWithErrors.Select(static (item, token) => item.ThreadIds.Errors));
 
         // Filter all items to enable caching at a coarse level, and remove diagnostics
-        IncrementalValuesProvider<(DispatchDataInfo Dispatch, HlslSourceInfo Hlsl, ThreadIdsInfo ThreadIds)> shaderInfo =
+        IncrementalValuesProvider<(DispatchDataInfo Dispatch, HlslShaderSourceInfo Hlsl, ThreadIdsInfo ThreadIds)> shaderInfo =
             shaderInfoWithErrors
             .Select(static (item, token) => (item.Dispatch.Value, item.Hlsl.Value, item.ThreadIds.Value))
-            .WithComparers(DispatchDataInfo.Comparer.Default, HlslSourceInfo.Comparer.Default, ThreadIdsInfo.Comparer.Default);
+            .WithComparers(DispatchDataInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default, ThreadIdsInfo.Comparer.Default);
 
         // Get a filtered sequence to enable caching
         IncrementalValuesProvider<DispatchDataInfo> dispatchDataInfo =
@@ -142,10 +142,10 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         }); 
 
         // Get the filtered sequence to enable caching
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslSourceInfo SourceInfo)> hlslSourceInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderSourceInfo SourceInfo)> hlslSourceInfo =
             shaderInfo
             .Select(static (item, token) => (item.Dispatch.Hierarchy, item.Hlsl))
-            .WithComparers(HierarchyInfo.Comparer.Default, HlslSourceInfo.Comparer.Default);
+            .WithComparers(HierarchyInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default);
 
         // Generate the BuildHlslString() methods
         context.RegisterSourceOutput(hlslSourceInfo.Combine(canUseSkipLocalsInit), static (context, item) =>

@@ -36,7 +36,7 @@ public sealed partial class IShaderGenerator
         /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
         /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
         /// <returns>The resulting info on the processed shader.</returns>
-        public static HlslSourceInfo GetInfo(
+        public static HlslShaderSourceInfo GetInfo(
             Compilation compilation,
             StructDeclarationSyntax structDeclaration,
             INamedTypeSymbol structDeclarationSymbol,
@@ -508,7 +508,7 @@ public sealed partial class IShaderGenerator
         /// <param name="isSamplerUsed">Whether the static sampler is used by the shader.</param>
         /// <param name="executeMethod">The body of the entry point of the shader.</param>
         /// <returns>The series of statements to build the HLSL source to compile to execute the current shader.</returns>
-        private static HlslSourceInfo GetHlslSourceInfo(
+        private static HlslShaderSourceInfo GetHlslSourceInfo(
             ImmutableArray<(string Name, string Value)> definedConstants,
             ImmutableArray<(string Name, string Definition)> declaredTypes,
             ImmutableArray<(string MetadataName, string Name, string HlslType)> resourceFields,
@@ -731,9 +731,9 @@ public sealed partial class IShaderGenerator
         /// <summary>
         /// Produces the non dynamic HLSL source (concatenating all generated HLSL source chunks).
         /// </summary>
-        /// <param name="hlslSourceInfo">The input <see cref="HlslSourceInfo"/> instance to use.</param>
+        /// <param name="hlslSourceInfo">The input <see cref="HlslShaderSourceInfo"/> instance to use.</param>
         /// <returns>The non dynamic HLSL source code.</returns>
-        public static string GetNonDynamicHlslSource(HlslSourceInfo hlslSourceInfo)
+        public static string GetNonDynamicHlslSource(HlslShaderSourceInfo hlslSourceInfo)
         {
             return
                 hlslSourceInfo.HeaderAndThreadsX + "<THREADSX>" +

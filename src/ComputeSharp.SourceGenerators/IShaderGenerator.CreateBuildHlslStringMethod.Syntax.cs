@@ -20,9 +20,9 @@ public sealed partial class IShaderGenerator
         /// <summary>
         /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslString</c> method.
         /// </summary>
-        /// <param name="hlslSourceInfo">The input <see cref="HlslSourceInfo"/> instance to use.</param>
+        /// <param name="hlslSourceInfo">The input <see cref="HlslShaderSourceInfo"/> instance to use.</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslString</c> method.</returns>
-        public static MethodDeclarationSyntax GetSyntax(HlslSourceInfo hlslSourceInfo)
+        public static MethodDeclarationSyntax GetSyntax(HlslShaderSourceInfo hlslSourceInfo)
         {
             ImmutableArray<StatementSyntax> bodyStatements = GenerateRenderMethodBody(hlslSourceInfo);
 
@@ -49,9 +49,9 @@ public sealed partial class IShaderGenerator
         /// <summary>
         /// Produces the series of statements to build the current HLSL source.
         /// </summary>
-        /// <param name="hlslSourceInfo">The input <see cref="HlslSourceInfo"/> instance to use.</param>
+        /// <param name="hlslSourceInfo">The input <see cref="HlslShaderSourceInfo"/> instance to use.</param>
         /// <returns>The series of statements to build the HLSL source to compile to execute the current shader.</returns>
-        private static ImmutableArray<StatementSyntax> GenerateRenderMethodBody(HlslSourceInfo hlslSourceInfo)
+        private static ImmutableArray<StatementSyntax> GenerateRenderMethodBody(HlslShaderSourceInfo hlslSourceInfo)
         {
             ImmutableArray<StatementSyntax>.Builder statements = ImmutableArray.CreateBuilder<StatementSyntax>();
             StringBuilder textBuilder = new();

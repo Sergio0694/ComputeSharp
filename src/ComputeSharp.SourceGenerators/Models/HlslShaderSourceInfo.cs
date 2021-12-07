@@ -22,7 +22,7 @@ namespace ComputeSharp.SourceGenerators.Models;
 /// <param name="DefinedConstants">The names of defined constants.</param>
 /// <param name="MethodSignatures">The signatures for captured methods.</param>
 /// <param name="Delegates">The list of delegate fields.</param>
-internal sealed record HlslSourceInfo(
+internal sealed record HlslShaderSourceInfo(
     string HeaderAndThreadsX,
     string ThreadsY,
     string ThreadsZ,
@@ -39,9 +39,9 @@ internal sealed record HlslSourceInfo(
     ImmutableArray<string> Delegates)
 {
     /// <summary>
-    /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="HlslSourceInfo"/>.
+    /// An <see cref="IEqualityComparer{T}"/> implementation for <see cref="HlslShaderSourceInfo"/>.
     /// </summary>
-    public sealed class Comparer : IEqualityComparer<HlslSourceInfo>
+    public sealed class Comparer : IEqualityComparer<HlslShaderSourceInfo>
     {
         /// <summary>
         /// The singleton <see cref="Comparer"/> instance.
@@ -49,7 +49,7 @@ internal sealed record HlslSourceInfo(
         public static Comparer Default { get; } = new();
 
         /// <inheritdoc/>
-        public bool Equals(HlslSourceInfo? x, HlslSourceInfo? y)
+        public bool Equals(HlslShaderSourceInfo? x, HlslShaderSourceInfo? y)
         {
             if (x is null && y is null)
             {
@@ -84,7 +84,7 @@ internal sealed record HlslSourceInfo(
         }
 
         /// <inheritdoc/>
-        public int GetHashCode(HlslSourceInfo obj)
+        public int GetHashCode(HlslShaderSourceInfo obj)
         {
             HashCode hashCode = default;
 
