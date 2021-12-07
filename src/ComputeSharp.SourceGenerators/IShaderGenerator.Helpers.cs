@@ -43,7 +43,7 @@ public sealed partial class IShaderGenerator
 
         return null;
     }
-    
+
     /// <summary>
     /// Creates a <see cref="CompilationUnitSyntax"/> instance wrapping the given method.
     /// </summary>
@@ -105,8 +105,8 @@ public sealed partial class IShaderGenerator
                 .AddMembers(typeDeclarationSyntax);
         }
 
-        // Create a static method to create the combined hashcode for a given shader type.
-        // This code takes a block syntax and produces a compilation unit as follows:
+        // Create the compilation unit with disabled warnings, target namespace and generated type.
+        // This will produce code as follows:
         //
         // #pragma warning disable
         //

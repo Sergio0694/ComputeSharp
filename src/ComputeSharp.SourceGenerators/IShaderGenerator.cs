@@ -31,12 +31,13 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
         // Get all declared struct types and their type symbols
         IncrementalValuesProvider<(StructDeclarationSyntax Syntax, INamedTypeSymbol Symbol)> structDeclarations =
-            context.SyntaxProvider.CreateSyntaxProvider(
+            context.SyntaxProvider
+            .CreateSyntaxProvider(
                 static (node, token) => node is StructDeclarationSyntax structDeclaration,
                 static (context, token) => (
                     (StructDeclarationSyntax)context.Node,
                     Symbol: (INamedTypeSymbol?)context.SemanticModel.GetDeclaredSymbol(context.Node, token)))
-            .Where(static pair => pair.Symbol is not null)!;
+            .Where(static pair => pair.Symbol is { Interfaces.IsEmpty: false })!;
 
         // Get the symbol for the IComputeShader and IPixelShader<TPixel> interfaces
         IncrementalValueProvider<(INamedTypeSymbol Compute, INamedTypeSymbol Pixel) > shaderInterfaces =
