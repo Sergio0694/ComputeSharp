@@ -1,111 +1,151 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
+using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using static ComputeSharp.SourceGenerators.Diagnostics.DiagnosticDescriptors;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-using static Microsoft.CodeAnalysis.SymbolDisplayTypeQualificationStyle;
 
 namespace ComputeSharp.SourceGenerators;
 
 /// <summary>
 /// A source generator creating constructors for types annotated with <see cref="AutoConstructorAttribute"/>.
 /// </summary>
-[Generator]
-public sealed partial class AutoConstructorGenerator : ISourceGenerator
+[Generator(LanguageNames.CSharp)]
+public sealed partial class AutoConstructorGenerator : IIncrementalGenerator
 {
     /// <inheritdoc/>
-    public void Initialize(GeneratorInitializationContext context)
+    public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        context.RegisterForSyntaxNotifications(static () => new SyntaxReceiver());
-    }
+        // Get all declared struct symbols with the [AutoConstructor] attribute
+        IncrementalValuesProvider<INamedTypeSymbol> structDeclarations =
+            context.SyntaxProvider
+            .CreateSyntaxProvider(
+                static (node, token) => node is StructDeclarationSyntax structDeclaration,
+                static (context, token) => (INamedTypeSymbol?)context.SemanticModel.GetDeclaredSymbol(context.Node, token))
+            .Where(static symbol => symbol is not null &&
+                                    symbol.GetAttributes().Any(static a => a.AttributeClass?.ToDisplayString() == typeof(AutoConstructorAttribute).FullName))!;
 
-    /// <inheritdoc/>
-    public void Execute(GeneratorExecutionContext context)
-    {
-        // Get the syntax receiver with the candidate nodes
-        if (context.SyntaxContextReceiver is not SyntaxReceiver syntaxReceiver)
-        {
-            return;
-        }
+        // Get the type hierarchy and fields info
+        IncrementalValuesProvider<(HierarchyInfo Left, ImmutableArray<ParameterInfo> Right)> constructorInfo =
+            structDeclarations
+            .Select(static (item, token) => (Hierarchy: HierarchyInfo.From(item), Parameters: Ctor.GetData(item)))
+            .Where(static item => !item.Parameters.IsEmpty)
+            .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<ParameterInfo>.Default.ForImmutableArray());
 
-        foreach (SyntaxReceiver.Item item in syntaxReceiver.GatheredInfo)
+        // Generate the constructors
+        context.RegisterSourceOutput(constructorInfo, static (context, item) =>
         {
-            try
-            {
-                OnExecute(context, item.StructDeclaration, item.StructSymbol);
-            }
-            catch
-            {
-                context.ReportDiagnostic(AutoConstructorGeneratorError, item.AttributeSyntax, item.StructSymbol);
-            }
-        }
+            CompilationUnitSyntax compilationUnit = Ctor.GetSyntax(item.Left, item.Right);
+
+            context.AddSource($"{item.Left.FilenameHint}.Ctor", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
+        });
     }
 
     /// <summary>
-    /// Processes a given target type.
+    /// A helper with all logic to generate the constructor declarations.
     /// </summary>
-    /// <param name="context">The input <see cref="GeneratorExecutionContext"/> instance to use.</param>
-    /// <param name="structDeclaration">The <see cref="StructDeclarationSyntax"/> node to process.</param>
-    /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> for <paramref name="structDeclaration"/>.</param>
-    private static void OnExecute(GeneratorExecutionContext context, StructDeclarationSyntax structDeclaration, INamedTypeSymbol structDeclarationSymbol)
+    private static class Ctor
     {
-        // Extract the info on the type to process
-        var namespaceName = structDeclarationSymbol.ContainingNamespace.ToDisplayString(new(typeQualificationStyle: NameAndContainingTypesAndNamespaces));
-        var structName = structDeclaration.Identifier.Text;
-        var structModifiers = structDeclaration.Modifiers;
-        var fields = (
-            from fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>()
-            where !fieldSymbol.IsConst && !fieldSymbol.IsStatic && !fieldSymbol.IsFixedSizeBuffer
-            let typeName = fieldSymbol.Type!.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
-            let fieldFullType = ParseTypeName(typeName)
-            select (Type: fieldFullType, Identifier: Identifier(fieldSymbol.Name))).ToImmutableArray();
-
-        // Create the constructor declaration for the type. This will
-        // produce a constructor with simple initialization of all variables:
-        //
-        // public MyType(Foo a, Bar b, Baz c, ...)
-        // {
-        //     this.a = a;
-        //     this.b = b;
-        //     this.c = c;
-        //     ...
-        // }
-        var structDeclarationSyntax =
-            StructDeclaration(structName).WithModifiers(structModifiers).AddMembers(
-            ConstructorDeclaration(structName)
-            .AddModifiers(Token(SyntaxKind.PublicKeyword))
-            .AddParameterListParameters(fields.Select(field => Parameter(field.Identifier).WithType(field.Type)).ToArray())
-            .AddBodyStatements(fields.Select(field => ParseStatement($"this.{field.Identifier} = {field.Identifier};")).ToArray()));
-
-        TypeDeclarationSyntax typeDeclarationSyntax = structDeclarationSyntax;
-
-        // Add all parent types in ascending order, if any
-        foreach (var parentType in structDeclaration.Ancestors().OfType<TypeDeclarationSyntax>())
+        /// <summary>
+        /// Gets the sequence of <see cref="ParameterInfo"/> items for all fields in the input type.
+        /// </summary>
+        /// <param name="structDeclarationSymbol">The <see cref="INamedTypeSymbol"/> being inspected.</param>
+        /// <returns>The sequence of <see cref="ParameterInfo"/> items for all fields in <paramref name="structDeclarationSymbol"/>.</returns>
+        public static ImmutableArray<ParameterInfo> GetData(INamedTypeSymbol structDeclarationSymbol)
         {
-            typeDeclarationSyntax = parentType
-                .WithMembers(SingletonList<MemberDeclarationSyntax>(typeDeclarationSyntax))
-                .WithConstraintClauses(List<TypeParameterConstraintClauseSyntax>())
-                .WithBaseList(null)
-                .WithAttributeLists(List<AttributeListSyntax>())
-                .WithoutTrivia();
+            return (
+                from fieldSymbol in structDeclarationSymbol.GetMembers().OfType<IFieldSymbol>()
+                where fieldSymbol is { IsConst: false, IsStatic: false, IsFixedSizeBuffer: false }
+                let typeName = fieldSymbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+                select new ParameterInfo(typeName, fieldSymbol.Name)).ToImmutableArray();
         }
 
-        // Create the compilation unit with the namespace and target member.
-        // From this, we can finally generate the source code to output.
-        var source =
-            CompilationUnit().AddMembers(
-            FileScopedNamespaceDeclaration(IdentifierName(namespaceName)).AddMembers(typeDeclarationSyntax)
-            .WithNamespaceKeyword(Token(TriviaList(Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))), SyntaxKind.NamespaceKeyword, TriviaList())))
-            .NormalizeWhitespace(eol: "\n")
-            .ToFullString();
+        /// <summary>
+        /// Gets the <see cref="CompilationUnitSyntax"/> instance for a given type and sequence of parameters.
+        /// </summary>
+        /// <param name="hierarchyInfo">The type hierarchy info.</param>
+        /// <param name="parameters">The sequence of parameters to initialize.</param>
+        /// <returns>A <see cref="CompilationUnitSyntax"/> instance for a specified type.</returns>
+        public static CompilationUnitSyntax GetSyntax(HierarchyInfo hierarchyInfo, ImmutableArray<ParameterInfo> parameters)
+        {
+            // Create the constructor declaration for the type. This will
+            // produce a constructor with simple initialization of all variables:
+            //
+            // public MyType(Foo a, Bar b, Baz c, ...)
+            // {
+            //     this.a = a;
+            //     this.b = b;
+            //     this.c = c;
+            //     ...
+            // }
+            ConstructorDeclarationSyntax constructorDeclaration =
+                ConstructorDeclaration(hierarchyInfo.Names[0])
+                .AddModifiers(Token(SyntaxKind.PublicKeyword))
+                .AddParameterListParameters(parameters.Select(field => Parameter(Identifier(field.Name)).WithType(IdentifierName(field.Type))).ToArray())
+                .AddBodyStatements(parameters.Select(field => ParseStatement($"this.{field.Name} = {field.Name};")).ToArray());
 
-        // Add the partial type
-        context.AddSource(structDeclarationSymbol.GetGeneratedFileName(), SourceText.From(source, Encoding.UTF8));
+            // Add the unsafe modifier, if needed
+            if (parameters.Any(static param => param.Type.Contains("*")))
+            {
+                constructorDeclaration = constructorDeclaration.AddModifiers(Token(SyntaxKind.UnsafeKeyword));
+            }
+
+            // Constructor attributes
+            AttributeListSyntax[] attributes =
+            {
+                AttributeList(SingletonSeparatedList(
+                    Attribute(IdentifierName("global::System.CodeDom.Compiler.GeneratedCode")).AddArgumentListArguments(
+                        AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(AutoConstructorGenerator).FullName))),
+                        AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(AutoConstructorGenerator).Assembly.GetName().Version.ToString())))))),
+                AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Diagnostics.DebuggerNonUserCode")))),
+                AttributeList(SingletonSeparatedList(Attribute(IdentifierName("global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"))))
+            };
+
+            // Create the partial shader type declaration with the given method implementation.
+            // This code produces a struct declaration as follows:
+            //
+            // partial struct <SHADER_TYPE>
+            // {
+            //     <METHOD>
+            // }
+            StructDeclarationSyntax structDeclarationSyntax =
+                StructDeclaration(hierarchyInfo.Names[0])
+                .AddModifiers(Token(SyntaxKind.PartialKeyword))
+                .AddMembers(constructorDeclaration.AddAttributeLists(attributes));
+
+            TypeDeclarationSyntax typeDeclarationSyntax = structDeclarationSyntax;
+
+            // Add all parent types in ascending order, if any
+            foreach (string parentType in hierarchyInfo.Names.AsSpan().Slice(1))
+            {
+                typeDeclarationSyntax =
+                    ClassDeclaration(parentType)
+                    .AddModifiers(Token(SyntaxKind.PartialKeyword))
+                    .AddMembers(typeDeclarationSyntax);
+            }
+
+            // Create the compilation unit with disabled warnings, target namespace and generated type.
+            // This will produce code as follows:
+            //
+            // #pragma warning disable
+            //
+            // namespace <NAMESPACE>;
+            // 
+            // <TYPE_HIERARCHY>
+            return
+                CompilationUnit().AddMembers(
+                FileScopedNamespaceDeclaration(IdentifierName(hierarchyInfo.Namespace))
+                .AddMembers(typeDeclarationSyntax)
+                .WithNamespaceKeyword(Token(TriviaList(
+                    Trivia(PragmaWarningDirectiveTrivia(Token(SyntaxKind.DisableKeyword), true))),
+                    SyntaxKind.NamespaceKeyword,
+                    TriviaList())))
+                .NormalizeWhitespace(eol: "\n");
+        }
     }
 }
