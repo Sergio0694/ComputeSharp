@@ -87,7 +87,7 @@ public sealed partial class IShaderGenerator
         /// <summary>
         /// Indicates whether the required <c>dxcompiler.dll</c> and <c>dxil.dll</c> libraries have been loaded.
         /// </summary>
-        private static bool areDxcLibrariesLoaded;
+        private static volatile bool areDxcLibrariesLoaded;
 
         /// <summary>
         /// Gets a <see cref="BlockSyntax"/> instance with the logic to try to get a compiled shader bytecode.
@@ -166,10 +166,10 @@ public sealed partial class IShaderGenerator
         private static void LoadNativeDxcLibraries()
         {
             // Extracts a specified native library for a given runtime identifier
-            static string ExtractLibrary(string rid, string name)
+            static string ExtractLibrary(string folder, string rid, string name)
             {
                 string sourceFilename = $"ComputeSharp.SourceGenerators.ComputeSharp.Libraries.{rid}.{name}.dll";
-                string targetFilename = Path.Combine(Path.GetTempPath(), "ComputeSharp.SourceGenerators", Path.GetRandomFileName(), rid, $"{name}.dll");
+                string targetFilename = Path.Combine(folder, rid, $"{name}.dll");
 
                 Directory.CreateDirectory(Path.GetDirectoryName(targetFilename));
 
@@ -214,11 +214,13 @@ public sealed partial class IShaderGenerator
                     _ => throw new NotSupportedException("Invalid process architecture")
                 };
 
-                LoadLibrary(ExtractLibrary(rid, "dxil"));
-                LoadLibrary(ExtractLibrary(rid, "dxcompiler"));
-            }
+                string folder = Path.Combine(Path.GetTempPath(), "ComputeSharp.SourceGenerators", Path.GetRandomFileName());
 
-            areDxcLibrariesLoaded = true;
+                LoadLibrary(ExtractLibrary(folder, rid, "dxil"));
+                LoadLibrary(ExtractLibrary(folder, rid, "dxcompiler"));
+
+                areDxcLibrariesLoaded = true;
+            }
         }
     }
 }
