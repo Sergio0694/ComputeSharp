@@ -27,7 +27,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             context.CompilationProvider
             .Select(static (compilation, token) =>
                 compilation.Options is CSharpCompilationOptions { AllowUnsafe: true } &&
-                compilation.GetTypeByMetadataName("System.Runtime.CompilerServices.SkipLocalsInit") is not null);
+                compilation.GetTypeByMetadataName("System.Runtime.CompilerServices.SkipLocalsInitAttribute") is not null);
 
         // Get all declared struct types and their type symbols
         IncrementalValuesProvider<(StructDeclarationSyntax Syntax, INamedTypeSymbol Symbol)> structDeclarations =
