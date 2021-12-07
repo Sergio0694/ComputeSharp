@@ -53,7 +53,8 @@ public sealed partial class IShaderGenerator
             ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
 
             // Validate the thread number arguments
-            if (attribute.ConstructorArguments[0].Value is not int threadsX ||
+            if (attribute.ConstructorArguments.Length != 3 ||
+                attribute.ConstructorArguments[0].Value is not int threadsX ||
                 attribute.ConstructorArguments[1].Value is not int threadsY ||
                 attribute.ConstructorArguments[2].Value is not int threadsZ ||
                 threadsX is < 1 or > 1024 ||
