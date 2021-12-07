@@ -94,20 +94,21 @@ public sealed partial class IShaderGenerator
         /// </summary>
         /// <param name="threadIds">The input <see cref="ThreadIdsInfo"/> instance to process.</param>
         /// <param name="hlslSource">The generated HLSL source code (ignoring captured delegates, if present).</param>
-        /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
+        /// <param name="diagnostic">The resulting diagnostic from the processing operation, if any.</param>
         /// <returns>The <see cref="ImmutableArray{T}"/> instance with the compiled shader bytecode.</returns>
         [Pure]
         public static unsafe ImmutableArray<byte> GetBytecode(
             ThreadIdsInfo threadIds,
             string hlslSource,
-            out ImmutableArray<Diagnostic> diagnostics)
+            out DiagnosticInfo? diagnostic)
         {
             ImmutableArray<byte> bytecode = ImmutableArray<byte>.Empty;
-            ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
 
             // No embedded shader was requested
             if (threadIds.IsDefault)
             {
+                diagnostic = null;
+
                 goto End;
             }
 
@@ -131,30 +132,18 @@ public sealed partial class IShaderGenerator
                 byte[] array = new ReadOnlySpan<byte>(buffer, length).ToArray();
 
                 bytecode = Unsafe.As<byte[], ImmutableArray<byte>>(ref array);
+                diagnostic = null;
             }
-            catch (Win32Exception)
+            catch (Win32Exception e)
             {
-                // TODO
-                //builder.Add(
-                //    EmbeddedBytecodeFailedWithWin32Exception,
-                //    structDeclarationSymbol,
-                //    structDeclarationSymbol,
-                //    e.HResult,
-                //    e.Message);
+                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithWin32Exception, e.HResult, e.Message);
             }
-            catch (HlslCompilationException)
+            catch (HlslCompilationException e)
             {
-                // TODO
-                //builder.Add(
-                //    EmbeddedBytecodeFailedWithHlslCompilationException,
-                //    structDeclarationSymbol,
-                //    structDeclarationSymbol,
-                //    e.Message);
+                diagnostic = new DiagnosticInfo(EmbeddedBytecodeFailedWithHlslCompilationException, e.Message);
             }
 
             End:
-            diagnostics = builder.ToImmutable();
-
             return bytecode;
         }
 

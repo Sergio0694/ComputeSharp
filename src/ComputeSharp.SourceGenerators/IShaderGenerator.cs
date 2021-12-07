@@ -193,11 +193,11 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             .WithComparers(HierarchyInfo.Comparer.Default, EqualityComparer<string>.Default, ThreadIdsInfo.Comparer.Default);
 
         // Compile the requested shader bytecodes
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, Result<EmbeddedBytecodeInfo> BytecodeInfo)> embeddedBytecodeWithErrors =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo, DiagnosticInfo? Diagnostic)> embeddedBytecodeWithErrors =
             shaderBytecodeInfo
             .Select(static (item, token) =>
             {
-                ImmutableArray<byte> bytecode = TryGetBytecode.GetBytecode(item.ThreadIds, item.Hlsl, out ImmutableArray<Diagnostic> diagnostics);
+                ImmutableArray<byte> bytecode = TryGetBytecode.GetBytecode(item.ThreadIds, item.Hlsl, out DiagnosticInfo? diagnostic);
 
                 EmbeddedBytecodeInfo bytecodeInfo = new(
                     item.ThreadIds.X,
@@ -205,16 +205,33 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                     item.ThreadIds.Z,
                     bytecode);
 
-                return (item.Hierarchy, new Result<EmbeddedBytecodeInfo>(bytecodeInfo, diagnostics));
+                return (item.Hierarchy, bytecodeInfo, diagnostic);
+            });
+
+        // Gather the diagnostics
+        IncrementalValuesProvider<ImmutableArray<Diagnostic>> embeddedBytecodeDiagnostics =
+            embeddedBytecodeWithErrors
+            .Select(static (item, token) => (item.Hierarchy.MetadataName, item.Diagnostic))
+            .Where(static item => item.Diagnostic is not null)
+            .Combine(context.CompilationProvider)
+            .Select(static (item, token) =>
+            {
+                INamedTypeSymbol? typeSymbol = item.Right.GetTypeByMetadataName(item.Left.MetadataName)!;
+                Diagnostic diagnostic = Diagnostic.Create(
+                    item.Left.Diagnostic!.Descriptor,
+                    typeSymbol.Locations.FirstOrDefault(),
+                    new object[] { typeSymbol }.Concat(item.Left.Diagnostic.Args).ToArray());
+
+                return ImmutableArray.Create(diagnostic);
             });
 
         // Output the diagnostics
-        context.ReportDiagnostics(embeddedBytecodeWithErrors.Select(static (item, token) => item.BytecodeInfo.Errors));
+        context.ReportDiagnostics(embeddedBytecodeDiagnostics);
 
         // Get the filtered sequence to enable caching
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, EmbeddedBytecodeInfo BytecodeInfo)> embeddedBytecode =
             embeddedBytecodeWithErrors
-            .Select(static (item, token) => (item.Hierarchy, item.BytecodeInfo.Value))
+            .Select(static (item, token) => (item.Hierarchy, item.BytecodeInfo))
             .WithComparers(HierarchyInfo.Comparer.Default, EmbeddedBytecodeInfo.Comparer.Default);
 
         // Generate the TryGetBytecode() methods

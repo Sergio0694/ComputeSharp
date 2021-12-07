@@ -12,9 +12,10 @@ namespace ComputeSharp.SourceGenerators.Models;
 /// A model describing the hierarchy info for a specific type.
 /// </summary>
 /// <param name="FilenameHint">The filename hint for the current type.</param>
+/// <param name="MetadataName">The metadata name for the current type.</param>
 /// <param name="Namespace">Gets the namespace for the current type.</param>
 /// <param name="Names">Gets the sequence of type definitions containing the current type.</param>
-internal sealed record HierarchyInfo(string FilenameHint, string Namespace, ImmutableArray<string> Names)
+internal sealed record HierarchyInfo(string FilenameHint, string MetadataName, string Namespace, ImmutableArray<string> Names)
 {
     /// <summary>
     /// Creates a new <see cref="HierarchyInfo"/> instance from a given <see cref="INamedTypeSymbol"/>.
@@ -35,6 +36,7 @@ internal sealed record HierarchyInfo(string FilenameHint, string Namespace, Immu
 
         return new(
             typeSymbol.GetGeneratedFileName(),
+            typeSymbol.MetadataName,
             typeSymbol.ContainingNamespace.ToDisplayString(new(typeQualificationStyle: NameAndContainingTypesAndNamespaces)),
             names.ToImmutable());
     }
@@ -69,6 +71,7 @@ internal sealed record HierarchyInfo(string FilenameHint, string Namespace, Immu
 
             return
                 x.FilenameHint == y.FilenameHint &&
+                x.MetadataName == y.MetadataName &&
                 x.Namespace == y.Namespace &&
                 x.Names.SequenceEqual(y.Names);
         }
@@ -76,7 +79,7 @@ internal sealed record HierarchyInfo(string FilenameHint, string Namespace, Immu
         /// <inheritdoc/>
         public int GetHashCode(HierarchyInfo obj)
         {
-            return HashCode.Combine(obj.Namespace, obj.Names, obj.Names[0]);
+            return HashCode.Combine(obj.Namespace, obj.MetadataName, obj.Names, obj.Names[0]);
         }
     }
 }
