@@ -189,6 +189,20 @@ public sealed unsafe class GraphicsDevice : NativeObject
     internal bool IsCacheCoherentUMA { get; }
 
     /// <summary>
+    /// Checks whether the current device supports double precision floating point operations in shaders.
+    /// </summary>
+    /// <returns>Whether the current device supports double precision floating point operations in shaders.</returns>
+    [Pure]
+    public bool IsDoublePrecisionSupportAvailable()
+    {
+        ThrowIfDisposed();
+
+        var d3D12OptionsData = this.d3D12Device.Get()->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS>(D3D12_FEATURE_D3D12_OPTIONS);
+
+        return d3D12OptionsData.DoublePrecisionFloatShaderOps;
+    }
+
+    /// <summary>
     /// Checks whether the current device supports the creation of
     /// <see cref="ReadOnlyTexture2D{T}"/> resources for a specified type <typeparamref name="T"/>.
     /// </summary>

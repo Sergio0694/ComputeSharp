@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using ComputeSharp.Interop;
 using ComputeSharp.SwapChain.Shaders;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
@@ -94,6 +95,10 @@ public class ShadersTests
     [Data(typeof(SwapChain.Shaders.Compute.ExtrudedTruchetPattern))]
     public void ExtrudedTruchetPattern(Device device, Type shaderType)
     {
+        ReflectionServices.GetShaderInfo<SwapChain.Shaders.Compute.ExtrudedTruchetPattern>(out var info);
+
+        Assert.IsFalse(info.RequiresDoublePrecisionSupport);
+
         RunAndCompareShader(device, shaderType, 0.00011f);
     }
 
@@ -156,6 +161,10 @@ public class ShadersTests
                 static void RunComputeShader<T>(ReadWriteTexture2D<Rgba32, float4> texture)
                     where T : struct, IComputeShader
                 {
+                    ReflectionServices.GetShaderInfo<T>(out var info);
+
+                    Assert.IsFalse(info.RequiresDoublePrecisionSupport);
+
                     texture.GraphicsDevice.For(texture.Width, texture.Height, (T)Activator.CreateInstance(typeof(T), texture, 0f)!);
                 }
 
@@ -221,6 +230,10 @@ public class ShadersTests
         {
             if (typeof(IComputeShader).IsAssignableFrom(shaderType))
             {
+                ReflectionServices.GetShaderInfo<TCompute>(out var info);
+
+                Assert.IsFalse(info.RequiresDoublePrecisionSupport);
+
                 Assert.AreEqual(typeof(TCompute), shaderType);
 
                 texture.GraphicsDevice.For(texture.Width, texture.Height, computeFactory(texture));

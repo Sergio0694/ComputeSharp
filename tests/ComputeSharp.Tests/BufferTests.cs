@@ -371,4 +371,40 @@ public partial class BufferTests
             destination[ThreadIds.X] = source[ThreadIds.X];
         }
     }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void Dispatch_ReadWriteBuffer_DoublePrecision(Device device)
+    {
+        if (!device.Get().IsDoublePrecisionSupportAvailable())
+        {
+            Assert.Inconclusive();
+        }
+
+        double[] array = Enumerable.Range(0, 128).Select(static i => (double)i).ToArray();
+
+        using ReadWriteBuffer<double> buffer = device.Get().AllocateReadWriteBuffer(array);
+
+        device.Get().For(128, new DoublePrecisionSupportShader(buffer, 2.0));
+
+        double[] result = buffer.ToArray();
+
+        for (int i = 0; i < 128; i++)
+        {
+            Assert.IsTrue(Math.Abs(result[i] - (array[i] * 2.0 + 3.14)) < 0.00001);
+        }
+    }
+
+    [AutoConstructor]
+    public readonly partial struct DoublePrecisionSupportShader : IComputeShader
+    {
+        public readonly ReadWriteBuffer<double> buffer;
+        public readonly double factor;
+
+        /// <inheritdoc/>
+        public void Execute()
+        {
+            buffer[ThreadIds.X] = buffer[ThreadIds.X] * factor + 3.14;
+        }
+    }
 }

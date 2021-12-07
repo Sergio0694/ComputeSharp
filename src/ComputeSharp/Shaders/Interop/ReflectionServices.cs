@@ -168,6 +168,7 @@ public static class ReflectionServices
         Unsafe.AsRef(shaderInfo.MovcInstructionCount) = d3D12ShaderReflection.Get()->GetMovcInstructionCount();
         Unsafe.AsRef(shaderInfo.MovInstructionCount) = d3D12ShaderReflection.Get()->GetMovInstructionCount();
         Unsafe.AsRef(shaderInfo.InterfaceSlotCount) = d3D12ShaderReflection.Get()->GetNumInterfaceSlots();
+        Unsafe.AsRef(shaderInfo.RequiresDoublePrecisionSupport) = (d3D12ShaderReflection.Get()->GetRequiresFlags() & (D3D.D3D_SHADER_REQUIRES_DOUBLES | D3D.D3D_SHADER_REQUIRES_11_1_DOUBLE_EXTENSIONS)) != 0;
 #endif
     }
 }
