@@ -680,7 +680,7 @@ public sealed partial class IShaderGenerator
             // Shared buffers
             foreach (var (bufferName, bufferType, bufferCount) in sharedBuffers)
             {
-                object count = (object?)bufferCount ?? "threadsX * threadsY * threadsZ";
+                object count = (object?)bufferCount ?? "__GroupSize__get_X * __GroupSize__get_Y * __GroupSize__get_Z";
 
                 AppendLF();
                 AppendLineAndLF($"groupshared {bufferType} {bufferName} [{count}];");

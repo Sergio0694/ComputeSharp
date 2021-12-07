@@ -4,6 +4,8 @@ using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+#pragma warning disable CS0649, CS8618
+
 namespace ComputeSharp.Tests;
 
 [TestClass]
@@ -296,6 +298,92 @@ public partial class DispatchTests
                 (float)ThreadIds.Y / DispatchSize.Y,
                 1,
                 1);
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void Verify_GroupShared_WithFixedSize(Device device)
+    {
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(128);
+
+        device.Get().For(256, new FixedGroupSharedPixelShader(buffer));
+
+        int[] result = buffer.ToArray();
+
+        for (int i = 0; i < 128; i++)
+        {
+            Assert.AreEqual(result[i], i);
+        }
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct FixedGroupSharedPixelShader : IComputeShader
+    {
+        private readonly ReadWriteBuffer<int> buffer;
+
+        [GroupShared(128)]
+        private static readonly int[] cache;
+
+        public void Execute()
+        {
+            int index = ThreadIds.X / 2;
+            bool isWritingToGroupShared = ThreadIds.X % 2 == 0;
+
+            if (isWritingToGroupShared)
+            {
+                cache[index] = index;
+            }
+
+            Hlsl.GroupMemoryBarrier();
+
+            if (!isWritingToGroupShared)
+            {
+                buffer[index] = cache[index];
+            }
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void Verify_GroupShared_WithDynamicSize(Device device)
+    {
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(32);
+
+        device.Get().For(64, 1, 1, 32, 1, 1, new DynamicGroupSharedPixelShader(buffer));
+
+        int[] result = buffer.ToArray();
+
+        for (int i = 0; i < 32; i++)
+        {
+            Assert.AreEqual(result[i], i);
+        }
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct DynamicGroupSharedPixelShader : IComputeShader
+    {
+        private readonly ReadWriteBuffer<int> buffer;
+
+        [GroupShared]
+        private static readonly int[] cache;
+
+        public void Execute()
+        {
+            int index = ThreadIds.X / 2;
+            bool isWritingToGroupShared = ThreadIds.X % 2 == 0;
+
+            if (isWritingToGroupShared)
+            {
+                cache[index] = index;
+            }
+
+            Hlsl.GroupMemoryBarrier();
+
+            if (!isWritingToGroupShared)
+            {
+                buffer[index] = cache[index];
+            }
         }
     }
 }
