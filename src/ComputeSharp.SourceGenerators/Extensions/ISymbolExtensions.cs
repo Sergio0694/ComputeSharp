@@ -117,17 +117,6 @@ internal static class ISymbolExtensions
     }
 
     /// <summary>
-    /// Gets a valid filename for a target symbol and generator type.
-    /// </summary>
-    /// <param name="symbol">The symbol being processed.</param>
-    /// <returns>A filename in the form "&lt;SYMBOL_FULLNAME&gt;"</returns>
-    [Pure]
-    public static string GetGeneratedFileName(this IMethodSymbol symbol)
-    {
-        return symbol.GetFullMetadataName(true).Replace('`', '-').Replace('+', '.');
-    }
-
-    /// <summary>
     /// Tracks an <see cref="ITypeSymbol"/> instance and returns an HLSL compatible <see cref="TypeSyntax"/> object.
     /// </summary>
     /// <param name="typeSymbol">The input <see cref="ITypeSymbol"/> instance to process.</param>

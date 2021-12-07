@@ -497,58 +497,10 @@ internal static class DiagnosticDescriptors
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 
     /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for an internal error in <see cref="AutoConstructorGenerator"/>.
-    /// <para>
-    /// Format: <c>"The generator AutoConstructorGenerator failed to execute on type {0}, and its constructor might not be available"</c>.
-    /// </para>
-    /// </summary>
-    public static readonly DiagnosticDescriptor AutoConstructorGeneratorError = new(
-        id: "CMPS0037",
-        title: $"Internal error for {nameof(AutoConstructorGenerator)}",
-        messageFormat: $"The generator {nameof(AutoConstructorGenerator)} failed to execute on type {{0}}, and its constructor might not be available",
-        category: typeof(AutoConstructorGenerator).FullName,
-        defaultSeverity: DiagnosticSeverity.Warning,
-        isEnabledByDefault: true,
-        description: $"The {nameof(AutoConstructorGenerator)} generator encountered an error while processing a type, and its constructor might not be available. Please report this issue at https://github.com/Sergio0694/ComputeSharp/issues.",
-        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
-
-    /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for an internal error in <see cref="IShaderGenerator"/>.
-    /// <para>
-    /// Format: <c>"The generator IShaderGenerator failed to execute on type {0}, and trying to use that shader might result in a runtime crash"</c>.
-    /// </para>
-    /// </summary>
-    public static readonly DiagnosticDescriptor IShaderGeneratorError = new(
-        id: "CMPS0040",
-        title: $"Internal error for {nameof(IShaderGenerator)}",
-        messageFormat: $"The generator {nameof(IShaderGenerator)} failed to execute on type {{0}}, and trying to use that shader might result in a runtime crash",
-        category: typeof(IShaderGenerator).FullName,
-        defaultSeverity: DiagnosticSeverity.Warning,
-        isEnabledByDefault: true,
-        description: $"The {nameof(IShaderGenerator)} generator encountered an error while processing a type, and trying to use that shader might result in a runtime crash. Please report this issue at https://github.com/Sergio0694/ComputeSharp/issues.",
-        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
-
-    /// <summary>
-    /// Gets a <see cref="DiagnosticDescriptor"/> for an internal error in <see cref="ShaderMethodSourceGenerator"/>.
-    /// <para>
-    /// Format: <c>"The generator ShaderMethodSourceGenerator failed to execute on method {0}, and using it in a shader might result in a runtime crash"</c>.
-    /// </para>
-    /// </summary>
-    public static readonly DiagnosticDescriptor ShaderMethodSourceGeneratorError = new(
-        id: "CMPS0041",
-        title: $"Internal error for {nameof(ShaderMethodSourceGenerator)}",
-        messageFormat: $"The generator {nameof(ShaderMethodSourceGenerator)} failed to execute on method {{0}}, and using it in a shader might result in a runtime crash",
-        category: typeof(ShaderMethodSourceGenerator).FullName,
-        defaultSeverity: DiagnosticSeverity.Warning,
-        isEnabledByDefault: true,
-        description: $"The {nameof(ShaderMethodSourceGenerator)} generator encountered an error while processing a method, and using it in a shader might result in a runtime crash. Please report this issue at https://github.com/Sergio0694/ComputeSharp/issues.",
-        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
-
-    /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an incorrect matrix swizzling property argument.
     /// </summary>
     public static readonly DiagnosticDescriptor NonConstantMatrixSwizzledIndex = new(
-        id: "CMPS0042",
+        id: "CMPS0037",
         title: "Non constant matrix swizzled property argument",
         messageFormat: "The arguments in a swizzled indexer for a matrix type must be compile-time constants",
         category: typeof(ShaderMethodSourceGenerator).FullName,
@@ -564,7 +516,7 @@ internal static class DiagnosticDescriptors
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidShaderStaticFieldType = new(
-        id: "CMPS0043",
+        id: "CMPS0038",
         title: "Invalid shader static field type",
         messageFormat: "The compute shader of type {0} contains a static field \"{1}\" of an invalid type {2} (only primitive, vector and matrix types are supported)",
         category: typeof(IComputeShader).FullName,
@@ -577,7 +529,7 @@ internal static class DiagnosticDescriptors
     /// Gets a <see cref="DiagnosticDescriptor"/> for an invalid <see cref="DispatchSize"/> usage.
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidDispatchSizeUsage = new(
-        id: "CMPS0044",
+        id: "CMPS0039",
         title: "Invalid DispatchSize usage",
         messageFormat: "The DispatchSize type can only be used within the main body of a compute shader",
         category: typeof(IComputeShader).FullName,
@@ -590,7 +542,7 @@ internal static class DiagnosticDescriptors
     /// Gets a <see cref="DiagnosticDescriptor"/> for a property declaration.
     /// </summary>
     public static readonly DiagnosticDescriptor PropertyDeclaration = new(
-        id: "CMPS0045",
+        id: "CMPS0040",
         title: "Property declaration",
         messageFormat: "Property declarations cannot be used in a compute shader",
         category: typeof(IComputeShader).FullName,
@@ -606,7 +558,7 @@ internal static class DiagnosticDescriptors
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor ShaderDispatchDataSizeExceeded = new(
-        id: "CMPS0046",
+        id: "CMPS0041",
         title: "Shader dispatch data size exceeded",
         messageFormat: "The compute shader of type {0} has exceeded the maximum allowed size for captured values and resources",
         category: typeof(IComputeShader).FullName,
@@ -622,7 +574,7 @@ internal static class DiagnosticDescriptors
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor MultipleShaderTypesImplemented = new(
-        id: "CMPS0047",
+        id: "CMPS0042",
         title: "Multiple shader implementations for type declaration",
         messageFormat: $"The shader of type {{0}} cannot implement more than one shader interface",
         category: typeof(IShaderGenerator).FullName,
@@ -638,7 +590,7 @@ internal static class DiagnosticDescriptors
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor EmbeddedBytecodeWithDynamicShader = new(
-        id: "CMPS0048",
+        id: "CMPS0043",
         title: "Embedded bytecode for dynamic shader",
         messageFormat: $"The shader of type {{0}} cannot be precompiled, as it is dynamic (it captures delegate fields)",
         category: typeof(IShaderGenerator).FullName,
@@ -654,7 +606,7 @@ internal static class DiagnosticDescriptors
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidEmbeddedBytecodeThreadIds = new(
-        id: "CMPS0049",
+        id: "CMPS0044",
         title: "Invalid thread ids for shader with embedded bytecode",
         messageFormat: $"The shader of type {{0}} is annotated with invalid thread ids values ({{1}}, {{2}}, {{3}})",
         category: typeof(IShaderGenerator).FullName,
@@ -670,7 +622,7 @@ internal static class DiagnosticDescriptors
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithWin32Exception = new(
-        id: "CMPS0050",
+        id: "CMPS0045",
         title: "Embedded bytecode compilation failed due to Win32 exception",
         messageFormat: $"The shader of type {{0}} failed to compile due to a Win32 exception (HRESULT: {{1:X8}}, Message: \"{{2}}\")",
         category: typeof(IShaderGenerator).FullName,
@@ -686,7 +638,7 @@ internal static class DiagnosticDescriptors
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithHlslCompilationException = new(
-        id: "CMPS0051",
+        id: "CMPS0046",
         title: "Embedded bytecode compilation failed due to an HLSL compiler error",
         messageFormat: $"The shader of type {{0}} failed to compile due to an HLSL compiler error (Message: \"{{1}}\")",
         category: typeof(IShaderGenerator).FullName,
