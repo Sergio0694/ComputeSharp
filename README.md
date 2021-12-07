@@ -42,7 +42,7 @@ More details available [here](https://www.nuget.org/packages/ComputeSharp/).
 
 # Quick start
 
-**ComputeSharp** exposes a `Gpu` class that acts as entry point for all public APIs. The available `Gpu.Default` property that lets you access the main GPU device on the current machine, which can be used to allocate buffers and perform operations. If your machine doesn't have a supported GPU (or if it doesn't have a GPU at all), **ComputeSharp** will automatically create a [WARP device](https://docs.microsoft.com/windows/win32/direct3darticles/directx-warp) instead, which will still let you use the library normally, with shaders running on the CPU instead through an emulation layer. This means that you don't need to manually write a fallback path in case no GPU is available - **ComputeSharp** will automatically handle this for you.
+**ComputeSharp** exposes a `GraphicsDevice` class that acts as entry point for all public APIs. The available `GraphicsDevice.Default` property that lets you access the main GPU device on the current machine, which can be used to allocate buffers and perform operations. If your machine doesn't have a supported GPU (or if it doesn't have a GPU at all), **ComputeSharp** will automatically create a [WARP device](https://docs.microsoft.com/windows/win32/direct3darticles/directx-warp) instead, which will still let you use the library normally, with shaders running on the CPU instead through an emulation layer. This means that you don't need to manually write a fallback path in case no GPU is available - **ComputeSharp** will automatically handle this for you.
 
 Let's suppose we want to run a simple compute shader that multiplies all items in a target buffer by two. The first step is to create the GPU buffer and copy our data to it:
 
@@ -53,7 +53,7 @@ int[] array = Enumerable.Range(1, 100).ToArray();
 // Allocate a GPU buffer and copy the data to it.
 // We want the shader to modify the items in-place, so we
 // can allocate a single read-write buffer to work on.
-using ReadWriteBuffer<int> buffer = Gpu.Default.AllocateReadWriteBuffer(array);
+using ReadWriteBuffer<int> buffer = GraphicsDevice.Default.AllocateReadWriteBuffer(array);
 ```
 
 The `AllocateReadWriteBuffer` extension takes care of creating a `ReadWriteBuffer<T>` instance with the same size as the input array and copying its contents to the allocated GPU buffer. There are a number of overloads available as well, to create buffers of different types and with custom length.
@@ -79,7 +79,7 @@ We can now finally run the GPU shader and copy the data back to our array:
 
 ```csharp
 // Launch the shader
-Gpu.Default.For(buffer.Length, new MultiplyByTwo(buffer));
+GraphicsDevice.Default.For(buffer.Length, new MultiplyByTwo(buffer));
 
 // Get the data back
 buffer.CopyTo(array);
@@ -216,10 +216,10 @@ As mentioned in the [GPU resource types](#gpu-resource-types) paragraph, there a
 
 ```csharp
 // Load a texture from a specified image, and decode it in the BGRA32 format
-using var texture = Gpu.Default.LoadReadWriteTexture2D<Bgra32, float4>("myImage.jpg");
+using var texture = GraphicsDevice.Default.LoadReadWriteTexture2D<Bgra32, float4>("myImage.jpg");
 
 // Run our shader on the texture we just loaded
-Gpu.Default.For(texture.Width, texture.Height, new GrayscaleEffect(texture));
+GraphicsDevice.Default.For(texture.Width, texture.Height, new GrayscaleEffect(texture));
 
 // Save the processed image by overwriting the original image
 texture.Save("myImage.jpg");
@@ -253,10 +253,10 @@ You can also use a similar technique to create a blank texture, render a single 
 
 ```csharp
 // Create a blank 1280x720 surface for us to render to
-using var texture = Gpu.Default.AllocateReadWriteTexture2D<Bgra32, float4>(1280, 720);
+using var texture = GraphicsDevice.Default.AllocateReadWriteTexture2D<Bgra32, float4>(1280, 720);
 
 // Using an existing shader from our samples, we can render a specific time frame
-Gpu.Default.ForEach(texture, new FourColorGradient(0));
+GraphicsDevice.Default.ForEach(texture, new FourColorGradient(0));
 
 // Save the result to a file on disk
 texture.Save("output.png");
@@ -291,10 +291,10 @@ Then we can simply create a new `Func<float, float>` instance and use that to co
 float[] array = LoadSampleData();
 
 // Allocate the buffer and copy data to it
-using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer(array);
+using ReadWriteBuffer<float> buffer = GraphicsDevice.Default.AllocateReadWriteBuffer(array);
 
 // Run the shader
-Gpu.Default.For(width, height, new ApplyFunction(buffer, Square));
+GraphicsDevice.Default.For(width, height, new ApplyFunction(buffer, Square));
 
 // Copy the processed data back as usual
 buffer.CopyTo(array);
@@ -323,10 +323,10 @@ There are cases where it might be needed to manually interop with other DirectX 
 using ComPtr<ID3D12Device> d3D12Device = default;
 using ComPtr<ID3D12Resource> d3D12Resource = default;
 
-using ReadWriteBuffer<float> buffer = Gpu.Default.AllocateReadWriteBuffer<float>(128);
+using ReadWriteBuffer<float> buffer = GraphicsDevice.Default.AllocateReadWriteBuffer<float>(128);
 
 // Get the underlying ID3D12Device object
-InteropServices.GetID3D12Device(Gpu.Default, __uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
+InteropServices.GetID3D12Device(GraphicsDevice.Default, __uuidof<ID3D12Device>(), (void**)d3D12Device.GetAddressOf());
 
 // Get the underlying ID3D12Resource object
 InteropServices.GetID3D12Resource(buffer, __uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf());
@@ -363,12 +363,12 @@ Assuming we had the `MultiplyByTwo` shader defined in the [Quick start](#quick-s
 let array = [| for i in 1 .. 100 -> (float32)i |]
 
 // Create the graphics buffer
-use buffer = Gpu.Default.AllocateReadWriteBuffer(array)
+use buffer = GraphicsDevice.Default.AllocateReadWriteBuffer(array)
 
 let shader = new MultiplyByTwo(buffer)
 
 // Run the shader (passed by reference)
-Gpu.Default.For(100, &shader)
+GraphicsDevice.Default.For(100, &shader)
 
 // Get the data back
 buffer.CopyTo array

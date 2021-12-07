@@ -26,7 +26,7 @@ public sealed partial class HlslBokehBlurProcessor : IImageProcessor
     /// Initializes a new instance of the <see cref="HlslBokehBlurProcessor"/> class.
     /// </summary>
     public HlslBokehBlurProcessor()
-        : this(Gpu.Default, DefaultRadius, DefaultComponents)
+        : this(GraphicsDevice.Default, DefaultRadius, DefaultComponents)
     {
     }
 
@@ -36,7 +36,7 @@ public sealed partial class HlslBokehBlurProcessor : IImageProcessor
     /// <param name="radius">The size of the area to sample.</param>
     /// <param name="components">The number of components to use to approximate the original 2D bokeh blur convolution kernel.</param>
     public HlslBokehBlurProcessor(int radius, int components)
-        : this(Gpu.Default, radius, components)
+        : this(GraphicsDevice.Default, radius, components)
     {
     }
 

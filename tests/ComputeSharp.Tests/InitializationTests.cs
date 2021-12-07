@@ -13,7 +13,7 @@ public partial class InitializationTests
     [TestMethod]
     public void IsSupported()
     {
-        Assert.IsTrue(Gpu.Default is not null);
+        Assert.IsTrue(GraphicsDevice.Default is not null);
     }
 
     [CombinatorialTestMethod]
@@ -31,11 +31,11 @@ public partial class InitializationTests
     [TestMethod]
     public void DisposeDefault()
     {
-        using var before = Gpu.Default.AllocateReadOnlyBuffer<float>(128);
+        using var before = GraphicsDevice.Default.AllocateReadOnlyBuffer<float>(128);
 
-        Gpu.Default.Dispose();
+        GraphicsDevice.Default.Dispose();
 
-        using var after = Gpu.Default.AllocateReadOnlyBuffer<float>(128);
+        using var after = GraphicsDevice.Default.AllocateReadOnlyBuffer<float>(128);
     }
 
     [TestMethod]
@@ -43,9 +43,9 @@ public partial class InitializationTests
     {
         int i = 0;
 
-        foreach (GraphicsDevice device in Gpu.EnumerateDevices())
+        foreach (GraphicsDevice device in GraphicsDevice.EnumerateDevices())
         {
-            if (i++ == 0) Assert.AreSame(Gpu.Default, device);
+            if (i++ == 0) Assert.AreSame(GraphicsDevice.Default, device);
 
             using ReadWriteBuffer<int> buffer = device.AllocateReadWriteBuffer<int>(128);
 
@@ -62,9 +62,9 @@ public partial class InitializationTests
     {
         int i = 0;
 
-        foreach (GraphicsDevice device in Gpu.QueryDevices(info => info.DedicatedMemorySize >= 1024))
+        foreach (GraphicsDevice device in GraphicsDevice.QueryDevices(info => info.DedicatedMemorySize >= 1024))
         {
-            if (i++ == 0) Assert.AreSame(Gpu.Default, device);
+            if (i++ == 0) Assert.AreSame(GraphicsDevice.Default, device);
 
             using ReadWriteBuffer<int> buffer = device.AllocateReadWriteBuffer<int>(128);
 

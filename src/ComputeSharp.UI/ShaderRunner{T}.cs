@@ -40,6 +40,6 @@ public sealed class ShaderRunner<T> : IShaderRunner
     /// <inheritdoc/>
     public void Execute(IReadWriteTexture2D<Float4> texture, TimeSpan time)
     {
-        Gpu.Default.ForEach(texture, this.shaderFactory(time));
+        GraphicsDevice.Default.ForEach(texture, this.shaderFactory(time));
     }
 }
