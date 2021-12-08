@@ -167,7 +167,7 @@ public class DiagnosticsTests
     [DataRow(nameof(GroupIds), "CMPS0007")]
     [DataRow(nameof(GroupSize), "CMPS0008")]
     [DataRow(nameof(GridIds), "CMPS0009")]
-    [DataRow(nameof(DispatchSize), "CMPS0044")]
+    [DataRow(nameof(DispatchSize), "CMPS0039")]
     public void InvalidDispatchInfoUsage_LocalFunction(string typeName, string diagnosticsId)
     {
         string source = $@"
@@ -202,7 +202,7 @@ public class DiagnosticsTests
     [DataRow(nameof(GroupIds), "CMPS0007")]
     [DataRow(nameof(GroupSize), "CMPS0008")]
     [DataRow(nameof(GridIds), "CMPS0009")]
-    [DataRow(nameof(DispatchSize), "CMPS0044")]
+    [DataRow(nameof(DispatchSize), "CMPS0039")]
     public void InvalidDispatchInfoUsage_StaticMethod(string typeName, string diagnosticsId)
     {
         string source = $@"
@@ -1194,7 +1194,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0042");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0037");
     }
 
     [TestMethod]
@@ -1222,7 +1222,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0043");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0038");
     }
 
     [TestMethod]
@@ -1250,7 +1250,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0045");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0040");
     }
 
     [TestMethod]
@@ -1281,7 +1281,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0045");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0040");
     }
 
     [TestMethod]
@@ -1309,7 +1309,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0045");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0040");
     }
 
     [TestMethod]
@@ -1337,7 +1337,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0045");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0040");
     }
 
     [TestMethod]
@@ -1371,7 +1371,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0046");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0041");
     }
 
     [TestMethod]
@@ -1396,7 +1396,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0047");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0042");
     }
 
     [TestMethod]
@@ -1410,12 +1410,15 @@ public class DiagnosticsTests
         {
             public interface IComputeShader { }
             public class ReadWriteBuffer<T> { }
-            public class EmbeddedBytecodeAttribute : Attribute { }
+            public class EmbeddedBytecodeAttribute : Attribute
+            {
+                public EmbeddedBytecodeAttribute(int threadsX, int threadsY, int threadsZ) { }
+            }
         }
 
         namespace MyFancyApp.Sample
         {
-            [EmbeddedBytecode]
+            [EmbeddedBytecode(8, 8, 1)]
             public struct MyShader : IComputeShader
             {
                 public ReadWriteBuffer<float> buffer;
@@ -1427,7 +1430,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0048");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0043");
     }
 
     [TestMethod]
@@ -1466,7 +1469,7 @@ public class DiagnosticsTests
             }}
         }}";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0049");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0044");
     }
 
     /// <summary>
@@ -1476,7 +1479,7 @@ public class DiagnosticsTests
     /// <param name="source">The input source to process.</param>
     /// <param name="diagnosticsIds">The expected diagnostics ids to be generated.</param>
     private static void VerifyGeneratedDiagnostics<TGenerator>(string source, params string[] diagnosticsIds)
-        where TGenerator : class, ISourceGenerator, new()
+        where TGenerator : class, IIncrementalGenerator, new()
     {
         SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source);
 
@@ -1488,7 +1491,7 @@ public class DiagnosticsTests
 
         CSharpCompilation compilation = CSharpCompilation.Create("original", new SyntaxTree[] { syntaxTree }, references, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
-        ISourceGenerator generator = new TGenerator();
+        IIncrementalGenerator generator = new TGenerator();
 
         CSharpGeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
 

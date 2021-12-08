@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using ComputeSharp.SourceGenerators.Diagnostics;
@@ -63,7 +64,7 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
     /// <param name="discoveredTypes">The set of discovered custom types.</param>
     /// <param name="staticMethods">The set of discovered and processed static methods.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
-    /// <param name="context">The current generator context in use.</param>
+    /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
     /// <param name="isEntryPoint">Whether or not the current instance is processing a shader entry point.</param>
     public ShaderSourceRewriter(
         INamedTypeSymbol shaderType,
@@ -71,9 +72,9 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
         ICollection<INamedTypeSymbol> discoveredTypes,
         IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
         IDictionary<IFieldSymbol, string> constantDefinitions,
-        GeneratorExecutionContext context,
+        ImmutableArray<Diagnostic>.Builder diagnostics,
         bool isEntryPoint)
-        : base(semanticModel, discoveredTypes, constantDefinitions, context)
+        : base(semanticModel, discoveredTypes, constantDefinitions, diagnostics)
     {
         this.shaderType = shaderType;
         this.staticMethods = staticMethods;
@@ -89,14 +90,14 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
     /// <param name="discoveredTypes">The set of discovered custom types.</param>
     /// <param name="staticMethods">The set of discovered and processed static methods.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
-    /// <param name="context">The current generator context in use.</param>
+    /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
     public ShaderSourceRewriter(
         SemanticModelProvider semanticModel,
         ICollection<INamedTypeSymbol> discoveredTypes,
         IDictionary<IMethodSymbol, MethodDeclarationSyntax> staticMethods,
         IDictionary<IFieldSymbol, string> constantDefinitions,
-        GeneratorExecutionContext context)
-        : base(semanticModel, discoveredTypes, constantDefinitions, context)
+        ImmutableArray<Diagnostic>.Builder diagnostics)
+        : base(semanticModel, discoveredTypes, constantDefinitions, diagnostics)
     {
         this.staticMethods = staticMethods;
         this.implicitVariables = new();
@@ -134,12 +135,12 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
 
         if (node!.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword)))
         {
-            Context.ReportDiagnostic(AsyncModifierOnMethodOrFunction, node);
+            Diagnostics.Add(AsyncModifierOnMethodOrFunction, node);
         }
 
         if (node!.Modifiers.Any(m => m.IsKind(SyntaxKind.UnsafeKeyword)))
         {
-            Context.ReportDiagnostic(UnsafeModifierOnMethodOrFunction, node);
+            Diagnostics.Add(UnsafeModifierOnMethodOrFunction, node);
         }
 
         if (updatedNode is not null)
@@ -183,7 +184,7 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
 
         if (SemanticModel.For(node).GetOperation(node) is IOperation { Kind: OperationKind.UsingDeclaration })
         {
-            Context.ReportDiagnostic(UsingStatementOrDeclaration, node);
+            Diagnostics.Add(UsingStatementOrDeclaration, node);
         }
 
         return updatedNode.ReplaceAndTrackType(updatedNode.Declaration.Type, node.Declaration.Type, SemanticModel.For(node), DiscoveredTypes);
@@ -227,12 +228,12 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
 
         if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword)))
         {
-            Context.ReportDiagnostic(AsyncModifierOnMethodOrFunction, node);
+            Diagnostics.Add(AsyncModifierOnMethodOrFunction, node);
         }
 
         if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.UnsafeKeyword)))
         {
-            Context.ReportDiagnostic(UnsafeModifierOnMethodOrFunction, node);
+            Diagnostics.Add(UnsafeModifierOnMethodOrFunction, node);
         }
 
         this.localFunctionDepth--;
@@ -295,7 +296,7 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
 
                         if (descriptor is not null)
                         {
-                            Context.ReportDiagnostic(descriptor, node);
+                            Diagnostics.Add(descriptor, node);
                         }
                     }
                 }
@@ -403,7 +404,7 @@ internal sealed class ShaderSourceRewriter : HlslSourceRewriter
 
                 if (!this.staticMethods.ContainsKey(method))
                 {
-                    ShaderSourceRewriter shaderSourceRewriter = new(SemanticModel, DiscoveredTypes, this.staticMethods, ConstantDefinitions, Context);
+                    ShaderSourceRewriter shaderSourceRewriter = new(SemanticModel, DiscoveredTypes, this.staticMethods, ConstantDefinitions, Diagnostics);
                     MethodDeclarationSyntax methodNode = (MethodDeclarationSyntax)method.DeclaringSyntaxReferences[0].GetSyntax();
                     MethodDeclarationSyntax processedMethod = shaderSourceRewriter.Visit(methodNode)!.NormalizeWhitespace(eol: "\n").WithoutTrivia();
 

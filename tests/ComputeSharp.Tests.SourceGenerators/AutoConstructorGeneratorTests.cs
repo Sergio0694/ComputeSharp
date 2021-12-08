@@ -27,7 +27,7 @@ public class AutoConstructorGeneratorTests
 
         namespace MyFancyApp.Sample
         {
-            public partial interface IFoo<T> : IFluff
+            public partial class IFoo<T> : IFluff
                 where T : notnull, new()
             {
                 public partial class Foo
@@ -44,25 +44,28 @@ public class AutoConstructorGeneratorTests
             }
         }";
 
-        string expected = @"
+        string expected = $@"
         #pragma warning disable
         namespace MyFancyApp.Sample;
-        public partial interface IFoo<T>
-        {
-            public partial class Foo
-            {
-                public readonly partial struct Test
-                {
+        partial class IFoo<T>
+        {{
+            partial class Foo
+            {{
+                partial struct Test
+                {{
+                    [global::System.CodeDom.Compiler.GeneratedCode(""ComputeSharp.SourceGenerators.AutoConstructorGenerator"", ""{typeof(AutoConstructorGenerator).Assembly.GetName().Version}"")]
+                    [global::System.Diagnostics.DebuggerNonUserCode]
+                    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
                     public Test(float a, global::System.Numerics.Vector2 b, global::ComputeSharp.ReadWriteBuffer<global::System.Numerics.Vector4> c, global::ComputeSharp.ReadWriteBuffer<int> d)
-                    {
+                    {{
                         this.a = a;
                         this.b = b;
                         this.c = c;
                         this.d = d;
-                    }
-                }
-            }
-        }";
+                    }}
+                }}
+            }}
+        }}";
 
         VerifyGeneratedMethodLines<AutoConstructorGenerator>(source, 0, expected);
     }
@@ -75,7 +78,7 @@ public class AutoConstructorGeneratorTests
     /// <param name="index">The target index to check in the resulting output.</param>
     /// <param name="expectedBody">The expected body to compare with the generated code.</param>
     private static void VerifyGeneratedMethodLines<TGenerator>(string source, int index, string expectedBody)
-        where TGenerator : class, ISourceGenerator, new()
+        where TGenerator : class, IIncrementalGenerator, new()
     {
         SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source);
 
@@ -87,7 +90,7 @@ public class AutoConstructorGeneratorTests
 
         CSharpCompilation compilation = CSharpCompilation.Create("original", new SyntaxTree[] { syntaxTree }, references, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
-        ISourceGenerator generator = new TGenerator();
+        IIncrementalGenerator generator = new TGenerator();
 
         CSharpGeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
 

@@ -9,13 +9,13 @@ namespace ComputeSharp.SourceGenerators;
 /// <summary>
 /// A source generator to create global using directives for the HLSL primitive types.
 /// </summary>
-[Generator]
-public sealed class GlobalUsingDirectivesGenerator : ISourceGenerator
+[Generator(LanguageNames.CSharp)]
+public sealed class GlobalUsingDirectivesGenerator : IIncrementalGenerator
 {
     /// <inheritdoc/>
-    public void Initialize(GeneratorInitializationContext context)
+    public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        context.RegisterForPostInitialization(static context =>
+        context.RegisterPostInitializationOutput(static context =>
         {
             const string filename = "ComputeSharp.SourceGenerators.EmbeddedResources.GlobalUsingDirectives.cs";
 
@@ -26,10 +26,5 @@ public sealed class GlobalUsingDirectivesGenerator : ISourceGenerator
 
             context.AddSource("GlobalUsingDirectives.cs", SourceText.From(globalUsingDirectives, Encoding.UTF8));
         });
-    }
-
-    /// <inheritdoc/>
-    public void Execute(GeneratorExecutionContext context)
-    {
     }
 }

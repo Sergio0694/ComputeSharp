@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using ComputeSharp.SourceGenerators.Diagnostics;
 using ComputeSharp.SourceGenerators.Extensions;
@@ -25,13 +26,13 @@ internal sealed class StaticFieldRewriter : HlslSourceRewriter
     /// <param name="semanticModel">The <see cref="SemanticModelProvider"/> instance for the target syntax tree.</param>
     /// <param name="discoveredTypes">The set of discovered custom types.</param>
     /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
-    /// <param name="context">The current generator context in use.</param>
+    /// <param name="diagnostics">The collection of produced <see cref="Diagnostic"/> instances.</param>
     public StaticFieldRewriter(
         SemanticModelProvider semanticModel,
         ICollection<INamedTypeSymbol> discoveredTypes,
         IDictionary<IFieldSymbol, string> constantDefinitions,
-        GeneratorExecutionContext context)
-        : base(semanticModel, discoveredTypes, constantDefinitions, context)
+        ImmutableArray<Diagnostic>.Builder diagnostics)
+        : base(semanticModel, discoveredTypes, constantDefinitions, diagnostics)
     {
     }
 
@@ -86,7 +87,7 @@ internal sealed class StaticFieldRewriter : HlslSourceRewriter
 
                     if (descriptor is not null)
                     {
-                        Context.ReportDiagnostic(descriptor, node);
+                        Diagnostics.Add(descriptor, node);
                     }
                 }
 
