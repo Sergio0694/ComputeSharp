@@ -247,10 +247,57 @@ internal sealed unsafe class WICHelper
             (IStream*)wicStream.Get(),
             WICBitmapEncoderCacheOption.WICBitmapEncoderNoCache).Assert();
 
+        SaveTexture(texture, wicBitmapEncoder.Get(), containerGuid);
+    }
+
+    /// <summary>
+    /// Saves a texture to a specified stream.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="texture">The texture data to save to a stream.</param>
+    /// <param name="stream">The target stream to write to.</param>
+    /// <param name="format">The target image format to use.</param>
+    public void SaveTexture<T>(TextureView2D<T> texture, Stream stream, ImageFormat format)
+        where T : unmanaged
+    {
+        using ComPtr<IWICBitmapEncoder> wicBitmapEncoder = default;
+        Guid containerGuid = WICFormatHelper.GetForFormat(format);
+
+        // Create the image encoder
+        this.wicImagingFactory2.Get()->CreateEncoder(
+            &containerGuid,
+            null,
+            wicBitmapEncoder.GetAddressOf()).Assert();
+
+        using ComPtr<IWICStream> wicStream = default;
+
+        // Create and initialize a stream
+        this.wicImagingFactory2.Get()->CreateStream(wicStream.GetAddressOf()).Assert();
+
+        wicStream.Get()->InitializeFromStream(stream);
+
+        // Initialize the encoder
+        wicBitmapEncoder.Get()->Initialize(
+            (IStream*)wicStream.Get(),
+            WICBitmapEncoderCacheOption.WICBitmapEncoderNoCache).Assert();
+
+        SaveTexture(texture, wicBitmapEncoder.Get(), containerGuid);
+    }
+
+    /// <summary>
+    /// Saves a texture to a specified <see cref="IWICBitmapEncoder"/> object.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="texture">The texture data to save to an image.</param>
+    /// <param name="wicBitmapEncoder">The <see cref="IWICBitmapEncoder"/> object in use.</param>
+    /// <param name="format">The <see cref="Guid"/> identifying the target format.</param>
+    private void SaveTexture<T>(TextureView2D<T> texture, IWICBitmapEncoder* wicBitmapEncoder, Guid format)
+        where T : unmanaged
+    {
         using ComPtr<IWICBitmapFrameEncode> wicBitmapFrameEncode = default;
 
         // Create the image frame and initialize it
-        wicBitmapEncoder.Get()->CreateNewFrame(wicBitmapFrameEncode.GetAddressOf(), null).Assert();
+        wicBitmapEncoder->CreateNewFrame(wicBitmapFrameEncode.GetAddressOf(), null).Assert();
 
         wicBitmapFrameEncode.Get()->Initialize(null).Assert();
         wicBitmapFrameEncode.Get()->SetSize((uint)texture.Width, (uint)texture.Height).Assert();
@@ -258,7 +305,7 @@ internal sealed unsafe class WICHelper
         // Depending on the target format and the current pixel type, we need to check whether
         // an intermediate encoding step is necessary. This is because not all pixel formats
         // are directly supported by the native image encoders present in Windows.
-        if (WICFormatHelper.TryGetIntermediateFormatForType<T>(containerGuid, out Guid intermediateGuid))
+        if (WICFormatHelper.TryGetIntermediateFormatForType<T>(format, out Guid intermediateGuid))
         {
             T* data = texture.DangerousGetAddressAndByteStride(out int strideInBytes);
 
@@ -306,9 +353,9 @@ internal sealed unsafe class WICHelper
                 cbStride: (uint)strideInBytes,
                 cbBufferSize: (uint)(strideInBytes * texture.Height),
                 pbPixels: (byte*)data).Assert();
-        }            
+        }
 
         wicBitmapFrameEncode.Get()->Commit();
-        wicBitmapEncoder.Get()->Commit();
+        wicBitmapEncoder->Commit();
     }
 }

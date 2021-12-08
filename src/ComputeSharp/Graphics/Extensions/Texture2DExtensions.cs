@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.IO;
 using System.Runtime.InteropServices;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Resources;
@@ -563,5 +564,24 @@ public static class Texture2DExtensions
         texture.CopyTo(readback);
 
         WICHelper.Instance.SaveTexture(readback.View, filename);
+    }
+
+    /// <summary>
+    /// Saves a texture to a specified stream.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="texture">The texture to save to an image.</param>
+    /// <param name="stream">The stream to save the image to.</param>
+    /// <param name="format">The target image format to use.</param>
+    public static void Save<T>(this Texture2D<T> texture, Stream stream, ImageFormat format)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(stream, nameof(stream));
+
+        using ReadBackTexture2D<T> readback = texture.GraphicsDevice.AllocateReadBackTexture2D<T>(texture.Width, texture.Height);
+
+        texture.CopyTo(readback);
+
+        WICHelper.Instance.SaveTexture(readback.View, stream, format);
     }
 }
