@@ -36,7 +36,7 @@ internal static class StreamExtensions
     /// </summary>
     /// <param name="stream">The input <see cref="Stream"/> instance.</param>
     /// <param name="span">A region of memory. This method copies the contents of this region to the current stream.</param>
-    public static void Write(this Stream stream, Span<byte> span)
+    public static void Write(this Stream stream, ReadOnlySpan<byte> span)
     {
         if (span.IsEmpty)
         {
