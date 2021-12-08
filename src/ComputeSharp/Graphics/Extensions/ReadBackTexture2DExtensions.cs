@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Resources;
 using Microsoft.Toolkit.Diagnostics;
@@ -80,5 +81,20 @@ public static class ReadBackTexture2DExtensions
         where T : unmanaged
     {
         WICHelper.Instance.SaveTexture(texture.View, filename);
+    }
+
+    /// <summary>
+    /// Saves a texture to a specified stream.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="texture">The texture to save to an image.</param>
+    /// <param name="stream">The stream to save the image to.</param>
+    /// <param name="format">The target image format to use.</param>
+    public static void Save<T>(this ReadBackTexture2D<T> texture, Stream stream, ImageFormat format)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(stream, nameof(stream));
+
+        WICHelper.Instance.SaveTexture(texture.View, stream, format);
     }
 }

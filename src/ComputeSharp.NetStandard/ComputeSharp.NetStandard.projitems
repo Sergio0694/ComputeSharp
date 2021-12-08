@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)System\GC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\IntPtrExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\FormatExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\IO\StreamExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Path.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\InterpolatedStringHandlerArgumentAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\InterpolatedStringHandlerAttribute.cs" />
@@ -22,6 +23,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\SkipLocalsInitAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\InteropServices\MemoryMarshal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\CompilerServices\RuntimeHelpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\InteropServices\UnmanagedCallersOnlyAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\InteropServices\NativeMemory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\Versioning\OSPlatformAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Runtime\Versioning\SupportedOSVersionAttribute.cs" />

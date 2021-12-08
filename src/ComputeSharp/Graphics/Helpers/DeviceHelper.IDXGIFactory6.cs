@@ -7,6 +7,7 @@ using TerraFX.Interop.Windows;
 using RuntimeHelpers = System.Runtime.CompilerServices.RuntimeHelpers;
 #else
 using RuntimeHelpers = ComputeSharp.NetStandard.System.Runtime.CompilerServices.RuntimeHelpers;
+using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.InteropServices.UnmanagedCallersOnlyAttribute;
 #endif
 
 #pragma warning disable CA1416
@@ -85,6 +86,32 @@ internal static partial class DeviceHelper
     /// </summary>
     private unsafe struct IDXGIFactory4As6Backcompat
     {
+#if !NET6_0_OR_GREATER
+        /// <inheritdoc cref="Release"/>
+        private delegate uint ReleaseDelegate(IDXGIFactory4As6Backcompat* @this);
+
+        /// <inheritdoc cref="EnumWarpAdapter"/>
+        private delegate int EnumWarpAdapterDelegate(IDXGIFactory4As6Backcompat* @this, Guid* riid, void** ppvAdapter);
+
+        /// <inheritdoc cref="EnumAdapterByGpuPreference"/>
+        private delegate int EnumAdapterByGpuPreferenceDelegate(IDXGIFactory4As6Backcompat* @this, uint Adapter, DXGI_GPU_PREFERENCE GpuPreference, Guid* riid, void** ppvAdapter);
+
+        /// <summary>
+        /// A cached <see cref="ReleaseDelegate"/> instance wrapping <see cref="Release"/>.
+        /// </summary>
+        private static readonly ReleaseDelegate ReleaseWrapper = Release;
+
+        /// <summary>
+        /// A cached <see cref="EnumWarpAdapterDelegate"/> instance wrapping <see cref="EnumWarpAdapter"/>.
+        /// </summary>
+        private static readonly EnumWarpAdapterDelegate EnumWarpAdapterWrapper = EnumWarpAdapter;
+
+        /// <summary>
+        /// A cached <see cref="EnumAdapterByGpuPreferenceDelegate"/> instance wrapping <see cref="EnumAdapterByGpuPreference"/>.
+        /// </summary>
+        private static readonly EnumAdapterByGpuPreferenceDelegate EnumAdapterByGpuPreferenceWrapper = EnumAdapterByGpuPreference;
+#endif
+
         /// <summary>
         /// The shared method table pointer for all <see cref="IDXGIFactory4As6Backcompat"/> instances.
         /// </summary>
@@ -138,20 +165,8 @@ internal static partial class DeviceHelper
             *dxgiFactory6 = (IDXGIFactory6*)@this;
         }
 
-#if !NET6_0_OR_GREATER
-        /// <inheritdoc cref="Release"/>
-        private delegate uint ReleaseDelegate(IDXGIFactory4As6Backcompat* @this);
-
-        /// <summary>
-        /// A cached <see cref="ReleaseDelegate"/> instance wrapping <see cref="Release"/>.
-        /// </summary>
-        private static readonly ReleaseDelegate ReleaseWrapper = Release;
-#endif
-
         /// <inheritdoc cref="IUnknown.Release"/>
-#if NET6_0_OR_GREATER
         [UnmanagedCallersOnly]
-#endif
         public static uint Release(IDXGIFactory4As6Backcompat* @this)
         {
             @this->dxgiFactory4->Release();
@@ -161,39 +176,15 @@ internal static partial class DeviceHelper
             return 0;
         }
 
-#if !NET6_0_OR_GREATER
-        /// <inheritdoc cref="EnumWarpAdapter"/>
-        private delegate int EnumWarpAdapterDelegate(IDXGIFactory4As6Backcompat* @this, Guid* riid, void** ppvAdapter);
-
-        /// <summary>
-        /// A cached <see cref="EnumWarpAdapterDelegate"/> instance wrapping <see cref="EnumWarpAdapter"/>.
-        /// </summary>
-        private static readonly EnumWarpAdapterDelegate EnumWarpAdapterWrapper = EnumWarpAdapter;
-#endif
-
         /// <inheritdoc cref="IDXGIFactory6.EnumWarpAdapter(Guid*, void**)"/>
-#if NET6_0_OR_GREATER
         [UnmanagedCallersOnly]
-#endif
         public static int EnumWarpAdapter(IDXGIFactory4As6Backcompat* @this, Guid* riid, void** ppvAdapter)
         {
             return @this->dxgiFactory4->EnumWarpAdapter(riid, ppvAdapter);
         }
 
-#if !NET6_0_OR_GREATER
-        /// <inheritdoc cref="EnumAdapterByGpuPreference"/>
-        private delegate int EnumAdapterByGpuPreferenceDelegate(IDXGIFactory4As6Backcompat* @this, uint Adapter, DXGI_GPU_PREFERENCE GpuPreference, Guid* riid, void** ppvAdapter);
-
-        /// <summary>
-        /// A cached <see cref="EnumAdapterByGpuPreferenceDelegate"/> instance wrapping <see cref="EnumAdapterByGpuPreference"/>.
-        /// </summary>
-        private static readonly EnumAdapterByGpuPreferenceDelegate EnumAdapterByGpuPreferenceWrapper = EnumAdapterByGpuPreference;
-#endif
-
         /// <inheritdoc cref="IDXGIFactory6.EnumAdapterByGpuPreference(uint, DXGI_GPU_PREFERENCE, Guid*, void**)"/>
-#if NET6_0_OR_GREATER
         [UnmanagedCallersOnly]
-#endif
         public static int EnumAdapterByGpuPreference(IDXGIFactory4As6Backcompat* @this, uint Adapter, DXGI_GPU_PREFERENCE GpuPreference, Guid* riid, void** ppvAdapter)
         {
             return @this->dxgiFactory4->EnumAdapters1(Adapter, (IDXGIAdapter1**)ppvAdapter);

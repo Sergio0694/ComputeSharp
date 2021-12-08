@@ -132,4 +132,25 @@ internal static class WICFormatHelper
             _ => ThrowHelper.ThrowArgumentException<Guid>("Invalid filename"),
         };
     }
+
+    /// <summary>
+    /// Gets the appropriate WIC container format <see cref="Guid"/> value for the input format.
+    /// </summary>
+    /// <param name="format">The target format to get the container format for.</param>
+    /// <returns>The WIC format container <see cref="Guid"/> value matching <paramref name="format"/>.</returns>
+    /// <exception cref="ArgumentException">Thrown when the input format isn't valid.</exception>
+    [Pure]
+    public static Guid GetForFormat(ImageFormat format)
+    {
+        return format switch
+        {
+            ImageFormat.Bmp => GUID.GUID_ContainerFormatBmp,
+            ImageFormat.Png => GUID.GUID_ContainerFormatPng,
+            ImageFormat.Jpeg => GUID.GUID_ContainerFormatJpeg,
+            ImageFormat.Wmp => GUID.GUID_ContainerFormatWmp,
+            ImageFormat.Tiff => GUID.GUID_ContainerFormatTiff,
+            ImageFormat.Dds => GUID.GUID_ContainerFormatDds,
+            _ => ThrowHelper.ThrowArgumentException<Guid>("Invalid format"),
+        };
+    }
 }

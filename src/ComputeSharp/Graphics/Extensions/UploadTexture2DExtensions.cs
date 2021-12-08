@@ -1,4 +1,8 @@
-﻿using ComputeSharp.Resources;
+﻿using System;
+using System.IO;
+using ComputeSharp.Graphics.Helpers;
+using ComputeSharp.Resources;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace ComputeSharp;
 
@@ -51,5 +55,58 @@ public static class UploadTexture2DExtensions
         where T : unmanaged
     {
         destination.CopyFrom(source, sourceOffsetX, sourceOffsetY, destinationOffsetX, destinationOffsetY, width, height);
+    }
+
+    /// <summary>
+    /// Loads a texture from a specified file.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <param name="texture">The texture to decode the image into.</param>
+    /// <param name="filename">The filename of the image file to load.</param>
+    public static void Load<T>(this UploadTexture2D<T> texture, string filename)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(filename, nameof(filename));
+
+        texture. Load(filename.AsSpan());
+    }
+
+    /// <summary>
+    /// Loads a texture from a specified file.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <param name="texture">The texture to decode the image into.</param>
+    /// <param name="filename">The filename of the image file to load.</param>
+    public static void Load<T>(this UploadTexture2D<T> texture, ReadOnlySpan<char> filename)
+        where T : unmanaged
+    {
+        WICHelper.Instance.LoadTexture(texture.View, filename);
+    }
+
+    /// <summary>
+    /// LLoads a texture from a specified buffer.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <param name="texture">The texture to decode the image into.</param>
+    /// <param name="span">The buffer with the image data to load and decode into the texture.</param>
+    /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+    public static void Load<T>(this UploadTexture2D<T> texture, ReadOnlySpan<byte> span)
+        where T : unmanaged
+    {
+        WICHelper.Instance.LoadTexture(texture.View, span);
+    }
+
+    /// <summary>
+    /// Loads a texture from a specified stream.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <param name="texture">The texture to decode the image into.</param>
+    /// <param name="stream">The stream to load the image from.</param>
+    public static void Load<T>(this UploadTexture2D<T> texture, Stream stream)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(stream, nameof(stream));
+
+        WICHelper.Instance.LoadTexture(texture.View, stream);
     }
 }

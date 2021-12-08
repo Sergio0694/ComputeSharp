@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.IO;
 using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Resources;
@@ -1134,6 +1135,30 @@ public static partial class GraphicsDeviceExtensions
     }
 
     /// <summary>
+    /// Loads a new readonly 2D texture with the contents of the specified stream.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="stream">The stream with the image data to load and decode into the texture.</param>
+    /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+    [Pure]
+    public static ReadOnlyTexture2D<T, TPixel> LoadReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, Stream stream)
+        where T : unmanaged, IUnorm<TPixel>
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(stream, nameof(stream));
+
+        using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, stream);
+
+        ReadOnlyTexture2D<T, TPixel> texture = device.AllocateReadOnlyTexture2D<T, TPixel>(upload.Width, upload.Height);
+
+        upload.CopyTo(texture);
+
+        return texture;
+    }
+
+    /// <summary>
     /// Loads a new writeable 2D texture with the contents of the specified file.
     /// </summary>
     /// <typeparam name="T">The type of items to store in the texture.</typeparam>
@@ -1187,6 +1212,30 @@ public static partial class GraphicsDeviceExtensions
         where TPixel : unmanaged
     {
         using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, span);
+
+        ReadWriteTexture2D<T, TPixel> texture = device.AllocateReadWriteTexture2D<T, TPixel>(upload.Width, upload.Height);
+
+        upload.CopyTo(texture);
+
+        return texture;
+    }
+
+    /// <summary>
+    /// Loads a new writeable 2D texture with the contents of the specified stream.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="stream">The stream with the image data to load and decode into the texture.</param>
+    /// <returns>A <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
+    [Pure]
+    public static ReadWriteTexture2D<T, TPixel> LoadReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, Stream stream)
+        where T : unmanaged, IUnorm<TPixel>
+        where TPixel : unmanaged
+    {
+        Guard.IsNotNull(stream, nameof(stream));
+
+        using UploadTexture2D<T> upload = WICHelper.Instance.LoadTexture<T>(device, stream);
 
         ReadWriteTexture2D<T, TPixel> texture = device.AllocateReadWriteTexture2D<T, TPixel>(upload.Width, upload.Height);
 
