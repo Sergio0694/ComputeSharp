@@ -41,6 +41,30 @@ public class ImagingTests
 
     [CombinatorialTestMethod]
     [AllDevices]
+    [Resource(typeof(ReadOnlyTexture2D<>))]
+    [Resource(typeof(ReadWriteTexture2D<>))]
+    [Data(typeof(string))]
+    [Data(typeof(ReadOnlySpan<char>))]
+    public void LoadAsRgba32_FromFile_WithUploadTexture(Device device, Type textureType, Type inputType)
+    {
+        string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
+
+        IImageInfo imageInfo = Image.Identify(path);
+
+        using Texture2D<Rgba32> texture = device.Get().AllocateTexture2D<Rgba32>(textureType, imageInfo.Width, imageInfo.Height);
+        using UploadTexture2D<Rgba32> upload = device.Get().AllocateUploadTexture2D<Rgba32>(imageInfo.Width, imageInfo.Height);
+
+        upload.Load(inputType, path);
+        upload.CopyTo(texture);
+
+        using Image<ImageSharpRgba32> loaded = texture.ToImage<Rgba32, ImageSharpRgba32>();
+        using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(path);
+
+        TolerantImageComparer.AssertEqual(original, loaded, 0.0000032f);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
     [Resource(typeof(ReadOnlyTexture2D<,>))]
     [Resource(typeof(ReadWriteTexture2D<,>))]
     public void LoadAsRgba32_FromBuffer(Device device, Type textureType)
@@ -50,6 +74,30 @@ public class ImagingTests
         byte[] buffer = File.ReadAllBytes(path);
 
         using Texture2D<Rgba32> texture = device.Get().LoadTexture2D<Rgba32, float4>(textureType, buffer);
+
+        using Image<ImageSharpRgba32> loaded = texture.ToImage<Rgba32, ImageSharpRgba32>();
+        using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(path);
+
+        TolerantImageComparer.AssertEqual(original, loaded, 0.0000032f);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Resource(typeof(ReadOnlyTexture2D<>))]
+    [Resource(typeof(ReadWriteTexture2D<>))]
+    public void LoadAsRgba32_FromBuffer_WithUploadTexture(Device device, Type textureType)
+    {
+        string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
+
+        IImageInfo imageInfo = Image.Identify(path);
+
+        using Texture2D<Rgba32> texture = device.Get().AllocateTexture2D<Rgba32>(textureType, imageInfo.Width, imageInfo.Height);
+        using UploadTexture2D<Rgba32> upload = device.Get().AllocateUploadTexture2D<Rgba32>(imageInfo.Width, imageInfo.Height);
+
+        byte[] buffer = File.ReadAllBytes(path);
+
+        upload.Load(buffer);
+        upload.CopyTo(texture);
 
         using Image<ImageSharpRgba32> loaded = texture.ToImage<Rgba32, ImageSharpRgba32>();
         using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(path);
@@ -73,6 +121,45 @@ public class ImagingTests
         using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(path);
 
         TolerantImageComparer.AssertEqual(original, loaded, 0.0000032f);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Resource(typeof(ReadOnlyTexture2D<>))]
+    [Resource(typeof(ReadWriteTexture2D<>))]
+    public void LoadAsRgba32_FromStream_WithUploadTexture(Device device, Type textureType)
+    {
+        string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
+
+        IImageInfo imageInfo = Image.Identify(path);
+
+        using Texture2D<Rgba32> texture = device.Get().AllocateTexture2D<Rgba32>(textureType, imageInfo.Width, imageInfo.Height);
+        using UploadTexture2D<Rgba32> upload = device.Get().AllocateUploadTexture2D<Rgba32>(imageInfo.Width, imageInfo.Height);
+
+        using Stream stream = File.OpenRead(path);
+
+        upload.Load(stream);
+        upload.CopyTo(texture);
+
+        using Image<ImageSharpRgba32> loaded = texture.ToImage<Rgba32, ImageSharpRgba32>();
+        using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(path);
+
+        TolerantImageComparer.AssertEqual(original, loaded, 0.0000032f);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(3840, 2562)]
+    [Data(3839, 2560)]
+    [Data(3844, 2564)]
+    [ExpectedException(typeof(ArgumentException))]
+    public void LoadAsRgba32_FromStream_WithUploadTexture_SizeMismatch(Device device, int width, int height)
+    {
+        string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
+
+        using UploadTexture2D<Rgba32> upload = device.Get().AllocateUploadTexture2D<Rgba32>(width, height);
+
+        upload.Load(path);
     }
 
     [CombinatorialTestMethod]

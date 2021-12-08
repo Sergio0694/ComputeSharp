@@ -303,6 +303,30 @@ public static class GraphicsDeviceExtensions
     }
 
     /// <summary>
+    /// Loads an image from a specific file into a target <see cref="UploadTexture2D{T}"/> instance.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="texture">The target <see cref="UploadTexture2D{T}"/> instance.</param>
+    /// <param name="inputType">The type of filepath to use.</param>
+    /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
+    [Pure]
+    public static void Load<T>(this UploadTexture2D<T> texture, Type inputType, string filename)
+        where T : unmanaged
+    {
+        switch (inputType)
+        {
+            case var _ when inputType == typeof(string):
+                texture.Load(filename);
+                break;
+            case var _ when inputType == typeof(ReadOnlySpan<char>):
+                texture.Load(filename);
+                break;
+            default:
+                throw new ArgumentException($"Invalid input type: {inputType}", nameof(inputType));
+        }
+    }
+
+    /// <summary>
     /// Loads a new readonly 2D texture with the contents of the specified file.
     /// </summary>
     /// <typeparam name="T">The type of items to store in the texture.</typeparam>
