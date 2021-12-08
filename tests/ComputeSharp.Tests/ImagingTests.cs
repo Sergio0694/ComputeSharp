@@ -112,6 +112,24 @@ public class ImagingTests
     }
 
     [CombinatorialTestMethod]
+    [AllDevices]
+    [Resource(typeof(ReadOnlyTexture2D<,>))]
+    [Resource(typeof(ReadWriteTexture2D<,>))]
+    public void LoadAsRgba32FromStream(Device device, Type textureType)
+    {
+        string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
+
+        using Stream stream = File.OpenRead(path);
+
+        using Texture2D<Rgba32> texture = device.Get().LoadTexture2D<Rgba32, float4>(textureType, stream);
+
+        using Image<ImageSharpRgba32> loaded = texture.ToImage<Rgba32, ImageSharpRgba32>();
+        using Image<ImageSharpRgba32> original = Image.Load<ImageSharpRgba32>(path);
+
+        TolerantImageComparer.AssertEqual(original, loaded, 0.0000032f);
+    }
+
+    [CombinatorialTestMethod]
     [Device(Device.Warp)]
     [Resource(typeof(ReadOnlyTexture2D<,>))]
     [Resource(typeof(ReadWriteTexture2D<,>))]
@@ -119,6 +137,16 @@ public class ImagingTests
     public void LoadAsRgba32_WithNullPath(Device device, Type textureType)
     {
         using Texture2D<Rgba32> texture = device.Get().LoadTexture2D<Rgba32, float4>(textureType, typeof(string), null!);
+    }
+
+    [CombinatorialTestMethod]
+    [Device(Device.Warp)]
+    [Resource(typeof(ReadOnlyTexture2D<,>))]
+    [Resource(typeof(ReadWriteTexture2D<,>))]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void LoadAsRgba32_WithNullStream(Device device, Type textureType)
+    {
+        using Texture2D<Rgba32> texture = device.Get().LoadTexture2D<Rgba32, float4>(textureType, (Stream)null!);
     }
 
     [CombinatorialTestMethod]

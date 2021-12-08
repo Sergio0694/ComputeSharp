@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.IO;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
+using ComputeSharp.Graphics.Extensions;
 using TerraFX.Interop.Windows;
 
 #pragma warning disable CA1416
@@ -107,6 +109,110 @@ internal sealed unsafe class WICHelper
     }
 
     /// <summary>
+    /// Loads an <see cref="UploadTexture2D{T}"/> from a specified stream.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="stream">The stream with the image data to load and decode into the texture.</param>
+    /// <returns>An <see cref="UploadTexture2D{T}"/> instance with the contents of the specified file.</returns>
+    [Pure]
+    public UploadTexture2D<T> LoadTexture<T>(GraphicsDevice device, Stream stream)
+        where T : unmanaged
+    {
+        using ComPtr<IWICBitmapDecoder> wicBitmapDecoder = default;
+        using ComPtr<IWICStream> wicStream = default;
+
+        this.wicImagingFactory2.Get()->CreateStream(wicStream.GetAddressOf()).Assert();
+
+        wicStream.Get()->InitializeFromStream(stream).Assert();
+
+        this.wicImagingFactory2.Get()->CreateDecoderFromStream(
+            (IStream*)wicStream.Get(),
+            null,
+            WICDecodeOptions.WICDecodeMetadataCacheOnDemand,
+            wicBitmapDecoder.GetAddressOf()).Assert();
+
+        return LoadTexture<T>(device, wicBitmapDecoder.Get());
+    }
+
+    /// <summary>
+    /// Loads an <see cref="UploadTexture2D{T}"/> from a specified <see cref="IWICBitmapDecoder"/> object.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="wicBitmapDecoder">The <see cref="IWICBitmapDecoder"/> object in use.</param>
+    /// <returns>An <see cref="UploadTexture2D{T}"/> instance with the contents of the specified file.</returns>
+    [Pure]
+    private UploadTexture2D<T> LoadTexture<T>(GraphicsDevice device, IWICBitmapDecoder* wicBitmapDecoder)
+        where T : unmanaged
+    {
+        using ComPtr<IWICBitmapFrameDecode> wicBitmapFrameDecode = default;
+
+        // Get the first frame of the loaded image (if more are present, they will be ignored)
+        wicBitmapDecoder->GetFrame(0, wicBitmapFrameDecode.GetAddressOf()).Assert();
+
+        uint width;
+        uint height;
+
+        // Extract the image size info
+        wicBitmapFrameDecode.Get()->GetSize(&width, &height).Assert();
+
+        Guid wicTargetPixelFormatGuid = WICFormatHelper.GetForType<T>();
+        Guid wicActualPixelFormatGuid;
+
+        // Get the current and target pixel format info
+        wicBitmapFrameDecode.Get()->GetPixelFormat(&wicActualPixelFormatGuid).Assert();
+
+        // If the current pixel format is the same as the target one, we can just read the
+        // decoded pixel data directly. Otherwise, we need a pixel format conversion step.
+        if (wicTargetPixelFormatGuid == wicActualPixelFormatGuid)
+        {
+            // Allocate an upload texture to transfer the decoded pixel data
+            UploadTexture2D<T> upload = device.AllocateUploadTexture2D<T>((int)width, (int)height);
+
+            T* data = upload.View.DangerousGetAddressAndByteStride(out int strideInBytes);
+
+            // Copy the decoded pixels directly from the loaded image
+            wicBitmapFrameDecode.Get()->CopyPixels(
+                prc: null,
+                cbStride: (uint)strideInBytes,
+                cbBufferSize: (uint)strideInBytes * height,
+                pbBuffer: (byte*)data).Assert();
+
+            return upload;
+        }
+        else
+        {
+            using ComPtr<IWICFormatConverter> wicFormatConverter = default;
+
+            this.wicImagingFactory2.Get()->CreateFormatConverter(wicFormatConverter.GetAddressOf()).Assert();
+
+            // Get a format converter to decode the pixel data
+            wicFormatConverter.Get()->Initialize(
+                (IWICBitmapSource*)wicBitmapFrameDecode.Get(),
+                &wicTargetPixelFormatGuid,
+                WICBitmapDitherType.WICBitmapDitherTypeNone,
+                null,
+                0,
+                WICBitmapPaletteType.WICBitmapPaletteTypeMedianCut).Assert();
+
+            // Allocate an upload texture to transfer the converted pixel data
+            UploadTexture2D<T> upload = device.AllocateUploadTexture2D<T>((int)width, (int)height);
+
+            T* data = upload.View.DangerousGetAddressAndByteStride(out int strideInBytes);
+
+            // Decode the pixel data into the upload buffer
+            wicFormatConverter.Get()->CopyPixels(
+                prc: null,
+                cbStride: (uint)strideInBytes,
+                cbBufferSize: (uint)strideInBytes * height,
+                pbBuffer: (byte*)data).Assert();
+
+            return upload;
+        }
+    }
+
+    /// <summary>
     /// Saves a texture to a specified file.
     /// </summary>
     /// <typeparam name="T">The type of items to store in the texture.</typeparam>
@@ -204,82 +310,5 @@ internal sealed unsafe class WICHelper
 
         wicBitmapFrameEncode.Get()->Commit();
         wicBitmapEncoder.Get()->Commit();
-    }
-
-    /// <summary>
-    /// Loads an <see cref="UploadTexture2D{T}"/> from a specified <see cref="IWICBitmapDecoder"/> object.
-    /// </summary>
-    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
-    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
-    /// <param name="wicBitmapDecoder">The <see cref="IWICBitmapDecoder"/> object in use.</param>
-    /// <returns>An <see cref="UploadTexture2D{T}"/> instance with the contents of the specified file.</returns>
-    [Pure]
-    private UploadTexture2D<T> LoadTexture<T>(GraphicsDevice device, IWICBitmapDecoder* wicBitmapDecoder)
-        where T : unmanaged
-    {
-        using ComPtr<IWICBitmapFrameDecode> wicBitmapFrameDecode = default;
-
-        // Get the first frame of the loaded image (if more are present, they will be ignored)
-        wicBitmapDecoder->GetFrame(0, wicBitmapFrameDecode.GetAddressOf()).Assert();
-
-        uint width;
-        uint height;
-
-        // Extract the image size info
-        wicBitmapFrameDecode.Get()->GetSize(&width, &height).Assert();
-
-        Guid wicTargetPixelFormatGuid = WICFormatHelper.GetForType<T>();
-        Guid wicActualPixelFormatGuid;
-
-        // Get the current and target pixel format info
-        wicBitmapFrameDecode.Get()->GetPixelFormat(&wicActualPixelFormatGuid).Assert();
-
-        // If the current pixel format is the same as the target one, we can just read the
-        // decoded pixel data directly. Otherwise, we need a pixel format conversion step.
-        if (wicTargetPixelFormatGuid == wicActualPixelFormatGuid)
-        {
-            // Allocate an upload texture to transfer the decoded pixel data
-            UploadTexture2D<T> upload = device.AllocateUploadTexture2D<T>((int)width, (int)height);
-
-            T* data = upload.View.DangerousGetAddressAndByteStride(out int strideInBytes);
-
-            // Copy the decoded pixels directly from the loaded image
-            wicBitmapFrameDecode.Get()->CopyPixels(
-                prc: null,
-                cbStride: (uint)strideInBytes,
-                cbBufferSize: (uint)strideInBytes * height,
-                pbBuffer: (byte*)data).Assert();
-
-            return upload;
-        }
-        else
-        {
-            using ComPtr<IWICFormatConverter> wicFormatConverter = default;
-
-            this.wicImagingFactory2.Get()->CreateFormatConverter(wicFormatConverter.GetAddressOf()).Assert();
-
-            // Get a format converter to decode the pixel data
-            wicFormatConverter.Get()->Initialize(
-                (IWICBitmapSource*)wicBitmapFrameDecode.Get(),
-                &wicTargetPixelFormatGuid,
-                WICBitmapDitherType.WICBitmapDitherTypeNone,
-                null,
-                0,
-                WICBitmapPaletteType.WICBitmapPaletteTypeMedianCut).Assert();
-
-            // Allocate an upload texture to transfer the converted pixel data
-            UploadTexture2D<T> upload = device.AllocateUploadTexture2D<T>((int)width, (int)height);
-
-            T* data = upload.View.DangerousGetAddressAndByteStride(out int strideInBytes);
-
-            // Decode the pixel data into the upload buffer
-            wicFormatConverter.Get()->CopyPixels(
-                prc: null,
-                cbStride: (uint)strideInBytes,
-                cbBufferSize: (uint)strideInBytes * height,
-                pbBuffer: (byte*)data).Assert();
-
-            return upload;
-        }
     }
 }

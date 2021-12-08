@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.IO;
 using ComputeSharp.__Internals;
 using ComputeSharp.Resources;
 
@@ -335,14 +336,14 @@ public static class GraphicsDeviceExtensions
     }
 
     /// <summary>
-    /// Loads a new readonly 2D texture with the contents of the specified file.
+    /// Loads a new readonly 2D texture with the contents of the specified buffer.
     /// </summary>
     /// <typeparam name="T">The type of items to store in the texture.</typeparam>
     /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
     /// <param name="type">The type of texture to allocate.</param>
     /// <param name="buffer">The buffer with the image data to load and decode into the texture.</param>
-    /// <returns>A <see cref="Texture2D{T}"/> instance with the contents of the specified file.</returns>
+    /// <returns>A <see cref="Texture2D{T}"/> instance with the contents of the specified buffer.</returns>
     [Pure]
     public static Texture2D<T> LoadTexture2D<T, TPixel>(this GraphicsDevice device, Type type, byte[] buffer)
         where T : unmanaged, IUnorm<TPixel>
@@ -352,6 +353,28 @@ public static class GraphicsDeviceExtensions
         {
             _ when type == typeof(ReadOnlyTexture2D<,>) => device.LoadReadOnlyTexture2D<T, TPixel>(buffer),
             _ when type == typeof(ReadWriteTexture2D<,>) => device.LoadReadWriteTexture2D<T, TPixel>(buffer),
+            _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
+        };
+    }
+
+    /// <summary>
+    /// Loads a new readonly 2D texture with the contents of the specified stream.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="type">The type of texture to allocate.</param>
+    /// <param name="stream">The stream with the image data to load and decode into the texture.</param>
+    /// <returns>A <see cref="Texture2D{T}"/> instance with the contents of the specified stream.</returns>
+    [Pure]
+    public static Texture2D<T> LoadTexture2D<T, TPixel>(this GraphicsDevice device, Type type, Stream stream)
+        where T : unmanaged, IUnorm<TPixel>
+        where TPixel : unmanaged
+    {
+        return type switch
+        {
+            _ when type == typeof(ReadOnlyTexture2D<,>) => device.LoadReadOnlyTexture2D<T, TPixel>(stream),
+            _ when type == typeof(ReadWriteTexture2D<,>) => device.LoadReadWriteTexture2D<T, TPixel>(stream),
             _ => throw new ArgumentException($"Invalid type: {type}", nameof(type))
         };
     }
