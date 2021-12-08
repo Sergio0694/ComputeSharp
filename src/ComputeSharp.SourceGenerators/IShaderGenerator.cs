@@ -84,13 +84,12 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                     out int root32BitConstantCount,
                     out ImmutableArray<Diagnostic> dispatchDataDiagnostics);
 
-                Result<DispatchDataInfo> dispatchDataInfo = new(new DispatchDataInfo(
+                DispatchDataInfo dispatchDataInfo = new(
                     item.Left.Hierarchy,
                     item.Left.Type,
                     fieldInfos,
                     resourceCount,
-                    root32BitConstantCount),
-                    dispatchDataDiagnostics);
+                    root32BitConstantCount);
 
                 // BuildHlslString() info
                 HlslShaderSourceInfo hlslSourceInfo = BuildHlslString.GetInfo(
@@ -106,7 +105,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                     out ImmutableArray<Diagnostic> threadIdsDiagnostics);
 
                 return (
-                    dispatchDataInfo,
+                    new Result<DispatchDataInfo>(dispatchDataInfo, dispatchDataDiagnostics),
                     new Result<HlslShaderSourceInfo>(hlslSourceInfo, hlslSourceDiagnostics),
                     new Result<ThreadIdsInfo>(threadIds, threadIdsDiagnostics));
             });
