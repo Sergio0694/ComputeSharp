@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.IO;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Resources;
@@ -96,5 +97,20 @@ public static class ReadBackTexture2DExtensions
         Guard.IsNotNull(stream, nameof(stream));
 
         WICHelper.Instance.SaveTexture(texture.View, stream, format);
+    }
+
+    /// <summary>
+    /// Saves a texture to a specified buffer writer.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="texture">The texture to save to an image.</param>
+    /// <param name="writer">The buffer writer to save the image to.</param>
+    /// <param name="format">The target image format to use.</param>
+    public static void Save<T>(this ReadBackTexture2D<T> texture, IBufferWriter<byte> writer, ImageFormat format)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(writer, nameof(writer));
+
+        WICHelper.Instance.SaveTexture(texture.View, writer, format);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -583,5 +584,24 @@ public static class Texture2DExtensions
         texture.CopyTo(readback);
 
         WICHelper.Instance.SaveTexture(readback.View, stream, format);
+    }
+
+    /// <summary>
+    /// Saves a texture to a specified buffer writer.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="texture">The texture to save to an image.</param>
+    /// <param name="writer">The buffer writer to save the image to.</param>
+    /// <param name="format">The target image format to use.</param>
+    public static void Save<T>(this Texture2D<T> texture, IBufferWriter<byte> writer, ImageFormat format)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(writer, nameof(writer));
+
+        using ReadBackTexture2D<T> readback = texture.GraphicsDevice.AllocateReadBackTexture2D<T>(texture.Width, texture.Height);
+
+        texture.CopyTo(readback);
+
+        WICHelper.Instance.SaveTexture(readback.View, writer, format);
     }
 }

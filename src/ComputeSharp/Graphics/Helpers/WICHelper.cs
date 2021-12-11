@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -420,6 +421,40 @@ internal sealed unsafe class WICHelper
         this.wicImagingFactory2.Get()->CreateStream(wicStream.GetAddressOf()).Assert();
 
         wicStream.Get()->InitializeFromStream(stream);
+
+        // Initialize the encoder
+        wicBitmapEncoder.Get()->Initialize(
+            (IStream*)wicStream.Get(),
+            WICBitmapEncoderCacheOption.WICBitmapEncoderNoCache).Assert();
+
+        SaveTexture(texture, wicBitmapEncoder.Get(), containerGuid);
+    }
+
+    /// <summary>
+    /// Saves a texture to a specified buffer writer.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="texture">The texture data to save to a stream.</param>
+    /// <param name="writer">The target buffer writer to write to.</param>
+    /// <param name="format">The target image format to use.</param>
+    public void SaveTexture<T>(TextureView2D<T> texture, IBufferWriter<byte> writer, ImageFormat format)
+        where T : unmanaged
+    {
+        using ComPtr<IWICBitmapEncoder> wicBitmapEncoder = default;
+        Guid containerGuid = WICFormatHelper.GetForFormat(format);
+
+        // Create the image encoder
+        this.wicImagingFactory2.Get()->CreateEncoder(
+            &containerGuid,
+            null,
+            wicBitmapEncoder.GetAddressOf()).Assert();
+
+        using ComPtr<IWICStream> wicStream = default;
+
+        // Create and initialize a stream
+        this.wicImagingFactory2.Get()->CreateStream(wicStream.GetAddressOf()).Assert();
+
+        wicStream.Get()->InitializeFromBufferWriter(writer);
 
         // Initialize the encoder
         wicBitmapEncoder.Get()->Initialize(
