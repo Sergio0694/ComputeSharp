@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -14,6 +15,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 using ImageSharpBgra32 = SixLabors.ImageSharp.PixelFormats.Bgra32;
 using ImageSharpL8 = SixLabors.ImageSharp.PixelFormats.L8;
+using Microsoft.Toolkit.HighPerformance.Buffers;
 
 namespace ComputeSharp.Tests;
 
@@ -333,6 +335,28 @@ public class ImagingTests
     [AllDevices]
     [Resource(typeof(ReadOnlyTexture2D<,>))]
     [Resource(typeof(ReadWriteTexture2D<,>))]
+    public void SaveRgba32AsJpeg_ToBufferWriter(Device device, Type textureType)
+    {
+        string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
+        string expectedPath = Path.Combine(path, "city.jpg");
+        string actualPath = Path.Combine(path, "city_rgba32_saved.jpg");
+
+        using Texture2D<Rgba32> texture = device.Get().LoadTexture2D<Rgba32, float4>(textureType, typeof(string), expectedPath);
+
+        using (ArrayPoolBufferWriter<byte> writer = new())
+        {
+            texture.Save(writer, ImageFormat.Jpeg);
+
+            File.WriteAllBytes(actualPath, writer.WrittenSpan.ToArray());
+        }
+
+        TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.00001023f);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Resource(typeof(ReadOnlyTexture2D<,>))]
+    [Resource(typeof(ReadWriteTexture2D<,>))]
     [Data(typeof(string))]
     [Data(typeof(ReadOnlySpan<char>))]
     public void SaveRgba32AsJpeg_ToFile_WithReadBackTexture(Device device, Type textureType, Type inputType)
@@ -375,6 +399,31 @@ public class ImagingTests
     }
 
     [CombinatorialTestMethod]
+    [AllDevices]
+    [Resource(typeof(ReadOnlyTexture2D<,>))]
+    [Resource(typeof(ReadWriteTexture2D<,>))]
+    public void SaveRgba32AsJpeg_ToBufferWriter_WithReadBackTexture(Device device, Type textureType)
+    {
+        string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
+        string expectedPath = Path.Combine(path, "city.jpg");
+        string actualPath = Path.Combine(path, "city_rgba32_saved.jpg");
+
+        using Texture2D<Rgba32> texture = device.Get().LoadTexture2D<Rgba32, float4>(textureType, typeof(string), expectedPath);
+        using ReadBackTexture2D<Rgba32> readback = device.Get().AllocateReadBackTexture2D<Rgba32>(texture.Width, texture.Height);
+
+        texture.CopyTo(readback);
+
+        using (ArrayPoolBufferWriter<byte> writer = new())
+        {
+            readback.Save(writer, ImageFormat.Jpeg);
+
+            File.WriteAllBytes(actualPath, writer.WrittenSpan.ToArray());
+        }
+
+        TolerantImageComparer.AssertEqual(expectedPath, actualPath, 0.00001023f);
+    }
+
+    [CombinatorialTestMethod]
     [Device(Device.Warp)]
     [Resource(typeof(ReadOnlyTexture2D<,>))]
     [Resource(typeof(ReadWriteTexture2D<,>))]
@@ -405,7 +454,24 @@ public class ImagingTests
 
         texture.CopyTo(readback);
 
-        readback.Save(null!, ImageFormat.Jpeg);
+        readback.Save((Stream)null!, ImageFormat.Jpeg);
+    }
+
+    [CombinatorialTestMethod]
+    [Device(Device.Warp)]
+    [Resource(typeof(ReadOnlyTexture2D<,>))]
+    [Resource(typeof(ReadWriteTexture2D<,>))]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void SaveRgba32AsJpeg_ToBufferWriter_WithReadBackTexture_WithNullBufferWriter(Device device, Type textureType)
+    {
+        string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging", "city.jpg");
+
+        using Texture2D<Rgba32> texture = device.Get().LoadTexture2D<Rgba32, float4>(textureType, typeof(string), path);
+        using ReadBackTexture2D<Rgba32> readback = device.Get().AllocateReadBackTexture2D<Rgba32>(texture.Width, texture.Height);
+
+        texture.CopyTo(readback);
+
+        readback.Save((IBufferWriter<byte>)null!, ImageFormat.Jpeg);
     }
 
     [CombinatorialTestMethod]
