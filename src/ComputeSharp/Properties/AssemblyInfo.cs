@@ -2,6 +2,8 @@
 
 [module: SkipLocalsInit]
 
-[assembly: InternalsVisibleTo("ComputeSharp.Tests.Internals")]
+[assembly: InternalsVisibleTo("ComputeSharp.Dynamic")]
 [assembly: InternalsVisibleTo("ComputeSharp.Uwp")]
 [assembly: InternalsVisibleTo("ComputeSharp.WinUI")]
+
+[assembly: InternalsVisibleTo("ComputeSharp.Tests.Internals")]

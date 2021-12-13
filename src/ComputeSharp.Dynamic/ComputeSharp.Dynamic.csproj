@@ -68,4 +68,8 @@
       </ItemGroup>
     </Otherwise>
   </Choose>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />
+  </ItemGroup>
 </Project>
