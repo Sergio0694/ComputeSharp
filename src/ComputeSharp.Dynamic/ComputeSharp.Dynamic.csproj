@@ -7,6 +7,16 @@
     <Platforms>AnyCPU;x64;ARM64</Platforms>
   </PropertyGroup>
 
+  <!-- Referece to the main non-dynamic library-->
+  <ItemGroup>
+    <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />
+  </ItemGroup>
+
+  <!-- Shared project with .NET Standard 2.0 polyfills for Dxc -->
+  <Import Condition="'$(TargetFramework)' == 'netstandard2.0'"
+          Project="..\TerraFX.Interop.Windows.Dynamic\TerraFX.Interop.Windows.Dynamic.projitems"
+          Label="Shared" />
+
   <Choose>
 
     <!-- When building locally for x64/ARM64 (using the project through a project reference),
@@ -68,8 +78,4 @@
       </ItemGroup>
     </Otherwise>
   </Choose>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ComputeSharp\ComputeSharp.csproj" />
-  </ItemGroup>
 </Project>

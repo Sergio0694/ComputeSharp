@@ -65,6 +65,24 @@ public interface IShader
 #endif
 
     /// <summary>
+    /// Builds the HLSL source code for the current shader instance.
+    /// </summary>
+    /// <param name="builder">The resulting <see cref="ArrayPoolStringBuilder"/> instance containing the HLSL source.</param>
+    /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
+    /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
+    /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    [Obsolete("This method is not intended to be called directly by user code")]
+    void BuildHlslString(out ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ)
+#if NET6_0_OR_GREATER
+    {
+        throw new NotImplementedException();
+    }
+#else
+    ;
+#endif
+
+    /// <summary>
     /// Loads the bytecode for the current shader.
     /// </summary>
     /// <typeparam name="TBytecodeLoader">The type of bytecode loader being used.</typeparam>

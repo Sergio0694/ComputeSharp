@@ -1,12 +1,13 @@
-﻿#if !DISABLE_RUNTIME_SHADER_COMPILATION_SUPPORT
-
-using System;
+﻿using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Exceptions;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
+#if !NET6_0_OR_GREATER
+using DirectX = TerraFX.Interop.DirectX.DirectX2;
+#endif
 
 namespace ComputeSharp.Shaders.Translation;
 
@@ -155,5 +156,3 @@ internal sealed unsafe partial class ShaderCompiler
         throw new HlslCompilationException(message);
     }
 }
-
-#endif
