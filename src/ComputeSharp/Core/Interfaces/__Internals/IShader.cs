@@ -65,35 +65,17 @@ public interface IShader
 #endif
 
     /// <summary>
-    /// Builds the HLSL source code for the current shader instance.
+    /// Loads the bytecode for the current shader.
     /// </summary>
-    /// <param name="builder">The resulting <see cref="ArrayPoolStringBuilder"/> instance containing the HLSL source.</param>
+    /// <typeparam name="TBytecodeLoader">The type of bytecode loader being used.</typeparam>
+    /// <param name="loader">The <typeparamref name="TBytecodeLoader"/> instance to use to load the bytecode.</param>
     /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
     /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
     /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    [Obsolete("This method is not intended to be called directly by user code")]
-    void BuildHlslString(out ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ)
-#if NET6_0_OR_GREATER
-    {
-        throw new NotImplementedException();
-    }
-#else
-    ;
-#endif
-
-    /// <summary>
-    /// Tries to retrieve the precompiled bytecode for the current shader.
-    /// </summary>
-    /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
-    /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
-    /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
-    /// <param name="bytecode">The resulting bytecode, if found.</param>
-    /// <returns>Whether or not a precompiled bytecode was found.</returns>
-    /// <remarks>The underlying buffer for <paramref name="bytecode"/>, if found, can be assumed to always be pinned.</remarks>
     [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("This method is not intended to be used directly by user code")]
-    bool TryGetBytecode(int threadsX, int threadsY, int threadsZ, out ReadOnlySpan<byte> bytecode)
+    void LoadBytecode<TBytecodeLoader>(ref TBytecodeLoader loader, int threadsX, int threadsY, int threadsZ)
+        where TBytecodeLoader : struct, IBytecodeLoader
 #if NET6_0_OR_GREATER
     {
         throw new NotImplementedException();
