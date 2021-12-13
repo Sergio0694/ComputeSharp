@@ -18,8 +18,8 @@
     <Compile Include="..\ComputeSharp\Core\Attributes\AutoConstructorAttribute.cs" Link="ComputeSharp\Core\Attributes\AutoConstructorAttribute.cs" />
     <Compile Include="..\ComputeSharp\Core\Attributes\EmbeddedBytecodeAttribute.cs" Link="ComputeSharp\Core\Attributes\EmbeddedBytecodeAttribute.cs" />
     <Compile Include="..\ComputeSharp\Core\Attributes\GroupSharedAttribute.cs" Link="ComputeSharp\Core\Attributes\GroupSharedAttribute.cs" />
-    <Compile Include="..\ComputeSharp\Core\Attributes\ShaderMethodAttribute.cs" Link="ComputeSharp\Core\Attributes\ShaderMethodAttribute.cs" />
-    <Compile Include="..\ComputeSharp\Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" Link="ComputeSharp\Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Dynamic\Attributes\ShaderMethodAttribute.cs" Link="ComputeSharp\Core\Attributes\ShaderMethodAttribute.cs" />
+    <Compile Include="..\ComputeSharp.Dynamic\Attributes\__Internals\ShaderMethodSourceAttribute.cs" Link="ComputeSharp\Core\Attributes\__Internals\ShaderMethodSourceAttribute.cs" />
     <Compile Include="..\ComputeSharp\Core\Dispatch\DispatchSize.cs" Link="ComputeSharp\Core\Dispatch\DispatchSize.cs" />
     <Compile Include="..\ComputeSharp\Core\Dispatch\GridIds.cs" Link="ComputeSharp\Core\Dispatch\GridIds.cs" />
     <Compile Include="..\ComputeSharp\Core\Dispatch\GroupIds.cs" Link="ComputeSharp\Core\Dispatch\GroupIds.cs" />
@@ -72,9 +72,9 @@
     <Compile Include="..\ComputeSharp\Core\Primitives\UInt\UIntMxN.g.cs" Link="ComputeSharp\Core\Primitives\UInt\UIntMxN.g.cs" />
     <Compile Include="..\ComputeSharp\Core\Primitives\MatrixIndex.cs" Link="ComputeSharp\Core\Primitives\MatrixIndex.cs" />
     <Compile Include="..\ComputeSharp\Graphics\Extensions\Interop\ComPtrExtensions.cs" Link="ComputeSharp\Graphics\Extensions\Interop\ComPtrExtensions.cs" />
-    <Compile Include="..\ComputeSharp\Shaders\Exceptions\HlslCompilationException.cs" Link="ComputeSharp\Shaders\Exceptions\HlslCompilationException.cs" />
-    <Compile Include="..\ComputeSharp\Shaders\Translation\ShaderCompiler.cs" Link="ComputeSharp\Shaders\Translation\ShaderCompiler.cs" />
-    <Compile Include="..\ComputeSharp\Shaders\Translation\__Internals\ArrayPoolStringBuilder.cs" Link="ComputeSharp\Shaders\Translation\__Internals\ArrayPoolStringBuilder.cs" />
+    <Compile Include="..\ComputeSharp.Dynamic\Shaders\Exceptions\HlslCompilationException.cs" Link="ComputeSharp\Shaders\Exceptions\HlslCompilationException.cs" />
+    <Compile Include="..\ComputeSharp.Dynamic\Shaders\Translation\ShaderCompiler.cs" Link="ComputeSharp\Shaders\Translation\ShaderCompiler.cs" />
+    <Compile Include="..\ComputeSharp\Shaders\Dispatching\__Internals\ArrayPoolStringBuilder.cs" Link="ComputeSharp\Shaders\Dispatching\__Internals\ArrayPoolStringBuilder.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -93,10 +93,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="..\ComputeSharp\Libraries\x64\dxcompiler.dll" Link="ComputeSharp\Libraries\x64\dxcompiler.dll" />
-    <EmbeddedResource Include="..\ComputeSharp\Libraries\x64\dxil.dll" Link="ComputeSharp\Libraries\x64\dxil.dll" />
-    <EmbeddedResource Include="..\ComputeSharp\Libraries\arm64\dxcompiler.dll" Link="ComputeSharp\Libraries\arm64\dxcompiler.dll" />
-    <EmbeddedResource Include="..\ComputeSharp\Libraries\arm64\dxil.dll" Link="ComputeSharp\Libraries\arm64\dxil.dll" />
+    <EmbeddedResource Include="..\ComputeSharp.Dynamic\Libraries\x64\dxcompiler.dll" Link="ComputeSharp\Libraries\x64\dxcompiler.dll" />
+    <EmbeddedResource Include="..\ComputeSharp.Dynamic\Libraries\x64\dxil.dll" Link="ComputeSharp\Libraries\x64\dxil.dll" />
+    <EmbeddedResource Include="..\ComputeSharp.Dynamic\Libraries\arm64\dxcompiler.dll" Link="ComputeSharp\Libraries\arm64\dxcompiler.dll" />
+    <EmbeddedResource Include="..\ComputeSharp.Dynamic\Libraries\arm64\dxil.dll" Link="ComputeSharp\Libraries\arm64\dxil.dll" />
   </ItemGroup>
 
   <!-- Shared project with .NET Standard 2.0 polyfills -->
@@ -104,5 +104,6 @@
 
   <!-- Shared project with TerraFX.Interop.Windows fork -->
   <Import Project="..\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems" Label="Shared" />
+  <Import Project="..\TerraFX.Interop.Windows.Dynamic\TerraFX.Interop.Windows.Dynamic.projitems" Label="Shared" />
 
 </Project>
