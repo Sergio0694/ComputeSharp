@@ -23,9 +23,9 @@ namespace ComputeSharp.SourceGenerators;
 public sealed partial class IShaderGenerator
 {
     /// <summary>
-    /// A helper with all logic to generate the <c>TryGetBytecode</c> method.
+    /// A helper with all logic to generate the <c>LoadBytecode</c> method.
     /// </summary>
-    private static partial class TryGetBytecode
+    private static partial class LoadBytecode
     {
         /// <summary>
         /// Gets the thread ids values for a given shader type, if available.

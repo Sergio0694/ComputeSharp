@@ -17,7 +17,7 @@ namespace ComputeSharp.SourceGenerators;
 public sealed partial class IShaderGenerator
 {
     /// <inheritdoc/>
-    private static partial class TryGetBytecode
+    private static partial class LoadBytecode
     {
         /// <summary>
         /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>TryGetBytecode</c> method.
@@ -41,14 +41,14 @@ public sealed partial class IShaderGenerator
 
             // This code produces a method declaration as follows:
             //
-            // readonly void global::ComputeSharp.__Internals.IShader.GetBytecode<TBytecodeLoader>(ref TBytecodeLoader loader, int threadsX, int threadsY, int threadsZ)
+            // readonly void global::ComputeSharp.__Internals.IShader.LoadBytecode<TBytecodeLoader>(ref TBytecodeLoader loader, int threadsX, int threadsY, int threadsZ)
             // {
             //     <BODY>
             // }
             return
                 MethodDeclaration(
                     PredefinedType(Token(SyntaxKind.VoidKeyword)),
-                    Identifier("GetBytecode"))
+                    Identifier("LoadBytecode"))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.__Internals.{nameof(IShader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
                 .AddTypeParameterListParameters(TypeParameter(Identifier("TBytecodeLoader")))
@@ -164,7 +164,7 @@ public sealed partial class IShaderGenerator
         /// <returns>A sequence of <see cref="StatementSyntax"/> instances to create a new dynamic shader.</returns>
         private static ImmutableArray<StatementSyntax> GetDynamicCompilationStatements()
         {
-            if (dynamicStatements.IsEmpty)
+            if (dynamicStatements.IsDefault)
             {
                 // This code produces a method declaration as follows:
                 //
