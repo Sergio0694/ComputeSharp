@@ -47,7 +47,7 @@ jobs:
   # Run all the unit tests referencing the ComputeSharp project directly
   run-tests:
     if: success()
-    needs: [build-solution-debug, build-solution-release, build-solution-release-no-dynamic]
+    needs: [build-solution-debug, build-solution-release]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -160,7 +160,7 @@ jobs:
   # This workflow also uploads the resulting package as an artifact.
   build-package:
     if: success()
-    needs: [build-solution-debug, build-solution-release, build-solution-release-no-dynamic]
+    needs: [build-solution-debug, build-solution-release]
     runs-on: windows-2022
     steps:
     - name: Git checkout
@@ -169,14 +169,22 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-    - name: Build
+    - name: Build ComputeSharp package
       run: dotnet build src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj -c Release /p:ContinuousIntegrationBuild=True
       shell: cmd
-    - name: Upload package artifact
+    - name: Upload ComputeSharp package artifact
       uses: actions/upload-artifact@v2
       with:
         name: ComputeSharp.nupkg
         path: src\ComputeSharp.Package\bin\Release\*.nupkg
+    - name: Build ComputeSharp.Dynamic package
+      run: dotnet build src\ComputeSharp.Dynamic.Package\ComputeSharp.Dynamic.Package.msbuildproj -c Release /p:ContinuousIntegrationBuild=True
+      shell: cmd
+    - name: Upload ComputeSharp.Dynamic package artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ComputeSharp.Dynamic.nupkg
+        path: src\ComputeSharp.Dynamic.Package\bin\Release\*.nupkg
 
   # Download the NuGet package generated in the previous job and use it
   # to build and run the sample project referencing it. This is used as
@@ -195,11 +203,16 @@ jobs:
     - name: Create local NuGet feed
       run: mkdir src\ComputeSharp.Package\bin\Release
       shell: cmd
-    - name: Download package artifact
+    - name: Download ComputeSharp package artifact
       uses: actions/download-artifact@v2
       with:
         name: ComputeSharp.nupkg
         path: src\ComputeSharp.Package\bin\Release\ComputeSharp.nupkg
+    - name: Download ComputeSharp.Dynamic package artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: ComputeSharp.Dynamic.nupkg
+        path: src\ComputeSharp.Dynamic.Package\bin\Release\ComputeSharp.Dynamic.nupkg
     - name: Build ComputeSharp.Sample.NuGet (.NET 6)
       run: dotnet build samples\ComputeSharp.Sample.NuGet\ComputeSharp.Sample.NuGet.csproj -c Release -f net6.0
       shell: cmd
