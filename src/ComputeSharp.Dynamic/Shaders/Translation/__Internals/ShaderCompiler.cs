@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -15,16 +16,23 @@ public static class ShaderCompiler
     /// <summary>
     /// Compiles a new HLSL shader from the input source code.
     /// </summary>
-    /// <param name="builder">The <see cref="ArrayPoolStringBuilder"/> instance with the HLSL source code to compile.</param>
-    /// <returns>The bytecode for the compiled shader.</returns>
-    public static unsafe IntPtr CompileShader(ref ArrayPoolStringBuilder builder)
+    /// <typeparam name="TBytecodeLoader">The type of bytecode loader being used.</typeparam>
+    /// <typeparam name="T">The type of shader being dispatched.</typeparam>
+    /// <param name="loader">The <typeparamref name="TBytecodeLoader"/> instance to use to load the bytecode.</param>
+    /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
+    /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
+    /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
+    /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
+    public static unsafe void LoadDynamicBytecode<TBytecodeLoader, T>(ref TBytecodeLoader loader, int threadsX, int threadsY, int threadsZ, in T shader)
+        where TBytecodeLoader : struct, IBytecodeLoader
+        where T : struct, IShader
     {
-        using ComPtr<IDxcBlob> shader = Shaders.Translation.ShaderCompiler.Instance.CompileShader(builder.WrittenSpan);
+        Unsafe.AsRef(in shader).BuildHlslString(out ArrayPoolStringBuilder builder, threadsX, threadsY, threadsZ);
+
+        using ComPtr<IDxcBlob> dxcBlobBytecode = Shaders.Translation.ShaderCompiler.Instance.CompileShader(builder.WrittenSpan);
 
         builder.Dispose();
 
-        _ = shader.Get()->AddRef();
-
-        return (IntPtr)shader.Get();
+        loader.LoadDynamicBytecode((IntPtr)dxcBlobBytecode.Get());
     }
 }

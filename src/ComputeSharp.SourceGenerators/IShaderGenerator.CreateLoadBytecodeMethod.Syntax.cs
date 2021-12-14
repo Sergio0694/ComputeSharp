@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using ComputeSharp.__Internals;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
@@ -79,7 +77,7 @@ public sealed partial class IShaderGenerator
                 if (supportsDynamicShaders)
                 {
                     // Return the dynamic compilation path
-                    return Block(GetDynamicCompilationStatements());
+                    return Block(GetDynamicCompilationStatement());
                 }
                 else
                 {
@@ -146,65 +144,40 @@ public sealed partial class IShaderGenerator
             // If dynamic shaders are supported, return the combined block
             if (supportsDynamicShaders)
             {
-                return Block(embeddedBranch).AddStatements(GetDynamicCompilationStatements().ToArray());
+                return Block(embeddedBranch.WithElse(ElseClause(Block(GetDynamicCompilationStatement()))));
             }
 
             // If there is no dynamic shader support, add the faulting path after the branch
-            return Block(embeddedBranch).AddStatements(GetDynamicCompilationFaultingBlock());
+            return Block(embeddedBranch.WithElse(ElseClause(Block(GetDynamicCompilationFaultingBlock()))));
         }
 
         /// <summary>
         /// The cached tree of dynamic statements.
         /// </summary>
-        private static ImmutableArray<StatementSyntax> dynamicStatements;
+        private static StatementSyntax? dynamicStatement;
 
         /// <summary>
-        /// Returns a sequence of <see cref="StatementSyntax"/> instances to create a new dynamic shader.
+        /// Returns the <see cref="StatementSyntax"/> instance to create a new dynamic shader.
         /// </summary>
-        /// <returns>A sequence of <see cref="StatementSyntax"/> instances to create a new dynamic shader.</returns>
-        private static ImmutableArray<StatementSyntax> GetDynamicCompilationStatements()
+        /// <returns>The <see cref="StatementSyntax"/> instance to create a new dynamic shader.</returns>
+        private static StatementSyntax GetDynamicCompilationStatement()
         {
-            if (dynamicStatements.IsDefault)
-            {
-                // This code produces a method declaration as follows:
-                //
-                // BuildHlslString(out global::ComputeSharp.__Internals.ArrayPoolStringBuilder builder, threadsX, threadsY, threadsZ);
-                // global::System.IntPtr bytecode = ShaderCompiler.CompileShader(ref builder);
-                // loader.LoadDynamicBytecode(bytecode);
-                dynamicStatements = ImmutableArray.Create<StatementSyntax>(
-                    ExpressionStatement(
-                        InvocationExpression(IdentifierName("BuildHlslString"))
-                        .AddArgumentListArguments(
-                            Argument(DeclarationExpression(
-                                IdentifierName("global::ComputeSharp.__Internals.ArrayPoolStringBuilder"),
-                                SingleVariableDesignation(Identifier("builder"))))
-                            .WithRefOrOutKeyword(Token(SyntaxKind.OutKeyword)),
-                            Argument(IdentifierName("threadsX")),
-                            Argument(IdentifierName("threadsY")),
-                            Argument(IdentifierName("threadsZ")))),
-                    LocalDeclarationStatement(
-                        VariableDeclaration(IdentifierName("global::System.IntPtr"))
-                        .AddVariables(VariableDeclarator(Identifier("bytecode"))
-                        .WithInitializer(
-                            EqualsValueClause(
-                                InvocationExpression(
-                                    MemberAccessExpression(
-                                        SyntaxKind.SimpleMemberAccessExpression,
-                                        IdentifierName("ShaderCompiler"),
-                                        IdentifierName("CompileShader")))
-                                .AddArgumentListArguments(
-                                    Argument(IdentifierName("builder"))
-                                    .WithRefKindKeyword(Token(SyntaxKind.RefKeyword))))))),
-                    ExpressionStatement(
-                        InvocationExpression(
-                            MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                IdentifierName("loader"),
-                                IdentifierName("LoadDynamicBytecode")))
-                        .AddArgumentListArguments(Argument(IdentifierName("bytecode")))));;
-            }
-
-            return dynamicStatements;
+            // This code produces a method declaration as follows:
+            //
+            // ComputeSharp.__Internals.ShaderCompiler.LoadDynamicBytecode(ref loader, threadsX, threadsY, threadsZ, in this);
+            return dynamicStatement ??=
+                ExpressionStatement(
+                    InvocationExpression(
+                        MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName("ComputeSharp.__Internals.ShaderCompiler"),
+                            IdentifierName("LoadDynamicBytecode")))
+                    .AddArgumentListArguments(
+                        Argument(IdentifierName("loader")).WithRefOrOutKeyword(Token(SyntaxKind.RefKeyword)),
+                        Argument(IdentifierName("threadsX")),
+                        Argument(IdentifierName("threadsY")),
+                        Argument(IdentifierName("threadsZ")),
+                        Argument(ThisExpression()).WithRefOrOutKeyword(Token(SyntaxKind.InKeyword))));
         }
 
         /// <summary>
@@ -218,25 +191,20 @@ public sealed partial class IShaderGenerator
         /// <returns>A <see cref="ExpressionStatementSyntax"/> instances to perform a faulting call to <c>LoadDynamicBytecode(IntPtr)</c>.</returns>
         private static ExpressionStatementSyntax GetDynamicCompilationFaultingBlock()
         {
-            if (dynamicFaultStatement is null)
-            {
-                // This code produces a faulting call as follows:
-                //
-                // loader.LoadDynamicBytecode(default);
-                return
-                    ExpressionStatement(
-                        InvocationExpression(
-                            MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                IdentifierName("loader"),
-                                IdentifierName("LoadDynamicBytecode")))
-                        .AddArgumentListArguments(
-                            Argument(LiteralExpression(
-                                SyntaxKind.DefaultLiteralExpression,
-                                Token(SyntaxKind.DefaultKeyword)))));
-            }
-
-            return dynamicFaultStatement;
+            // This code produces a faulting call as follows:
+            //
+            // loader.LoadDynamicBytecode(default);
+            return dynamicFaultStatement ??=
+                ExpressionStatement(
+                    InvocationExpression(
+                        MemberAccessExpression(
+                            SyntaxKind.SimpleMemberAccessExpression,
+                            IdentifierName("loader"),
+                            IdentifierName("LoadDynamicBytecode")))
+                    .AddArgumentListArguments(
+                        Argument(LiteralExpression(
+                            SyntaxKind.DefaultLiteralExpression,
+                            Token(SyntaxKind.DefaultKeyword)))));
         }
 
         /// <summary>
