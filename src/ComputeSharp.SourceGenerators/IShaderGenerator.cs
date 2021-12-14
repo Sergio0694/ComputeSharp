@@ -227,7 +227,8 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // Check whether or not dynamic shaders are supported
         IncrementalValueProvider<bool> supportsDynamicShaders =
             context.CompilationProvider
-            .Select(static (compilation, token) => compilation.GetTypeByMetadataName("ComputeSharp.__Internals.ShaderCompiler") is not null);
+            .Select(static (compilation, token) => compilation.ReferencedAssemblyNames.Any(
+                static identity => identity.Name is "ComputeSharp.Dynamic"));
 
         // Generate the TryGetBytecode() methods
         context.RegisterSourceOutput(embeddedBytecode.Combine(supportsDynamicShaders), static (context, item) =>

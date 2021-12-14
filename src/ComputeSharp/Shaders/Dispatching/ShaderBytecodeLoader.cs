@@ -29,7 +29,7 @@ internal struct ShaderBytecodeLoader : IBytecodeLoader
     {
         if (this.cachedShader is not ICachedShader cachedShader)
         {
-            return ThrowHelper.ThrowInvalidOperationException<ICachedShader>("The shader has not been initialized");
+            return ThrowHelper.ThrowInvalidOperationException<ICachedShader>("The shader has not been initialized.");
         }
 
         return cachedShader;
@@ -40,7 +40,12 @@ internal struct ShaderBytecodeLoader : IBytecodeLoader
     {
         if (this.cachedShader is not null)
         {
-            ThrowHelper.ThrowInvalidOperationException("The shader has already been initialized");
+            ThrowHelper.ThrowInvalidOperationException("The shader has already been initialized.");
+        }
+
+        if (handle == IntPtr.Zero)
+        {
+            ThrowHelper.ThrowNotSupportedException("Runtime shader compilation is not supported by the current configuration.");
         }
 
         this.cachedShader = new ICachedShader.Dynamic((IDxcBlob*)handle);
@@ -52,7 +57,7 @@ internal struct ShaderBytecodeLoader : IBytecodeLoader
     {
         if (this.cachedShader is not null)
         {
-            ThrowHelper.ThrowInvalidOperationException("The shader has already been initialized");
+            ThrowHelper.ThrowInvalidOperationException("The shader has already been initialized.");
         }
 
         this.cachedShader = new ICachedShader.Embedded(bytecode);

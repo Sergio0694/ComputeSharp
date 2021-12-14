@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using ComputeSharp.__Internals;
 using ComputeSharp.Core.Extensions;
-using ComputeSharp.Shaders.Translation;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 #if !NET6_0_OR_GREATER
@@ -107,7 +106,7 @@ public static class ReflectionServices
     {
         Unsafe.AsRef(in shader).BuildHlslString(out ArrayPoolStringBuilder shaderSource, 1, 1, 1);
 
-        using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.CompileShader(shaderSource.WrittenSpan);
+        using ComPtr<IDxcBlob> dxcBlobBytecode = Shaders.Translation.ShaderCompiler.Instance.CompileShader(shaderSource.WrittenSpan);
 
         shaderSource.Dispose();
 

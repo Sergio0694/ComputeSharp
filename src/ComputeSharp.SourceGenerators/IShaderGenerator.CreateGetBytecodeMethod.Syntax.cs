@@ -169,8 +169,7 @@ public sealed partial class IShaderGenerator
                 // This code produces a method declaration as follows:
                 //
                 // BuildHlslString(out global::ComputeSharp.__Internals.ArrayPoolStringBuilder builder, threadsX, threadsY, threadsZ);
-                // global::System.IntPtr bytecode = ShaderCompiler.CompileShader(builder.WrittenSpan);
-                // builder.Dispose();
+                // global::System.IntPtr bytecode = ShaderCompiler.CompileShader(ref builder);
                 // loader.LoadDynamicBytecode(bytecode);
                 dynamicStatements = ImmutableArray.Create<StatementSyntax>(
                     ExpressionStatement(
@@ -194,24 +193,15 @@ public sealed partial class IShaderGenerator
                                         IdentifierName("ShaderCompiler"),
                                         IdentifierName("CompileShader")))
                                 .AddArgumentListArguments(
-                                    Argument(
-                                        MemberAccessExpression(
-                                            SyntaxKind.SimpleMemberAccessExpression,
-                                            IdentifierName("builder"),
-                                            IdentifierName("WrittenSpan")))))))),
-                    ExpressionStatement(
-                        InvocationExpression(
-                            MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                IdentifierName("builder"),
-                                IdentifierName("Dispose")))),
+                                    Argument(IdentifierName("builder"))
+                                    .WithRefKindKeyword(Token(SyntaxKind.RefKeyword))))))),
                     ExpressionStatement(
                         InvocationExpression(
                             MemberAccessExpression(
                                 SyntaxKind.SimpleMemberAccessExpression,
                                 IdentifierName("loader"),
                                 IdentifierName("LoadDynamicBytecode")))
-                        .AddArgumentListArguments(Argument(IdentifierName("bytecode")))));
+                        .AddArgumentListArguments(Argument(IdentifierName("bytecode")))));;
             }
 
             return dynamicStatements;
@@ -232,7 +222,7 @@ public sealed partial class IShaderGenerator
             {
                 // This code produces a faulting call as follows:
                 //
-                // loader.LoadDynamicBytecode(global::System.IntPtr.Zero);
+                // loader.LoadDynamicBytecode(default);
                 return
                     ExpressionStatement(
                         InvocationExpression(
@@ -241,14 +231,9 @@ public sealed partial class IShaderGenerator
                                 IdentifierName("loader"),
                                 IdentifierName("LoadDynamicBytecode")))
                         .AddArgumentListArguments(
-                            Argument(
-                                MemberAccessExpression(
-                                    SyntaxKind.SimpleMemberAccessExpression,
-                                    MemberAccessExpression(
-                                        SyntaxKind.SimpleMemberAccessExpression,
-                                        IdentifierName("global::System.IntPtr"),
-                                        IdentifierName("IntPtr")),
-                                    IdentifierName("Zero")))));
+                            Argument(LiteralExpression(
+                                SyntaxKind.DefaultLiteralExpression,
+                                Token(SyntaxKind.DefaultKeyword)))));
             }
 
             return dynamicFaultStatement;
