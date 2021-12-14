@@ -224,14 +224,19 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             .Select(static (item, token) => (item.Hierarchy, item.BytecodeInfo))
             .WithComparers(HierarchyInfo.Comparer.Default, EmbeddedBytecodeInfo.Comparer.Default);
 
+        // Check whether or not dynamic shaders are supported
+        IncrementalValueProvider<bool> supportsDynamicShaders =
+            context.CompilationProvider
+            .Select(static (compilation, token) => compilation.GetTypeByMetadataName("ComputeSharp.__Internals.ShaderCompiler") is not null);
+
         // Generate the TryGetBytecode() methods
-        context.RegisterSourceOutput(embeddedBytecode, static (context, item) =>
+        context.RegisterSourceOutput(embeddedBytecode.Combine(supportsDynamicShaders), static (context, item) =>
         {
-            MethodDeclarationSyntax tryGetBytecodeMethod = TryGetBytecode.GetSyntax(item.BytecodeInfo, out Func<SyntaxNode, string> fixup);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, tryGetBytecodeMethod, false);
+            MethodDeclarationSyntax tryGetBytecodeMethod = TryGetBytecode.GetSyntax(item.Left.BytecodeInfo, item.Right, out Func<SyntaxNode, string> fixup);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, tryGetBytecodeMethod, false);
             string text = fixup(compilationUnit);
 
-            context.AddSource($"{item.Hierarchy.FilenameHint}.TryGetBytecode", SourceText.From(text, Encoding.UTF8));
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.TryGetBytecode", SourceText.From(text, Encoding.UTF8));
         });
     }
 }
