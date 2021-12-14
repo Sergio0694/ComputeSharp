@@ -1,6 +1,4 @@
-﻿#if !DISABLE_RUNTIME_SHADER_COMPILATION_SUPPORT
-
-using System;
+﻿using System;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Shaders.Translation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -47,5 +45,3 @@ public class ShaderCompilerTests
         using ComPtr<IDxcBlob> dxcBlob = ShaderCompiler.Instance.CompileShader(faultyShader.AsSpan());
     }
 }
-
-#endif

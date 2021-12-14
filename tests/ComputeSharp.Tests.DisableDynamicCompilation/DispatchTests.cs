@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using ComputeSharp.Interop;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,22 +10,10 @@ namespace ComputeSharp.Tests.DisableDynamicCompilation;
 [TestCategory("Dispatch")]
 public partial class DispatchTests
 {
-    private static readonly bool IsDynamicCompilationDisabled =
-#if DISABLE_RUNTIME_SHADER_COMPILATION_SUPPORT
-        true;
-#else
-        false;
-#endif
-
     [CombinatorialTestMethod]
     [AllDevices]
     public void ComputeShader_Test_Ok(Device device)
     {
-        if (!IsDynamicCompilationDisabled)
-        {
-            Assert.Inconclusive();
-        }
-
         float[] array = Enumerable.Range(0, 128).Select(static i => (float)i).ToArray();
 
         using ReadWriteBuffer<float> buffer = device.Get().AllocateReadWriteBuffer(array);
@@ -48,11 +35,6 @@ public partial class DispatchTests
     [ExpectedException(typeof(NotSupportedException))]
     public void ComputeShader_Test_Fail(Device device)
     {
-        if (!IsDynamicCompilationDisabled)
-        {
-            Assert.Inconclusive();
-        }
-
         using ReadWriteBuffer<float> buffer = device.Get().AllocateReadWriteBuffer<float>(128);
 
         device.Get().For(128, 1, 1, 64, 1, 1, new ComputeShader(buffer, 2.0f));
@@ -76,11 +58,6 @@ public partial class DispatchTests
     [AllDevices]
     public void PixelShader_Test_Ok(Device device)
     {
-        if (!IsDynamicCompilationDisabled)
-        {
-            Assert.Inconclusive();
-        }
-
         using ReadWriteTexture2D<Rgba32, float4> texture = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(128, 128);
 
         device.Get().ForEach(texture, new PixelShader(0.3f, 0.6f));
@@ -119,29 +96,5 @@ public partial class DispatchTests
         {
             return new(ThreadIds.Normalized.X, ThreadIds.Normalized.Y, b, a);
         }
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(NotSupportedException))]
-    public void ReflectionService_ComputeShader()
-    {
-        if (!IsDynamicCompilationDisabled)
-        {
-            Assert.Inconclusive();
-        }
-
-        ReflectionServices.GetShaderInfo<ComputeShader>(out _);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(NotSupportedException))]
-    public void ReflectionService_PixelShader()
-    {
-        if (!IsDynamicCompilationDisabled)
-        {
-            Assert.Inconclusive();
-        }
-
-        ReflectionServices.GetShaderInfo<PixelShader, float4>(out _);
     }
 }
