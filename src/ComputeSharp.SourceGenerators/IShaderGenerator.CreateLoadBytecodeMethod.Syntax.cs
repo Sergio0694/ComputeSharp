@@ -39,7 +39,7 @@ public sealed partial class IShaderGenerator
 
             // This code produces a method declaration as follows:
             //
-            // readonly void global::ComputeSharp.__Internals.IShader.LoadBytecode<TBytecodeLoader>(ref TBytecodeLoader loader, int threadsX, int threadsY, int threadsZ)
+            // readonly void global::ComputeSharp.__Internals.IShader.LoadBytecode<TLoader>(ref TLoader loader, int threadsX, int threadsY, int threadsZ)
             // {
             //     <BODY>
             // }
@@ -49,11 +49,11 @@ public sealed partial class IShaderGenerator
                     Identifier("LoadBytecode"))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.__Internals.{nameof(IShader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
-                .AddTypeParameterListParameters(TypeParameter(Identifier("TBytecodeLoader")))
+                .AddTypeParameterListParameters(TypeParameter(Identifier("TLoader")))
                 .AddParameterListParameters(
                     Parameter(Identifier("loader"))
                         .AddModifiers(Token(SyntaxKind.RefKeyword))
-                        .WithType(IdentifierName("TBytecodeLoader")),
+                        .WithType(IdentifierName("TLoader")),
                     Parameter(Identifier("threadsX")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
                     Parameter(Identifier("threadsY")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
                     Parameter(Identifier("threadsZ")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))))

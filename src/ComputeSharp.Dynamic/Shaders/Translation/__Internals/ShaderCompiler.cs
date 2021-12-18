@@ -16,15 +16,15 @@ public static class ShaderCompiler
     /// <summary>
     /// Compiles a new HLSL shader from the input source code.
     /// </summary>
-    /// <typeparam name="TBytecodeLoader">The type of bytecode loader being used.</typeparam>
+    /// <typeparam name="TLoadeer">The type of bytecode loader being used.</typeparam>
     /// <typeparam name="T">The type of shader being dispatched.</typeparam>
-    /// <param name="loader">The <typeparamref name="TBytecodeLoader"/> instance to use to load the bytecode.</param>
+    /// <param name="loader">The <typeparamref name="TLoadeer"/> instance to use to load the bytecode.</param>
     /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
     /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
     /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-    public static unsafe void LoadDynamicBytecode<TBytecodeLoader, T>(ref TBytecodeLoader loader, int threadsX, int threadsY, int threadsZ, in T shader)
-        where TBytecodeLoader : struct, IBytecodeLoader
+    public static unsafe void LoadDynamicBytecode<TLoadeer, T>(ref TLoadeer loader, int threadsX, int threadsY, int threadsZ, in T shader)
+        where TLoadeer : struct, IBytecodeLoader
         where T : struct, IShader
     {
         Unsafe.AsRef(in shader).BuildHlslString(out ArrayPoolStringBuilder builder, threadsX, threadsY, threadsZ);

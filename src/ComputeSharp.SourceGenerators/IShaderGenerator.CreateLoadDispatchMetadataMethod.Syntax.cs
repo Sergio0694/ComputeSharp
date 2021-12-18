@@ -25,7 +25,7 @@ public sealed partial class IShaderGenerator
         {
             // This code produces a method declaration as follows:
             //
-            // readonly void global::ComputeSharp.__Internals.IShader.LoadDispatchMetadata<TMetadataLoader>(ref TMetadataLoader loader, out global::System.IntPtr result)
+            // readonly void global::ComputeSharp.__Internals.IShader.LoadDispatchMetadata<TLoader>(ref TLoader loader, out global::System.IntPtr result)
             // {
             //     <BODY>
             // }
@@ -35,11 +35,11 @@ public sealed partial class IShaderGenerator
                     Identifier("LoadDispatchMetadata"))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.__Internals.{nameof(IShader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
-                .AddTypeParameterListParameters(TypeParameter(Identifier("TMetadataLoader")))
+                .AddTypeParameterListParameters(TypeParameter(Identifier("TLoader")))
                 .AddParameterListParameters(
                     Parameter(Identifier("loader"))
                         .AddModifiers(Token(SyntaxKind.RefKeyword))
-                        .WithType(IdentifierName("TMetadataLoader")),
+                        .WithType(IdentifierName("TLoader")),
                     Parameter(Identifier("result"))
                         .AddModifiers(Token(SyntaxKind.OutKeyword))
                         .WithType(IdentifierName($"global::System.{typeof(IntPtr).Name}")))
