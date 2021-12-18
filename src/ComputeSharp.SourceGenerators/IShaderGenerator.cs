@@ -138,18 +138,25 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, loadDispatchDataMethod, item.Right);
 
             context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchData)}", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
-        }); 
+        });
+
+        // Check whether or not dynamic shaders are supported
+        IncrementalValueProvider<bool> supportsDynamicShaders =
+            context.CompilationProvider
+            .Select(static (compilation, token) => compilation.ReferencedAssemblyNames.Any(
+                static identity => identity.Name is "ComputeSharp.Dynamic"));
 
         // Get the filtered sequence to enable caching
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderSourceInfo SourceInfo)> hlslSourceInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderSourceInfo SourceInfo, bool SupportsDynamicShaders)> hlslSourceInfo =
             shaderInfo
-            .Select(static (item, token) => (item.Dispatch.Hierarchy, item.Hlsl))
-            .WithComparers(HierarchyInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default);
+            .Combine(supportsDynamicShaders)
+            .Select(static (item, token) => (item.Left.Dispatch.Hierarchy, item.Left.Hlsl, item.Right))
+            .WithComparers(HierarchyInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default, EqualityComparer<bool>.Default);
 
         // Generate the BuildHlslString() methods
         context.RegisterSourceOutput(hlslSourceInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
         {
-            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslString.GetSyntax(item.Left.SourceInfo);
+            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslString.GetSyntax(item.Left.SourceInfo, item.Left.SupportsDynamicShaders);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, item.Right);
 
             context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(BuildHlslString)}", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
@@ -223,12 +230,6 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             embeddedBytecodeWithErrors
             .Select(static (item, token) => (item.Hierarchy, item.BytecodeInfo))
             .WithComparers(HierarchyInfo.Comparer.Default, EmbeddedBytecodeInfo.Comparer.Default);
-
-        // Check whether or not dynamic shaders are supported
-        IncrementalValueProvider<bool> supportsDynamicShaders =
-            context.CompilationProvider
-            .Select(static (compilation, token) => compilation.ReferencedAssemblyNames.Any(
-                static identity => identity.Name is "ComputeSharp.Dynamic"));
 
         // Generate the TryGetBytecode() methods
         context.RegisterSourceOutput(embeddedBytecode.Combine(supportsDynamicShaders), static (context, item) =>
