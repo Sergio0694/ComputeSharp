@@ -35,7 +35,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0001");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0001", "CMPS0047");
     }
 
     [TestMethod]
@@ -60,7 +60,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0001");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0001", "CMPS0047");
     }
 
     [TestMethod]
@@ -88,7 +88,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0002");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0002", "CMPS0047");
     }
 
     [TestMethod]
@@ -116,7 +116,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0003");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0003", "CMPS0047");
     }
 
     [TestMethod]
@@ -142,7 +142,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0004");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0004", "CMPS0047");
     }
 
     [TestMethod]
@@ -159,7 +159,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0005");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0005", "CMPS0047");
     }
 
     [TestMethod]
@@ -194,7 +194,7 @@ public class DiagnosticsTests
             }}
         }}";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, diagnosticsId);
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, diagnosticsId, "CMPS0047");
     }
 
     [TestMethod]
@@ -226,7 +226,7 @@ public class DiagnosticsTests
             }}
         }}";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, diagnosticsId);
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, diagnosticsId, "CMPS0047");
     }
 
     [TestMethod]
@@ -256,7 +256,7 @@ public class DiagnosticsTests
             }}
         }}";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0006");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0006", "CMPS0047");
     }
 
     [TestMethod]
@@ -283,7 +283,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0010", "CMPS0031");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0010", "CMPS0031", "CMPS0047");
     }
 
     [TestMethod]
@@ -310,7 +310,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0010", "CMPS0031");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0010", "CMPS0031", "CMPS0047");
     }
 
     [TestMethod]
@@ -337,7 +337,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0011", "CMPS0031");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0011", "CMPS0031", "CMPS0047");
     }
 
     [TestMethod]
@@ -366,7 +366,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0012");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0012", "CMPS0047");
     }
 
     [TestMethod]
@@ -392,7 +392,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0012");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0012", "CMPS0047");
     }
 
     [TestMethod]
@@ -419,7 +419,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0012", "CMPS0013");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0012", "CMPS0013", "CMPS0047");
     }
 
     [TestMethod]
@@ -448,7 +448,7 @@ public class DiagnosticsTests
             }}
         }}";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0014");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0014", "CMPS0047");
     }
 
     [TestMethod]
@@ -480,7 +480,7 @@ public class DiagnosticsTests
             }}
         }}";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0015");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0015", "CMPS0047");
     }
 
     [TestMethod]
@@ -512,7 +512,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0016", "CMPS0032");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0016", "CMPS0032", "CMPS0047");
     }
 
     [TestMethod]
@@ -544,7 +544,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0017");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0017", "CMPS0047");
     }
 
     [TestMethod]
@@ -573,7 +573,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0018");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0018", "CMPS0047");
     }
 
     [TestMethod]
@@ -603,7 +603,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0019");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0019", "CMPS0047");
     }
 
     [TestMethod]
@@ -633,7 +633,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0020");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0020", "CMPS0047");
     }
 
     [TestMethod]
@@ -665,7 +665,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0021");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0021", "CMPS0047");
     }
 
     [TestMethod]
@@ -695,7 +695,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0022");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0022", "CMPS0047");
     }
 
     [TestMethod]
@@ -727,7 +727,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0023");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0023", "CMPS0047");
     }
 
     [TestMethod]
@@ -754,7 +754,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0024");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0024", "CMPS0047");
     }
 
     [TestMethod]
@@ -781,7 +781,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0032", "CMPS0025");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0032", "CMPS0025", "CMPS0047");
     }
 
     [TestMethod]
@@ -808,7 +808,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0026");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0026", "CMPS0047");
     }
 
     [TestMethod]
@@ -840,7 +840,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0027");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0027", "CMPS0047");
     }
 
     [TestMethod]
@@ -867,7 +867,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0028");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0028", "CMPS0047");
     }
 
     [TestMethod]
@@ -894,7 +894,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0029", "CMPS0031");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0029", "CMPS0031", "CMPS0047");
     }
 
     [TestMethod]
@@ -923,7 +923,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0029", "CMPS0031");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0029", "CMPS0031", "CMPS0047");
     }
 
     [TestMethod]
@@ -956,7 +956,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0030");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0030", "CMPS0047");
     }
 
     [TestMethod]
@@ -983,7 +983,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0031");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0031", "CMPS0047");
     }
 
     [TestMethod]
@@ -1010,7 +1010,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0032");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0032", "CMPS0047");
     }
 
     [TestMethod]
@@ -1037,7 +1037,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0033");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0033", "CMPS0047");
     }
 
     [TestMethod]
@@ -1066,7 +1066,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0034");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0034", "CMPS0047");
     }
 
     [TestMethod]
@@ -1095,7 +1095,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0035");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0035", "CMPS0047");
     }
 
     [TestMethod]
@@ -1124,7 +1124,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0035");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0035", "CMPS0047");
     }
 
     [TestMethod]
@@ -1151,7 +1151,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0036");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0036", "CMPS0047");
     }
 
     [TestMethod]
@@ -1194,7 +1194,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0037");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0037", "CMPS0047");
     }
 
     [TestMethod]
@@ -1222,7 +1222,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0038");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0038", "CMPS0047");
     }
 
     [TestMethod]
@@ -1250,7 +1250,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0040");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0040", "CMPS0047");
     }
 
     [TestMethod]
@@ -1281,7 +1281,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0040");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0040", "CMPS0047");
     }
 
     [TestMethod]
@@ -1309,7 +1309,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0040");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0040", "CMPS0047");
     }
 
     [TestMethod]
@@ -1337,7 +1337,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0040");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0040", "CMPS0047");
     }
 
     [TestMethod]
@@ -1371,7 +1371,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0041");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0041", "CMPS0047");
     }
 
     [TestMethod]
@@ -1396,7 +1396,7 @@ public class DiagnosticsTests
             }
         }";
 
-        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0042");
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0042", "CMPS0047");
     }
 
     [TestMethod]
