@@ -67,12 +67,12 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             .WithComparers(HierarchyInfo.Comparer.Default, DispatchIdInfo.Comparer.Default);
 
         // Generate the GetDispatchId() methods
-        context.RegisterSourceOutput(hierarchyAndDispatchIdInfo, static (context, item) =>
+        context.RegisterSourceOutput(hierarchyAndDispatchIdInfo.Combine(supportsDynamicShaders), static (context, item) =>
         {
-            MethodDeclarationSyntax getDispatchIdMethod = GetDispatchId.GetSyntax(item.Info.Delegates);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getDispatchIdMethod, false);
+            MethodDeclarationSyntax getDispatchIdMethod = GetDispatchId.GetSyntax(item.Left.Info.Delegates, item.Right);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, getDispatchIdMethod, false);
 
-            context.AddSource($"{item.Hierarchy.FilenameHint}.{nameof(GetDispatchId)}", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(GetDispatchId)}", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
         });
 
         // Get the dispatch data, HLSL source and embedded bytecode info. This info is computed on the
