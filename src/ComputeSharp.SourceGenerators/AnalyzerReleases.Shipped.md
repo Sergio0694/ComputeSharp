@@ -53,3 +53,4 @@ CMPS0043 | ComputeSharp.IComputeShader | Error | IShaderGenerator, [Documentatio
 CMPS0044 | ComputeSharp.IComputeShader | Error | IShaderGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
 CMPS0045 | ComputeSharp.IComputeShader | Error | IShaderGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
 CMPS0046 | ComputeSharp.IComputeShader | Error | IShaderGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)
+CMPS0047 | ComputeSharp.IComputeShader | Error | IShaderGenerator, [Documentation](https://github.com/Sergio0694/ComputeSharp)

@@ -29,6 +29,12 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                 compilation.Options is CSharpCompilationOptions { AllowUnsafe: true } &&
                 compilation.GetTypeByMetadataName("System.Runtime.CompilerServices.SkipLocalsInitAttribute") is not null);
 
+        // Check whether or not dynamic shaders are supported
+        IncrementalValueProvider<bool> supportsDynamicShaders =
+            context.CompilationProvider
+            .Select(static (compilation, token) => compilation.ReferencedAssemblyNames.Any(
+                static identity => identity.Name is "ComputeSharp.Dynamic"));
+
         // Get all declared struct types and their type symbols
         IncrementalValuesProvider<(StructDeclarationSyntax Syntax, INamedTypeSymbol Symbol)> structDeclarations =
             context.SyntaxProvider
@@ -73,20 +79,21 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
         // same step as parts are shared in following sub-branches in the incremental generator pipeline.
         IncrementalValuesProvider<(Result<DispatchDataInfo> Dispatch, Result<HlslShaderSourceInfo> Hlsl, Result<ThreadIdsInfo> ThreadIds)> shaderInfoWithErrors =
             shaderDeclarations
+            .Combine(supportsDynamicShaders)
             .Combine(context.CompilationProvider)
             .Select(static (item, token) =>
             {
                 // LoadDispatchData() info
                 ImmutableArray<FieldInfo> fieldInfos = LoadDispatchData.GetInfo(
-                    item.Left.Symbol,
-                    item.Left.Type,
+                    item.Left.Left.Symbol,
+                    item.Left.Left.Type,
                     out int resourceCount,
                     out int root32BitConstantCount,
                     out ImmutableArray<Diagnostic> dispatchDataDiagnostics);
 
                 DispatchDataInfo dispatchDataInfo = new(
-                    item.Left.Hierarchy,
-                    item.Left.Type,
+                    item.Left.Left.Hierarchy,
+                    item.Left.Left.Type,
                     fieldInfos,
                     resourceCount,
                     root32BitConstantCount);
@@ -94,14 +101,15 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                 // BuildHlslString() info
                 HlslShaderSourceInfo hlslSourceInfo = BuildHlslString.GetInfo(
                     item.Right,
-                    item.Left.Syntax,
-                    item.Left.Symbol,
+                    item.Left.Left.Syntax,
+                    item.Left.Left.Symbol,
                     out ImmutableArray<Diagnostic> hlslSourceDiagnostics);
 
                 // TryGetBytecode() info
                 ThreadIdsInfo threadIds = LoadBytecode.GetInfo(
-                    item.Left.Symbol,
+                    item.Left.Left.Symbol,
                     !hlslSourceInfo.Delegates.IsEmpty,
+                    item.Left.Right,
                     out ImmutableArray<Diagnostic> threadIdsDiagnostics);
 
                 return (
@@ -139,12 +147,6 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
 
             context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchData)}", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
         });
-
-        // Check whether or not dynamic shaders are supported
-        IncrementalValueProvider<bool> supportsDynamicShaders =
-            context.CompilationProvider
-            .Select(static (compilation, token) => compilation.ReferencedAssemblyNames.Any(
-                static identity => identity.Name is "ComputeSharp.Dynamic"));
 
         // Get the filtered sequence to enable caching
         IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderSourceInfo SourceInfo, bool SupportsDynamicShaders)> hlslSourceInfo =

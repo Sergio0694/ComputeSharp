@@ -32,25 +32,33 @@ public sealed partial class IShaderGenerator
         /// </summary>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="isDynamicShader">Indicates whether or not the shader is dynamic (ie. captures delegates).</param>
+        /// <param name="supportsDynamicShaders">Indicates whether or not dynamic shaders are supported.</param>
         /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
         /// <returns>The thread ids for the precompiled shader, if available.</returns>
         public static ThreadIdsInfo GetInfo(
             INamedTypeSymbol structDeclarationSymbol,
             bool isDynamicShader,
+            bool supportsDynamicShaders,
             out ImmutableArray<Diagnostic> diagnostics)
         {
+            ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
+
             AttributeData? attribute = structDeclarationSymbol
                 .GetAttributes()
                 .FirstOrDefault(static a => a.AttributeClass?.ToDisplayString() == typeof(EmbeddedBytecodeAttribute).FullName);
 
             if (attribute is null)
             {
-                diagnostics = ImmutableArray<Diagnostic>.Empty;
+                // Emit the diagnostics if dynamic shaders are not supported
+                if (!supportsDynamicShaders)
+                {
+                    builder.Add(MissingEmbeddedBytecodeAttributeWhenDynamicShaderCompilationIsNotSupported, structDeclarationSymbol, structDeclarationSymbol);
+                }
+
+                diagnostics = builder.ToImmutable();
 
                 return new(true, 0, 0, 0);
             }
-
-            ImmutableArray<Diagnostic>.Builder builder = ImmutableArray.CreateBuilder<Diagnostic>();
 
             // Validate the thread number arguments
             if (attribute.ConstructorArguments.Length != 3 ||

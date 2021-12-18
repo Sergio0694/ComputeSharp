@@ -576,7 +576,7 @@ internal static class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor MultipleShaderTypesImplemented = new(
         id: "CMPS0042",
         title: "Multiple shader implementations for type declaration",
-        messageFormat: $"The shader of type {{0}} cannot implement more than one shader interface",
+        messageFormat: "The shader of type {0} cannot implement more than one shader interface",
         category: typeof(IShaderGenerator).FullName,
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -592,7 +592,7 @@ internal static class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor EmbeddedBytecodeWithDynamicShader = new(
         id: "CMPS0043",
         title: "Embedded bytecode for dynamic shader",
-        messageFormat: $"The shader of type {{0}} cannot be precompiled, as it is dynamic (it captures delegate fields)",
+        messageFormat: "The shader of type {0} cannot be precompiled, as it is dynamic (it captures delegate fields)",
         category: typeof(IShaderGenerator).FullName,
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -608,7 +608,7 @@ internal static class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor InvalidEmbeddedBytecodeThreadIds = new(
         id: "CMPS0044",
         title: "Invalid thread ids for shader with embedded bytecode",
-        messageFormat: $"The shader of type {{0}} is annotated with invalid thread ids values ({{1}}, {{2}}, {{3}})",
+        messageFormat: "The shader of type {0} is annotated with invalid thread ids values ({1}, {2}, {3})",
         category: typeof(IShaderGenerator).FullName,
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -618,13 +618,13 @@ internal static class DiagnosticDescriptors
     /// <summary>
     /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode shader failed due to a Win32 exception.
     /// <para>
-    /// Format: <c>"The shader of type {{0}} failed to compile due to a Win32 exception (HRESULT: {1:X8}, Message: "{2}")"</c>.
+    /// Format: <c>"The shader of type {0} failed to compile due to a Win32 exception (HRESULT: {1:X8}, Message: "{2}")"</c>.
     /// </para>
     /// </summary>
     public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithWin32Exception = new(
         id: "CMPS0045",
         title: "Embedded bytecode compilation failed due to Win32 exception",
-        messageFormat: $"The shader of type {{0}} failed to compile due to a Win32 exception (HRESULT: {{1:X8}}, Message: \"{{2}}\")",
+        messageFormat: "The shader of type {0} failed to compile due to a Win32 exception (HRESULT: {1:X8}, Message: \"{2}\")",
         category: typeof(IShaderGenerator).FullName,
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -640,10 +640,26 @@ internal static class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor EmbeddedBytecodeFailedWithHlslCompilationException = new(
         id: "CMPS0046",
         title: "Embedded bytecode compilation failed due to an HLSL compiler error",
-        messageFormat: $"The shader of type {{0}} failed to compile due to an HLSL compiler error (Message: \"{{1}}\")",
+        messageFormat: "The shader of type {0} failed to compile due to an HLSL compiler error (Message: \"{1}\")",
         category: typeof(IShaderGenerator).FullName,
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
         description: "The embedded bytecode for a shader failed to be compiled due to an HLSL compiler error.",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for a shader without the embedded bytecode attribute, when dynamic shaders are not supported.
+    /// <para>
+    /// Format: <c>"The shader of type {0} needs to be annotated as having embedded bytecode (using the [EmbeddedBytecode] attribute), as dynamic shader compilation is not supported"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor MissingEmbeddedBytecodeAttributeWhenDynamicShaderCompilationIsNotSupported = new(
+        id: "CMPS0047",
+        title: "Embedded bytecode compilation failed due to an HLSL compiler error",
+        messageFormat: "The shader of type {0} needs to be annotated as having embedded bytecode (using the [EmbeddedBytecode] attribute), as dynamic shader compilation is not supported",
+        category: typeof(IShaderGenerator).FullName,
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "When dynamic shader compilation is not supported (ie. when ComputeSharp.Dynamic is not referenced), all shaders need to be annotated as having embedded bytecode (using the [EmbeddedBytecode] attribute).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
