@@ -7,6 +7,9 @@
 /// <para>Created by Shane.</para>
 /// </summary>
 [AutoConstructor]
+#if SAMPLE_APP
+[EmbeddedBytecode(8, 8, 1)]
+#endif
 internal readonly partial struct PyramidPattern : IPixelShader<float4>
 {
     /// <summary>

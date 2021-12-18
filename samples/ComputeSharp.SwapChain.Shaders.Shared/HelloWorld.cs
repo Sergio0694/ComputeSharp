@@ -5,6 +5,9 @@
 /// Ported from <see href="https://www.shadertoy.com/new"/>.
 /// </summary>
 [AutoConstructor]
+#if SAMPLE_APP
+[EmbeddedBytecode(8, 8, 1)]
+#endif
 internal readonly partial struct HelloWorld : IPixelShader<float4>
 {
     /// <summary>
