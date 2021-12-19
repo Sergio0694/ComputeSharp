@@ -3,7 +3,6 @@
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <OutputPath>bin\Release</OutputPath>
     <DocumentationFile>ComputeSharp.xml</DocumentationFile>
-    <Description>ComputeSharp</Description>
   </PropertyGroup>
 
   <ItemGroup>
