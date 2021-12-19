@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
 using ComputeSharp.Resources;
 using Microsoft.Toolkit.Diagnostics;
@@ -22,7 +21,6 @@ public static class Texture3DExtensions
     /// in the 3D volume represented by the texture is contiguous in memory, and planes are stacked in
     /// the depth dimension. This means that the resulting 3D array will have a size of [D, H, W].
     /// </remarks>
-    [Pure]
     public static T[,,] ToArray<T>(this Texture3D<T> source)
         where T : unmanaged
     {

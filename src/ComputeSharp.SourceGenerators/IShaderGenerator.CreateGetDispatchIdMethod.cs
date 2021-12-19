@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
@@ -18,7 +17,6 @@ public sealed partial class IShaderGenerator
         /// </summary>
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <returns>The names of all <see cref="System.Delegate"/> instance fields within <paramref name="structDeclarationSymbol"/>.</returns>
-        [Pure]
         public static ImmutableArray<string> GetInfo(INamedTypeSymbol structDeclarationSymbol)
         {
             return

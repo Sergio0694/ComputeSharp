@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using ComputeSharp.__Internals;
@@ -119,7 +118,6 @@ public sealed partial class ShaderMethodSourceGenerator : IIncrementalGenerator
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <param name="diagnostics">The resulting diagnostics from the processing operation.</param>
         /// <returns>A sequence of processed methods in <paramref name="methodDeclaration"/> (main method and all captured methods).</returns>
-        [Pure]
         private static (string TargetMethod, ImmutableArray<(string Signature, string Definition)> DependentMethods) GetProcessedMethods(
             MethodDeclarationSyntax methodDeclaration,
             SemanticModelProvider semanticModel,

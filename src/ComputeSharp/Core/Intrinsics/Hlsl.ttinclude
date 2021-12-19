@@ -80,8 +80,7 @@ var Intrinsics = new[]
             new { Return = "Double4x2", Params = new[] { "Double4x2" } },
             new { Return = "Double4x3", Params = new[] { "Double4x3" } },
             new { Return = "Double4x4", Params = new[] { "Double4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -115,8 +114,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -190,8 +188,7 @@ var Intrinsics = new[]
             new { Return = "bool", Params = new[] { "Bool4x2" } },
             new { Return = "bool", Params = new[] { "Bool4x3" } },
             new { Return = "bool", Params = new[] { "Bool4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -265,8 +262,7 @@ var Intrinsics = new[]
             new { Return = "bool", Params = new[] { "Bool4x2" } },
             new { Return = "bool", Params = new[] { "Bool4x3" } },
             new { Return = "bool", Params = new[] { "Bool4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -283,8 +279,7 @@ var Intrinsics = new[]
         {
             new { Return = "double", Params = new[] { "uint", "uint" } },
             new { Return = "Double2", Params = new[] { "UInt2", "UInt2" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -338,8 +333,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "UInt4x2" } },
             new { Return = "Float4x3", Params = new[] { "UInt4x3" } },
             new { Return = "Float4x4", Params = new[] { "UInt4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -373,8 +367,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -428,8 +421,7 @@ var Intrinsics = new[]
             new { Return = "Int4x2", Params = new[] { "UInt4x2" } },
             new { Return = "Int4x3", Params = new[] { "UInt4x3" } },
             new { Return = "Int4x4", Params = new[] { "UInt4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -483,8 +475,7 @@ var Intrinsics = new[]
             new { Return = "UInt4x2", Params = new[] { "Int4x2" } },
             new { Return = "UInt4x3", Params = new[] { "Int4x3" } },
             new { Return = "UInt4x4", Params = new[] { "Int4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -518,8 +509,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -554,8 +544,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -589,8 +578,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -646,8 +634,7 @@ var Intrinsics = new[]
             new { Return = "Int4x2", Params = new[] { "Int4x2", "Int4x2", "Int4x2" } },
             new { Return = "Int4x3", Params = new[] { "Int4x3", "Int4x3", "Int4x3" } },
             new { Return = "Int4x4", Params = new[] { "Int4x4", "Int4x4", "Int4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -681,8 +668,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -716,8 +702,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -735,8 +720,7 @@ var Intrinsics = new[]
             new { Return = "UInt2", Params = new[] { "UInt2" } },
             new { Return = "UInt3", Params = new[] { "UInt3" } },
             new { Return = "UInt4", Params = new[] { "UInt4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -752,8 +736,7 @@ var Intrinsics = new[]
         Overloads = new[]
         {
             new { Return = "Float3", Params = new[] { "Float3", "Float3" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -787,8 +770,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -806,8 +788,7 @@ var Intrinsics = new[]
             new { Return = "float", Params = new[] { "Float2x2" } },
             new { Return = "float", Params = new[] { "Float3x3" } },
             new { Return = "float", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -825,8 +806,7 @@ var Intrinsics = new[]
             new { Return = "float", Params = new[] { "Float2", "Float2" } },
             new { Return = "float", Params = new[] { "Float3", "Float3" } },
             new { Return = "float", Params = new[] { "Float4", "Float4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -847,8 +827,7 @@ var Intrinsics = new[]
             new { Return = "int", Params = new[] { "Int2", "Int2" } },
             new { Return = "int", Params = new[] { "Int3", "Int3" } },
             new { Return = "int", Params = new[] { "Int4", "Int4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -882,8 +861,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -917,8 +895,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -940,8 +917,7 @@ var Intrinsics = new[]
             new { Return = "UInt2", Params = new[] { "UInt2" } },
             new { Return = "UInt3", Params = new[] { "UInt3" } },
             new { Return = "UInt4", Params = new[] { "UInt4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -963,8 +939,7 @@ var Intrinsics = new[]
             new { Return = "UInt2", Params = new[] { "UInt2" } },
             new { Return = "UInt3", Params = new[] { "UInt3" } },
             new { Return = "UInt4", Params = new[] { "UInt4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -998,8 +973,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -1035,8 +1009,7 @@ var Intrinsics = new[]
             new { Return = "Double4x2", Params = new[] { "Double4x2", "Double4x2", "Double4x2" } },
             new { Return = "Double4x3", Params = new[] { "Double4x3", "Double4x3", "Double4x3" } },
             new { Return = "Double4x4", Params = new[] { "Double4x4", "Double4x4", "Double4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -1071,8 +1044,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -1106,8 +1078,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -1142,8 +1113,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4" } }
-        },
-        IsPure = false
+        }
     },
     new
     {
@@ -1177,8 +1147,7 @@ var Intrinsics = new[]
             new { Return = "Bool4x2", Params = new[] { "Float4x2" } },
             new { Return = "Bool4x3", Params = new[] { "Float4x3" } },
             new { Return = "Bool4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -1212,8 +1181,7 @@ var Intrinsics = new[]
             new { Return = "Bool4x2", Params = new[] { "Float4x2" } },
             new { Return = "Bool4x3", Params = new[] { "Float4x3" } },
             new { Return = "Bool4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -1247,8 +1215,7 @@ var Intrinsics = new[]
             new { Return = "Bool4x2", Params = new[] { "Float4x2" } },
             new { Return = "Bool4x3", Params = new[] { "Float4x3" } },
             new { Return = "Bool4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -1283,8 +1250,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -1301,8 +1267,7 @@ var Intrinsics = new[]
             new { Return = "float", Params = new[] { "Float2" } },
             new { Return = "float", Params = new[] { "Float3" } },
             new { Return = "float", Params = new[] { "Float4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -1338,8 +1303,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2", "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3", "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4", "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -1373,8 +1337,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -1408,8 +1371,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -1443,8 +1405,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -1519,8 +1480,7 @@ var Intrinsics = new[]
             new { Return = "Int4x2", Params = new[] { "Int4x2", "Int4x2" } },
             new { Return = "Int4x3", Params = new[] { "Int4x3", "Int4x3" } },
             new { Return = "Int4x4", Params = new[] { "Int4x4", "Int4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -1595,8 +1555,7 @@ var Intrinsics = new[]
             new { Return = "Int4x2", Params = new[] { "Int4x2", "Int4x2" } },
             new { Return = "Int4x3", Params = new[] { "Int4x3", "Int4x3" } },
             new { Return = "Int4x4", Params = new[] { "Int4x4", "Int4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -1651,8 +1610,7 @@ var Intrinsics = new[]
             new { Return = "Int4x2", Params = new[] { "Int4x2", "Int4x2" } },
             new { Return = "Int4x3", Params = new[] { "Int4x3", "Int4x3" } },
             new { Return = "Int4x4", Params = new[] { "Int4x4", "Int4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -1944,8 +1902,7 @@ var Intrinsics = new[]
             new { Return = "Int4x2", Params = new[] { "Int4x4", "Int4x2" } },
             new { Return = "Int4x3", Params = new[] { "Int4x4", "Int4x3" } },
             new { Return = "Int4x4", Params = new[] { "Int4x4", "Int4x4" } },
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -1962,8 +1919,7 @@ var Intrinsics = new[]
             new { Return = "float", Params = new[] { "Float2" } },
             new { Return = "float", Params = new[] { "Float3" } },
             new { Return = "float", Params = new[] { "Float4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -1998,8 +1954,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2033,8 +1988,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2088,8 +2042,7 @@ var Intrinsics = new[]
             new { Return = "Double4x2", Params = new[] { "Double4x2" } },
             new { Return = "Double4x3", Params = new[] { "Double4x3" } },
             new { Return = "Double4x4", Params = new[] { "Double4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2124,8 +2077,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2161,8 +2113,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2", "float" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3", "float" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4", "float" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2180,8 +2131,7 @@ var Intrinsics = new[]
             new { Return = "UInt2", Params = new[] { "UInt2" } },
             new { Return = "UInt3", Params = new[] { "UInt3" } },
             new { Return = "UInt4", Params = new[] { "UInt4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2215,8 +2165,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2250,8 +2199,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2305,8 +2253,7 @@ var Intrinsics = new[]
             new { Return = "Double4x2", Params = new[] { "Double4x2" } },
             new { Return = "Double4x3", Params = new[] { "Double4x3" } },
             new { Return = "Double4x4", Params = new[] { "Double4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2360,8 +2307,7 @@ var Intrinsics = new[]
             new { Return = "Int4x2", Params = new[] { "Int4x2" } },
             new { Return = "Int4x3", Params = new[] { "Int4x3" } },
             new { Return = "Int4x4", Params = new[] { "Int4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2395,8 +2341,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2432,8 +2377,7 @@ var Intrinsics = new[]
             new { Return = "void", Params = new[] { "Float4x2", "Float4x2", "Float4x2" } },
             new { Return = "void", Params = new[] { "Float4x3", "Float4x3", "Float4x3" } },
             new { Return = "void", Params = new[] { "Float4x4", "Float4x4", "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2467,8 +2411,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2504,8 +2447,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2", "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3", "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4", "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2539,8 +2481,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2575,8 +2516,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2", "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3", "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4", "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2610,8 +2550,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2645,8 +2584,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2696,8 +2634,7 @@ var Intrinsics = new[]
             new { Return = "Bool1x4", Params = new[] { "Bool4x1" } },
             new { Return = "Bool2x4", Params = new[] { "Bool4x2" } },
             new { Return = "Bool3x4", Params = new[] { "Bool4x3" } },
-        },
-        IsPure = true
+        }
     },
     new
     {
@@ -2731,8 +2668,7 @@ var Intrinsics = new[]
             new { Return = "Float4x2", Params = new[] { "Float4x2" } },
             new { Return = "Float4x3", Params = new[] { "Float4x3" } },
             new { Return = "Float4x4", Params = new[] { "Float4x4" } }
-        },
-        IsPure = true
+        }
     }
 };
 #>

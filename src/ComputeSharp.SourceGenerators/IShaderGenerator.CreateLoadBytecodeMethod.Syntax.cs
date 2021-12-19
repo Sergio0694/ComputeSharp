@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using ComputeSharp.__Internals;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
@@ -67,7 +66,6 @@ public sealed partial class IShaderGenerator
         /// <param name="supportsDynamicShaders">Indicates whether or not dynamic shaders are supported.</param>
         /// <param name="bytecodeLiterals">The resulting bytecode literals to insert into the final source code.</param>
         /// <returns>The <see cref="BlockSyntax"/> instance trying to retrieve the precompiled shader.</returns>
-        [Pure]
         private static unsafe BlockSyntax GetShaderBytecodeBody(EmbeddedBytecodeInfo bytecodeInfo, bool supportsDynamicShaders, out string? bytecodeLiterals)
         {
             if (bytecodeInfo.Bytecode.IsEmpty)

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-
+﻿
 namespace ComputeSharp.SourceGenerators.Extensions;
 
 /// <summary>
@@ -12,7 +11,6 @@ internal static class StringExtensions
     /// </summary>
     /// <param name="text">The input <see cref="string"/> instance to convert.</param>
     /// <returns>An valid HLSL identifier name from <paramref name="text"/>.</returns>
-    [Pure]
     public static string ToHlslIdentifierName(this string text)
     {
         return text.Replace('.', '_').Replace('+', '_');

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
 using ComputeSharp.Resources;
 using Microsoft.Toolkit.Diagnostics;
@@ -20,7 +19,6 @@ public static class BufferExtensions
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
     /// <param name="source">The input <see cref="Buffer{T}"/> instance to read data from.</param>
     /// <returns>A <typeparamref name="T"/> array with the contents of the input buffer.</returns>
-    [Pure]
     public static T[] ToArray<T>(this Buffer<T> source)
         where T : unmanaged
     {
@@ -35,7 +33,6 @@ public static class BufferExtensions
     /// <param name="offset">The offset to start reading data from.</param>
     /// <param name="count">The number of items to read.</param>
     /// <returns>A <typeparamref name="T"/> array with the contents of the specified range from the current buffer.</returns>
-    [Pure]
     public static T[] ToArray<T>(this Buffer<T> source, int offset, int count)
         where T : unmanaged
     {

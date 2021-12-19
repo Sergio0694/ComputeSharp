@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Text;
 
 namespace ComputeSharp.Exceptions;
@@ -23,7 +22,6 @@ public sealed class UnsupportedDoubleOperationsException : InvalidOperationExcep
     /// </summary>
     /// <param name="type">The element type of resource that was being created.</param>
     /// <returns>A new <see cref="UnsupportedTextureTypeException"/> instance with a formatted error message.</returns>
-    [Pure]
     private static UnsupportedDoubleOperationsException Create(Type type)
     {
         StringBuilder builder = new(256);

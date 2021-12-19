@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using ComputeSharp.SourceGenerators.Mappings;
 using Microsoft.CodeAnalysis;
@@ -23,7 +22,6 @@ internal static class SyntaxNodeExtensions
     /// <param name="semanticModel">The <see cref="SemanticModel"/> instance with info on the input tree.</param>
     /// <param name="discoveredTypes">The collection of currently discovered types.</param>
     /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
-    [Pure]
     public static TRoot ReplaceAndTrackType<TRoot>(this TRoot node, SyntaxNode sourceType, SemanticModel semanticModel, ICollection<INamedTypeSymbol> discoveredTypes)
         where TRoot : TypeSyntax
     {
@@ -40,7 +38,6 @@ internal static class SyntaxNodeExtensions
     /// <param name="semanticModel">The <see cref="SemanticModel"/> instance with info on the input tree.</param>
     /// <param name="discoveredTypes">The collection of currently discovered types.</param>
     /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
-    [Pure]
     public static TRoot ReplaceAndTrackType<TRoot>(this TRoot node, TypeSyntax targetType, SyntaxNode sourceType, SemanticModel semanticModel, ICollection<INamedTypeSymbol> discoveredTypes)
         where TRoot : SyntaxNode
     {
@@ -85,7 +82,6 @@ internal static class SyntaxNodeExtensions
     /// <param name="semanticModel">The <see cref="SemanticModel"/> instance with info on the input tree.</param>
     /// <param name="discoveredTypes">The collection of currently discovered types.</param>
     /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
-    [Pure]
     public static TypeSyntax TrackType(this SyntaxNode node, SemanticModel semanticModel, ICollection<INamedTypeSymbol> discoveredTypes)
     {
         ITypeSymbol typeSymbol = semanticModel.GetTypeInfo(node).Type!;
@@ -106,7 +102,6 @@ internal static class SyntaxNodeExtensions
     /// </summary>
     /// <param name="node">The input <see cref="MethodDeclarationSyntax"/> node.</param>
     /// <returns>A node like the one in input, but always with a block body.</returns>
-    [Pure]
     public static MethodDeclarationSyntax WithBlockBody(this MethodDeclarationSyntax node)
     {
         if (node.ExpressionBody is ArrowExpressionClauseSyntax arrow)
@@ -131,7 +126,6 @@ internal static class SyntaxNodeExtensions
     /// </summary>
     /// <param name="node">The input <see cref="MethodDeclarationSyntax"/> node.</param>
     /// <returns>A node like the one in input, but just as a definition.</returns>
-    [Pure]
     public static MethodDeclarationSyntax AsDefinition(this MethodDeclarationSyntax node)
     {
         if (node.ExpressionBody is ArrowExpressionClauseSyntax)
@@ -151,7 +145,6 @@ internal static class SyntaxNodeExtensions
     /// This method is the same as <see cref="WithBlockBody(MethodDeclarationSyntax)"/>, but it is necessary to
     /// duplicate the code because the two types don't have a common base type or interface that can be leveraged.
     /// </remarks>
-    [Pure]
     public static LocalFunctionStatementSyntax WithBlockBody(this LocalFunctionStatementSyntax node)
     {
         if (node.ExpressionBody is ArrowExpressionClauseSyntax arrow)
@@ -176,7 +169,6 @@ internal static class SyntaxNodeExtensions
     /// </summary>
     /// <param name="node">The input <see cref="LocalFunctionStatementSyntax"/> node.</param>
     /// <returns>A node like the one in input, but just as a definition.</returns>
-    [Pure]
     public static LocalFunctionStatementSyntax AsDefinition(this LocalFunctionStatementSyntax node)
     {
         if (node.ExpressionBody is ArrowExpressionClauseSyntax)
@@ -192,7 +184,6 @@ internal static class SyntaxNodeExtensions
     /// </summary>
     /// <param name="node">The input <see cref="MethodDeclarationSyntax"/> node.</param>
     /// <returns>A node just like <paramref name="node"/> but with no accessibility modifiers.</returns>
-    [Pure]
     public static MethodDeclarationSyntax WithoutAccessibilityModifiers(this MethodDeclarationSyntax node)
     {
         return node.WithModifiers(TokenList(node.Modifiers.Where(static modifier => modifier.Kind() switch

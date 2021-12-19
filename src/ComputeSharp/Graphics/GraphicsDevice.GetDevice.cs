@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using ComputeSharp.Graphics.Helpers;
 
 namespace ComputeSharp;
@@ -29,7 +28,6 @@ partial class GraphicsDevice
     /// Creating a device is a relatively expensive operation, so consider using <see cref="QueryDevices"/> to be
     /// able to filter the existing adapters before creating a device from them, to reduce the system overhead.
     /// </remarks>
-    [Pure]
     public static IEnumerable<GraphicsDevice> EnumerateDevices()
     {
         return new DeviceHelper.DeviceQuery(null);
@@ -46,7 +44,6 @@ partial class GraphicsDevice
     /// the current system, if any of them doesn't meet the minimum criteria, and that additional filtering might be done
     /// after the input predicate is invoked, so a match doesn't necessarily guarantee that that device will be returned.
     /// </remarks>
-    [Pure]
     public static IEnumerable<GraphicsDevice> QueryDevices(Predicate<GraphicsDeviceInfo> predicate)
     {
         return new DeviceHelper.DeviceQuery(predicate);

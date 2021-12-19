@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.IO;
 using ComputeSharp.__Internals;
 using ComputeSharp.Resources;
@@ -22,7 +21,6 @@ public static class GraphicsDeviceExtensions
     /// <param name="length">The length of the buffer to create.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="Buffer{T}"/> instance of the requested size.</returns>
-    [Pure]
     public static Buffer<T> AllocateBuffer<T>(this GraphicsDevice device, Type type, int length, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -45,7 +43,6 @@ public static class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture to create.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="Texture2D{T}"/> instance of the requested size.</returns>
-    [Pure]
     public static Texture2D<T> AllocateTexture2D<T>(this GraphicsDevice device, Type type, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -68,7 +65,6 @@ public static class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture to create.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="Texture2D{T}"/> instance of the requested size.</returns>
-    [Pure]
     public static Texture2D<T> AllocateTexture2D<T, TPixel>(this GraphicsDevice device, Type type, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -92,7 +88,6 @@ public static class GraphicsDeviceExtensions
     /// <param name="depth">The depth of the texture to create.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="Texture2D{T}"/> instance of the requested size.</returns>
-    [Pure]
     public static Texture3D<T> AllocateTexture3D<T>(this GraphicsDevice device, Type type, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -116,7 +111,6 @@ public static class GraphicsDeviceExtensions
     /// <param name="depth">The depth of the texture to create.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="Texture3D{T}"/> instance of the requested size.</returns>
-    [Pure]
     public static Texture3D<T> AllocateTexture3D<T, TPixel>(this GraphicsDevice device, Type type, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -138,7 +132,6 @@ public static class GraphicsDeviceExtensions
     /// <param name="length">The length of the buffer to create.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="TransferBuffer{T}"/> instance of the requested size.</returns>
-    [Pure]
     public static TransferBuffer<T> AllocateTransferBuffer<T>(this GraphicsDevice device, Type type, int length, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -160,7 +153,6 @@ public static class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture to create.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="TransferTexture2D{T}"/> instance of the requested size.</returns>
-    [Pure]
     public static TransferTexture2D<T> AllocateTransferTexture2D<T>(this GraphicsDevice device, Type type, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -183,7 +175,6 @@ public static class GraphicsDeviceExtensions
     /// <param name="depth">The depth of the texture to create.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="TransferTexture3D{T}"/> instance of the requested size.</returns>
-    [Pure]
     public static TransferTexture3D<T> AllocateTransferTexture3D<T>(this GraphicsDevice device, Type type, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -203,7 +194,6 @@ public static class GraphicsDeviceExtensions
     /// <param name="type">The type of buffer to allocate.</param>
     /// <param name="data">The data to load on the buffer.</param>
     /// <returns>A <see cref="Buffer{T}"/> instance of the requested type.</returns>
-    [Pure]
     public static Buffer<T> AllocateBuffer<T>(this GraphicsDevice device, Type type, T[] data)
         where T : unmanaged
     {
@@ -226,7 +216,6 @@ public static class GraphicsDeviceExtensions
     /// <param name="width">The width of the texture to create.</param>
     /// <param name="height">The height of the texture to create.</param>
     /// <returns>A <see cref="Texture2D{T}"/> instance of the requested type.</returns>
-    [Pure]
     public static Texture2D<T> AllocateTexture2D<T>(this GraphicsDevice device, Type type, T[] data, int width, int height)
         where T : unmanaged
     {
@@ -249,7 +238,6 @@ public static class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture to create.</param>
     /// <param name="depth">The depth of the texture to create.</param>
     /// <returns>A <see cref="Texture2D{T}"/> instance of the requested type.</returns>
-    [Pure]
     public static Texture3D<T> AllocateTexture3D<T>(this GraphicsDevice device, Type type, T[] data, int width, int height, int depth)
         where T : unmanaged
     {
@@ -269,7 +257,6 @@ public static class GraphicsDeviceExtensions
     /// <param name="type">The type of texture to allocate.</param>
     /// <param name="data">The input 3D array to use as source data for the texture.</param>
     /// <returns>A <see cref="Texture2D{T}"/> instance of the requested size.</returns>
-    [Pure]
     public static Texture3D<T> AllocateTexture3D<T>(this GraphicsDevice device, Type type, T[,,] data)
         where T : unmanaged
     {
@@ -289,7 +276,6 @@ public static class GraphicsDeviceExtensions
     /// <param name="type">The type of buffer to allocate.</param>
     /// <param name="data">The data to load on the buffer.</param>
     /// <returns>A <see cref="Buffer{T}"/> instance of the requested type.</returns>
-    [Pure]
     public static Buffer<T> AllocateBuffer<T>(this GraphicsDevice device, Type type, Buffer<T> data)
         where T : unmanaged
     {
@@ -309,7 +295,6 @@ public static class GraphicsDeviceExtensions
     /// <param name="texture">The target <see cref="UploadTexture2D{T}"/> instance.</param>
     /// <param name="inputType">The type of filepath to use.</param>
     /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
-    [Pure]
     public static void Load<T>(this UploadTexture2D<T> texture, Type inputType, string filename)
         where T : unmanaged
     {
@@ -336,7 +321,6 @@ public static class GraphicsDeviceExtensions
     /// <param name="inputType">The type of filepath to use.</param>
     /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
     /// <returns>A <see cref="Texture2D{T}"/> instance with the contents of the specified file.</returns>
-    [Pure]
     public static Texture2D<T> LoadTexture2D<T, TPixel>(this GraphicsDevice device, Type textureType, Type inputType, string filename)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -368,7 +352,6 @@ public static class GraphicsDeviceExtensions
     /// <param name="type">The type of texture to allocate.</param>
     /// <param name="buffer">The buffer with the image data to load and decode into the texture.</param>
     /// <returns>A <see cref="Texture2D{T}"/> instance with the contents of the specified buffer.</returns>
-    [Pure]
     public static Texture2D<T> LoadTexture2D<T, TPixel>(this GraphicsDevice device, Type type, byte[] buffer)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -390,7 +373,6 @@ public static class GraphicsDeviceExtensions
     /// <param name="type">The type of texture to allocate.</param>
     /// <param name="stream">The stream with the image data to load and decode into the texture.</param>
     /// <returns>A <see cref="Texture2D{T}"/> instance with the contents of the specified stream.</returns>
-    [Pure]
     public static Texture2D<T> LoadTexture2D<T, TPixel>(this GraphicsDevice device, Type type, Stream stream)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged

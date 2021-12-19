@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Runtime.CompilerServices;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
@@ -18,7 +17,6 @@ internal static class DXGIFormatHelper
     /// <typeparam name="T">The input type argument to get the corresponding <see cref="DXGI_FORMAT"/> for.</typeparam>
     /// <returns>The <see cref="DXGI_FORMAT"/> value corresponding to <typeparamref name="T"/>.</returns>
     /// <exception cref="System.ArgumentException">Thrown when the input type <typeparamref name="T"/> is not supported.</exception>
-    [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static DXGI_FORMAT GetForType<T>()
         where T : unmanaged

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Core.Extensions;
@@ -80,7 +79,6 @@ internal static class ComPtrExtensions
     /// This method is meant to be used in a chained expression and it does not increment the reference
     /// count for the input pointer. Do not expose the return value of this extension to consumers.
     /// </remarks>
-    [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static unsafe ref readonly ComPtr<IUnknown> AsIUnknown<T>(this in ComPtr<T> ptr)
 #if NET6_0_OR_GREATER
@@ -99,7 +97,6 @@ internal static class ComPtrExtensions
     /// <param name="ptr">The input <see cref="ComPtr{T}"/> instance to get the address for.</param>
     /// <returns>The raw pointer to the input <see cref="ComPtr{T}"/> instance.</returns>
     /// <remarks>This method is only valid when the current <see cref="ComPtr{T}"/> instance is on the stack or pinned.</remarks>
-    [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static unsafe void** GetVoidAddressOf<T>(this in ComPtr<T> ptr)
 #if NET6_0_OR_GREATER

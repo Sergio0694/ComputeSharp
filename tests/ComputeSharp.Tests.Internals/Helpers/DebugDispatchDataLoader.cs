@@ -1,5 +1,4 @@
 ﻿﻿using System;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.__Internals;
 
@@ -31,7 +30,6 @@ internal readonly unsafe struct DebugDispatchDataLoader : IDispatchDataLoader
     /// Creates a new <see cref="DebugDispatchDataLoader"/> instance.
     /// </summary>
     /// <returns>A new <see cref="DebugDispatchDataLoader"/> instance to use.</returns>
-    [Pure]
     public static DebugDispatchDataLoader Create()
     {
         DebugDispatchDataLoader @this = default;

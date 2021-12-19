@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Reflection;
 
 namespace ComputeSharp.Graphics.Helpers;
@@ -21,7 +20,6 @@ internal static class TypeInfo<T>
     /// </summary>
     /// <param name="type">The current type to check.</param>
     /// <returns>Whether or not <paramref name="type"/> is <see cref="double"/> or contains a <see cref="double"/> field.</returns>
-    [Pure]
     private static bool ChecksIsDoubleOrContainsDoubles(Type type)
     {
         if (type == typeof(double)) return true;

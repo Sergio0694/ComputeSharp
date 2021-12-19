@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using ComputeSharp.SourceGenerators.Mappings;
@@ -35,7 +34,6 @@ internal static class ISymbolExtensions
     /// </summary>
     /// <param name="symbol">The input <see cref="ITypeSymbol"/> instance.</param>
     /// <returns>The full metadata name for <paramref name="symbol"/>.</returns>
-    [Pure]
     public static string GetFullMetadataName(this ITypeSymbol symbol)
     {
         static StringBuilder BuildFrom(ISymbol? symbol, StringBuilder builder)
@@ -61,7 +59,6 @@ internal static class ISymbolExtensions
     /// <param name="symbol">The input <see cref="IMethodSymbol"/> instance.</param>
     /// <param name="includeParameters">Whether or not to also include parameter types.</param>
     /// <returns>The full metadata name for <paramref name="symbol"/>.</returns>
-    [Pure]
     public static string GetFullMetadataName(this IMethodSymbol symbol, bool includeParameters = false)
     {
         if (includeParameters)
@@ -79,7 +76,6 @@ internal static class ISymbolExtensions
     /// </summary>
     /// <param name="symbol">The input <see cref="IPropertySymbol"/> instance.</param>
     /// <returns>The full metadata name for <paramref name="symbol"/>.</returns>
-    [Pure]
     public static string GetFullMetadataName(this IPropertySymbol symbol)
     {
         string declaringTypeName = symbol.ContainingType.GetFullMetadataName();
@@ -99,7 +95,6 @@ internal static class ISymbolExtensions
     /// </summary>
     /// <param name="symbol">The input <see cref="IFieldSymbol"/> instance.</param>
     /// <returns>The full metadata name for <paramref name="symbol"/>.</returns>
-    [Pure]
     public static string GetFullMetadataName(this IFieldSymbol symbol)
     {
         return $"{symbol.ContainingType.GetFullMetadataName()}.{symbol.Name}";
@@ -110,7 +105,6 @@ internal static class ISymbolExtensions
     /// </summary>
     /// <param name="symbol">The symbol being processed.</param>
     /// <returns>A filename in the form "&lt;SYMBOL_FULLNAME&gt;"</returns>
-    [Pure]
     public static string GetGeneratedFileName(this INamedTypeSymbol symbol)
     {
         return symbol.GetFullMetadataName().Replace('`', '-').Replace('+', '.');
@@ -122,7 +116,6 @@ internal static class ISymbolExtensions
     /// <param name="typeSymbol">The input <see cref="ITypeSymbol"/> instance to process.</param>
     /// <param name="discoveredTypes">The collection of currently discovered types.</param>
     /// <returns>A <see cref="SyntaxNode"/> instance that represents a type compatible with HLSL.</returns>
-    [Pure]
     public static TypeSyntax TrackType(this ITypeSymbol typeSymbol, ICollection<INamedTypeSymbol> discoveredTypes)
     {
         string typeName = typeSymbol.ToDisplayString(FullyQualifiedWithoutGlobalFormat);

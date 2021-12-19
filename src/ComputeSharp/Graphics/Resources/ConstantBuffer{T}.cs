@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Helpers;
 using ComputeSharp.Exceptions;
@@ -49,7 +48,6 @@ public sealed class ConstantBuffer<T> : Buffer<T>
     /// <summary>
     /// Gets the right padded size for <typeparamref name="T"/> elements to store in the current instance.
     /// </summary>
-    [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static unsafe int GetPaddedSize()
     {

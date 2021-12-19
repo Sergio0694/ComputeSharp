@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics.Contracts;
 using ComputeSharp.__Internals;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -45,7 +44,6 @@ public sealed partial class IShaderGenerator
         /// <param name="delegateFieldNames">The names of all <see cref="System.Delegate"/> instance fields within the current shader type.</param>
         /// <param name="supportsDynamicShaders">Indicates whether or not dynamic shaders are supported.</param>
         /// <returns>The <see cref="BlockSyntax"/> instance to hash the input shader.</returns>
-        [Pure]
         private static BlockSyntax GetShaderHashCodeBody(ImmutableArray<string> delegateFieldNames, bool supportsDynamicShaders)
         {
             if (delegateFieldNames.Length == 0 || !supportsDynamicShaders)

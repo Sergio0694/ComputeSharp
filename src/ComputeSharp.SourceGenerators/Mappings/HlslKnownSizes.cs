@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
@@ -20,7 +19,6 @@ internal static class HlslKnownSizes
     /// <summary>
     /// Builds the mapping of known type sizes and alignments.
     /// </summary>
-    [Pure]
     private static IReadOnlyDictionary<string, (int, int)> BuildKnownSizesMap()
     {
         Dictionary<string, (int, int)> knownSizes = new()
@@ -53,7 +51,6 @@ internal static class HlslKnownSizes
     /// </summary>
     /// <param name="typeName">The type name to get info for.</param>
     /// <returns>The size and and alignment for the input type.</returns>
-    [Pure]
     public static (int Size, int Pack) GetTypeInfo(string typeName)
     {
         return KnownSizes[typeName];

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -74,7 +73,6 @@ class Program
     /// </summary>
     /// <param name="name">The name of the texture to load.</param>
     /// <returns>A texture with the data from the image at the specified name.</returns>
-    [Pure]
     private static ReadOnlyTexture2D<Rgba32, float4> LoadTexture([CallerMemberName] string name = null!)
     {
         string filename = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Textures", $"{name}.png");

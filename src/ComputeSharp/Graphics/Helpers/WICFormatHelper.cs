@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.Windows;
@@ -22,7 +21,6 @@ internal static class WICFormatHelper
     /// <typeparam name="T">The input type argument to get the corresponding WIC format <see cref="Guid"/>.</typeparam>
     /// <returns>The WIC format <see cref="Guid"/> value corresponding to <typeparamref name="T"/>.</returns>
     /// <exception cref="ArgumentException">Thrown when the input type <typeparamref name="T"/> is not supported.</exception>
-    [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Guid GetForType<T>()
         where T : unmanaged
@@ -41,7 +39,6 @@ internal static class WICFormatHelper
     /// <typeparam name="T">The input type argument to get the corresponding WIC format <see cref="Guid"/>.</typeparam>
     /// <returns>The WIC format <see cref="Guid"/> value corresponding to <typeparamref name="T"/>.</returns>
     /// <exception cref="ArgumentException">Thrown when the input type <typeparamref name="T"/> is not supported.</exception>
-    [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryGetIntermediateFormatForType<T>(Guid containerFormat, out Guid intermediateFormat)
         where T : unmanaged
@@ -114,7 +111,6 @@ internal static class WICFormatHelper
     /// <param name="filename">The target filename to get the container format for.</param>
     /// <returns>The WIC format container <see cref="Guid"/> value matching <paramref name="filename"/>.</returns>
     /// <exception cref="ArgumentException">Thrown when the input filename doesn't have a valid file extension.</exception>
-    [Pure]
     public static Guid GetForFilename(ReadOnlySpan<char> filename)
     {
         return Path.GetExtension(filename).ToString() switch
@@ -139,7 +135,6 @@ internal static class WICFormatHelper
     /// <param name="format">The target format to get the container format for.</param>
     /// <returns>The WIC format container <see cref="Guid"/> value matching <paramref name="format"/>.</returns>
     /// <exception cref="ArgumentException">Thrown when the input format isn't valid.</exception>
-    [Pure]
     public static Guid GetForFormat(ImageFormat format)
     {
         return format switch

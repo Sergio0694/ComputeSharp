@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using ComputeSharp.Core.Extensions;
@@ -71,7 +70,6 @@ public sealed partial class ShaderMethodSourceAttribute : Attribute
     /// <param name="function">The input <see cref="Delegate"/> instance to get info for.</param>
     /// <param name="name">The name of the shader field containing <paramref name="function"/>.</param>
     /// <returns>The associated <see cref="ShaderMethodSourceAttribute"/> instance for the given delegate.</returns>
-    [Pure]
     public static ShaderMethodSourceAttribute GetForDelegate(Delegate function, string name)
     {
         if (!function.Method.IsStatic)

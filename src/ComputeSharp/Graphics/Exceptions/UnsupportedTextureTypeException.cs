@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Text;
 using Microsoft.Toolkit.Diagnostics;
 
@@ -25,7 +24,6 @@ public sealed class UnsupportedTextureTypeException : InvalidOperationException
     /// <param name="rank">The rank of the texture that couldn't be created.</param>
     /// <param name="type">The element type of texture that was being created.</param>
     /// <returns>A new <see cref="UnsupportedTextureTypeException"/> instance with a formatted error message.</returns>
-    [Pure]
     private static UnsupportedTextureTypeException Create(int rank, Type type)
     {
         StringBuilder builder = new(256);

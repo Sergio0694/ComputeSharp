@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Exceptions;
@@ -84,7 +83,6 @@ internal sealed unsafe partial class ShaderCompiler
     /// </summary>
     /// <param name="source">The HLSL source code to compile.</param>
     /// <returns>The bytecode for the compiled shader.</returns>
-    [Pure]
     public ComPtr<IDxcBlob> CompileShader(ReadOnlySpan<char> source)
     {
         using ComPtr<IDxcBlobEncoding> dxcBlobEncoding = default;

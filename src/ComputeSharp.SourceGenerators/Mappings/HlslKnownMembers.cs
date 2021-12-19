@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
@@ -79,7 +78,6 @@ internal static class HlslKnownMembers
     /// <summary>
     /// Builds the mapping of supported known members to HLSL names.
     /// </summary>
-    [Pure]
     private static IReadOnlyDictionary<string, string> BuildKnownMembersMap()
     {
         Dictionary<string, string> knownMembers = new()
@@ -325,7 +323,6 @@ internal static class HlslKnownMembers
     /// <summary>
     /// Builds the mapping of swizzled matrix indexer properties.
     /// </summary>
-    [Pure]
     private static IReadOnlyCollection<string> BuildKnownMatrixIndexers()
     {
         return (
@@ -347,7 +344,6 @@ internal static class HlslKnownMembers
     /// <summary>
     /// Builds the mapping of swizzled matrix indices.
     /// </summary>
-    [Pure]
     private static IReadOnlyCollection<string> BuildKnownMatrixIndices()
     {
         return (
@@ -360,7 +356,6 @@ internal static class HlslKnownMembers
     /// </summary>
     /// <param name="name">The input fully qualified member name.</param>
     /// <returns>Whether or not <paramref name="name"/> is a matrix swizzled indexer.</returns>
-    [Pure]
     public static bool IsKnownMatrixIndexer(string name)
     {
         return KnownMatrixIndexers.Contains(name);
@@ -371,7 +366,6 @@ internal static class HlslKnownMembers
     /// </summary>
     /// <param name="name">The input fully qualified member name.</param>
     /// <returns>Whether or not <paramref name="name"/> is a matrix swizzled index.</returns>
-    [Pure]
     public static bool IsKnownMatrixIndex(string name)
     {
         return KnownMatrixIndices.Contains(name);
@@ -383,7 +377,6 @@ internal static class HlslKnownMembers
     /// <param name="name">The input fully qualified member name.</param>
     /// <param name="mapped">The mapped name, if one is found.</param>
     /// <returns>The HLSL-compatible member name that can be used in an HLSL shader.</returns>
-    [Pure]
     public static bool TryGetMappedName(string name, out string? mapped)
     {
         return KnownMembers.TryGetValue(name, out mapped);
@@ -395,7 +388,6 @@ internal static class HlslKnownMembers
     /// <param name="name">The input fully qualified indexer name.</param>
     /// <param name="mapped">The mapped type name, if one is found.</param>
     /// <returns>The HLSL-compatible type name that can be used in an HLSL shader for the given indexer.</returns>
-    [Pure]
     public static bool TryGetMappedResourceIndexerTypeName(string name, out string? mapped)
     {
         return KnownResourceIndexers.TryGetValue(name, out mapped);
@@ -407,7 +399,6 @@ internal static class HlslKnownMembers
     /// <param name="name">The input fully qualified indexer name.</param>
     /// <param name="mapped">The mapped type name, if one is found.</param>
     /// <returns>The HLSL-compatible type name that can be used in an HLSL shader for the given sampler.</returns>
-    [Pure]
     public static bool TryGetMappedResourceSamplerAccessType(string name, out string? mapped)
     {
         return KnownResourceSamplers.TryGetValue(name, out mapped);
@@ -420,7 +411,6 @@ internal static class HlslKnownMembers
     /// <param name="rank">The resulting indexer rank, if found.</param>
     /// <param name="axis">The resulting indexer axis, if found.</param>
     /// <returns>Whether or not a rank and axis could be resolved by the input indexer name.</returns>
-    [Pure]
     public static bool TryGetAccessorRankAndAxis(string name, out int rank, out int axis)
     {
         if (KnownSizeAccessors.TryGetValue(name, out var info))

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
 using ComputeSharp.Resources;
 using Microsoft.Toolkit.Diagnostics;
@@ -21,7 +20,6 @@ public static class ImagingExtensions
     /// <typeparam name="TTo">The target pixel format for the returned image.</typeparam>
     /// <param name="texture">The source <see cref="Texture2D{T}"/> instance to read data from.</param>
     /// <returns>An image with the data from the input texture.</returns>
-    [Pure]
     public static unsafe Image<TTo> ToImage<TFrom, TTo>(this Texture2D<TFrom> texture)
         where TFrom : unmanaged
         where TTo : unmanaged, IPixel<TTo>

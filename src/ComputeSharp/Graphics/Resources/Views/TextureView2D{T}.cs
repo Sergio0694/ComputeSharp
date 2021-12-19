@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using Microsoft.Toolkit.Diagnostics;
 
@@ -284,7 +283,6 @@ public readonly unsafe ref partial struct TextureView2D<T>
     /// Returns a reference to the first element within the current instance, with no bounds check.
     /// </summary>
     /// <returns>A reference to the first element within the current instance.</returns>
-    [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T* DangerousGetAddressAndByteStride(out int strideInBytes)
     {
@@ -299,7 +297,6 @@ public readonly unsafe ref partial struct TextureView2D<T>
     /// <param name="y">The index of the target row to retrieve.</param>
     /// <exception cref="ArgumentOutOfRangeException">Throw when <paramref name="y"/> is out of range.</exception>
     /// <returns>The resulting row <see cref="Span{T}"/>.</returns>
-    [Pure]
     public Span<T> GetRowSpan(int y)
     {
         Guard.IsInRange(y, 0, this.height, nameof(y));
@@ -330,7 +327,6 @@ public readonly unsafe ref partial struct TextureView2D<T>
     /// Copies the contents of the current <see cref="TextureView2D{T}"/> instance into a new 2D array.
     /// </summary>
     /// <returns>A 2D array containing the data in the current <see cref="TextureView2D{T}"/> instance.</returns>
-    [Pure]
     public T[,] ToArray()
     {
         T[,] array = new T[this.height, this.width];

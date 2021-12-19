@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.IO;
 using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Helpers;
@@ -21,7 +20,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="length">The length of the buffer to allocate.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A zeroed <see cref="ConstantBuffer{T}"/> instance of size <paramref name="length"/>.</returns>
-    [Pure]
     public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -35,7 +33,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
     /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated buffer.</param>
     /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, T[] source)
         where T : unmanaged
     {
@@ -49,7 +46,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
     /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated buffer.</param>
     /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
-    [Pure]
     public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> source)
         where T : unmanaged
     {
@@ -67,7 +63,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
     /// <param name="source">The input <see cref="Buffer{T}"/> with the data to copy on the allocated buffer.</param>
     /// <returns>A constant <see cref="ConstantBuffer{T}"/> instance with the contents of the input <see cref="Buffer{T}"/>.</returns>
-    [Pure]
     public static ConstantBuffer<T> AllocateConstantBuffer<T>(this GraphicsDevice device, Buffer<T> source)
         where T : unmanaged
     {
@@ -86,7 +81,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="length">The length of the buffer to allocate.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A zeroed <see cref="ReadOnlyBuffer{T}"/> instance of size <paramref name="length"/>.</returns>
-    [Pure]
     public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -100,7 +94,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
     /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated buffer.</param>
     /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, T[] source)
         where T : unmanaged
     {
@@ -114,7 +107,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
     /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated buffer.</param>
     /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
-    [Pure]
     public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> source)
         where T : unmanaged
     {
@@ -132,7 +124,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
     /// <param name="source">The input <see cref="Buffer{T}"/> with the data to copy on the allocated buffer.</param>
     /// <returns>A read write <see cref="ReadOnlyBuffer{T}"/> instance with the contents of the input <see cref="Buffer{T}"/>.</returns>
-    [Pure]
     public static ReadOnlyBuffer<T> AllocateReadOnlyBuffer<T>(this GraphicsDevice device, Buffer<T> source)
         where T : unmanaged
     {
@@ -152,7 +143,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A zeroed <see cref="ReadOnlyTexture2D{T}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>].</returns>
-    [Pure]
     public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -168,7 +158,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="width">The width of the texture.</param>
     /// <param name="height">The height of the texture.</param>
     /// <returns>A <see cref="ReadOnlyTexture2D{T}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, T[] source, int width, int height)
         where T : unmanaged
     {
@@ -185,7 +174,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="width">The width of the texture.</param>
     /// <param name="height">The height of the texture.</param>
     /// <returns>A <see cref="ReadOnlyTexture2D{T}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, T[] source, int offset, int width, int height)
         where T : unmanaged
     {
@@ -199,7 +187,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
     /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
     /// <returns>A read write <see cref="ReadOnlyTexture2D{T}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, T[,] source)
         where T : unmanaged
     {
@@ -219,7 +206,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="width">The width of the texture.</param>
     /// <param name="height">The height of the texture.</param>
     /// <returns>A <see cref="ReadOnlyTexture2D{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
-    [Pure]
     public static ReadOnlyTexture2D<T> AllocateReadOnlyTexture2D<T>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height)
         where T : unmanaged
     {
@@ -240,7 +226,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A zeroed <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>].</returns>
-    [Pure]
     public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -258,7 +243,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="width">The width of the texture.</param>
     /// <param name="height">The height of the texture.</param>
     /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, T[] source, int width, int height)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -277,7 +261,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="width">The width of the texture.</param>
     /// <param name="height">The height of the texture.</param>
     /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, T[] source, int offset, int width, int height)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -293,7 +276,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
     /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
     /// <returns>A read write <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, T[,] source)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -315,7 +297,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="width">The width of the texture.</param>
     /// <param name="height">The height of the texture.</param>
     /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
-    [Pure]
     public static ReadOnlyTexture2D<T, TPixel> AllocateReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -337,7 +318,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="depth">The depth of the texture.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A zeroed <see cref="ReadOnlyTexture3D{T}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>, <paramref name="depth"/>].</returns>
-    [Pure]
     public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -354,7 +334,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture.</param>
     /// <param name="depth">The depth of the texture.</param>
     /// <returns>A <see cref="ReadOnlyTexture3D{T}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, T[] source, int width, int height, int depth)
         where T : unmanaged
     {
@@ -372,7 +351,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture.</param>
     /// <param name="depth">The depth of the texture.</param>
     /// <returns>A <see cref="ReadOnlyTexture3D{T}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, T[] source, int offset, int width, int height, int depth)
         where T : unmanaged
     {
@@ -390,7 +368,6 @@ public static partial class GraphicsDeviceExtensions
     /// The source 3D array needs to have each 2D plane stacked on the depth axis.
     /// That is, the expected layout of the input array has to be [depth, height, width].
     /// </remarks>
-    [Pure]
     public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, T[,,] source)
         where T : unmanaged
     {
@@ -411,7 +388,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture.</param>
     /// <param name="depth">The depth of the texture.</param>
     /// <returns>A <see cref="ReadOnlyTexture3D{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
-    [Pure]
     public static ReadOnlyTexture3D<T> AllocateReadOnlyTexture3D<T>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height, int depth)
         where T : unmanaged
     {
@@ -433,7 +409,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="depth">The depth of the texture.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A zeroed <see cref="ReadOnlyTexture3D{T, TPixel}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>, <paramref name="depth"/>].</returns>
-    [Pure]
     public static ReadOnlyTexture3D<T, TPixel> AllocateReadOnlyTexture3D<T, TPixel>(this GraphicsDevice device, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -452,7 +427,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture.</param>
     /// <param name="depth">The depth of the texture.</param>
     /// <returns>A <see cref="ReadOnlyTexture3D{T, TPixel}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadOnlyTexture3D<T, TPixel> AllocateReadOnlyTexture3D<T, TPixel>(this GraphicsDevice device, T[] source, int width, int height, int depth)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -472,7 +446,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture.</param>
     /// <param name="depth">The depth of the texture.</param>
     /// <returns>A <see cref="ReadOnlyTexture3D{T, TPixel}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadOnlyTexture3D<T, TPixel> AllocateReadOnlyTexture3D<T, TPixel>(this GraphicsDevice device, T[] source, int offset, int width, int height, int depth)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -492,7 +465,6 @@ public static partial class GraphicsDeviceExtensions
     /// The source 3D array needs to have each 2D plane stacked on the depth axis.
     /// That is, the expected layout of the input array has to be [depth, height, width].
     /// </remarks>
-    [Pure]
     public static ReadOnlyTexture3D<T, TPixel> AllocateReadOnlyTexture3D<T, TPixel>(this GraphicsDevice device, T[,,] source)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -515,7 +487,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture.</param>
     /// <param name="depth">The depth of the texture.</param>
     /// <returns>A <see cref="ReadOnlyTexture3D{T, TPixel}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
-    [Pure]
     public static ReadOnlyTexture3D<T, TPixel> AllocateReadOnlyTexture3D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height, int depth)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -535,7 +506,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="length">The length of the buffer to allocate.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A zeroed <see cref="ReadWriteBuffer{T}"/> instance of size <paramref name="length"/>.</returns>
-    [Pure]
     public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -549,7 +519,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
     /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated buffer.</param>
     /// <returns>A read write <see cref="ReadWriteBuffer{T}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, T[] source)
         where T : unmanaged
     {
@@ -563,7 +532,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
     /// <param name="source">The input <see cref="ReadOnlySpan{T}"/> with the data to copy on the allocated buffer.</param>
     /// <returns>A read write <see cref="ReadWriteBuffer{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
-    [Pure]
     public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, ReadOnlySpan<T> source)
         where T : unmanaged
     {
@@ -581,7 +549,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the buffer.</param>
     /// <param name="source">The input <see cref="Buffer{T}"/> with the data to copy on the allocated buffer.</param>
     /// <returns>A read write <see cref="ReadWriteBuffer{T}"/> instance with the contents of the input <see cref="Buffer{T}"/>.</returns>
-    [Pure]
     public static ReadWriteBuffer<T> AllocateReadWriteBuffer<T>(this GraphicsDevice device, Buffer<T> source)
         where T : unmanaged
     {
@@ -601,7 +568,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A zeroed <see cref="ReadWriteTexture2D{T}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>].</returns>
-    [Pure]
     public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -617,7 +583,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="width">The width of the texture.</param>
     /// <param name="height">The height of the texture.</param>
     /// <returns>A <see cref="ReadWriteTexture2D{T}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, T[] source, int width, int height)
         where T : unmanaged
     {
@@ -634,7 +599,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="width">The width of the texture.</param>
     /// <param name="height">The height of the texture.</param>
     /// <returns>A <see cref="ReadWriteTexture2D{T}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, T[] source, int offset, int width, int height)
         where T : unmanaged
     {
@@ -648,7 +612,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
     /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
     /// <returns>A read write <see cref="ReadWriteTexture2D{T}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, T[,] source)
         where T : unmanaged
     {
@@ -668,7 +631,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="width">The width of the texture.</param>
     /// <param name="height">The height of the texture.</param>
     /// <returns>A <see cref="ReadWriteTexture2D{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
-    [Pure]
     public static ReadWriteTexture2D<T> AllocateReadWriteTexture2D<T>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height)
         where T : unmanaged
     {
@@ -689,7 +651,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A zeroed <see cref="ReadWriteTexture2D{T, TPixel}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>].</returns>
-    [Pure]
     public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -707,7 +668,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="width">The width of the texture.</param>
     /// <param name="height">The height of the texture.</param>
     /// <returns>A <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, T[] source, int width, int height)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -726,7 +686,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="width">The width of the texture.</param>
     /// <param name="height">The height of the texture.</param>
     /// <returns>A <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, T[] source, int offset, int width, int height)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -742,7 +701,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
     /// <param name="source">The input <typeparamref name="T"/> array with the data to copy on the allocated texture.</param>
     /// <returns>A read write <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, T[,] source)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -764,7 +722,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="width">The width of the texture.</param>
     /// <param name="height">The height of the texture.</param>
     /// <returns>A <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
-    [Pure]
     public static ReadWriteTexture2D<T, TPixel> AllocateReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -786,7 +743,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="depth">The depth of the texture.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A zeroed <see cref="ReadWriteTexture3D{T}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>].</returns>
-    [Pure]
     public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -803,7 +759,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture.</param>
     /// <param name="depth">The depth of the texture.</param>
     /// <returns>A <see cref="ReadWriteTexture3D{T}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, T[] source, int width, int height, int depth)
         where T : unmanaged
     {
@@ -821,7 +776,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture.</param>
     /// <param name="depth">The depth of the texture.</param>
     /// <returns>A <see cref="ReadWriteTexture3D{T}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, T[] source, int offset, int width, int height, int depth)
         where T : unmanaged
     {
@@ -839,7 +793,6 @@ public static partial class GraphicsDeviceExtensions
     /// The source 3D array needs to have each 2D plane stacked on the depth axis.
     /// That is, the expected layout of the input array has to be [depth, height, width].
     /// </remarks>
-    [Pure]
     public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, T[,,] source)
         where T : unmanaged
     {
@@ -860,7 +813,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture.</param>
     /// <param name="depth">The depth of the texture.</param>
     /// <returns>A <see cref="ReadWriteTexture3D{T}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
-    [Pure]
     public static ReadWriteTexture3D<T> AllocateReadWriteTexture3D<T>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height, int depth)
         where T : unmanaged
     {
@@ -882,7 +834,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="depth">The depth of the texture.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="ReadWriteTexture3D{T, TPixel}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>, <paramref name="depth"/>].</returns>
-    [Pure]
     public static ReadWriteTexture3D<T, TPixel> AllocateReadWriteTexture3D<T, TPixel>(this GraphicsDevice device, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -901,7 +852,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture.</param>
     /// <param name="depth">The depth of the texture.</param>
     /// <returns>A <see cref="ReadWriteTexture3D{T, TPixel}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadWriteTexture3D<T, TPixel> AllocateReadWriteTexture3D<T, TPixel>(this GraphicsDevice device, T[] source, int width, int height, int depth)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -921,7 +871,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture.</param>
     /// <param name="depth">The depth of the texture.</param>
     /// <returns>A <see cref="ReadWriteTexture3D{T, TPixel}"/> instance with the contents of the input array.</returns>
-    [Pure]
     public static ReadWriteTexture3D<T, TPixel> AllocateReadWriteTexture3D<T, TPixel>(this GraphicsDevice device, T[] source, int offset, int width, int height, int depth)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -941,7 +890,6 @@ public static partial class GraphicsDeviceExtensions
     /// The source 3D array needs to have each 2D plane stacked on the depth axis.
     /// That is, the expected layout of the input array has to be [depth, height, width].
     /// </remarks>
-    [Pure]
     public static ReadWriteTexture3D<T, TPixel> AllocateReadWriteTexture3D<T, TPixel>(this GraphicsDevice device, T[,,] source)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -964,7 +912,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture.</param>
     /// <param name="depth">The depth of the texture.</param>
     /// <returns>A <see cref="ReadWriteTexture3D{T, TPixel}"/> instance with the contents of the input <see cref="ReadOnlySpan{T}"/>.</returns>
-    [Pure]
     public static ReadWriteTexture3D<T, TPixel> AllocateReadWriteTexture3D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<T> source, int width, int height, int depth)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -984,7 +931,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="length">The length of the buffer to allocate.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="ReadOnlyBuffer{T}"/> instance of size <paramref name="length"/>.</returns>
-    [Pure]
     public static UploadBuffer<T> AllocateUploadBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -1000,7 +946,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="UploadTexture2D{T}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>].</returns>
-    [Pure]
     public static UploadTexture2D<T> AllocateUploadTexture2D<T>(this GraphicsDevice device, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -1017,7 +962,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="depth">The depth of the texture.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="UploadTexture3D{T}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>, <paramref name="depth"/>].</returns>
-    [Pure]
     public static UploadTexture3D<T> AllocateUploadTexture3D<T>(this GraphicsDevice device, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -1032,7 +976,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="length">The length of the buffer to allocate.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="ReadBackBuffer{T}"/> instance of size <paramref name="length"/>.</returns>
-    [Pure]
     public static ReadBackBuffer<T> AllocateReadBackBuffer<T>(this GraphicsDevice device, int length, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -1048,7 +991,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="height">The height of the texture.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="ReadBackTexture2D{T}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>].</returns>
-    [Pure]
     public static ReadBackTexture2D<T> AllocateReadBackTexture2D<T>(this GraphicsDevice device, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -1065,7 +1007,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="depth">The depth of the texture.</param>
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="ReadBackTexture3D{T}"/> instance of size [<paramref name="width"/>, <paramref name="height"/>, <paramref name="depth"/>].</returns>
-    [Pure]
     public static ReadBackTexture3D<T> AllocateReadBackTexture3D<T>(this GraphicsDevice device, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
         where T : unmanaged
     {
@@ -1080,7 +1021,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
     /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
     /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
-    [Pure]
     public static ReadOnlyTexture2D<T, TPixel> LoadReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, string filename)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -1098,7 +1038,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
     /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
     /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
-    [Pure]
     public static ReadOnlyTexture2D<T, TPixel> LoadReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<char> filename)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -1120,7 +1059,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
     /// <param name="span">The buffer with the image data to load and decode into the texture.</param>
     /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
-    [Pure]
     public static ReadOnlyTexture2D<T, TPixel> LoadReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<byte> span)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -1142,7 +1080,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
     /// <param name="stream">The stream with the image data to load and decode into the texture.</param>
     /// <returns>A <see cref="ReadOnlyTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
-    [Pure]
     public static ReadOnlyTexture2D<T, TPixel> LoadReadOnlyTexture2D<T, TPixel>(this GraphicsDevice device, Stream stream)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -1166,7 +1103,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
     /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
     /// <returns>A <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
-    [Pure]
     public static ReadWriteTexture2D<T, TPixel> LoadReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, string filename)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -1184,7 +1120,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
     /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
     /// <returns>A <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
-    [Pure]
     public static ReadWriteTexture2D<T, TPixel> LoadReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<char> filename)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -1206,7 +1141,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
     /// <param name="span">The buffer with the image data to load and decode into the texture.</param>
     /// <returns>A <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
-    [Pure]
     public static ReadWriteTexture2D<T, TPixel> LoadReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, ReadOnlySpan<byte> span)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
@@ -1228,7 +1162,6 @@ public static partial class GraphicsDeviceExtensions
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
     /// <param name="stream">The stream with the image data to load and decode into the texture.</param>
     /// <returns>A <see cref="ReadWriteTexture2D{T, TPixel}"/> instance with the contents of the specified file.</returns>
-    [Pure]
     public static ReadWriteTexture2D<T, TPixel> LoadReadWriteTexture2D<T, TPixel>(this GraphicsDevice device, Stream stream)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged

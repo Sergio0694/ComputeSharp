@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using Microsoft.Toolkit.Diagnostics;
 
@@ -320,7 +319,6 @@ public readonly unsafe ref partial struct TextureView3D<T>
     /// Returns a reference to the first element within the current instance, with no bounds check.
     /// </summary>
     /// <returns>A reference to the first element within the current instance.</returns>
-    [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T* DangerousGetAddressAndByteStride(out int strideInBytes)
     {
@@ -338,7 +336,6 @@ public readonly unsafe ref partial struct TextureView3D<T>
     /// Throw when either <paramref name="y"/> or <paramref name="z"/> are out of range.
     /// </exception>
     /// <returns>The resulting row <see cref="Span{T}"/>.</returns>
-    [Pure]
     public Span<T> GetRowSpan(int y, int z)
     {
         Guard.IsInRange(y, 0, this.height, nameof(y));
@@ -370,7 +367,6 @@ public readonly unsafe ref partial struct TextureView3D<T>
     /// Copies the contents of the current <see cref="TextureView3D{T}"/> instance into a new 3D array.
     /// </summary>
     /// <returns>A 3D array containing the data in the current <see cref="TextureView3D{T}"/> instance.</returns>
-    [Pure]
     public T[,,] ToArray()
     {
         T[,,] array = new T[this.depth, this.height, this.width];

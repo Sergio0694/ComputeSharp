@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
@@ -73,7 +72,6 @@ internal static class HlslKnownTypes
     /// <summary>
     /// Builds the mapping of known primitive types.
     /// </summary>
-    [Pure]
     private static IReadOnlyDictionary<string, string> BuildKnownHlslTypes()
     {
         Dictionary<string, string> knownTypes = new()
@@ -263,7 +261,6 @@ internal static class HlslKnownTypes
     /// </summary>
     /// <param name="typeSymbol">The input type to map.</param>
     /// <returns>The HLSL-compatible type name that can be used in an HLSL shader.</returns>
-    [Pure]
     public static string GetMappedName(INamedTypeSymbol typeSymbol)
     {
         // Delegate types just return an empty string, as they're not actually
@@ -320,7 +317,6 @@ internal static class HlslKnownTypes
     /// </summary>
     /// <param name="typeSymbol">The pixel shader type to map.</param>
     /// <returns>The HLSL-compatible type name that can be used in an HLSL shader.</returns>
-    [Pure]
     public static string GetMappedNameForPixelShaderType(INamedTypeSymbol typeSymbol)
     {
         string genericArgumentName = ((INamedTypeSymbol)typeSymbol.TypeArguments.First()).GetFullMetadataName();
@@ -340,7 +336,6 @@ internal static class HlslKnownTypes
     /// </summary>
     /// <param name="typeSymbol">The input type to map.</param>
     /// <returns>The HLSL-compatible type name that can be used in an HLSL shader.</returns>
-    [Pure]
     public static string GetMappedElementName(IArrayTypeSymbol typeSymbol)
     {
         string elementTypeName = ((INamedTypeSymbol)typeSymbol.ElementType).GetFullMetadataName();
@@ -402,7 +397,6 @@ internal static class HlslKnownTypes
     /// </summary>
     /// <param name="types">The input collection of types to declare.</param>
     /// <returns>The same list as input, but in a valid HLSL declaration order.</returns>
-    [Pure]
     private static IEnumerable<INamedTypeSymbol> OrderByDependency(IEnumerable<INamedTypeSymbol> types)
     {
         Queue<(INamedTypeSymbol Type, HashSet<INamedTypeSymbol> Fields)> queue = new();

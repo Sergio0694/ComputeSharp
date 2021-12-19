@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
@@ -21,7 +20,6 @@ internal static class HlslKnownMethods
     /// <summary>
     /// Builds the mapping of supported known methods to HLSL names.
     /// </summary>
-    [Pure]
     private static IReadOnlyDictionary<string, string> BuildKnownMethodsMap()
     {
         Dictionary<string, string> knownMethods = new()
@@ -148,7 +146,6 @@ internal static class HlslKnownMethods
     /// <param name="name">The input fully qualified method name.</param>
     /// <param name="mapped">The mapped name, if one is found.</param>
     /// <returns>The HLSL-compatible member name that can be used in an HLSL shader.</returns>
-    [Pure]
     public static bool TryGetMappedName(string name, out string? mapped)
     {
         return KnownMethods.TryGetValue(name, out mapped);

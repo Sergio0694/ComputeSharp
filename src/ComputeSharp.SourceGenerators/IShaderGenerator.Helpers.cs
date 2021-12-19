@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using ComputeSharp.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -19,7 +18,6 @@ public sealed partial class IShaderGenerator
     /// <param name="iComputeShaderSymbol">The <see cref="INamedTypeSymbol"/> instance for <see cref="IComputeShader"/>.</param>
     /// <param name="iPixelShaderSymbol">The <see cref="INamedTypeSymbol"/> instance for <see cref="IPixelShader{TPixel}"/>.</param>
     /// <returns>Either <see cref="IComputeShader"/> or <see cref="IPixelShader{TPixel}"/>, or <see langword="null"/>.</returns>
-    [Pure]
     private static Type? GetShaderType(
         INamedTypeSymbol typeSymbol,
         INamedTypeSymbol iComputeShaderSymbol,
@@ -51,7 +49,6 @@ public sealed partial class IShaderGenerator
     /// <param name="methodDeclaration">The <see cref="MethodDeclarationSyntax"/> item to insert.</param>
     /// <param name="canUseSkipLocalsInit">Whether <c>[SkipLocalsInit]</c> can be used.</param>
     /// <returns>A <see cref="CompilationUnitSyntax"/> object wrapping <paramref name="methodDeclaration"/>.</returns>
-    [Pure]
     private static CompilationUnitSyntax GetCompilationUnitFromMethod(
         HierarchyInfo hierarchyInfo,
         MethodDeclarationSyntax methodDeclaration,

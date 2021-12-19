@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using ComputeSharp.SourceGenerators.Diagnostics;
@@ -98,7 +97,6 @@ public sealed partial class IShaderGenerator
         /// <param name="types">The collection of currently discovered types.</param>
         /// <param name="isComputeShader">Indicates whether or not <paramref name="structDeclarationSymbol"/> represents a compute shader.</param>
         /// <returns>A sequence of captured fields in <paramref name="structDeclarationSymbol"/>.</returns>
-        [Pure]
         private static (
             ImmutableArray<(string MetadataName, string Name, string HlslType)>,
             ImmutableArray<(string Name, string HlslType)>)
@@ -193,7 +191,6 @@ public sealed partial class IShaderGenerator
         /// <param name="discoveredTypes">The collection of currently discovered types.</param>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <returns>A sequence of static constant fields in <paramref name="structDeclarationSymbol"/>.</returns>
-        [Pure]
         private static ImmutableArray<(string Name, string TypeDeclaration, string? Assignment)> GetStaticFields(
             ImmutableArray<Diagnostic>.Builder diagnostics,
             SemanticModelProvider semanticModel,
@@ -261,7 +258,6 @@ public sealed partial class IShaderGenerator
         /// <param name="structDeclarationSymbol">The input <see cref="INamedTypeSymbol"/> instance to process.</param>
         /// <param name="types">The collection of currently discovered types.</param>
         /// <returns>A sequence of captured members in <paramref name="structDeclarationSymbol"/>.</returns>
-        [Pure]
         private static ImmutableArray<(string Name, string Type, int? Count)> GetSharedBuffers(
             ImmutableArray<Diagnostic>.Builder diagnostics,
             INamedTypeSymbol structDeclarationSymbol,
@@ -323,7 +319,6 @@ public sealed partial class IShaderGenerator
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <param name="isComputeShader">Indicates whether or not <paramref name="structDeclarationSymbol"/> represents a compute shader.</param>
         /// <returns>A sequence of processed methods in <paramref name="structDeclaration"/>, and the entry point.</returns>
-        [Pure]
         private static (string EntryPoint, ImmutableArray<(string Signature, string Definition)> Methods, bool IsSamplerUser) GetProcessedMethods(
             ImmutableArray<Diagnostic>.Builder diagnostics,
             StructDeclarationSyntax structDeclaration,
@@ -418,7 +413,6 @@ public sealed partial class IShaderGenerator
         /// </summary>
         /// <param name="constantDefinitions">The collection of discovered constant definitions.</param>
         /// <returns>A sequence of discovered constants to declare in the shader.</returns>
-        [Pure]
         internal static ImmutableArray<(string Name, string Value)> GetDefinedConstants(IReadOnlyDictionary<IFieldSymbol, string> constantDefinitions)
         {
             ImmutableArray<(string, string)>.Builder builder = ImmutableArray.CreateBuilder<(string, string)>(constantDefinitions.Count);

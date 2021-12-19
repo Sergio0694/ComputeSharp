@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using ComputeSharp.Core.Intrinsics.Attributes;
@@ -19,7 +18,6 @@ internal static class HlslKnownKeywords
     /// <summary>
     /// Builds the mapping of all known HLSL keywords.
     /// </summary>
-    [Pure]
     private static IReadOnlyCollection<string> BuildKnownKeywordsMap()
     {
         // HLSL keywords
@@ -58,7 +56,6 @@ internal static class HlslKnownKeywords
     /// <param name="name">The input identifier name.</param>
     /// <param name="mapped">The mapped identifier name, if a replacement is needed.</param>
     /// <returns>The HLSL-compatible identifier name that can be used in an HLSL shader.</returns>
-    [Pure]
     public static bool TryGetMappedName(string name, out string? mapped)
     {
         mapped = KnownKeywords.Contains(name) switch

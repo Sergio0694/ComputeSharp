@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using ComputeSharp.Core.Extensions;
@@ -192,7 +191,6 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// Checks whether the current device supports double precision floating point operations in shaders.
     /// </summary>
     /// <returns>Whether the current device supports double precision floating point operations in shaders.</returns>
-    [Pure]
     public bool IsDoublePrecisionSupportAvailable()
     {
         ThrowIfDisposed();
@@ -208,7 +206,6 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// </summary>
     /// <typeparam name="T">The type of values to check support for.</typeparam>
     /// <returns>Whether <see cref="ReadOnlyTexture2D{T}"/> instances can be created by the current device.</returns>
-    [Pure]
     public bool IsReadOnlyTexture2DSupportedForType<T>()
         where T : unmanaged
     {
@@ -223,7 +220,6 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// </summary>
     /// <typeparam name="T">The type of values to check support for.</typeparam>
     /// <returns>Whether <see cref="ReadWriteTexture2D{T}"/> instances can be created by the current device.</returns>
-    [Pure]
     public bool IsReadWriteTexture2DSupportedForType<T>()
         where T : unmanaged
     {
@@ -240,7 +236,6 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// </summary>
     /// <typeparam name="T">The type of values to check support for.</typeparam>
     /// <returns>Whether <see cref="ReadOnlyTexture3D{T}"/> instances can be created by the current device.</returns>
-    [Pure]
     public bool IsReadOnlyTexture3DSupportedForType<T>()
         where T : unmanaged
     {
@@ -255,7 +250,6 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// </summary>
     /// <typeparam name="T">The type of values to check support for.</typeparam>
     /// <returns>Whether <see cref="ReadWriteTexture3D{T}"/> instances can be created by the current device.</returns>
-    [Pure]
     public bool IsReadWriteTexture3DSupportedForType<T>()
         where T : unmanaged
     {

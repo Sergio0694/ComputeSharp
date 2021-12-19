@@ -2,7 +2,6 @@
 using System.Buffers;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 
 namespace ComputeSharp.__Internals;
@@ -30,7 +29,6 @@ public ref struct ArrayPoolStringBuilder
     /// </summary>
     /// <param name="sizeHint">The size hint for the internal buffer to allocate.</param>
     /// <returns>A new <see cref="ArrayPoolStringBuilder"/> instance with default values.</returns>
-    [Pure]
     public static ArrayPoolStringBuilder Create(int sizeHint)
     {
         ArrayPoolStringBuilder builder;

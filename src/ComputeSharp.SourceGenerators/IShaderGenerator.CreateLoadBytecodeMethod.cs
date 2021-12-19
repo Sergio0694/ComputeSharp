@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -103,7 +102,6 @@ public sealed partial class IShaderGenerator
         /// <param name="hlslSource">The generated HLSL source code (ignoring captured delegates, if present).</param>
         /// <param name="diagnostic">The resulting diagnostic from the processing operation, if any.</param>
         /// <returns>The <see cref="ImmutableArray{T}"/> instance with the compiled shader bytecode.</returns>
-        [Pure]
         public static unsafe ImmutableArray<byte> GetBytecode(
             ThreadIdsInfo threadIds,
             string hlslSource,

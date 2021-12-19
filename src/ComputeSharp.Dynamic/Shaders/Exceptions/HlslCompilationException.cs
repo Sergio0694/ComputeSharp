@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Text;
 
 namespace ComputeSharp.Exceptions;
@@ -23,7 +22,6 @@ public sealed class HlslCompilationException : Exception
     /// </summary>
     /// <param name="error">The input compilatin error message from the DXC compiler.</param>
     /// <returns>A formatted error message for a new <see cref="HlslCompilationException"/> instance.</returns>
-    [Pure]
     private static string GetExceptionMessage(string error)
     {
         StringBuilder builder = new(512);

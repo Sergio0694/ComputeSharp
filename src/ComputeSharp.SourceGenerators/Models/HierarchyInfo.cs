@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics.Contracts;
 using ComputeSharp.SourceGenerators.Extensions;
 using Microsoft.CodeAnalysis;
 using static Microsoft.CodeAnalysis.SymbolDisplayTypeQualificationStyle;
@@ -22,7 +21,6 @@ internal sealed record HierarchyInfo(string FilenameHint, string MetadataName, s
     /// </summary>
     /// <param name="typeSymbol">The input <see cref="INamedTypeSymbol"/> instance to gather info for.</param>
     /// <returns>A <see cref="HierarchyInfo"/> instance describing <paramref name="typeSymbol"/>.</returns>
-    [Pure]
     public static HierarchyInfo From(INamedTypeSymbol typeSymbol)
     {
         ImmutableArray<string>.Builder names = ImmutableArray.CreateBuilder<string>();

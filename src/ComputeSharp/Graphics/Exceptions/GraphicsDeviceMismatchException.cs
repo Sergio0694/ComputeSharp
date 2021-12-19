@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Text;
 using ComputeSharp.Interop;
 using ComputeSharp.Resources;
@@ -31,7 +30,6 @@ public sealed class GraphicsDeviceMismatchException : InvalidOperationException
     /// This method only takes a <see cref="NativeObject"/> instance and the associated <see cref="GraphicsDevice"/> instance as
     /// <see cref="object.GetType"/> will still be available, but without the unnecessary generic type specializations for the method.
     /// </remarks>
-    [Pure]
     private static GraphicsDeviceMismatchException Create(NativeObject resource, GraphicsDevice sourceDevice, GraphicsDevice destinationDevice)
     {
         StringBuilder builder = new(512);

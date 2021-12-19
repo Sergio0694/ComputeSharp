@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -113,7 +112,6 @@ internal unsafe ref struct CommandList
     /// Gets a pointer to the <see cref="ID3D12CommandList"/> object in use by the current instance.
     /// </summary>
     /// <returns>A double pointer to the current <see cref="ID3D12CommandList"/> object to execute.</returns>
-    [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ID3D12CommandList** GetD3D12CommandListAddressOf()
     {

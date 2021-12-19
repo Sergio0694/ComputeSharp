@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Buffers;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Runtime.CompilerServices;
 using ComputeSharp.Core.Extensions;
@@ -59,7 +58,6 @@ internal sealed unsafe class WICHelper
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
     /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
     /// <returns>An <see cref="UploadTexture2D{T}"/> instance with the contents of the specified file.</returns>
-    [Pure]
     public UploadTexture2D<T> LoadTexture<T>(GraphicsDevice device, ReadOnlySpan<char> filename)
         where T : unmanaged
     {
@@ -86,7 +84,6 @@ internal sealed unsafe class WICHelper
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
     /// <param name="span">The buffer with the image data to load and decode into the texture.</param>
     /// <returns>An <see cref="UploadTexture2D{T}"/> instance with the contents of the specified file.</returns>
-    [Pure]
     public UploadTexture2D<T> LoadTexture<T>(GraphicsDevice device, ReadOnlySpan<byte> span)
         where T : unmanaged
     {
@@ -117,7 +114,6 @@ internal sealed unsafe class WICHelper
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
     /// <param name="stream">The stream with the image data to load and decode into the texture.</param>
     /// <returns>An <see cref="UploadTexture2D{T}"/> instance with the contents of the specified file.</returns>
-    [Pure]
     public UploadTexture2D<T> LoadTexture<T>(GraphicsDevice device, Stream stream)
         where T : unmanaged
     {
@@ -144,7 +140,6 @@ internal sealed unsafe class WICHelper
     /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
     /// <param name="wicBitmapDecoder">The <see cref="IWICBitmapDecoder"/> object in use.</param>
     /// <returns>An <see cref="UploadTexture2D{T}"/> instance with the contents of the specified file.</returns>
-    [Pure]
     private UploadTexture2D<T> LoadTexture<T>(GraphicsDevice device, IWICBitmapDecoder* wicBitmapDecoder)
         where T : unmanaged
     {
@@ -220,7 +215,6 @@ internal sealed unsafe class WICHelper
     /// <typeparam name="T">The type of items to store in the texture.</typeparam>
     /// <param name="texture">The target <see cref="TextureView2D{T}"/> instance to write data to.</param>
     /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
-    [Pure]
     public void LoadTexture<T>(TextureView2D<T> texture, ReadOnlySpan<char> filename)
         where T : unmanaged
     {
@@ -245,7 +239,6 @@ internal sealed unsafe class WICHelper
     /// <typeparam name="T">The type of items to store in the texture.</typeparam>
     /// <param name="texture">The target <see cref="TextureView2D{T}"/> instance to write data to.</param>
     /// <param name="span">The buffer with the image data to load and decode into the texture.</param>
-    [Pure]
     public void LoadTexture<T>(TextureView2D<T> texture, ReadOnlySpan<byte> span)
         where T : unmanaged
     {
@@ -275,7 +268,6 @@ internal sealed unsafe class WICHelper
     /// <typeparam name="T">The type of items to store in the texture.</typeparam>
     /// <param name="texture">The target <see cref="TextureView2D{T}"/> instance to write data to.</param>
     /// <param name="stream">The stream with the image data to load and decode into the texture.</param>
-    [Pure]
     public void LoadTexture<T>(TextureView2D<T> texture, Stream stream)
         where T : unmanaged
     {
@@ -301,7 +293,6 @@ internal sealed unsafe class WICHelper
     /// <typeparam name="T">The type of items to store in the texture.</typeparam>
     /// <param name="texture">The target <see cref="TextureView2D{T}"/> instance to write data to.</param>
     /// <param name="wicBitmapDecoder">The <see cref="IWICBitmapDecoder"/> object in use.</param>
-    [Pure]
     private void LoadTexture<T>(TextureView2D<T> texture, IWICBitmapDecoder* wicBitmapDecoder)
         where T : unmanaged
     {

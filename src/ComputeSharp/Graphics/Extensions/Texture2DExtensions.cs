@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Buffers;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Runtime.InteropServices;
 using ComputeSharp.Graphics.Helpers;
@@ -20,7 +19,6 @@ public static class Texture2DExtensions
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <param name="source">The input <see cref="Texture2D{T}"/> instance to read data from.</param>
     /// <returns>A <typeparamref name="T"/> array with the contents of the current texture.</returns>
-    [Pure]
     public static T[,] ToArray<T>(this Texture2D<T> source)
         where T : unmanaged
     {
@@ -41,7 +39,6 @@ public static class Texture2DExtensions
     /// <param name="width">The width of the memory area to copy.</param>
     /// <param name="height">The height of the memory area to copy.</param>
     /// <returns>A <typeparamref name="T"/> array with the contents of the current texture.</returns>
-    [Pure]
     public static unsafe T[,] ToArray<T>(this Texture2D<T> source, int x, int y, int width, int height)
         where T : unmanaged
     {

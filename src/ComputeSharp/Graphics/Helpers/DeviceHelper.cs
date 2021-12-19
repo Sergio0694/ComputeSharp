@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
 using Microsoft.Toolkit.Diagnostics;
@@ -38,7 +37,6 @@ internal static partial class DeviceHelper
     /// </summary>
     /// <returns>The <see cref="Luid"/> of the default device supporting <see cref="D3D_FEATURE_LEVEL_11_0"/> and <see cref="D3D_SHADER_MODEL_6_0"/>.</returns>
     /// <remarks>This methods assumes that a default device is available.</remarks>
-    [Pure]
     public static unsafe Luid GetDefaultDeviceLuid()
     {
         if (DefaultFactory.IsValueCreated)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 #if NET6_0_OR_GREATER
 using System.Runtime.CompilerServices;
 #endif
@@ -590,7 +589,6 @@ internal static unsafe class ID3D12DeviceExtensions
     /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to check features for.</param>
     /// <param name="d3D12Feature">The type of features to check.</param>
     /// <returns>A <see typeparamref="TFeature"/> value with the features data.</returns>
-    [Pure]
     public static unsafe TFeature CheckFeatureSupport<TFeature>(this ref ID3D12Device d3D12Device, D3D12_FEATURE d3D12Feature)
         where TFeature : unmanaged
     {
@@ -608,7 +606,6 @@ internal static unsafe class ID3D12DeviceExtensions
     /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> type to check support for.</param>
     /// <param name="d3D12FormatSupport1">The resource type to check support for.</param>
     /// <returns>Whether or not the input device supports the requested format for the specified resource type.</returns>
-    [Pure]
     public static unsafe bool IsDxgiFormatSupported(this ref ID3D12Device d3D12Device, DXGI_FORMAT dxgiFormat, D3D12_FORMAT_SUPPORT1 d3D12FormatSupport1)
     {
         D3D12_FEATURE_DATA_FORMAT_SUPPORT d3D12FeatureDataFormatSupport = default;
@@ -625,7 +622,6 @@ internal static unsafe class ID3D12DeviceExtensions
     /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to check features for.</param>
     /// <param name="d3DShaderModel">The <see cref="D3D_SHADER_MODEL"/> value to check support for.</param>
     /// <returns>Whether or not the input device supports the requested shader model.</returns>
-    [Pure]
     public static unsafe bool IsShaderModelSupported(this ref ID3D12Device d3D12Device, D3D_SHADER_MODEL d3DShaderModel)
     {
         D3D12_FEATURE_DATA_SHADER_MODEL d3D12ShaderModel = default;

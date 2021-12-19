@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -23,7 +22,6 @@ internal static class SyntaxFactoryHelper
     /// </summary>
     /// <param name="groups">The input sequence of <see cref="string"/> groups.</param>
     /// <returns>An <see cref="ArrayCreationExpressionSyntax"/> instance with the described contents.</returns>
-    [Pure]
     public static ArrayCreationExpressionSyntax NestedArrayExpression(IEnumerable<(string A, string B)> groups)
     {
         return

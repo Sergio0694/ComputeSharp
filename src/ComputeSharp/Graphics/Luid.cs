@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using TerraFX.Interop.Windows;
 
@@ -30,7 +29,6 @@ public readonly struct Luid : IEquatable<Luid>
     /// </summary>
     /// <param name="luid">The input <see cref="LUID"/> value.</param>
     /// <returns>A <see cref="Luid"/> instance with the same value.</returns>
-    [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static unsafe Luid FromLUID(LUID luid)
     {
@@ -38,7 +36,6 @@ public readonly struct Luid : IEquatable<Luid>
     }
 
     /// <inheritdoc/>
-    [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Equals(Luid other)
     {
@@ -48,14 +45,12 @@ public readonly struct Luid : IEquatable<Luid>
     }
 
     /// <inheritdoc/>
-    [Pure]
     public override bool Equals(object? other)
     {
         return other is Luid luid && Equals(luid);
     }
 
     /// <inheritdoc/>
-    [Pure]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override int GetHashCode()
     {
@@ -63,7 +58,6 @@ public readonly struct Luid : IEquatable<Luid>
     }
 
     /// <inheritdoc/>
-    [Pure]
     public override string ToString()
     {
         return (((long)this.highPart) << 32 | this.lowPart).ToString();
@@ -71,7 +65,6 @@ public readonly struct Luid : IEquatable<Luid>
 
 #if NET6_0_OR_GREATER
     /// <inheritdoc/>
-    [Pure]
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
         return (((long)this.highPart) << 32 | this.lowPart).ToString(format, formatProvider);
