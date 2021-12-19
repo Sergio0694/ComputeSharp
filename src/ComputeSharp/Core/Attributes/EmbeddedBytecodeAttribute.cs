@@ -15,16 +15,20 @@ namespace ComputeSharp;
 /// </code>
 /// </para>
 /// <para>
+/// </para>
+/// The runtime compilation will automatically be skipped if the shader is invoked using matching thread count values,
+/// otherwise the usual runtime compilation will be used as fallback if the <c>ComputeSharp.Dynamic</c> library is
+/// referenced. If not, <see cref="NotSupportedException"/> will be thrown when trying to dispatch the shader.
+/// </summary>
+/// <remarks>
+/// <para>
+/// Using this attribute is mandatory when not referencing <c>ComputeSharp.Dynamic</c>.
+/// </para>
+/// <para>
 /// This attribute can only be used when the shader type being annotated does not require dynamic
 /// features. Specifically, this attribute is not supported if the shader captures any delegates.
 /// </para>
-/// The runtime compilation will automatically be skipped if the shader is invoked using matching
-/// thread count values, otherwise the usual runtime compilation will be used as fallback. In case
-/// the fallback support is not needed and all shaders in use are being precompiled, it is possible
-/// to skip bundling the native <c>dxcompiler.dll</c> and <c>dxil.dll</c> libraries included with
-/// ComputeSharp entirely, resulting in a smaller binary size in consuming applications. To do this,
-/// the <c>PackageReference</c> item for the library should be annotated with <c>ExcludeAssets="native"</c>.
-/// </summary>
+/// </remarks>
 [AttributeUsage(AttributeTargets.Struct, AllowMultiple = false)]
 public sealed class EmbeddedBytecodeAttribute : Attribute
 {
