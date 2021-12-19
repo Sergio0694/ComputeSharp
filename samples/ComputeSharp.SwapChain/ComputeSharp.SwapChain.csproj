@@ -4,11 +4,11 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <Platforms>x64;ARM64</Platforms>
+    <DefineConstants>$(DefineConstants);SAMPLE_APP</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ComputeSharp\ComputeSharp.csproj" />
-    <ProjectReference Include="..\..\src\ComputeSharp.Dynamic\ComputeSharp.Dynamic.csproj" />
     <ProjectReference Include="..\..\src\ComputeSharp.SourceGenerators\ComputeSharp.SourceGenerators.csproj"
                       OutputItemType="Analyzer"
                       ReferenceOutputAssembly="false"
