@@ -4,9 +4,6 @@ using System.Runtime.CompilerServices;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Shaders.Dispatching;
 using ComputeSharp.Shaders.Extensions;
-#if !DISABLE_RUNTIME_SHADER_COMPILATION_SUPPORT
-using ComputeSharp.Shaders.Translation;
-#endif
 using ComputeSharp.Shaders.Translation.Models;
 using ComputeSharp.__Internals;
 using Microsoft.Toolkit.Diagnostics;
@@ -228,26 +225,11 @@ internal static class ShaderRunner<T>
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static unsafe void LoadShader(int threadsX, int threadsY, int threadsZ, ref T shader, out ICachedShader shaderData)
     {
-        if (Unsafe.NullRef<T>().TryGetBytecode(threadsX, threadsY, threadsZ, out ReadOnlySpan<byte> bytecode))
-        {
-            shaderData = new ICachedShader.Embedded(bytecode);
-        }
-        else
-        {
-#if DISABLE_RUNTIME_SHADER_COMPILATION_SUPPORT
-            ThrowHelper.ThrowNotSupportedException("Runtime shader compilation is not supported by the current configuration.");
+        ShaderBytecodeLoader bytecodeLoader = default;
 
-            shaderData = null!;
-#else
-            shader.BuildHlslString(out ArrayPoolStringBuilder builder, threadsX, threadsY, threadsZ);
+        shader.LoadBytecode(ref bytecodeLoader, threadsX, threadsY, threadsZ);
 
-            using ComPtr<IDxcBlob> dxcBlobBytecode = ShaderCompiler.Instance.CompileShader(builder.WrittenSpan);
-
-            builder.Dispose();
-
-            shaderData = new ICachedShader.Dynamic(dxcBlobBytecode.Get());
-#endif
-        }
+        shaderData = bytecodeLoader.GetCachedShader();
     }
 
     /// <summary>

@@ -30,6 +30,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.SourceGenerato
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{FB17EF84-9208-47AC-921F-680CB1DAD8BA}"
 	ProjectSection(SolutionItems) = preProject
+		src\ComputeSharp.Dynamic.Package\ComputeSharp.Dynamic.Package.msbuildproj = src\ComputeSharp.Dynamic.Package\ComputeSharp.Dynamic.Package.msbuildproj
 		src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj = src\ComputeSharp.Package\ComputeSharp.Package.msbuildproj
 		src\ComputeSharp.Package\icon.png = src\ComputeSharp.Package\icon.png
 	EndProjectSection
@@ -70,23 +71,30 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ComputeSharp.SwapChain.Core
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Tests.DisableDynamicCompilation", "tests\ComputeSharp.Tests.DisableDynamicCompilation\ComputeSharp.Tests.DisableDynamicCompilation.csproj", "{4A8FCE22-851C-442A-8BC9-3EC3FD00B637}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeSharp.Dynamic", "src\ComputeSharp.Dynamic\ComputeSharp.Dynamic.csproj", "{76C66257-FDAA-47AB-85E7-EF757EAB10C0}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TerraFX.Interop.Windows.Dynamic", "src\TerraFX.Interop.Windows.Dynamic\TerraFX.Interop.Windows.Dynamic.shproj", "{158F984D-CD96-4062-BD02-2268946031A0}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		samples\ComputeSharp.SwapChain.Core.Shared\ComputeSharp.SwapChain.Core.Shared.projitems*{0071701e-b9c5-4098-be5f-ef556c4553c6}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{0071701e-b9c5-4098-be5f-ef556c4553c6}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{0800bd51-499d-44c2-9417-fd1f7fdfe9c4}*SharedItemsImports = 13
 		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{0c82ede1-5b8a-4df3-87da-700b29d5e265}*SharedItemsImports = 13
+		src\TerraFX.Interop.Windows.Dynamic\TerraFX.Interop.Windows.Dynamic.projitems*{158f984d-cd96-4062-bd02-2268946031a0}*SharedItemsImports = 13
 		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{314eb353-e7e3-4146-8111-685cc83ec1de}*SharedItemsImports = 5
 		src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems*{314eb353-e7e3-4146-8111-685cc83ec1de}*SharedItemsImports = 5
 		src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems*{514ff00e-bbf0-4d55-a47c-eeeb6208adce}*SharedItemsImports = 13
 		samples\ComputeSharp.Sample.Shared\ComputeSharp.Sample.Shared.projitems*{7048deea-0a6f-46a0-b951-b682a8f1cb75}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Core.Shared\ComputeSharp.SwapChain.Core.Shared.projitems*{751bb05b-563d-4b3a-94c6-15e2d79d35ea}*SharedItemsImports = 13
+		src\TerraFX.Interop.Windows.Dynamic\TerraFX.Interop.Windows.Dynamic.projitems*{76c66257-fdaa-47ab-85e7-ef757eab10c0}*SharedItemsImports = 5
 		samples\ComputeSharp.Sample.Shared\ComputeSharp.Sample.Shared.projitems*{8cefc324-ca6c-4845-9ad9-70b92bd87057}*SharedItemsImports = 13
 		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{a5997814-d8d2-4541-87ac-c3e53caa67c0}*SharedItemsImports = 13
 		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{afaafdc9-be42-45d4-8c79-0ee8c8edbf52}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{e7c9247d-016b-4819-af9f-0e9b3591e04b}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Shaders.Shared\ComputeSharp.SwapChain.Shaders.Shared.projitems*{e91f4d24-922a-4921-a8d7-9c45a143c45d}*SharedItemsImports = 5
 		src\ComputeSharp.NetStandard\ComputeSharp.NetStandard.projitems*{eb52cb67-4162-4722-874b-44ea8da5450e}*SharedItemsImports = 5
+		src\TerraFX.Interop.Windows.Dynamic\TerraFX.Interop.Windows.Dynamic.projitems*{eb52cb67-4162-4722-874b-44ea8da5450e}*SharedItemsImports = 5
 		src\TerraFX.Interop.Windows\TerraFX.Interop.Windows.projitems*{eb52cb67-4162-4722-874b-44ea8da5450e}*SharedItemsImports = 5
 		src\ComputeSharp.UI\ComputeSharp.UI.projitems*{fa18ba9f-76bf-4de0-8d24-02fc7657e6cb}*SharedItemsImports = 5
 		samples\ComputeSharp.SwapChain.Core.Shared\ComputeSharp.SwapChain.Core.Shared.projitems*{fbd388a5-7855-4408-98ff-e689f509db5a}*SharedItemsImports = 4
@@ -101,18 +109,18 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Debug|Any CPU.Build.0 = Debug|x64
-		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Debug|ARM64.ActiveCfg = Debug|ARM64
-		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Debug|ARM64.Build.0 = Debug|ARM64
-		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Debug|x64.ActiveCfg = Debug|x64
-		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Debug|x64.Build.0 = Debug|x64
-		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Release|Any CPU.ActiveCfg = Release|x64
-		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Release|Any CPU.Build.0 = Release|x64
-		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Release|ARM64.ActiveCfg = Release|ARM64
-		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Release|ARM64.Build.0 = Release|ARM64
-		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Release|x64.ActiveCfg = Release|x64
-		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Release|x64.Build.0 = Release|x64
+		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Debug|x64.Build.0 = Debug|Any CPU
+		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Release|ARM64.Build.0 = Release|Any CPU
+		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Release|x64.ActiveCfg = Release|Any CPU
+		{314EB353-E7E3-4146-8111-685CC83EC1DE}.Release|x64.Build.0 = Release|Any CPU
 		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34AFE6E6-9A4C-4C3F-AE69-DD3693086DAF}.Debug|ARM64.ActiveCfg = Debug|Any CPU
@@ -317,6 +325,18 @@ Global
 		{4A8FCE22-851C-442A-8BC9-3EC3FD00B637}.Release|ARM64.Build.0 = Release|Any CPU
 		{4A8FCE22-851C-442A-8BC9-3EC3FD00B637}.Release|x64.ActiveCfg = Release|Any CPU
 		{4A8FCE22-851C-442A-8BC9-3EC3FD00B637}.Release|x64.Build.0 = Release|Any CPU
+		{76C66257-FDAA-47AB-85E7-EF757EAB10C0}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{76C66257-FDAA-47AB-85E7-EF757EAB10C0}.Debug|Any CPU.Build.0 = Debug|x64
+		{76C66257-FDAA-47AB-85E7-EF757EAB10C0}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{76C66257-FDAA-47AB-85E7-EF757EAB10C0}.Debug|ARM64.Build.0 = Debug|ARM64
+		{76C66257-FDAA-47AB-85E7-EF757EAB10C0}.Debug|x64.ActiveCfg = Debug|x64
+		{76C66257-FDAA-47AB-85E7-EF757EAB10C0}.Debug|x64.Build.0 = Debug|x64
+		{76C66257-FDAA-47AB-85E7-EF757EAB10C0}.Release|Any CPU.ActiveCfg = Release|x64
+		{76C66257-FDAA-47AB-85E7-EF757EAB10C0}.Release|Any CPU.Build.0 = Release|x64
+		{76C66257-FDAA-47AB-85E7-EF757EAB10C0}.Release|ARM64.ActiveCfg = Release|ARM64
+		{76C66257-FDAA-47AB-85E7-EF757EAB10C0}.Release|ARM64.Build.0 = Release|ARM64
+		{76C66257-FDAA-47AB-85E7-EF757EAB10C0}.Release|x64.ActiveCfg = Release|x64
+		{76C66257-FDAA-47AB-85E7-EF757EAB10C0}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -340,6 +360,7 @@ Global
 		{0800BD51-499D-44C2-9417-FD1F7FDFE9C4} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 		{751BB05B-563D-4B3A-94C6-15E2D79D35EA} = {0ED8F632-5E17-46BE-8CC3-B14A82D4AEB1}
 		{4A8FCE22-851C-442A-8BC9-3EC3FD00B637} = {F8EFBB27-4EE2-4463-A75B-7EFDFB55D0F7}
+		{158F984D-CD96-4062-BD02-2268946031A0} = {8DCE343F-BA78-4FE1-B562-B57C603A8BAA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4664C5E3-0340-4E22-BCFD-98AAEDF5F2DC}

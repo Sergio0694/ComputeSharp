@@ -197,7 +197,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3dcommon\D3D_TESSELLATOR_PARTITIONING.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\d3dcommon\ID3DBlob.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\dxcapi\CLSID.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\dxcapi\DirectX.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\dxcapi\DxcBuffer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\dxcapi\DxcDefine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\um\dxcapi\IDxcBlob.cs" />

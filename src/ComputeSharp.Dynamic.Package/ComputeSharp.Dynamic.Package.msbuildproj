@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.Build.NoTargets/2.0.1" DefaultTargets="Pack">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>ComputeSharp.Dynamic</PackageId>
+    <Title>ComputeSharp.Dynamic</Title>
+    <Description>An extension library for ComputeSharp to enable dynamic compilation of shaders at runtime</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\ComputeSharp.Package\icon.png" PackFolder="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ComputeSharp.Dynamic\ComputeSharp.Dynamic.csproj" />
+  </ItemGroup>
+
+</Project>

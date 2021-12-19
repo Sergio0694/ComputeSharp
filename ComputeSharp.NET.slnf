@@ -12,6 +12,7 @@
       "samples\\ComputeSharp.SwapChain.Shaders.Shared\\ComputeSharp.SwapChain.Shaders.Shared.csproj",
       "src\\ComputeSharp.SourceGenerators\\ComputeSharp.SourceGenerators.csproj",
       "src\\ComputeSharp\\ComputeSharp.csproj",
+      "src\\ComputeSharp.Dynamic\\ComputeSharp.Dynamic.csproj",
       "tests\\ComputeSharp.Tests.Internals\\ComputeSharp.Tests.Internals.csproj",
       "tests\\ComputeSharp.Tests.NativeLibrariesResolver\\ComputeSharp.Tests.NativeLibrariesResolver.csproj",
       "tests\\ComputeSharp.Tests.SourceGenerators\\ComputeSharp.Tests.SourceGenerators.csproj",

@@ -29,6 +29,12 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                 compilation.Options is CSharpCompilationOptions { AllowUnsafe: true } &&
                 compilation.GetTypeByMetadataName("System.Runtime.CompilerServices.SkipLocalsInitAttribute") is not null);
 
+        // Check whether or not dynamic shaders are supported
+        IncrementalValueProvider<bool> supportsDynamicShaders =
+            context.CompilationProvider
+            .Select(static (compilation, token) => compilation.ReferencedAssemblyNames.Any(
+                static identity => identity.Name is "ComputeSharp.Dynamic"));
+
         // Get all declared struct types and their type symbols
         IncrementalValuesProvider<(StructDeclarationSyntax Syntax, INamedTypeSymbol Symbol)> structDeclarations =
             context.SyntaxProvider
@@ -61,32 +67,33 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             .WithComparers(HierarchyInfo.Comparer.Default, DispatchIdInfo.Comparer.Default);
 
         // Generate the GetDispatchId() methods
-        context.RegisterSourceOutput(hierarchyAndDispatchIdInfo, static (context, item) =>
+        context.RegisterSourceOutput(hierarchyAndDispatchIdInfo.Combine(supportsDynamicShaders), static (context, item) =>
         {
-            MethodDeclarationSyntax getDispatchIdMethod = GetDispatchId.GetSyntax(item.Info.Delegates);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, getDispatchIdMethod, false);
+            MethodDeclarationSyntax getDispatchIdMethod = GetDispatchId.GetSyntax(item.Left.Info.Delegates, item.Right);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, getDispatchIdMethod, false);
 
-            context.AddSource($"{item.Hierarchy.FilenameHint}.GetDispatchId", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(GetDispatchId)}", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
         });
 
         // Get the dispatch data, HLSL source and embedded bytecode info. This info is computed on the
         // same step as parts are shared in following sub-branches in the incremental generator pipeline.
         IncrementalValuesProvider<(Result<DispatchDataInfo> Dispatch, Result<HlslShaderSourceInfo> Hlsl, Result<ThreadIdsInfo> ThreadIds)> shaderInfoWithErrors =
             shaderDeclarations
+            .Combine(supportsDynamicShaders)
             .Combine(context.CompilationProvider)
             .Select(static (item, token) =>
             {
                 // LoadDispatchData() info
                 ImmutableArray<FieldInfo> fieldInfos = LoadDispatchData.GetInfo(
-                    item.Left.Symbol,
-                    item.Left.Type,
+                    item.Left.Left.Symbol,
+                    item.Left.Left.Type,
                     out int resourceCount,
                     out int root32BitConstantCount,
                     out ImmutableArray<Diagnostic> dispatchDataDiagnostics);
 
                 DispatchDataInfo dispatchDataInfo = new(
-                    item.Left.Hierarchy,
-                    item.Left.Type,
+                    item.Left.Left.Hierarchy,
+                    item.Left.Left.Type,
                     fieldInfos,
                     resourceCount,
                     root32BitConstantCount);
@@ -94,14 +101,15 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                 // BuildHlslString() info
                 HlslShaderSourceInfo hlslSourceInfo = BuildHlslString.GetInfo(
                     item.Right,
-                    item.Left.Syntax,
-                    item.Left.Symbol,
+                    item.Left.Left.Syntax,
+                    item.Left.Left.Symbol,
                     out ImmutableArray<Diagnostic> hlslSourceDiagnostics);
 
                 // TryGetBytecode() info
-                ThreadIdsInfo threadIds = TryGetBytecode.GetInfo(
-                    item.Left.Symbol,
+                ThreadIdsInfo threadIds = LoadBytecode.GetInfo(
+                    item.Left.Left.Symbol,
                     !hlslSourceInfo.Delegates.IsEmpty,
+                    item.Left.Right,
                     out ImmutableArray<Diagnostic> threadIdsDiagnostics);
 
                 return (
@@ -137,22 +145,23 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
                 item.Left.Root32BitConstantCount);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, loadDispatchDataMethod, item.Right);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.LoadDispatchData", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
-        }); 
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchData)}", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
+        });
 
         // Get the filtered sequence to enable caching
-        IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderSourceInfo SourceInfo)> hlslSourceInfo =
+        IncrementalValuesProvider<(HierarchyInfo Hierarchy, HlslShaderSourceInfo SourceInfo, bool SupportsDynamicShaders)> hlslSourceInfo =
             shaderInfo
-            .Select(static (item, token) => (item.Dispatch.Hierarchy, item.Hlsl))
-            .WithComparers(HierarchyInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default);
+            .Combine(supportsDynamicShaders)
+            .Select(static (item, token) => (item.Left.Dispatch.Hierarchy, item.Left.Hlsl, item.Right))
+            .WithComparers(HierarchyInfo.Comparer.Default, HlslShaderSourceInfo.Comparer.Default, EqualityComparer<bool>.Default);
 
         // Generate the BuildHlslString() methods
         context.RegisterSourceOutput(hlslSourceInfo.Combine(canUseSkipLocalsInit), static (context, item) =>
         {
-            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslString.GetSyntax(item.Left.SourceInfo);
+            MethodDeclarationSyntax buildHlslStringMethod = BuildHlslString.GetSyntax(item.Left.SourceInfo, item.Left.SupportsDynamicShaders);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, item.Right);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.BuildHlslString", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(BuildHlslString)}", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
         });
 
         // Get the dispatch metadata info
@@ -173,7 +182,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             MethodDeclarationSyntax buildHlslStringMethod = LoadDispatchMetadata.GetSyntax(item.Left.MetadataInfo);
             CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, buildHlslStringMethod, item.Right);
 
-            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.LoadDispatchMetadata", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadDispatchMetadata)}", SourceText.From(compilationUnit.ToFullString(), Encoding.UTF8));
         });
 
         // Transform the raw HLSL source to compile
@@ -187,7 +196,7 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             shaderBytecodeInfo
             .Select(static (item, token) =>
             {
-                ImmutableArray<byte> bytecode = TryGetBytecode.GetBytecode(item.ThreadIds, item.Hlsl, out DiagnosticInfo? diagnostic);
+                ImmutableArray<byte> bytecode = LoadBytecode.GetBytecode(item.ThreadIds, item.Hlsl, out DiagnosticInfo? diagnostic);
 
                 EmbeddedBytecodeInfo bytecodeInfo = new(
                     item.ThreadIds.X,
@@ -225,13 +234,13 @@ public sealed partial class IShaderGenerator : IIncrementalGenerator
             .WithComparers(HierarchyInfo.Comparer.Default, EmbeddedBytecodeInfo.Comparer.Default);
 
         // Generate the TryGetBytecode() methods
-        context.RegisterSourceOutput(embeddedBytecode, static (context, item) =>
+        context.RegisterSourceOutput(embeddedBytecode.Combine(supportsDynamicShaders), static (context, item) =>
         {
-            MethodDeclarationSyntax tryGetBytecodeMethod = TryGetBytecode.GetSyntax(item.BytecodeInfo, out Func<SyntaxNode, string> fixup);
-            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Hierarchy, tryGetBytecodeMethod, false);
+            MethodDeclarationSyntax tryGetBytecodeMethod = LoadBytecode.GetSyntax(item.Left.BytecodeInfo, item.Right, out Func<SyntaxNode, string> fixup);
+            CompilationUnitSyntax compilationUnit = GetCompilationUnitFromMethod(item.Left.Hierarchy, tryGetBytecodeMethod, false);
             string text = fixup(compilationUnit);
 
-            context.AddSource($"{item.Hierarchy.FilenameHint}.TryGetBytecode", SourceText.From(text, Encoding.UTF8));
+            context.AddSource($"{item.Left.Hierarchy.FilenameHint}.{nameof(LoadBytecode)}", SourceText.From(text, Encoding.UTF8));
         });
     }
 }

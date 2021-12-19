@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="ComputeSharp" Version="2.0.0" />
+    <PackageReference Include="ComputeSharp.Dynamic" Version="2.0.0" />
   </ItemGroup>
 
   <Import Project="..\ComputeSharp.Sample.Shared\ComputeSharp.Sample.Shared.projitems" Label="Shared" />

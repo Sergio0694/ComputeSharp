@@ -1,5 +1,5 @@
 ![](https://user-images.githubusercontent.com/10199417/108635546-3512ea00-7480-11eb-8172-99bc59f4eb6f.png)
-[![.NET](https://github.com/Sergio0694/ComputeSharp/workflows/.NET/badge.svg)](https://github.com/Sergio0694/ComputeSharp/actions) [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.svg)](https://www.nuget.org/packages/ComputeSharp/) [![NuGet](https://img.shields.io/nuget/dt/ComputeSharp.svg)](https://www.nuget.org/stats/packages/ComputeSharp?groupby=Version)
+[![.NET](https://github.com/Sergio0694/ComputeSharp/workflows/.NET/badge.svg)](https://github.com/Sergio0694/ComputeSharp/actions) [![NuGet](https://img.shields.io/nuget/dt/ComputeSharp.svg)](https://www.nuget.org/stats/packages/ComputeSharp?groupby=Version)
 
 # What is it?
 
@@ -13,6 +13,7 @@ https://user-images.githubusercontent.com/10199417/126792509-c11feb11-a609-4fab-
 
 # Table of Contents
 
+- [Available packages](#available-packages)
 - [Installing from NuGet](#installing-from-nuget)
 - [Quick start](#quick-start)
   - [Capturing variables](#capturing-variables)
@@ -25,10 +26,20 @@ https://user-images.githubusercontent.com/10199417/126792509-c11feb11-a609-4fab-
   - [Shader metaprogramming](#shader-metaprogramming)
   - [Inspecting shaders](#inspecting-shaders)
   - [DirectX interop](#directx-interop)
+  - [Precompiled shaders](#precompiled-shaders)
 - [Requirements](#requirements)
 - [F# support](#f-support)
 - [Sponsors](#sponsors)
 - [Special thanks](#special-thanks)
+
+# Available packages
+
+| Name | Description | Latest version |
+| ------ | ------  | ------ |
+| **ComputeSharp** | The core library, with compiled shaders support | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.svg)](https://www.nuget.org/packages/ComputeSharp/) |
+| **ComputeSharp.Dynamic** | An extension for **ComputeSharp**, enabling dynamic shader compilation at runtime and shader metaprogramming | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.Dynamic.svg)](https://www.nuget.org/packages/ComputeSharp.Dynamic/) |
+| **ComputeSharp.Uwp** | A UWP library (targeting .NET Standard 2.0) with controls to render DX12 shaders powered by **ComputeSharp** | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.Uwp.svg)](https://www.nuget.org/packages/ComputeSharp.Uwp/) |
+| **ComputeSharp.WinUI** | A WinUI 3 library (targeting .NET 6) with controls to render DX12 shaders powered by **ComputeSharp** | [![NuGet](https://img.shields.io/nuget/vpre/ComputeSharp.WinUI.svg)](https://www.nuget.org/packages/ComputeSharp.WinUI/) |
 
 # Installing from NuGet
 
@@ -37,6 +48,8 @@ To install **ComputeSharp**, run the following command in the **Package Manager 
 ```
 Install-Package ComputeSharp
 ```
+
+Alternatively, use the NuGet package manager wizard in Visual Studio or your IDE of choice.
 
 More details available [here](https://www.nuget.org/packages/ComputeSharp/).
 
@@ -84,6 +97,8 @@ GraphicsDevice.Default.For(buffer.Length, new MultiplyByTwo(buffer));
 // Get the data back
 buffer.CopyTo(array);
 ```
+
+> **NOTE:** all these samples assume that **ComputeSharp.Dynamic** is also installed. For info on how to only use precompiled shaders with the base **ComputeSharp** package, see the [precompiled shaders](#precompiled-shaders) paragraph.
 
 ## Capturing variables
 
@@ -336,6 +351,27 @@ InteropServices.GetID3D12Resource(buffer, __uuidof<ID3D12Resource>(), (void**)d3
 
 The `InteropServices` class is also used by the swap chain sample to access the underlying COM objects and use them the rendered frames in a Win32 window. The full source code is available [here](https://github.com/Sergio0694/ComputeSharp/blob/main/samples/ComputeSharp.SwapChain/Backend/SwapChainApplication%7BT%7D.cs), and it provides reference implementation of how these APIs can be used to interop with other DirectX objects.
 
+## Precompiled shaders
+
+When only using the main **ComputeSharp** project, dynamic shader compilation is not available. This makes the library have a much smaller impact on binary size, as it will not bundle the native DirectX compiler dependencies (which add about 20MB per CPU architecture). Additionally, precompiling shaders makes the code less error prone and the startup time much faster. In order to precompile a shader, it must not have dynamic features (ie. it cannot capture delegates, see the [shader metaprogramming](#shader-metaprogramming) paragraph) and it must be annotated with the `[EmbeddedBytecode]` attribute:
+
+```csharp
+[AutoConstructor]
+[EmbeddedBytecode(8, 8, 1)]
+public readonly partial struct MultiplyByTwo : IPixelShader<float4>
+{
+    public float4 Execute()
+    {
+        float2 uv = ThreadIds.Normalized.XY;
+        float3 col = 0.5f + 0.5f * Hlsl.Cos(new float3(uv, uv.X) + new float3(0, 2, 4));
+
+        return new(col, 1f);
+    }
+}
+```
+
+The values in the `[EmbeddedBytecode]` attribute map to the [`[numthreads]` HLSL attribute](https://docs.microsoft.com/windows/win32/direct3dhlsl/sm5-attributes-numthreads) for the shader entry point. Make sure to use the same values when dispatching the shader at runtime (either using the `GraphicsDevice.For` overload with explicit parameters for the tread numbers, or by relying on `GraphicsDevice.ForEach` to always use `(8, 8, 1)` for thread numbers, as it will be dispatching shaders on a 2D texture).
+
 # Requirements
 
 Building and running **ComputeSharp** from the .NET solution filter has the following prerequisites:
@@ -380,11 +416,11 @@ For a complete example, check out the F# sample [here](https://github.com/Sergio
 
 Huge thanks to these sponsors for directly supporting my work on **ComputeSharp**, it means a lot! 🙌
 
-<a href="https://github.com/sebastienros"><img src="https://avatars.githubusercontent.com/u/1165805" height="auto" width="60" style="border-radius:50%"></a>
-<a href="https://github.com/ptasev"><img src="https://avatars.githubusercontent.com/u/23424044" height="auto" width="60" style="border-radius:50%"></a>
+<a href="https://github.com/dgellow"><img src="https://avatars.githubusercontent.com/u/2451004" height="auto" width="60" style="border-radius:50%"></a>
 <a href="https://github.com/Gavin-Williams"><img src="https://avatars.githubusercontent.com/u/4374176" height="auto" width="60" style="border-radius:50%"></a>
-<a href="https://github.com/hawkerm"><img src="https://avatars.githubusercontent.com/u/8959496" height="auto" width="60" style="border-radius:50%"></a>
+<a href="https://github.com/ptasev"><img src="https://avatars.githubusercontent.com/u/23424044" height="auto" width="60" style="border-radius:50%"></a>
 <a href="https://github.com/xoofx"><img src="https://avatars.githubusercontent.com/u/715038" height="auto" width="60" style="border-radius:50%"></a>
+<a href="https://github.com/hawkerm"><img src="https://avatars.githubusercontent.com/u/8959496" height="auto" width="60" style="border-radius:50%"></a>
 
 # Special thanks
 

@@ -79,7 +79,14 @@ internal sealed record HierarchyInfo(string FilenameHint, string MetadataName, s
         /// <inheritdoc/>
         public int GetHashCode(HierarchyInfo obj)
         {
-            return HashCode.Combine(obj.Namespace, obj.MetadataName, obj.Names, obj.Names[0]);
+            HashCode hashCode = default;
+
+            hashCode.Add(obj.FilenameHint);
+            hashCode.Add(obj.MetadataName);
+            hashCode.Add(obj.Namespace);
+            hashCode.AddRange(obj.Names);
+
+            return hashCode.ToHashCode();
         }
     }
 }

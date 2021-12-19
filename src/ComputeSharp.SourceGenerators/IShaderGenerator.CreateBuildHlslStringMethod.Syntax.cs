@@ -21,14 +21,18 @@ public sealed partial class IShaderGenerator
         /// Creates a <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslString</c> method.
         /// </summary>
         /// <param name="hlslSourceInfo">The input <see cref="HlslShaderSourceInfo"/> instance to use.</param>
+        /// <param name="supportsDynamicShaders">Indicates whether or not dynamic shaders are supported.</param>
         /// <returns>The resulting <see cref="MethodDeclarationSyntax"/> instance for the <c>BuildHlslString</c> method.</returns>
-        public static MethodDeclarationSyntax GetSyntax(HlslShaderSourceInfo hlslSourceInfo)
+        public static MethodDeclarationSyntax GetSyntax(HlslShaderSourceInfo hlslSourceInfo, bool supportsDynamicShaders)
         {
-            ImmutableArray<StatementSyntax> bodyStatements = GenerateRenderMethodBody(hlslSourceInfo);
+            // Generate the necessary body statements depending on whether dynamic shaders are supported
+            ImmutableArray<StatementSyntax> bodyStatements = supportsDynamicShaders
+                ? GenerateRenderMethodBody(hlslSourceInfo)
+                : GenerateEmptyMethodBody();
 
             // This code produces a method declaration as follows:
             //
-            // readonly void global::ComputeSharp.__Internals.IShader.BuildHlslString(ref global::ComputeSharp.__Internals.ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ)
+            // readonly void global::ComputeSharp.__Internals.IShader.BuildHlslString(out global::ComputeSharp.__Internals.ArrayPoolStringBuilder builder, int threadsX, int threadsY, int threadsZ)
             // {
             //     <BODY>
             // }
@@ -44,6 +48,30 @@ public sealed partial class IShaderGenerator
                     Parameter(Identifier("threadsY")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
                     Parameter(Identifier("threadsZ")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))))
                 .WithBody(Block(bodyStatements));
+        }
+
+        /// <summary>
+        /// Produces the series of statements for the empty fallback method.
+        /// </summary>
+        /// <returns>A series of statements for when dynamic shaders are not supported.</returns>
+        private static ImmutableArray<StatementSyntax> GenerateEmptyMethodBody()
+        {
+            // builder = global::ComputeSharp.__Internals.ArrayPoolStringBuilder.Create(0);
+            return
+                ImmutableArray.Create<StatementSyntax>(
+                    ExpressionStatement(
+                        AssignmentExpression(
+                            SyntaxKind.SimpleAssignmentExpression,
+                            IdentifierName("builder"),
+                            InvocationExpression(
+                                MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    IdentifierName("global::ComputeSharp.__Internals.ArrayPoolStringBuilder"),
+                                    IdentifierName("Create")))
+                            .AddArgumentListArguments(
+                                Argument(LiteralExpression(
+                                    SyntaxKind.NumericLiteralExpression,
+                                    Literal(0)))))));
         }
 
         /// <summary>

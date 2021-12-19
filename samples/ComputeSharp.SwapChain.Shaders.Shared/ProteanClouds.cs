@@ -7,6 +7,9 @@
 /// <para>License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</para>
 /// </summary>
 [AutoConstructor]
+#if SAMPLE_APP
+[EmbeddedBytecode(8, 8, 1)]
+#endif
 internal readonly partial struct ProteanClouds : IPixelShader<float4>
 {
     /// <summary>

@@ -32,7 +32,7 @@ public sealed partial class IShaderGenerator
         {
             // This code produces a method declaration as follows:
             //
-            // readonly void global::ComputeSharp.__Internals.IShader.LoadDispatchData<TDataLoader>(ref TDataLoader loader, global::ComputeSharp.GraphicsDevice device, int x, int y, int z)
+            // readonly void global::ComputeSharp.__Internals.IShader.LoadDispatchData<TLoader>(ref TLoader loader, global::ComputeSharp.GraphicsDevice device, int x, int y, int z)
             // {
             //     <BODY>
             // }
@@ -42,11 +42,11 @@ public sealed partial class IShaderGenerator
                     Identifier("LoadDispatchData"))
                 .WithExplicitInterfaceSpecifier(ExplicitInterfaceSpecifier(IdentifierName($"global::ComputeSharp.__Internals.{nameof(IShader)}")))
                 .AddModifiers(Token(SyntaxKind.ReadOnlyKeyword))
-                .AddTypeParameterListParameters(TypeParameter(Identifier("TDataLoader")))
+                .AddTypeParameterListParameters(TypeParameter(Identifier("TLoader")))
                 .AddParameterListParameters(
                     Parameter(Identifier("loader"))
                         .AddModifiers(Token(SyntaxKind.RefKeyword))
-                        .WithType(IdentifierName("TDataLoader")),
+                        .WithType(IdentifierName("TLoader")),
                     Parameter(Identifier("device")).WithType(IdentifierName("global::ComputeSharp.GraphicsDevice")),
                     Parameter(Identifier("x")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
                     Parameter(Identifier("y")).WithType(PredefinedType(Token(SyntaxKind.IntKeyword))),
