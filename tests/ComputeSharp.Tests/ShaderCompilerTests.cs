@@ -12,7 +12,7 @@ namespace ComputeSharp.Tests
         [TestMethod]
         public void ReservedKeywords()
         {
-            ReflectionServices.GetShaderInfo<ReservedKeywordsShader>(out _);
+            _ = ReflectionServices.GetShaderInfo<ReservedKeywordsShader>();
         }
 
         [AutoConstructor]
@@ -33,7 +33,7 @@ namespace ComputeSharp.Tests
         [TestMethod]
         public void SpecialTypeAsReturnType()
         {
-            ReflectionServices.GetShaderInfo<SpecialTypeAsReturnTypeShader>(out _);
+            _ = ReflectionServices.GetShaderInfo<SpecialTypeAsReturnTypeShader>();
         }
 
         [AutoConstructor]
@@ -54,7 +54,7 @@ namespace ComputeSharp.Tests
         [TestMethod]
         public void LocalFunctionInExternalMethods()
         {
-            ReflectionServices.GetShaderInfo<LocalFunctionInExternalMethodsShader>(out _);
+            _ = ReflectionServices.GetShaderInfo<LocalFunctionInExternalMethodsShader>();
         }
 
         [AutoConstructor]
@@ -78,7 +78,7 @@ namespace ComputeSharp.Tests
         [TestMethod]
         public void CapturedNestedStructType()
         {
-            ReflectionServices.GetShaderInfo<CapturedNestedStructTypeShader>(out _);
+            _ = ReflectionServices.GetShaderInfo<CapturedNestedStructTypeShader>();
         }
 
         [AutoConstructor]
@@ -104,7 +104,7 @@ namespace ComputeSharp.Tests
         [TestMethod]
         public void ExternalStructType_Ok()
         {
-            ReflectionServices.GetShaderInfo<ExternalStructTypeShader>(out var info);
+            _ = ReflectionServices.GetShaderInfo<ExternalStructTypeShader>();
         }
 
         [AutoConstructor]
@@ -125,7 +125,7 @@ namespace ComputeSharp.Tests
         [TestMethod]
         public void OutOfOrderMethods()
         {
-            ReflectionServices.GetShaderInfo<OutOfOrderMethodsShader>(out var info);
+            _ = ReflectionServices.GetShaderInfo<OutOfOrderMethodsShader>();
         }
 
         [AutoConstructor]
@@ -158,7 +158,7 @@ namespace ComputeSharp.Tests
         [TestMethod]
         public void PixelShader()
         {
-            ReflectionServices.GetShaderInfo<StatelessPixelShader, float4>(out var info);
+            ShaderInfo info = ReflectionServices.GetShaderInfo<StatelessPixelShader, float4>();
 
             Assert.AreEqual(info.TextureStoreInstructionCount, 1u);
             Assert.AreEqual(info.BoundResourceCount, 2u);
@@ -191,13 +191,13 @@ namespace ComputeSharp.Tests
         [TestMethod]
         public void LoopWithVarCounter()
         {
-            ReflectionServices.GetShaderInfo<LoopWithVarCounterShader>(out var info);
+            _ = ReflectionServices.GetShaderInfo<LoopWithVarCounterShader>();
         }
 
         [TestMethod]
         public void DoublePrecisionSupport()
         {
-            ReflectionServices.GetShaderInfo<DoublePrecisionSupportShader>(out var info);
+            ShaderInfo info = ReflectionServices.GetShaderInfo<DoublePrecisionSupportShader>();
 
             Assert.IsTrue(info.RequiresDoublePrecisionSupport);
         }
@@ -241,7 +241,7 @@ namespace ExternalNamespace
         [TestMethod]
         public void UserDefinedType()
         {
-            ReflectionServices.GetShaderInfo<UserDefinedTypeShader>(out var info);
+            _ = ReflectionServices.GetShaderInfo<UserDefinedTypeShader>();
         }
     }
 }

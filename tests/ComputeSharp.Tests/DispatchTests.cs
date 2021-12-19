@@ -237,7 +237,7 @@ public partial class DispatchTests
 
         device.Get().For(11, 22, 3, new DispatchSizeShader(buffer));
 
-        ReflectionServices.GetShaderInfo<DispatchSizeShader>(out var info);
+        ShaderInfo info = ReflectionServices.GetShaderInfo<DispatchSizeShader>();
 
         int[] data = buffer.ToArray();
 

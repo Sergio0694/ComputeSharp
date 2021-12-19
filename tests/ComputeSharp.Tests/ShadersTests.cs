@@ -95,7 +95,7 @@ public class ShadersTests
     [Data(typeof(SwapChain.Shaders.Compute.ExtrudedTruchetPattern))]
     public void ExtrudedTruchetPattern(Device device, Type shaderType)
     {
-        ReflectionServices.GetShaderInfo<SwapChain.Shaders.Compute.ExtrudedTruchetPattern>(out var info);
+        ShaderInfo info = ReflectionServices.GetShaderInfo<SwapChain.Shaders.Compute.ExtrudedTruchetPattern>();
 
         Assert.IsFalse(info.RequiresDoublePrecisionSupport);
 
@@ -161,7 +161,7 @@ public class ShadersTests
                 static void RunComputeShader<T>(ReadWriteTexture2D<Rgba32, float4> texture)
                     where T : struct, IComputeShader
                 {
-                    ReflectionServices.GetShaderInfo<T>(out var info);
+                    ShaderInfo info = ReflectionServices.GetShaderInfo<T>();
 
                     Assert.IsFalse(info.RequiresDoublePrecisionSupport);
 
@@ -230,7 +230,7 @@ public class ShadersTests
         {
             if (typeof(IComputeShader).IsAssignableFrom(shaderType))
             {
-                ReflectionServices.GetShaderInfo<TCompute>(out var info);
+                ShaderInfo info = ReflectionServices.GetShaderInfo<TCompute>();
 
                 Assert.IsFalse(info.RequiresDoublePrecisionSupport);
 

@@ -25,16 +25,16 @@ public static class ReflectionServices
     /// </para>
     /// </summary>
     /// <typeparam name="T">The type of compute shader to retrieve info for.</typeparam>
-    /// <param name="shaderInfo">The resulting <see cref="ShaderInfo"/> instance.</param>
+    /// <returns>The resulting <see cref="ShaderInfo"/> instance.</returns>
     /// <remarks>
     /// The thread group sizes will always be set to (1, 1, 1) in the returned shader. This is done to
     /// avoid having to compiler multiple shaders just to get reflection info for them. When using any of
     /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
     /// </remarks>
-    public static void GetShaderInfo<T>(out ShaderInfo shaderInfo)
+    public static ShaderInfo GetShaderInfo<T>()
         where T : struct, IComputeShader
     {
-        GetNonGenericShaderInfo(default(T), out shaderInfo);
+        return GetNonGenericShaderInfo(default(T));
     }
 
     /// <summary>
@@ -42,16 +42,16 @@ public static class ReflectionServices
     /// </summary>
     /// <typeparam name="T">The type of compute shader to retrieve info for.</typeparam>
     /// <param name="shader">The input compute shader to retrieve info for.</param>
-    /// <param name="shaderInfo">The resulting <see cref="ShaderInfo"/> instance.</param>
+    /// <returns>The resulting <see cref="ShaderInfo"/> instance.</returns>
     /// <remarks>
     /// The thread group sizes will always be set to (1, 1, 1) in the returned shader. This is done to
     /// avoid having to compiler multiple shaders just to get reflection info for them. When using any of
     /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
     /// </remarks>
-    public static unsafe void GetShaderInfo<T>(in T shader, out ShaderInfo shaderInfo)
+    public static unsafe ShaderInfo GetShaderInfo<T>(in T shader)
         where T : struct, IComputeShader
     {
-        GetNonGenericShaderInfo(in shader, out shaderInfo);
+        return GetNonGenericShaderInfo(in shader);
     }
 
     /// <summary>
@@ -63,17 +63,17 @@ public static class ReflectionServices
     /// </summary>
     /// <typeparam name="T">The type of pixel shader to retrieve info for.</typeparam>
     /// <typeparam name="TPixel">The type of pixels being processed by the shader.</typeparam>
-    /// <param name="shaderInfo">The resulting <see cref="ShaderInfo"/> instance.</param>
+    /// <returns>The resulting <see cref="ShaderInfo"/> instance.</returns>
     /// <remarks>
     /// The thread group sizes will always be set to (1, 1, 1) in the returned shader. This is done to
     /// avoid having to compiler multiple shaders just to get reflection info for them. When using any of
     /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
     /// </remarks>
-    public static void GetShaderInfo<T, TPixel>(out ShaderInfo shaderInfo)
+    public static ShaderInfo GetShaderInfo<T, TPixel>()
         where T : struct, IPixelShader<TPixel>
         where TPixel : unmanaged
     {
-        GetNonGenericShaderInfo(default(T), out shaderInfo);
+        return GetNonGenericShaderInfo(default(T));
     }
 
     /// <summary>
@@ -82,17 +82,17 @@ public static class ReflectionServices
     /// <typeparam name="T">The type of pixel shader to retrieve info for.</typeparam>
     /// <typeparam name="TPixel">The type of pixels being processed by the shader.</typeparam>
     /// <param name="shader">The input pixel shader to retrieve info for.</param>
-    /// <param name="shaderInfo">The resulting <see cref="ShaderInfo"/> instance.</param>
+    /// <returns>The resulting <see cref="ShaderInfo"/> instance.</returns>
     /// <remarks>
     /// The thread group sizes will always be set to (1, 1, 1) in the returned shader. This is done to
     /// avoid having to compiler multiple shaders just to get reflection info for them. When using any of
     /// the APIs to dispatch a shader, the thread sizes would actually be set to a proper value insead.
     /// </remarks>
-    public static unsafe void GetShaderInfo<T, TPixel>(in T shader, out ShaderInfo shaderInfo)
+    public static unsafe ShaderInfo GetShaderInfo<T, TPixel>(in T shader)
         where T : struct, IPixelShader<TPixel>
         where TPixel : unmanaged
     {
-        GetNonGenericShaderInfo(in shader, out shaderInfo);
+        return GetNonGenericShaderInfo(in shader);
     }
 
     /// <summary>
@@ -100,8 +100,8 @@ public static class ReflectionServices
     /// </summary>
     /// <typeparam name="T">The type of shader to retrieve info for.</typeparam>
     /// <param name="shader">The input shader to retrieve info for.</param>
-    /// <param name="shaderInfo">The resulting <see cref="ShaderInfo"/> instance.</param>
-    private static unsafe void GetNonGenericShaderInfo<T>(in T shader, out ShaderInfo shaderInfo)
+    /// <returns>The resulting <see cref="ShaderInfo"/> instance.</returns>
+    private static unsafe ShaderInfo GetNonGenericShaderInfo<T>(in T shader)
         where T : struct, IShader
     {
         Unsafe.AsRef(in shader).BuildHlslString(out ArrayPoolStringBuilder shaderSource, 1, 1, 1);
@@ -132,31 +132,31 @@ public static class ReflectionServices
 
         d3D12ShaderReflection.Get()->GetDesc(&d3D12ShaderDescription).Assert();
 
-        shaderInfo = default;
-        Unsafe.AsRef(shaderInfo.CompilerVersion) = new string(d3D12ShaderDescription.Creator);
-        Unsafe.AsRef(shaderInfo.HlslSource) = shaderSource.WrittenSpan.ToString();
-        Unsafe.AsRef(shaderInfo.ConstantBufferCount) = d3D12ShaderDescription.ConstantBuffers;
-        Unsafe.AsRef(shaderInfo.BoundResourceCount) = d3D12ShaderDescription.BoundResources;
-        Unsafe.AsRef(shaderInfo.InstructionCount) = d3D12ShaderDescription.InstructionCount;
-        Unsafe.AsRef(shaderInfo.TemporaryRegisterCount) = d3D12ShaderDescription.TempRegisterCount;
-        Unsafe.AsRef(shaderInfo.TemporaryArrayCount) = d3D12ShaderDescription.TempArrayCount;
-        Unsafe.AsRef(shaderInfo.ConstantDefineCount) = d3D12ShaderDescription.DefCount;
-        Unsafe.AsRef(shaderInfo.DeclarationCount) = d3D12ShaderDescription.DclCount;
-        Unsafe.AsRef(shaderInfo.TextureNormalInstructions) = d3D12ShaderDescription.TextureNormalInstructions;
-        Unsafe.AsRef(shaderInfo.TextureLoadInstructionCount) = d3D12ShaderDescription.TextureLoadInstructions;
-        Unsafe.AsRef(shaderInfo.TextureStoreInstructionCount) = d3D12ShaderDescription.cTextureStoreInstructions;
-        Unsafe.AsRef(shaderInfo.FloatInstructionCount) = d3D12ShaderDescription.FloatInstructionCount;
-        Unsafe.AsRef(shaderInfo.IntInstructionCount) = d3D12ShaderDescription.IntInstructionCount;
-        Unsafe.AsRef(shaderInfo.UIntInstructionCount) = d3D12ShaderDescription.UintInstructionCount;
-        Unsafe.AsRef(shaderInfo.StaticFlowControlInstructionCount) = d3D12ShaderDescription.StaticFlowControlCount;
-        Unsafe.AsRef(shaderInfo.DynamicFlowControlInstructionCount) = d3D12ShaderDescription.DynamicFlowControlCount;
-        Unsafe.AsRef(shaderInfo.EmitInstructionCount) = d3D12ShaderDescription.EmitInstructionCount;
-        Unsafe.AsRef(shaderInfo.BarrierInstructionCount) = d3D12ShaderDescription.cBarrierInstructions;
-        Unsafe.AsRef(shaderInfo.InterlockedInstructionCount) = d3D12ShaderDescription.cInterlockedInstructions;
-        Unsafe.AsRef(shaderInfo.BitwiseInstructionCount) = d3D12ShaderReflection.Get()->GetBitwiseInstructionCount();
-        Unsafe.AsRef(shaderInfo.MovcInstructionCount) = d3D12ShaderReflection.Get()->GetMovcInstructionCount();
-        Unsafe.AsRef(shaderInfo.MovInstructionCount) = d3D12ShaderReflection.Get()->GetMovInstructionCount();
-        Unsafe.AsRef(shaderInfo.InterfaceSlotCount) = d3D12ShaderReflection.Get()->GetNumInterfaceSlots();
-        Unsafe.AsRef(shaderInfo.RequiresDoublePrecisionSupport) = (d3D12ShaderReflection.Get()->GetRequiresFlags() & (D3D.D3D_SHADER_REQUIRES_DOUBLES | D3D.D3D_SHADER_REQUIRES_11_1_DOUBLE_EXTENSIONS)) != 0;
+        return new(
+            CompilerVersion: new string(d3D12ShaderDescription.Creator),
+            HlslSource: shaderSource.WrittenSpan.ToString(),
+            ConstantBufferCount: d3D12ShaderDescription.ConstantBuffers,
+            BoundResourceCount: d3D12ShaderDescription.BoundResources,
+            InstructionCount: d3D12ShaderDescription.InstructionCount,
+            TemporaryRegisterCount: d3D12ShaderDescription.TempRegisterCount,
+            TemporaryArrayCount: d3D12ShaderDescription.TempArrayCount,
+            ConstantDefineCount: d3D12ShaderDescription.DefCount,
+            DeclarationCount: d3D12ShaderDescription.DclCount,
+            TextureNormalInstructions: d3D12ShaderDescription.TextureNormalInstructions,
+            TextureLoadInstructionCount: d3D12ShaderDescription.TextureLoadInstructions,
+            TextureStoreInstructionCount: d3D12ShaderDescription.cTextureStoreInstructions,
+            FloatInstructionCount: d3D12ShaderDescription.FloatInstructionCount,
+            IntInstructionCount: d3D12ShaderDescription.IntInstructionCount,
+            UIntInstructionCount: d3D12ShaderDescription.UintInstructionCount,
+            StaticFlowControlInstructionCount: d3D12ShaderDescription.StaticFlowControlCount,
+            DynamicFlowControlInstructionCount: d3D12ShaderDescription.DynamicFlowControlCount,
+            EmitInstructionCount: d3D12ShaderDescription.EmitInstructionCount,
+            BarrierInstructionCount: d3D12ShaderDescription.cBarrierInstructions,
+            InterlockedInstructionCount: d3D12ShaderDescription.cInterlockedInstructions,
+            BitwiseInstructionCount: d3D12ShaderReflection.Get()->GetBitwiseInstructionCount(),
+            MovcInstructionCount: d3D12ShaderReflection.Get()->GetMovcInstructionCount(),
+            MovInstructionCount: d3D12ShaderReflection.Get()->GetMovInstructionCount(),
+            InterfaceSlotCount: d3D12ShaderReflection.Get()->GetNumInterfaceSlots(),
+            RequiresDoublePrecisionSupport: (d3D12ShaderReflection.Get()->GetRequiresFlags() & (D3D.D3D_SHADER_REQUIRES_DOUBLES | D3D.D3D_SHADER_REQUIRES_11_1_DOUBLE_EXTENSIONS)) != 0);
     }
 }
