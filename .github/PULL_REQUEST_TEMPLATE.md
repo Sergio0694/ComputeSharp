@@ -1,18 +1,13 @@
----
-name: New feature
-about: A new feature being added to the library
-title: ''
-labels: 'feature 🎉'
-assignees: ''
-
----
-
 ### Closes #<ISSUE_NUMBER>
 
 ### Description (optional)
 
 This section should contain an expanded description
 of the pull request, if the title is not sufficient.
+
+### API breakdown (for new features)
+
+This section should contain the APIs being implemented.
 
 ### Additional context (optional)
 
