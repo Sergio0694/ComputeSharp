@@ -44,15 +44,15 @@ public sealed class EmbeddedBytecodeAttribute : Attribute
     /// <summary>
     /// Gets the number of threads in each thread group for the X axis
     /// </summary>
-    public int ThreadsX { get; init; }
+    public int ThreadsX { get; }
 
     /// <summary>
     /// Gets the number of threads in each thread group for the Y axis
     /// </summary>
-    public int ThreadsY { get; init; }
+    public int ThreadsY { get; }
 
     /// <summary>
     /// Gets the number of threads in each thread group for the Z axis
     /// </summary>
-    public int ThreadsZ { get; init; }
+    public int ThreadsZ { get; }
 }
