@@ -162,6 +162,8 @@ internal static partial class DeviceHelper
             @this->lpVtbl = Vtbl;
             @this->dxgiFactory4 = dxgiFactory4;
 
+            _ = dxgiFactory4->AddRef();
+
             *dxgiFactory6 = (IDXGIFactory6*)@this;
         }
 
