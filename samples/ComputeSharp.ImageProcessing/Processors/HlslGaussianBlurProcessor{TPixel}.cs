@@ -105,8 +105,11 @@ public sealed partial class HlslGaussianBlurProcessor
             using ReadWriteTexture2D<Rgba32, Vector4> firstPassTexture = GraphicsDevice.AllocateReadWriteTexture2D<Rgba32, Vector4>(source.Width, source.Height);
             using ReadOnlyBuffer<float> kernelBuffer = GraphicsDevice.AllocateReadOnlyBuffer(Kernel);
 
-            GraphicsDevice.For<VerticalConvolutionProcessor>(source.Width, source.Height, new(sourceTexture, firstPassTexture, kernelBuffer));
-            GraphicsDevice.For<HorizontalConvolutionProcessor>(source.Width, source.Height, new(firstPassTexture, sourceTexture, kernelBuffer));
+            using (var context = GraphicsDevice.CreateComputeContext())
+            {
+                context.For<VerticalConvolutionProcessor>(source.Width, source.Height, new(sourceTexture, firstPassTexture, kernelBuffer));
+                context.For<HorizontalConvolutionProcessor>(source.Width, source.Height, new(firstPassTexture, sourceTexture, kernelBuffer));
+            }
 
             sourceTexture.CopyTo(span);
         }

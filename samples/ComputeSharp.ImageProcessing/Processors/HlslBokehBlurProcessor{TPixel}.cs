@@ -286,12 +286,14 @@ public sealed partial class HlslBokehBlurProcessor
 
                 kernel.CopyFrom(Kernels[j]);
 
-                GraphicsDevice.For<VerticalConvolutionProcessor>(
+                using var context = GraphicsDevice.CreateComputeContext();
+
+                context.For<VerticalConvolutionProcessor>(
                     source.Width,
                     source.Height,
                     new(texture, reals, imaginaries, kernel));
 
-                GraphicsDevice.For<HorizontalConvolutionAndAccumulatePartialsProcessor>(
+                context.For<HorizontalConvolutionAndAccumulatePartialsProcessor>(
                     source.Width,
                     source.Height,
                     new(parameters.Z, parameters.W, reals, imaginaries, temporary, kernel));
