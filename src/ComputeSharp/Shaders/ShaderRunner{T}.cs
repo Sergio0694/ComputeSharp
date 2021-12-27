@@ -122,26 +122,7 @@ internal static class ShaderRunner<T>
         Guard.IsBetweenOrEqualTo(groupsY, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
         Guard.IsBetweenOrEqualTo(groupsZ, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
 
-        ShaderKey key = new(shader.GetDispatchId(), threadsX, threadsY, threadsZ);
-        PipelineData? pipelineData;
-
-        lock (ShadersCache)
-        {
-            // Get or preload the shader
-            if (!ShadersCache.TryGetValue(key, out ICachedShader? shaderData))
-            {
-                LoadShader(threadsX, threadsY, threadsZ, ref shader, out shaderData);
-
-                // Cache for later use
-                ShadersCache.Add(key, shaderData);
-            }
-
-            // Create the reusable pipeline state
-            if (!shaderData.CachedPipelines.TryGetValue(device, out pipelineData))
-            {
-                CreatePipelineData(device, shaderData, out pipelineData);
-            }
-        }
+        PipelineData pipelineData = GetPipelineData(device, threadsX, threadsY, threadsZ, ref shader);
 
         using CommandList commandList = new(device, pipelineData.D3D12PipelineState);
 
@@ -168,34 +149,16 @@ internal static class ShaderRunner<T>
 
         int x = texture.Width;
         int y = texture.Height;
-        int threadsX = 8;
-        int threadsY = 8;
+        const int threadsX = 8;
+        const int threadsY = 8;
+        const int threadsZ = 1;
         int groupsX = Math.DivRem(x, threadsX, out int modX) + (modX == 0 ? 0 : 1);
         int groupsY = Math.DivRem(y, threadsY, out int modY) + (modY == 0 ? 0 : 1);
 
         Guard.IsBetweenOrEqualTo(groupsX, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
         Guard.IsBetweenOrEqualTo(groupsY, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
 
-        ShaderKey key = new(shader.GetDispatchId(), threadsX, threadsY, 1);
-        PipelineData? pipelineData;
-
-        lock (ShadersCache)
-        {
-            // Get or preload the shader
-            if (!ShadersCache.TryGetValue(key, out ICachedShader? shaderData))
-            {
-                LoadShader(threadsX, threadsY, 1, ref shader, out shaderData);
-
-                // Cache for later use
-                ShadersCache.Add(key, shaderData);
-            }
-
-            // Create the reusable pipeline state
-            if (!shaderData.CachedPipelines.TryGetValue(device, out pipelineData))
-            {
-                CreatePipelineData(device, shaderData, out pipelineData);
-            }
-        }
+        PipelineData pipelineData = GetPipelineData(device, threadsX, threadsY, threadsZ, ref shader);
 
         using CommandList commandList = new(device, pipelineData.D3D12PipelineState);
 
@@ -212,6 +175,40 @@ internal static class ShaderRunner<T>
 
         commandList.D3D12GraphicsCommandList->Dispatch((uint)groupsX, (uint)groupsY, 1);
         commandList.ExecuteAndWaitForCompletion();
+    }
+
+    /// <summary>
+    /// Gets the <see cref="PipelineData"/> instance for a given shader.
+    /// </summary>
+    /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
+    /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
+    /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
+    /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
+    /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
+    /// <returns>The <see cref="PipelineData"/> instance for a given shader.</returns>
+    public static unsafe PipelineData GetPipelineData(GraphicsDevice device, int threadsX, int threadsY, int threadsZ, ref T shader)
+    {
+        ShaderKey key = new(shader.GetDispatchId(), threadsX, threadsY, threadsZ);
+
+        lock (ShadersCache)
+        {
+            // Get or preload the shader
+            if (!ShadersCache.TryGetValue(key, out ICachedShader? shaderData))
+            {
+                LoadShader(threadsX, threadsY, threadsZ, ref shader, out shaderData);
+
+                // Cache for later use
+                ShadersCache.Add(key, shaderData);
+            }
+
+            // Create the reusable pipeline state
+            if (!shaderData.CachedPipelines.TryGetValue(device, out PipelineData? pipelineData))
+            {
+                CreatePipelineData(device, shaderData, out pipelineData);
+            }
+
+            return pipelineData;
+        }
     }
 
     /// <summary>
