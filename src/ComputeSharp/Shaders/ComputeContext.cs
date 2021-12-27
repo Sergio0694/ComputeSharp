@@ -109,6 +109,8 @@ public ref struct ComputeContext
         ref T shader)
         where T : struct, IComputeShader
     {
+        ThrowInvalidOperationExceptionIfDeviceIsNull();
+
         Guard.IsGreaterThan(x, 0, nameof(x));
         Guard.IsGreaterThan(y, 0, nameof(y));
         Guard.IsGreaterThan(z, 0, nameof(z));
@@ -149,6 +151,8 @@ public ref struct ComputeContext
         where T : struct, IPixelShader<TPixel>
         where TPixel : unmanaged
     {
+        ThrowInvalidOperationExceptionIfDeviceIsNull();
+
         int x = texture.Width;
         int y = texture.Height;
         const int threadsX = 8;
@@ -181,6 +185,8 @@ public ref struct ComputeContext
     /// <inheritdoc cref="IDisposable.Dispose"/>
     public void Dispose()
     {
+        ThrowInvalidOperationExceptionIfDeviceIsNull();
+
         if (!this.commandList.IsAllocated)
         {
             return;
@@ -215,5 +221,18 @@ public ref struct ComputeContext
         }
 
         return ref context.commandList;
+    }
+
+    /// <summary>
+    /// Throws an <see cref="InvalidOperationException"/> if <see cref="device"/> is <see langword="null"/>.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Thrown if <see cref="device"/> is <see langword="null"/>.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private readonly void ThrowInvalidOperationExceptionIfDeviceIsNull()
+    {
+        if (this.device is null)
+        {
+            ThrowHelper.ThrowInvalidOperationException("The current compute context has not been initialized correctly.");
+        }
     }
 }
