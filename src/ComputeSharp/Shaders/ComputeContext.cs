@@ -129,7 +129,7 @@ public ref struct ComputeContext
 
         PipelineData pipelineData = ShaderRunner<T>.GetPipelineData(this.device, threadsX, threadsY, threadsZ, ref shader);
 
-        ref CommandList commandList = ref GetCommandList(in this, this.device, pipelineData.D3D12PipelineState);
+        ref CommandList commandList = ref GetCommandList(in this, pipelineData.D3D12PipelineState);
 
         commandList.D3D12GraphicsCommandList->SetComputeRootSignature(pipelineData.D3D12RootSignature);
 
@@ -166,7 +166,7 @@ public ref struct ComputeContext
 
         PipelineData pipelineData = ShaderRunner<T>.GetPipelineData(this.device, threadsX, threadsY, threadsZ, ref shader);
 
-        ref CommandList commandList = ref GetCommandList(in this, this.device, pipelineData.D3D12PipelineState);
+        ref CommandList commandList = ref GetCommandList(in this, pipelineData.D3D12PipelineState);
 
         commandList.D3D12GraphicsCommandList->SetComputeRootSignature(pipelineData.D3D12RootSignature);
 
@@ -183,6 +183,7 @@ public ref struct ComputeContext
     }
 
     /// <inheritdoc cref="IDisposable.Dispose"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Dispose()
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
@@ -199,11 +200,10 @@ public ref struct ComputeContext
     /// Gets the current <see cref="CommandList"/> instance, and initializes it as needed.
     /// </summary>
     /// <param name="this">The current <see cref="ComputeContext"/> instance.</param>
-    /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
     /// <param name="pipelineState">The input <see cref="ID3D12PipelineState"/> to load.</param>
     /// <returns>A reference to the <see cref="CommandList"/> instance to use.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static unsafe ref CommandList GetCommandList(in ComputeContext @this, GraphicsDevice device, ID3D12PipelineState* pipelineState)
+    private static unsafe ref CommandList GetCommandList(in ComputeContext @this, ID3D12PipelineState* pipelineState)
     {
         // This method has to take the context by readonly reference to allow callers to be marked as readonly.
         // This is needed to skip the hidden copies done by Roslyn, which would break the dispatching, as the
@@ -217,7 +217,7 @@ public ref struct ComputeContext
         }
         else
         {
-            context.commandList = new CommandList(device, pipelineState);
+            context.commandList = new CommandList(context.device, pipelineState);
         }
 
         return ref context.commandList;
