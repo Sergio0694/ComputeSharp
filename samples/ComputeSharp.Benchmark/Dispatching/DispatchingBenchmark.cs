@@ -1,11 +1,13 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Configs;
 
 namespace ComputeSharp.Benchmark.Blas;
 
 /// <summary>
 /// A <see langword="class"/> that benchmarks the shader dispatch times.
 /// </summary>
+[GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
 public partial class DispatchingBenchmark : IDisposable
 {
     /// <summary>
@@ -30,10 +32,33 @@ public partial class DispatchingBenchmark : IDisposable
     }
 
     /// <summary>
+    /// Invokes a single shader, manually.
+    /// </summary>
+    [Benchmark(Baseline = true)]
+    [BenchmarkCategory("SINGLE")]
+    public void Compute_Single()
+    {
+        GraphicsDevice.Default.For(64, new TestShader(Buffer!));
+    }
+
+    /// <summary>
+    /// Invokes a single shader through a compute context.
+    /// </summary>
+    [Benchmark]
+    [BenchmarkCategory("SINGLE")]
+    public void Compute_Single_WithContext()
+    {
+        using var context = GraphicsDevice.Default.CreateComputeContext();
+
+        context.For(64, new TestShader(Buffer!));
+    }
+
+    /// <summary>
     /// Invokes two empty compute shaders one by one.
     /// </summary>
     [Benchmark(Baseline = true)]
-    public void Compute_Single()
+    [BenchmarkCategory("MULTIPLE")]
+    public void Compute_Multiple()
     {
         GraphicsDevice.Default.For(64, new TestShader(Buffer!));
         GraphicsDevice.Default.For(64, new TestShader(Buffer!));
@@ -43,7 +68,8 @@ public partial class DispatchingBenchmark : IDisposable
     /// Invokes two empty compute shaders in a batch.
     /// </summary>
     [Benchmark]
-    public void Compute_Batched()
+    [BenchmarkCategory("MULTIPLE")]
+    public void Compute_Multiple_WithContext()
     {
         using var context = GraphicsDevice.Default.CreateComputeContext();
 
