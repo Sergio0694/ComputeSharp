@@ -43,7 +43,7 @@ public ref struct ComputeContext
     /// <param name="y">The number of iterations to run on the Y axis.</param>
     /// <param name="z">The number of iterations to run on the Z axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-    internal unsafe void Run<T>(int x, int y, int z, ref T shader)
+    internal readonly unsafe void Run<T>(int x, int y, int z, ref T shader)
         where T : struct, IComputeShader
     {
         bool xIs1 = x == 1;
@@ -99,7 +99,7 @@ public ref struct ComputeContext
     /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
     /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
-    internal unsafe void Run<T>(
+    internal readonly unsafe void Run<T>(
         int x,
         int y,
         int z,
@@ -127,7 +127,7 @@ public ref struct ComputeContext
 
         PipelineData pipelineData = ShaderRunner<T>.GetPipelineData(this.device, threadsX, threadsY, threadsZ, ref shader);
 
-        ref CommandList commandList = ref GetCommandList(ref this, this.device, pipelineData.D3D12PipelineState);
+        ref CommandList commandList = ref GetCommandList(in this, this.device, pipelineData.D3D12PipelineState);
 
         commandList.D3D12GraphicsCommandList->SetComputeRootSignature(pipelineData.D3D12RootSignature);
 
@@ -145,7 +145,7 @@ public ref struct ComputeContext
     /// <typeparam name="TPixel">The type of pixel to work on.</typeparam>
     /// <param name="texture">The target texture to invoke the pixel shader upon.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the pixel shader to run.</param>
-    internal unsafe void Run<T, TPixel>(IReadWriteTexture2D<TPixel> texture, ref T shader)
+    internal readonly unsafe void Run<T, TPixel>(IReadWriteTexture2D<TPixel> texture, ref T shader)
         where T : struct, IPixelShader<TPixel>
         where TPixel : unmanaged
     {
@@ -162,7 +162,7 @@ public ref struct ComputeContext
 
         PipelineData pipelineData = ShaderRunner<T>.GetPipelineData(this.device, threadsX, threadsY, threadsZ, ref shader);
 
-        ref CommandList commandList = ref GetCommandList(ref this, this.device, pipelineData.D3D12PipelineState);
+        ref CommandList commandList = ref GetCommandList(in this, this.device, pipelineData.D3D12PipelineState);
 
         commandList.D3D12GraphicsCommandList->SetComputeRootSignature(pipelineData.D3D12RootSignature);
 
@@ -197,17 +197,23 @@ public ref struct ComputeContext
     /// <param name="pipelineState">The input <see cref="ID3D12PipelineState"/> to load.</param>
     /// <returns>A reference to the <see cref="CommandList"/> instance to use.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static unsafe ref CommandList GetCommandList(ref ComputeContext @this, GraphicsDevice device, ID3D12PipelineState* pipelineState)
+    private static unsafe ref CommandList GetCommandList(in ComputeContext @this, GraphicsDevice device, ID3D12PipelineState* pipelineState)
     {
-        if (@this.commandList.IsAllocated)
+        // This method has to take the context by readonly reference to allow callers to be marked as readonly.
+        // This is needed to skip the hidden copies done by Roslyn, which would break the dispatching, as the
+        // original context would not see the changes done by the following queued dispatches. This delegate
+        // cast is necessary to work around the fact that ref structs cannot currently be used as type arguments.
+        ref ComputeContext context = ref ((delegate*<in ComputeContext, ref ComputeContext>)(delegate*<in byte, ref byte>)&Unsafe.AsRef<byte>)(in @this);
+
+        if (context.commandList.IsAllocated)
         {
-            @this.commandList.D3D12GraphicsCommandList->SetPipelineState(pipelineState);
+            context.commandList.D3D12GraphicsCommandList->SetPipelineState(pipelineState);
         }
         else
         {
-            @this.commandList = new CommandList(device, pipelineState);
+            context.commandList = new CommandList(device, pipelineState);
         }
 
-        return ref @this.commandList;
+        return ref context.commandList;
     }
 }
