@@ -79,6 +79,16 @@ internal unsafe ref struct CommandList
     }
 
     /// <summary>
+    /// Gets whether or not the curreent <see cref="CommandList"/> instance is allocated.
+    /// </summary>
+    public readonly bool IsAllocated => this.device is not null;
+
+    /// <summary>
+    /// Gets the <see cref="GraphicsDevice"/> instance associated with the current command list.
+    /// </summary>
+    public GraphicsDevice GraphicsDevice => this.device;
+
+    /// <summary>
     /// Gets the command list type being used by the current instance.
     /// </summary>
     public readonly D3D12_COMMAND_LIST_TYPE D3D12CommandListType => this.d3D12CommandListType;

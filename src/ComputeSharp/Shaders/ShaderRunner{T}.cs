@@ -27,7 +27,7 @@ internal static class ShaderRunner<T>
     private static readonly Dictionary<ShaderKey, ICachedShader> ShadersCache = new();
 
     /// <summary>
-    /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
+    /// Runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
     /// </summary>
     /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
     /// <param name="x">The number of iterations to run on the X axis.</param>
@@ -84,7 +84,7 @@ internal static class ShaderRunner<T>
     }
 
     /// <summary>
-    /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
+    /// Runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
     /// </summary>
     /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
     /// <param name="x">The number of iterations to run on the X axis.</param>
@@ -137,7 +137,7 @@ internal static class ShaderRunner<T>
     }
 
     /// <summary>
-    /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
+    /// Runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
     /// </summary>
     /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
     /// <param name="texture">The target texture to invoke the pixel shader upon.</param>
