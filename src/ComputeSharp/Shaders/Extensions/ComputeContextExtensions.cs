@@ -1,0 +1,189 @@
+﻿using System.Runtime.CompilerServices;
+using ComputeSharp.__Internals;
+
+#pragma warning disable CS0618
+
+namespace ComputeSharp;
+
+/// <summary>
+/// A <see langword="class"/> that contains extension methods for the <see cref="ComputeContext"/> type, used to run compute shaders.
+/// </summary>
+public static partial class ComputeContextExtensions
+{
+    /// <summary>
+    /// Inserts a resource barrier for a specific resource.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
+    /// <param name="buffer">The input <see cref="ReadWriteBuffer{T}"/> instance to insert the barrier for.</param>
+    public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteBuffer<T> buffer)
+        where T : unmanaged
+    {
+        context.Barrier(buffer.ValidateAndGetID3D12Resource(context.GraphicsDevice));
+    }
+
+    /// <summary>
+    /// Inserts a resource barrier for a specific resource.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to insert the barrier for.</param>
+    public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteTexture2D<T> texture)
+        where T : unmanaged
+    {
+        context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
+    }
+
+    /// <summary>
+    /// Inserts a resource barrier for a specific resource.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
+    /// <param name="texture">The input <see cref="ReadWriteBuffer{T}"/> instance to insert the barrier for.</param>
+    public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteTexture3D<T> texture)
+        where T : unmanaged
+    {
+        context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
+    }
+
+    /// <summary>
+    /// Inserts a resource barrier for a specific resource.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture2D{T,TPixel}"/> instance to insert the barrier for.</param>
+    public static unsafe void Barrier<T, TPixel>(this in ComputeContext context, ReadWriteTexture2D<T, TPixel> texture)
+        where T : unmanaged, IUnorm<TPixel>
+        where TPixel : unmanaged
+    {
+        context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
+    }
+
+    /// <summary>
+    /// Inserts a resource barrier for a specific resource.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture3D{T,TPixel}"/> instance to insert the barrier for.</param>
+    public static unsafe void Barrier<T, TPixel>(this in ComputeContext context, ReadWriteTexture3D<T, TPixel> texture)
+        where T : unmanaged, IUnorm<TPixel>
+        where TPixel : unmanaged
+    {
+        context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
+    }
+
+    /// <summary>
+    /// Inserts a resource barrier for a specific resource.
+    /// </summary>
+    /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
+    /// <param name="texture">The input <see cref="IReadWriteTexture2D{TPixel}"/> instance to insert the barrier for.</param>
+    public static unsafe void Barrier<TPixel>(this in ComputeContext context, IReadWriteTexture2D<TPixel> texture)
+        where TPixel : unmanaged
+    {
+        context.Barrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice));
+    }
+
+    /// <summary>
+    /// Inserts a resource barrier for a specific resource.
+    /// </summary>
+    /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
+    /// <param name="texture">The input <see cref="IReadWriteTexture3D{TPixel}"/> instance to insert the barrier for.</param>
+    public static unsafe void Barrier<TPixel>(this in ComputeContext context, IReadWriteTexture3D<TPixel> texture)
+        where TPixel : unmanaged
+    {
+        context.Barrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice));
+    }
+
+    /// <summary>
+    /// Runs the input shader on a target <see cref="ComputeContext"/> instance, with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of compute shader to run.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to run the shader.</param>
+    /// <param name="x">The number of iterations to run on the X axis.</param>
+    /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
+    public static void For<T>(this in ComputeContext context, int x, in T shader)
+        where T : struct, IComputeShader
+    {
+        context.Run(x, 1, 1, ref Unsafe.AsRef(in shader));
+    }
+
+    /// <summary>
+    /// Runs the input shader on a target <see cref="ComputeContext"/> instance, with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of compute shader to run.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to run the shader.</param>
+    /// <param name="x">The number of iterations to run on the X axis.</param>
+    /// <param name="y">The number of iterations to run on the Y axis.</param>
+    /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
+    public static void For<T>(this in ComputeContext context, int x, int y, in T shader)
+        where T : struct, IComputeShader
+    {
+        context.Run(x, y, 1, ref Unsafe.AsRef(in shader));
+    }
+
+    /// <summary>
+    /// Runs the input shader on a target <see cref="ComputeContext"/> instance, with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of compute shader to run.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to run the shader.</param>
+    /// <param name="x">The number of iterations to run on the X axis.</param>
+    /// <param name="y">The number of iterations to run on the Y axis.</param>
+    /// <param name="z">The number of iterations to run on the Z axis.</param>
+    /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
+    public static void For<T>(this in ComputeContext context, int x, int y, int z, in T shader)
+        where T : struct, IComputeShader
+    {
+        context.Run(x, y, z, ref Unsafe.AsRef(in shader));
+    }
+
+    /// <summary>
+    /// Runs the input shader on a target <see cref="ComputeContext"/> instance, with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of compute shader to run.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to run the shader.</param>
+    /// <param name="x">The number of iterations to run on the X axis.</param>
+    /// <param name="y">The number of iterations to run on the Y axis.</param>
+    /// <param name="z">The number of iterations to run on the Z axis.</param>
+    /// <param name="threadsX">The number of threads in each thread group for the X axis.</param>
+    /// <param name="threadsY">The number of threads in each thread group for the Y axis.</param>
+    /// <param name="threadsZ">The number of threads in each thread group for the Z axis.</param>
+    /// <param name="shader">The input <typeparamref name="T"/> instance representing the compute shader to run.</param>
+    public static void For<T>(this in ComputeContext context, int x, int y, int z, int threadsX, int threadsY, int threadsZ, in T shader)
+        where T : struct, IComputeShader
+    {
+        context.Run(x, y, z, threadsX, threadsY, threadsZ, ref Unsafe.AsRef(in shader));
+    }
+
+    /// <summary>
+    /// Runs the input shader on a target <see cref="ComputeContext"/> instance, with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of pixel shader to run.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels being processed by the shader.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to run the shader.</param>
+    /// <param name="texture">The target texture to apply the pixel shader to.</param>
+    public static void ForEach<T, TPixel>(this in ComputeContext context, IReadWriteTexture2D<TPixel> texture)
+        where T : struct, IPixelShader<TPixel>
+        where TPixel : unmanaged
+    {
+        context.Run(texture, ref Unsafe.AsRef(default(T)));
+    }
+
+    /// <summary>
+    /// Runs the input shader on a target <see cref="ComputeContext"/> instance, with the specified parameters.
+    /// </summary>
+    /// <typeparam name="T">The type of pixel shader to run.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels being processed by the shader.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to run the shader.</param>
+    /// <param name="texture">The target texture to apply the pixel shader to.</param>
+    /// <param name="shader">The input <typeparamref name="T"/> instance representing the pixel shader to run.</param>
+    public static void ForEach<T, TPixel>(this in ComputeContext context, IReadWriteTexture2D<TPixel> texture, in T shader)
+        where T : struct, IPixelShader<TPixel>
+        where TPixel : unmanaged
+    {
+        context.Run(texture, ref Unsafe.AsRef(in shader));
+    }
+}

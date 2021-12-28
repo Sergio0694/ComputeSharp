@@ -9,7 +9,7 @@ namespace ComputeSharp;
 public static partial class GraphicsDeviceExtensions
 {
     /// <summary>
-    /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
+    /// Runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
     /// </summary>
     /// <typeparam name="T">The type of compute shader to run.</typeparam>
     /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
@@ -22,7 +22,7 @@ public static partial class GraphicsDeviceExtensions
     }
 
     /// <summary>
-    /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
+    /// Runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
     /// </summary>
     /// <typeparam name="T">The type of compute shader to run.</typeparam>
     /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
@@ -36,7 +36,7 @@ public static partial class GraphicsDeviceExtensions
     }
 
     /// <summary>
-    /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
+    /// Runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
     /// </summary>
     /// <typeparam name="T">The type of compute shader to run.</typeparam>
     /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
@@ -51,7 +51,7 @@ public static partial class GraphicsDeviceExtensions
     }
 
     /// <summary>
-    /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
+    /// Runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
     /// </summary>
     /// <typeparam name="T">The type of compute shader to run.</typeparam>
     /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
@@ -69,7 +69,7 @@ public static partial class GraphicsDeviceExtensions
     }
 
     /// <summary>
-    /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
+    /// Runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
     /// </summary>
     /// <typeparam name="T">The type of pixel shader to run.</typeparam>
     /// <typeparam name="TPixel">The type of pixels being processed by the shader.</typeparam>
@@ -83,7 +83,7 @@ public static partial class GraphicsDeviceExtensions
     }
 
     /// <summary>
-    /// Compiles and runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
+    /// Runs the input shader on a target <see cref="GraphicsDevice"/> instance, with the specified parameters.
     /// </summary>
     /// <typeparam name="T">The type of pixel shader to run.</typeparam>
     /// <typeparam name="TPixel">The type of pixels being processed by the shader.</typeparam>
@@ -95,5 +95,27 @@ public static partial class GraphicsDeviceExtensions
         where TPixel : unmanaged
     {
         ShaderRunner<T>.Run(device, texture, ref Unsafe.AsRef(in shader));
+    }
+
+    /// <summary>
+    /// Creates a new <see cref="ComputeContext"/> instance to batch compute operations together.
+    /// </summary>
+    /// <param name="device">The <see cref="GraphicsDevice"/> to use to run shaders.</param>
+    /// <returns>A new <see cref="ComputeContext"/> instance to batch compute operations together.</returns>
+    /// <remarks>
+    /// The returned <see cref="ComputeContext"/> instance should be used in a <see langword="using"/> block or declaration:
+    /// <code>
+    /// using (var context = device.CreateComputeContext())
+    /// {
+    ///     // Dispatch shaders here...
+    /// }
+    /// </code>
+    /// All dispatched shaders will be executed as soon as the context goes out of scope.
+    /// </remarks>
+    public static ComputeContext CreateComputeContext(this GraphicsDevice device)
+    {
+        device.ThrowIfDisposed();
+
+        return new(device);
     }
 }
