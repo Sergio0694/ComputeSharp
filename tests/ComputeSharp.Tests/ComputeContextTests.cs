@@ -45,6 +45,7 @@ public partial class ComputeContextTests
         using (ComputeContext context = device.Get().CreateComputeContext())
         {
             context.ForEach(texture, default(ClearPixelShader));
+            context.FullBarrier(texture);
             context.ForEach(texture, new ColorPixelShader(new float4(0.22f, 0.44f, 0.66f, 0.88f)));
         }
 
@@ -73,7 +74,9 @@ public partial class ComputeContextTests
             context.For(512, new OffsetComputeShader(buffer, 0));
             context.For(64, new OffsetComputeShader(buffer, 512));
             context.ForEach(texture, default(ClearPixelShader));
+            context.StartBarrier(texture);
             context.For(299, new OffsetComputeShader(buffer, 576));
+            context.EndBarrier(texture);
             context.ForEach(texture, new ColorPixelShader(new float4(0.22f, 0.44f, 0.66f, 0.88f)));
             context.For(149, new OffsetComputeShader(buffer, 875));
         }

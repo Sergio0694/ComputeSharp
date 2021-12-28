@@ -74,6 +74,7 @@ public partial class DispatchingBenchmark : IDisposable
         using var context = GraphicsDevice.Default.CreateComputeContext();
 
         context.For(64, new TestShader(Buffer!));
+        context.FullBarrier(Buffer!);
         context.For(64, new TestShader(Buffer!));
     }
 

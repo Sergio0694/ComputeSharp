@@ -293,6 +293,9 @@ public sealed partial class HlslBokehBlurProcessor
                     source.Height,
                     new(texture, reals, imaginaries, kernel));
 
+                context.FullBarrier(reals);
+                context.FullBarrier(imaginaries);
+
                 context.For<HorizontalConvolutionAndAccumulatePartialsProcessor>(
                     source.Width,
                     source.Height,
