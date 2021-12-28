@@ -1,5 +1,7 @@
 ﻿using System;
 using TerraFX.Interop.DirectX;
+using static TerraFX.Interop.DirectX.D3D12_RESOURCE_BARRIER_FLAGS;
+using static TerraFX.Interop.DirectX.D3D12_RESOURCE_BARRIER_TYPE;
 
 namespace ComputeSharp.Graphics.Extensions;
 
@@ -195,13 +197,55 @@ internal static unsafe class ID3D12GraphicsCommandListExtensions
     /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to change state for.</param>
     /// <param name="d3D12ResourceStatesBefore">The starting <see cref="D3D12_RESOURCE_STATES"/> value for the transition.</param>
     /// <param name="d3D12ResourceStatesAfter">The destnation <see cref="D3D12_RESOURCE_STATES"/> value for the transition.</param>
-    public static void ResourceBarrier(
+    public static void TransitioneBarrier(
         this ref ID3D12GraphicsCommandList d3D12GraphicsCommandList,
         ID3D12Resource* d3D12Resource,
         D3D12_RESOURCE_STATES d3D12ResourceStatesBefore,
         D3D12_RESOURCE_STATES d3D12ResourceStatesAfter)
     {
         D3D12_RESOURCE_BARRIER d3D12ResourceBarrier = D3D12_RESOURCE_BARRIER.InitTransition(d3D12Resource, d3D12ResourceStatesBefore, d3D12ResourceStatesAfter);
+
+        d3D12GraphicsCommandList.ResourceBarrier(1, &d3D12ResourceBarrier);
+    }
+
+    /// <summary>
+    /// Inserts a UAV resource barrier for a specific resource.
+    /// </summary>
+    /// <param name="d3D12GraphicsCommandList">The <see cref="ID3D12GraphicsCommandList"/> instance in use.</param>
+    /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to insert the barrier for.</param>
+    public static void UAVBarrier(this ref ID3D12GraphicsCommandList d3D12GraphicsCommandList, ID3D12Resource* d3D12Resource)
+    {
+        D3D12_RESOURCE_BARRIER d3D12ResourceBarrier = D3D12_RESOURCE_BARRIER.InitUAV(d3D12Resource);
+
+        d3D12GraphicsCommandList.ResourceBarrier(1, &d3D12ResourceBarrier);
+    }
+
+    /// <summary>
+    /// Starts a UAV resource barrier for a specific resource.
+    /// </summary>
+    /// <param name="d3D12GraphicsCommandList">The <see cref="ID3D12GraphicsCommandList"/> instance in use.</param>
+    /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to start the barrier for.</param>
+    public static void StartUAVBarrier(this ref ID3D12GraphicsCommandList d3D12GraphicsCommandList, ID3D12Resource* d3D12Resource)
+    {
+        D3D12_RESOURCE_BARRIER d3D12ResourceBarrier = default;
+        d3D12ResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+        d3D12ResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_BEGIN_ONLY;
+        d3D12ResourceBarrier.Anonymous.UAV.pResource = d3D12Resource;
+
+        d3D12GraphicsCommandList.ResourceBarrier(1, &d3D12ResourceBarrier);
+    }
+
+    /// <summary>
+    /// Ends a UAV resource barrier for a specific resource.
+    /// </summary>
+    /// <param name="d3D12GraphicsCommandList">The <see cref="ID3D12GraphicsCommandList"/> instance in use.</param>
+    /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to end the barrier for.</param>
+    public static void EndUAVBarrier(this ref ID3D12GraphicsCommandList d3D12GraphicsCommandList, ID3D12Resource* d3D12Resource)
+    {
+        D3D12_RESOURCE_BARRIER d3D12ResourceBarrier = default;
+        d3D12ResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+        d3D12ResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_END_ONLY;
+        d3D12ResourceBarrier.Anonymous.UAV.pResource = d3D12Resource;
 
         d3D12GraphicsCommandList.ResourceBarrier(1, &d3D12ResourceBarrier);
     }

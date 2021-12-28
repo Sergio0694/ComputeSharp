@@ -223,7 +223,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
         {
             if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
             {
-                copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_SOURCE);
+                copyCommandList.D3D12GraphicsCommandList->TransitioneBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_SOURCE);
             }
 
             copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
@@ -242,7 +242,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
 
             if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
             {
-                copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, this.d3D12ResourceState);
+                copyCommandList.D3D12GraphicsCommandList->TransitioneBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, this.d3D12ResourceState);
             }
 
             copyCommandList.ExecuteAndWaitForCompletion();
@@ -314,8 +314,8 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
 
         if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
         {
-            copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_SOURCE);
-            copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(destination.D3D12Resource, destination.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_DEST);
+            copyCommandList.D3D12GraphicsCommandList->TransitioneBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_SOURCE);
+            copyCommandList.D3D12GraphicsCommandList->TransitioneBarrier(destination.D3D12Resource, destination.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_DEST);
         }
 
         copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
@@ -333,8 +333,8 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
 
         if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
         {
-            copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, this.d3D12ResourceState);
-            copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(destination.D3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, destination.d3D12ResourceState);
+            copyCommandList.D3D12GraphicsCommandList->TransitioneBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, this.d3D12ResourceState);
+            copyCommandList.D3D12GraphicsCommandList->TransitioneBarrier(destination.D3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, destination.d3D12ResourceState);
         }
 
         copyCommandList.ExecuteAndWaitForCompletion();
@@ -385,7 +385,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
 
         if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
         {
-            copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_SOURCE);
+            copyCommandList.D3D12GraphicsCommandList->TransitioneBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_SOURCE);
         }
 
         fixed (D3D12_PLACED_SUBRESOURCE_FOOTPRINT* d3D12PlacedSubresourceFootprintDestination = &destination.D3D12PlacedSubresourceFootprint)
@@ -407,7 +407,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
 
         if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
         {
-            copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, this.d3D12ResourceState);
+            copyCommandList.D3D12GraphicsCommandList->TransitioneBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_SOURCE, this.d3D12ResourceState);
         }
 
         copyCommandList.ExecuteAndWaitForCompletion();
@@ -483,7 +483,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
 
         if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
         {
-            copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_DEST);
+            copyCommandList.D3D12GraphicsCommandList->TransitioneBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_DEST);
         }
 
         copyCommandList.D3D12GraphicsCommandList->CopyTextureRegion(
@@ -502,7 +502,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
 
         if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
         {
-            copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, this.d3D12ResourceState);
+            copyCommandList.D3D12GraphicsCommandList->TransitioneBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, this.d3D12ResourceState);
         }
 
         copyCommandList.ExecuteAndWaitForCompletion();
@@ -553,7 +553,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
 
         if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
         {
-            copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_DEST);
+            copyCommandList.D3D12GraphicsCommandList->TransitioneBarrier(D3D12Resource, this.d3D12ResourceState, D3D12_RESOURCE_STATE_COPY_DEST);
         }
 
         fixed (D3D12_PLACED_SUBRESOURCE_FOOTPRINT* d3D12PlacedSubresourceFootprintSource = &source.D3D12PlacedSubresourceFootprint)
@@ -575,7 +575,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
 
         if (copyCommandList.D3D12CommandListType == D3D12_COMMAND_LIST_TYPE_COMPUTE)
         {
-            copyCommandList.D3D12GraphicsCommandList->ResourceBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, this.d3D12ResourceState);
+            copyCommandList.D3D12GraphicsCommandList->TransitioneBarrier(D3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, this.d3D12ResourceState);
         }
 
         copyCommandList.ExecuteAndWaitForCompletion();

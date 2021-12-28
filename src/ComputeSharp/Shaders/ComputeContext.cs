@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Commands;
+using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Shaders;
 using ComputeSharp.Shaders.Dispatching;
 using Microsoft.Toolkit.Diagnostics;
@@ -34,6 +35,45 @@ public ref struct ComputeContext
     {
         this.device = device;
         this.commandList = default;
+    }
+
+    /// <summary>
+    /// Starts a resource barrier for a specific resource.
+    /// </summary>
+    /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to start the barrier for.</param>
+    internal readonly unsafe void StartBarrier(ID3D12Resource* d3D12Resource)
+    {
+        ThrowInvalidOperationExceptionIfDeviceIsNull();
+
+        ref CommandList commandList = ref GetCommandList(in this);
+
+        commandList.D3D12GraphicsCommandList->StartUAVBarrier(d3D12Resource);
+    }
+
+    /// <summary>
+    /// Ends a resource barrier for a specific resource.
+    /// </summary>
+    /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to end the barrier for.</param>
+    internal readonly unsafe void EndBarrier(ID3D12Resource* d3D12Resource)
+    {
+        ThrowInvalidOperationExceptionIfDeviceIsNull();
+
+        ref CommandList commandList = ref GetCommandList(in this);
+
+        commandList.D3D12GraphicsCommandList->EndUAVBarrier(d3D12Resource);
+    }
+
+    /// <summary>
+    /// Inserts a full a resource barrier for a specific resource.
+    /// </summary>
+    /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to insert the barrier for.</param>
+    internal readonly unsafe void FullBarrier(ID3D12Resource* d3D12Resource)
+    {
+        ThrowInvalidOperationExceptionIfDeviceIsNull();
+
+        ref CommandList commandList = ref GetCommandList(in this);
+
+        commandList.D3D12GraphicsCommandList->UAVBarrier(d3D12Resource);
     }
 
     /// <summary>
@@ -197,6 +237,29 @@ public ref struct ComputeContext
     }
 
     /// <summary>
+    /// Gets the current <see cref="CommandList"/> instance.
+    /// </summary>
+    /// <param name="this">The current <see cref="ComputeContext"/> instance.</param>
+    /// <returns>A reference to the <see cref="CommandList"/> instance to use.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if the <see cref="CommandList"/> has not been initialized yet.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static unsafe ref CommandList GetCommandList(in ComputeContext @this)
+    {
+        // This method has to take the context by readonly reference to allow callers to be marked as readonly.
+        // This is needed to skip the hidden copies done by Roslyn, which would break the dispatching, as the
+        // original context would not see the changes done by the following queued dispatches. This delegate
+        // cast is necessary to work around the fact that ref structs cannot currently be used as type arguments.
+        ref ComputeContext context = ref ((delegate*<in ComputeContext, ref ComputeContext>)(delegate*<in byte, ref byte>)&Unsafe.AsRef<byte>)(in @this);
+
+        if (!context.commandList.IsAllocated)
+        {
+            ThrowHelper.ThrowInvalidOperationException("The current compute context has not yet been initialized.");
+        }
+
+        return ref context.commandList;
+    }
+
+    /// <summary>
     /// Gets the current <see cref="CommandList"/> instance, and initializes it as needed.
     /// </summary>
     /// <param name="this">The current <see cref="ComputeContext"/> instance.</param>
@@ -205,10 +268,6 @@ public ref struct ComputeContext
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static unsafe ref CommandList GetCommandList(in ComputeContext @this, ID3D12PipelineState* pipelineState)
     {
-        // This method has to take the context by readonly reference to allow callers to be marked as readonly.
-        // This is needed to skip the hidden copies done by Roslyn, which would break the dispatching, as the
-        // original context would not see the changes done by the following queued dispatches. This delegate
-        // cast is necessary to work around the fact that ref structs cannot currently be used as type arguments.
         ref ComputeContext context = ref ((delegate*<in ComputeContext, ref ComputeContext>)(delegate*<in byte, ref byte>)&Unsafe.AsRef<byte>)(in @this);
 
         if (context.commandList.IsAllocated)
