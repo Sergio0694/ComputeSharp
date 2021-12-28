@@ -40,12 +40,12 @@ public unsafe abstract class Buffer<T> : NativeObject
     /// <summary>
     /// The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
     /// </summary>
-    private readonly D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandle;
+    private readonly D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle;
 
     /// <summary>
     /// The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
     /// </summary>
-    internal readonly D3D12_GPU_DESCRIPTOR_HANDLE D3D12GpuDescriptorHandle;
+    private readonly D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle;
 
     /// <summary>
     /// The size in bytes of the current buffer (this value is never negative).
@@ -95,18 +95,18 @@ public unsafe abstract class Buffer<T> : NativeObject
 #endif
 
         device.RegisterAllocatedResource();
-        device.RentShaderResourceViewDescriptorHandles(out D3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
+        device.RentShaderResourceViewDescriptorHandles(out this.d3D12CpuDescriptorHandle, out this.d3D12GpuDescriptorHandle);
 
         switch (resourceType)
         {
             case ResourceType.Constant:
-                device.D3D12Device->CreateConstantBufferView(this.d3D12Resource.Get(), effectiveSizeInBytes, D3D12CpuDescriptorHandle);
+                device.D3D12Device->CreateConstantBufferView(this.d3D12Resource.Get(), effectiveSizeInBytes, this.d3D12CpuDescriptorHandle);
                 break;
             case ResourceType.ReadOnly:
-                device.D3D12Device->CreateShaderResourceView(this.d3D12Resource.Get(), (uint)length, elementSizeInBytes, D3D12CpuDescriptorHandle);
+                device.D3D12Device->CreateShaderResourceView(this.d3D12Resource.Get(), (uint)length, elementSizeInBytes, this.d3D12CpuDescriptorHandle);
                 break;
             case ResourceType.ReadWrite:
-                device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), (uint)length, elementSizeInBytes, D3D12CpuDescriptorHandle);
+                device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), (uint)length, elementSizeInBytes, this.d3D12CpuDescriptorHandle);
                 break;
         }
 
@@ -136,6 +136,16 @@ public unsafe abstract class Buffer<T> : NativeObject
     /// Gets the <see cref="ID3D12Resource"/> instance currently mapped.
     /// </summary>
     internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
+
+    /// <summary>
+    /// Gets the <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
+    /// </summary>
+    internal D3D12_GPU_DESCRIPTOR_HANDLE D3D12GpuDescriptorHandle => this.d3D12GpuDescriptorHandle;
+
+    /// <summary>
+    /// Gets the <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
+    /// </summary>
+    internal D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandle => this.d3D12CpuDescriptorHandle;
 
     /// <summary>
     /// Reads the contents of the specified range from the current <see cref="Buffer{T}"/> instance and writes them into a target memory area.

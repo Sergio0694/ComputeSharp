@@ -41,12 +41,12 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
     /// <summary>
     /// The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
     /// </summary>
-    private readonly D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandle;
+    private readonly D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle;
 
     /// <summary>
     /// The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
     /// </summary>
-    internal readonly D3D12_GPU_DESCRIPTOR_HANDLE D3D12GpuDescriptorHandle;
+    private readonly D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle;
 
     /// <summary>
     /// The default <see cref="D3D12_RESOURCE_STATES"/> value for the current resource.
@@ -125,15 +125,15 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
             out _);
 
         device.RegisterAllocatedResource();
-        device.RentShaderResourceViewDescriptorHandles(out D3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
+        device.RentShaderResourceViewDescriptorHandles(out this.d3D12CpuDescriptorHandle, out this.d3D12GpuDescriptorHandle);
 
         switch (resourceType)
         {
             case ResourceType.ReadOnly:
-                device.D3D12Device->CreateShaderResourceView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_SRV_DIMENSION_TEXTURE3D, D3D12CpuDescriptorHandle);
+                device.D3D12Device->CreateShaderResourceView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_SRV_DIMENSION_TEXTURE3D, this.d3D12CpuDescriptorHandle);
                 break;
             case ResourceType.ReadWrite:
-                device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_UAV_DIMENSION_TEXTURE3D, D3D12CpuDescriptorHandle);
+                device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_UAV_DIMENSION_TEXTURE3D, this.d3D12CpuDescriptorHandle);
                 break;
         }
 
@@ -164,6 +164,16 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
     /// Gets the <see cref="ID3D12Resource"/> instance currently mapped.
     /// </summary>
     internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
+
+    /// <summary>
+    /// Gets the <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
+    /// </summary>
+    internal D3D12_GPU_DESCRIPTOR_HANDLE D3D12GpuDescriptorHandle => this.d3D12GpuDescriptorHandle;
+
+    /// <summary>
+    /// Gets the <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
+    /// </summary>
+    internal D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandle => this.d3D12CpuDescriptorHandle;
 
     /// <summary>
     /// Reads the contents of the specified range from the current <see cref="Texture3D{T}"/> instance and writes them into a target memory area.
@@ -605,6 +615,15 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
         }
     }
 
+    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandles(GraphicsDevice)"/>
+    internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandles(GraphicsDevice device)
+    {
+        ThrowIfDisposed();
+        ThrowIfDeviceMismatch(device);
+
+        return (D3D12GpuDescriptorHandle, D3D12CpuDescriptorHandle);
+    }
+
     /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice)"/>
     internal ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device)
     {
@@ -621,6 +640,12 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
         ThrowIfDeviceMismatch(device);
 
         return D3D12GpuDescriptorHandle;
+    }
+
+    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandles(GraphicsDevice)"/>
+    (D3D12_GPU_DESCRIPTOR_HANDLE, D3D12_CPU_DESCRIPTOR_HANDLE) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandles(GraphicsDevice device)
+    {
+        return ValidateAndGetGpuAndCpuDescriptorHandles(device);
     }
 
     /// <inheritdoc/>
