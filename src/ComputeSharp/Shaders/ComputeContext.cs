@@ -43,36 +43,10 @@ public ref struct ComputeContext
     public GraphicsDevice GraphicsDevice => this.device;
 
     /// <summary>
-    /// Starts a resource barrier for a specific resource.
-    /// </summary>
-    /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to start the barrier for.</param>
-    internal readonly unsafe void StartBarrier(ID3D12Resource* d3D12Resource)
-    {
-        ThrowInvalidOperationExceptionIfDeviceIsNull();
-
-        ref CommandList commandList = ref GetCommandList(in this);
-
-        commandList.D3D12GraphicsCommandList->StartUAVBarrier(d3D12Resource);
-    }
-
-    /// <summary>
-    /// Ends a resource barrier for a specific resource.
-    /// </summary>
-    /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to end the barrier for.</param>
-    internal readonly unsafe void EndBarrier(ID3D12Resource* d3D12Resource)
-    {
-        ThrowInvalidOperationExceptionIfDeviceIsNull();
-
-        ref CommandList commandList = ref GetCommandList(in this);
-
-        commandList.D3D12GraphicsCommandList->EndUAVBarrier(d3D12Resource);
-    }
-
-    /// <summary>
-    /// Inserts a full a resource barrier for a specific resource.
+    /// Inserts a resource barrier for a specific resource.
     /// </summary>
     /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to insert the barrier for.</param>
-    internal readonly unsafe void FullBarrier(ID3D12Resource* d3D12Resource)
+    internal readonly unsafe void Barrier(ID3D12Resource* d3D12Resource)
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
 
@@ -91,6 +65,8 @@ public ref struct ComputeContext
     internal readonly unsafe void Run<T>(int x, int y, int z, ref T shader)
         where T : struct, IComputeShader
     {
+        ThrowInvalidOperationExceptionIfDeviceIsNull();
+
         bool xIs1 = x == 1;
         bool yIs1 = y == 1;
         bool zIs1 = z == 1;

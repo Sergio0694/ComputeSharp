@@ -45,7 +45,7 @@ public partial class ComputeContextTests
         using (ComputeContext context = device.Get().CreateComputeContext())
         {
             context.ForEach(texture, default(ClearPixelShader));
-            context.FullBarrier(texture);
+            context.Barrier(texture);
             context.ForEach(texture, new ColorPixelShader(new float4(0.22f, 0.44f, 0.66f, 0.88f)));
         }
 
@@ -74,9 +74,8 @@ public partial class ComputeContextTests
             context.For(512, new OffsetComputeShader(buffer, 0));
             context.For(64, new OffsetComputeShader(buffer, 512));
             context.ForEach(texture, default(ClearPixelShader));
-            context.StartBarrier(texture);
             context.For(299, new OffsetComputeShader(buffer, 576));
-            context.EndBarrier(texture);
+            context.Barrier(texture);
             context.ForEach(texture, new ColorPixelShader(new float4(0.22f, 0.44f, 0.66f, 0.88f)));
             context.For(149, new OffsetComputeShader(buffer, 875));
         }
@@ -105,6 +104,35 @@ public partial class ComputeContextTests
                 Assert.AreEqual(pixel.A, 224);
             }
         }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void Barrier_WithoutPreviousDispatches_ThrowsException(Device device)
+    {
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(64);
+
+        using (ComputeContext context = device.Get().CreateComputeContext())
+        {
+            context.Barrier(buffer);
+        }
+
+        Assert.Fail();
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void DefaultContext_Barrier_ThrowsException(Device device)
+    {
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(64);
+
+        using ComputeContext context = default;
+
+        context.Barrier(buffer);
+
+        Assert.Fail();
     }
 
     [TestMethod]

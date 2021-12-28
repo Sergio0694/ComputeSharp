@@ -108,7 +108,7 @@ public sealed partial class HlslGaussianBlurProcessor
             using (var context = GraphicsDevice.CreateComputeContext())
             {
                 context.For<VerticalConvolutionProcessor>(source.Width, source.Height, new(sourceTexture, firstPassTexture, kernelBuffer));
-                context.FullBarrier(firstPassTexture);
+                context.Barrier(firstPassTexture);
                 context.For<HorizontalConvolutionProcessor>(source.Width, source.Height, new(firstPassTexture, sourceTexture, kernelBuffer));
             }
 

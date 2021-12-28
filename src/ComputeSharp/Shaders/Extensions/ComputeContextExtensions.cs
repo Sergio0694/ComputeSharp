@@ -11,267 +11,91 @@ namespace ComputeSharp;
 public static partial class ComputeContextExtensions
 {
     /// <summary>
-    /// Starts a resource barrier for a specific resource.
-    /// </summary>
-    /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
-    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
-    /// <param name="buffer">The input <see cref="ReadWriteBuffer{T}"/> instance to start the barrier for.</param>
-    public static unsafe void StartBarrier<T>(this in ComputeContext context, ReadWriteBuffer<T> buffer)
-        where T : unmanaged
-    {
-        context.StartBarrier(buffer.ValidateAndGetID3D12Resource(context.GraphicsDevice));
-    }
-
-    /// <summary>
-    /// Starts a resource barrier for a specific resource.
-    /// </summary>
-    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
-    /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to start the barrier for.</param>
-    public static unsafe void StartBarrier<T>(this in ComputeContext context, ReadWriteTexture2D<T> texture)
-        where T : unmanaged
-    {
-        context.StartBarrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
-    }
-
-    /// <summary>
-    /// Starts a resource barrier for a specific resource.
-    /// </summary>
-    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
-    /// <param name="texture">The input <see cref="ReadWriteBuffer{T}"/> instance to start the barrier for.</param>
-    public static unsafe void StartBarrier<T>(this in ComputeContext context, ReadWriteTexture3D<T> texture)
-        where T : unmanaged
-    {
-        context.StartBarrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
-    }
-
-    /// <summary>
-    /// Starts a resource barrier for a specific resource.
-    /// </summary>
-    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
-    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
-    /// <param name="texture">The input <see cref="ReadWriteTexture2D{T,TPixel}"/> instance to start the barrier for.</param>
-    public static unsafe void StartBarrier<T, TPixel>(this in ComputeContext context, ReadWriteTexture2D<T, TPixel> texture)
-        where T : unmanaged, IUnorm<TPixel>
-        where TPixel : unmanaged
-    {
-        context.StartBarrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
-    }
-
-    /// <summary>
-    /// Starts a resource barrier for a specific resource.
-    /// </summary>
-    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
-    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
-    /// <param name="texture">The input <see cref="ReadWriteTexture3D{T,TPixel}"/> instance to start the barrier for.</param>
-    public static unsafe void StartBarrier<T, TPixel>(this in ComputeContext context, ReadWriteTexture3D<T, TPixel> texture)
-        where T : unmanaged, IUnorm<TPixel>
-        where TPixel : unmanaged
-    {
-        context.StartBarrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
-    }
-
-    /// <summary>
-    /// Starts a resource barrier for a specific resource.
-    /// </summary>
-    /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
-    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
-    /// <param name="texture">The input <see cref="IReadWriteTexture2D{TPixel}"/> instance to start the barrier for.</param>
-    public static unsafe void StartBarrier<TPixel>(this in ComputeContext context, IReadWriteTexture2D<TPixel> texture)
-        where TPixel : unmanaged
-    {
-        context.StartBarrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice));
-    }
-
-    /// <summary>
-    /// Starts a resource barrier for a specific resource.
-    /// </summary>
-    /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
-    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
-    /// <param name="texture">The input <see cref="IReadWriteTexture3D{TPixel}"/> instance to start the barrier for.</param>
-    public static unsafe void StartBarrier<TPixel>(this in ComputeContext context, IReadWriteTexture3D<TPixel> texture)
-        where TPixel : unmanaged
-    {
-        context.StartBarrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice));
-    }
-
-    /// <summary>
-    /// Ends a resource barrier for a specific resource.
-    /// </summary>
-    /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
-    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
-    /// <param name="buffer">The input <see cref="ReadWriteBuffer{T}"/> instance to end the barrier for.</param>
-    public static unsafe void EndBarrier<T>(this in ComputeContext context, ReadWriteBuffer<T> buffer)
-        where T : unmanaged
-    {
-        context.EndBarrier(buffer.ValidateAndGetID3D12Resource(context.GraphicsDevice));
-    }
-
-    /// <summary>
-    /// Ends a resource barrier for a specific resource.
-    /// </summary>
-    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
-    /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to end the barrier for.</param>
-    public static unsafe void EndBarrier<T>(this in ComputeContext context, ReadWriteTexture2D<T> texture)
-        where T : unmanaged
-    {
-        context.EndBarrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
-    }
-
-    /// <summary>
-    /// Ends a resource barrier for a specific resource.
-    /// </summary>
-    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
-    /// <param name="texture">The input <see cref="ReadWriteBuffer{T}"/> instance to end the barrier for.</param>
-    public static unsafe void EndBarrier<T>(this in ComputeContext context, ReadWriteTexture3D<T> texture)
-        where T : unmanaged
-    {
-        context.EndBarrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
-    }
-
-    /// <summary>
-    /// Ends a resource barrier for a specific resource.
-    /// </summary>
-    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
-    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
-    /// <param name="texture">The input <see cref="ReadWriteTexture2D{T,TPixel}"/> instance to end the barrier for.</param>
-    public static unsafe void EndBarrier<T, TPixel>(this in ComputeContext context, ReadWriteTexture2D<T, TPixel> texture)
-        where T : unmanaged, IUnorm<TPixel>
-        where TPixel : unmanaged
-    {
-        context.EndBarrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
-    }
-
-    /// <summary>
-    /// Ends a resource barrier for a specific resource.
-    /// </summary>
-    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
-    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
-    /// <param name="texture">The input <see cref="ReadWriteTexture3D{T,TPixel}"/> instance to end the barrier for.</param>
-    public static unsafe void EndBarrier<T, TPixel>(this in ComputeContext context, ReadWriteTexture3D<T, TPixel> texture)
-        where T : unmanaged, IUnorm<TPixel>
-        where TPixel : unmanaged
-    {
-        context.EndBarrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
-    }
-
-    /// <summary>
-    /// Ends a resource barrier for a specific resource.
-    /// </summary>
-    /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
-    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
-    /// <param name="texture">The input <see cref="IReadWriteTexture2D{TPixel}"/> instance to end the barrier for.</param>
-    public static unsafe void EndBarrier<TPixel>(this in ComputeContext context, IReadWriteTexture2D<TPixel> texture)
-        where TPixel : unmanaged
-    {
-        context.EndBarrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice));
-    }
-
-    /// <summary>
-    /// Ends a resource barrier for a specific resource.
-    /// </summary>
-    /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
-    /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
-    /// <param name="texture">The input <see cref="IReadWriteTexture3D{TPixel}"/> instance to end the barrier for.</param>
-    public static unsafe void EndBarrier<TPixel>(this in ComputeContext context, IReadWriteTexture3D<TPixel> texture)
-        where TPixel : unmanaged
-    {
-        context.EndBarrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice));
-    }
-
-    /// <summary>
-    /// Inserts a full resource barrier for a specific resource.
+    /// Inserts a resource barrier for a specific resource.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="buffer">The input <see cref="ReadWriteBuffer{T}"/> instance to insert the barrier for.</param>
-    public static unsafe void FullBarrier<T>(this in ComputeContext context, ReadWriteBuffer<T> buffer)
+    public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteBuffer<T> buffer)
         where T : unmanaged
     {
-        context.FullBarrier(buffer.ValidateAndGetID3D12Resource(context.GraphicsDevice));
+        context.Barrier(buffer.ValidateAndGetID3D12Resource(context.GraphicsDevice));
     }
 
     /// <summary>
-    /// Inserts a full resource barrier for a specific resource.
+    /// Inserts a resource barrier for a specific resource.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to insert the barrier for.</param>
-    public static unsafe void FullBarrier<T>(this in ComputeContext context, ReadWriteTexture2D<T> texture)
+    public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteTexture2D<T> texture)
         where T : unmanaged
     {
-        context.FullBarrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
+        context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
     }
 
     /// <summary>
-    /// Inserts a full resource barrier for a specific resource.
+    /// Inserts a resource barrier for a specific resource.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="ReadWriteBuffer{T}"/> instance to insert the barrier for.</param>
-    public static unsafe void FullBarrier<T>(this in ComputeContext context, ReadWriteTexture3D<T> texture)
+    public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteTexture3D<T> texture)
         where T : unmanaged
     {
-        context.FullBarrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
+        context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
     }
 
     /// <summary>
-    /// Inserts a full resource barrier for a specific resource.
+    /// Inserts a resource barrier for a specific resource.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T,TPixel}"/> instance to insert the barrier for.</param>
-    public static unsafe void FullBarrier<T, TPixel>(this in ComputeContext context, ReadWriteTexture2D<T, TPixel> texture)
+    public static unsafe void Barrier<T, TPixel>(this in ComputeContext context, ReadWriteTexture2D<T, TPixel> texture)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
     {
-        context.FullBarrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
+        context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
     }
 
     /// <summary>
-    /// Inserts a full resource barrier for a specific resource.
+    /// Inserts a resource barrier for a specific resource.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture3D{T,TPixel}"/> instance to insert the barrier for.</param>
-    public static unsafe void FullBarrier<T, TPixel>(this in ComputeContext context, ReadWriteTexture3D<T, TPixel> texture)
+    public static unsafe void Barrier<T, TPixel>(this in ComputeContext context, ReadWriteTexture3D<T, TPixel> texture)
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
     {
-        context.FullBarrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
+        context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
     }
 
     /// <summary>
-    /// Inserts a full resource barrier for a specific resource.
+    /// Inserts a resource barrier for a specific resource.
     /// </summary>
     /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="IReadWriteTexture2D{TPixel}"/> instance to insert the barrier for.</param>
-    public static unsafe void FullBarrier<TPixel>(this in ComputeContext context, IReadWriteTexture2D<TPixel> texture)
+    public static unsafe void Barrier<TPixel>(this in ComputeContext context, IReadWriteTexture2D<TPixel> texture)
         where TPixel : unmanaged
     {
-        context.FullBarrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice));
+        context.Barrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice));
     }
 
     /// <summary>
-    /// Inserts a full resource barrier for a specific resource.
+    /// Inserts a resource barrier for a specific resource.
     /// </summary>
     /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="IReadWriteTexture3D{TPixel}"/> instance to insert the barrier for.</param>
-    public static unsafe void FullBarrier<TPixel>(this in ComputeContext context, IReadWriteTexture3D<TPixel> texture)
+    public static unsafe void Barrier<TPixel>(this in ComputeContext context, IReadWriteTexture3D<TPixel> texture)
         where TPixel : unmanaged
     {
-        context.FullBarrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice));
+        context.Barrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice));
     }
 
     /// <summary>
