@@ -17,7 +17,7 @@ public static class GraphicsResourceHelper
     /// <summary>
     /// An interface for non-generic graphics resource types.
     /// </summary>
-    internal interface IGraphicsResource
+    internal unsafe interface IGraphicsResource
     {
         /// <summary>
         /// Validates the given resource for usage with a specified device, and retrieves its GPU descriptor handle.
@@ -25,6 +25,13 @@ public static class GraphicsResourceHelper
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
         /// <returns>The GPU descriptor handle for the resource.</returns> 
         D3D12_GPU_DESCRIPTOR_HANDLE ValidateAndGetGpuDescriptorHandle(GraphicsDevice device);
+
+        /// <summary>
+        /// Validates the given resource for usage with a specified device, and retrieves the underlying <see cref="ID3D12Resource"/> object.
+        /// </summary>
+        /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
+        /// <returns>The the underlying <see cref="ID3D12Resource"/> object.</returns> 
+        ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device);
     }
 
     /// <summary>

@@ -608,6 +608,15 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
         }
     }
 
+    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice)"/>
+    internal ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device)
+    {
+        ThrowIfDisposed();
+        ThrowIfDeviceMismatch(device);
+
+        return D3D12Resource;
+    }
+
     /// <inheritdoc/>
     D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
     {
@@ -615,5 +624,11 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
         ThrowIfDeviceMismatch(device);
 
         return D3D12GpuDescriptorHandle;
+    }
+
+    /// <inheritdoc/>
+    ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device)
+    {
+        return ValidateAndGetID3D12Resource(device);
     }
 }

@@ -38,6 +38,11 @@ public ref struct ComputeContext
     }
 
     /// <summary>
+    /// Gets the <see cref="ComputeSharp.GraphicsDevice"/> associated with the current instance.
+    /// </summary>
+    public GraphicsDevice GraphicsDevice => this.device;
+
+    /// <summary>
     /// Starts a resource barrier for a specific resource.
     /// </summary>
     /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to start the barrier for.</param>

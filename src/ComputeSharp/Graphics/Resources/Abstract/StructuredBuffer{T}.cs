@@ -306,4 +306,13 @@ public abstract class StructuredBuffer<T> : Buffer<T>
             copyCommandList.ExecuteAndWaitForCompletion();
         }
     }
+
+    /// <inheritdoc cref="__Internals.GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice)"/>
+    internal unsafe ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device)
+    {
+        ThrowIfDisposed();
+        ThrowIfDeviceMismatch(device);
+
+        return D3D12Resource;
+    }
 }
