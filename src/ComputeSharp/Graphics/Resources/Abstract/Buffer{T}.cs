@@ -91,7 +91,7 @@ public unsafe abstract class Buffer<T> : NativeObject
         this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, (ulong)effectiveSizeInBytes);
         this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
 #else
-        this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, allocationMode, (ulong)effectiveSizeInBytes, device.IsCacheCoherentUMA);
+        this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, (ulong)effectiveSizeInBytes, device.IsCacheCoherentUMA);
 #endif
 
         device.RegisterAllocatedResource();

@@ -77,7 +77,7 @@ public unsafe abstract class TransferTexture3D<T> : NativeObject
         this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, totalSizeInBytes);
         this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
 #else
-        this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, allocationMode, totalSizeInBytes, device.IsCacheCoherentUMA);
+        this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, totalSizeInBytes, device.IsCacheCoherentUMA);
 #endif
 
         device.RegisterAllocatedResource();

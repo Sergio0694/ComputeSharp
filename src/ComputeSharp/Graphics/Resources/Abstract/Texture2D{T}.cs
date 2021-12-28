@@ -100,7 +100,6 @@ public unsafe abstract class Texture2D<T> : NativeObject, GraphicsResourceHelper
 #else
         this.d3D12Resource = device.D3D12Device->CreateCommittedResource(
             resourceType,
-            allocationMode,
             DXGIFormatHelper.GetForType<T>(),
             (uint)width,
             (uint)height,
@@ -198,7 +197,6 @@ public unsafe abstract class Texture2D<T> : NativeObject, GraphicsResourceHelper
 #else
         using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(
             ResourceType.ReadBack,
-            AllocationMode.Default,
             totalSizeInBytes,
             GraphicsDevice.IsCacheCoherentUMA);
 #endif
@@ -419,7 +417,6 @@ public unsafe abstract class Texture2D<T> : NativeObject, GraphicsResourceHelper
 #else
         using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(
             ResourceType.Upload,
-            AllocationMode.Default,
             totalSizeInBytes,
             GraphicsDevice.IsCacheCoherentUMA);
 #endif

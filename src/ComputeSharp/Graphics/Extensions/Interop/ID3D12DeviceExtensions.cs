@@ -63,14 +63,12 @@ internal static unsafe class ID3D12DeviceExtensions
     /// </summary>
     /// <param name="d3D12Device">The <see cref="ID3D12Device"/> instance in use.</param>
     /// <param name="resourceType">The resource type currently in use.</param>
-    /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <param name="sizeInBytes">The size in bytes of the current buffer.</param>
     /// <param name="isCacheCoherentUMA">Indicates whether or not the current device has a cache coherent UMA architecture.</param>
     /// <returns>An <see cref="ID3D12Resource"/> reference for the current buffer.</returns>
     public static ComPtr<ID3D12Resource> CreateCommittedResource(
         this ref ID3D12Device d3D12Device,
         ResourceType resourceType,
-        AllocationMode allocationMode,
         ulong sizeInBytes,
         bool isCacheCoherentUMA)
     {
@@ -124,7 +122,6 @@ internal static unsafe class ID3D12DeviceExtensions
     /// </summary>
     /// <param name="d3D12Device">The <see cref="ID3D12Device"/> instance in use.</param>
     /// <param name="resourceType">The resource type currently in use.</param>
-    /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
     /// <param name="width">The width of the texture resource.</param>
     /// <param name="height">The height of the texture resource.</param>
@@ -134,7 +131,6 @@ internal static unsafe class ID3D12DeviceExtensions
     public static ComPtr<ID3D12Resource> CreateCommittedResource(
         this ref ID3D12Device d3D12Device,
         ResourceType resourceType,
-        AllocationMode allocationMode,
         DXGI_FORMAT dxgiFormat,
         uint width,
         uint height,
@@ -188,7 +184,6 @@ internal static unsafe class ID3D12DeviceExtensions
     /// </summary>
     /// <param name="d3D12Device">The <see cref="ID3D12Device"/> instance in use.</param>
     /// <param name="resourceType">The resource type currently in use.</param>
-    /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
     /// <param name="width">The width of the texture resource.</param>
     /// <param name="height">The height of the texture resource.</param>
@@ -199,7 +194,6 @@ internal static unsafe class ID3D12DeviceExtensions
     public static ComPtr<ID3D12Resource> CreateCommittedResource(
         this ref ID3D12Device d3D12Device,
         ResourceType resourceType,
-        AllocationMode allocationMode,
         DXGI_FORMAT dxgiFormat,
         uint width,
         uint height,

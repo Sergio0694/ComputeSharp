@@ -66,7 +66,6 @@ public abstract class StructuredBuffer<T> : Buffer<T>
 #else
             using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(
                 ResourceType.ReadBack,
-                AllocationMode.Default,
                 (ulong)byteLength,
                 GraphicsDevice.IsCacheCoherentUMA);
 #endif
@@ -225,7 +224,6 @@ public abstract class StructuredBuffer<T> : Buffer<T>
 #else
             using ComPtr<ID3D12Resource> d3D12Resource = GraphicsDevice.D3D12Device->CreateCommittedResource(
                 ResourceType.Upload,
-                AllocationMode.Default,
                 (ulong)byteLength,
                 GraphicsDevice.IsCacheCoherentUMA);
 #endif

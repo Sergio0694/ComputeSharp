@@ -58,7 +58,7 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IMemoryOwner<T>
         this.allocation = device.Allocator->CreateResource(device.Pool, resourceType, allocationMode, sizeInBytes);
         this.d3D12Resource = new ComPtr<ID3D12Resource>(this.allocation.Get()->GetResource());
 #else
-        this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, allocationMode, sizeInBytes, device.IsCacheCoherentUMA);
+        this.d3D12Resource = device.D3D12Device->CreateCommittedResource(resourceType, sizeInBytes, device.IsCacheCoherentUMA);
 #endif
 
         device.RegisterAllocatedResource();
