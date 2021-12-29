@@ -311,7 +311,7 @@ public abstract class StructuredBuffer<T> : Buffer<T>
         ThrowIfDisposed();
         ThrowIfDeviceMismatch(device);
 
-        return (D3D12GpuDescriptorHandle, D3D12CpuDescriptorHandle);
+        return (D3D12GpuDescriptorHandle, D3D12CpuDescriptorHandleNonGpuVisible);
     }
 
     /// <inheritdoc cref="__Internals.GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice)"/>

@@ -286,18 +286,20 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal void RentShaderResourceViewDescriptorHandles(
         out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
+        out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandleNonGpuVisible,
         out D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle)
     {
-        this.shaderResourceViewDescriptorAllocator.Rent(out d3D12CpuDescriptorHandle, out d3D12GpuDescriptorHandle);
+        this.shaderResourceViewDescriptorAllocator.Rent(out d3D12CpuDescriptorHandle, out d3D12CpuDescriptorHandleNonGpuVisible, out d3D12GpuDescriptorHandle);
     }
 
     /// <inheritdoc cref="ID3D12DescriptorHandleAllocator.Return"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal void ReturnShaderResourceViewDescriptorHandles(
         D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
+        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandleNonGpuVisible,
         D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle)
     {
-        this.shaderResourceViewDescriptorAllocator.Return(d3D12CpuDescriptorHandle, d3D12GpuDescriptorHandle);
+        this.shaderResourceViewDescriptorAllocator.Return(d3D12CpuDescriptorHandle, d3D12CpuDescriptorHandleNonGpuVisible, d3D12GpuDescriptorHandle);
     }
 
     /// <inheritdoc cref="ID3D12CommandListPool.Rent"/>

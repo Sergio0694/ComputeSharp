@@ -43,6 +43,11 @@ public unsafe abstract class Buffer<T> : NativeObject
     private readonly D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle;
 
     /// <summary>
+    /// The non shader visible <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
+    /// </summary>
+    private readonly D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandleNonShaderVisible;
+
+    /// <summary>
     /// The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
     /// </summary>
     private readonly D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle;
@@ -95,7 +100,7 @@ public unsafe abstract class Buffer<T> : NativeObject
 #endif
 
         device.RegisterAllocatedResource();
-        device.RentShaderResourceViewDescriptorHandles(out this.d3D12CpuDescriptorHandle, out this.d3D12GpuDescriptorHandle);
+        device.RentShaderResourceViewDescriptorHandles(out this.d3D12CpuDescriptorHandle, out this.d3D12CpuDescriptorHandleNonShaderVisible, out this.d3D12GpuDescriptorHandle);
 
         switch (resourceType)
         {
@@ -107,6 +112,7 @@ public unsafe abstract class Buffer<T> : NativeObject
                 break;
             case ResourceType.ReadWrite:
                 device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), (uint)length, elementSizeInBytes, this.d3D12CpuDescriptorHandle);
+                device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), (uint)length, elementSizeInBytes, this.d3D12CpuDescriptorHandleNonShaderVisible);
                 break;
         }
 
@@ -146,6 +152,11 @@ public unsafe abstract class Buffer<T> : NativeObject
     /// Gets the <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
     /// </summary>
     internal D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandle => this.d3D12CpuDescriptorHandle;
+
+    /// <summary>
+    /// Gets the non shader visible <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
+    /// </summary>
+    internal D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandleNonGpuVisible => this.d3D12CpuDescriptorHandleNonShaderVisible;
 
     /// <summary>
     /// Reads the contents of the specified range from the current <see cref="Buffer{T}"/> instance and writes them into a target memory area.
@@ -208,7 +219,7 @@ public unsafe abstract class Buffer<T> : NativeObject
         if (GraphicsDevice is GraphicsDevice device)
         {
             device.UnregisterAllocatedResource();
-            device.ReturnShaderResourceViewDescriptorHandles(D3D12CpuDescriptorHandle, D3D12GpuDescriptorHandle);
+            device.ReturnShaderResourceViewDescriptorHandles(D3D12CpuDescriptorHandle, this.d3D12CpuDescriptorHandleNonShaderVisible, D3D12GpuDescriptorHandle);
         }
     }
 

@@ -321,16 +321,17 @@ internal static unsafe class ID3D12DeviceExtensions
     /// </summary>
     /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the descriptor heap.</param>
     /// <param name="descriptorsCount">The number of descriptors to allocate.</param>
+    /// <param name="isShaderVisible">Whether or not the descriptor heap should be shader visible.</param>
     /// <returns>A pointer to the newly allocated <see cref="ID3D12DescriptorHeap"/> instance.</returns>
     /// <exception cref="Exception">Thrown when the creation of the command queue fails.</exception>
-    public static ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(this ref ID3D12Device d3D12Device, uint descriptorsCount)
+    public static ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(this ref ID3D12Device d3D12Device, uint descriptorsCount, bool isShaderVisible)
     {
         using ComPtr<ID3D12DescriptorHeap> d3D12DescriptorHeap = default;
 
         D3D12_DESCRIPTOR_HEAP_DESC d3D12DescriptorHeapDesc;
         d3D12DescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
         d3D12DescriptorHeapDesc.NumDescriptors = descriptorsCount;
-        d3D12DescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+        d3D12DescriptorHeapDesc.Flags = isShaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAGS.D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
         d3D12DescriptorHeapDesc.NodeMask = 0;
 
         d3D12Device.CreateDescriptorHeap(

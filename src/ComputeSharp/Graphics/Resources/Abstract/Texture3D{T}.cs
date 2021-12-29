@@ -44,6 +44,11 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
     private readonly D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle;
 
     /// <summary>
+    /// The non shader visible <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
+    /// </summary>
+    private readonly D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandleNonShaderVisible;
+
+    /// <summary>
     /// The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
     /// </summary>
     private readonly D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle;
@@ -125,7 +130,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
             out _);
 
         device.RegisterAllocatedResource();
-        device.RentShaderResourceViewDescriptorHandles(out this.d3D12CpuDescriptorHandle, out this.d3D12GpuDescriptorHandle);
+        device.RentShaderResourceViewDescriptorHandles(out this.d3D12CpuDescriptorHandle, out this.d3D12CpuDescriptorHandleNonShaderVisible, out this.d3D12GpuDescriptorHandle);
 
         switch (resourceType)
         {
@@ -134,6 +139,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
                 break;
             case ResourceType.ReadWrite:
                 device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_UAV_DIMENSION_TEXTURE3D, this.d3D12CpuDescriptorHandle);
+                device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_UAV_DIMENSION_TEXTURE3D, this.d3D12CpuDescriptorHandleNonShaderVisible);
                 break;
         }
 
@@ -599,7 +605,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
         if (GraphicsDevice is GraphicsDevice device)
         {
             device.UnregisterAllocatedResource();
-            device.ReturnShaderResourceViewDescriptorHandles(D3D12CpuDescriptorHandle, D3D12GpuDescriptorHandle);
+            device.ReturnShaderResourceViewDescriptorHandles(D3D12CpuDescriptorHandle, this.d3D12CpuDescriptorHandleNonShaderVisible, D3D12GpuDescriptorHandle);
         }
     }
 
