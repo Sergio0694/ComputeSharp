@@ -2,6 +2,7 @@
 using ComputeSharp.__Internals;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Commands;
+using ComputeSharp.Graphics.Commands.Interop;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Graphics.Resources.Interop;
@@ -39,14 +40,9 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
     private ComPtr<ID3D12Resource> d3D12Resource;
 
     /// <summary>
-    /// The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
+    /// The <see cref="ID3D12ResourceDescriptorHandles"/> instance for the current resource.
     /// </summary>
-    private readonly D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandle;
-
-    /// <summary>
-    /// The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
-    /// </summary>
-    internal readonly D3D12_GPU_DESCRIPTOR_HANDLE D3D12GpuDescriptorHandle;
+    private readonly ID3D12ResourceDescriptorHandles d3D12ResourceDescriptorHandles;
 
     /// <summary>
     /// The default <see cref="D3D12_RESOURCE_STATES"/> value for the current resource.
@@ -125,15 +121,16 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
             out _);
 
         device.RegisterAllocatedResource();
-        device.RentShaderResourceViewDescriptorHandles(out D3D12CpuDescriptorHandle, out D3D12GpuDescriptorHandle);
+        device.RentShaderResourceViewDescriptorHandles(out this.d3D12ResourceDescriptorHandles);
 
         switch (resourceType)
         {
             case ResourceType.ReadOnly:
-                device.D3D12Device->CreateShaderResourceView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_SRV_DIMENSION_TEXTURE3D, D3D12CpuDescriptorHandle);
+                device.D3D12Device->CreateShaderResourceView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_SRV_DIMENSION_TEXTURE3D, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandle);
                 break;
             case ResourceType.ReadWrite:
-                device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_UAV_DIMENSION_TEXTURE3D, D3D12CpuDescriptorHandle);
+                device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_UAV_DIMENSION_TEXTURE3D, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandle);
+                device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), DXGIFormatHelper.GetForType<T>(), D3D12_UAV_DIMENSION_TEXTURE3D, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandleNonShaderVisible);
                 break;
         }
 
@@ -164,6 +161,11 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
     /// Gets the <see cref="ID3D12Resource"/> instance currently mapped.
     /// </summary>
     internal ID3D12Resource* D3D12Resource => this.d3D12Resource;
+
+    /// <summary>
+    /// Gets the <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
+    /// </summary>
+    internal D3D12_GPU_DESCRIPTOR_HANDLE D3D12GpuDescriptorHandle => this.d3D12ResourceDescriptorHandles.D3D12GpuDescriptorHandle;
 
     /// <summary>
     /// Reads the contents of the specified range from the current <see cref="Texture3D{T}"/> instance and writes them into a target memory area.
@@ -589,7 +591,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
         if (GraphicsDevice is GraphicsDevice device)
         {
             device.UnregisterAllocatedResource();
-            device.ReturnShaderResourceViewDescriptorHandles(D3D12CpuDescriptorHandle, D3D12GpuDescriptorHandle);
+            device.ReturnShaderResourceViewDescriptorHandles(in this.d3D12ResourceDescriptorHandles);
         }
     }
 
@@ -603,6 +605,17 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
         {
             GraphicsDeviceMismatchException.Throw(this, device);
         }
+    }
+
+    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice, out bool)"/>
+    internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized)
+    {
+        ThrowIfDisposed();
+        ThrowIfDeviceMismatch(device);
+
+        isNormalized = DXGIFormatHelper.IsNormalizedType<T>();
+
+        return (this.d3D12ResourceDescriptorHandles.D3D12GpuDescriptorHandle, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandleNonShaderVisible);
     }
 
     /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice)"/>
@@ -621,6 +634,12 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
         ThrowIfDeviceMismatch(device);
 
         return D3D12GpuDescriptorHandle;
+    }
+
+    /// <inheritdoc/>
+    (D3D12_GPU_DESCRIPTOR_HANDLE, D3D12_CPU_DESCRIPTOR_HANDLE) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized)
+    {
+        return ValidateAndGetGpuAndCpuDescriptorHandlesForClear(device, out isNormalized);
     }
 
     /// <inheritdoc/>

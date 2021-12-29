@@ -298,5 +298,19 @@ namespace TerraFX.Interop.DirectX
         {
             ((delegate* unmanaged[Stdcall]<ID3D12GraphicsCommandList*, uint, ulong, void>)(lpVtbl[42]))((ID3D12GraphicsCommandList*)Unsafe.AsPointer(ref this), RootParameterIndex, BufferLocation);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [VtblIndex(49)]
+        public void ClearUnorderedAccessViewUint(D3D12_GPU_DESCRIPTOR_HANDLE ViewGPUHandleInCurrentHeap, D3D12_CPU_DESCRIPTOR_HANDLE ViewCPUHandle, ID3D12Resource* pResource, [NativeTypeName("const UINT [4]")] uint* Values, uint NumRects, [NativeTypeName("const D3D12_RECT *")] void* pRects)
+        {
+            ((delegate* unmanaged[Stdcall]<ID3D12GraphicsCommandList*, D3D12_GPU_DESCRIPTOR_HANDLE, D3D12_CPU_DESCRIPTOR_HANDLE, ID3D12Resource*, uint*, uint, void*, void>)(lpVtbl[49]))((ID3D12GraphicsCommandList*)Unsafe.AsPointer(ref this), ViewGPUHandleInCurrentHeap, ViewCPUHandle, pResource, Values, NumRects, pRects);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [VtblIndex(50)]
+        public void ClearUnorderedAccessViewFloat(D3D12_GPU_DESCRIPTOR_HANDLE ViewGPUHandleInCurrentHeap, D3D12_CPU_DESCRIPTOR_HANDLE ViewCPUHandle, ID3D12Resource* pResource, [NativeTypeName("const FLOAT [4]")] float* Values, uint NumRects, [NativeTypeName("const D3D12_RECT *")] void* pRects)
+        {
+            ((delegate* unmanaged[Stdcall]<ID3D12GraphicsCommandList*, D3D12_GPU_DESCRIPTOR_HANDLE, D3D12_CPU_DESCRIPTOR_HANDLE, ID3D12Resource*, float*, uint, void*, void>)(lpVtbl[50]))((ID3D12GraphicsCommandList*)Unsafe.AsPointer(ref this), ViewGPUHandleInCurrentHeap, ViewCPUHandle, pResource, Values, NumRects, pRects);
+        }
     }
 }

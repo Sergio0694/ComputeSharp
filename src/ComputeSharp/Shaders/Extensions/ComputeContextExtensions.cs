@@ -99,6 +99,108 @@ public static partial class ComputeContextExtensions
     }
 
     /// <summary>
+    /// Clears a specific resource.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
+    /// <param name="buffer">The input <see cref="ReadWriteBuffer{T}"/> instance to clear.</param>
+    public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteBuffer<T> buffer)
+        where T : unmanaged
+    {
+        var handles = buffer.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice);
+
+        context.Clear(buffer.D3D12Resource, handles.Gpu, handles.Cpu, isNormalized: false);
+    }
+
+    /// <summary>
+    /// Clears a specific resource, with a specified value.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to clear.</param>
+    public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteTexture2D<T> texture)
+        where T : unmanaged
+    {
+        var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
+
+        context.Clear(texture.D3D12Resource, handles.Gpu, handles.Cpu, isNormalized);
+    }
+
+    /// <summary>
+    /// Clears a specific resource, with a specified value.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteBuffer{T}"/> instance to clear.</param>
+    public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteTexture3D<T> texture)
+        where T : unmanaged
+    {
+        var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
+
+        context.Clear(texture.D3D12Resource, handles.Gpu, handles.Cpu, isNormalized);
+    }
+
+    /// <summary>
+    /// Clears a specific resource, with a specified value.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture2D{T,TPixel}"/> instance to clear.</param>
+    public static unsafe void Clear<T, TPixel>(this in ComputeContext context, ReadWriteTexture2D<T, TPixel> texture)
+        where T : unmanaged, IUnorm<TPixel>
+        where TPixel : unmanaged
+    {
+        var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
+
+        context.Clear(texture.D3D12Resource, handles.Gpu, handles.Cpu, isNormalized);
+    }
+
+    /// <summary>
+    /// Clears a specific resource, with a specified value.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture3D{T,TPixel}"/> instance to clear.</param>
+    public static unsafe void Clear<T, TPixel>(this in ComputeContext context, ReadWriteTexture3D<T, TPixel> texture)
+        where T : unmanaged, IUnorm<TPixel>
+        where TPixel : unmanaged
+    {
+        var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
+
+        context.Clear(texture.D3D12Resource, handles.Gpu, handles.Cpu, isNormalized);
+    }
+
+    /// <summary>
+    /// Clears a specific resource, with a specified value.
+    /// </summary>
+    /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
+    /// <param name="texture">The input <see cref="IReadWriteTexture2D{TPixel}"/> instance to clear.</param>
+    public static unsafe void Clear<TPixel>(this in ComputeContext context, IReadWriteTexture2D<TPixel> texture)
+        where TPixel : unmanaged
+    {
+        var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
+
+        context.Clear(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice), handles.Gpu, handles.Cpu, isNormalized);
+    }
+
+    /// <summary>
+    /// Clears a specific resource, with a specified value.
+    /// </summary>
+    /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
+    /// <param name="texture">The input <see cref="IReadWriteTexture3D{TPixel}"/> instance to clear.</param>
+    public static unsafe void Clear<TPixel>(this in ComputeContext context, IReadWriteTexture3D<TPixel> texture)
+        where TPixel : unmanaged
+    {
+        var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
+
+        context.Clear(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice), handles.Gpu, handles.Cpu, isNormalized);
+    }
+
+    /// <summary>
     /// Runs the input shader on a target <see cref="ComputeContext"/> instance, with the specified parameters.
     /// </summary>
     /// <typeparam name="T">The type of compute shader to run.</typeparam>

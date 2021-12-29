@@ -27,6 +27,14 @@ public static class GraphicsResourceHelper
         D3D12_GPU_DESCRIPTOR_HANDLE ValidateAndGetGpuDescriptorHandle(GraphicsDevice device);
 
         /// <summary>
+        /// Validates the given resource for usage with a specified device, and retrieves its GPU and CPU descriptor handles for a clear operation.
+        /// </summary>
+        /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
+        /// <param name="isNormalized">Indicates whether the current resource uses a normalized format.</param>
+        /// <returns>The GPU and CPU descriptor handles for the resource.</returns> 
+        (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized);
+
+        /// <summary>
         /// Validates the given resource for usage with a specified device, and retrieves the underlying <see cref="ID3D12Resource"/> object.
         /// </summary>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
@@ -42,13 +50,15 @@ public static class GraphicsResourceHelper
     /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
     /// <returns>The GPU descriptor handle for the buffer.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ulong ValidateAndGetGpuDescriptorHandle<T>(Buffer<T> buffer, GraphicsDevice device)
+    public static unsafe ulong ValidateAndGetGpuDescriptorHandle<T>(Buffer<T> buffer, GraphicsDevice device)
         where T : unmanaged
     {
         buffer.ThrowIfDisposed();
         buffer.ThrowIfDeviceMismatch(device);
 
-        return Unsafe.As<D3D12_GPU_DESCRIPTOR_HANDLE, ulong>(ref Unsafe.AsRef(in buffer.D3D12GpuDescriptorHandle));
+        D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = buffer.D3D12GpuDescriptorHandle;
+
+        return *(ulong*)&d3D12GpuDescriptorHandle;
     }
 
     /// <summary>
@@ -59,13 +69,15 @@ public static class GraphicsResourceHelper
     /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
     /// <returns>The GPU descriptor handle for the texture.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ulong ValidateAndGetGpuDescriptorHandle<T>(ReadOnlyTexture2D<T> texture, GraphicsDevice device)
+    public static unsafe ulong ValidateAndGetGpuDescriptorHandle<T>(ReadOnlyTexture2D<T> texture, GraphicsDevice device)
         where T : unmanaged
     {
         texture.ThrowIfDisposed();
         texture.ThrowIfDeviceMismatch(device);
 
-        return Unsafe.As<D3D12_GPU_DESCRIPTOR_HANDLE, ulong>(ref Unsafe.AsRef(in texture.D3D12GpuDescriptorHandle));
+        D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = texture.D3D12GpuDescriptorHandle;
+
+        return *(ulong*)&d3D12GpuDescriptorHandle;
     }
 
     /// <summary>
@@ -76,13 +88,15 @@ public static class GraphicsResourceHelper
     /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
     /// <returns>The GPU descriptor handle for the texture.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ulong ValidateAndGetGpuDescriptorHandle<T>(ReadWriteTexture2D<T> texture, GraphicsDevice device)
+    public static unsafe ulong ValidateAndGetGpuDescriptorHandle<T>(ReadWriteTexture2D<T> texture, GraphicsDevice device)
         where T : unmanaged
     {
         texture.ThrowIfDisposed();
         texture.ThrowIfDeviceMismatch(device);
 
-        return Unsafe.As<D3D12_GPU_DESCRIPTOR_HANDLE, ulong>(ref Unsafe.AsRef(in texture.D3D12GpuDescriptorHandle));
+        D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = texture.D3D12GpuDescriptorHandle;
+
+        return *(ulong*)&d3D12GpuDescriptorHandle;
     }
 
     /// <summary>
@@ -135,13 +149,15 @@ public static class GraphicsResourceHelper
     /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
     /// <returns>The GPU descriptor handle for the texture.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ulong ValidateAndGetGpuDescriptorHandle<T>(ReadOnlyTexture3D<T> texture, GraphicsDevice device)
+    public static unsafe ulong ValidateAndGetGpuDescriptorHandle<T>(ReadOnlyTexture3D<T> texture, GraphicsDevice device)
         where T : unmanaged
     {
         texture.ThrowIfDisposed();
         texture.ThrowIfDeviceMismatch(device);
 
-        return Unsafe.As<D3D12_GPU_DESCRIPTOR_HANDLE, ulong>(ref Unsafe.AsRef(in texture.D3D12GpuDescriptorHandle));
+        D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = texture.D3D12GpuDescriptorHandle;
+
+        return *(ulong*)&d3D12GpuDescriptorHandle;
     }
 
     /// <summary>
@@ -152,13 +168,15 @@ public static class GraphicsResourceHelper
     /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
     /// <returns>The GPU descriptor handle for the texture.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ulong ValidateAndGetGpuDescriptorHandle<T>(ReadWriteTexture3D<T> texture, GraphicsDevice device)
+    public static unsafe ulong ValidateAndGetGpuDescriptorHandle<T>(ReadWriteTexture3D<T> texture, GraphicsDevice device)
         where T : unmanaged
     {
         texture.ThrowIfDisposed();
         texture.ThrowIfDeviceMismatch(device);
 
-        return Unsafe.As<D3D12_GPU_DESCRIPTOR_HANDLE, ulong>(ref Unsafe.AsRef(in texture.D3D12GpuDescriptorHandle));
+        D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = texture.D3D12GpuDescriptorHandle;
+
+        return *(ulong*)&d3D12GpuDescriptorHandle;
     }
 
     /// <summary>

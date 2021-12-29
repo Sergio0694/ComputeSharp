@@ -1,7 +1,6 @@
 ﻿using System;
+using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
-using static TerraFX.Interop.DirectX.D3D12_RESOURCE_BARRIER_FLAGS;
-using static TerraFX.Interop.DirectX.D3D12_RESOURCE_BARRIER_TYPE;
 
 namespace ComputeSharp.Graphics.Extensions;
 
@@ -213,11 +212,52 @@ internal static unsafe class ID3D12GraphicsCommandListExtensions
     /// </summary>
     /// <param name="d3D12GraphicsCommandList">The <see cref="ID3D12GraphicsCommandList"/> instance in use.</param>
     /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to insert the barrier for.</param>
-    public static void UAVBarrier(this ref ID3D12GraphicsCommandList d3D12GraphicsCommandList, ID3D12Resource* d3D12Resource)
+    public static void UnorderedAccessViewBarrier(this ref ID3D12GraphicsCommandList d3D12GraphicsCommandList, ID3D12Resource* d3D12Resource)
     {
         D3D12_RESOURCE_BARRIER d3D12ResourceBarrier = D3D12_RESOURCE_BARRIER.InitUAV(d3D12Resource);
 
         d3D12GraphicsCommandList.ResourceBarrier(1, &d3D12ResourceBarrier);
+    }
+
+    /// <summary>
+    /// Clears a target UAV resource.
+    /// </summary>
+    /// <param name="d3D12GraphicsCommandList">The <see cref="ID3D12GraphicsCommandList"/> instance in use.</param>
+    /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to clear.</param>
+    /// <param name="d3D12GpuDescriptorHandle">The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value for the target resource.</param>
+    /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value for the target resource.</param>
+    /// <param name="isNormalized">Indicates whether the target resource uses a normalized format.</param>
+    public static unsafe void ClearUnorderedAccessView(
+        this ref ID3D12GraphicsCommandList d3D12GraphicsCommandList,
+        ID3D12Resource* d3D12Resource,
+        D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle,
+        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
+        bool isNormalized)
+    {
+        if (isNormalized)
+        {
+            Float4 values = default;
+
+            d3D12GraphicsCommandList.ClearUnorderedAccessViewFloat(
+                ViewGPUHandleInCurrentHeap: d3D12GpuDescriptorHandle,
+                ViewCPUHandle: d3D12CpuDescriptorHandle,
+                pResource: d3D12Resource,
+                Values: (float*)&values,
+                NumRects: 0,
+                pRects: null);
+        }
+        else
+        {
+            UInt4 values = default;
+
+            d3D12GraphicsCommandList.ClearUnorderedAccessViewUint(
+                ViewGPUHandleInCurrentHeap: d3D12GpuDescriptorHandle,
+                ViewCPUHandle: d3D12CpuDescriptorHandle,
+                pResource: d3D12Resource,
+                Values: (uint*)&values,
+                NumRects: 0,
+                pRects: null);
+        }
     }
 
     /// <summary>

@@ -45,4 +45,47 @@ internal static class DXGIFormatHelper
         else if (typeof(T) == typeof(Rg32)) return DXGI_FORMAT_R16G16_UNORM;
         else return ThrowHelper.ThrowArgumentException<DXGI_FORMAT>("Invalid texture type");
     }
+
+    /// <summary>
+    /// Gets whether or not the input type corresponds to a normalized format.
+    /// </summary>
+    /// <typeparam name="T">The input type argument to check.</typeparam>
+    /// <returns>TWhether or not the input type corresponds to a normalized format..</returns>
+    /// <exception cref="System.ArgumentException">Thrown when the input type <typeparamref name="T"/> is not supported.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNormalizedType<T>()
+        where T : unmanaged
+    {
+        if (typeof(T) == typeof(int) ||
+            typeof(T) == typeof(Int2) ||
+            typeof(T) == typeof(Int3) ||
+            typeof(T) == typeof(Int4) ||
+            typeof(T) == typeof(uint) ||
+            typeof(T) == typeof(UInt2) ||
+            typeof(T) == typeof(UInt3) ||
+            typeof(T) == typeof(UInt4) ||
+            typeof(T) == typeof(float) ||
+            typeof(T) == typeof(Float2) ||
+            typeof(T) == typeof(Float3) ||
+            typeof(T) == typeof(Float4) ||
+            typeof(T) == typeof(Vector2) ||
+            typeof(T) == typeof(Vector3) ||
+            typeof(T) == typeof(Vector4))
+        {
+            return false;
+        }
+
+        if (typeof(T) == typeof(Bgra32) ||
+            typeof(T) == typeof(Rgba32) ||
+            typeof(T) == typeof(Rgba64) ||
+            typeof(T) == typeof(R8) ||
+            typeof(T) == typeof(R16) ||
+            typeof(T) == typeof(Rg16) ||
+            typeof(T) == typeof(Rg32))
+        {
+            return true;
+        }
+        
+        return ThrowHelper.ThrowArgumentException<bool>("Invalid texture type");
+    }
 }

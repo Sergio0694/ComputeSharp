@@ -40,7 +40,35 @@ public ref struct ComputeContext
     /// <summary>
     /// Gets the <see cref="ComputeSharp.GraphicsDevice"/> associated with the current instance.
     /// </summary>
-    public GraphicsDevice GraphicsDevice => this.device;
+    public GraphicsDevice GraphicsDevice
+    {
+        get
+        {
+            ThrowInvalidOperationExceptionIfDeviceIsNull();
+
+            return this.device;
+        }
+    }
+
+    /// <summary>
+    /// Clears a specific resource.
+    /// </summary>
+    /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to clear.</param>
+    /// <param name="d3D12GpuDescriptorHandle">The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value for the target resource.</param>
+    /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value for the target resource.</param>
+    /// <param name="isNormalized">Indicates whether the target resource uses a normalized format.</param>
+    internal readonly unsafe void Clear(
+        ID3D12Resource* d3D12Resource,
+        D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle,
+        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
+        bool isNormalized)
+    {
+        ThrowInvalidOperationExceptionIfDeviceIsNull();
+
+        ref CommandList commandList = ref GetCommandList(in this, null);
+
+        commandList.D3D12GraphicsCommandList->ClearUnorderedAccessView(d3D12Resource, d3D12GpuDescriptorHandle, d3D12CpuDescriptorHandle, isNormalized);
+    }
 
     /// <summary>
     /// Inserts a resource barrier for a specific resource.
@@ -52,7 +80,7 @@ public ref struct ComputeContext
 
         ref CommandList commandList = ref GetCommandList(in this);
 
-        commandList.D3D12GraphicsCommandList->UAVBarrier(d3D12Resource);
+        commandList.D3D12GraphicsCommandList->UnorderedAccessViewBarrier(d3D12Resource);
     }
 
     /// <summary>
@@ -253,7 +281,12 @@ public ref struct ComputeContext
 
         if (context.commandList.IsAllocated)
         {
-            context.commandList.D3D12GraphicsCommandList->SetPipelineState(pipelineState);
+            // Skip setting the pipeline state if the new state is null. This is the case when the upcoming
+            // operation is not a shader dispatch, but just a resource clear. In this case there is no state.
+            if (pipelineState is not null)
+            {
+                context.commandList.D3D12GraphicsCommandList->SetPipelineState(pipelineState);
+            }
         }
         else
         {

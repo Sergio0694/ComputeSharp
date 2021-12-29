@@ -321,16 +321,17 @@ internal static unsafe class ID3D12DeviceExtensions
     /// </summary>
     /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the descriptor heap.</param>
     /// <param name="descriptorsCount">The number of descriptors to allocate.</param>
+    /// <param name="isShaderVisible">Whether or not the descriptor heap should be shader visible.</param>
     /// <returns>A pointer to the newly allocated <see cref="ID3D12DescriptorHeap"/> instance.</returns>
     /// <exception cref="Exception">Thrown when the creation of the command queue fails.</exception>
-    public static ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(this ref ID3D12Device d3D12Device, uint descriptorsCount)
+    public static ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(this ref ID3D12Device d3D12Device, uint descriptorsCount, bool isShaderVisible)
     {
         using ComPtr<ID3D12DescriptorHeap> d3D12DescriptorHeap = default;
 
         D3D12_DESCRIPTOR_HEAP_DESC d3D12DescriptorHeapDesc;
         d3D12DescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
         d3D12DescriptorHeapDesc.NumDescriptors = descriptorsCount;
-        d3D12DescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+        d3D12DescriptorHeapDesc.Flags = isShaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAGS.D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
         d3D12DescriptorHeapDesc.NodeMask = 0;
 
         d3D12Device.CreateDescriptorHeap(
@@ -455,6 +456,37 @@ internal static unsafe class ID3D12DeviceExtensions
         d3D12UnorderedAccessViewDescription.Texture3D.WSize = uint.MaxValue;
 
         d3D12Device.CreateUnorderedAccessView(d3D12Resource, null, &d3D12UnorderedAccessViewDescription, d3D12CpuDescriptorHandle);
+    }
+
+    /// <summary>
+    /// Creates a view for a buffer that will need to be cleared.
+    /// </summary>
+    /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
+    /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
+    /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
+    /// <param name="bufferSize">The size of the target resource.</param>
+    /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
+    /// <param name="d3D12CpuDescriptorHandleNonShaderVisible">The non shader visible<see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
+    public static void CreateUnorderedAccessViewForClear(
+        this ref ID3D12Device d3D12Device,
+        ID3D12Resource* d3D12Resource,
+        DXGI_FORMAT dxgiFormat,
+        uint bufferSize,
+        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
+        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandleNonShaderVisible)
+    {
+        D3D12_UNORDERED_ACCESS_VIEW_DESC d3D12UnorderedAccessViewDescription = default;
+        d3D12UnorderedAccessViewDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
+        d3D12UnorderedAccessViewDescription.Format = dxgiFormat;
+        d3D12UnorderedAccessViewDescription.Buffer.NumElements = bufferSize;
+
+        d3D12Device.CreateUnorderedAccessView(d3D12Resource, null, &d3D12UnorderedAccessViewDescription, d3D12CpuDescriptorHandleNonShaderVisible);
+
+        d3D12Device.CopyDescriptorsSimple(
+            NumDescriptors: 1,
+            DestDescriptorRangeStart: d3D12CpuDescriptorHandle,
+            SrcDescriptorRangeStart: d3D12CpuDescriptorHandleNonShaderVisible,
+            D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     }
 
     /// <summary>
