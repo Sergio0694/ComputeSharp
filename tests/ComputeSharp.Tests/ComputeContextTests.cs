@@ -2,6 +2,8 @@
 using System.Linq;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
+using ComputeSharp.Tests.Helpers;
+using Microsoft.Toolkit.HighPerformance;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ComputeSharp.Tests;
@@ -10,6 +12,112 @@ namespace ComputeSharp.Tests;
 [TestCategory("ComputeContext")]
 public partial class ComputeContextTests
 {
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(typeof(int))]
+    [Data(typeof(Int2))]
+    [Data(typeof(Int3))]
+    [Data(typeof(Int4))]
+    [Data(typeof(uint))]
+    [Data(typeof(UInt2))]
+    [Data(typeof(UInt3))]
+    [Data(typeof(UInt4))]
+    [Data(typeof(float))]
+    [Data(typeof(Float2))]
+    [Data(typeof(Float3))]
+    [Data(typeof(Float4))]
+    [Data(typeof(Bgra32))]
+    [Data(typeof(Rgba32))]
+    [Data(typeof(Rgba64))]
+    [Data(typeof(R8))]
+    [Data(typeof(R16))]
+    [Data(typeof(Rg16))]
+    [Data(typeof(Rg32))]
+    public void Clear_ReadWriteTexture2D(Device device, Type type)
+    {
+        static void Test<T>(Device device)
+            where T : unmanaged
+        {
+            if (!device.Get().IsReadWriteTexture2DSupportedForType<T>())
+            {
+                Assert.Inconclusive();
+            }
+
+            T[] array = new T[128 * 128];
+
+            new Random().NextBytes(array.AsSpan().AsBytes());
+
+            using ReadWriteTexture2D<T> texture = device.Get().AllocateReadWriteTexture2D<T>(array, 128, 128);
+
+            using (ComputeContext context = device.Get().CreateComputeContext())
+            {
+                context.Clear(texture);
+            }
+
+            texture.CopyTo(array);
+
+            foreach (byte value in array.AsSpan().AsBytes())
+            {
+                Assert.AreEqual(value, 0);
+            }
+        }
+
+        TestHelper.Run(Test<int>, type, device);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(typeof(int))]
+    [Data(typeof(Int2))]
+    [Data(typeof(Int3))]
+    [Data(typeof(Int4))]
+    [Data(typeof(uint))]
+    [Data(typeof(UInt2))]
+    [Data(typeof(UInt3))]
+    [Data(typeof(UInt4))]
+    [Data(typeof(float))]
+    [Data(typeof(Float2))]
+    [Data(typeof(Float3))]
+    [Data(typeof(Float4))]
+    [Data(typeof(Bgra32))]
+    [Data(typeof(Rgba32))]
+    [Data(typeof(Rgba64))]
+    [Data(typeof(R8))]
+    [Data(typeof(R16))]
+    [Data(typeof(Rg16))]
+    [Data(typeof(Rg32))]
+    public void Clear_ReadWriteTexture3D(Device device, Type type)
+    {
+        static void Test<T>(Device device)
+            where T : unmanaged
+        {
+            if (!device.Get().IsReadWriteTexture3DSupportedForType<T>())
+            {
+                Assert.Inconclusive();
+            }
+
+            T[] array = new T[128 * 128 * 3];
+
+            new Random().NextBytes(array.AsSpan().AsBytes());
+
+            using ReadWriteTexture3D<T> texture = device.Get().AllocateReadWriteTexture3D<T>(array, 128, 128, 3);
+
+            using (ComputeContext context = device.Get().CreateComputeContext())
+            {
+                context.Clear(texture);
+            }
+
+            texture.CopyTo(array);
+
+            foreach (byte value in array.AsSpan().AsBytes())
+            {
+                Assert.AreEqual(value, 0);
+            }
+        }
+
+        TestHelper.Run(Test<int>, type, device);
+    }
+
     [CombinatorialTestMethod]
     [AllDevices]
     public void For_Batched(Device device)
@@ -108,7 +216,7 @@ public partial class ComputeContextTests
 
     [CombinatorialTestMethod]
     [AllDevices]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(InvalidOperationException), AllowDerivedTypes = false)]
     public void Barrier_WithoutPreviousDispatches_ThrowsException(Device device)
     {
         using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(64);
@@ -123,7 +231,7 @@ public partial class ComputeContextTests
 
     [CombinatorialTestMethod]
     [AllDevices]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(InvalidOperationException), AllowDerivedTypes = false)]
     public void DefaultContext_Barrier_ThrowsException(Device device)
     {
         using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(64);
@@ -135,8 +243,22 @@ public partial class ComputeContextTests
         Assert.Fail();
     }
 
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [ExpectedException(typeof(InvalidOperationException), AllowDerivedTypes = false)]
+    public void DefaultContext_Clear_ThrowsException(Device device)
+    {
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(64);
+
+        using ComputeContext context = default;
+
+        context.Clear(buffer);
+
+        Assert.Fail();
+    }
+
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(InvalidOperationException), AllowDerivedTypes = false)]
     public void DefaultContext_For_ThrowsException()
     {
         using ComputeContext context = default;
@@ -148,7 +270,7 @@ public partial class ComputeContextTests
 
     [CombinatorialTestMethod]
     [AllDevices]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(InvalidOperationException), AllowDerivedTypes = false)]
     public void DefaultContext_ForEach_ThrowsException(Device device)
     {
         using ReadWriteTexture2D<Rgba32, float4> texture = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(128, 128);
@@ -161,7 +283,7 @@ public partial class ComputeContextTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(InvalidOperationException))]
+    [ExpectedException(typeof(InvalidOperationException), AllowDerivedTypes = false)]
     public void DefaultContext_Dispose_ThrowsException()
     {
         using ComputeContext context = default;
