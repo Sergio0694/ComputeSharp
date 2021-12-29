@@ -459,6 +459,37 @@ internal static unsafe class ID3D12DeviceExtensions
     }
 
     /// <summary>
+    /// Creates a view for a buffer that will need to be cleared.
+    /// </summary>
+    /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> instance in use.</param>
+    /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to create a view for.</param>
+    /// <param name="dxgiFormat">The <see cref="DXGI_FORMAT"/> value to use.</param>
+    /// <param name="bufferSize">The size of the target resource.</param>
+    /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
+    /// <param name="d3D12CpuDescriptorHandleNonShaderVisible">The non shader visible<see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.</param>
+    public static void CreateUnorderedAccessViewForClear(
+        this ref ID3D12Device d3D12Device,
+        ID3D12Resource* d3D12Resource,
+        DXGI_FORMAT dxgiFormat,
+        uint bufferSize,
+        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
+        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandleNonShaderVisible)
+    {
+        D3D12_UNORDERED_ACCESS_VIEW_DESC d3D12UnorderedAccessViewDescription = default;
+        d3D12UnorderedAccessViewDescription.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
+        d3D12UnorderedAccessViewDescription.Format = dxgiFormat;
+        d3D12UnorderedAccessViewDescription.Buffer.NumElements = bufferSize;
+
+        d3D12Device.CreateUnorderedAccessView(d3D12Resource, null, &d3D12UnorderedAccessViewDescription, d3D12CpuDescriptorHandleNonShaderVisible);
+
+        d3D12Device.CopyDescriptorsSimple(
+            NumDescriptors: 1,
+            DestDescriptorRangeStart: d3D12CpuDescriptorHandle,
+            SrcDescriptorRangeStart: d3D12CpuDescriptorHandleNonShaderVisible,
+            D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    }
+
+    /// <summary>
     /// Creates a new <see cref="ID3D12CommandAllocator"/> for a given device.
     /// </summary>
     /// <param name="d3D12Device">The target <see cref="ID3D12Device"/> to use to create the command allocator.</param>

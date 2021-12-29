@@ -36,6 +36,54 @@ public partial class ComputeContextTests
     [Data(typeof(R16))]
     [Data(typeof(Rg16))]
     [Data(typeof(Rg32))]
+    public void Clear_ReadWriteBuffer(Device device, Type type)
+    {
+        static void Test<T>(Device device)
+            where T : unmanaged
+        {
+            T[] array = new T[128];
+
+            new Random().NextBytes(array.AsSpan().AsBytes());
+
+            using ReadWriteBuffer<T> texture = device.Get().AllocateReadWriteBuffer<T>(array);
+
+            using (ComputeContext context = device.Get().CreateComputeContext())
+            {
+                context.Clear(texture);
+            }
+
+            texture.CopyTo(array);
+
+            foreach (byte value in array.AsSpan().AsBytes())
+            {
+                Assert.AreEqual(value, 0);
+            }
+        }
+
+        TestHelper.Run(Test<int>, type, device);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(typeof(int))]
+    [Data(typeof(Int2))]
+    [Data(typeof(Int3))]
+    [Data(typeof(Int4))]
+    [Data(typeof(uint))]
+    [Data(typeof(UInt2))]
+    [Data(typeof(UInt3))]
+    [Data(typeof(UInt4))]
+    [Data(typeof(float))]
+    [Data(typeof(Float2))]
+    [Data(typeof(Float3))]
+    [Data(typeof(Float4))]
+    [Data(typeof(Bgra32))]
+    [Data(typeof(Rgba32))]
+    [Data(typeof(Rgba64))]
+    [Data(typeof(R8))]
+    [Data(typeof(R16))]
+    [Data(typeof(Rg16))]
+    [Data(typeof(Rg32))]
     public void Clear_ReadWriteTexture2D(Device device, Type type)
     {
         static void Test<T>(Device device)

@@ -10,6 +10,7 @@ using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_FEATURE;
+using static TerraFX.Interop.DirectX.DXGI_FORMAT;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 #if NET6_0_OR_GREATER
 using MemoryMarshal = System.Runtime.InteropServices.MemoryMarshal;
@@ -42,6 +43,11 @@ public unsafe abstract class Buffer<T> : NativeObject
     /// The <see cref="ID3D12ResourceDescriptorHandles"/> instance for the current resource.
     /// </summary>
     private readonly ID3D12ResourceDescriptorHandles d3D12ResourceDescriptorHandles;
+
+    /// <summary>
+    /// The <see cref="ID3D12ResourceDescriptorHandles"/> instance for the current resource, when a typed UAV is needed.
+    /// </summary>
+    private readonly ID3D12ResourceDescriptorHandles d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView;
 
     /// <summary>
     /// The size in bytes of the current buffer (this value is never negative).
@@ -92,6 +98,7 @@ public unsafe abstract class Buffer<T> : NativeObject
 
         device.RegisterAllocatedResource();
         device.RentShaderResourceViewDescriptorHandles(out this.d3D12ResourceDescriptorHandles);
+        device.RentShaderResourceViewDescriptorHandles(out this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView);
 
         switch (resourceType)
         {
@@ -103,7 +110,12 @@ public unsafe abstract class Buffer<T> : NativeObject
                 break;
             case ResourceType.ReadWrite:
                 device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), (uint)length, elementSizeInBytes, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandle);
-                device.D3D12Device->CreateUnorderedAccessView(this.d3D12Resource.Get(), (uint)length, elementSizeInBytes, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandleNonShaderVisible);
+                device.D3D12Device->CreateUnorderedAccessViewForClear(
+                    this.d3D12Resource.Get(),
+                    DXGI_FORMAT_R32_UINT,
+                    (uint)(usableSizeInBytes / sizeof(uint)),
+                    this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView.D3D12CpuDescriptorHandle,
+                    this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView.D3D12CpuDescriptorHandleNonShaderVisible);
                 break;
         }
 
@@ -201,6 +213,7 @@ public unsafe abstract class Buffer<T> : NativeObject
         {
             device.UnregisterAllocatedResource();
             device.ReturnShaderResourceViewDescriptorHandles(in this.d3D12ResourceDescriptorHandles);
+            device.ReturnShaderResourceViewDescriptorHandles(in this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView);
         }
     }
 
@@ -222,7 +235,9 @@ public unsafe abstract class Buffer<T> : NativeObject
         ThrowIfDisposed();
         ThrowIfDeviceMismatch(device);
 
-        return (this.d3D12ResourceDescriptorHandles.D3D12GpuDescriptorHandle, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandleNonShaderVisible);
+        return (
+            this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView.D3D12GpuDescriptorHandle,
+            this.d3D12ResourceDescriptorHandlesForTypedUnorderedAccessView.D3D12CpuDescriptorHandleNonShaderVisible);
     }
 
     /// <inheritdoc cref="__Internals.GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice)"/>
