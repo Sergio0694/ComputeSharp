@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Linq;
+using ComputeSharp.__Internals;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using ComputeSharp.Tests.Helpers;
 using Microsoft.Toolkit.HighPerformance;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+#pragma warning disable CS0618
 
 namespace ComputeSharp.Tests;
 
@@ -116,6 +119,174 @@ public partial class ComputeContextTests
         }
 
         TestHelper.Run(Test<int>, type, device);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(typeof(Bgra32), typeof(Float4))]
+    [Data(typeof(Rgba32), typeof(Float4))]
+    [Data(typeof(Rgba64), typeof(Float4))]
+    [Data(typeof(R8), typeof(float))]
+    [Data(typeof(R16), typeof(float))]
+    [Data(typeof(Rg16), typeof(Float2))]
+    [Data(typeof(Rg32), typeof(Float2))]
+    public void Clear_ReadWriteTexture2D_WithPixel(Device device, Type cpuType, Type gpuType)
+    {
+        static void Test<T, TPixel>(Device device)
+            where T : unmanaged, IUnorm<TPixel>
+            where TPixel : unmanaged
+        {
+            if (!device.Get().IsReadWriteTexture2DSupportedForType<T>())
+            {
+                Assert.Inconclusive();
+            }
+
+            T[] array = new T[128 * 128];
+
+            new Random().NextBytes(array.AsSpan().AsBytes());
+
+            using ReadWriteTexture2D<T, TPixel> texture = device.Get().AllocateReadWriteTexture2D<T, TPixel>(array, 128, 128);
+
+            using (ComputeContext context = device.Get().CreateComputeContext())
+            {
+                context.Clear(texture);
+            }
+
+            texture.CopyTo(array);
+
+            foreach (byte value in array.AsSpan().AsBytes())
+            {
+                Assert.AreEqual(value, 0);
+            }
+        }
+
+        TestHelper.Run(Test<Bgra32, Float4>, cpuType, gpuType, device);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(typeof(Bgra32), typeof(Float4))]
+    [Data(typeof(Rgba32), typeof(Float4))]
+    [Data(typeof(Rgba64), typeof(Float4))]
+    [Data(typeof(R8), typeof(float))]
+    [Data(typeof(R16), typeof(float))]
+    [Data(typeof(Rg16), typeof(Float2))]
+    [Data(typeof(Rg32), typeof(Float2))]
+    public void Clear_ReadWriteTexture3D_WithPixel(Device device, Type cpuType, Type gpuType)
+    {
+        static void Test<T, TPixel>(Device device)
+            where T : unmanaged, IUnorm<TPixel>
+            where TPixel : unmanaged
+        {
+            if (!device.Get().IsReadWriteTexture2DSupportedForType<T>())
+            {
+                Assert.Inconclusive();
+            }
+
+            T[] array = new T[128 * 128 * 3];
+
+            new Random().NextBytes(array.AsSpan().AsBytes());
+
+            using ReadWriteTexture3D<T, TPixel> texture = device.Get().AllocateReadWriteTexture3D<T, TPixel>(array, 128, 128, 3);
+
+            using (ComputeContext context = device.Get().CreateComputeContext())
+            {
+                context.Clear(texture);
+            }
+
+            texture.CopyTo(array);
+
+            foreach (byte value in array.AsSpan().AsBytes())
+            {
+                Assert.AreEqual(value, 0);
+            }
+        }
+
+        TestHelper.Run(Test<Bgra32, Float4>, cpuType, gpuType, device);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(typeof(Bgra32), typeof(Float4))]
+    [Data(typeof(Rgba32), typeof(Float4))]
+    [Data(typeof(Rgba64), typeof(Float4))]
+    [Data(typeof(R8), typeof(float))]
+    [Data(typeof(R16), typeof(float))]
+    [Data(typeof(Rg16), typeof(Float2))]
+    [Data(typeof(Rg32), typeof(Float2))]
+    public void Clear_ReadWriteTexture2D_WithPixel_AsNormalizedTexture(Device device, Type cpuType, Type gpuType)
+    {
+        static void Test<T, TPixel>(Device device)
+            where T : unmanaged, IUnorm<TPixel>
+            where TPixel : unmanaged
+        {
+            if (!device.Get().IsReadWriteTexture2DSupportedForType<T>())
+            {
+                Assert.Inconclusive();
+            }
+
+            T[] array = new T[128 * 128];
+
+            new Random().NextBytes(array.AsSpan().AsBytes());
+
+            using ReadWriteTexture2D<T, TPixel> texture = device.Get().AllocateReadWriteTexture2D<T, TPixel>(array, 128, 128);
+
+            using (ComputeContext context = device.Get().CreateComputeContext())
+            {
+                context.Clear((IReadWriteTexture2D<TPixel>)texture);
+            }
+
+            texture.CopyTo(array);
+
+            foreach (byte value in array.AsSpan().AsBytes())
+            {
+                Assert.AreEqual(value, 0);
+            }
+        }
+
+        TestHelper.Run(Test<Bgra32, Float4>, cpuType, gpuType, device);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(typeof(Bgra32), typeof(Float4))]
+    [Data(typeof(Rgba32), typeof(Float4))]
+    [Data(typeof(Rgba64), typeof(Float4))]
+    [Data(typeof(R8), typeof(float))]
+    [Data(typeof(R16), typeof(float))]
+    [Data(typeof(Rg16), typeof(Float2))]
+    [Data(typeof(Rg32), typeof(Float2))]
+    public void Clear_ReadWriteTexture3D_WithPixel_AsNormalizedTexture(Device device, Type cpuType, Type gpuType)
+    {
+        static void Test<T, TPixel>(Device device)
+            where T : unmanaged, IUnorm<TPixel>
+            where TPixel : unmanaged
+        {
+            if (!device.Get().IsReadWriteTexture2DSupportedForType<T>())
+            {
+                Assert.Inconclusive();
+            }
+
+            T[] array = new T[128 * 128 * 3];
+
+            new Random().NextBytes(array.AsSpan().AsBytes());
+
+            using ReadWriteTexture3D<T, TPixel> texture = device.Get().AllocateReadWriteTexture3D<T, TPixel>(array, 128, 128, 3);
+
+            using (ComputeContext context = device.Get().CreateComputeContext())
+            {
+                context.Clear((IReadWriteTexture3D<TPixel>)texture);
+            }
+
+            texture.CopyTo(array);
+
+            foreach (byte value in array.AsSpan().AsBytes())
+            {
+                Assert.AreEqual(value, 0);
+            }
+        }
+
+        TestHelper.Run(Test<Bgra32, Float4>, cpuType, gpuType, device);
     }
 
     [CombinatorialTestMethod]
