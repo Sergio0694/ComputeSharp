@@ -40,7 +40,15 @@ public ref struct ComputeContext
     /// <summary>
     /// Gets the <see cref="ComputeSharp.GraphicsDevice"/> associated with the current instance.
     /// </summary>
-    public GraphicsDevice GraphicsDevice => this.device;
+    public GraphicsDevice GraphicsDevice
+    {
+        get
+        {
+            ThrowInvalidOperationExceptionIfDeviceIsNull();
+
+            return this.device;
+        }
+    }
 
     /// <summary>
     /// Clears a specific resource.
@@ -48,17 +56,18 @@ public ref struct ComputeContext
     /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to clear.</param>
     /// <param name="d3D12GpuDescriptorHandle">The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value for the target resource.</param>
     /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value for the target resource.</param>
-    internal readonly unsafe void Clear<T>(
+    /// <param name="isNormalized">Indicates whether the target resource uses a normalized format.</param>
+    internal readonly unsafe void Clear(
         ID3D12Resource* d3D12Resource,
         D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle,
-        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
-        where T : unmanaged
+        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
+        bool isNormalized)
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
 
         ref CommandList commandList = ref GetCommandList(in this, null);
 
-        commandList.D3D12GraphicsCommandList->ClearUnorderedAccessView<T>(d3D12Resource, d3D12GpuDescriptorHandle, d3D12CpuDescriptorHandle);
+        commandList.D3D12GraphicsCommandList->ClearUnorderedAccessView(d3D12Resource, d3D12GpuDescriptorHandle, d3D12CpuDescriptorHandle, isNormalized);
     }
 
     /// <summary>

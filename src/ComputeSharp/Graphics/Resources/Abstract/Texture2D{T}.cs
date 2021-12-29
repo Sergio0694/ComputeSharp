@@ -174,7 +174,7 @@ public unsafe abstract class Texture2D<T> : NativeObject, GraphicsResourceHelper
     /// <summary>
     /// Gets the non shader visible <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
     /// </summary>
-    internal D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandleNonGpuVisible => this.d3D12CpuDescriptorHandleNonShaderVisible;
+    internal D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandleNonShaderVisible => this.d3D12CpuDescriptorHandleNonShaderVisible;
 
     /// <summary>
     /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target memory area.
@@ -573,13 +573,15 @@ public unsafe abstract class Texture2D<T> : NativeObject, GraphicsResourceHelper
         }
     }
 
-    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandles(GraphicsDevice)"/>
-    internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandles(GraphicsDevice device)
+    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice, out bool)"/>
+    internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized)
     {
         ThrowIfDisposed();
         ThrowIfDeviceMismatch(device);
 
-        return (D3D12GpuDescriptorHandle, D3D12CpuDescriptorHandleNonGpuVisible);
+        isNormalized = DXGIFormatHelper.IsNormalizedType<T>();
+
+        return (D3D12GpuDescriptorHandle, D3D12CpuDescriptorHandleNonShaderVisible);
     }
 
     /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice)"/>
@@ -601,9 +603,9 @@ public unsafe abstract class Texture2D<T> : NativeObject, GraphicsResourceHelper
     }
 
     /// <inheritdoc/>
-    (D3D12_GPU_DESCRIPTOR_HANDLE, D3D12_CPU_DESCRIPTOR_HANDLE) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandles(GraphicsDevice device)
+    (D3D12_GPU_DESCRIPTOR_HANDLE, D3D12_CPU_DESCRIPTOR_HANDLE) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized)
     {
-        return ValidateAndGetGpuAndCpuDescriptorHandles(device);
+        return ValidateAndGetGpuAndCpuDescriptorHandlesForClear(device, out isNormalized);
     }
 
     /// <inheritdoc/>

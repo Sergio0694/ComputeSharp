@@ -156,7 +156,7 @@ public unsafe abstract class Buffer<T> : NativeObject
     /// <summary>
     /// Gets the non shader visible <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
     /// </summary>
-    internal D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandleNonGpuVisible => this.d3D12CpuDescriptorHandleNonShaderVisible;
+    internal D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandleNonShaderVisible => this.d3D12CpuDescriptorHandleNonShaderVisible;
 
     /// <summary>
     /// Reads the contents of the specified range from the current <see cref="Buffer{T}"/> instance and writes them into a target memory area.

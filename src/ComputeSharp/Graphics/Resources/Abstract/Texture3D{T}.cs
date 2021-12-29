@@ -182,6 +182,11 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
     internal D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandle => this.d3D12CpuDescriptorHandle;
 
     /// <summary>
+    /// Gets the non shader visible <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
+    /// </summary>
+    internal D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandleNonShaderVisible => this.d3D12CpuDescriptorHandleNonShaderVisible;
+
+    /// <summary>
     /// Reads the contents of the specified range from the current <see cref="Texture3D{T}"/> instance and writes them into a target memory area.
     /// </summary>
     /// <param name="destination">The target memory area to write data to.</param>
@@ -621,13 +626,15 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
         }
     }
 
-    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandles(GraphicsDevice)"/>
-    internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandles(GraphicsDevice device)
+    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice, out bool)"/>
+    internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized)
     {
         ThrowIfDisposed();
         ThrowIfDeviceMismatch(device);
 
-        return (D3D12GpuDescriptorHandle, D3D12CpuDescriptorHandle);
+        isNormalized = DXGIFormatHelper.IsNormalizedType<T>();
+
+        return (D3D12GpuDescriptorHandle, D3D12CpuDescriptorHandleNonShaderVisible);
     }
 
     /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice)"/>
@@ -648,10 +655,10 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
         return D3D12GpuDescriptorHandle;
     }
 
-    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandles(GraphicsDevice)"/>
-    (D3D12_GPU_DESCRIPTOR_HANDLE, D3D12_CPU_DESCRIPTOR_HANDLE) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandles(GraphicsDevice device)
+    /// <inheritdoc/>
+    (D3D12_GPU_DESCRIPTOR_HANDLE, D3D12_CPU_DESCRIPTOR_HANDLE) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized)
     {
-        return ValidateAndGetGpuAndCpuDescriptorHandles(device);
+        return ValidateAndGetGpuAndCpuDescriptorHandlesForClear(device, out isNormalized);
     }
 
     /// <inheritdoc/>

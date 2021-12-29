@@ -27,11 +27,12 @@ public static class GraphicsResourceHelper
         D3D12_GPU_DESCRIPTOR_HANDLE ValidateAndGetGpuDescriptorHandle(GraphicsDevice device);
 
         /// <summary>
-        /// Validates the given resource for usage with a specified device, and retrieves its GPU and CPU descriptor handles.
+        /// Validates the given resource for usage with a specified device, and retrieves its GPU and CPU descriptor handles for a clear operation.
         /// </summary>
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
+        /// <param name="isNormalized">Indicates whether the current resource uses a normalized format.</param>
         /// <returns>The GPU and CPU descriptor handles for the resource.</returns> 
-        (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandles(GraphicsDevice device);
+        (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device, out bool isNormalized);
 
         /// <summary>
         /// Validates the given resource for usage with a specified device, and retrieves the underlying <see cref="ID3D12Resource"/> object.

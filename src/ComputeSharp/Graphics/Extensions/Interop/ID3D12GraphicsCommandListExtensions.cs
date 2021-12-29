@@ -222,31 +222,19 @@ internal static unsafe class ID3D12GraphicsCommandListExtensions
     /// <summary>
     /// Clears a target UAV resource.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     /// <param name="d3D12GraphicsCommandList">The <see cref="ID3D12GraphicsCommandList"/> instance in use.</param>
     /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to clear.</param>
     /// <param name="d3D12GpuDescriptorHandle">The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value for the target resource.</param>
     /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value for the target resource.</param>
-    public static unsafe void ClearUnorderedAccessView<T>(
+    /// <param name="isNormalized">Indicates whether the target resource uses a normalized format.</param>
+    public static unsafe void ClearUnorderedAccessView(
         this ref ID3D12GraphicsCommandList d3D12GraphicsCommandList,
         ID3D12Resource* d3D12Resource,
         D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle,
-        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle)
-        where T : unmanaged
+        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
+        bool isNormalized)
     {
-        if (typeof(T) == typeof(uint))
-        {
-            UInt4 values = default;
-
-            d3D12GraphicsCommandList.ClearUnorderedAccessViewUint(
-                ViewGPUHandleInCurrentHeap: d3D12GpuDescriptorHandle,
-                ViewCPUHandle: d3D12CpuDescriptorHandle,
-                pResource: d3D12Resource,
-                Values: (uint*)&values,
-                NumRects: 0,
-                pRects: null);
-        }
-        else if (typeof(T) == typeof(float))
+        if (isNormalized)
         {
             Float4 values = default;
 
@@ -260,7 +248,15 @@ internal static unsafe class ID3D12GraphicsCommandListExtensions
         }
         else
         {
-            ThrowHelper.ThrowArgumentException("Invalid clear type");
+            UInt4 values = default;
+
+            d3D12GraphicsCommandList.ClearUnorderedAccessViewUint(
+                ViewGPUHandleInCurrentHeap: d3D12GpuDescriptorHandle,
+                ViewCPUHandle: d3D12CpuDescriptorHandle,
+                pResource: d3D12Resource,
+                Values: (uint*)&values,
+                NumRects: 0,
+                pRects: null);
         }
     }
 

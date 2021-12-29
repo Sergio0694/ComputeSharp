@@ -107,9 +107,9 @@ public static partial class ComputeContextExtensions
     public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteBuffer<T> buffer)
         where T : unmanaged
     {
-        var handles = buffer.ValidateAndGetGpuAndCpuDescriptorHandles(context.GraphicsDevice);
+        var handles = buffer.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice);
 
-        context.Clear<uint>(buffer.D3D12Resource, handles.Gpu, handles.Cpu);
+        context.Clear(buffer.D3D12Resource, handles.Gpu, handles.Cpu, isNormalized: false);
     }
 
     /// <summary>
@@ -121,7 +121,9 @@ public static partial class ComputeContextExtensions
     public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteTexture2D<T> texture)
         where T : unmanaged
     {
-        throw new System.NotImplementedException();
+        var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
+
+        context.Clear(texture.D3D12Resource, handles.Gpu, handles.Cpu, isNormalized);
     }
 
     /// <summary>
@@ -133,7 +135,9 @@ public static partial class ComputeContextExtensions
     public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteTexture3D<T> texture)
         where T : unmanaged
     {
-        throw new System.NotImplementedException();
+        var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
+
+        context.Clear(texture.D3D12Resource, handles.Gpu, handles.Cpu, isNormalized);
     }
 
     /// <summary>
@@ -147,7 +151,9 @@ public static partial class ComputeContextExtensions
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
     {
-        throw new System.NotImplementedException();
+        var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
+
+        context.Clear(texture.D3D12Resource, handles.Gpu, handles.Cpu, isNormalized);
     }
 
     /// <summary>
@@ -161,7 +167,9 @@ public static partial class ComputeContextExtensions
         where T : unmanaged, IUnorm<TPixel>
         where TPixel : unmanaged
     {
-        throw new System.NotImplementedException();
+        var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
+
+        context.Clear(texture.D3D12Resource, handles.Gpu, handles.Cpu, isNormalized);
     }
 
     /// <summary>
@@ -173,7 +181,9 @@ public static partial class ComputeContextExtensions
     public static unsafe void Clear<TPixel>(this in ComputeContext context, IReadWriteTexture2D<TPixel> texture)
         where TPixel : unmanaged
     {
-        throw new System.NotImplementedException();
+        var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
+
+        context.Clear(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice), handles.Gpu, handles.Cpu, isNormalized);
     }
 
     /// <summary>
@@ -185,7 +195,9 @@ public static partial class ComputeContextExtensions
     public static unsafe void Clear<TPixel>(this in ComputeContext context, IReadWriteTexture3D<TPixel> texture)
         where TPixel : unmanaged
     {
-        throw new System.NotImplementedException();
+        var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
+
+        context.Clear(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice), handles.Gpu, handles.Cpu, isNormalized);
     }
 
     /// <summary>
