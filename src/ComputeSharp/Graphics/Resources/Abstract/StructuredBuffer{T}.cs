@@ -304,22 +304,4 @@ public abstract class StructuredBuffer<T> : Buffer<T>
             copyCommandList.ExecuteAndWaitForCompletion();
         }
     }
-
-    /// <inheritdoc cref="__Internals.GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice, out bool)"/>
-    internal (D3D12_GPU_DESCRIPTOR_HANDLE Gpu, D3D12_CPU_DESCRIPTOR_HANDLE Cpu) ValidateAndGetGpuAndCpuDescriptorHandlesForClear(GraphicsDevice device)
-    {
-        ThrowIfDisposed();
-        ThrowIfDeviceMismatch(device);
-
-        return (D3D12GpuDescriptorHandle, D3D12CpuDescriptorHandleNonShaderVisible);
-    }
-
-    /// <inheritdoc cref="__Internals.GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice)"/>
-    internal unsafe ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device)
-    {
-        ThrowIfDisposed();
-        ThrowIfDeviceMismatch(device);
-
-        return D3D12Resource;
-    }
 }

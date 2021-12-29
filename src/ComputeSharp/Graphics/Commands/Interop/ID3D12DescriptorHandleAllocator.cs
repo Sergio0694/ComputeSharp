@@ -31,9 +31,9 @@ internal unsafe struct ID3D12DescriptorHandleAllocator : IDisposable
     private ComPtr<ID3D12DescriptorHeap> d3D12DescriptorHeapNonShaderVisible;
 
     /// <summary>
-    /// The array of <see cref="D3D12DescriptorHandleBundle"/> items with the available descriptor handles.
+    /// The array of <see cref="ID3D12ResourceDescriptorHandles"/> items with the available descriptor handles.
     /// </summary>
-    private readonly D3D12DescriptorHandleBundle[] d3D12DescriptorHandlePairs;
+    private readonly ID3D12ResourceDescriptorHandles[] d3D12DescriptorHandlePairs;
 
     /// <summary>
     /// The head index for the queue.
@@ -58,24 +58,26 @@ internal unsafe struct ID3D12DescriptorHandleAllocator : IDisposable
     {
         this.d3D12DescriptorHeap = device->CreateDescriptorHeap(DescriptorsPerHeap, isShaderVisible: true);
         this.d3D12DescriptorHeapNonShaderVisible = device->CreateDescriptorHeap(DescriptorsPerHeap, isShaderVisible: false);
-        this.d3D12DescriptorHandlePairs = GC.AllocateUninitializedArray<D3D12DescriptorHandleBundle>((int)DescriptorsPerHeap);
+        this.d3D12DescriptorHandlePairs = GC.AllocateUninitializedArray<ID3D12ResourceDescriptorHandles>((int)DescriptorsPerHeap);
         this.head = 0;
         this.tail = 0;
         this.size = (int)DescriptorsPerHeap;
 
-        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle = this.d3D12DescriptorHeap.Get()->GetCPUDescriptorHandleForHeapStart();
-        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandleNonShaderVisible = this.d3D12DescriptorHeapNonShaderVisible.Get()->GetCPUDescriptorHandleForHeapStart();
+        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandleStart = this.d3D12DescriptorHeap.Get()->GetCPUDescriptorHandleForHeapStart();
         D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandleStart = this.d3D12DescriptorHeap.Get()->GetGPUDescriptorHandleForHeapStart();
+        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandleNonShaderVisibleStart = this.d3D12DescriptorHeapNonShaderVisible.Get()->GetCPUDescriptorHandleForHeapStart();
         uint descriptorIncrementSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
         for (int i = 0; i < this.d3D12DescriptorHandlePairs.Length; i++)
         {
-            this.d3D12DescriptorHandlePairs[i] = new D3D12DescriptorHandleBundle(
-                in d3D12CpuDescriptorHandle,
-                in d3D12CpuDescriptorHandleNonShaderVisible,
-                in d3D12GpuDescriptorHandleStart,
-                i,
-                descriptorIncrementSize);
+            D3D12_CPU_DESCRIPTOR_HANDLE.InitOffsetted(out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle, in d3D12CpuDescriptorHandleStart, i, descriptorIncrementSize);
+            D3D12_GPU_DESCRIPTOR_HANDLE.InitOffsetted(out D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle, in d3D12GpuDescriptorHandleStart, i, descriptorIncrementSize);
+            D3D12_CPU_DESCRIPTOR_HANDLE.InitOffsetted(out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandleNonShaderVisible, in d3D12CpuDescriptorHandleNonShaderVisibleStart, i, descriptorIncrementSize);
+
+            this.d3D12DescriptorHandlePairs[i] = new ID3D12ResourceDescriptorHandles(
+                d3D12CpuDescriptorHandle,
+                d3D12GpuDescriptorHandle,
+                d3D12CpuDescriptorHandleNonShaderVisible);
         }
     }
 
@@ -85,25 +87,16 @@ internal unsafe struct ID3D12DescriptorHandleAllocator : IDisposable
     public ID3D12DescriptorHeap* D3D12DescriptorHeap => this.d3D12DescriptorHeap;
 
     /// <summary>
-    /// Rents a new CPU and GPU handle pair to use in a memory buffer.
+    /// Rents a new bundle of CPU and GPU handles to use in a resource.
     /// </summary>
-    /// <param name="d3D12CpuDescriptorHandle">The resulting <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value.</param>
-    /// <param name="d3D12CpuDescriptorHandleNonShaderVisible">The resulting non shader visible <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value.</param>
-    /// <param name="d3D12GpuDescriptorHandle">The resulting <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value.</param>
-    public void Rent(
-        out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
-        out D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandleNonShaderVisible,
-        out D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle)
+    /// <param name="d3D12ResourceDescriptorHandles">The resulting <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value.</param>
+    public void Rent(out ID3D12ResourceDescriptorHandles d3D12ResourceDescriptorHandles)
     {
         lock (this.d3D12DescriptorHandlePairs)
         {
             Guard.IsGreaterThan(this.size, 0, nameof(size));
 
-            ref readonly D3D12DescriptorHandleBundle d3D12DescriptorHandlePair = ref this.d3D12DescriptorHandlePairs[this.head++];
-
-            d3D12CpuDescriptorHandle = d3D12DescriptorHandlePair.D3D12CpuDescriptorHandle;
-            d3D12CpuDescriptorHandleNonShaderVisible = d3D12DescriptorHandlePair.D3D12CpuDescriptorHandleNonShaderVisible;
-            d3D12GpuDescriptorHandle = d3D12DescriptorHandlePair.D3D12GpuDescriptorhandle;
+            d3D12ResourceDescriptorHandles = this.d3D12DescriptorHandlePairs[this.head++];
 
             if (this.head == DescriptorsPerHeap)
             {
@@ -117,19 +110,14 @@ internal unsafe struct ID3D12DescriptorHandleAllocator : IDisposable
     /// <summary>
     /// Returns a CPU and GPU handle pair for later use.
     /// </summary>
-    /// <param name="d3D12CpuDescriptorHandle">The returned <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value.</param>
-    /// <param name="d3D12CpuDescriptorHandleNonShaderVisible">The returned non shader visible <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value.</param>
-    /// <param name="d3D12GpuDescriptorHandle">The returned <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value.</param>
-    public void Return(
-        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
-        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandleNonShaderVisible,
-        D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle)
+    /// <param name="d3D12ResourceDescriptorHandles">The returned <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value.</param>
+    public void Return(in ID3D12ResourceDescriptorHandles d3D12ResourceDescriptorHandles)
     {
         lock (this.d3D12DescriptorHandlePairs)
         {
             Guard.IsLessThan(this.size, DescriptorsPerHeap, nameof(size));
 
-            this.d3D12DescriptorHandlePairs[this.tail++] = new D3D12DescriptorHandleBundle(d3D12CpuDescriptorHandle, d3D12CpuDescriptorHandleNonShaderVisible, d3D12GpuDescriptorHandle);
+            this.d3D12DescriptorHandlePairs[this.tail++] = d3D12ResourceDescriptorHandles;
 
             if (this.tail == DescriptorsPerHeap)
             {
@@ -144,62 +132,5 @@ internal unsafe struct ID3D12DescriptorHandleAllocator : IDisposable
     public void Dispose()
     {
         this.d3D12DescriptorHeap.Dispose();
-    }
-
-    /// <summary>
-    /// A type representing a bundle of reusable descriptor handles.
-    /// </summary>
-    private readonly struct D3D12DescriptorHandleBundle
-    {
-        /// <summary>
-        /// The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value for the current entry.
-        /// </summary>
-        public readonly D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandle;
-
-        /// <summary>
-        /// The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value for the current entry, non shader visible.
-        /// </summary>
-        public readonly D3D12_CPU_DESCRIPTOR_HANDLE D3D12CpuDescriptorHandleNonShaderVisible;
-
-        /// <summary>
-        /// The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value for the current entry.
-        /// </summary>
-        public readonly D3D12_GPU_DESCRIPTOR_HANDLE D3D12GpuDescriptorhandle;
-
-        /// <summary>
-        /// Creates a new <see cref="D3D12DescriptorHandleBundle"/> instance with the given parameters.
-        /// </summary>
-        /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value to wrap.</param>
-        /// <param name="d3D12CpuDescriptorHandleNonShaderVisible">The non shader visible <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value to wrap.</param>
-        /// <param name="d3D12GpuDescriptorHandle">The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value to wrap.</param>
-        public D3D12DescriptorHandleBundle(
-            D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
-            D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandleNonShaderVisible,
-            D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle)
-        {
-            D3D12CpuDescriptorHandle = d3D12CpuDescriptorHandle;
-            D3D12CpuDescriptorHandleNonShaderVisible = d3D12CpuDescriptorHandleNonShaderVisible;
-            D3D12GpuDescriptorhandle = d3D12GpuDescriptorHandle;
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="D3D12DescriptorHandleBundle"/> instance with the given parameters.
-        /// </summary>
-        /// <param name="d3D12CpuDescriptorHandleStart">The base <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value.</param>
-        /// <param name="d3D12CpuDescriptorHandleNonShaderVisible">The base non shader visible <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value.</param>
-        /// <param name="d3D12GpuDescriptorHandleStart">The base <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value.</param>
-        /// <param name="offset">The offset for the new pair of handles to compute.</param>
-        /// <param name="descriptorIncrementSize">The increment size for each consecutive handles pair.</param>
-        public D3D12DescriptorHandleBundle(
-            in D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandleStart,
-            in D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandleNonShaderVisible,
-            in D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandleStart,
-            int offset,
-            uint descriptorIncrementSize)
-        {
-            D3D12_CPU_DESCRIPTOR_HANDLE.InitOffsetted(out D3D12CpuDescriptorHandle, in d3D12CpuDescriptorHandleStart, offset, descriptorIncrementSize);
-            D3D12_CPU_DESCRIPTOR_HANDLE.InitOffsetted(out D3D12CpuDescriptorHandleNonShaderVisible, in d3D12CpuDescriptorHandleNonShaderVisible, offset, descriptorIncrementSize);
-            D3D12_GPU_DESCRIPTOR_HANDLE.InitOffsetted(out D3D12GpuDescriptorhandle, in d3D12GpuDescriptorHandleStart, offset, descriptorIncrementSize);
-        }
     }
 }
