@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
@@ -15,7 +16,7 @@ namespace ComputeSharp;
 /// <summary>
 /// A context to batch compute operations in a single invocation, minimizing GPU overhead.
 /// </summary>
-public ref struct ComputeContext
+public struct ComputeContext : IDisposable, IAsyncDisposable
 {
     /// <summary>
     /// The <see cref="GraphicsDevice"/> instance owning the current context.
@@ -231,7 +232,7 @@ public ref struct ComputeContext
         commandList.D3D12GraphicsCommandList->Dispatch((uint)groupsX, (uint)groupsY, 1);
     }
 
-    /// <inheritdoc cref="IDisposable.Dispose"/>
+    /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Dispose()
     {
@@ -243,6 +244,24 @@ public ref struct ComputeContext
         }
 
         this.commandList.ExecuteAndWaitForCompletion();
+    }
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public ValueTask DisposeAsync()
+    {
+        ThrowInvalidOperationExceptionIfDeviceIsNull();
+
+        if (!this.commandList.IsAllocated)
+        {
+#if NET6_0_OR_GREATER
+            return ValueTask.CompletedTask;
+#else
+            return new(Task.CompletedTask);
+#endif
+        }
+
+        return this.commandList.ExecuteAndWaitForCompletionAsync();
     }
 
     /// <summary>

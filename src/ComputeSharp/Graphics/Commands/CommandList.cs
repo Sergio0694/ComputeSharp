@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
@@ -9,7 +10,7 @@ namespace ComputeSharp.Graphics.Commands;
 /// <summary>
 /// A command list to set and execute operations on the GPU.
 /// </summary>
-internal unsafe ref struct CommandList
+internal unsafe struct CommandList : IDisposable
 {
     /// <summary>
     /// The <see cref="GraphicsDevice"/> instance associated with the current command list.
@@ -138,7 +139,18 @@ internal unsafe ref struct CommandList
         this.device.ExecuteCommandList(ref this);
     }
 
-    /// <inheritdoc cref="IDisposable.Dispose"/>
+    /// <summary>
+    /// Executes the commands in the current commands list, returns a <see cref="ValueTask"/>.
+    /// </summary>
+    /// <returns>The <see cref="ValueTask"/> to await for the operations to complete.</returns>
+    public ValueTask ExecuteAndWaitForCompletionAsync()
+    {
+        this.d3D12GraphicsCommandList.Get()->Close();
+
+        return this.device.ExecuteCommandListAsync(ref this);
+    }
+
+    /// <inheritdoc/>
     public void Dispose()
     {
         this.d3D12CommandAllocator.Dispose();

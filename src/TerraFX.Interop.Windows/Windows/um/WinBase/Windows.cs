@@ -10,10 +10,9 @@ namespace TerraFX.Interop.Windows
     internal static unsafe partial class Windows
     {
         [DllImport("kernel32", ExactSpelling = true)]
-        public static extern HANDLE CreateEventW([NativeTypeName("LPSECURITY_ATTRIBUTES")] SECURITY_ATTRIBUTES* lpEventAttributes, BOOL bManualReset, BOOL bInitialState, [NativeTypeName("LPCWSTR")] ushort* lpName);
+        public static extern BOOL RegisterWaitForSingleObject([NativeTypeName("PHANDLE")] HANDLE* phNewWaitObject, HANDLE hObject, [NativeTypeName("WAITORTIMERCALLBACK")] void* Callback, [NativeTypeName("PVOID")] void* Context, [NativeTypeName("ULONG")] uint dwMilliseconds, [NativeTypeName("ULONG")] uint dwFlags);
 
-        [DllImport("kernel32", ExactSpelling = true)]
-        [return: NativeTypeName("DWORD")]
-        public static extern uint WaitForSingleObjectEx(HANDLE hHandle, [NativeTypeName("DWORD")] uint dwMilliseconds, BOOL bAlertable);
+        [NativeTypeName("#define INFINITE 0xFFFFFFFF")]
+        public const uint INFINITE = 0xFFFFFFFF;
     }
 }
