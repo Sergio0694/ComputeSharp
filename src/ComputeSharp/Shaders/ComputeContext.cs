@@ -275,16 +275,15 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         // This method has to take the context by readonly reference to allow callers to be marked as readonly.
         // This is needed to skip the hidden copies done by Roslyn, which would break the dispatching, as the
-        // original context would not see the changes done by the following queued dispatches. This delegate
-        // cast is necessary to work around the fact that ref structs cannot currently be used as type arguments.
-        ref ComputeContext context = ref ((delegate*<in ComputeContext, ref ComputeContext>)(delegate*<in byte, ref byte>)&Unsafe.AsRef<byte>)(in @this);
+        // original context would not see the changes done by the following queued dispatches.
+        ref CommandList commandList = ref Unsafe.AsRef(in @this).commandList;
 
-        if (!context.commandList.IsAllocated)
+        if (!commandList.IsAllocated)
         {
             ThrowHelper.ThrowInvalidOperationException("The current compute context has not yet been initialized.");
         }
 
-        return ref context.commandList;
+        return ref commandList;
     }
 
     /// <summary>
@@ -296,7 +295,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static unsafe ref CommandList GetCommandList(in ComputeContext @this, ID3D12PipelineState* pipelineState)
     {
-        ref ComputeContext context = ref ((delegate*<in ComputeContext, ref ComputeContext>)(delegate*<in byte, ref byte>)&Unsafe.AsRef<byte>)(in @this);
+        ref ComputeContext context = ref Unsafe.AsRef(in @this);
 
         if (context.commandList.IsAllocated)
         {
