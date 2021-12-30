@@ -534,6 +534,37 @@ public partial class ComputeContextTests
         Assert.Fail();
     }
 
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [ExpectedException(typeof(InvalidOperationException), AllowDerivedTypes = false)]
+    public void For_AfterDispose_ThrowsException(Device device)
+    {
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(128);
+
+        ComputeContext context = device.Get().CreateComputeContext();
+
+        context.Dispose();
+        context.For(512, new OffsetComputeShader(buffer, 0));
+
+        Assert.Fail();
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [ExpectedException(typeof(InvalidOperationException), AllowDerivedTypes = false)]
+    public async Task For_AfterDisposeAsync_ThrowsException(Device device)
+    {
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(128);
+
+        ComputeContext context = device.Get().CreateComputeContext();
+
+        await context.DisposeAsync();
+
+        context.For(512, new OffsetComputeShader(buffer, 0));
+
+        Assert.Fail();
+    }
+
     [TestMethod]
     [ExpectedException(typeof(InvalidOperationException), AllowDerivedTypes = false)]
     public void DefaultContext_GetGraphicsDevice_ThrowsException()

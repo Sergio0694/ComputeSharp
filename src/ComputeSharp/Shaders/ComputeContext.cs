@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using ComputeSharp.__Internals;
@@ -21,7 +22,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// <summary>
     /// The <see cref="GraphicsDevice"/> instance owning the current context.
     /// </summary>
-    private readonly GraphicsDevice device;
+    private GraphicsDevice? device;
 
     /// <summary>
     /// The current <see cref="CommandList"/> instance used to dispatch shaders.
@@ -238,6 +239,8 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
 
+        this.device = null;
+
         if (!this.commandList.IsAllocated)
         {
             return;
@@ -251,6 +254,8 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     public ValueTask DisposeAsync()
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
+
+        this.device = null;
 
         if (!this.commandList.IsAllocated)
         {
@@ -308,7 +313,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         }
         else
         {
-            context.commandList = new CommandList(context.device, pipelineState);
+            context.commandList = new CommandList(context.device!, pipelineState);
         }
 
         return ref context.commandList;
@@ -318,12 +323,13 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     /// Throws an <see cref="InvalidOperationException"/> if <see cref="device"/> is <see langword="null"/>.
     /// </summary>
     /// <exception cref="InvalidOperationException">Thrown if <see cref="device"/> is <see langword="null"/>.</exception>
+    [MemberNotNull(nameof(device))]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private readonly void ThrowInvalidOperationExceptionIfDeviceIsNull()
     {
         if (this.device is null)
         {
-            ThrowHelper.ThrowInvalidOperationException("The current compute context has not been initialized correctly.");
+            ThrowHelper.ThrowInvalidOperationException("The current compute context is not in a valid state.");
         }
     }
 }

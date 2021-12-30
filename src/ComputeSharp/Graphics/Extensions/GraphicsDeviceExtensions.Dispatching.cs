@@ -110,7 +110,15 @@ public static partial class GraphicsDeviceExtensions
     ///     // Dispatch shaders here...
     /// }
     /// </code>
-    /// All dispatched shaders will be executed as soon as the context goes out of scope.
+    /// <para>All dispatched shaders will be executed as soon as the context goes out of scope.</para>
+    /// <para>Asynchronous execution is also supported, through the <see cref="System.IAsyncDisposable"/> interface:</para>
+    /// <code>
+    /// await using (var context = device.CreateComputeContext())
+    /// {
+    ///     // Dispatch shaders here, they will be executed asynchronously
+    /// }
+    /// </code>
+    /// Copying or not disposing the <see cref="ComputeContext"/> instance results in undefined behavior.
     /// </remarks>
     public static ComputeContext CreateComputeContext(this GraphicsDevice device)
     {
