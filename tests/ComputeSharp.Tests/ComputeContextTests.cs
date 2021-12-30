@@ -487,6 +487,13 @@ public partial class ComputeContextTests
 
     [CombinatorialTestMethod]
     [AllDevices]
+    public async Task ForAndForEach_Async_Batched_WithTaskRun(Device device)
+    {
+        await Task.Run(() => ForAndForEach_Async_Batched(device));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
     public async Task ForAndForEach_Async_Batched_Parallel(Device device)
     {
         async Task TestAsync(Device device)
@@ -498,6 +505,51 @@ public partial class ComputeContextTests
         }
 
         await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => TestAsync(device)));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public async Task ForAndForEach_Async_Batched_Parallel_WithConfigureAwait(Device device)
+    {
+        async Task TestAsync(Device device)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                await ForAndForEach_Async_Batched(device).ConfigureAwait(false);
+            }
+        }
+
+        await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => TestAsync(device)));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public async Task ForAndForEach_Async_Batched_Parallel_WithTaskRun(Device device)
+    {
+        async Task TestAsync(Device device)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                await ForAndForEach_Async_Batched(device);
+            }
+        }
+
+        await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => Task.Run(() => TestAsync(device))));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public async Task ForAndForEach_Async_Batched_Parallel_WithConfigureAwaitAndTaskRun(Device device)
+    {
+        async Task TestAsync(Device device)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                await ForAndForEach_Async_Batched(device).ConfigureAwait(false);
+            }
+        }
+
+        await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => Task.Run(() => TestAsync(device))));
     }
 
     [CombinatorialTestMethod]
@@ -517,6 +569,63 @@ public partial class ComputeContextTests
         }
 
         await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => TestAsync(device)));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public async Task ForAndForEach_Async_Batched_Parallel_Multiple_WithConfigureAwait(Device device)
+    {
+        async Task TestAsync(Device device)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Task task1 = ForAndForEach_Async_Batched(device);
+                Task task2 = ForAndForEach_Async_Batched(device);
+                Task task3 = ForAndForEach_Async_Batched(device);
+
+                await Task.WhenAll(task1, task2, task3).ConfigureAwait(false);
+            }
+        }
+
+        await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => TestAsync(device)));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public async Task ForAndForEach_Async_Batched_Parallel_Multiple_WithTaskRun(Device device)
+    {
+        async Task TestAsync(Device device)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Task task1 = ForAndForEach_Async_Batched(device);
+                Task task2 = ForAndForEach_Async_Batched(device);
+                Task task3 = ForAndForEach_Async_Batched(device);
+
+                await Task.WhenAll(task1, task2, task3);
+            }
+        }
+
+        await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => Task.Run(() => TestAsync(device))));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public async Task ForAndForEach_Async_Batched_Parallel_Multiple_WithConfigureAwaitAndTaskRun(Device device)
+    {
+        async Task TestAsync(Device device)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Task task1 = ForAndForEach_Async_Batched(device);
+                Task task2 = ForAndForEach_Async_Batched(device);
+                Task task3 = ForAndForEach_Async_Batched(device);
+
+                await Task.WhenAll(task1, task2, task3).ConfigureAwait(false);
+            }
+        }
+
+        await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => Task.Run(() => TestAsync(device))));
     }
 
     [CombinatorialTestMethod]
