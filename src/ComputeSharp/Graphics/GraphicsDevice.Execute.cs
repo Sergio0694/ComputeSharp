@@ -1,7 +1,11 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Sources;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Commands.Interop;
@@ -120,13 +124,11 @@ unsafe partial class GraphicsDevice : NativeObject
         }
 
         // Setup the awaitable task
-        Task computeTask = WaitForFenceAsync(
+        return WaitForFenceAsync(
             updatedFenceValue,
             this,
             commandList.DetachD3D12CommandList(),
-            commandList.DetachD3D12CommandAllocator());
-
-        return new(computeTask);
+            commandList.DetachD3D12CommandAllocator()).AsValueTask();
     }
 
     /// <summary>
@@ -135,9 +137,9 @@ unsafe partial class GraphicsDevice : NativeObject
     private struct CallbackContext
     {
         /// <summary>
-        /// The <see cref="GCHandle"/> wrapping the <see cref="TaskCompletionSource"/> object to signal completion.
+        /// The <see cref="GCHandle"/> wrapping the <see cref="WaitForFenceValueTaskSource"/> object to signal completion.
         /// </summary>
-        public GCHandle TaskCompletionSourceHandle;
+        public GCHandle WaitForFenceValueTaskSourceHandle;
 
         /// <summary>
         /// The <see cref="GCHandle"/> wrapping the <see cref="GraphicsDevice"/> instance in use.
@@ -167,9 +169,9 @@ unsafe partial class GraphicsDevice : NativeObject
     /// <param name="device">The <see cref="GraphicsDevice"/> instance executing the operations.</param>
     /// <param name="d3D12GraphicsCommandList">The <see cref="ID3D12GraphicsCommandList"/> used to queue the operations.</param>
     /// <param name="d3D12CommandAllocator">The <see cref="ID3D12GraphicsCommandList"/> object backing <paramref name="d3D12GraphicsCommandList"/>.</param>
-    /// <returns>The <see cref="ValueTask"/> object representing the operation to wait for.</returns>
+    /// <returns>The <see cref="WaitForFenceValueTaskSource"/> object representing the operation to wait for.</returns>
     /// <remarks>This method is only supported for compute operations.</remarks>
-    private static Task WaitForFenceAsync(
+    private static WaitForFenceValueTaskSource WaitForFenceAsync(
         ulong d3D12FenceValue,
         GraphicsDevice device,
         ID3D12GraphicsCommandList* d3D12GraphicsCommandList,
@@ -179,10 +181,10 @@ unsafe partial class GraphicsDevice : NativeObject
 
         device.d3D12ComputeFence.Get()->SetEventOnCompletion(d3D12FenceValue, eventHandle).Assert();
 
-        TaskCompletionSource taskCompletionSource = new();
+        WaitForFenceValueTaskSource waitForFenceValueTaskSource = WaitForFenceValueTaskSource.Rent();
         CallbackContext* callbackContext = (CallbackContext*)NativeMemory.Alloc((nuint)sizeof(CallbackContext));
 
-        callbackContext->TaskCompletionSourceHandle = GCHandle.Alloc(taskCompletionSource);
+        callbackContext->WaitForFenceValueTaskSourceHandle = GCHandle.Alloc(waitForFenceValueTaskSource);
         callbackContext->GraphicsDeviceHandle = GCHandle.Alloc(device);
         callbackContext->D3D12GraphicsCommandList = d3D12GraphicsCommandList;
         callbackContext->D3D12CommandAllocator = d3D12CommandAllocator;
@@ -202,7 +204,7 @@ unsafe partial class GraphicsDevice : NativeObject
             dwMilliseconds: Windows.INFINITE,
             dwFlags: 0);
 
-        return taskCompletionSource.Task;
+        return waitForFenceValueTaskSource;
     }
 
     /// <summary>
@@ -215,13 +217,13 @@ unsafe partial class GraphicsDevice : NativeObject
     {
         CallbackContext* callbackContext = (CallbackContext*)pContext;
 
-        TaskCompletionSource taskCompletionSource = Unsafe.As<TaskCompletionSource>(callbackContext->TaskCompletionSourceHandle.Target)!;
+        WaitForFenceValueTaskSource waitForFenceValueTaskSource = Unsafe.As<WaitForFenceValueTaskSource>(callbackContext->WaitForFenceValueTaskSourceHandle.Target)!;
         GraphicsDevice device = Unsafe.As<GraphicsDevice>(callbackContext->GraphicsDeviceHandle.Target)!;
         ID3D12GraphicsCommandList* d3D12GraphicsCommandList = callbackContext->D3D12GraphicsCommandList;
         ID3D12CommandAllocator* d3D12CommandAllocator = callbackContext->D3D12CommandAllocator;
         HANDLE eventHandle = callbackContext->EventHandle;
 
-        callbackContext->TaskCompletionSourceHandle.Free();
+        callbackContext->WaitForFenceValueTaskSourceHandle.Free();
         callbackContext->GraphicsDeviceHandle.Free();
 
         device.computeCommandListPool.Return(d3D12GraphicsCommandList, d3D12CommandAllocator);
@@ -230,6 +232,93 @@ unsafe partial class GraphicsDevice : NativeObject
 
         NativeMemory.Free(callbackContext);
 
-        taskCompletionSource.SetResult();
+        waitForFenceValueTaskSource.Complete();
+    }
+
+    /// <summary>
+    /// A reusable <see cref="IValueTaskSource"/> type.
+    /// </summary>
+    private sealed class WaitForFenceValueTaskSource : IValueTaskSource
+    {
+        /// <summary>
+        /// The shared <see cref="ConcurrentQueue{T}"/> holding the reusable <see cref="WaitForFenceValueTaskSource"/> instances.
+        /// </summary>
+        private static readonly ConcurrentQueue<WaitForFenceValueTaskSource> ValueTaskSourceQueue = new();
+
+        /// <summary>
+        /// The approximate count of currently enqueued instances in <see cref="ValueTaskSourceQueue"/>.
+        /// </summary>
+        private static volatile int queuedValueTaskSourceCount;
+
+        /// <summary>
+        /// The wrapped <see cref="ManualResetValueTaskSourceCore{TResult}"/> instance being used.
+        /// </summary>
+        private ManualResetValueTaskSourceCore<object?> manualResetValueTaskSource;
+
+        /// <summary>
+        /// Rents a <see cref="WaitForFenceValueTaskSource"/> instance.
+        /// </summary>
+        /// <returns>A <see cref="WaitForFenceValueTaskSource"/> instance to use.</returns>
+        public static WaitForFenceValueTaskSource Rent()
+        {
+            if (ValueTaskSourceQueue.TryDequeue(out WaitForFenceValueTaskSource? valueTaskSource))
+            {
+                _ = Interlocked.Decrement(ref queuedValueTaskSourceCount);
+            }
+            else
+            {
+                valueTaskSource = new WaitForFenceValueTaskSource();
+            }
+
+            return valueTaskSource;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="ValueTask"/> from the current instance.
+        /// </summary>
+        /// <returns>A <see cref="ValueTask"/> used to wait for the underlying operation.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ValueTask AsValueTask()
+        {
+            return new(this, this.manualResetValueTaskSource.Version);
+        }
+
+        /// <summary>
+        /// Signals the current instance for completion.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Complete()
+        {
+            this.manualResetValueTaskSource.SetResult(null);
+        }
+
+        /// <inheritdoc/>
+        public void GetResult(short token)
+        {
+            _ = this.manualResetValueTaskSource.GetResult(token);
+
+            this.manualResetValueTaskSource.Reset();
+
+            if (Interlocked.Increment(ref queuedValueTaskSourceCount) < 16)
+            {
+                ValueTaskSourceQueue.Enqueue(this);
+            }
+            else
+            {
+                _ = Interlocked.Decrement(ref queuedValueTaskSourceCount);
+            }
+        }
+
+        /// <inheritdoc/>
+        public ValueTaskSourceStatus GetStatus(short token)
+        {
+            return this.manualResetValueTaskSource.GetStatus(token);
+        }
+
+        /// <inheritdoc/>
+        public void OnCompleted(Action<object?> continuation, object? state, short token, ValueTaskSourceOnCompletedFlags flags)
+        {
+            this.manualResetValueTaskSource.OnCompleted(continuation, state, token, flags);
+        }
     }
 }

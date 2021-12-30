@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
 
@@ -8,6 +9,7 @@ namespace ComputeSharp.Benchmark.Blas;
 /// A <see langword="class"/> that benchmarks the shader dispatch times.
 /// </summary>
 [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
+[MemoryDiagnoser]
 public partial class DispatchingBenchmark : IDisposable
 {
     /// <summary>
@@ -54,6 +56,18 @@ public partial class DispatchingBenchmark : IDisposable
     }
 
     /// <summary>
+    /// Invokes a single shader through a compute context, asynchronously.
+    /// </summary>
+    [Benchmark]
+    [BenchmarkCategory("SINGLE")]
+    public async Task Compute_Single_WithContext_Async()
+    {
+        await using var context = GraphicsDevice.Default.CreateComputeContext();
+
+        context.For(64, new TestShader(Buffer!));
+    }
+
+    /// <summary>
     /// Invokes two empty compute shaders one by one.
     /// </summary>
     [Benchmark(Baseline = true)]
@@ -72,6 +86,20 @@ public partial class DispatchingBenchmark : IDisposable
     public void Compute_Multiple_WithContext()
     {
         using var context = GraphicsDevice.Default.CreateComputeContext();
+
+        context.For(64, new TestShader(Buffer!));
+        context.Barrier(Buffer!);
+        context.For(64, new TestShader(Buffer!));
+    }
+
+    /// <summary>
+    /// Invokes two empty compute shaders in a batch, asynchronously.
+    /// </summary>
+    [Benchmark]
+    [BenchmarkCategory("MULTIPLE")]
+    public async Task Compute_Multiple_WithContext_Async()
+    {
+        await using var context = GraphicsDevice.Default.CreateComputeContext();
 
         context.For(64, new TestShader(Buffer!));
         context.Barrier(Buffer!);
