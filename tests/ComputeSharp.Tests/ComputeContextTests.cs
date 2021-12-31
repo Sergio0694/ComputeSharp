@@ -446,6 +446,8 @@ public partial class ComputeContextTests
             }
         }
 
+        _ = device.Get();
+
         Parallel.For(0, 64, _ => Test(device));
     }
 
@@ -460,6 +462,8 @@ public partial class ComputeContextTests
                 ForAndForEach_Batched(device);
             }
         }
+
+        _ = device.Get();
 
         await Task.Run(() => Test(device));
     }
@@ -519,6 +523,8 @@ public partial class ComputeContextTests
     [AllDevices]
     public async Task ForAndForEach_Async_Batched_WithTaskRun(Device device)
     {
+        _ = device.Get();
+
         await Task.Run(() => ForAndForEach_Async_Batched(device));
     }
 
@@ -533,6 +539,8 @@ public partial class ComputeContextTests
                 await ForAndForEach_Async_Batched(device);
             }
         }
+
+        _ = device.Get();
 
         await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => TestAsync(device)));
     }
@@ -549,6 +557,8 @@ public partial class ComputeContextTests
             }
         }
 
+        _ = device.Get();
+
         await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => TestAsync(device)));
     }
 
@@ -564,6 +574,8 @@ public partial class ComputeContextTests
             }
         }
 
+        _ = device.Get();
+
         await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => Task.Run(() => TestAsync(device))));
     }
 
@@ -578,6 +590,8 @@ public partial class ComputeContextTests
                 await ForAndForEach_Async_Batched(device).ConfigureAwait(false);
             }
         }
+
+        _ = device.Get();
 
         await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => Task.Run(() => TestAsync(device))));
     }
@@ -598,6 +612,8 @@ public partial class ComputeContextTests
             }
         }
 
+        _ = device.Get();
+
         await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => TestAsync(device)));
     }
 
@@ -616,6 +632,8 @@ public partial class ComputeContextTests
                 await Task.WhenAll(task1, task2, task3).ConfigureAwait(false);
             }
         }
+
+        _ = device.Get();
 
         await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => TestAsync(device)));
     }
@@ -636,6 +654,8 @@ public partial class ComputeContextTests
             }
         }
 
+        _ = device.Get();
+
         await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => Task.Run(() => TestAsync(device))));
     }
 
@@ -654,6 +674,8 @@ public partial class ComputeContextTests
                 await Task.WhenAll(task1, task2, task3).ConfigureAwait(false);
             }
         }
+
+        _ = device.Get();
 
         await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => Task.Run(() => TestAsync(device))));
     }
