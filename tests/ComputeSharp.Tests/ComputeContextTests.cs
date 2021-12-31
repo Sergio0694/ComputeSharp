@@ -436,6 +436,36 @@ public partial class ComputeContextTests
 
     [CombinatorialTestMethod]
     [AllDevices]
+    public void ForAndForEach_Batched_Parallel_WithParallelFor(Device device)
+    {
+        void Test(Device device)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                ForAndForEach_Batched(device);
+            }
+        }
+
+        Parallel.For(0, 64, _ => Test(device));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public async Task ForAndForEach_Batched_Parallel_WithTaskRun(Device device)
+    {
+        void Test(Device device)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                ForAndForEach_Batched(device);
+            }
+        }
+
+        await Task.Run(() => Test(device));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
     public async Task ForAndForEach_Async_Batched(Device device)
     {
         int[] array = Enumerable.Range(0, 1024).ToArray();
