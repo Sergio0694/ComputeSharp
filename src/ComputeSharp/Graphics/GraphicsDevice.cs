@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Threading;
-using ComputeSharp.Core.Extensions;
-using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Commands.Interop;
+#if NET6_0_OR_GREATER
+using ComputeSharp.Core.Extensions;
+#endif
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
@@ -14,7 +14,6 @@ using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
 using static TerraFX.Interop.DirectX.D3D12_FEATURE;
 using static TerraFX.Interop.DirectX.D3D12_FORMAT_SUPPORT1;
 using static TerraFX.Interop.DirectX.DXGI_ADAPTER_FLAG;
-
 namespace ComputeSharp;
 
 /// <summary>
@@ -345,58 +344,6 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
         ID3D12DescriptorHeap* d3D12DescriptorHeap = this.shaderResourceViewDescriptorAllocator.D3D12DescriptorHeap;
 
         d3D12GraphicsCommandList->SetDescriptorHeaps(1, &d3D12DescriptorHeap);
-    }
-
-    /// <summary>
-    /// Executes a given command list and waits for the operation to be completed.
-    /// </summary>
-    /// <param name="commandList">The input <see cref="CommandList"/> to execute.</param>
-    internal void ExecuteCommandList(ref CommandList commandList)
-    {
-        ref readonly ID3D12CommandListPool commandListPool = ref Unsafe.NullRef<ID3D12CommandListPool>();
-        ID3D12CommandQueue* d3D12CommandQueue;
-        ID3D12Fence* d3D12Fence;
-        ref ulong d3D12FenceValue = ref Unsafe.NullRef<ulong>();
-
-        // Get the target command queue, fence and pool for the list type
-        switch (commandList.D3D12CommandListType)
-        {
-            case D3D12_COMMAND_LIST_TYPE_COMPUTE:
-                commandListPool = ref this.computeCommandListPool;
-                d3D12CommandQueue = this.d3D12ComputeCommandQueue;
-                d3D12Fence = this.d3D12ComputeFence;
-                d3D12FenceValue = ref this.nextD3D12ComputeFenceValue;
-                break;
-            case D3D12_COMMAND_LIST_TYPE_COPY:
-                commandListPool = ref this.copyCommandListPool;
-                d3D12CommandQueue = this.d3D12CopyCommandQueue;
-                d3D12Fence = this.d3D12CopyFence;
-                d3D12FenceValue = ref this.nextD3D12CopyFenceValue;
-                break;
-            default: ThrowHelper.ThrowArgumentException(); return;
-        }
-
-        // Execute the command list
-        d3D12CommandQueue->ExecuteCommandLists(1, commandList.GetD3D12CommandListAddressOf());
-
-#if NET6_0_OR_GREATER
-        ulong updatedFenceValue = Interlocked.Increment(ref d3D12FenceValue);
-#else
-        ulong updatedFenceValue = (ulong)Interlocked.Increment(ref Unsafe.As<ulong, long>(ref d3D12FenceValue));
-#endif
-
-        // Signal to the target fence with the updated value. Note that incrementing the
-        // target fence value to signal must be done after executing the command list.
-        d3D12CommandQueue->Signal(d3D12Fence, updatedFenceValue).Assert();
-
-        // If the fence value hasn't been reached, wait until the operation completes
-        if (updatedFenceValue > d3D12Fence->GetCompletedValue())
-        {
-            d3D12Fence->SetEventOnCompletion(updatedFenceValue, default).Assert();
-        }
-
-        // Return the rented command list and command allocator so that they can be reused
-        commandListPool.Return(commandList.DetachD3D12CommandList(), commandList.DetachD3D12CommandAllocator());
     }
 
     /// <inheritdoc/>

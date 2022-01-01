@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using ComputeSharp.__Internals;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
@@ -435,6 +436,252 @@ public partial class ComputeContextTests
 
     [CombinatorialTestMethod]
     [AllDevices]
+    public void ForAndForEach_Batched_Parallel_WithParallelFor(Device device)
+    {
+        void Test(Device device)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                ForAndForEach_Batched(device);
+            }
+        }
+
+        _ = device.Get();
+
+        Parallel.For(0, 64, _ => Test(device));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public async Task ForAndForEach_Batched_Parallel_WithTaskRun(Device device)
+    {
+        void Test(Device device)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                ForAndForEach_Batched(device);
+            }
+        }
+
+        _ = device.Get();
+
+        await Task.Run(() => Test(device));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public async Task ForAndForEach_Async_Batched(Device device)
+    {
+        int[] array = Enumerable.Range(0, 1024).ToArray();
+
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer(array);
+        using ReadWriteTexture2D<Rgba32, float4> texture = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(128, 128);
+
+        await using (ComputeContext context = device.Get().CreateComputeContext())
+        {
+            context.For(512, new OffsetComputeShader(buffer, 0));
+            context.For(64, new OffsetComputeShader(buffer, 512));
+            context.ForEach(texture, default(ClearPixelShader));
+            context.For(299, new OffsetComputeShader(buffer, 576));
+            context.Barrier(texture);
+            context.ForEach(texture, new ColorPixelShader(new float4(0.22f, 0.44f, 0.66f, 0.88f)));
+            context.For(149, new OffsetComputeShader(buffer, 875));
+        }
+
+        void Validate()
+        {
+            // Buffer test
+            {
+                int[] result = buffer.ToArray();
+
+                foreach (ref int x in array.AsSpan())
+                {
+                    x *= 2;
+                }
+
+                CollectionAssert.AreEqual(array, result);
+            }
+
+            // Texture test
+            {
+                Rgba32[,] result = texture.ToArray();
+
+                foreach (Rgba32 pixel in result)
+                {
+                    Assert.AreEqual(pixel.R, 56);
+                    Assert.AreEqual(pixel.G, 112);
+                    Assert.AreEqual(pixel.B, 168);
+                    Assert.AreEqual(pixel.A, 224);
+                }
+            }
+        }
+
+        Validate();
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public async Task ForAndForEach_Async_Batched_WithTaskRun(Device device)
+    {
+        _ = device.Get();
+
+        await Task.Run(() => ForAndForEach_Async_Batched(device));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public async Task ForAndForEach_Async_Batched_Parallel(Device device)
+    {
+        async Task TestAsync(Device device)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                await ForAndForEach_Async_Batched(device);
+            }
+        }
+
+        _ = device.Get();
+
+        await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => TestAsync(device)));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public async Task ForAndForEach_Async_Batched_Parallel_WithConfigureAwait(Device device)
+    {
+        async Task TestAsync(Device device)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                await ForAndForEach_Async_Batched(device).ConfigureAwait(false);
+            }
+        }
+
+        _ = device.Get();
+
+        await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => TestAsync(device)));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public async Task ForAndForEach_Async_Batched_Parallel_WithTaskRun(Device device)
+    {
+        async Task TestAsync(Device device)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                await ForAndForEach_Async_Batched(device);
+            }
+        }
+
+        _ = device.Get();
+
+        await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => Task.Run(() => TestAsync(device))));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public async Task ForAndForEach_Async_Batched_Parallel_WithConfigureAwaitAndTaskRun(Device device)
+    {
+        async Task TestAsync(Device device)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                await ForAndForEach_Async_Batched(device).ConfigureAwait(false);
+            }
+        }
+
+        _ = device.Get();
+
+        await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => Task.Run(() => TestAsync(device))));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public async Task ForAndForEach_Async_Batched_Parallel_Multiple(Device device)
+    {
+        async Task TestAsync(Device device)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Task task1 = ForAndForEach_Async_Batched(device);
+                Task task2 = ForAndForEach_Async_Batched(device);
+                Task task3 = ForAndForEach_Async_Batched(device);
+
+                await Task.WhenAll(task1, task2, task3);
+            }
+        }
+
+        _ = device.Get();
+
+        await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => TestAsync(device)));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public async Task ForAndForEach_Async_Batched_Parallel_Multiple_WithConfigureAwait(Device device)
+    {
+        async Task TestAsync(Device device)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Task task1 = ForAndForEach_Async_Batched(device);
+                Task task2 = ForAndForEach_Async_Batched(device);
+                Task task3 = ForAndForEach_Async_Batched(device);
+
+                await Task.WhenAll(task1, task2, task3).ConfigureAwait(false);
+            }
+        }
+
+        _ = device.Get();
+
+        await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => TestAsync(device)));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public async Task ForAndForEach_Async_Batched_Parallel_Multiple_WithTaskRun(Device device)
+    {
+        async Task TestAsync(Device device)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Task task1 = ForAndForEach_Async_Batched(device);
+                Task task2 = ForAndForEach_Async_Batched(device);
+                Task task3 = ForAndForEach_Async_Batched(device);
+
+                await Task.WhenAll(task1, task2, task3);
+            }
+        }
+
+        _ = device.Get();
+
+        await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => Task.Run(() => TestAsync(device))));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public async Task ForAndForEach_Async_Batched_Parallel_Multiple_WithConfigureAwaitAndTaskRun(Device device)
+    {
+        async Task TestAsync(Device device)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Task task1 = ForAndForEach_Async_Batched(device);
+                Task task2 = ForAndForEach_Async_Batched(device);
+                Task task3 = ForAndForEach_Async_Batched(device);
+
+                await Task.WhenAll(task1, task2, task3).ConfigureAwait(false);
+            }
+        }
+
+        _ = device.Get();
+
+        await Task.WhenAll(Enumerable.Range(0, 64).Select(_ => Task.Run(() => TestAsync(device))));
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
     [ExpectedException(typeof(InvalidOperationException), AllowDerivedTypes = false)]
     public void Barrier_WithoutPreviousDispatches_ThrowsException(Device device)
     {
@@ -446,6 +693,44 @@ public partial class ComputeContextTests
         }
 
         Assert.Fail();
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [ExpectedException(typeof(InvalidOperationException), AllowDerivedTypes = false)]
+    public void For_AfterDispose_ThrowsException(Device device)
+    {
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(128);
+
+        ComputeContext context = device.Get().CreateComputeContext();
+
+        context.Dispose();
+        context.For(512, new OffsetComputeShader(buffer, 0));
+
+        Assert.Fail();
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [ExpectedException(typeof(InvalidOperationException), AllowDerivedTypes = false)]
+    public async Task For_AfterDisposeAsync_ThrowsException(Device device)
+    {
+        using ReadWriteBuffer<int> buffer = device.Get().AllocateReadWriteBuffer<int>(128);
+
+        ComputeContext context = device.Get().CreateComputeContext();
+
+        await context.DisposeAsync();
+
+        context.For(512, new OffsetComputeShader(buffer, 0));
+
+        Assert.Fail();
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException), AllowDerivedTypes = false)]
+    public void DefaultContext_GetGraphicsDevice_ThrowsException()
+    {
+        _ = default(ComputeContext).GraphicsDevice;
     }
 
     [CombinatorialTestMethod]
@@ -506,6 +791,13 @@ public partial class ComputeContextTests
     public void DefaultContext_Dispose_ThrowsException()
     {
         using ComputeContext context = default;
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException), AllowDerivedTypes = false)]
+    public async Task DefaultContext_DisposeAsync_ThrowsException()
+    {
+        await using ComputeContext context = default;
     }
 
     [AutoConstructor]

@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)System\Collections.Generic\DictionaryExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Collections.Generic\QueueExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System\Diagnostics.CodeAnalysis\MemberNotNullAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\Enum.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\GC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System\IntPtrExtensions.cs" />
