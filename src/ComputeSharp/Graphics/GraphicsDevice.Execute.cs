@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -9,7 +8,6 @@ using System.Threading.Tasks.Sources;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Commands.Interop;
-using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
@@ -21,7 +19,7 @@ using UnmanagedCallersOnlyAttribute = ComputeSharp.NetStandard.System.Runtime.In
 namespace ComputeSharp;
 
 /// <inheritdoc/>
-unsafe partial class GraphicsDevice : NativeObject
+unsafe partial class GraphicsDevice
 {
 #if !NET6_0_OR_GREATER
     /// <summary>

@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 
 namespace ComputeSharp.Graphics.Extensions;
