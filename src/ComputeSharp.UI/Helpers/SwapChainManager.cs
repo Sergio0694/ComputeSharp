@@ -46,7 +46,7 @@ internal sealed unsafe class SwapChainManager : NativeObject
     /// <summary>
     /// The next fence value for graphics operations using <see cref="d3D12CommandQueue"/>.
     /// </summary>
-    private ulong nextD3D12FenceValue = 1;
+    private ulong nextD3D12FenceValue;
 
     /// <summary>
     /// The <see cref="ID3D12CommandAllocator"/> object to create command lists.
@@ -275,12 +275,12 @@ internal sealed unsafe class SwapChainManager : NativeObject
     /// </summary>
     private unsafe void ApplyResize()
     {
-        this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), this.nextD3D12FenceValue).Assert();
+        ulong updatedFenceValue = ++this.nextD3D12FenceValue;
+
+        this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), updatedFenceValue).Assert();
 
         // Wait for the fence again to ensure there are no pending operations
-        this.d3D12Fence.Get()->SetEventOnCompletion(this.nextD3D12FenceValue, default).Assert();
-
-        this.nextD3D12FenceValue++;
+        this.d3D12Fence.Get()->SetEventOnCompletion(updatedFenceValue, default).Assert();
 
         // Dispose the old buffers before resizing the buffer
         this.d3D12Resource0.Dispose();
@@ -413,17 +413,20 @@ internal sealed unsafe class SwapChainManager : NativeObject
 
         // Execute the command list to perform the copy
         this.d3D12CommandQueue.Get()->ExecuteCommandLists(1, (ID3D12CommandList**)this.d3D12GraphicsCommandList.GetAddressOf());
-        this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), this.nextD3D12FenceValue).Assert();
+
+        // Increment the fence value and signal the fence. Just like with normal dispatches,
+        // the increment must be done after executing the command list and before signaling.
+        ulong updatedFenceValue = ++this.nextD3D12FenceValue;
+
+        this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), updatedFenceValue).Assert();
 
         // Present the new frame
         this.dxgiSwapChain3.Get()->Present(0, 0).Assert();
 
-        if (this.nextD3D12FenceValue > this.d3D12Fence.Get()->GetCompletedValue())
+        if (updatedFenceValue > this.d3D12Fence.Get()->GetCompletedValue())
         {
-            this.d3D12Fence.Get()->SetEventOnCompletion(this.nextD3D12FenceValue, default).Assert();
+            this.d3D12Fence.Get()->SetEventOnCompletion(updatedFenceValue, default).Assert();
         }
-
-        this.nextD3D12FenceValue++;
     }
 
     /// <summary>
