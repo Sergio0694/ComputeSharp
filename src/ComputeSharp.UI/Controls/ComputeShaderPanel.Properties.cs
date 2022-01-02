@@ -10,7 +10,7 @@ namespace ComputeSharp.WinUI;
 #endif
 
 /// <inheritdoc cref="ComputeShaderPanel"/>
-public sealed unsafe partial class ComputeShaderPanel
+partial class ComputeShaderPanel
 {
     /// <summary>
     /// Gets or sets the <see cref="IShaderRunner"/> instance to use to render content.

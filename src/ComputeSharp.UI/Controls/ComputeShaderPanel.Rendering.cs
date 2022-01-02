@@ -29,7 +29,7 @@ namespace ComputeSharp.WinUI;
 #endif
 
 /// <inheritdoc cref="ComputeShaderPanel"/>
-public sealed partial class ComputeShaderPanel
+partial class ComputeShaderPanel
 {
     /// <summary>
     /// The render thread in use, if any.
@@ -231,10 +231,6 @@ public sealed partial class ComputeShaderPanel
             }
         }
 
-        // Set the maximum frame latency to 2 to improve rendering performance. This is fine in this scenario, as we're not
-        // dealing with a real-time game or something that absolutely needs the least amount of frame latency as possible.
-        this.dxgiSwapChain3.Get()->SetMaximumFrameLatency(2).Assert();
-
         // Get the awaitable object to synchronizize present calls
         this.frameLatencyWaitableObject = this.dxgiSwapChain3.Get()->GetFrameLatencyWaitableObject();
 
@@ -352,10 +348,10 @@ public sealed partial class ComputeShaderPanel
     }
 
     /// <summary>
-    /// Updates the render resolution, if needed, and renders and presents a new frame.
+    /// Updates the render resolution, if needed, and renders a new frame.
     /// </summary>
     /// <param name="time">The current time since the start of the application.</param>
-    private unsafe bool OnUpdate(TimeSpan time)
+    private void OnUpdate(TimeSpan time)
     {
         if (this.isResizePending)
         {
@@ -367,19 +363,11 @@ public sealed partial class ComputeShaderPanel
         // Skip if no factory is available
         if (this.shaderRunner is null)
         {
-            return false;
+            return;
         }
-
-        // Wait for the swap chain to finish presenting
-        _ = Win32.WaitForSingleObjectEx(frameLatencyWaitableObject, 1000, true);
 
         // Generate the new frame
         this.shaderRunner.Execute(this.texture!, time);
-
-        // Present the new frame
-        OnPresent();
-
-        return true;
     }
 
     /// <summary>
@@ -387,6 +375,9 @@ public sealed partial class ComputeShaderPanel
     /// </summary>
     private unsafe void OnPresent()
     {
+        // Wait for the swap chain to be ready for presenting
+        _ = Win32.WaitForSingleObjectEx(frameLatencyWaitableObject, 1000, true);
+
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 
         // Get the underlying ID3D12Resource pointer for the texture
@@ -472,10 +463,8 @@ public sealed partial class ComputeShaderPanel
 
             // Start the initial frame separately, before the timer starts. This ensures that
             // resuming after a pause correctly renders the first frame at the right time.
-            while (!@this.OnUpdate(renderStopwatch.Elapsed) &&
-                   !@this.isCancellationRequested)
-            {
-            }
+            @this.OnUpdate(renderStopwatch.Elapsed);
+            @this.OnPresent();
 
             renderStopwatch.Start();
 
@@ -506,10 +495,8 @@ public sealed partial class ComputeShaderPanel
 
                 frameStopwatch.Restart();
 
-                while (!@this.OnUpdate(renderStopwatch.Elapsed) &&
-                       !@this.isCancellationRequested)
-                {
-                }
+                @this.OnUpdate(renderStopwatch.Elapsed);
+                @this.OnPresent();
             }
 
             renderStopwatch.Stop();

@@ -64,13 +64,6 @@ namespace TerraFX.Interop.DirectX
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [VtblIndex(31)]
-        public HRESULT SetMaximumFrameLatency(uint MaxLatency)
-        {
-            return ((delegate* unmanaged[Stdcall]<IDXGISwapChain3*, uint, int>)(lpVtbl[31]))((IDXGISwapChain3*)Unsafe.AsPointer(ref this), MaxLatency);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [VtblIndex(33)]
         public HANDLE GetFrameLatencyWaitableObject()
         {

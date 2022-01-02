@@ -14,7 +14,7 @@ namespace ComputeSharp.WinUI;
 /// A custom <see cref="SwapChainPanel"/> that can be used to render animated backgrounds.
 /// It is powered by ComputeSharp and leverages compute shaders to create frames to display.
 /// </summary>
-public sealed unsafe partial class ComputeShaderPanel : SwapChainPanel
+public sealed partial class ComputeShaderPanel : SwapChainPanel
 {
     /// <summary>
     /// Creates a new <see cref="ComputeShaderPanel"/> instance.
