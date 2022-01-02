@@ -123,7 +123,7 @@
                                     <Grid>
 
                                         <!--  Shader preview  -->
-                                        <computesharp:ComputeShaderPanel ShaderRunner="{x:Bind ShaderRunner}" />
+                                        <computesharp:AnimatedComputeShaderPanel ShaderRunner="{x:Bind ShaderRunner}" />
 
                                         <!--
                                             Note: here we have a selection property to work around {x:Bind} not working correctly outside of the
@@ -151,7 +151,7 @@
         </Grid.Resources>
 
         <!--  Shader  -->
-        <computesharp:ComputeShaderPanel
+        <computesharp:AnimatedComputeShaderPanel
             x:Name="ShaderPanel"
             Grid.Row="1"
             IsDynamicResolutionEnabled="{x:Bind ViewModel.IsDynamicResolutionEnabled, Mode=OneWay}"
