@@ -11,7 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ComputeShaderPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ComputeShaderPanel.Properties.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controls\ComputeShaderPanel.Rendering.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\SwapChainManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\DynamicResolutionManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IShaderRunner.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShaderRunner{T}.cs" />

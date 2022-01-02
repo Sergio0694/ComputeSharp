@@ -1,11 +1,13 @@
 ﻿using System;
 #if WINDOWS_UWP
 using Windows.UI.Xaml;
+#else
+using Microsoft.UI.Xaml;
+#endif
 
+#if WINDOWS_UWP
 namespace ComputeSharp.Uwp;
 #else
-
-using Microsoft.UI.Xaml;
 namespace ComputeSharp.WinUI;
 #endif
 
@@ -17,18 +19,35 @@ partial class ComputeShaderPanel
     /// </summary>
     public IShaderRunner? ShaderRunner
     {
-        get => (IShaderRunner?)GetValue(ShaderFactoryProperty);
-        set => SetValue(ShaderFactoryProperty, value);
+        get => (IShaderRunner?)GetValue(ShaderRunnerProperty);
+        set => SetValue(ShaderRunnerProperty, value);
     }
 
     /// <summary>
     /// The <see cref="DependencyProperty"/> backing <see cref="ShaderRunner"/>.
     /// </summary>
-    public static readonly DependencyProperty ShaderFactoryProperty = DependencyProperty.Register(
+    public static readonly DependencyProperty ShaderRunnerProperty = DependencyProperty.Register(
         nameof(ShaderRunner),
         typeof(IShaderRunner),
         typeof(ComputeShaderPanel),
-        new PropertyMetadata(null, static (d, e) => ((ComputeShaderPanel)d).shaderRunner = (IShaderRunner?)e.NewValue));
+        new PropertyMetadata(null, OnShaderRunnerPropertyChanged));
+
+    /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
+    private static void OnShaderRunnerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var @this = (ComputeShaderPanel)d;
+        var shaderRunner = (IShaderRunner?)e.NewValue;
+
+        if (shaderRunner is null)
+        {
+            @this.swapChainManager.StopRenderLoop();
+        }
+        else if (@this.IsLoaded &&
+                 !@this.IsPaused)
+        {
+            @this.swapChainManager.StartRenderLoop(shaderRunner);
+        }
+    }
 
     /// <summary>
     /// Gets or sets the resolution scale to be used to render frames.
@@ -56,12 +75,7 @@ partial class ComputeShaderPanel
         var @this = (ComputeShaderPanel)d;
         var resolutionScale = (double)e.NewValue;
 
-        @this.targetResolutionScale = (float)resolutionScale;
-
-        if (!@this.isDynamicResolutionEnabled)
-        {
-            @this.OnResize();
-        }
+        @this.swapChainManager.QueueResolutionScaleChange(resolutionScale);
     }
 
     /// <summary>
@@ -89,8 +103,6 @@ partial class ComputeShaderPanel
     {
         var @this = (ComputeShaderPanel)d;
         var isDynamicResolutionEnabled = (bool)e.NewValue;
-
-        @this.isDynamicResolutionEnabled = isDynamicResolutionEnabled;
     }
 
     /// <summary>
@@ -119,11 +131,12 @@ partial class ComputeShaderPanel
 
         if (isPaused)
         {
-            @this.OnStopRenderLoop();
+            @this.swapChainManager.StopRenderLoop();
         }
-        else
+        else if (@this.IsLoaded &&
+                 @this.ShaderRunner is IShaderRunner shaderRunner)
         {
-            @this.OnStartRenderLoop();
+            @this.swapChainManager.StartRenderLoop(shaderRunner);
         }
     }
 }

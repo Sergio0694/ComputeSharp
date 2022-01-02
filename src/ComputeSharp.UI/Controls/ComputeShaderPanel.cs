@@ -1,12 +1,20 @@
 ﻿#if WINDOWS_UWP
+using System.Runtime.InteropServices;
+using ComputeSharp.Uwp.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-
-namespace ComputeSharp.Uwp;
+using TerraFX.Interop.Windows;
 #else
+using ComputeSharp.WinUI.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using TerraFX.Interop.Windows;
+using WinRT;
+#endif
 
+#if WINDOWS_UWP
+namespace ComputeSharp.Uwp;
+#else
 namespace ComputeSharp.WinUI;
 #endif
 
@@ -17,60 +25,57 @@ namespace ComputeSharp.WinUI;
 public sealed partial class ComputeShaderPanel : SwapChainPanel
 {
     /// <summary>
+    /// The <see cref="SwapChainManager"/> instance handling rendering.
+    /// </summary>
+    private readonly SwapChainManager swapChainManager;
+
+    /// <summary>
     /// Creates a new <see cref="ComputeShaderPanel"/> instance.
     /// </summary>
-    public ComputeShaderPanel()
+    public unsafe ComputeShaderPanel()
     {
+#if WINDOWS_UWP
+        IUnknown* swapChainPanel = (IUnknown*)Marshal.GetIUnknownForObject(this);
+#else
+        IUnknown* swapChainPanel = (IUnknown*)((IWinRTObject)this).NativeObject.ThisPtr;
+#endif
+
+        this.swapChainManager = new SwapChainManager(swapChainPanel);
+
         this.Loaded += ComputeShaderPanel_Loaded;
         this.Unloaded += ComputeShaderPanel_Unloaded;
         this.SizeChanged += ComputeShaderPanel_SizeChanged;
         this.CompositionScaleChanged += ComputeShaderPanel_CompositionScaleChanged;
     }
 
-    /// <summary>
-    /// Finalizes the current <see cref="ComputeShaderPanel"/> instance and releases all resources.
-    /// </summary>
-    ~ComputeShaderPanel()
-    {
-        OnDisposed();
-    }
-
     // Initializes the swap chain and starts the render thread
     private void ComputeShaderPanel_Loaded(object sender, RoutedEventArgs e)
     {
-        this.width = (float)ActualWidth;
-        this.height = (float)ActualHeight;
-        this.compositionScaleX = CompositionScaleX;
-        this.compositionScaleY = CompositionScaleY;
-        this.resolutionScale = (float)ResolutionScale;
-        this.targetResolutionScale = 1.0f;
-        this.isDynamicResolutionEnabled = true;
+        this.swapChainManager.QueueResize(ActualWidth, ActualHeight);
+        this.swapChainManager.QueueCompositionScaleChange(CompositionScaleX, CompositionScaleY);
+        this.swapChainManager.QueueResolutionScaleChange(ResolutionScale);
 
-        OnInitialize();
-        OnStartRenderLoop();
+        if (ShaderRunner is IShaderRunner shaderRunner)
+        {
+            this.swapChainManager.StartRenderLoop(shaderRunner);
+        }
     }
 
     // Requests a cancellation for the render thread
     private void ComputeShaderPanel_Unloaded(object sender, RoutedEventArgs e)
     {
-        OnStopRenderLoop();
+        this.swapChainManager.StopRenderLoop();
     }
 
     // Updates the background store for the frame size factors used by the render thread
     private void ComputeShaderPanel_SizeChanged(object sender, SizeChangedEventArgs e)
     {
-        this.width = (float)e.NewSize.Width;
-        this.height = (float)e.NewSize.Height;
-
-        OnResize();
+        this.swapChainManager.QueueResize(e.NewSize.Width, e.NewSize.Height);
     }
 
     // Updates the background store for the composition scale factors used by the render thread
     private void ComputeShaderPanel_CompositionScaleChanged(SwapChainPanel sender, object args)
     {
-        this.compositionScaleX = CompositionScaleX;
-        this.compositionScaleY = CompositionScaleY;
-
-        OnResize();
+        this.swapChainManager.QueueCompositionScaleChange(CompositionScaleX, CompositionScaleY);
     }
 }

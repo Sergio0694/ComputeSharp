@@ -1,45 +1,32 @@
 ﻿using System;
 using System.Diagnostics;
-#if WINDOWS_UWP
-using System.Runtime.InteropServices;
-#endif
 using System.Threading;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
-#if WINDOWS_UWP
-using ComputeSharp.Uwp.Helpers;
-#else
-using ComputeSharp.WinUI.Helpers;
-#endif
+using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using TerraFX.Interop.WinRT;
-#if !WINDOWS_UWP
-using WinRT;
-#endif
 using Win32 = TerraFX.Interop.Windows.Windows;
 
 #pragma warning disable CS0420
 
 #if WINDOWS_UWP
-namespace ComputeSharp.Uwp;
+namespace ComputeSharp.Uwp.Helpers;
 #else
-namespace ComputeSharp.WinUI;
+namespace ComputeSharp.WinUI.Helpers;
 #endif
 
-/// <inheritdoc cref="ComputeShaderPanel"/>
-partial class ComputeShaderPanel
+/// <summary>
+/// A type managing rendering on a target swap chain object.
+/// </summary>
+internal sealed unsafe class SwapChainManager : NativeObject
 {
     /// <summary>
-    /// The render thread in use, if any.
+    /// A lock object for the render loops.
     /// </summary>
-    private Thread? renderThread;
-
-    /// <summary>
-    /// The <see cref="IShaderRunner"/> instance used to create shaders to run.
-    /// </summary>
-    private IShaderRunner? shaderRunner;
+    private readonly object renderLock = new();
 
     /// <summary>
     /// The <see cref="ID3D12Device"/> pointer for the device currently in use.
@@ -94,12 +81,27 @@ partial class ComputeShaderPanel
     /// <summary>
     /// The index of the next buffer that can be used to present content.
     /// </summary>
-    private uint currentBufferIndex;
+    private volatile uint currentBufferIndex;
+
+    /// <summary>
+    /// The render thread in use, if any.
+    /// </summary>
+    private volatile Thread? renderThread;
+
+    /// <summary>
+    /// The <see cref="CancellationTokenSource"/> to use for <see cref="renderThread"/>.
+    /// </summary>
+    private volatile CancellationTokenSource? renderCancellationTokenSource;
+
+    /// <summary>
+    /// The <see cref="IShaderRunner"/> instance used to create shaders to run.
+    /// </summary>
+    private volatile IShaderRunner? shaderRunner;
 
     /// <summary>
     /// The <see cref="ReadWriteTexture2D{T, TPixel}"/> instance used to prepare frames to display.
     /// </summary>
-    private ReadWriteTexture2D<Rgba32, Float4>? texture;
+    private volatile ReadWriteTexture2D<Rgba32, Float4>? texture;
 
     /// <summary>
     /// Whether or not the window has been resized and requires the buffers to be updated.
@@ -142,36 +144,36 @@ partial class ComputeShaderPanel
     private volatile bool isDynamicResolutionEnabled;
 
     /// <summary>
-    /// Indicates whether or not the rendering has been canceled.
-    /// </summary>
-    private volatile bool isCancellationRequested;
-
-    /// <summary>
     /// The <see cref="Stopwatch"/> instance tracking time since the first rendered frame.
     /// </summary>
-    private Stopwatch? renderStopwatch;
+    private volatile Stopwatch? renderStopwatch;
 
     /// <summary>
-    /// Indicates whether or not <see cref="OnInitialize"/> has already been called.
+    /// Initializes a new instance of the <see cref="SwapChainManager"/> type.
     /// </summary>
-    private bool isInitialized;
-
-    /// <summary>
-    /// Initializes the current application.
-    /// </summary>
-    private unsafe void OnInitialize()
+    /// <param name="swapChainPanel">The input swap chain object being used.</param>
+    public SwapChainManager(IUnknown* swapChainPanel)
     {
-        if (this.isInitialized)
-        {
-            return;
-        }
+        // Extract the ISwapChainPanelNative reference from the current panel, then query the
+        // IDXGISwapChain reference just created and set that as the swap chain panel to use.
+        using ComPtr<ISwapChainPanelNative> swapChainPanelNative = default;
 
-        this.isInitialized = true;
+#if WINDOWS_UWP
+        swapChainPanel->QueryInterface(
+            Win32.__uuidof<ISwapChainPanelNative>(),
+            (void**)&swapChainPanelNative).Assert();
+#else
+        Guid iSwapChainPanelNativeUuid = new(0x63AAD0B8, 0x7C24, 0x40FF, 0x85, 0xA8, 0x64, 0x0D, 0x94, 0x4C, 0xC3, 0x25);
+
+        swapChainPanel->QueryInterface(
+            &iSwapChainPanelNativeUuid,
+            (void**)&swapChainPanelNative).Assert();
+#endif
 
         // Get the underlying ID3D12Device in use
         fixed (ID3D12Device** d3D12Device = this.d3D12Device)
         {
-            InteropServices.TryGetID3D12Device(GraphicsDevice.Default, Win32.__uuidof<ID3D12Device>(), (void**)d3D12Device).Assert();
+            GraphicsDevice.Default.D3D12Device->QueryInterface(Win32.__uuidof<ID3D12Device>(), (void**)d3D12Device).Assert();
         }
 
         // Create the direct command queue to use
@@ -258,25 +260,6 @@ partial class ComputeShaderPanel
         // Close the command list to prepare it for future use
         this.d3D12GraphicsCommandList.Get()->Close().Assert();
 
-        // Extract the ISwapChainPanelNative reference from the current panel, then query the
-        // IDXGISwapChain reference just created and set that as the swap chain panel to use.
-        using ComPtr<ISwapChainPanelNative> swapChainPanelNative = default;
-
-#if WINDOWS_UWP
-        IUnknown* swapChainPanel = (IUnknown*)Marshal.GetIUnknownForObject(this);
-
-        swapChainPanel->QueryInterface(
-            Win32.__uuidof<ISwapChainPanelNative>(),
-            (void**)&swapChainPanelNative).Assert();
-#else
-        IUnknown* swapChainPanel = (IUnknown*)((IWinRTObject)this).NativeObject.ThisPtr;
-        Guid iSwapChainPanelNativeUuid = new(0x63AAD0B8, 0x7C24, 0x40FF, 0x85, 0xA8, 0x64, 0x0D, 0x94, 0x4C, 0xC3, 0x25);
-
-        swapChainPanel->QueryInterface(
-            &iSwapChainPanelNativeUuid,
-            (void**)&swapChainPanelNative).Assert();
-#endif
-
         using (ComPtr<IDXGISwapChain> idxgiSwapChain = default)
         {
             this.dxgiSwapChain3.CopyTo(&idxgiSwapChain).Assert();
@@ -285,14 +268,6 @@ partial class ComputeShaderPanel
         }
 
         GC.KeepAlive(this);
-    }
-
-    /// <summary>
-    /// Resizes the current application.
-    /// </summary>
-    private void OnResize()
-    {
-        this.isResizePending = true;
     }
 
     /// <summary>
@@ -348,10 +323,9 @@ partial class ComputeShaderPanel
     }
 
     /// <summary>
-    /// Updates the render resolution, if needed, and renders a new frame.
+    /// Resizes the current application, if needed.
     /// </summary>
-    /// <param name="time">The current time since the start of the application.</param>
-    private void OnUpdate(TimeSpan time)
+    private void OnResize()
     {
         if (this.isResizePending)
         {
@@ -359,7 +333,14 @@ partial class ComputeShaderPanel
 
             this.isResizePending = false;
         }
+    }
 
+    /// <summary>
+    /// Updates the render resolution, if needed, and renders a new frame.
+    /// </summary>
+    /// <param name="time">The current time since the start of the application.</param>
+    private void OnUpdate(TimeSpan time)
+    {
         // Skip if no factory is available
         if (this.shaderRunner is null)
         {
@@ -381,7 +362,7 @@ partial class ComputeShaderPanel
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 
         // Get the underlying ID3D12Resource pointer for the texture
-        InteropServices.TryGetID3D12Resource(this.texture!, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf()).Assert();
+        this.texture!.D3D12Resource->QueryInterface(Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf()).Assert();
 
         // Get the target back buffer to update
         ID3D12Resource* d3D12ResourceBackBuffer = this.currentBufferIndex switch
@@ -446,86 +427,146 @@ partial class ComputeShaderPanel
     }
 
     /// <summary>
-    /// Executes the render loop for the current panel.
+    /// The core render loop.
     /// </summary>
-    /// <remarks>This method assumes to be invoked from a background thread.</remarks>
-    private void OnStartRenderLoop()
+    private void RenderLoop()
     {
-        static void ExecuteRenderLoop(ComputeShaderPanel @this)
+        Stopwatch renderStopwatch = this.renderStopwatch ??= new();
+        Stopwatch frameStopwatch = Stopwatch.StartNew();
+        CancellationToken cancellationToken = this.renderCancellationTokenSource!.Token;
+
+        DynamicResolutionManager.Create(out DynamicResolutionManager frameTimeWatcher);
+
+        bool isDynamicResolutionEnabled = this.isDynamicResolutionEnabled;
+
+        // Start the initial frame separately, before the timer starts. This ensures that
+        // resuming after a pause correctly renders the first frame at the right time.
+        this.OnResize();
+        this.OnUpdate(renderStopwatch.Elapsed);
+        this.OnPresent();
+
+        renderStopwatch.Start();
+
+        // Main render loop, until cancellation is requested
+        while (!cancellationToken.IsCancellationRequested)
         {
-            Stopwatch
-                renderStopwatch = @this.renderStopwatch ??= new(),
-                frameStopwatch = Stopwatch.StartNew();
-
-            DynamicResolutionManager.Create(out DynamicResolutionManager frameTimeWatcher);
-
-            bool isDynamicResolutionEnabled = @this.isDynamicResolutionEnabled;
-
-            // Start the initial frame separately, before the timer starts. This ensures that
-            // resuming after a pause correctly renders the first frame at the right time.
-            @this.OnUpdate(renderStopwatch.Elapsed);
-            @this.OnPresent();
-
-            renderStopwatch.Start();
-
-            // Main render loop, until cancellation is requested
-            while (!@this.isCancellationRequested)
+            // Update the resolution mode, if needed
+            if (isDynamicResolutionEnabled != this.isDynamicResolutionEnabled)
             {
-                // Update the resolution mode, if needed
-                if (isDynamicResolutionEnabled != @this.isDynamicResolutionEnabled)
+                isDynamicResolutionEnabled = !isDynamicResolutionEnabled;
+
+                if (isDynamicResolutionEnabled)
                 {
-                    isDynamicResolutionEnabled = !isDynamicResolutionEnabled;
-
-                    if (isDynamicResolutionEnabled)
-                    {
-                        DynamicResolutionManager.Create(out frameTimeWatcher);
-                    }
-                    else
-                    {
-                        @this.targetResolutionScale = @this.resolutionScale;
-                    }
+                    DynamicResolutionManager.Create(out frameTimeWatcher);
                 }
-
-                // Evaluate the dynamic resolution frame time step, if the mode is enabled
-                if (isDynamicResolutionEnabled &&
-                    frameTimeWatcher.Advance(frameStopwatch.ElapsedTicks, ref @this.targetResolutionScale))
+                else
                 {
-                    @this.isResizePending = true;
+                    this.targetResolutionScale = this.resolutionScale;
                 }
-
-                frameStopwatch.Restart();
-
-                @this.OnUpdate(renderStopwatch.Elapsed);
-                @this.OnPresent();
             }
 
-            renderStopwatch.Stop();
+            // Evaluate the dynamic resolution frame time step, if the mode is enabled
+            if (isDynamicResolutionEnabled &&
+                frameTimeWatcher.Advance(frameStopwatch.ElapsedTicks, ref this.targetResolutionScale))
+            {
+                this.isResizePending = true;
+            }
+
+            frameStopwatch.Restart();
+
+            this.OnResize();
+            this.OnUpdate(renderStopwatch.Elapsed);
+            this.OnPresent();
         }
 
-        this.isCancellationRequested = false;
-        this.renderThread = new Thread(static args => ExecuteRenderLoop((ComputeShaderPanel)args!));
-        this.renderThread.Start(this);
+        renderStopwatch.Stop();
+    }
+
+    /// <summary>
+    /// Starts the current render loop.
+    /// </summary>
+    public void StartRenderLoop(IShaderRunner shaderRunner)
+    {
+        this.isDynamicResolutionEnabled = false;
+
+        ThrowIfDisposed();
+
+        Guard.IsNotNull(shaderRunner, nameof(shaderRunner));
+
+        lock (this.renderLock)
+        {
+            this.renderCancellationTokenSource?.Cancel();
+            this.renderThread?.Join();
+
+            Thread newRenderThread = new(static args => ((SwapChainManager)args!).RenderLoop());
+
+            this.shaderRunner = shaderRunner;
+            this.renderCancellationTokenSource = new CancellationTokenSource();
+            this.renderThread = newRenderThread;
+
+            newRenderThread.Start(this);
+        }
     }
 
     /// <summary>
     /// Stops the current render loop, if one is running.
     /// </summary>
-    private void OnStopRenderLoop()
+    public void StopRenderLoop()
     {
-        this.isCancellationRequested = true;
+        ThrowIfDisposed();
+
+        lock (this.renderLock)
+        {
+            this.renderCancellationTokenSource?.Cancel();
+        }
     }
 
     /// <summary>
-    /// Stops the current render loop, and releases all resources.
+    /// Queues a resize operation.
     /// </summary>
-    private void OnDisposed()
+    /// <param name="width">The width of the render resolution.</param>
+    /// <param name="height">The height of the render resolution.</param>
+    public void QueueResize(double width, double height)
     {
-        this.isCancellationRequested = true;
+        this.width = (float)width;
+        this.height = (float)height;
 
+        this.isResizePending = true;
+    }
+
+    /// <summary>
+    /// Queues a change in the composition scale factors.
+    /// </summary>
+    /// <param name="compositionScaleX">The composition scale on the X axis.</param>
+    /// <param name="compositionScaleY">The composition scale on the Y axis</param>
+    public void QueueCompositionScaleChange(double compositionScaleX, double compositionScaleY)
+    {
+        this.compositionScaleX = (float)compositionScaleX;
+        this.compositionScaleY = (float)compositionScaleY;
+
+        this.isResizePending = true;
+    }
+
+    /// <summary>
+    /// Queues a change in the resolution scale factor.
+    /// </summary>
+    /// <param name="resolutionScale">The resolution scale factor to use.</param>
+    public void QueueResolutionScaleChange(double resolutionScale)
+    {
+        this.resolutionScale = (float)resolutionScale;
+        this.targetResolutionScale = (float)resolutionScale;
+
+        this.isResizePending = true;
+    }
+
+    /// <inheritdoc/>
+    protected override void OnDispose()
+    {
         // Ensure the rendering has stopped
-        if (this.renderThread is Thread renderThread)
+        lock (this.renderLock)
         {
-            renderThread.Join();
+            this.renderCancellationTokenSource?.Cancel();
+            this.renderThread?.Join();
         }
 
         this.d3D12Device.Dispose();
