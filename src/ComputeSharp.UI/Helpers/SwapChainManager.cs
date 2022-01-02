@@ -430,17 +430,31 @@ internal sealed unsafe class SwapChainManager : NativeObject
     }
 
     /// <summary>
+    /// Selects the right render loop to start.
+    /// </summary>
+    private void SwitchAndStartRenderLoop()
+    {
+        if (this.isDynamicResolutionEnabled)
+        {
+            this.targetResolutionScale = 1.0f;
+
+            RenderLoopWithDynamicResolution();
+        }
+        else
+        {
+            this.targetResolutionScale = this.resolutionScale;
+
+            RenderLoop();
+        }
+    }
+
+    /// <summary>
     /// The core render loop.
     /// </summary>
     private void RenderLoop()
     {
         Stopwatch renderStopwatch = this.renderStopwatch ??= new();
-        Stopwatch frameStopwatch = Stopwatch.StartNew();
         CancellationToken cancellationToken = this.renderCancellationTokenSource!.Token;
-
-        DynamicResolutionManager.Create(out DynamicResolutionManager frameTimeWatcher);
-
-        bool isDynamicResolutionEnabled = this.isDynamicResolutionEnabled;
 
         // Start the initial frame separately, before the timer starts. This ensures that
         // resuming after a pause correctly renders the first frame at the right time.
@@ -453,24 +467,38 @@ internal sealed unsafe class SwapChainManager : NativeObject
         // Main render loop, until cancellation is requested
         while (!cancellationToken.IsCancellationRequested)
         {
-            // Update the resolution mode, if needed
-            if (isDynamicResolutionEnabled != this.isDynamicResolutionEnabled)
-            {
-                isDynamicResolutionEnabled = !isDynamicResolutionEnabled;
+            this.OnResize();
+            this.OnUpdate(renderStopwatch.Elapsed);
+            this.OnPresent();
+        }
 
-                if (isDynamicResolutionEnabled)
-                {
-                    DynamicResolutionManager.Create(out frameTimeWatcher);
-                }
-                else
-                {
-                    this.targetResolutionScale = this.resolutionScale;
-                }
-            }
+        renderStopwatch.Stop();
+    }
 
+    /// <summary>
+    /// The core render loop with dynamic resolution.
+    /// </summary>
+    private void RenderLoopWithDynamicResolution()
+    {
+        Stopwatch renderStopwatch = this.renderStopwatch ??= new();
+        Stopwatch frameStopwatch = Stopwatch.StartNew();
+        CancellationToken cancellationToken = this.renderCancellationTokenSource!.Token;
+
+        DynamicResolutionManager.Create(out DynamicResolutionManager frameTimeWatcher);
+
+        // Start the initial frame separately, before the timer starts. This ensures that
+        // resuming after a pause correctly renders the first frame at the right time.
+        this.OnResize();
+        this.OnUpdate(renderStopwatch.Elapsed);
+        this.OnPresent();
+
+        renderStopwatch.Start();
+
+        // Main render loop, until cancellation is requested
+        while (!cancellationToken.IsCancellationRequested)
+        {
             // Evaluate the dynamic resolution frame time step, if the mode is enabled
-            if (isDynamicResolutionEnabled &&
-                frameTimeWatcher.Advance(frameStopwatch.ElapsedTicks, ref this.targetResolutionScale))
+            if (frameTimeWatcher.Advance(frameStopwatch.ElapsedTicks, ref this.targetResolutionScale))
             {
                 this.isResizePending = true;
             }
@@ -488,10 +516,9 @@ internal sealed unsafe class SwapChainManager : NativeObject
     /// <summary>
     /// Starts the current render loop.
     /// </summary>
+    /// <param name="shaderRunner">The <see cref="IShaderRunner"/> instance to use to render frames.</param>
     public void StartRenderLoop(IShaderRunner shaderRunner)
     {
-        this.isDynamicResolutionEnabled = false;
-
         ThrowIfDisposed();
 
         Guard.IsNotNull(shaderRunner, nameof(shaderRunner));
@@ -501,7 +528,7 @@ internal sealed unsafe class SwapChainManager : NativeObject
             this.renderCancellationTokenSource?.Cancel();
             this.renderThread?.Join();
 
-            Thread newRenderThread = new(static args => ((SwapChainManager)args!).RenderLoop());
+            Thread newRenderThread = new(static args => ((SwapChainManager)args!).SwitchAndStartRenderLoop());
 
             this.shaderRunner = shaderRunner;
             this.renderCancellationTokenSource = new CancellationTokenSource();
@@ -512,15 +539,33 @@ internal sealed unsafe class SwapChainManager : NativeObject
     }
 
     /// <summary>
-    /// Stops the current render loop, if one is running.
+    /// Queues a change in the dynamic resolution mode.
     /// </summary>
-    public void StopRenderLoop()
+    /// <param name="isDynamicResolutionEnabled">Whether or not to use dynamic resolution.</param>
+    public void QueueDynamicResolutionModeChange(bool isDynamicResolutionEnabled)
     {
         ThrowIfDisposed();
 
         lock (this.renderLock)
         {
-            this.renderCancellationTokenSource?.Cancel();
+            // If there is a render thread currently running, stop it and restart it
+            if (this.renderCancellationTokenSource?.IsCancellationRequested == false)
+            {
+                this.renderCancellationTokenSource?.Cancel();
+                this.renderThread?.Join();
+
+                Thread newRenderThread = new(static args => ((SwapChainManager)args!).SwitchAndStartRenderLoop());
+
+                this.renderCancellationTokenSource = new CancellationTokenSource();
+                this.renderThread = newRenderThread;
+                this.isDynamicResolutionEnabled = isDynamicResolutionEnabled;
+
+                newRenderThread.Start(this);
+            }
+            else
+            {
+                this.isDynamicResolutionEnabled = isDynamicResolutionEnabled;
+            }
         }
     }
 
@@ -531,6 +576,8 @@ internal sealed unsafe class SwapChainManager : NativeObject
     /// <param name="height">The height of the render resolution.</param>
     public void QueueResize(double width, double height)
     {
+        ThrowIfDisposed();
+
         this.width = (float)width;
         this.height = (float)height;
 
@@ -544,6 +591,8 @@ internal sealed unsafe class SwapChainManager : NativeObject
     /// <param name="compositionScaleY">The composition scale on the Y axis</param>
     public void QueueCompositionScaleChange(double compositionScaleX, double compositionScaleY)
     {
+        ThrowIfDisposed();
+
         this.compositionScaleX = (float)compositionScaleX;
         this.compositionScaleY = (float)compositionScaleY;
 
@@ -556,10 +605,24 @@ internal sealed unsafe class SwapChainManager : NativeObject
     /// <param name="resolutionScale">The resolution scale factor to use.</param>
     public void QueueResolutionScaleChange(double resolutionScale)
     {
+        ThrowIfDisposed();
+
         this.resolutionScale = (float)resolutionScale;
-        this.targetResolutionScale = (float)resolutionScale;
 
         this.isResizePending = true;
+    }
+
+    /// <summary>
+    /// Stops the current render loop, if one is running.
+    /// </summary>
+    public void StopRenderLoop()
+    {
+        ThrowIfDisposed();
+
+        lock (this.renderLock)
+        {
+            this.renderCancellationTokenSource?.Cancel();
+        }
     }
 
     /// <inheritdoc/>

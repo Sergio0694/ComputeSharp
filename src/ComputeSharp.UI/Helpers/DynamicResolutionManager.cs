@@ -118,10 +118,9 @@ internal unsafe ref struct DynamicResolutionManager
 
             if (averageFrameTimeInTicks is < LowerFrameTimeThresholdInTicksFor60fps or > UpperFrameTimeThresholdInTicksFor60fps)
             {
-                float
-                    frameTimeDelta = (TargetFrameTimeInTicksFor60fps - averageFrameTimeInTicks) / (float)averageFrameTimeInTicks,
-                    scaleFactorDelta = scaleFactor * frameTimeDelta * ScaleFactorDeltaK,
-                    updatedScaleFactor = Math.Clamp(scaleFactor + scaleFactorDelta, 0.10f, 1.0f);
+                float frameTimeDelta = (TargetFrameTimeInTicksFor60fps - averageFrameTimeInTicks) / (float)averageFrameTimeInTicks;
+                float scaleFactorDelta = scaleFactor * frameTimeDelta * ScaleFactorDeltaK;
+                float updatedScaleFactor = Math.Clamp(scaleFactor + scaleFactorDelta, 0.10f, 1.0f);
 
                 // Apply the scale factor update if the target scale has changed enough. This helps to avoid
                 // too frequence resolution changes if the scale factor only changes very little every time.

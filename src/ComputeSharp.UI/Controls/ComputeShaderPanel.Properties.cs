@@ -103,6 +103,8 @@ partial class ComputeShaderPanel
     {
         var @this = (ComputeShaderPanel)d;
         var isDynamicResolutionEnabled = (bool)e.NewValue;
+
+        @this.swapChainManager.QueueDynamicResolutionModeChange(isDynamicResolutionEnabled);
     }
 
     /// <summary>
