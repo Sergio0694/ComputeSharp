@@ -58,7 +58,7 @@ public sealed partial class ComputeShaderPanel : SwapChainPanel
 
         if (ShaderRunner is IShaderRunner shaderRunner)
         {
-            this.swapChainManager.StartRenderLoop(shaderRunner);
+            this.swapChainManager.StartRenderLoop(FrameRequestQueue, shaderRunner);
         }
     }
 

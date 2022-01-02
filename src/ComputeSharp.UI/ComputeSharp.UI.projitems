@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\SwapChainManager.Rendering.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\SwapChainManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\DynamicResolutionManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IFrameRequestQueue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IShaderRunner.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ShaderRunner{T}.cs" />
   </ItemGroup>

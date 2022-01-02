@@ -15,6 +15,38 @@ namespace ComputeSharp.WinUI;
 partial class ComputeShaderPanel
 {
     /// <summary>
+    /// Gets or sets the <see cref="IFrameRequestQueue"/> instance to use to request new frames.
+    /// </summary>
+    public IFrameRequestQueue? FrameRequestQueue
+    {
+        get => (IFrameRequestQueue)GetValue(FrameRequestQueueProperty);
+        set => SetValue(FrameRequestQueueProperty, value);
+    }
+
+    /// <summary>
+    /// The <see cref="DependencyProperty"/> backing <see cref="ShaderRunner"/>.
+    /// </summary>
+    public static readonly DependencyProperty FrameRequestQueueProperty = DependencyProperty.Register(
+        nameof(FrameRequestQueue),
+        typeof(IFrameRequestQueue),
+        typeof(ComputeShaderPanel),
+        new PropertyMetadata(null, OnFrameRequestQueueChanged));
+
+    /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
+    private static void OnFrameRequestQueueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var @this = (ComputeShaderPanel)d;
+        var frameRequestQueue = (IFrameRequestQueue?)e.NewValue;
+
+        if (@this.IsLoaded &&
+            !@this.IsPaused &&
+            @this.ShaderRunner is IShaderRunner shaderRunner)
+        {
+            @this.swapChainManager.StartRenderLoop(frameRequestQueue, shaderRunner);
+        }
+    }
+
+    /// <summary>
     /// Gets or sets the <see cref="IShaderRunner"/> instance to use to render content.
     /// </summary>
     public IShaderRunner? ShaderRunner
@@ -45,7 +77,7 @@ partial class ComputeShaderPanel
         else if (@this.IsLoaded &&
                  !@this.IsPaused)
         {
-            @this.swapChainManager.StartRenderLoop(shaderRunner);
+            @this.swapChainManager.StartRenderLoop(@this.FrameRequestQueue, shaderRunner);
         }
     }
 
@@ -138,7 +170,7 @@ partial class ComputeShaderPanel
         else if (@this.IsLoaded &&
                  @this.ShaderRunner is IShaderRunner shaderRunner)
         {
-            @this.swapChainManager.StartRenderLoop(shaderRunner);
+            @this.swapChainManager.StartRenderLoop(@this.FrameRequestQueue, shaderRunner);
         }
     }
 }

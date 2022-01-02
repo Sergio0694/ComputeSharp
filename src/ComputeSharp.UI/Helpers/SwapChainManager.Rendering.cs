@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using Microsoft.Toolkit.Diagnostics;
 
@@ -17,8 +18,9 @@ partial class SwapChainManager
     /// <summary>
     /// Starts the current render loop.
     /// </summary>
+    /// <param name="frameRequestQueue">The <see cref="IFrameRequestQueue"/> instance to use, if available.</param>
     /// <param name="shaderRunner">The <see cref="IShaderRunner"/> instance to use to render frames.</param>
-    public void StartRenderLoop(IShaderRunner shaderRunner)
+    public void StartRenderLoop(IFrameRequestQueue? frameRequestQueue, IShaderRunner shaderRunner)
     {
         ThrowIfDisposed();
 
@@ -31,6 +33,7 @@ partial class SwapChainManager
 
             Thread newRenderThread = new(static args => ((SwapChainManager)args!).SwitchAndStartRenderLoop());
 
+            this.frameRequestQueue = frameRequestQueue;
             this.shaderRunner = shaderRunner;
             this.renderCancellationTokenSource = new CancellationTokenSource();
             this.renderThread = newRenderThread;
@@ -154,20 +157,30 @@ partial class SwapChainManager
         Stopwatch renderStopwatch = this.renderStopwatch ??= new();
         CancellationToken cancellationToken = this.renderCancellationTokenSource!.Token;
 
+        if (!OnFrameRequest(out object? parameter, cancellationToken))
+        {
+            return;
+        }
+
         // Start the initial frame separately, before the timer starts. This ensures that
         // resuming after a pause correctly renders the first frame at the right time.
-        this.OnResize();
-        this.OnUpdate(renderStopwatch.Elapsed);
-        this.OnPresent();
+        OnResize();
+        OnUpdate(renderStopwatch.Elapsed, parameter);
+        OnPresent();
 
         renderStopwatch.Start();
 
         // Main render loop, until cancellation is requested
         while (!cancellationToken.IsCancellationRequested)
         {
-            this.OnResize();
-            this.OnUpdate(renderStopwatch.Elapsed);
-            this.OnPresent();
+            if (!OnFrameRequest(out parameter, cancellationToken))
+            {
+                return;
+            }
+
+            OnResize();
+            OnUpdate(renderStopwatch.Elapsed, parameter);
+            OnPresent();
         }
 
         renderStopwatch.Stop();
@@ -179,20 +192,23 @@ partial class SwapChainManager
     private void RenderLoopWithDynamicResolution()
     {
         Stopwatch renderStopwatch = this.renderStopwatch ??= new();
-        Stopwatch frameStopwatch = Stopwatch.StartNew();
         CancellationToken cancellationToken = this.renderCancellationTokenSource!.Token;
 
         DynamicResolutionManager.Create(out DynamicResolutionManager frameTimeWatcher);
+        
+        if (!OnFrameRequest(out object? parameter, cancellationToken))
+        {
+            return;
+        }
 
-        // Start the initial frame separately, before the timer starts. This ensures that
-        // resuming after a pause correctly renders the first frame at the right time.
-        this.OnResize();
-        this.OnUpdate(renderStopwatch.Elapsed);
-        this.OnPresent();
+        Stopwatch frameStopwatch = Stopwatch.StartNew();
+
+        OnResize();
+        OnUpdate(renderStopwatch.Elapsed, parameter);
+        OnPresent();
 
         renderStopwatch.Start();
 
-        // Main render loop, until cancellation is requested
         while (!cancellationToken.IsCancellationRequested)
         {
             // Evaluate the dynamic resolution frame time step, if the mode is enabled
@@ -201,14 +217,55 @@ partial class SwapChainManager
                 this.isResizePending = true;
             }
 
+            if (!OnFrameRequest(out parameter, cancellationToken))
+            {
+                return;
+            }
+
             frameStopwatch.Restart();
 
-            this.OnResize();
-            this.OnUpdate(renderStopwatch.Elapsed);
-            this.OnPresent();
+            OnResize();
+            OnUpdate(renderStopwatch.Elapsed, parameter);
+            OnPresent();
         }
 
         renderStopwatch.Stop();
+    }
+
+    /// <summary>
+    /// Waits for a new frame request and retrieves its parameter.
+    /// </summary>
+    /// <param name="parameter">The input parameter for the frame to render.</param>
+    /// <param name="token">A token to cancel waiting for a new frame.</param>
+    /// <returns>Whether the operation was canceled.</returns>
+    private bool OnFrameRequest(out object? parameter, CancellationToken token)
+    {
+        if (this.frameRequestQueue is IFrameRequestQueue frameRequestQueue)
+        {
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            static bool WaitForFrameRequest(IFrameRequestQueue frameRequestQueue, out object? parameter, CancellationToken token)
+            {
+                try
+                {
+                    // Wait for a new frame request
+                    frameRequestQueue.Dequeue(out parameter, token);
+
+                    return true;
+                }
+                catch (OperationCanceledException)
+                {
+                    parameter = null;
+
+                    return false;
+                }
+            }
+
+            return WaitForFrameRequest(frameRequestQueue, out parameter, token);
+        }
+
+        parameter = null;
+
+        return true;
     }
 
     /// <summary>
@@ -228,9 +285,10 @@ partial class SwapChainManager
     /// Updates the render resolution, if needed, and renders a new frame.
     /// </summary>
     /// <param name="time">The current time since the start of the application.</param>
-    private void OnUpdate(TimeSpan time)
+    /// <param name="parameter">The input parameter for the frame being rendered.</param>
+    private void OnUpdate(TimeSpan time, object? parameter)
     {
-        this.shaderRunner!.Execute(this.texture!, time, null);
+        this.shaderRunner!.Execute(this.texture!, time, parameter);
     }
 
     /// <summary>

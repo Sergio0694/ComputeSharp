@@ -91,6 +91,11 @@ internal sealed unsafe partial class SwapChainManager : NativeObject
     private volatile CancellationTokenSource? renderCancellationTokenSource;
 
     /// <summary>
+    /// The <see cref="IFrameRequestQueue"/> instance used to get frame requests and parameters.
+    /// </summary>
+    private volatile IFrameRequestQueue? frameRequestQueue;
+
+    /// <summary>
     /// The <see cref="IShaderRunner"/> instance used to create shaders to run.
     /// </summary>
     private volatile IShaderRunner? shaderRunner;
