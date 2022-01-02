@@ -230,7 +230,7 @@ partial class SwapChainManager
     /// <param name="time">The current time since the start of the application.</param>
     private void OnUpdate(TimeSpan time)
     {
-        this.shaderRunner!.Execute(this.texture!, time);
+        this.shaderRunner!.Execute(this.texture!, time, null);
     }
 
     /// <summary>
