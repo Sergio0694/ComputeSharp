@@ -12,13 +12,13 @@ namespace ComputeSharp.Uwp;
 namespace ComputeSharp.WinUI;
 #endif
 
-/// <inheritdoc cref="ComputeShaderPanel"/>
-partial class ComputeShaderPanel
+/// <inheritdoc cref="AnimatedComputeShaderPanel"/>
+partial class AnimatedComputeShaderPanel
 {
     /// <summary>
     /// Raised whenever rendering starts.
     /// </summary>
-    public event TypedEventHandler<ComputeShaderPanel, EventArgs>? RenderingStarted
+    public event TypedEventHandler<AnimatedComputeShaderPanel, EventArgs>? RenderingStarted
     {
         add => this.swapChainManager.RenderingStarted += value;
         remove => this.swapChainManager.RenderingStarted -= value;
@@ -27,7 +27,7 @@ partial class ComputeShaderPanel
     /// <summary>
     /// Raised whenever rendering stops.
     /// </summary>
-    public event TypedEventHandler<ComputeShaderPanel, EventArgs>? RenderingStopped
+    public event TypedEventHandler<AnimatedComputeShaderPanel, EventArgs>? RenderingStopped
     {
         add => this.swapChainManager.RenderingStopped += value;
         remove => this.swapChainManager.RenderingStopped -= value;
@@ -36,45 +36,10 @@ partial class ComputeShaderPanel
     /// <summary>
     /// Raised whenever rendering fails.
     /// </summary>
-    public event TypedEventHandler<ComputeShaderPanel, Exception>? RenderingFailed
+    public event TypedEventHandler<AnimatedComputeShaderPanel, Exception>? RenderingFailed
     {
         add => this.swapChainManager.RenderingFailed += value;
         remove => this.swapChainManager.RenderingFailed -= value;
-    }
-
-    /// <summary>
-    /// Gets or sets the <see cref="IFrameRequestQueue"/> instance to use to request new frames.
-    /// </summary>
-    public IFrameRequestQueue? FrameRequestQueue
-    {
-        get => (IFrameRequestQueue)GetValue(FrameRequestQueueProperty);
-        set => SetValue(FrameRequestQueueProperty, value);
-    }
-
-    /// <summary>
-    /// The <see cref="DependencyProperty"/> backing <see cref="ShaderRunner"/>.
-    /// </summary>
-    public static readonly DependencyProperty FrameRequestQueueProperty = DependencyProperty.Register(
-        nameof(FrameRequestQueue),
-        typeof(IFrameRequestQueue),
-        typeof(ComputeShaderPanel),
-        new PropertyMetadata(null, OnFrameRequestQueueChanged));
-
-    /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
-    private static void OnFrameRequestQueueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var @this = (ComputeShaderPanel)d;
-
-        if (@this.IsLoaded &&
-            e.NewValue is IFrameRequestQueue frameRequestQueue &&
-            @this.ShaderRunner is IShaderRunner shaderRunner)
-        {
-            @this.swapChainManager.StartRenderLoop(frameRequestQueue, shaderRunner);
-        }
-        else
-        {
-            @this.swapChainManager.StopRenderLoop();
-        }
     }
 
     /// <summary>
@@ -92,19 +57,19 @@ partial class ComputeShaderPanel
     public static readonly DependencyProperty ShaderRunnerProperty = DependencyProperty.Register(
         nameof(ShaderRunner),
         typeof(IShaderRunner),
-        typeof(ComputeShaderPanel),
+        typeof(AnimatedComputeShaderPanel),
         new PropertyMetadata(null, OnShaderRunnerPropertyChanged));
 
     /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
     private static void OnShaderRunnerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var @this = (ComputeShaderPanel)d;
-
+        var @this = (AnimatedComputeShaderPanel)d;
+        
         if (@this.IsLoaded &&
-            @this.FrameRequestQueue is IFrameRequestQueue frameRequestQueue &&
+            !@this.IsPaused &&
             e.NewValue is IShaderRunner shaderRunner)
         {
-            @this.swapChainManager.StartRenderLoop(frameRequestQueue, shaderRunner);
+            @this.swapChainManager.StartRenderLoop(null, shaderRunner);
         }
         else
         {
@@ -129,13 +94,13 @@ partial class ComputeShaderPanel
     public static readonly DependencyProperty ResolutionScaleProperty = DependencyProperty.Register(
         nameof(ResolutionScale),
         typeof(double),
-        typeof(ComputeShaderPanel),
+        typeof(AnimatedComputeShaderPanel),
         new PropertyMetadata(1.0, OnResolutionScalePropertyChanged));
 
     /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
     private static void OnResolutionScalePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var @this = (ComputeShaderPanel)d;
+        var @this = (AnimatedComputeShaderPanel)d;
         var resolutionScale = (double)e.NewValue;
 
         @this.swapChainManager.QueueResolutionScaleChange(resolutionScale);
@@ -158,15 +123,50 @@ partial class ComputeShaderPanel
     public static readonly DependencyProperty IsDynamicResolutionEnabledProperty = DependencyProperty.Register(
         nameof(IsDynamicResolutionEnabled),
         typeof(bool),
-        typeof(ComputeShaderPanel),
+        typeof(AnimatedComputeShaderPanel),
         new PropertyMetadata(true, OnIsDynamicResolutionEnabledPropertyChanged));
 
     /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
     private static void OnIsDynamicResolutionEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var @this = (ComputeShaderPanel)d;
+        var @this = (AnimatedComputeShaderPanel)d;
         var isDynamicResolutionEnabled = (bool)e.NewValue;
 
         @this.swapChainManager.QueueDynamicResolutionModeChange(isDynamicResolutionEnabled);
+    }
+
+    /// <summary>
+    /// Gets or sets whether or not the rendering is paused.
+    /// </summary>
+    public bool IsPaused
+    {
+        get => (bool)GetValue(IsPausedProperty);
+        set => SetValue(IsPausedProperty, value);
+    }
+
+    /// <summary>
+    /// The <see cref="DependencyProperty"/> backing <see cref="IsPaused"/>.
+    /// </summary>
+    public static readonly DependencyProperty IsPausedProperty = DependencyProperty.Register(
+        nameof(IsPaused),
+        typeof(bool),
+        typeof(AnimatedComputeShaderPanel),
+        new PropertyMetadata(false, OnIsPausedPropertyChanged));
+
+    /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
+    private static void OnIsPausedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var @this = (AnimatedComputeShaderPanel)d;
+
+        if (@this.IsLoaded &&
+            (bool)e.NewValue is false &&
+            @this.ShaderRunner is IShaderRunner shaderRunner)
+        {
+            @this.swapChainManager.StartRenderLoop(null, shaderRunner);
+        }
+        else
+        {
+            @this.swapChainManager.StopRenderLoop();
+        }
     }
 }

@@ -1,45 +1,54 @@
 ﻿using System;
 using System.Diagnostics;
-#if WINDOWS_UWP
-using System.Runtime.InteropServices;
-#endif
 using System.Threading;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
-#if WINDOWS_UWP
-using ComputeSharp.Uwp.Helpers;
-#else
-using ComputeSharp.WinUI.Helpers;
+#if !WINDOWS_UWP
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml.Controls;
 #endif
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using TerraFX.Interop.WinRT;
-#if !WINDOWS_UWP
+#if WINDOWS_UWP
+using System.Runtime.InteropServices;
+using Windows.Foundation;
+using Windows.UI.Xaml.Controls;
+using Windows.System;
+#else
+using Windows.Foundation;
 using WinRT;
 #endif
 using Win32 = TerraFX.Interop.Windows.Windows;
 
-#pragma warning disable CS0420
-
 #if WINDOWS_UWP
-namespace ComputeSharp.Uwp;
+namespace ComputeSharp.Uwp.Helpers;
 #else
-namespace ComputeSharp.WinUI;
+namespace ComputeSharp.WinUI.Helpers;
 #endif
 
-/// <inheritdoc cref="ComputeShaderPanel"/>
-public sealed partial class ComputeShaderPanel
+/// <summary>
+/// A type managing rendering on a target swap chain object.
+/// </summary>
+/// <typeparam name="TOwner">The type of the owner <see cref="SwapChainPanel"/> instance.</typeparam>
+internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
+    where TOwner : SwapChainPanel
 {
     /// <summary>
-    /// The render thread in use, if any.
+    /// The owning <typeparamref name="TOwner"/> instance.
     /// </summary>
-    private Thread? renderThread;
+    private readonly TOwner owner;
 
     /// <summary>
-    /// The <see cref="IShaderRunner"/> instance used to create shaders to run.
+    /// The captured <see cref="SynchronizationContext"/> for the current instance.
     /// </summary>
-    private IShaderRunner? shaderRunner;
+    private readonly DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+
+    /// <summary>
+    /// An <see cref="SemaphoreSlim"/> object for the render loop management.
+    /// </summary>
+    private readonly SemaphoreSlim setupSemaphore = new(1, 1);
 
     /// <summary>
     /// The <see cref="ID3D12Device"/> pointer for the device currently in use.
@@ -59,7 +68,7 @@ public sealed partial class ComputeShaderPanel
     /// <summary>
     /// The next fence value for graphics operations using <see cref="d3D12CommandQueue"/>.
     /// </summary>
-    private ulong nextD3D12FenceValue = 1;
+    private ulong nextD3D12FenceValue;
 
     /// <summary>
     /// The <see cref="ID3D12CommandAllocator"/> object to create command lists.
@@ -94,12 +103,37 @@ public sealed partial class ComputeShaderPanel
     /// <summary>
     /// The index of the next buffer that can be used to present content.
     /// </summary>
-    private uint currentBufferIndex;
+    private volatile uint currentBufferIndex;
+
+    /// <summary>
+    /// The render thread in use, if any.
+    /// </summary>
+    private volatile Thread? renderThread;
+
+    /// <summary>
+    /// The <see cref="SemaphoreSlim"/> used to wait for render threads to complete.
+    /// </summary>
+    private volatile SemaphoreSlim renderSemaphore = new(1, 1);
+
+    /// <summary>
+    /// The <see cref="CancellationTokenSource"/> to use for <see cref="renderThread"/>.
+    /// </summary>
+    private volatile CancellationTokenSource? renderCancellationTokenSource;
+
+    /// <summary>
+    /// The <see cref="IFrameRequestQueue"/> instance used to get frame requests and parameters.
+    /// </summary>
+    private volatile IFrameRequestQueue? frameRequestQueue;
+
+    /// <summary>
+    /// The <see cref="IShaderRunner"/> instance used to create shaders to run.
+    /// </summary>
+    private volatile IShaderRunner? shaderRunner;
 
     /// <summary>
     /// The <see cref="ReadWriteTexture2D{T, TPixel}"/> instance used to prepare frames to display.
     /// </summary>
-    private ReadWriteTexture2D<Rgba32, Float4>? texture;
+    private volatile ReadWriteTexture2D<Rgba32, Float4>? texture;
 
     /// <summary>
     /// Whether or not the window has been resized and requires the buffers to be updated.
@@ -142,36 +176,56 @@ public sealed partial class ComputeShaderPanel
     private volatile bool isDynamicResolutionEnabled;
 
     /// <summary>
-    /// Indicates whether or not the rendering has been canceled.
-    /// </summary>
-    private volatile bool isCancellationRequested;
-
-    /// <summary>
     /// The <see cref="Stopwatch"/> instance tracking time since the first rendered frame.
     /// </summary>
-    private Stopwatch? renderStopwatch;
+    private volatile Stopwatch? renderStopwatch;
 
     /// <summary>
-    /// Indicates whether or not <see cref="OnInitialize"/> has already been called.
+    /// Raised whenever rendering starts.
     /// </summary>
-    private bool isInitialized;
+    public event TypedEventHandler<TOwner, EventArgs>? RenderingStarted;
 
     /// <summary>
-    /// Initializes the current application.
+    /// Raised whenever rendering stops.
     /// </summary>
-    private unsafe void OnInitialize()
+    public event TypedEventHandler<TOwner, EventArgs>? RenderingStopped;
+
+    /// <summary>
+    /// Raised whenever rendering fails.
+    /// </summary>
+    public event TypedEventHandler<TOwner, Exception>? RenderingFailed;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SwapChainManager{TOwner}"/> type.
+    /// </summary>
+    /// <param name="owner">The input swap chain instance being used.</param>
+    public SwapChainManager(TOwner owner)
     {
-        if (this.isInitialized)
-        {
-            return;
-        }
+        this.owner = owner;
 
-        this.isInitialized = true;
+        // Extract the ISwapChainPanelNative reference from the current panel, then query the
+        // IDXGISwapChain reference just created and set that as the swap chain panel to use.
+        using ComPtr<ISwapChainPanelNative> swapChainPanelNative = default;
+
+#if WINDOWS_UWP
+        IUnknown* swapChainPanel = (IUnknown*)Marshal.GetIUnknownForObject(owner);
+
+        swapChainPanel->QueryInterface(
+            Win32.__uuidof<ISwapChainPanelNative>(),
+            (void**)&swapChainPanelNative).Assert();
+#else
+        IUnknown* swapChainPanel = (IUnknown*)((IWinRTObject)owner).NativeObject.ThisPtr;
+        Guid iSwapChainPanelNativeUuid = new(0x63AAD0B8, 0x7C24, 0x40FF, 0x85, 0xA8, 0x64, 0x0D, 0x94, 0x4C, 0xC3, 0x25);
+
+        swapChainPanel->QueryInterface(
+            &iSwapChainPanelNativeUuid,
+            (void**)&swapChainPanelNative).Assert();
+#endif
 
         // Get the underlying ID3D12Device in use
         fixed (ID3D12Device** d3D12Device = this.d3D12Device)
         {
-            InteropServices.TryGetID3D12Device(GraphicsDevice.Default, Win32.__uuidof<ID3D12Device>(), (void**)d3D12Device).Assert();
+            GraphicsDevice.Default.D3D12Device->QueryInterface(Win32.__uuidof<ID3D12Device>(), (void**)d3D12Device).Assert();
         }
 
         // Create the direct command queue to use
@@ -258,25 +312,6 @@ public sealed partial class ComputeShaderPanel
         // Close the command list to prepare it for future use
         this.d3D12GraphicsCommandList.Get()->Close().Assert();
 
-        // Extract the ISwapChainPanelNative reference from the current panel, then query the
-        // IDXGISwapChain reference just created and set that as the swap chain panel to use.
-        using ComPtr<ISwapChainPanelNative> swapChainPanelNative = default;
-
-#if WINDOWS_UWP
-        IUnknown* swapChainPanel = (IUnknown*)Marshal.GetIUnknownForObject(this);
-
-        swapChainPanel->QueryInterface(
-            Win32.__uuidof<ISwapChainPanelNative>(),
-            (void**)&swapChainPanelNative).Assert();
-#else
-        IUnknown* swapChainPanel = (IUnknown*)((IWinRTObject)this).NativeObject.ThisPtr;
-        Guid iSwapChainPanelNativeUuid = new(0x63AAD0B8, 0x7C24, 0x40FF, 0x85, 0xA8, 0x64, 0x0D, 0x94, 0x4C, 0xC3, 0x25);
-
-        swapChainPanel->QueryInterface(
-            &iSwapChainPanelNativeUuid,
-            (void**)&swapChainPanelNative).Assert();
-#endif
-
         using (ComPtr<IDXGISwapChain> idxgiSwapChain = default)
         {
             this.dxgiSwapChain3.CopyTo(&idxgiSwapChain).Assert();
@@ -288,24 +323,16 @@ public sealed partial class ComputeShaderPanel
     }
 
     /// <summary>
-    /// Resizes the current application.
-    /// </summary>
-    private void OnResize()
-    {
-        this.isResizePending = true;
-    }
-
-    /// <summary>
     /// Applies the actual resize logic that was scheduled from <see cref="OnResize"/>.
     /// </summary>
     private unsafe void ApplyResize()
     {
-        this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), this.nextD3D12FenceValue).Assert();
+        ulong updatedFenceValue = ++this.nextD3D12FenceValue;
+
+        this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), updatedFenceValue).Assert();
 
         // Wait for the fence again to ensure there are no pending operations
-        this.d3D12Fence.Get()->SetEventOnCompletion(this.nextD3D12FenceValue, default).Assert();
-
-        this.nextD3D12FenceValue++;
+        this.d3D12Fence.Get()->SetEventOnCompletion(updatedFenceValue, default).Assert();
 
         // Dispose the old buffers before resizing the buffer
         this.d3D12Resource0.Dispose();
@@ -347,40 +374,16 @@ public sealed partial class ComputeShaderPanel
             (int)d3D12Resource0Description.Height);
     }
 
-    /// <summary>
-    /// Updates the render resolution, if needed, and renders a new frame.
-    /// </summary>
-    /// <param name="time">The current time since the start of the application.</param>
-    private unsafe void OnUpdate(TimeSpan time)
+    /// <inheritdoc/>
+    private unsafe partial void OnPresent()
     {
-        if (this.isResizePending)
-        {
-            ApplyResize();
-
-            this.isResizePending = false;
-        }
-
-        // Skip if no factory is available
-        if (this.shaderRunner is null)
-        {
-            return;
-        }
-
-        // Generate the new frame
-        this.shaderRunner.Execute(this.texture!, time);
-    }
-
-    /// <summary>
-    /// Presents the last rendered frame for the current application.
-    /// </summary>
-    private unsafe void OnPresent()
-    {
-        _ = Win32.WaitForSingleObjectEx(frameLatencyWaitableObject, 1000, 1);
+        // Wait for the swap chain to be ready for presenting
+        _ = Win32.WaitForSingleObjectEx(frameLatencyWaitableObject, 1000, true);
 
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 
         // Get the underlying ID3D12Resource pointer for the texture
-        InteropServices.TryGetID3D12Resource(this.texture!, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf()).Assert();
+        this.texture!.D3D12Resource->QueryInterface(Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource.GetAddressOf()).Assert();
 
         // Get the target back buffer to update
         ID3D12Resource* d3D12ResourceBackBuffer = this.currentBufferIndex switch
@@ -431,116 +434,40 @@ public sealed partial class ComputeShaderPanel
 
         // Execute the command list to perform the copy
         this.d3D12CommandQueue.Get()->ExecuteCommandLists(1, (ID3D12CommandList**)this.d3D12GraphicsCommandList.GetAddressOf());
-        this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), this.nextD3D12FenceValue).Assert();
+
+        // Increment the fence value and signal the fence. Just like with normal dispatches,
+        // the increment must be done after executing the command list and before signaling.
+        ulong updatedFenceValue = ++this.nextD3D12FenceValue;
+
+        this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), updatedFenceValue).Assert();
 
         // Present the new frame
         this.dxgiSwapChain3.Get()->Present(0, 0).Assert();
 
-        if (this.nextD3D12FenceValue > this.d3D12Fence.Get()->GetCompletedValue())
+        if (updatedFenceValue > this.d3D12Fence.Get()->GetCompletedValue())
         {
-            this.d3D12Fence.Get()->SetEventOnCompletion(this.nextD3D12FenceValue, default).Assert();
+            this.d3D12Fence.Get()->SetEventOnCompletion(updatedFenceValue, default).Assert();
         }
-
-        this.nextD3D12FenceValue++;
     }
 
-    /// <summary>
-    /// Executes the render loop for the current panel.
-    /// </summary>
-    /// <remarks>This method assumes to be invoked from a background thread.</remarks>
-    private void OnStartRenderLoop()
+    /// <inheritdoc/>
+    protected override void OnDispose()
     {
-        static void ExecuteRenderLoop(ComputeShaderPanel @this)
+        ThreadPool.UnsafeQueueUserWorkItem(static state =>
         {
-            Stopwatch
-                renderStopwatch = @this.renderStopwatch ??= new(),
-                frameStopwatch = Stopwatch.StartNew();
+            SwapChainManager<TOwner> @this = (SwapChainManager<TOwner>)state!;
 
-            DynamicResolutionManager.Create(out DynamicResolutionManager frameTimeWatcher);
+            @this.UnsafeStopRenderLoopAndWait();
 
-            bool isDynamicResolutionEnabled = @this.isDynamicResolutionEnabled;
-
-            // Start the initial frame separately, before the timer starts. This ensures that
-            // resuming after a pause correctly renders the first frame at the right time.
-            @this.OnUpdate(renderStopwatch.Elapsed);
-            @this.OnPresent();
-
-            renderStopwatch.Start();
-
-            const long targetFrameTimeInTicksFor61fps = 163934;
-
-            // Main render loop, until cancellation is requested
-            while (!@this.isCancellationRequested)
-            {
-                // Update the resolution mode, if needed
-                if (isDynamicResolutionEnabled != @this.isDynamicResolutionEnabled)
-                {
-                    isDynamicResolutionEnabled = !isDynamicResolutionEnabled;
-
-                    if (isDynamicResolutionEnabled)
-                    {
-                        DynamicResolutionManager.Create(out frameTimeWatcher);
-                    }
-                    else
-                    {
-                        @this.targetResolutionScale = @this.resolutionScale;
-                    }
-                }
-
-                // Evaluate the dynamic resolution frame time step, if the mode is enabled
-                if (isDynamicResolutionEnabled &&
-                    frameTimeWatcher.Advance(frameStopwatch.ElapsedTicks, ref @this.targetResolutionScale))
-                {
-                    @this.isResizePending = true;
-                }
-
-                while (frameStopwatch.ElapsedTicks < targetFrameTimeInTicksFor61fps)
-                {
-                }
-
-                frameStopwatch.Restart();
-
-                @this.OnUpdate(renderStopwatch.Elapsed);
-                @this.OnPresent();
-            }
-
-            renderStopwatch.Stop();
-        }
-
-        this.isCancellationRequested = false;
-        this.renderThread = new Thread(static args => ExecuteRenderLoop((ComputeShaderPanel)args!));
-        this.renderThread.Start(this);
-    }
-
-    /// <summary>
-    /// Stops the current render loop, if one is running.
-    /// </summary>
-    private void OnStopRenderLoop()
-    {
-        this.isCancellationRequested = true;
-    }
-
-    /// <summary>
-    /// Stops the current render loop, and releases all resources.
-    /// </summary>
-    private void OnDisposed()
-    {
-        this.isCancellationRequested = true;
-
-        // Ensure the rendering has stopped
-        if (this.renderThread is Thread renderThread)
-        {
-            renderThread.Join();
-        }
-
-        this.d3D12Device.Dispose();
-        this.d3D12CommandQueue.Dispose();
-        this.d3D12Fence.Dispose();
-        this.d3D12CommandAllocator.Dispose();
-        this.d3D12GraphicsCommandList.Dispose();
-        this.dxgiSwapChain3.Dispose();
-        this.d3D12Resource0.Dispose();
-        this.d3D12Resource1.Dispose();
-        this.texture?.Dispose();
+            @this.d3D12Device.Dispose();
+            @this.d3D12CommandQueue.Dispose();
+            @this.d3D12Fence.Dispose();
+            @this.d3D12CommandAllocator.Dispose();
+            @this.d3D12GraphicsCommandList.Dispose();
+            @this.dxgiSwapChain3.Dispose();
+            @this.d3D12Resource0.Dispose();
+            @this.d3D12Resource1.Dispose();
+            @this.texture?.Dispose();
+        }, this);
     }
 }
