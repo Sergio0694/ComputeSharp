@@ -433,7 +433,10 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
         this.d3D12GraphicsCommandList.Get()->Close().Assert();
 
         // Execute the command list to perform the copy
-        this.d3D12CommandQueue.Get()->ExecuteCommandLists(1, (ID3D12CommandList**)this.d3D12GraphicsCommandList.GetAddressOf());
+        fixed (ID3D12GraphicsCommandList** d3D12GraphicsCommandList = this.d3D12GraphicsCommandList)
+        {
+            this.d3D12CommandQueue.Get()->ExecuteCommandLists(1, (ID3D12CommandList**)d3D12GraphicsCommandList);
+        }
 
         // Increment the fence value and signal the fence. Just like with normal dispatches,
         // the increment must be done after executing the command list and before signaling.
