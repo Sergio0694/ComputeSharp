@@ -4,6 +4,7 @@ using Windows.UI.Xaml;
 #else
 using Microsoft.UI.Xaml;
 #endif
+using Windows.Foundation;
 
 #if WINDOWS_UWP
 namespace ComputeSharp.Uwp;
@@ -14,6 +15,33 @@ namespace ComputeSharp.WinUI;
 /// <inheritdoc cref="ComputeShaderPanel"/>
 partial class ComputeShaderPanel
 {
+    /// <summary>
+    /// Raised whenever rendering starts.
+    /// </summary>
+    public event TypedEventHandler<ComputeShaderPanel, EventArgs>? RenderingStarted
+    {
+        add => this.swapChainManager.RenderingStarted += value;
+        remove => this.swapChainManager.RenderingStarted -= value;
+    }
+
+    /// <summary>
+    /// Raised whenever rendering stops.
+    /// </summary>
+    public event TypedEventHandler<ComputeShaderPanel, EventArgs>? RenderingStopped
+    {
+        add => this.swapChainManager.RenderingStopped += value;
+        remove => this.swapChainManager.RenderingStopped -= value;
+    }
+
+    /// <summary>
+    /// Raised whenever rendering fails.
+    /// </summary>
+    public event TypedEventHandler<ComputeShaderPanel, Exception>? RenderingFailed
+    {
+        add => this.swapChainManager.RenderingFailed += value;
+        remove => this.swapChainManager.RenderingFailed -= value;
+    }
+
     /// <summary>
     /// Gets or sets the <see cref="IFrameRequestQueue"/> instance to use to request new frames.
     /// </summary>

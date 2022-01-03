@@ -1,15 +1,11 @@
 ﻿#if WINDOWS_UWP
-using System.Runtime.InteropServices;
 using ComputeSharp.Uwp.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using TerraFX.Interop.Windows;
 #else
 using ComputeSharp.WinUI.Helpers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using TerraFX.Interop.Windows;
-using WinRT;
 #endif
 
 #if WINDOWS_UWP
@@ -30,22 +26,16 @@ namespace ComputeSharp.WinUI;
 public sealed partial class AnimatedComputeShaderPanel : SwapChainPanel
 {
     /// <summary>
-    /// The <see cref="SwapChainManager"/> instance handling rendering.
+    /// The <see cref="SwapChainManager{TOwner}"/> instance handling rendering.
     /// </summary>
-    private readonly SwapChainManager swapChainManager;
+    private readonly SwapChainManager<AnimatedComputeShaderPanel> swapChainManager;
 
     /// <summary>
     /// Creates a new <see cref="AnimatedComputeShaderPanel"/> instance.
     /// </summary>
     public unsafe AnimatedComputeShaderPanel()
     {
-#if WINDOWS_UWP
-        IUnknown* swapChainPanel = (IUnknown*)Marshal.GetIUnknownForObject(this);
-#else
-        IUnknown* swapChainPanel = (IUnknown*)((IWinRTObject)this).NativeObject.ThisPtr;
-#endif
-
-        this.swapChainManager = new SwapChainManager(swapChainPanel);
+        this.swapChainManager = new SwapChainManager<AnimatedComputeShaderPanel>(this);
 
         this.Loaded += AnimatedComputeShaderPanel_Loaded;
         this.Unloaded += AnimatedComputeShaderPanel_Unloaded;

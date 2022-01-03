@@ -18,7 +18,7 @@ namespace ComputeSharp.WinUI.Helpers;
 #endif
 
 /// <inheritdoc/>
-partial class SwapChainManager
+partial class SwapChainManager<TOwner>
 {
     /// <summary>
     /// Starts the current render loop.
@@ -37,7 +37,7 @@ partial class SwapChainManager
             
             await this.renderSemaphore.WaitAsync();
 
-            Thread newRenderThread = new(static args => ((SwapChainManager)args!).SwitchAndStartRenderLoop());
+            Thread newRenderThread = new(static args => ((SwapChainManager<TOwner>)args!).SwitchAndStartRenderLoop());
 
             this.frameRequestQueue = frameRequestQueue;
             this.shaderRunner = shaderRunner;
@@ -79,7 +79,7 @@ partial class SwapChainManager
 
                 await this.renderSemaphore.WaitAsync();
 
-                Thread newRenderThread = new(static args => ((SwapChainManager)args!).SwitchAndStartRenderLoop());
+                Thread newRenderThread = new(static args => ((SwapChainManager<TOwner>)args!).SwitchAndStartRenderLoop());
 
                 this.renderCancellationTokenSource = new CancellationTokenSource();
                 this.renderThread = newRenderThread;
@@ -145,6 +145,8 @@ partial class SwapChainManager
     {
         try
         {
+            OnRenderingStarted();
+
             if (this.isDynamicResolutionEnabled)
             {
                 this.targetResolutionScale = 1.0f;
@@ -157,6 +159,12 @@ partial class SwapChainManager
 
                 RenderLoop();
             }
+
+            OnRenderingStopped();
+        }
+        catch (Exception e)
+        {
+            OnRenderingFailed(e);
         }
         finally
         {
@@ -310,6 +318,31 @@ partial class SwapChainManager
     /// Presents the last rendered frame for the current application.
     /// </summary>
     private unsafe partial void OnPresent();
+
+    /// <summary>
+    /// Raises <see cref="RenderingStarted"/>.
+    /// </summary>
+    private void OnRenderingStarted()
+    {
+        _ = this.dispatcherQueue.TryEnqueue(() => RenderingStarted?.Invoke(this.owner, EventArgs.Empty));
+    }
+
+    /// <summary>
+    /// Raises <see cref="RenderingStopped"/>.
+    /// </summary>
+    private void OnRenderingStopped()
+    {
+        _ = this.dispatcherQueue.TryEnqueue(() => RenderingStopped?.Invoke(this.owner, EventArgs.Empty));
+    }
+
+    /// <summary>
+    /// Raises <see cref="RenderingFailed"/>.
+    /// </summary>
+    /// <param name="e">The <see cref="Exception"/> being thrown that caused rendering to stop.</param>
+    private void OnRenderingFailed(Exception e)
+    {
+        _ = this.dispatcherQueue.TryEnqueue(() => RenderingFailed?.Invoke(this.owner, e));
+    }
 
     /// <summary>
     /// Stops the current render loop, if one is running, and waits for it.

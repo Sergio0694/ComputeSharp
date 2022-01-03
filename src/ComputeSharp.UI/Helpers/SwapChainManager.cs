@@ -4,9 +4,22 @@ using System.Threading;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
+#if !WINDOWS_UWP
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml.Controls;
+#endif
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using TerraFX.Interop.WinRT;
+#if WINDOWS_UWP
+using System.Runtime.InteropServices;
+using Windows.Foundation;
+using Windows.UI.Xaml.Controls;
+using Windows.System;
+#else
+using Windows.Foundation;
+using WinRT;
+#endif
 using Win32 = TerraFX.Interop.Windows.Windows;
 
 #if WINDOWS_UWP
@@ -18,8 +31,20 @@ namespace ComputeSharp.WinUI.Helpers;
 /// <summary>
 /// A type managing rendering on a target swap chain object.
 /// </summary>
-internal sealed unsafe partial class SwapChainManager : NativeObject
+/// <typeparam name="TOwner">The type of the owner <see cref="SwapChainPanel"/> instance.</typeparam>
+internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
+    where TOwner : SwapChainPanel
 {
+    /// <summary>
+    /// The owning <typeparamref name="TOwner"/> instance.
+    /// </summary>
+    private readonly TOwner owner;
+
+    /// <summary>
+    /// The captured <see cref="SynchronizationContext"/> for the current instance.
+    /// </summary>
+    private readonly DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+
     /// <summary>
     /// An <see cref="SemaphoreSlim"/> object for the render loop management.
     /// </summary>
@@ -156,20 +181,40 @@ internal sealed unsafe partial class SwapChainManager : NativeObject
     private volatile Stopwatch? renderStopwatch;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SwapChainManager"/> type.
+    /// Raised whenever rendering starts.
     /// </summary>
-    /// <param name="swapChainPanel">The input swap chain object being used.</param>
-    public SwapChainManager(IUnknown* swapChainPanel)
+    public event TypedEventHandler<TOwner, EventArgs>? RenderingStarted;
+
+    /// <summary>
+    /// Raised whenever rendering stops.
+    /// </summary>
+    public event TypedEventHandler<TOwner, EventArgs>? RenderingStopped;
+
+    /// <summary>
+    /// Raised whenever rendering fails.
+    /// </summary>
+    public event TypedEventHandler<TOwner, Exception>? RenderingFailed;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SwapChainManager{TOwner}"/> type.
+    /// </summary>
+    /// <param name="owner">The input swap chain instance being used.</param>
+    public SwapChainManager(TOwner owner)
     {
+        this.owner = owner;
+
         // Extract the ISwapChainPanelNative reference from the current panel, then query the
         // IDXGISwapChain reference just created and set that as the swap chain panel to use.
         using ComPtr<ISwapChainPanelNative> swapChainPanelNative = default;
 
 #if WINDOWS_UWP
+        IUnknown* swapChainPanel = (IUnknown*)Marshal.GetIUnknownForObject(owner);
+
         swapChainPanel->QueryInterface(
             Win32.__uuidof<ISwapChainPanelNative>(),
             (void**)&swapChainPanelNative).Assert();
 #else
+        IUnknown* swapChainPanel = (IUnknown*)((IWinRTObject)owner).NativeObject.ThisPtr;
         Guid iSwapChainPanelNativeUuid = new(0x63AAD0B8, 0x7C24, 0x40FF, 0x85, 0xA8, 0x64, 0x0D, 0x94, 0x4C, 0xC3, 0x25);
 
         swapChainPanel->QueryInterface(
@@ -410,7 +455,7 @@ internal sealed unsafe partial class SwapChainManager : NativeObject
     {
         ThreadPool.UnsafeQueueUserWorkItem(static state =>
         {
-            SwapChainManager @this = (SwapChainManager)state!;
+            SwapChainManager<TOwner> @this = (SwapChainManager<TOwner>)state!;
 
             @this.UnsafeStopRenderLoopAndWait();
 
