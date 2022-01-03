@@ -21,9 +21,9 @@ namespace ComputeSharp.WinUI.Helpers;
 internal sealed unsafe partial class SwapChainManager : NativeObject
 {
     /// <summary>
-    /// A lock object for the render loops.
+    /// An <see cref="SemaphoreSlim"/> object for the render loop management.
     /// </summary>
-    private readonly object renderLock = new();
+    private readonly SemaphoreSlim setupSemaphore = new(1, 1);
 
     /// <summary>
     /// The <see cref="ID3D12Device"/> pointer for the device currently in use.
@@ -84,6 +84,11 @@ internal sealed unsafe partial class SwapChainManager : NativeObject
     /// The render thread in use, if any.
     /// </summary>
     private volatile Thread? renderThread;
+
+    /// <summary>
+    /// The <see cref="SemaphoreSlim"/> used to wait for render threads to complete.
+    /// </summary>
+    private volatile SemaphoreSlim renderSemaphore = new(1, 1);
 
     /// <summary>
     /// The <see cref="CancellationTokenSource"/> to use for <see cref="renderThread"/>.
@@ -403,16 +408,21 @@ internal sealed unsafe partial class SwapChainManager : NativeObject
     /// <inheritdoc/>
     protected override void OnDispose()
     {
-        UnsafeStopRenderLoopAndWait();
+        ThreadPool.UnsafeQueueUserWorkItem(static state =>
+        {
+            SwapChainManager @this = (SwapChainManager)state!;
 
-        this.d3D12Device.Dispose();
-        this.d3D12CommandQueue.Dispose();
-        this.d3D12Fence.Dispose();
-        this.d3D12CommandAllocator.Dispose();
-        this.d3D12GraphicsCommandList.Dispose();
-        this.dxgiSwapChain3.Dispose();
-        this.d3D12Resource0.Dispose();
-        this.d3D12Resource1.Dispose();
-        this.texture?.Dispose();
+            @this.UnsafeStopRenderLoopAndWait();
+
+            @this.d3D12Device.Dispose();
+            @this.d3D12CommandQueue.Dispose();
+            @this.d3D12Fence.Dispose();
+            @this.d3D12CommandAllocator.Dispose();
+            @this.d3D12GraphicsCommandList.Dispose();
+            @this.dxgiSwapChain3.Dispose();
+            @this.d3D12Resource0.Dispose();
+            @this.d3D12Resource1.Dispose();
+            @this.texture?.Dispose();
+        }, this);
     }
 }

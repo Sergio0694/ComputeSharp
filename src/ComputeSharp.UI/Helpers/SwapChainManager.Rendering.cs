@@ -2,6 +2,11 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
+#if WINDOWS_UWP
+using ComputeSharp.Uwp.Extensions;
+#else
+using ComputeSharp.WinUI.Extensions;
+#endif
 using Microsoft.Toolkit.Diagnostics;
 
 #pragma warning disable CS0420
@@ -20,16 +25,17 @@ partial class SwapChainManager
     /// </summary>
     /// <param name="frameRequestQueue">The <see cref="IFrameRequestQueue"/> instance to use, if available.</param>
     /// <param name="shaderRunner">The <see cref="IShaderRunner"/> instance to use to render frames.</param>
-    public void StartRenderLoop(IFrameRequestQueue? frameRequestQueue, IShaderRunner shaderRunner)
+    public async void StartRenderLoop(IFrameRequestQueue? frameRequestQueue, IShaderRunner shaderRunner)
     {
         ThrowIfDisposed();
 
         Guard.IsNotNull(shaderRunner, nameof(shaderRunner));
 
-        lock (this.renderLock)
+        using (await this.setupSemaphore.LockAsync())
         {
             this.renderCancellationTokenSource?.Cancel();
-            this.renderThread?.Join();
+            
+            await this.renderSemaphore.WaitAsync();
 
             Thread newRenderThread = new(static args => ((SwapChainManager)args!).SwitchAndStartRenderLoop());
 
@@ -37,6 +43,7 @@ partial class SwapChainManager
             this.shaderRunner = shaderRunner;
             this.renderCancellationTokenSource = new CancellationTokenSource();
             this.renderThread = newRenderThread;
+            this.renderSemaphore = new SemaphoreSlim(0, 1);
 
             newRenderThread.Start(this);
         }
@@ -45,14 +52,13 @@ partial class SwapChainManager
     /// <summary>
     /// Stops the current render loop, if one is running.
     /// </summary>
-    public void StopRenderLoop()
+    public async void StopRenderLoop()
     {
         ThrowIfDisposed();
 
-        lock (this.renderLock)
+        using (await this.setupSemaphore.LockAsync())
         {
             this.renderCancellationTokenSource?.Cancel();
-            this.renderThread?.Join();
         }
     }
 
@@ -60,22 +66,24 @@ partial class SwapChainManager
     /// Queues a change in the dynamic resolution mode.
     /// </summary>
     /// <param name="isDynamicResolutionEnabled">Whether or not to use dynamic resolution.</param>
-    public void QueueDynamicResolutionModeChange(bool isDynamicResolutionEnabled)
+    public async void QueueDynamicResolutionModeChange(bool isDynamicResolutionEnabled)
     {
         ThrowIfDisposed();
 
-        lock (this.renderLock)
+        using (await this.setupSemaphore.LockAsync())
         {
             // If there is a render thread currently running, stop it and restart it
             if (this.renderCancellationTokenSource?.IsCancellationRequested == false)
             {
                 this.renderCancellationTokenSource?.Cancel();
-                this.renderThread?.Join();
+
+                await this.renderSemaphore.WaitAsync();
 
                 Thread newRenderThread = new(static args => ((SwapChainManager)args!).SwitchAndStartRenderLoop());
 
                 this.renderCancellationTokenSource = new CancellationTokenSource();
                 this.renderThread = newRenderThread;
+                this.renderSemaphore = new SemaphoreSlim(0, 1);
                 this.isDynamicResolutionEnabled = isDynamicResolutionEnabled;
 
                 newRenderThread.Start(this);
@@ -135,17 +143,24 @@ partial class SwapChainManager
     /// </summary>
     private void SwitchAndStartRenderLoop()
     {
-        if (this.isDynamicResolutionEnabled)
+        try
         {
-            this.targetResolutionScale = 1.0f;
+            if (this.isDynamicResolutionEnabled)
+            {
+                this.targetResolutionScale = 1.0f;
 
-            RenderLoopWithDynamicResolution();
+                RenderLoopWithDynamicResolution();
+            }
+            else
+            {
+                this.targetResolutionScale = this.resolutionScale;
+
+                RenderLoop();
+            }
         }
-        else
+        finally
         {
-            this.targetResolutionScale = this.resolutionScale;
-
-            RenderLoop();
+            this.renderSemaphore.Release();
         }
     }
 
@@ -304,9 +319,9 @@ partial class SwapChainManager
     {
         ThrowIfDisposed();
 
-        lock (this.renderLock)
-        {
-            this.renderCancellationTokenSource?.Cancel();
-        }
+        this.setupSemaphore.Wait();
+
+        this.renderCancellationTokenSource?.Cancel();
+        this.renderSemaphore.Wait();
     }
 }
