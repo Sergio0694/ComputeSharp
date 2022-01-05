@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ComputeSharp.SwapChain.Core.Constants;
 using ComputeSharp.SwapChain.Core.Models;
 using ComputeSharp.SwapChain.Core.Services;
 using ComputeSharp.SwapChain.Core.Shaders.Runners;
@@ -56,7 +57,13 @@ public sealed class MainViewModel : ObservableObject
     public bool IsDynamicResolutionEnabled
     {
         get => this.isDynamicResolutionEnabled;
-        set => SetProperty(ref this.isDynamicResolutionEnabled, value);
+        set
+        {
+            if (SetProperty(ref this.isDynamicResolutionEnabled, value))
+            {
+                this.analyticsService.Log(Event.IsDynamicResolutionEnabledChanged, (nameof(value), value));
+            }
+        }
     }
 
     private int selectedResolutionScale;
@@ -67,7 +74,13 @@ public sealed class MainViewModel : ObservableObject
     public int SelectedResolutionScale
     {
         get => this.selectedResolutionScale;
-        private set => SetProperty(ref this.selectedResolutionScale, value);
+        private set
+        {
+            if (SetProperty(ref this.selectedResolutionScale, value))
+            {
+                this.analyticsService.Log(Event.SelectedResolutionScaleChanged, (nameof(value), value));
+            }
+        }
     }
 
     /// <summary>
@@ -115,6 +128,8 @@ public sealed class MainViewModel : ObservableObject
             if (SetProperty(ref this.selectedComputeShader, value) &&
                 value is not null)
             {
+                this.analyticsService.Log(Event.SelectedComputeShaderChanged, (nameof(value.ShaderRunner), value.ShaderRunner));
+
                 value.IsSelected = true;
             }
         }
@@ -128,7 +143,13 @@ public sealed class MainViewModel : ObservableObject
     public bool IsRenderingPaused
     {
         get => this.isRenderingPaused;
-        set => SetProperty(ref this.isRenderingPaused, value);
+        set
+        {
+            if (SetProperty(ref this.isRenderingPaused, value))
+            {
+                this.analyticsService.Log(Event.IsRenderingPausedChanged, (nameof(value), value));
+            }
+        }
     }
 
     /// <summary>

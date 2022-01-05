@@ -1,4 +1,6 @@
-﻿#nullable enable
+﻿using System;
+
+#nullable enable
 
 namespace ComputeSharp.SwapChain.Core.Services;
 
@@ -12,5 +14,13 @@ public interface IAnalyticsService
     /// </summary>
     /// <param name="title">The title of the event to track.</param>
     /// <param name="data">The optional event properties.</param>
-    void Log(string title, params (string Property, string Value)[]? data);
+    void Log(string title, params (string Property, object? Value)[]? data);
+
+    /// <summary>
+    /// Logs an exception with a specified title and optional properties.
+    /// </summary>
+    /// <param name="title">The title of the event to track.</param>
+    /// <param name="exception">The exception that has been thrown.</param>
+    /// <param name="data">The optional event properties.</param>
+    void Log(string title, Exception exception, params (string Property, object? Value)[]? data);
 }

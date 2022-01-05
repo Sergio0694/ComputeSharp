@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Text;
 
 #nullable enable
@@ -11,7 +12,7 @@ namespace ComputeSharp.SwapChain.Core.Services;
 public sealed class DebugAnalyticsService : IAnalyticsService
 {
     /// <inheritdoc/>
-    public void Log(string title, params (string Property, string Value)[]? data)
+    public void Log(string title, params (string Property, object? Value)[]? data)
     {
         StringBuilder builder = new();
 
@@ -21,7 +22,28 @@ public sealed class DebugAnalyticsService : IAnalyticsService
         {
             foreach (var info in data)
             {
-                builder.AppendLine($">> {info.Property}: \"{info.Value}\"");
+                builder.AppendLine($">> {info.Property}: \"{info.Value ?? "<NULL>"}\"");
+            }
+        }
+
+        Trace.Write(builder);
+    }
+
+    /// <inheritdoc/>
+    public void Log(string title, Exception exception, params (string Property, object? Value)[]? data)
+    {
+        StringBuilder builder = new();
+
+        builder.AppendLine($"[EXCEPTION]: \"{title}\"");
+        builder.AppendLine($">> Type: \"{exception.GetType()}\"");
+        builder.AppendLine(">> Stack trace");
+        builder.AppendLine(exception.StackTrace);
+
+        if (data is not null)
+        {
+            foreach (var info in data)
+            {
+                builder.AppendLine($">> {info.Property}: \"{info.Value ?? "<NULL>"}\"");
             }
         }
 

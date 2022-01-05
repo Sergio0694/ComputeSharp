@@ -9,6 +9,7 @@
     <Import_RootNamespace>ComputeSharp.SwapChain.Core.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Constants\Event.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\RenderingPauseConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ResolutionScaleConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ComputeShader.cs" />

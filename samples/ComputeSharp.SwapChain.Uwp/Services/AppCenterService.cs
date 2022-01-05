@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using ComputeSharp.SwapChain.Core.Services;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
@@ -28,14 +28,34 @@ public sealed class AppCenterService : IAnalyticsService
     }
 
     /// <inheritdoc/>
-    public void Log(string title, params (string Property, string Value)[]? data)
+    public void Log(string title, params (string Property, object? Value)[]? data)
     {
-        IDictionary<string, string>? properties = data?.ToDictionary(
-            pair => pair.Property,
-            pair => pair.Value.Length <= PropertyStringMaxLength
-                ? pair.Value
-                : $"|{pair.Value.Substring(pair.Value.Length - PropertyStringMaxLength)}");
+        Analytics.TrackEvent(title, GetProperties(data));
+    }
 
-        Analytics.TrackEvent(title, properties);
+    /// <inheritdoc/>
+    public void Log(string title, Exception exception, params (string Property, object? Value)[]? data)
+    {
+        Crashes.TrackError(exception, GetProperties(data));
+    }
+
+    /// <summary>
+    /// Gets the additional logging properties from the input data.
+    /// </summary>
+    /// <param name="data">The optional event properties.</param>
+    /// <returns>The additional logging properties to track.</returns>
+    private static IDictionary<string, string>? GetProperties((string Property, object? Value)[]? data)
+    {
+        return
+            data?.ToDictionary(
+            pair => pair.Property,
+            pair =>
+            {
+                string text = (pair.Value ?? "<NULL>").ToString();
+
+                return text.Length <= PropertyStringMaxLength
+                    ? text
+                    : $"|{text.Substring(text.Length - PropertyStringMaxLength)}";
+            });
     }
 }

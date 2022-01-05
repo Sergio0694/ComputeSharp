@@ -25,7 +25,7 @@ public static class AssemblyExtensions
 
         try
         {
-            string manifestFilename = $"{assembly.FullName}.{filename.Replace('/', '.').Replace('\\', '.')}";
+            string manifestFilename = $"{assembly.GetName().Name}.{filename.Replace('/', '.').Replace('\\', '.')}";
 
             using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(manifestFilename);
             using StreamReader reader = new(stream);

@@ -121,7 +121,7 @@
                                     <Grid>
 
                                         <!--  Shader preview  -->
-                                        <computesharp:AnimatedComputeShaderPanel ShaderRunner="{x:Bind ShaderRunner}" />
+                                        <computesharp:AnimatedComputeShaderPanel RenderingFailed="SelectionShaderPanel_RenderingFailed" ShaderRunner="{x:Bind ShaderRunner}" />
 
                                         <!--
                                             Note: here we have a selection property to work around {x:Bind} not working correctly outside of the
@@ -154,6 +154,7 @@
             Grid.Row="1"
             IsDynamicResolutionEnabled="{x:Bind ViewModel.IsDynamicResolutionEnabled, Mode=OneWay}"
             IsPaused="{x:Bind ViewModel.IsRenderingPaused, Mode=OneWay}"
+            RenderingFailed="MainShaderPanel_RenderingFailed"
             ResolutionScale="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToScale(ViewModel.SelectedResolutionScale), Mode=OneWay}"
             ShaderRunner="{x:Bind ViewModel.SelectedComputeShader.ShaderRunner, Mode=OneWay}" />
 
