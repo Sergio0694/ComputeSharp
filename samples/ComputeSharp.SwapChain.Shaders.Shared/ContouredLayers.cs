@@ -7,7 +7,7 @@
 /// </summary>
 [AutoConstructor]
 #if SAMPLE_APP
-[EmbeddedBytecode(8, 8, 1)]
+[EmbeddedBytecode(DispatchAxis.XY)]
 #endif
 internal readonly partial struct ContouredLayers : IPixelShader<float4>
 {

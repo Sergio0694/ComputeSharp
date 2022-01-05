@@ -59,20 +59,58 @@ public sealed partial class IShaderGenerator
                 return new(true, 0, 0, 0);
             }
 
-            // Validate the thread number arguments
-            if (attribute.ConstructorArguments.Length != 3 ||
-                attribute.ConstructorArguments[0].Value is not int threadsX ||
-                attribute.ConstructorArguments[1].Value is not int threadsY ||
-                attribute.ConstructorArguments[2].Value is not int threadsZ ||
-                threadsX is < 1 or > 1024 ||
-                threadsY is < 1 or > 1024 ||
-                threadsZ is < 1 or > 64)
+            int threadsX;
+            int threadsY;
+            int threadsZ;
+
+            // Check for a dispatch axis argument first
+            if (attribute.ConstructorArguments.Length == 1)
             {
+                int dispatchAxis = (int)attribute.ConstructorArguments[0].Value!;
+
+                (threadsX, threadsY, threadsZ) = (DispatchAxis)dispatchAxis switch
+                {
+                    DispatchAxis.X => (64, 1, 1),
+                    DispatchAxis.Y => (1, 64, 1),
+                    DispatchAxis.Z => (1, 1, 64),
+                    DispatchAxis.XY => (8, 8, 1),
+                    DispatchAxis.XZ => (8, 1, 8),
+                    DispatchAxis.YZ => (1, 8, 8),
+                    DispatchAxis.XYZ => (4, 4, 4),
+                    _ => (0, 0, 0)
+                };
+
+                // Validate the dispatch axis argument
+                if ((threadsX, threadsY, threadsZ) is (0, 0, 0))
+                {
+                    builder.Add(InvalidEmbeddedBytecodeDispatchAxis, structDeclarationSymbol, structDeclarationSymbol);
+
+                    diagnostics = builder.ToImmutable();
+
+                    return new(true, 0, 0, 0);
+                }
+            }
+            else if (
+                attribute.ConstructorArguments.Length != 3 ||
+                attribute.ConstructorArguments[0].Value is not int explicitThreadsX ||
+                attribute.ConstructorArguments[1].Value is not int explicitThreadsY ||
+                attribute.ConstructorArguments[2].Value is not int explicitThreadsZ ||
+                explicitThreadsX is < 1 or > 1024 ||
+                explicitThreadsY is < 1 or > 1024 ||
+                explicitThreadsZ is < 1 or > 64)
+            {
+                // Failed to validate the thread number arguments
                 builder.Add(InvalidEmbeddedBytecodeThreadIds, structDeclarationSymbol, structDeclarationSymbol);
 
                 diagnostics = builder.ToImmutable();
 
                 return new(true, 0, 0, 0);
+            }
+            else
+            {
+                threadsX = explicitThreadsX;
+                threadsY = explicitThreadsY;
+                threadsZ = explicitThreadsZ;
             }
 
             // If the current shader is dynamic, emit a diagnostic error
