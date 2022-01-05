@@ -1,4 +1,13 @@
-﻿using ComputeSharp.SwapChain.Uwp.Views;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using ComputeSharp.SwapChain.Core.Services;
+using ComputeSharp.SwapChain.Core.ViewModels;
+using ComputeSharp.SwapChain.Uwp.Services;
+using ComputeSharp.SwapChain.Uwp.Views;
+using Microsoft.Extensions.DependencyInjection;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
@@ -13,7 +22,7 @@ namespace ComputeSharp.SwapChain.Uwp;
 sealed partial class App : Application
 {
     /// <summary>
-    /// Initializes the singleton application object.  This is the first line of authored code
+    /// Initializes the singleton application object. This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
     public App()
@@ -26,6 +35,7 @@ sealed partial class App : Application
     {
         if (Window.Current.Content is not MainView)
         {
+            ConfigureServices();
             StyleTitleBar();
             ExpandViewIntoTitleBar();
 
@@ -36,6 +46,43 @@ sealed partial class App : Application
         {
             Window.Current.Activate();
         }
+    }
+
+    /// <summary>
+    /// Configures the services for the application.
+    /// </summary>
+    private static void ConfigureServices()
+    {
+        ServiceCollection services = new();
+
+#if RELEASE
+        if (Debugger.IsAttached)
+        {
+            services.AddSingleton<IAnalyticsService, DebugAnalyticsService>();
+        }
+        else
+        {
+            using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ComputeSharp.SwapChain.Uwp.Assets.ServiceTokens.AppCenter.txt");
+            using StreamReader reader = new(stream);
+
+            string appCenterSecret = reader.ReadToEnd().Trim();
+
+            if (Guid.TryParse(appCenterSecret, out _))
+            {
+                services.AddSingleton<IAnalyticsService>(new AppCenterService(appCenterSecret));
+            }
+            else
+            {
+                services.AddSingleton<IAnalyticsService, DebugAnalyticsService>();
+            }
+        }
+#else
+        services.AddSingleton<IAnalyticsService, DebugAnalyticsService>();
+#endif
+
+        services.AddTransient<MainViewModel>();
+
+        Ioc.Default.ConfigureServices(services.BuildServiceProvider());
     }
 
     /// <summary>

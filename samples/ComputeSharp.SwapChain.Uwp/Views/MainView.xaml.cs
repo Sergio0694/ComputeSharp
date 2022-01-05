@@ -1,4 +1,6 @@
 ﻿using System;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using ComputeSharp.SwapChain.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -13,7 +15,13 @@ public sealed partial class MainView : UserControl
     public MainView()
     {
         this.InitializeComponent();
+        this.DataContext = Ioc.Default.GetRequiredService<MainViewModel>();
     }
+
+    /// <summary>
+    /// Gets the <see cref="MainViewModel"/> instance for the current view.
+    /// </summary>
+    public MainViewModel ViewModel => (MainViewModel)DataContext;
 
     // Opens the shader selection panel
     private void OpenShaderSelectionPanelButton_Click(object sender, RoutedEventArgs e)
