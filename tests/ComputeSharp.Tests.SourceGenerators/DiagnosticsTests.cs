@@ -1472,6 +1472,108 @@ public class DiagnosticsTests
         VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0044");
     }
 
+    [TestMethod]
+    public void InvalidEmbeddedBytecodeDispatchSize_Flags()
+    {
+        string source = $@"
+        using System;
+        using ComputeSharp;
+
+        namespace ComputeSharp
+        {{
+            public interface IComputeShader {{ }}
+            public class ReadWriteBuffer<T> {{ }}
+            public enum DispatchAxis {{ X, Y, Z, XY, XZ, YZ, XYZ }}
+            public class EmbeddedBytecodeAttribute : Attribute
+            {{
+                public EmbeddedBytecodeAttribute(DispatchAxis dispatchAxis) {{ }}
+            }}
+        }}
+
+        namespace MyFancyApp.Sample
+        {{
+            [EmbeddedBytecode(DispatchAxis.XYZ | DispatchAxis.Y)]
+            public struct MyShader : IComputeShader
+            {{
+                public ReadWriteBuffer<float> buffer;
+
+                public void Execute()
+                {{
+                }}
+            }}
+        }}";
+
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0048");
+    }
+
+    [TestMethod]
+    public void InvalidEmbeddedBytecodeDispatchSize_ExplicitValue()
+    {
+        string source = $@"
+        using System;
+        using ComputeSharp;
+
+        namespace ComputeSharp
+        {{
+            public interface IComputeShader {{ }}
+            public class ReadWriteBuffer<T> {{ }}
+            public enum DispatchAxis {{ X, Y, Z, XY, XZ, YZ, XYZ }}
+            public class EmbeddedBytecodeAttribute : Attribute
+            {{
+                public EmbeddedBytecodeAttribute(DispatchAxis dispatchAxis) {{ }}
+            }}
+        }}
+
+        namespace MyFancyApp.Sample
+        {{
+            [EmbeddedBytecode((DispatchAxis)243712)]
+            public struct MyShader : IComputeShader
+            {{
+                public ReadWriteBuffer<float> buffer;
+
+                public void Execute()
+                {{
+                }}
+            }}
+        }}";
+
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0048");
+    }
+
+    [TestMethod]
+    public void InvalidEmbeddedBytecodeDispatchSize_ExplicitValue_Negative()
+    {
+        string source = $@"
+        using System;
+        using ComputeSharp;
+
+        namespace ComputeSharp
+        {{
+            public interface IComputeShader {{ }}
+            public class ReadWriteBuffer<T> {{ }}
+            public enum DispatchAxis {{ X, Y, Z, XY, XZ, YZ, XYZ }}
+            public class EmbeddedBytecodeAttribute : Attribute
+            {{
+                public EmbeddedBytecodeAttribute(DispatchAxis dispatchAxis) {{ }}
+            }}
+        }}
+
+        namespace MyFancyApp.Sample
+        {{
+            [EmbeddedBytecode((DispatchAxis)(-289))]
+            public struct MyShader : IComputeShader
+            {{
+                public ReadWriteBuffer<float> buffer;
+
+                public void Execute()
+                {{
+                }}
+            }}
+        }}";
+
+        VerifyGeneratedDiagnostics<IShaderGenerator>(source, "CMPS0048");
+    }
+
     /// <summary>
     /// Verifies the output of a source generator.
     /// </summary>

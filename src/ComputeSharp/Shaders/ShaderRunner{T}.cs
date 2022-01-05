@@ -38,9 +38,12 @@ internal static class ShaderRunner<T>
     {
         // Here we calculate the optimized [numthreads] values. Using small thread group sizes leads to the
         // best average performance due to better occupancy of the GPU with different shaders, using any
-        // number of registers and any amount of thread local storage. We use the wave size of the device in
-        // use for 1D dispatches, otherwise a multiple of 32 that is greater than or equal to 64, which still
-        // results in an evenly divisible number of waves per thread group on all existing GPU devices.
+        // number of registers and any amount of thread local storage. We use 64 for 1D dispatches, otherwise
+        // a multiple of 32 that is greater than or equal to 64, which still results in an evenly divisible
+        // number of waves per thread group on all existing GPU devices. All GPUs will generally have a wavefront
+        // size of either 16 (eg. Intel mobile GPUs), 32 (nvidia GPUs) or 64 (AMD GPUs), so in all cases 64 will
+        // be a multiple of that, guaranteeing that all thread waves will be saturated when dispatching shaders.
+
         bool xIs1 = x == 1;
         bool yIs1 = y == 1;
         bool zIs1 = z == 1;
@@ -60,7 +63,7 @@ internal static class ShaderRunner<T>
                 threadsY = 1;
                 break;
             case 2: // (_, 1, 1)
-                threadsX = (int)device.WavefrontSize;
+                threadsX = 64;
                 threadsY = threadsZ = 1;
                 break;
             case 3: // (1, _, _)
@@ -69,11 +72,11 @@ internal static class ShaderRunner<T>
                 break;
             case 4: // (1, _, 1)
                 threadsX = threadsZ = 1;
-                threadsY = (int)device.WavefrontSize;
+                threadsY = 64;
                 break;
             case 5: // (1, 1, _)
                 threadsX = threadsY = 1;
-                threadsZ = (int)device.WavefrontSize;
+                threadsZ = 64;
                 break;
             default: // (_, _, _)
                 threadsX = threadsY = threadsZ = 4;

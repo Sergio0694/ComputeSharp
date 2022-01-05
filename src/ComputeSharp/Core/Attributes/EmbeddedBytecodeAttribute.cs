@@ -1,4 +1,7 @@
 ﻿using System;
+#if !SOURCE_GENERATOR
+using Microsoft.Toolkit.Diagnostics;
+#endif
 
 namespace ComputeSharp;
 
@@ -8,11 +11,24 @@ namespace ComputeSharp;
 /// <para>
 /// This attribute can be used to annotate shader types as follows:
 /// <code>
-/// [EmbeddedBytecode(8, 8, 1)]
+/// // A compute shader that is dispatched on a target buffer
+/// [EmbeddedBytecode(DispatchAxis.X)]
 /// struct MyShader : IComputeShader
 /// {
 /// }
 /// </code>
+/// Or similarly, for a pixel shader:
+/// <code>
+/// // A pixel shader that is dispatched on a target texture
+/// [EmbeddedBytecode(DispatchAxis.XY)]
+/// struct MyShader : IPixelShader&lt;float4&gt;
+/// {
+/// }
+/// </code>
+/// </para>
+/// <para>
+/// Using <see cref="DispatchAxis"/> is an easier way to precompile shaders when dispatching them over known dimensions. For more
+/// fine grained control over the thread size values when dispatching, use <see cref="EmbeddedBytecodeAttribute(int, int, int)"/>.
 /// </para>
 /// <para>
 /// </para>
@@ -32,6 +48,27 @@ namespace ComputeSharp;
 [AttributeUsage(AttributeTargets.Struct, AllowMultiple = false)]
 public sealed class EmbeddedBytecodeAttribute : Attribute
 {
+    /// <summary>
+    /// Creates a new <see cref="EmbeddedBytecodeAttribute"/> instance with the specified parameters.
+    /// </summary>
+    /// <param name="dispatchAxis">The target dispatch axes for the shader to run.</param>
+    public EmbeddedBytecodeAttribute(DispatchAxis dispatchAxis)
+    {
+#if !SOURCE_GENERATOR
+        (ThreadsX, ThreadsY, ThreadsZ) = dispatchAxis switch
+        {
+            DispatchAxis.X => (64, 1, 1),
+            DispatchAxis.Y => (1, 64, 1),
+            DispatchAxis.Z => (1, 1, 64),
+            DispatchAxis.XY => (8, 8, 1),
+            DispatchAxis.XZ => (8, 1, 8),
+            DispatchAxis.YZ => (1, 8, 8),
+            DispatchAxis.XYZ => (4, 4, 4),
+            _ => ThrowHelper.ThrowArgumentException<(int, int, int)>(nameof(dispatchAxis), "Invalid dispatch axis value.")
+        };
+#endif
+    }
+
     /// <summary>
     /// Creates a new <see cref="EmbeddedBytecodeAttribute"/> instance with the specified parameters.
     /// </summary>

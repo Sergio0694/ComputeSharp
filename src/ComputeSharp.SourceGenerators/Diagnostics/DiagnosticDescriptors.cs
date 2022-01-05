@@ -662,4 +662,20 @@ internal static class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "When dynamic shader compilation is not supported (ie. when ComputeSharp.Dynamic is not referenced), all shaders need to be annotated as having embedded bytecode (using the [EmbeddedBytecode] attribute).",
         helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
+
+    /// <summary>
+    /// Gets a <see cref="DiagnosticDescriptor"/> for an embedded bytecode shader with an invalid dispatch axis value.
+    /// <para>
+    /// Format: <c>"The shader of type {0} is annotated with an invalid dispatch axis value"</c>.
+    /// </para>
+    /// </summary>
+    public static readonly DiagnosticDescriptor InvalidEmbeddedBytecodeDispatchAxis = new(
+        id: "CMPS0048",
+        title: "Invalid dispatch axis for shader with embedded bytecode",
+        messageFormat: "The shader of type {0} is annotated with with an invalid dispatch axis value",
+        category: typeof(IShaderGenerator).FullName,
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: "The dispatch axis value for a shader marked as embedded bytecode have to be valid (flags are not supported).",
+        helpLinkUri: "https://github.com/Sergio0694/ComputeSharp");
 }
