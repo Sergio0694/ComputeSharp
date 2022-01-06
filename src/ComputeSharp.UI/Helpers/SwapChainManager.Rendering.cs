@@ -185,11 +185,14 @@ partial class SwapChainManager<TOwner>
             return;
         }
 
-        // Start the initial frame separately, before the timer starts. This ensures that
-        // resuming after a pause correctly renders the first frame at the right time.
         OnResize();
-        OnUpdate(renderStopwatch.Elapsed, parameter);
-        OnPresent();
+
+        // Start the initial frame separately, before the timer starts. This ensures that
+        // resuming after a pause correctly renders the first frame at the right time.        
+        if (OnUpdate(renderStopwatch.Elapsed, parameter))
+        {
+            OnPresent();
+        }
 
         renderStopwatch.Start();
 
@@ -202,8 +205,11 @@ partial class SwapChainManager<TOwner>
             }
 
             OnResize();
-            OnUpdate(renderStopwatch.Elapsed, parameter);
-            OnPresent();
+            
+            if (OnUpdate(renderStopwatch.Elapsed, parameter))
+            {
+                OnPresent();
+            }
         }
 
         renderStopwatch.Stop();
@@ -215,41 +221,46 @@ partial class SwapChainManager<TOwner>
     private void RenderLoopWithDynamicResolution()
     {
         Stopwatch renderStopwatch = this.renderStopwatch ??= new();
+        Stopwatch frameStopwatch = new();
         CancellationToken cancellationToken = this.renderCancellationTokenSource!.Token;
 
         DynamicResolutionManager.Create(out DynamicResolutionManager frameTimeWatcher);
-        
+
         if (!OnFrameRequest(out object? parameter, cancellationToken))
         {
             return;
         }
 
-        Stopwatch frameStopwatch = Stopwatch.StartNew();
-
         OnResize();
-        OnUpdate(renderStopwatch.Elapsed, parameter);
-        OnPresent();
+
+        if (OnUpdate(renderStopwatch.Elapsed, parameter))
+        {
+            OnPresent();
+        }
 
         renderStopwatch.Start();
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            // Evaluate the dynamic resolution frame time step, if the mode is enabled
-            if (frameTimeWatcher.Advance(frameStopwatch.ElapsedTicks, ref this.targetResolutionScale))
-            {
-                this.isResizePending = true;
-            }
-
             if (!OnFrameRequest(out parameter, cancellationToken))
             {
                 return;
             }
 
+            OnResize();
+
             frameStopwatch.Restart();
 
-            OnResize();
-            OnUpdate(renderStopwatch.Elapsed, parameter);
-            OnPresent();
+            if (OnUpdate(renderStopwatch.Elapsed, parameter))
+            {
+                OnPresent();
+
+                // Evaluate the dynamic resolution frame time step
+                if (frameTimeWatcher.Advance(frameStopwatch.ElapsedTicks, ref this.targetResolutionScale))
+                {
+                    this.isResizePending = true;
+                }
+            }
         }
 
         renderStopwatch.Stop();
@@ -309,9 +320,10 @@ partial class SwapChainManager<TOwner>
     /// </summary>
     /// <param name="time">The current time since the start of the application.</param>
     /// <param name="parameter">The input parameter for the frame being rendered.</param>
-    private void OnUpdate(TimeSpan time, object? parameter)
+    /// <returns>Whether or not to present the resulting frame.</returns>
+    private bool OnUpdate(TimeSpan time, object? parameter)
     {
-        this.shaderRunner!.Execute(this.texture!, time, parameter);
+        return this.shaderRunner!.TryExecute(this.texture!, time, parameter);
     }
 
     /// <summary>

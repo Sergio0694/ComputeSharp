@@ -12,10 +12,11 @@ namespace ComputeSharp.WinUI;
 public interface IShaderRunner
 {
     /// <summary>
-    /// Renders a single frame to a texture.
+    /// Tries to render a single frame to a texture, optionally skipping the frame if needed.
     /// </summary>
     /// <param name="texture">The target texture to render the frame to.</param>
     /// <param name="timespan">The timespan for the current frame.</param>
     /// <param name="parameter">The input parameter for the frame being rendered.</param>
-    void Execute(IReadWriteTexture2D<Float4> texture, TimeSpan timespan, object? parameter);
+    /// <returns>Whether or not to present the current frame. If <see langword="false"/>, the frame will be skipped.</returns>
+    bool TryExecute(IReadWriteTexture2D<Float4> texture, TimeSpan timespan, object? parameter);
 }
