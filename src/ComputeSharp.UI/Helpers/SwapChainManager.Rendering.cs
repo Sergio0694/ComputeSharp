@@ -44,6 +44,7 @@ partial class SwapChainManager<TOwner>
             this.renderCancellationTokenSource = new CancellationTokenSource();
             this.renderThread = newRenderThread;
             this.renderSemaphore = new SemaphoreSlim(0, 1);
+            this.isResizePending = true;
 
             newRenderThread.Start(this);
         }
@@ -85,6 +86,7 @@ partial class SwapChainManager<TOwner>
                 this.renderThread = newRenderThread;
                 this.renderSemaphore = new SemaphoreSlim(0, 1);
                 this.isDynamicResolutionEnabled = isDynamicResolutionEnabled;
+                this.isResizePending = true;
 
                 newRenderThread.Start(this);
             }
@@ -149,14 +151,12 @@ partial class SwapChainManager<TOwner>
 
             if (this.isDynamicResolutionEnabled)
             {
-                this.targetResolutionScale = 1.0f;
+                this.dynamicResolutionScale = this.resolutionScale;
 
                 RenderLoopWithDynamicResolution();
             }
             else
             {
-                this.targetResolutionScale = this.resolutionScale;
-
                 RenderLoop();
             }
 
@@ -256,7 +256,7 @@ partial class SwapChainManager<TOwner>
                 OnPresent();
 
                 // Evaluate the dynamic resolution frame time step
-                if (frameTimeWatcher.Advance(frameStopwatch.ElapsedTicks, ref this.targetResolutionScale))
+                if (frameTimeWatcher.Advance(frameStopwatch.ElapsedTicks, ref this.dynamicResolutionScale))
                 {
                     this.isResizePending = true;
                 }

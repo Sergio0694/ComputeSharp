@@ -166,9 +166,9 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     private volatile float resolutionScale;
 
     /// <summary>
-    /// The resolution scale used to render frames, in either render mode.
+    /// The dynamic resolution scale used to render frames.
     /// </summary>
-    private volatile float targetResolutionScale;
+    private volatile float dynamicResolutionScale;
 
     /// <summary>
     /// Whether dynamic resolution is currently enabled.
@@ -327,8 +327,14 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     /// </summary>
     private unsafe void ApplyResize()
     {
-        uint resizedWidth = (uint)Math.Max(Math.Ceiling(this.width * this.compositionScaleX * this.targetResolutionScale), 1.0);
-        uint resizeHeight = (uint)Math.Max(Math.Ceiling(this.height * this.compositionScaleY * this.targetResolutionScale), 1.0);
+        // The target resolution scale is either the dynamic resolution scale, being updated by the render thread,
+        // or the fixed resolution scale set by the user. If dynamic resolution is enabled, the latter is ignored.
+        float targetResolutionScale = this.isDynamicResolutionEnabled
+            ? this.dynamicResolutionScale
+            : this.resolutionScale;
+
+        uint resizedWidth = (uint)Math.Max(Math.Ceiling(this.width * this.compositionScaleX * targetResolutionScale), 1.0);
+        uint resizeHeight = (uint)Math.Max(Math.Ceiling(this.height * this.compositionScaleY * targetResolutionScale), 1.0);
 
         if (this.texture is null ||
             this.texture.Width != resizedWidth ||
@@ -355,8 +361,8 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
 
             // Apply the necessary scale transform
             DXGI_MATRIX_3X2_F transformMatrix = default;
-            transformMatrix._11 = (1 / this.compositionScaleX) * (1 / this.targetResolutionScale);
-            transformMatrix._22 = (1 / this.compositionScaleY) * (1 / this.targetResolutionScale);
+            transformMatrix._11 = (1 / this.compositionScaleX) * (1 / targetResolutionScale);
+            transformMatrix._22 = (1 / this.compositionScaleY) * (1 / targetResolutionScale);
 
             this.dxgiSwapChain3.Get()->SetMatrixTransform(&transformMatrix).Assert();
 
