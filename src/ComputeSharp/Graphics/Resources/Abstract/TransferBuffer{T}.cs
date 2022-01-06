@@ -15,7 +15,7 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed buffer stored on CPU memory, that can be used to transfer data to/from the GPU.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the buffer.</typeparam>
-public abstract unsafe class TransferBuffer<T> : NativeObject, IMemoryOwner<T>
+public abstract unsafe class TransferBuffer<T> : NativeObject, IGraphicsResource, IMemoryOwner<T>
     where T : unmanaged
 {
 #if NET6_0_OR_GREATER
@@ -68,9 +68,7 @@ public abstract unsafe class TransferBuffer<T> : NativeObject, IMemoryOwner<T>
         this.d3D12Resource.Get()->SetName(this);
     }
 
-    /// <summary>
-    /// Gets the <see cref="ComputeSharp.GraphicsDevice"/> associated with the current instance.
-    /// </summary>
+    /// <inheritdoc/>
     public GraphicsDevice GraphicsDevice { get; }
 
     /// <summary>

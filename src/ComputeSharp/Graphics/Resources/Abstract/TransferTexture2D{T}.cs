@@ -15,7 +15,7 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed 2D texture stored on on CPU memory, that can be used to transfer data to/from the GPU.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-public unsafe abstract class TransferTexture2D<T> : NativeObject
+public unsafe abstract class TransferTexture2D<T> : NativeObject, IGraphicsResource
     where T : unmanaged
 {
 #if NET6_0_OR_GREATER
@@ -84,9 +84,7 @@ public unsafe abstract class TransferTexture2D<T> : NativeObject
         this.d3D12Resource.Get()->SetName(this);
     }
 
-    /// <summary>
-    /// Gets the <see cref="ComputeSharp.GraphicsDevice"/> associated with the current instance.
-    /// </summary>
+    /// <inheritdoc/>
     public GraphicsDevice GraphicsDevice { get; }
 
     /// <summary>
