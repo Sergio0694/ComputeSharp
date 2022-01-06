@@ -263,8 +263,8 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
             dxgiSwapChainDesc1.BufferCount = 2;
             dxgiSwapChainDesc1.Flags = (uint)DXGI_SWAP_CHAIN_FLAG.DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT;
             dxgiSwapChainDesc1.Format = DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM;
-            dxgiSwapChainDesc1.Width = (uint)Math.Max(Math.Ceiling(this.width * this.compositionScaleX * this.targetResolutionScale), 1.0);
-            dxgiSwapChainDesc1.Height = (uint)Math.Max(Math.Ceiling(this.height * this.compositionScaleY * this.targetResolutionScale), 1.0);
+            dxgiSwapChainDesc1.Width = 1;
+            dxgiSwapChainDesc1.Height = 1;
             dxgiSwapChainDesc1.SampleDesc = new DXGI_SAMPLE_DESC(count: 1, quality: 0);
             dxgiSwapChainDesc1.Scaling = DXGI_SCALING.DXGI_SCALING_STRETCH;
             dxgiSwapChainDesc1.Stereo = 0;
@@ -323,55 +323,59 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     }
 
     /// <summary>
-    /// Applies the actual resize logic that was scheduled from <see cref="OnResize"/>.
+    /// Applies the actual resize logic that was scheduled from <see cref="OnResize"/>, if needed.
     /// </summary>
     private unsafe void ApplyResize()
     {
-        ulong updatedFenceValue = ++this.nextD3D12FenceValue;
+        uint resizedWidth = (uint)Math.Max(Math.Ceiling(this.width * this.compositionScaleX * this.targetResolutionScale), 1.0);
+        uint resizeHeight = (uint)Math.Max(Math.Ceiling(this.height * this.compositionScaleY * this.targetResolutionScale), 1.0);
 
-        this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), updatedFenceValue).Assert();
-
-        // Wait for the fence again to ensure there are no pending operations
-        this.d3D12Fence.Get()->SetEventOnCompletion(updatedFenceValue, default).Assert();
-
-        // Dispose the old buffers before resizing the buffer
-        this.d3D12Resource0.Dispose();
-        this.d3D12Resource1.Dispose();
-
-        // Resize the swap chain buffers
-        this.dxgiSwapChain3.Get()->ResizeBuffers(
-            2,
-            (uint)Math.Max(Math.Ceiling(this.width * this.compositionScaleX * this.targetResolutionScale), 1.0),
-            (uint)Math.Max(Math.Ceiling(this.height * this.compositionScaleY * this.targetResolutionScale), 1.0),
-            DXGI_FORMAT.DXGI_FORMAT_UNKNOWN,
-            (uint)DXGI_SWAP_CHAIN_FLAG.DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT).Assert();
-
-        // Apply the necessary scale transform
-        DXGI_MATRIX_3X2_F transformMatrix = default;
-        transformMatrix._11 = (1 / this.compositionScaleX) * (1 / this.targetResolutionScale);
-        transformMatrix._22 = (1 / this.compositionScaleY) * (1 / this.targetResolutionScale);
-
-        this.dxgiSwapChain3.Get()->SetMatrixTransform(&transformMatrix).Assert();
-
-        // Retrieve the back buffers for the swap chain
-        fixed (ID3D12Resource** d3D12Resource0 = this.d3D12Resource0)
-        fixed (ID3D12Resource** d3D12Resource1 = this.d3D12Resource1)
+        if (this.texture is null ||
+            this.texture.Width != resizedWidth ||
+            this.texture.Height != resizeHeight)
         {
-            this.dxgiSwapChain3.Get()->GetBuffer(0, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0).Assert();
-            this.dxgiSwapChain3.Get()->GetBuffer(1, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1).Assert();
+            ulong updatedFenceValue = ++this.nextD3D12FenceValue;
+
+            this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), updatedFenceValue).Assert();
+
+            // Wait for the fence again to ensure there are no pending operations
+            this.d3D12Fence.Get()->SetEventOnCompletion(updatedFenceValue, default).Assert();
+
+            // Dispose the old buffers before resizing the buffer
+            this.d3D12Resource0.Dispose();
+            this.d3D12Resource1.Dispose();
+
+            // Resize the swap chain buffers
+            this.dxgiSwapChain3.Get()->ResizeBuffers(
+                2,
+                resizedWidth,
+                resizeHeight,
+                DXGI_FORMAT.DXGI_FORMAT_UNKNOWN,
+                (uint)DXGI_SWAP_CHAIN_FLAG.DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT).Assert();
+
+            // Apply the necessary scale transform
+            DXGI_MATRIX_3X2_F transformMatrix = default;
+            transformMatrix._11 = (1 / this.compositionScaleX) * (1 / this.targetResolutionScale);
+            transformMatrix._22 = (1 / this.compositionScaleY) * (1 / this.targetResolutionScale);
+
+            this.dxgiSwapChain3.Get()->SetMatrixTransform(&transformMatrix).Assert();
+
+            // Retrieve the back buffers for the swap chain
+            fixed (ID3D12Resource** d3D12Resource0 = this.d3D12Resource0)
+            fixed (ID3D12Resource** d3D12Resource1 = this.d3D12Resource1)
+            {
+                this.dxgiSwapChain3.Get()->GetBuffer(0, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource0).Assert();
+                this.dxgiSwapChain3.Get()->GetBuffer(1, Win32.__uuidof<ID3D12Resource>(), (void**)d3D12Resource1).Assert();
+            }
+
+            // Get the index of the initial back buffer
+            this.currentBufferIndex = this.dxgiSwapChain3.Get()->GetCurrentBackBufferIndex();
+
+            // Dispose the previous texture, if present, and create the new 2D texture to use to generate frames to display
+            this.texture?.Dispose();
+
+            this.texture = GraphicsDevice.Default.AllocateReadWriteTexture2D<Rgba32, Float4>((int)resizedWidth, (int)resizeHeight);
         }
-
-        // Get the index of the initial back buffer
-        this.currentBufferIndex = this.dxgiSwapChain3.Get()->GetCurrentBackBufferIndex();
-
-        this.texture?.Dispose();
-
-        D3D12_RESOURCE_DESC d3D12Resource0Description = this.d3D12Resource0.Get()->GetDesc();
-
-        // Create the 2D texture to use to generate frames to display
-        this.texture = GraphicsDevice.Default.AllocateReadWriteTexture2D<Rgba32, Float4>(
-            (int)d3D12Resource0Description.Width,
-            (int)d3D12Resource0Description.Height);
     }
 
     /// <inheritdoc/>

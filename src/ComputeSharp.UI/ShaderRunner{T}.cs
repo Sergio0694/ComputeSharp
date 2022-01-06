@@ -8,7 +8,8 @@ namespace ComputeSharp.WinUI;
 #endif
 
 /// <summary>
-/// An <see cref="IShaderRunner"/> implementation powered by a supplied shader type.
+/// A simple <see cref="IShaderRunner"/> implementation powered by a supplied shader type.
+/// All rendered frames produced by this type will always be presented.
 /// </summary>
 /// <typeparam name="T">The type of shader to use to render frames.</typeparam>
 public sealed class ShaderRunner<T> : IShaderRunner
@@ -56,7 +57,7 @@ public sealed class ShaderRunner<T> : IShaderRunner
     }
 
     /// <inheritdoc/>
-    public void Execute(IReadWriteTexture2D<Float4> texture, TimeSpan time, object? parameter)
+    public bool TryExecute(IReadWriteTexture2D<Float4> texture, TimeSpan time, object? parameter)
     {
         if (this.shaderFactory is Func<TimeSpan, T> shaderFactory)
         {
@@ -66,5 +67,7 @@ public sealed class ShaderRunner<T> : IShaderRunner
         {
             GraphicsDevice.Default.ForEach(texture, this.statefulShaderFactory!(time, parameter));
         }
+
+        return true;
     }
 }
