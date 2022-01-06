@@ -11,6 +11,12 @@ Since a video is worth a thousand words, here's a showcase of some pixel shaders
 
 https://user-images.githubusercontent.com/10199417/126792509-c11feb11-a609-4fab-86b3-426d43df6d90.mp4
 
+# Try out the sample app!
+
+The sample app is available in the Microsoft Store, showcasing several pixel shaders all powered by **ComputeSharp**!
+
+<a href="https://www.microsoft.com/store/apps/9PDC095X3PKV"><img src="https://developer.microsoft.com/en-us/store/badges/images/English_get-it-from-MS.png" alt="Get it from Microsoft" width='280' /></a>
+
 # Table of Contents
 
 - [Available packages](#available-packages)
