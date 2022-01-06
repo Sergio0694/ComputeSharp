@@ -10,7 +10,7 @@
   <Identity
     Name="26577SergioPedri.ComputeSharpSampleApp"
     Publisher="CN=46C587B2-48EE-4200-9544-40C64534E565"
-    Version="1.0.0.0" />
+    Version="0.0.5.0" />
 
   <mp:PhoneIdentity PhoneProductId="85b5430e-b15d-4364-a837-e4c49f3f3f77" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -48,4 +48,8 @@
       </uap:VisualElements>
     </Application>
   </Applications>
+
+  <Capabilities>
+    <Capability Name="internetClient"/>
+  </Capabilities>
 </Package>
