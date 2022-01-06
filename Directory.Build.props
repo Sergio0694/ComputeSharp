@@ -4,8 +4,6 @@
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <Company>Sergio Pedri</Company>
-    <Copyright>Copyright (c) 2021 Sergio Pedri</Copyright>
     <NoWarn>$(NoWarn);MSB3270</NoWarn>
   </PropertyGroup>
 
@@ -18,7 +16,8 @@
     <ProjectUrl>https://github.com/Sergio0694/ComputeSharp/</ProjectUrl>    
     <Authors>Sergio Pedri</Authors>
     <Owners>Sergio Pedri</Owners>
-    <Copyright>Copyright (c) 2021 Sergio Pedri</Copyright>
+    <Company>Sergio Pedri</Company>
+    <Copyright>Copyright (c) 2022 Sergio Pedri</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageIcon>icon.png</PackageIcon>
