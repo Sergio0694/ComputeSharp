@@ -25,14 +25,17 @@ public sealed class ContouredLayersRunner : IShaderRunner
     /// <inheritdoc/>
     public bool TryExecute(IReadWriteTexture2D<Float4> texture, TimeSpan timespan, object? parameter)
     {
-        if (this.texture is null)
+        if (this.texture is null ||
+            this.texture.GraphicsDevice != texture.GraphicsDevice)
         {
             string filename = Path.Combine(Package.Current.InstalledLocation.Path, "Assets", "Textures", "RustyMetal.png");
 
-            this.texture = GraphicsDevice.Default.LoadReadOnlyTexture2D<Rgba32, Float4>(filename);
+            this.texture?.Dispose();
+
+            this.texture = texture.GraphicsDevice.LoadReadOnlyTexture2D<Rgba32, Float4>(filename);
         }
 
-        GraphicsDevice.Default.ForEach(texture, new ContouredLayers((float)timespan.TotalSeconds, this.texture));
+        texture.GraphicsDevice.ForEach(texture, new ContouredLayers((float)timespan.TotalSeconds, this.texture));
 
         return true;
     }

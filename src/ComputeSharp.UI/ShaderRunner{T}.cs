@@ -61,11 +61,11 @@ public sealed class ShaderRunner<T> : IShaderRunner
     {
         if (this.shaderFactory is Func<TimeSpan, T> shaderFactory)
         {
-            GraphicsDevice.Default.ForEach(texture, this.shaderFactory(time));
+            texture.GraphicsDevice.ForEach(texture, this.shaderFactory(time));
         }
         else
         {
-            GraphicsDevice.Default.ForEach(texture, this.statefulShaderFactory!(time, parameter));
+            texture.GraphicsDevice.ForEach(texture, this.statefulShaderFactory!(time, parameter));
         }
 
         return true;
