@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Numerics;
 using System.Reflection;
-using ComputeSharp.__Internals;
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.Tests;
 
@@ -32,7 +29,7 @@ public partial class Texture3DTests
     public void Allocate_Uninitialized_Pixel_Ok(Device device, Type textureType, Type t, Type tPixel)
     {
         static void Test<T, TPixel>(Device device, Type textureType)
-            where T : unmanaged, IUnorm<TPixel>
+            where T : unmanaged, IPixel<T, TPixel>
             where TPixel : unmanaged
         {
             using Texture3D<T> texture = device.Get().AllocateTexture3D<T, TPixel>(textureType, 128, 128, 2);

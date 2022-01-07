@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ComputeSharp.__Internals;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using ComputeSharp.Tests.Helpers;
 using Microsoft.Toolkit.HighPerformance;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.Tests;
 
@@ -182,7 +179,7 @@ public partial class ComputeContextTests
     public void Clear_ReadWriteTexture2D_WithPixel(Device device, Type cpuType, Type gpuType)
     {
         static void Test<T, TPixel>(Device device)
-            where T : unmanaged, IUnorm<TPixel>
+            where T : unmanaged, IPixel<T, TPixel>
             where TPixel : unmanaged
         {
             if (!device.Get().IsReadWriteTexture2DSupportedForType<T>())
@@ -224,7 +221,7 @@ public partial class ComputeContextTests
     public void Clear_ReadWriteTexture3D_WithPixel(Device device, Type cpuType, Type gpuType)
     {
         static void Test<T, TPixel>(Device device)
-            where T : unmanaged, IUnorm<TPixel>
+            where T : unmanaged, IPixel<T, TPixel>
             where TPixel : unmanaged
         {
             if (!device.Get().IsReadWriteTexture2DSupportedForType<T>())
@@ -266,7 +263,7 @@ public partial class ComputeContextTests
     public void Clear_ReadWriteTexture2D_WithPixel_AsNormalizedTexture(Device device, Type cpuType, Type gpuType)
     {
         static void Test<T, TPixel>(Device device)
-            where T : unmanaged, IUnorm<TPixel>
+            where T : unmanaged, IPixel<T, TPixel>
             where TPixel : unmanaged
         {
             if (!device.Get().IsReadWriteTexture2DSupportedForType<T>())
@@ -308,7 +305,7 @@ public partial class ComputeContextTests
     public void Clear_ReadWriteTexture3D_WithPixel_AsNormalizedTexture(Device device, Type cpuType, Type gpuType)
     {
         static void Test<T, TPixel>(Device device)
-            where T : unmanaged, IUnorm<TPixel>
+            where T : unmanaged, IPixel<T, TPixel>
             where TPixel : unmanaged
         {
             if (!device.Get().IsReadWriteTexture2DSupportedForType<T>())

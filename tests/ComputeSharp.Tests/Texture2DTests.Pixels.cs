@@ -2,15 +2,12 @@
 using System.IO;
 using System.Numerics;
 using System.Reflection;
-using ComputeSharp.__Internals;
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.Tests;
 
@@ -35,7 +32,7 @@ public partial class Texture2DTests
     public void Allocate_Uninitialized_Pixel_Ok(Device device, Type textureType, Type t, Type tPixel)
     {
         static void Test<T, TPixel>(Device device, Type textureType)
-            where T : unmanaged, IUnorm<TPixel>
+            where T : unmanaged, IPixel<T, TPixel>
             where TPixel : unmanaged
         {
             using Texture2D<T> texture = device.Get().AllocateTexture2D<T, TPixel>(textureType, 128, 128);

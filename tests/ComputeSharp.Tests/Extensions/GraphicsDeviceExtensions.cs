@@ -1,9 +1,6 @@
 ﻿using System;
 using System.IO;
-using ComputeSharp.__Internals;
 using ComputeSharp.Resources;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.Tests.Extensions;
 
@@ -66,7 +63,7 @@ public static class GraphicsDeviceExtensions
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="Texture2D{T}"/> instance of the requested size.</returns>
     public static Texture2D<T> AllocateTexture2D<T, TPixel>(this GraphicsDevice device, Type type, int width, int height, AllocationMode allocationMode = AllocationMode.Default)
-        where T : unmanaged, IUnorm<TPixel>
+        where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
         return type switch
@@ -112,7 +109,7 @@ public static class GraphicsDeviceExtensions
     /// <param name="allocationMode">The allocation mode to use for the new resource.</param>
     /// <returns>A <see cref="Texture3D{T}"/> instance of the requested size.</returns>
     public static Texture3D<T> AllocateTexture3D<T, TPixel>(this GraphicsDevice device, Type type, int width, int height, int depth, AllocationMode allocationMode = AllocationMode.Default)
-        where T : unmanaged, IUnorm<TPixel>
+        where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
         return type switch
@@ -322,7 +319,7 @@ public static class GraphicsDeviceExtensions
     /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
     /// <returns>A <see cref="Texture2D{T}"/> instance with the contents of the specified file.</returns>
     public static Texture2D<T> LoadTexture2D<T, TPixel>(this GraphicsDevice device, Type textureType, Type inputType, string filename)
-        where T : unmanaged, IUnorm<TPixel>
+        where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
         return textureType switch
@@ -353,7 +350,7 @@ public static class GraphicsDeviceExtensions
     /// <param name="buffer">The buffer with the image data to load and decode into the texture.</param>
     /// <returns>A <see cref="Texture2D{T}"/> instance with the contents of the specified buffer.</returns>
     public static Texture2D<T> LoadTexture2D<T, TPixel>(this GraphicsDevice device, Type type, byte[] buffer)
-        where T : unmanaged, IUnorm<TPixel>
+        where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
         return type switch
@@ -374,7 +371,7 @@ public static class GraphicsDeviceExtensions
     /// <param name="stream">The stream with the image data to load and decode into the texture.</param>
     /// <returns>A <see cref="Texture2D{T}"/> instance with the contents of the specified stream.</returns>
     public static Texture2D<T> LoadTexture2D<T, TPixel>(this GraphicsDevice device, Type type, Stream stream)
-        where T : unmanaged, IUnorm<TPixel>
+        where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
         return type switch
