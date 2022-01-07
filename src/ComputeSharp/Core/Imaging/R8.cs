@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.__Internals;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp;
 
@@ -14,7 +11,7 @@ namespace ComputeSharp;
 /// </para>
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct R8 : IEquatable<R8>, IUnorm<float>
+public struct R8 : IEquatable<R8>, IPixel<R8, float>
 #if NET6_0_OR_GREATER
     , ISpanFormattable
 #endif

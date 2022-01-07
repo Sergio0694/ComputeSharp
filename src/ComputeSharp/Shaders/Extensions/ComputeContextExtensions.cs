@@ -54,7 +54,7 @@ public static partial class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T,TPixel}"/> instance to insert the barrier for.</param>
     public static unsafe void Barrier<T, TPixel>(this in ComputeContext context, ReadWriteTexture2D<T, TPixel> texture)
-        where T : unmanaged, IUnorm<TPixel>
+        where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
         context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
@@ -68,7 +68,7 @@ public static partial class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture3D{T,TPixel}"/> instance to insert the barrier for.</param>
     public static unsafe void Barrier<T, TPixel>(this in ComputeContext context, ReadWriteTexture3D<T, TPixel> texture)
-        where T : unmanaged, IUnorm<TPixel>
+        where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
         context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
@@ -148,7 +148,7 @@ public static partial class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T,TPixel}"/> instance to clear.</param>
     public static unsafe void Clear<T, TPixel>(this in ComputeContext context, ReadWriteTexture2D<T, TPixel> texture)
-        where T : unmanaged, IUnorm<TPixel>
+        where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
         var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
@@ -164,7 +164,7 @@ public static partial class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture3D{T,TPixel}"/> instance to clear.</param>
     public static unsafe void Clear<T, TPixel>(this in ComputeContext context, ReadWriteTexture3D<T, TPixel> texture)
-        where T : unmanaged, IUnorm<TPixel>
+        where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
         var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);

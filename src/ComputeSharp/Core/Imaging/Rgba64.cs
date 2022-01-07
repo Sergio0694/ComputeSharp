@@ -2,9 +2,6 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.__Internals;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp;
 
@@ -17,7 +14,7 @@ namespace ComputeSharp;
 /// </summary>
 /// <remarks>This struct is fully mutable.</remarks>
 [StructLayout(LayoutKind.Sequential)]
-public struct Rgba64 : IEquatable<Rgba64>, IUnorm<Vector4>, IUnorm<Float4>
+public struct Rgba64 : IEquatable<Rgba64>, IPixel<Rgba64, Vector4>, IPixel<Rgba64, Float4>
 #if NET6_0_OR_GREATER
     , ISpanFormattable
 #endif
