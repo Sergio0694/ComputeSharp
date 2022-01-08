@@ -9,7 +9,7 @@ namespace ComputeSharp;
 /// <summary>
 /// A <see langword="class"/> that contains extension methods for the <see cref="ComputeContext"/> type, used to run compute shaders.
 /// </summary>
-public static partial class ComputeContextExtensions
+public static class ComputeContextExtensions
 {
     /// <summary>
     /// Inserts a resource barrier for a specific resource.
