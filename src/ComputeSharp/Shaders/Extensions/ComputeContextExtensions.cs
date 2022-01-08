@@ -215,7 +215,7 @@ public static partial class ComputeContextExtensions
     {
         var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
-        context.Fill(texture.D3D12Resource, handles.Gpu, handles.Cpu, DXGIFormatHelper.ConvertToNormalizedValue(ref value));
+        context.Fill(texture.D3D12Resource, handles.Gpu, handles.Cpu, DXGIFormatHelper.ExtendToNormalizedValue(value.ToPixel()));
     }
 
     /// <summary>
@@ -232,7 +232,7 @@ public static partial class ComputeContextExtensions
     {
         var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
-        context.Fill(texture.D3D12Resource, handles.Gpu, handles.Cpu, DXGIFormatHelper.ConvertToNormalizedValue(ref value));
+        context.Fill(texture.D3D12Resource, handles.Gpu, handles.Cpu, DXGIFormatHelper.ExtendToNormalizedValue(value.ToPixel()));
     }
 
     /// <summary>
@@ -251,7 +251,7 @@ public static partial class ComputeContextExtensions
             ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice),
             handles.Gpu,
             handles.Cpu,
-            DXGIFormatHelper.ExtendToNormalizedValue(ref value));
+            DXGIFormatHelper.ExtendToNormalizedValue(value));
     }
 
     /// <summary>
@@ -270,7 +270,7 @@ public static partial class ComputeContextExtensions
             ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice),
             handles.Gpu,
             handles.Cpu,
-            DXGIFormatHelper.ExtendToNormalizedValue(ref value));
+            DXGIFormatHelper.ExtendToNormalizedValue(value));
     }
 
     /// <summary>

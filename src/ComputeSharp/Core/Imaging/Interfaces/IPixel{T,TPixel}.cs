@@ -9,4 +9,14 @@ public interface IPixel<T, TPixel>
     where T : unmanaged, IPixel<T, TPixel>
     where TPixel : unmanaged
 {
+    /// <summary>
+    /// Converts the current <typeparamref name="T"/> value into its normalized <typeparamref name="TPixel"/> representation.
+    /// </summary>
+    /// <returns>The <typeparamref name="TPixel"/> representation for the current value.</returns>
+    /// <remarks>
+    /// This method is primarily meant to be used to support
+    /// <see cref="ComputeContextExtensions.Fill{TPixel}(in ComputeContext, IReadWriteTexture2D{TPixel}, TPixel)"/>
+    /// and <see cref="ComputeContextExtensions.Fill{TPixel}(in ComputeContext, IReadWriteTexture3D{TPixel}, TPixel)"/>.
+    /// </remarks>
+    TPixel ToPixel();
 }

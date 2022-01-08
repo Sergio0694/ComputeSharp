@@ -27,7 +27,7 @@ public struct R8 : IEquatable<R8>, IPixel<R8, float>
     /// <param name="r">The red component.</param>
     public R8(byte r)
     {
-        R = r;
+        this.R = r;
     }
 
     /// <summary>
@@ -36,10 +36,17 @@ public struct R8 : IEquatable<R8>, IPixel<R8, float>
     public byte PackedValue
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        readonly get => Unsafe.As<R8, byte>(ref Unsafe.AsRef(this));
+        readonly get => Unsafe.As<R8, byte>(ref Unsafe.AsRef(in this));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         set => Unsafe.As<R8, byte>(ref this) = value;
+    }
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly float ToPixel()
+    {
+        return this.R / (float)byte.MaxValue;
     }
 
     /// <summary>

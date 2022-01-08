@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -75,10 +76,20 @@ public struct Rgba32 : IEquatable<Rgba32>, IPixel<Rgba32, Float4>
     public uint PackedValue
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        readonly get => Unsafe.As<Rgba32, uint>(ref Unsafe.AsRef(this));
+        readonly get => Unsafe.As<Rgba32, uint>(ref Unsafe.AsRef(in this));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         set => Unsafe.As<Rgba32, uint>(ref this) = value;
+    }
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly Float4 ToPixel()
+    {
+        Vector4 linear = new(this.R, this.G, this.B, this.A);
+        Vector4 normalized = linear / byte.MaxValue;
+
+        return normalized;
     }
 
     /// <summary>

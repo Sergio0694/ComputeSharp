@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -75,10 +76,20 @@ public struct Rgba64 : IEquatable<Rgba64>, IPixel<Rgba64, Float4>
     public ulong PackedValue
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        readonly get => Unsafe.As<Rgba64, ulong>(ref Unsafe.AsRef(this));
+        readonly get => Unsafe.As<Rgba64, ulong>(ref Unsafe.AsRef(in this));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         set => Unsafe.As<Rgba64, ulong>(ref this) = value;
+    }
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly Float4 ToPixel()
+    {
+        Vector4 linear = new(this.R, this.G, this.B, this.A);
+        Vector4 normalized = linear / ushort.MaxValue;
+
+        return normalized;
     }
 
     /// <summary>

@@ -33,8 +33,8 @@ public struct Rg32 : IEquatable<Rg32>, IPixel<Rg32, Float2>
     /// <param name="g">The green component.</param>
     public Rg32(ushort r, ushort g)
     {
-        R = r;
-        G = g;
+        this.R = r;
+        this.G = g;
     }
 
     /// <summary>
@@ -43,10 +43,17 @@ public struct Rg32 : IEquatable<Rg32>, IPixel<Rg32, Float2>
     public uint PackedValue
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        readonly get => Unsafe.As<Rg32, uint>(ref Unsafe.AsRef(this));
+        readonly get => Unsafe.As<Rg32, uint>(ref Unsafe.AsRef(in this));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         set => Unsafe.As<Rg32, uint>(ref this) = value;
+    }
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly Float2 ToPixel()
+    {
+        return new(this.R / (float)ushort.MaxValue, this.G / (float)ushort.MaxValue);
     }
 
     /// <summary>
