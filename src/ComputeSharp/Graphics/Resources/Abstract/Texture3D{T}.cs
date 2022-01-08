@@ -24,7 +24,7 @@ namespace ComputeSharp.Resources;
 /// A <see langword="class"/> representing a typed 3D texture stored on GPU memory.
 /// </summary>
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
-public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper.IGraphicsResource
+public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, GraphicsResourceHelper.IGraphicsResource
     where T : unmanaged
 {
 #if NET6_0_OR_GREATER
@@ -137,9 +137,7 @@ public unsafe abstract class Texture3D<T> : NativeObject, GraphicsResourceHelper
         this.d3D12Resource.Get()->SetName(this);
     }
 
-    /// <summary>
-    /// Gets the <see cref="ComputeSharp.GraphicsDevice"/> associated with the current instance.
-    /// </summary>
+    /// <inheritdoc/>
     public GraphicsDevice GraphicsDevice { get; }
 
     /// <summary>
