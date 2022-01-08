@@ -50,7 +50,7 @@ internal static class DXGIFormatHelper
     /// Gets whether or not the input type corresponds to a normalized format.
     /// </summary>
     /// <typeparam name="T">The input type argument to check.</typeparam>
-    /// <returns>TWhether or not the input type corresponds to a normalized format..</returns>
+    /// <returns>Whether or not the input type corresponds to a normalized format.</returns>
     /// <exception cref="System.ArgumentException">Thrown when the input type <typeparamref name="T"/> is not supported.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNormalizedType<T>()
@@ -87,5 +87,26 @@ internal static class DXGIFormatHelper
         }
         
         return ThrowHelper.ThrowArgumentException<bool>("Invalid texture type");
+    }
+
+    /// <summary>
+    /// Extends a given pixel type to its <see cref="Float4"/> equivalent.
+    /// </summary>
+    /// <typeparam name="T">The input pixel value to convert.</typeparam>
+    /// <returns>The <see cref="Float4"/> equivalent value for <paramref name="value"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Float4 ExtendToNormalizedValue<T>(T value)
+        where T : unmanaged
+    {
+        if (typeof(T) == typeof(Float4))
+        {
+            return Unsafe.As<T, Float4>(ref value);
+        }
+
+        Float4 result = default;
+
+        Unsafe.As<Float4, T>(ref result) = value;
+
+        return result;
     }
 }

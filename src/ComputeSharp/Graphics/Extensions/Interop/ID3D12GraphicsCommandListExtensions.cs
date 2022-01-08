@@ -260,6 +260,30 @@ internal static unsafe class ID3D12GraphicsCommandListExtensions
     }
 
     /// <summary>
+    /// Fills a target UAV resource.
+    /// </summary>
+    /// <param name="d3D12GraphicsCommandList">The <see cref="ID3D12GraphicsCommandList"/> instance in use.</param>
+    /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to fill.</param>
+    /// <param name="d3D12GpuDescriptorHandle">The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value for the target resource.</param>
+    /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value for the target resource.</param>
+    /// <param name="value">The value to use to fill the view.</param>
+    public static unsafe void FillUnorderedAccessView(
+        this ref ID3D12GraphicsCommandList d3D12GraphicsCommandList,
+        ID3D12Resource* d3D12Resource,
+        D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle,
+        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
+        Float4 value)
+    {
+        d3D12GraphicsCommandList.ClearUnorderedAccessViewFloat(
+            ViewGPUHandleInCurrentHeap: d3D12GpuDescriptorHandle,
+            ViewCPUHandle: d3D12CpuDescriptorHandle,
+            pResource: d3D12Resource,
+            Values: (float*)&value,
+            NumRects: 0,
+            pRects: null);
+    }
+
+    /// <summary>
     /// Binds an input constant buffer to the first root parameter.
     /// </summary>
     /// <param name="d3D12GraphicsCommandList">The <see cref="ID3D12GraphicsCommandList"/> instance in use.</param>

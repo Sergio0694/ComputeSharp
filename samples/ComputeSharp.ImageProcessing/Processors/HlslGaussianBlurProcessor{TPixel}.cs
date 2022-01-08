@@ -101,8 +101,8 @@ public sealed partial class HlslGaussianBlurProcessor
 
             Span<Rgba32> span = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(pixelSpan);
 
-            using ReadWriteTexture2D<Rgba32, Vector4> sourceTexture = GraphicsDevice.AllocateReadWriteTexture2D<Rgba32, Vector4>(span, source.Width, source.Height);
-            using ReadWriteTexture2D<Rgba32, Vector4> firstPassTexture = GraphicsDevice.AllocateReadWriteTexture2D<Rgba32, Vector4>(source.Width, source.Height);
+            using ReadWriteTexture2D<Rgba32, float4> sourceTexture = GraphicsDevice.AllocateReadWriteTexture2D<Rgba32, float4>(span, source.Width, source.Height);
+            using ReadWriteTexture2D<Rgba32, float4> firstPassTexture = GraphicsDevice.AllocateReadWriteTexture2D<Rgba32, float4>(source.Width, source.Height);
             using ReadOnlyBuffer<float> kernelBuffer = GraphicsDevice.AllocateReadOnlyBuffer(Kernel);
 
             using (var context = GraphicsDevice.CreateComputeContext())
@@ -121,14 +121,14 @@ public sealed partial class HlslGaussianBlurProcessor
         [AutoConstructor]
         internal readonly partial struct VerticalConvolutionProcessor : IComputeShader
         {
-            public readonly IReadWriteTexture2D<Vector4> source;
-            public readonly IReadWriteTexture2D<Vector4> target;
+            public readonly IReadWriteTexture2D<float4> source;
+            public readonly IReadWriteTexture2D<float4> target;
             public readonly ReadOnlyBuffer<float> kernel;
 
             /// <inheritdoc/>
             public void Execute()
             {
-                Vector4 result = Vector4.Zero;
+                float4 result = float4.Zero;
                 int maxY = source.Height - 1;
                 int maxX = source.Width - 1;
                 int kernelLength = kernel.Length;
@@ -138,7 +138,7 @@ public sealed partial class HlslGaussianBlurProcessor
                 {
                     int offsetY = Hlsl.Clamp(ThreadIds.Y + i - radiusY, 0, maxY);
                     int offsetX = Hlsl.Clamp(ThreadIds.X, 0, maxX);
-                    Vector4 color = source[offsetX, offsetY];
+                    float4 color = source[offsetX, offsetY];
 
                     result += kernel[i] * color;
                 }
@@ -153,14 +153,14 @@ public sealed partial class HlslGaussianBlurProcessor
         [AutoConstructor]
         internal readonly partial struct HorizontalConvolutionProcessor : IComputeShader
         {
-            public readonly IReadWriteTexture2D<Vector4> source;
-            public readonly IReadWriteTexture2D<Vector4> target;
+            public readonly IReadWriteTexture2D<float4> source;
+            public readonly IReadWriteTexture2D<float4> target;
             public readonly ReadOnlyBuffer<float> kernel;
 
             /// <inheritdoc/>
             public void Execute()
             {
-                Vector4 result = Vector4.Zero;
+                float4 result = float4.Zero;
                 int maxY = source.Height - 1;
                 int maxX = source.Width - 1;
                 int kernelLength = kernel.Length;
@@ -170,7 +170,7 @@ public sealed partial class HlslGaussianBlurProcessor
                 for (int i = 0; i < kernelLength; i++)
                 {
                     int offsetX = Hlsl.Clamp(ThreadIds.X + i - radiusX, 0, maxX);
-                    Vector4 color = source[offsetX, offsetY];
+                    float4 color = source[offsetX, offsetY];
 
                     result += kernel[i] * color;
                 }

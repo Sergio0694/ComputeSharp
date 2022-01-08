@@ -53,6 +53,19 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     }
 
     /// <summary>
+    /// Inserts a resource barrier for a specific resource.
+    /// </summary>
+    /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to insert the barrier for.</param>
+    internal readonly unsafe void Barrier(ID3D12Resource* d3D12Resource)
+    {
+        ThrowInvalidOperationExceptionIfDeviceIsNull();
+
+        ref CommandList commandList = ref GetCommandList(in this);
+
+        commandList.D3D12GraphicsCommandList->UnorderedAccessViewBarrier(d3D12Resource);
+    }
+
+    /// <summary>
     /// Clears a specific resource.
     /// </summary>
     /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to clear.</param>
@@ -73,16 +86,23 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     }
 
     /// <summary>
-    /// Inserts a resource barrier for a specific resource.
+    /// Fills a specific resource.
     /// </summary>
-    /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to insert the barrier for.</param>
-    internal readonly unsafe void Barrier(ID3D12Resource* d3D12Resource)
+    /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to fill.</param>
+    /// <param name="d3D12GpuDescriptorHandle">The <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> value for the target resource.</param>
+    /// <param name="d3D12CpuDescriptorHandle">The <see cref="D3D12_CPU_DESCRIPTOR_HANDLE"/> value for the target resource.</param>
+    /// <param name="value">The value to use to fill the resource.</param>
+    internal readonly unsafe void Fill(
+        ID3D12Resource* d3D12Resource,
+        D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle,
+        D3D12_CPU_DESCRIPTOR_HANDLE d3D12CpuDescriptorHandle,
+        Float4 value)
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
 
-        ref CommandList commandList = ref GetCommandList(in this);
+        ref CommandList commandList = ref GetCommandList(in this, null);
 
-        commandList.D3D12GraphicsCommandList->UnorderedAccessViewBarrier(d3D12Resource);
+        commandList.D3D12GraphicsCommandList->FillUnorderedAccessView(d3D12Resource, d3D12GpuDescriptorHandle, d3D12CpuDescriptorHandle, value);
     }
 
     /// <summary>

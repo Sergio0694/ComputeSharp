@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.__Internals;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp;
 
@@ -15,7 +11,7 @@ namespace ComputeSharp;
 /// </para>
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct Rg16 : IEquatable<Rg16>, IUnorm<Vector2>, IUnorm<Float2>
+public struct Rg16 : IEquatable<Rg16>, IPixel<Rg16, Float2>
 #if NET6_0_OR_GREATER
     , ISpanFormattable
 #endif
@@ -37,8 +33,8 @@ public struct Rg16 : IEquatable<Rg16>, IUnorm<Vector2>, IUnorm<Float2>
     /// <param name="g">The green component.</param>
     public Rg16(byte r, byte g)
     {
-        R = r;
-        G = g;
+        this.R = r;
+        this.G = g;
     }
 
     /// <summary>
@@ -47,10 +43,17 @@ public struct Rg16 : IEquatable<Rg16>, IUnorm<Vector2>, IUnorm<Float2>
     public ushort PackedValue
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        readonly get => Unsafe.As<Rg16, ushort>(ref Unsafe.AsRef(this));
+        readonly get => Unsafe.As<Rg16, ushort>(ref Unsafe.AsRef(in this));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         set => Unsafe.As<Rg16, ushort>(ref this) = value;
+    }
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly Float2 ToPixel()
+    {
+        return new(this.R / (float)byte.MaxValue, this.G / (float)byte.MaxValue);
     }
 
     /// <summary>

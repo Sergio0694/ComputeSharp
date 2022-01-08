@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.__Internals;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp;
 
@@ -14,7 +11,7 @@ namespace ComputeSharp;
 /// </para>
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct R16 : IEquatable<R16>, IUnorm<float>
+public struct R16 : IEquatable<R16>, IPixel<R16, float>
 #if NET6_0_OR_GREATER
     , ISpanFormattable
 #endif
@@ -30,7 +27,7 @@ public struct R16 : IEquatable<R16>, IUnorm<float>
     /// <param name="r">The red component.</param>
     public R16(ushort r)
     {
-        R = r;
+        this.R = r;
     }
 
     /// <summary>
@@ -39,10 +36,17 @@ public struct R16 : IEquatable<R16>, IUnorm<float>
     public ushort PackedValue
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        readonly get => Unsafe.As<R16, ushort>(ref Unsafe.AsRef(this));
+        readonly get => Unsafe.As<R16, ushort>(ref Unsafe.AsRef(in this));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         set => Unsafe.As<R16, ushort>(ref this) = value;
+    }
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly float ToPixel()
+    {
+        return this.R / (float)ushort.MaxValue;
     }
 
     /// <summary>

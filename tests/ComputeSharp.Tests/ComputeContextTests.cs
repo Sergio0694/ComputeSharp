@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ComputeSharp.__Internals;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using ComputeSharp.Tests.Helpers;
 using Microsoft.Toolkit.HighPerformance;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp.Tests;
 
@@ -182,7 +179,7 @@ public partial class ComputeContextTests
     public void Clear_ReadWriteTexture2D_WithPixel(Device device, Type cpuType, Type gpuType)
     {
         static void Test<T, TPixel>(Device device)
-            where T : unmanaged, IUnorm<TPixel>
+            where T : unmanaged, IPixel<T, TPixel>
             where TPixel : unmanaged
         {
             if (!device.Get().IsReadWriteTexture2DSupportedForType<T>())
@@ -224,7 +221,7 @@ public partial class ComputeContextTests
     public void Clear_ReadWriteTexture3D_WithPixel(Device device, Type cpuType, Type gpuType)
     {
         static void Test<T, TPixel>(Device device)
-            where T : unmanaged, IUnorm<TPixel>
+            where T : unmanaged, IPixel<T, TPixel>
             where TPixel : unmanaged
         {
             if (!device.Get().IsReadWriteTexture2DSupportedForType<T>())
@@ -266,7 +263,7 @@ public partial class ComputeContextTests
     public void Clear_ReadWriteTexture2D_WithPixel_AsNormalizedTexture(Device device, Type cpuType, Type gpuType)
     {
         static void Test<T, TPixel>(Device device)
-            where T : unmanaged, IUnorm<TPixel>
+            where T : unmanaged, IPixel<T, TPixel>
             where TPixel : unmanaged
         {
             if (!device.Get().IsReadWriteTexture2DSupportedForType<T>())
@@ -308,7 +305,7 @@ public partial class ComputeContextTests
     public void Clear_ReadWriteTexture3D_WithPixel_AsNormalizedTexture(Device device, Type cpuType, Type gpuType)
     {
         static void Test<T, TPixel>(Device device)
-            where T : unmanaged, IUnorm<TPixel>
+            where T : unmanaged, IPixel<T, TPixel>
             where TPixel : unmanaged
         {
             if (!device.Get().IsReadWriteTexture2DSupportedForType<T>())
@@ -332,6 +329,212 @@ public partial class ComputeContextTests
             foreach (byte value in array.AsSpan().AsBytes())
             {
                 Assert.AreEqual(value, 0);
+            }
+        }
+
+        TestHelper.Run(Test<Bgra32, Float4>, cpuType, gpuType, device);
+    }
+
+    /// <summary>
+    /// Gets a sample pixel color of the specified type.
+    /// </summary>
+    /// <typeparam name="T">The type of pixel to get.</typeparam>
+    /// <returns>A sample pixel color of the specified type.</returns>
+    /// <exception cref="ArgumentException">Thrown when <typeparamref name="T"/> isn't valid.</exception>
+    private static T GetColor<T>()
+    {
+        if (typeof(T) == typeof(Bgra32))
+        {
+            return (T)(object)new Bgra32(0x6B, 0x6D, 0x9E, 0xC0);
+        }
+
+        if (typeof(T) == typeof(Rgba32))
+        {
+            return (T)(object)new Rgba32(0x6B, 0x6D, 0x9E, 0xC0);
+        }
+
+        if (typeof(T) == typeof(Rgba64))
+        {
+            return (T)(object)new Rgba64(0x6B, 0x6D05, 0x9E, 0xC0);
+        }
+
+        if (typeof(T) == typeof(R8))
+        {
+            return (T)(object)new R8(0x6B);
+        }
+
+        if (typeof(T) == typeof(R16))
+        {
+            return (T)(object)new R16(0x6D05);
+        }
+
+        if (typeof(T) == typeof(Rg16))
+        {
+            return (T)(object)new Rg16(0x6B, 0x6D);
+        }
+
+        if (typeof(T) == typeof(Rg32))
+        {
+            return (T)(object)new Rg32(0x6B, 0x6D05);
+        }
+
+        throw new ArgumentException("Invalid pixel type");
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(typeof(Bgra32), typeof(Float4))]
+    [Data(typeof(Rgba32), typeof(Float4))]
+    [Data(typeof(Rgba64), typeof(Float4))]
+    [Data(typeof(R8), typeof(float))]
+    [Data(typeof(R16), typeof(float))]
+    [Data(typeof(Rg16), typeof(Float2))]
+    [Data(typeof(Rg32), typeof(Float2))]
+    public void Fill_ReadWriteTexture2D_WithPixel(Device device, Type cpuType, Type gpuType)
+    {
+        static void Test<T, TPixel>(Device device)
+            where T : unmanaged, IPixel<T, TPixel>
+            where TPixel : unmanaged
+        {
+            if (!device.Get().IsReadWriteTexture2DSupportedForType<T>())
+            {
+                Assert.Inconclusive();
+            }
+
+            T color = GetColor<T>();
+
+            using ReadWriteTexture2D<T, TPixel> texture = device.Get().AllocateReadWriteTexture2D<T, TPixel>(128, 128);
+
+            using (ComputeContext context = device.Get().CreateComputeContext())
+            {
+                context.Fill(texture, color);
+            }
+
+            T[,] result = texture.ToArray();
+
+            foreach (T value in result)
+            {
+                Assert.AreEqual(value, color);
+            }
+        }
+
+        TestHelper.Run(Test<Bgra32, Float4>, cpuType, gpuType, device);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(typeof(Bgra32), typeof(Float4))]
+    [Data(typeof(Rgba32), typeof(Float4))]
+    [Data(typeof(Rgba64), typeof(Float4))]
+    [Data(typeof(R8), typeof(float))]
+    [Data(typeof(R16), typeof(float))]
+    [Data(typeof(Rg16), typeof(Float2))]
+    [Data(typeof(Rg32), typeof(Float2))]
+    public void Fill_ReadWriteTexture3D_WithPixel(Device device, Type cpuType, Type gpuType)
+    {
+        static void Test<T, TPixel>(Device device)
+            where T : unmanaged, IPixel<T, TPixel>
+            where TPixel : unmanaged
+        {
+            if (!device.Get().IsReadWriteTexture2DSupportedForType<T>())
+            {
+                Assert.Inconclusive();
+            }
+
+            T color = GetColor<T>();
+
+            using ReadWriteTexture3D<T, TPixel> texture = device.Get().AllocateReadWriteTexture3D<T, TPixel>(128, 128, 3);
+
+            using (ComputeContext context = device.Get().CreateComputeContext())
+            {
+                context.Fill(texture, color);
+            }
+
+            T[,,] result = texture.ToArray();
+
+            foreach (T value in result)
+            {
+                Assert.AreEqual(value, color);
+            }
+        }
+
+        TestHelper.Run(Test<Bgra32, Float4>, cpuType, gpuType, device);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(typeof(Bgra32), typeof(Float4))]
+    [Data(typeof(Rgba32), typeof(Float4))]
+    [Data(typeof(Rgba64), typeof(Float4))]
+    [Data(typeof(R8), typeof(float))]
+    [Data(typeof(R16), typeof(float))]
+    [Data(typeof(Rg16), typeof(Float2))]
+    [Data(typeof(Rg32), typeof(Float2))]
+    public void Fill_ReadWriteTexture2D_WithPixel_AsNormalizedTexture(Device device, Type cpuType, Type gpuType)
+    {
+        static void Test<T, TPixel>(Device device)
+            where T : unmanaged, IPixel<T, TPixel>
+            where TPixel : unmanaged
+        {
+            if (!device.Get().IsReadWriteTexture2DSupportedForType<T>())
+            {
+                Assert.Inconclusive();
+            }
+
+            T color = GetColor<T>();
+
+            using ReadWriteTexture2D<T, TPixel> texture = device.Get().AllocateReadWriteTexture2D<T, TPixel>(128, 128);
+
+            using (ComputeContext context = device.Get().CreateComputeContext())
+            {
+                context.Fill((IReadWriteTexture2D<TPixel>)texture, color.ToPixel());
+            }
+
+            T[,] result = texture.ToArray();
+
+            foreach (T value in result)
+            {
+                Assert.AreEqual(value, color);
+            }
+        }
+
+        TestHelper.Run(Test<Bgra32, Float4>, cpuType, gpuType, device);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(typeof(Bgra32), typeof(Float4))]
+    [Data(typeof(Rgba32), typeof(Float4))]
+    [Data(typeof(Rgba64), typeof(Float4))]
+    [Data(typeof(R8), typeof(float))]
+    [Data(typeof(R16), typeof(float))]
+    [Data(typeof(Rg16), typeof(Float2))]
+    [Data(typeof(Rg32), typeof(Float2))]
+    public void Fill_ReadWriteTexture3D_WithPixel_AsNormalizedTexture(Device device, Type cpuType, Type gpuType)
+    {
+        static void Test<T, TPixel>(Device device)
+            where T : unmanaged, IPixel<T, TPixel>
+            where TPixel : unmanaged
+        {
+            if (!device.Get().IsReadWriteTexture2DSupportedForType<T>())
+            {
+                Assert.Inconclusive();
+            }
+
+            T color = GetColor<T>();
+
+            using ReadWriteTexture3D<T, TPixel> texture = device.Get().AllocateReadWriteTexture3D<T, TPixel>(128, 128, 3);
+
+            using (ComputeContext context = device.Get().CreateComputeContext())
+            {
+                context.Fill((IReadWriteTexture3D<TPixel>)texture, color.ToPixel());
+            }
+
+            T[,,] result = texture.ToArray();
+
+            foreach (T value in result)
+            {
+                Assert.AreEqual(value, color);
             }
         }
 

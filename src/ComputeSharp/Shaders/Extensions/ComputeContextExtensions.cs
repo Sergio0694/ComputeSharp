@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using ComputeSharp.__Internals;
+using ComputeSharp.Graphics.Helpers;
 
 #pragma warning disable CS0618
 
@@ -8,7 +9,7 @@ namespace ComputeSharp;
 /// <summary>
 /// A <see langword="class"/> that contains extension methods for the <see cref="ComputeContext"/> type, used to run compute shaders.
 /// </summary>
-public static partial class ComputeContextExtensions
+public static class ComputeContextExtensions
 {
     /// <summary>
     /// Inserts a resource barrier for a specific resource.
@@ -54,7 +55,7 @@ public static partial class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T,TPixel}"/> instance to insert the barrier for.</param>
     public static unsafe void Barrier<T, TPixel>(this in ComputeContext context, ReadWriteTexture2D<T, TPixel> texture)
-        where T : unmanaged, IUnorm<TPixel>
+        where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
         context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
@@ -68,7 +69,7 @@ public static partial class ComputeContextExtensions
     /// <param name="context">The <see cref="ComputeContext"/> to use to insert the resource barrier.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture3D{T,TPixel}"/> instance to insert the barrier for.</param>
     public static unsafe void Barrier<T, TPixel>(this in ComputeContext context, ReadWriteTexture3D<T, TPixel> texture)
-        where T : unmanaged, IUnorm<TPixel>
+        where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
         context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
@@ -113,7 +114,7 @@ public static partial class ComputeContextExtensions
     }
 
     /// <summary>
-    /// Clears a specific resource, with a specified value.
+    /// Clears a specific resource.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
@@ -127,7 +128,7 @@ public static partial class ComputeContextExtensions
     }
 
     /// <summary>
-    /// Clears a specific resource, with a specified value.
+    /// Clears a specific resource.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
@@ -141,39 +142,39 @@ public static partial class ComputeContextExtensions
     }
 
     /// <summary>
-    /// Clears a specific resource, with a specified value.
+    /// Clears a specific resource.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture2D{T,TPixel}"/> instance to clear.</param>
     public static unsafe void Clear<T, TPixel>(this in ComputeContext context, ReadWriteTexture2D<T, TPixel> texture)
-        where T : unmanaged, IUnorm<TPixel>
+        where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
+        var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
-        context.Clear(texture.D3D12Resource, handles.Gpu, handles.Cpu, isNormalized);
+        context.Clear(texture.D3D12Resource, handles.Gpu, handles.Cpu, true);
     }
 
     /// <summary>
-    /// Clears a specific resource, with a specified value.
+    /// Clears a specific resource.
     /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
     /// <param name="texture">The input <see cref="ReadWriteTexture3D{T,TPixel}"/> instance to clear.</param>
     public static unsafe void Clear<T, TPixel>(this in ComputeContext context, ReadWriteTexture3D<T, TPixel> texture)
-        where T : unmanaged, IUnorm<TPixel>
+        where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
+        var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
-        context.Clear(texture.D3D12Resource, handles.Gpu, handles.Cpu, isNormalized);
+        context.Clear(texture.D3D12Resource, handles.Gpu, handles.Cpu, true);
     }
 
     /// <summary>
-    /// Clears a specific resource, with a specified value.
+    /// Clears a specific resource.
     /// </summary>
     /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
@@ -181,13 +182,13 @@ public static partial class ComputeContextExtensions
     public static unsafe void Clear<TPixel>(this in ComputeContext context, IReadWriteTexture2D<TPixel> texture)
         where TPixel : unmanaged
     {
-        var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
+        var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
-        context.Clear(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice), handles.Gpu, handles.Cpu, isNormalized);
+        context.Clear(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice), handles.Gpu, handles.Cpu, true);
     }
 
     /// <summary>
-    /// Clears a specific resource, with a specified value.
+    /// Clears a specific resource.
     /// </summary>
     /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to clear the resource.</param>
@@ -195,9 +196,81 @@ public static partial class ComputeContextExtensions
     public static unsafe void Clear<TPixel>(this in ComputeContext context, IReadWriteTexture3D<TPixel> texture)
         where TPixel : unmanaged
     {
-        var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
+        var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
-        context.Clear(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice), handles.Gpu, handles.Cpu, isNormalized);
+        context.Clear(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice), handles.Gpu, handles.Cpu, true);
+    }
+
+    /// <summary>
+    /// Fills a specific texture with a given value.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to fill the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture2D{T,TPixel}"/> instance to fill.</param>
+    /// <param name="value">The value to use to fill <paramref name="texture"/>.</param>
+    public static unsafe void Fill<T, TPixel>(this in ComputeContext context, ReadWriteTexture2D<T, TPixel> texture, T value)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
+    {
+        var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
+
+        context.Fill(texture.D3D12Resource, handles.Gpu, handles.Cpu, DXGIFormatHelper.ExtendToNormalizedValue(value.ToPixel()));
+    }
+
+    /// <summary>
+    /// Fills a specific texture with a given value.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to fill the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture3D{T,TPixel}"/> instance to fill.</param>
+    /// <param name="value">The value to use to fill <paramref name="texture"/>.</param>
+    public static unsafe void Fill<T, TPixel>(this in ComputeContext context, ReadWriteTexture3D<T, TPixel> texture, T value)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
+    {
+        var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
+
+        context.Fill(texture.D3D12Resource, handles.Gpu, handles.Cpu, DXGIFormatHelper.ExtendToNormalizedValue(value.ToPixel()));
+    }
+
+    /// <summary>
+    /// Fills a specific texture with a given value.
+    /// </summary>
+    /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to fill the resource.</param>
+    /// <param name="texture">The input <see cref="IReadWriteTexture2D{TPixel}"/> instance to fill.</param>
+    /// <param name="value">The value to use to fill <paramref name="texture"/>.</param>
+    public static unsafe void Fill<TPixel>(this in ComputeContext context, IReadWriteTexture2D<TPixel> texture, TPixel value)
+        where TPixel : unmanaged
+    {
+        var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
+
+        context.Fill(
+            ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice),
+            handles.Gpu,
+            handles.Cpu,
+            DXGIFormatHelper.ExtendToNormalizedValue(value));
+    }
+
+    /// <summary>
+    /// Fills a specific texture with a given value.
+    /// </summary>
+    /// <typeparam name="TPixel">The type of pixels stored on the texture.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to fill the resource.</param>
+    /// <param name="texture">The input <see cref="IReadWriteTexture3D{TPixel}"/> instance to fill.</param>
+    /// <param name="value">The value to use to fill <paramref name="texture"/>.</param>
+    public static unsafe void Fill<TPixel>(this in ComputeContext context, IReadWriteTexture3D<TPixel> texture, TPixel value)
+        where TPixel : unmanaged
+    {
+        var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
+
+        context.Fill(
+            ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice),
+            handles.Gpu,
+            handles.Cpu,
+            DXGIFormatHelper.ExtendToNormalizedValue(value));
     }
 
     /// <summary>

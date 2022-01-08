@@ -2,9 +2,6 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.__Internals;
-
-#pragma warning disable CS0618
 
 namespace ComputeSharp;
 
@@ -18,7 +15,7 @@ namespace ComputeSharp;
 /// </summary>
 /// <remarks>This struct is fully mutable.</remarks>
 [StructLayout(LayoutKind.Sequential)]
-public struct Bgra32 : IEquatable<Bgra32>, IUnorm<Vector4>, IUnorm<Float4>
+public struct Bgra32 : IEquatable<Bgra32>, IPixel<Bgra32, Float4>
 #if NET6_0_OR_GREATER
     , ISpanFormattable
 #endif
@@ -52,10 +49,10 @@ public struct Bgra32 : IEquatable<Bgra32>, IUnorm<Vector4>, IUnorm<Float4>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Bgra32(byte r, byte g, byte b)
     {
-        R = r;
-        G = g;
-        B = b;
-        A = byte.MaxValue;
+        this.R = r;
+        this.G = g;
+        this.B = b;
+        this.A = byte.MaxValue;
     }
 
     /// <summary>
@@ -68,10 +65,10 @@ public struct Bgra32 : IEquatable<Bgra32>, IUnorm<Vector4>, IUnorm<Float4>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Bgra32(byte r, byte g, byte b, byte a)
     {
-        R = r;
-        G = g;
-        B = b;
-        A = a;
+        this.R = r;
+        this.G = g;
+        this.B = b;
+        this.A = a;
     }
 
     /// <summary>
@@ -80,10 +77,20 @@ public struct Bgra32 : IEquatable<Bgra32>, IUnorm<Vector4>, IUnorm<Float4>
     public uint PackedValue
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        readonly get => Unsafe.As<Bgra32, uint>(ref Unsafe.AsRef(this));
+        readonly get => Unsafe.As<Bgra32, uint>(ref Unsafe.AsRef(in this));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         set => Unsafe.As<Bgra32, uint>(ref this) = value;
+    }
+
+    /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly Float4 ToPixel()
+    {
+        Vector4 linear = new(this.R, this.G, this.B, this.A);
+        Vector4 normalized = linear / byte.MaxValue;
+
+        return normalized;
     }
 
     /// <summary>

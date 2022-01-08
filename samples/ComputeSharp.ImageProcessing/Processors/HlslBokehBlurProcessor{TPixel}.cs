@@ -270,10 +270,10 @@ public sealed partial class HlslBokehBlurProcessor
 
             Span<Rgba32> span = MemoryMarshal.Cast<ImageSharpRgba32, Rgba32>(pixelSpan);
 
-            using ReadWriteTexture2D<Rgba32, Vector4> texture = GraphicsDevice.AllocateReadWriteTexture2D<Rgba32, Vector4>(span, source.Width, source.Height);
-            using ReadWriteTexture2D<Vector4> temporary = GraphicsDevice.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height, AllocationMode.Clear);
-            using ReadWriteTexture2D<Vector4> reals = GraphicsDevice.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
-            using ReadWriteTexture2D<Vector4> imaginaries = GraphicsDevice.AllocateReadWriteTexture2D<Vector4>(source.Width, source.Height);
+            using ReadWriteTexture2D<Rgba32, float4> texture = GraphicsDevice.AllocateReadWriteTexture2D<Rgba32, float4>(span, source.Width, source.Height);
+            using ReadWriteTexture2D<float4> temporary = GraphicsDevice.AllocateReadWriteTexture2D<float4>(source.Width, source.Height, AllocationMode.Clear);
+            using ReadWriteTexture2D<float4> reals = GraphicsDevice.AllocateReadWriteTexture2D<float4>(source.Width, source.Height);
+            using ReadWriteTexture2D<float4> imaginaries = GraphicsDevice.AllocateReadWriteTexture2D<float4>(source.Width, source.Height);
             using ReadOnlyBuffer<Complex64> kernel = GraphicsDevice.AllocateReadOnlyBuffer<Complex64>(KernelSize);
 
             // Preliminary gamma highlight pass
@@ -315,16 +315,16 @@ public sealed partial class HlslBokehBlurProcessor
         [AutoConstructor]
         internal partial struct VerticalConvolutionProcessor : IComputeShader
         {
-            public IReadWriteTexture2D<Vector4> source;
-            public ReadWriteTexture2D<Vector4> reals;
-            public ReadWriteTexture2D<Vector4> imaginaries;
+            public IReadWriteTexture2D<float4> source;
+            public ReadWriteTexture2D<float4> reals;
+            public ReadWriteTexture2D<float4> imaginaries;
             public ReadOnlyBuffer<Complex64> kernel;
 
             /// <inheritdoc/>
             public void Execute()
             {
-                Vector4 real = Vector4.Zero;
-                Vector4 imaginary = Vector4.Zero;
+                float4 real = float4.Zero;
+                float4 imaginary = float4.Zero;
                 int maxY = source.Height;
                 int maxX = source.Width;
                 int kernelLength = kernel.Length;
@@ -334,7 +334,7 @@ public sealed partial class HlslBokehBlurProcessor
                 {
                     int offsetY = Hlsl.Clamp(ThreadIds.Y + i - radiusY, 0, maxY);
                     int offsetX = Hlsl.Clamp(ThreadIds.X, 0, maxX);
-                    Vector4 color = source[offsetX, offsetY];
+                    float4 color = source[offsetX, offsetY];
                     Complex64 factors = kernel[i];
 
                     real += factors.Real * color;
@@ -355,16 +355,16 @@ public sealed partial class HlslBokehBlurProcessor
             public float z;
             public float w;
 
-            public ReadWriteTexture2D<Vector4> reals;
-            public ReadWriteTexture2D<Vector4> imaginaries;
-            public ReadWriteTexture2D<Vector4> target;
+            public ReadWriteTexture2D<float4> reals;
+            public ReadWriteTexture2D<float4> imaginaries;
+            public ReadWriteTexture2D<float4> target;
             public ReadOnlyBuffer<Complex64> kernel;
 
             /// <inheritdoc/>
             public void Execute()
             {
-                Vector4 real = Vector4.Zero;
-                Vector4 imaginary = Vector4.Zero;
+                float4 real = float4.Zero;
+                float4 imaginary = float4.Zero;
                 int maxY = target.Height;
                 int maxX = target.Width;
                 int kernelLength = kernel.Length;
@@ -374,8 +374,8 @@ public sealed partial class HlslBokehBlurProcessor
                 for (int i = 0; i < kernelLength; i++)
                 {
                     int offsetX = Hlsl.Clamp(ThreadIds.X + i - radiusX, 0, maxX);
-                    Vector4 sourceReal = reals[offsetX, offsetY];
-                    Vector4 sourceImaginary = imaginaries[offsetX, offsetY];
+                    float4 sourceReal = reals[offsetX, offsetY];
+                    float4 sourceImaginary = imaginaries[offsetX, offsetY];
                     Complex64 factors = kernel[i];
 
                     real += factors.Real * sourceReal - factors.Imaginary * sourceImaginary;
@@ -392,7 +392,7 @@ public sealed partial class HlslBokehBlurProcessor
         [AutoConstructor]
         internal readonly partial struct GammaHighlightProcessor : IComputeShader
         {
-            public readonly IReadWriteTexture2D<Vector4> source;
+            public readonly IReadWriteTexture2D<float4> source;
 
             /// <inheritdoc/>
             public void Execute()
@@ -416,8 +416,8 @@ public sealed partial class HlslBokehBlurProcessor
         [AutoConstructor]
         internal readonly partial struct InverseGammaHighlightProcessor : IComputeShader
         {
-            public readonly ReadWriteTexture2D<Vector4> source;
-            public readonly IReadWriteTexture2D<Vector4> target;
+            public readonly ReadWriteTexture2D<float4> source;
+            public readonly IReadWriteTexture2D<float4> target;
 
             /// <inheritdoc/>
             public void Execute()
