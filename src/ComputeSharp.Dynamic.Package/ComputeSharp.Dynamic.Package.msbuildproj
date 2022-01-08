@@ -16,6 +16,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp.Dynamic\ComputeSharp.Dynamic.csproj" />
+    <ProjectReference Include="..\ComputeSharp.Package\ComputeSharp.Package.msbuildproj">
+      <AdditionalProperties>PackageVersion=$(PackageVersion)</AdditionalProperties>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>
