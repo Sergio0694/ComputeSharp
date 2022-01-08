@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -12,7 +11,7 @@ namespace ComputeSharp;
 /// </para>
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct Rg32 : IEquatable<Rg32>, IPixel<Rg32, Vector2>, IPixel<Rg32, Float2>
+public struct Rg32 : IEquatable<Rg32>, IPixel<Rg32, Float2>
 #if NET6_0_OR_GREATER
     , ISpanFormattable
 #endif

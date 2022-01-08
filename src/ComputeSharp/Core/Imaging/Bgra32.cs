@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -15,7 +14,7 @@ namespace ComputeSharp;
 /// </summary>
 /// <remarks>This struct is fully mutable.</remarks>
 [StructLayout(LayoutKind.Sequential)]
-public struct Bgra32 : IEquatable<Bgra32>, IPixel<Bgra32, Vector4>, IPixel<Bgra32, Float4>
+public struct Bgra32 : IEquatable<Bgra32>, IPixel<Bgra32, Float4>
 #if NET6_0_OR_GREATER
     , ISpanFormattable
 #endif
