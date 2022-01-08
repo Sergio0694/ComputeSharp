@@ -50,7 +50,7 @@ internal static class DXGIFormatHelper
     /// Gets whether or not the input type corresponds to a normalized format.
     /// </summary>
     /// <typeparam name="T">The input type argument to check.</typeparam>
-    /// <returns>TWhether or not the input type corresponds to a normalized format..</returns>
+    /// <returns>Whether or not the input type corresponds to a normalized format.</returns>
     /// <exception cref="System.ArgumentException">Thrown when the input type <typeparamref name="T"/> is not supported.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNormalizedType<T>()
@@ -87,5 +87,109 @@ internal static class DXGIFormatHelper
         }
         
         return ThrowHelper.ThrowArgumentException<bool>("Invalid texture type");
+    }
+
+    /// <summary>
+    /// Extends a given pixel type to its <see cref="Float4"/> equivalent.
+    /// </summary>
+    /// <typeparam name="T">The input pixel value to convert.</typeparam>
+    /// <returns>The <see cref="Float4"/> equivalent value for <paramref name="value"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Float4 ExtendToNormalizedValue<T>(ref T value)
+        where T : unmanaged
+    {
+        if (typeof(T) == typeof(Float4))
+        {
+            return Unsafe.As<T, Float4>(ref value);
+        }
+
+        Float4 result = default;
+
+        Unsafe.As<Float4, T>(ref result) = value;
+
+        return result;
+    }
+
+    /// <summary>
+    /// Converts a given value to a normalized value.
+    /// </summary>
+    /// <typeparam name="T">The input value to convert.</typeparam>
+    /// <returns>The normalized value for <paramref name="value"/>.</returns>
+    /// <exception cref="System.ArgumentException">Thrown when the input type <typeparamref name="T"/> is not supported.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Float4 ConvertToNormalizedValue<T>(ref T value)
+        where T : unmanaged
+    {
+        if (typeof(T) == typeof(Bgra32))
+        {
+            ref Bgra32 bgra = ref Unsafe.As<T, Bgra32>(ref value);
+
+            Vector4 linear = new(bgra.R, bgra.G, bgra.B, bgra.A);
+            Vector4 normalized = linear / byte.MaxValue;
+
+            return normalized;
+        }
+        
+        if (typeof(T) == typeof(Rgba32))
+        {
+            ref Rgba32 rgba = ref Unsafe.As<T, Rgba32>(ref value);
+
+            Vector4 linear = new(rgba.R, rgba.G, rgba.B, rgba.A);
+            Vector4 normalized = linear / byte.MaxValue;
+
+            return normalized;
+        }
+        
+        if (typeof(T) == typeof(Rgba64))
+        {
+            ref Rgba64 rgba = ref Unsafe.As<T, Rgba64>(ref value);
+
+            Vector4 linear = new(rgba.R, rgba.G, rgba.B, rgba.A);
+            Vector4 normalized = linear / ushort.MaxValue;
+
+            return normalized;
+        }
+        
+        if (typeof(T) == typeof(R8))
+        {
+            ref R8 r = ref Unsafe.As<T, R8>(ref value);
+
+            Vector4 linear = new(r.R, 0, 0, 0);
+            Vector4 normalized = linear / byte.MaxValue;
+
+            return normalized;
+        }
+        
+        if (typeof(T) == typeof(R16))
+        {
+            ref R16 r = ref Unsafe.As<T, R16>(ref value);
+
+            Vector4 linear = new(r.R, 0, 0, 0);
+            Vector4 normalized = linear / ushort.MaxValue;
+
+            return normalized;
+        }
+        
+        if (typeof(T) == typeof(Rg16))
+        {
+            ref Rg16 rg = ref Unsafe.As<T, Rg16>(ref value);
+
+            Vector4 linear = new(rg.R, rg.G, 0, 0);
+            Vector4 normalized = linear / byte.MaxValue;
+
+            return normalized;
+        }
+        
+        if (typeof(T) == typeof(Rg32))
+        {
+            ref Rg32 rg = ref Unsafe.As<T, Rg32>(ref value);
+
+            Vector4 linear = new(rg.R, rg.G, 0, 0);
+            Vector4 normalized = linear / ushort.MaxValue;
+
+            return normalized;
+        }        
+
+        return ThrowHelper.ThrowArgumentException<Float4>("Invalid pixel type");
     }
 }
