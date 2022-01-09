@@ -175,6 +175,7 @@ partial class SwapChainManager<TOwner>
     /// <summary>
     /// The core render loop.
     /// </summary>
+    [MethodImpl(MethodImplOptions.NoInlining)]
     private void RenderLoop()
     {
         Stopwatch renderStopwatch = this.renderStopwatch ??= new();
@@ -218,6 +219,7 @@ partial class SwapChainManager<TOwner>
     /// <summary>
     /// The core render loop with dynamic resolution.
     /// </summary>
+    [MethodImpl(MethodImplOptions.NoInlining)]
     private void RenderLoopWithDynamicResolution()
     {
         Stopwatch renderStopwatch = this.renderStopwatch ??= new();
