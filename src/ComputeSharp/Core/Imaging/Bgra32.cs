@@ -2,6 +2,10 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+#if NET6_0_OR_GREATER
+using System.Runtime.Intrinsics;
+using System.Runtime.Intrinsics.X86;
+#endif
 
 namespace ComputeSharp;
 
@@ -87,6 +91,22 @@ public struct Bgra32 : IEquatable<Bgra32>, IPixel<Bgra32, Float4>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly Float4 ToPixel()
     {
+#if NET6_0_OR_GREATER
+        if (Sse2.IsSupported)
+        {
+            int pack = Unsafe.As<Bgra32, int>(ref Unsafe.AsRef(in this));
+            Vector128<byte> vZero = Vector128<byte>.Zero;
+            Vector128<byte> vByte = Vector128.CreateScalarUnsafe(pack).AsByte();
+            Vector128<ushort> vUShort = Sse2.UnpackLow(vByte, vZero).AsUInt16();
+            Vector128<int> vInt = Sse2.UnpackLow(vUShort, vZero.AsUInt16()).AsInt32();
+            Vector128<int> vShuffle = Sse2.Shuffle(vInt, 0b11_00_01_10);
+            Vector128<float> vFloat = Sse2.ConvertToVector128Single(vShuffle);
+            Vector128<float> vMax = Vector128.Create((float)byte.MaxValue);
+            Vector128<float> vNorm = Sse.Divide(vFloat, vMax);
+
+            return vNorm.AsVector4();
+        }
+#endif
         Vector4 linear = new(this.R, this.G, this.B, this.A);
         Vector4 normalized = linear / byte.MaxValue;
 

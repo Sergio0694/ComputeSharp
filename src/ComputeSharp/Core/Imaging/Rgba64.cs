@@ -2,6 +2,10 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+#if NET6_0_OR_GREATER
+using System.Runtime.Intrinsics;
+using System.Runtime.Intrinsics.X86;
+#endif
 
 namespace ComputeSharp;
 
@@ -86,6 +90,19 @@ public struct Rgba64 : IEquatable<Rgba64>, IPixel<Rgba64, Float4>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly Float4 ToPixel()
     {
+#if NET6_0_OR_GREATER
+        if (Sse2.IsSupported)
+        {
+            long pack = Unsafe.As<Rgba64, long>(ref Unsafe.AsRef(in this));
+            Vector128<ushort> vUShort = Vector128.CreateScalarUnsafe(pack).AsUInt16();
+            Vector128<int> vInt = Sse2.UnpackLow(vUShort, Vector128<ushort>.Zero).AsInt32();
+            Vector128<float> vFloat = Sse2.ConvertToVector128Single(vInt);
+            Vector128<float> vMax = Vector128.Create((float)ushort.MaxValue);
+            Vector128<float> vNorm = Sse.Divide(vFloat, vMax);
+
+            return vNorm.AsVector4();
+        }
+#endif
         Vector4 linear = new(this.R, this.G, this.B, this.A);
         Vector4 normalized = linear / ushort.MaxValue;
 
