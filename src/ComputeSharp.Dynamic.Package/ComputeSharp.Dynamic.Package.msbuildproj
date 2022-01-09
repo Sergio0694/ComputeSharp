@@ -16,7 +16,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ComputeSharp.Dynamic\ComputeSharp.Dynamic.csproj" />
-    <ProjectReference Include="..\ComputeSharp.Package\ComputeSharp.Package.msbuildproj">
+    <ProjectReference Include="..\ComputeSharp.Package\ComputeSharp.Package.msbuildproj" TargetFramework="net6.0">
+      <AdditionalProperties>PackageVersion=$(PackageVersion)</AdditionalProperties>
+    </ProjectReference>
+    <ProjectReference Include="..\ComputeSharp.Package\ComputeSharp.Package.msbuildproj" TargetFramework="netstandard2.0">
       <AdditionalProperties>PackageVersion=$(PackageVersion)</AdditionalProperties>
     </ProjectReference>
   </ItemGroup>
