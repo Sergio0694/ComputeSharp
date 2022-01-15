@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Helpers;
+using TerraFX.Interop.DirectX;
 
 #pragma warning disable CS0618
 
@@ -360,5 +361,39 @@ public static class ComputeContextExtensions
         where TPixel : unmanaged
     {
         context.Run(texture, ref Unsafe.AsRef(in shader));
+    }
+
+    /// <summary>
+    /// Transitions the state of a specific resource.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture2D{T,TPixel}"/> instance to transition.</param>
+    /// <param name="resourceState">The state to transition the input resource to.</param>
+    public static unsafe void Transition<T, TPixel>(this in ComputeContext context, ReadWriteTexture2D<T, TPixel> texture, ResourceState resourceState)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
+    {
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+
+        context.Transition(d3D12Resource, states.Before, states.After);
+    }
+
+    /// <summary>
+    /// Transitions the state of a specific resource.
+    /// </summary>
+    /// <typeparam name="T">The type of items stored on the texture.</typeparam>
+    /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture2D{T,TPixel}"/> instance to transition.</param>
+    /// <param name="resourceState">The state to transition the input resource to.</param>
+    public static unsafe void Transition<T, TPixel>(this in ComputeContext context, ReadWriteTexture3D<T, TPixel> texture, ResourceState resourceState)
+        where T : unmanaged, IPixel<T, TPixel>
+        where TPixel : unmanaged
+    {
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+
+        context.Transition(d3D12Resource, states.Before, states.After);
     }
 }
