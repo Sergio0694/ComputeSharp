@@ -12016,7 +12016,7 @@ public static partial class Hlsl
     /// <returns>The normalized <paramref name="x"/> parameter. If the length of the <paramref name="x"/> parameter is 0, the result is indefinite.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("normalize")]
-    public static float Normalize(Float2 x) => default;
+    public static float Normalize(float x) => default;
 
     /// <summary>
     /// Normalizes the specified floating-point vector according to x / length(x).
@@ -12025,7 +12025,7 @@ public static partial class Hlsl
     /// <returns>The normalized <paramref name="x"/> parameter. If the length of the <paramref name="x"/> parameter is 0, the result is indefinite.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("normalize")]
-    public static float Normalize(Float3 x) => default;
+    public static Float2 Normalize(Float2 x) => default;
 
     /// <summary>
     /// Normalizes the specified floating-point vector according to x / length(x).
@@ -12034,7 +12034,16 @@ public static partial class Hlsl
     /// <returns>The normalized <paramref name="x"/> parameter. If the length of the <paramref name="x"/> parameter is 0, the result is indefinite.</returns>
     /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
     [HlslIntrinsicName("normalize")]
-    public static float Normalize(Float4 x) => default;
+    public static Float3 Normalize(Float3 x) => default;
+
+    /// <summary>
+    /// Normalizes the specified floating-point vector according to x / length(x).
+    /// </summary>
+    /// <param name="x">The specified floating-point vector.</param>
+    /// <returns>The normalized <paramref name="x"/> parameter. If the length of the <paramref name="x"/> parameter is 0, the result is indefinite.</returns>
+    /// <remarks>This method is an intrinsic and can only be used within a shader on the GPU. Using it on the CPU is undefined behavior.</remarks>
+    [HlslIntrinsicName("normalize")]
+    public static Float4 Normalize(Float4 x) => default;
 
     /// <summary>
     /// Returns the specified value raised to the specified power.
