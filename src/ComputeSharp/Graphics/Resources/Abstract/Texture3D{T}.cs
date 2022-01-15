@@ -5,6 +5,7 @@ using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Commands.Interop;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
+using ComputeSharp.Graphics.Resources.Helpers;
 using ComputeSharp.Graphics.Resources.Interop;
 using ComputeSharp.Interop;
 using Microsoft.Toolkit.Diagnostics;
@@ -45,11 +46,6 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     private readonly ID3D12ResourceDescriptorHandles d3D12ResourceDescriptorHandles;
 
     /// <summary>
-    /// The default <see cref="D3D12_RESOURCE_STATES"/> value for the current resource.
-    /// </summary>
-    private readonly D3D12_RESOURCE_STATES d3D12ResourceState;
-
-    /// <summary>
     /// The <see cref="D3D12_COMMAND_LIST_TYPE"/> value to use for copy operations.
     /// </summary>
     private readonly D3D12_COMMAND_LIST_TYPE d3D12CommandListType;
@@ -58,6 +54,11 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     /// The <see cref="D3D12_PLACED_SUBRESOURCE_FOOTPRINT"/> description for the current resource.
     /// </summary>
     private readonly D3D12_PLACED_SUBRESOURCE_FOOTPRINT d3D12PlacedSubresourceFootprint;
+
+    /// <summary>
+    /// The current <see cref="D3D12_RESOURCE_STATES"/> value for the current resource.
+    /// </summary>
+    private D3D12_RESOURCE_STATES d3D12ResourceState;
 
     /// <summary>
     /// Creates a new <see cref="Texture3D{T}"/> instance with the specified parameters.
@@ -625,6 +626,22 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
         return D3D12Resource;
     }
 
+    /// <inheritdoc cref="GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice, ResourceState, out ID3D12Resource*)"/>
+    internal (D3D12_RESOURCE_STATES Before, D3D12_RESOURCE_STATES After) ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource)
+    {
+        ThrowIfDisposed();
+        ThrowIfDeviceMismatch(device);
+
+        D3D12_RESOURCE_STATES d3D12ResourceStatesBefore = this.d3D12ResourceState;
+        D3D12_RESOURCE_STATES d3D12ResourceStatesAfter = ResourceStateHelper.GetD3D12ResourceStates(resourceState);
+
+        this.d3D12ResourceState = d3D12ResourceStatesAfter;
+
+        d3D12Resource = D3D12Resource;
+
+        return (d3D12ResourceStatesBefore, d3D12ResourceStatesAfter);
+    }
+
     /// <inheritdoc/>
     D3D12_GPU_DESCRIPTOR_HANDLE GraphicsResourceHelper.IGraphicsResource.ValidateAndGetGpuDescriptorHandle(GraphicsDevice device)
     {
@@ -644,5 +661,11 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     ID3D12Resource* GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12Resource(GraphicsDevice device)
     {
         return ValidateAndGetID3D12Resource(device);
+    }
+
+    /// <inheritdoc/>
+    (D3D12_RESOURCE_STATES, D3D12_RESOURCE_STATES) GraphicsResourceHelper.IGraphicsResource.ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource)
+    {
+        return ValidateAndGetID3D12ResourceAndTransitionStates(device, resourceState, out d3D12Resource);
     }
 }
