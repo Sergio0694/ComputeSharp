@@ -130,19 +130,24 @@ internal abstract class ExecuteMethodRewriter : CSharpSyntaxRewriter
         {
             var updatedNode = (ReturnStatementSyntax)base.VisitReturnStatement(node)!;
 
-            // __outputTexture[ThreadIds.xy] = <RETURN_EXPRESSION>;
+            // {
+            //     __outputTexture[ThreadIds.xy] = <RETURN_EXPRESSION>;
+            //     return;
+            // }
             return
-                ExpressionStatement(
-                    AssignmentExpression(
-                        SyntaxKind.SimpleAssignmentExpression,
-                        ElementAccessExpression(IdentifierName("__outputTexture"))
-                        .AddArgumentListArguments(
-                            Argument(
-                                MemberAccessExpression(
-                                    SyntaxKind.SimpleMemberAccessExpression,
-                                    IdentifierName("ThreadIds"),
-                                    IdentifierName("xy")))),
-                        updatedNode.Expression!));
+                Block(
+                    ExpressionStatement(
+                        AssignmentExpression(
+                            SyntaxKind.SimpleAssignmentExpression,
+                            ElementAccessExpression(IdentifierName("__outputTexture"))
+                            .AddArgumentListArguments(
+                                Argument(
+                                    MemberAccessExpression(
+                                        SyntaxKind.SimpleMemberAccessExpression,
+                                        IdentifierName("ThreadIds"),
+                                        IdentifierName("xy")))),
+                            updatedNode.Expression!)),
+                    ReturnStatement());
         }
 
         /// <inheritdoc/>
