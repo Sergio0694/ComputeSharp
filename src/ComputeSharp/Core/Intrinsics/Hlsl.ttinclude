@@ -1916,9 +1916,10 @@ var Intrinsics = new[]
         Returns = "The normalized {x} parameter. If the length of the {x} parameter is 0, the result is indefinite.",
         Overloads = new[]
         {
-            new { Return = "float", Params = new[] { "Float2" } },
-            new { Return = "float", Params = new[] { "Float3" } },
-            new { Return = "float", Params = new[] { "Float4" } }
+            new { Return = "float", Params = new[] { "float" } },
+            new { Return = "Float2", Params = new[] { "Float2" } },
+            new { Return = "Float3", Params = new[] { "Float3" } },
+            new { Return = "Float4", Params = new[] { "Float4" } }
         }
     },
     new
