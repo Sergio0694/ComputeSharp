@@ -102,16 +102,16 @@ partial class ReadWriteTexture2D<T, TPixel>
         }
 
         /// <inheritdoc/>
-        public TPixel this[int x, int y] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T, TPixel>.ReadOnly)}[{typeof(int)}, {typeof(int)}]");
+        public ref readonly TPixel this[int x, int y] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T, TPixel>.ReadOnly)}[{typeof(int)}, {typeof(int)}]");
 
         /// <inheritdoc/>
-        public TPixel this[Int2 xy] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T, TPixel>.ReadOnly)}[{typeof(Int2)}]");
+        public ref readonly TPixel this[Int2 xy] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T, TPixel>.ReadOnly)}[{typeof(Int2)}]");
 
         /// <inheritdoc/>
-        public TPixel this[float u, float v] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T, TPixel>.ReadOnly)}[{typeof(float)}, {typeof(float)}]");
+        public ref readonly TPixel this[float u, float v] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T, TPixel>.ReadOnly)}[{typeof(float)}, {typeof(float)}]");
 
         /// <inheritdoc/>
-        public TPixel this[Float2 uv] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T, TPixel>.ReadOnly)}[{typeof(Float2)}]");
+        public ref readonly TPixel this[Float2 uv] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T, TPixel>.ReadOnly)}[{typeof(Float2)}]");
 
         /// <inheritdoc/>
         public int Width => this.owner.Width;
