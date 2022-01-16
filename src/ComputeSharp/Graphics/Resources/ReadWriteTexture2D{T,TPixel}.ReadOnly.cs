@@ -31,20 +31,7 @@ partial class ReadWriteTexture2D<T, TPixel>
         GraphicsDevice.ThrowIfDisposed();
 
         ThrowIfDisposed();
-
-        if (!IsInReadOnlyState)
-        {
-            static void Throw()
-            {
-                throw new InvalidOperationException(
-                    "The texture is not currently in readonly mode. This API can only be used when creating a compute graph with " +
-                    "the ComputeContext type, and after having used ComputeContext.Transition() to change the state of the texture.");
-            }
-
-            Throw();
-        }
-
-        GetWrapperAndReturnIfNotNull:
+        ThrowIfIsNotInReadOnlyState();
 
         ReadOnly? readOnlyWrapper = this.readOnlyWrapper;
 
@@ -53,19 +40,16 @@ partial class ReadWriteTexture2D<T, TPixel>
             return readOnlyWrapper;
         }
 
-        // The wrapper initialization is moved to a non inlined helper to keep the codegen of this
-        // method as compact as possible. If the current wrapper is not initialized, a new one is
-        // created, then code jumps back to the check. This allows the method to have a single exit
-        // point, which further improves the final codegen.
+        // The wrapper initialization is moved to a non inlined helper to keep the codegen of this method
+        // as compact as possible. If the current wrapper is not initialized, control goes directly to the
+        // helper that will initialize and return it, which translates to a single jump.
         [MethodImpl(MethodImplOptions.NoInlining)]
-        static void InitializeWrapper(ReadWriteTexture2D<T, TPixel> texture)
+        static ReadOnly InitializeWrapper(ReadWriteTexture2D<T, TPixel> texture)
         {
-            texture.readOnlyWrapper = new ReadOnly(texture);
+            return texture.readOnlyWrapper = new(texture);
         }
 
-        InitializeWrapper(this);
-
-        goto GetWrapperAndReturnIfNotNull;
+        return InitializeWrapper(this);
     }
 
     /// <inheritdoc/>

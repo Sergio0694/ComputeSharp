@@ -31,20 +31,7 @@ partial class ReadWriteTexture3D<T, TPixel>
         GraphicsDevice.ThrowIfDisposed();
 
         ThrowIfDisposed();
-
-        if (!IsInReadOnlyState)
-        {
-            static void Throw()
-            {
-                throw new InvalidOperationException(
-                    "The texture is not currently in readonly mode. This API can only be used when creating a compute graph with " +
-                    "the ComputeContext type, and after having used ComputeContext.Transition() to change the state of the texture.");
-            }
-
-            Throw();
-        }
-
-        GetWrapperAndReturnIfNotNull:
+        ThrowIfIsNotInReadOnlyState();
 
         ReadOnly? readOnlyWrapper = this.readOnlyWrapper;
 
@@ -54,14 +41,12 @@ partial class ReadWriteTexture3D<T, TPixel>
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        static void InitializeWrapper(ReadWriteTexture3D<T, TPixel> texture)
+        static ReadOnly InitializeWrapper(ReadWriteTexture3D<T, TPixel> texture)
         {
-            texture.readOnlyWrapper = new ReadOnly(texture);
+            return texture.readOnlyWrapper = new(texture);
         }
 
-        InitializeWrapper(this);
-
-        goto GetWrapperAndReturnIfNotNull;
+        return InitializeWrapper(this);
     }
 
     /// <inheritdoc/>

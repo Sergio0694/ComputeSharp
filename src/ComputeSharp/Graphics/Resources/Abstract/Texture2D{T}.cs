@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using ComputeSharp.__Internals;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Commands;
@@ -155,11 +156,6 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     /// Gets the <see cref="D3D12_GPU_DESCRIPTOR_HANDLE"/> instance for the current resource.
     /// </summary>
     internal D3D12_GPU_DESCRIPTOR_HANDLE D3D12GpuDescriptorHandle => this.d3D12ResourceDescriptorHandles.D3D12GpuDescriptorHandle;
-
-    /// <summary>
-    /// Gets whether or not the current resource is in readonly state.
-    /// </summary>
-    protected bool IsInReadOnlyState => this.d3D12ResourceState != D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
 
     /// <summary>
     /// Reads the contents of the specified range from the current <see cref="Texture2D{T}"/> instance and writes them into a target memory area.
@@ -543,6 +539,25 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
         {
             device.UnregisterAllocatedResource();
             device.ReturnShaderResourceViewDescriptorHandles(in this.d3D12ResourceDescriptorHandles);
+        }
+    }
+
+    /// <summary>
+    /// Throws an <see cref="InvalidOperationException"/> if the current resource is not in a readonly state.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    protected void ThrowIfIsNotInReadOnlyState()
+    {
+        if (this.d3D12ResourceState == D3D12_RESOURCE_STATE_UNORDERED_ACCESS)
+        {
+            static void Throw()
+            {
+                throw new InvalidOperationException(
+                    "The texture is not currently in readonly mode. This API can only be used when creating a compute graph with " +
+                    "the ComputeContext type, and after having used ComputeContext.Transition() to change the state of the texture.");
+            }
+
+            Throw();
         }
     }
 
