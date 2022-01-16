@@ -68,6 +68,14 @@ partial class ReadWriteTexture2D<T, TPixel>
         goto GetWrapperAndReturnIfNotNull;
     }
 
+    /// <inheritdoc/>
+    protected override void OnDispose()
+    {
+        base.OnDispose();
+
+        this.readOnlyWrapper?.Dispose();
+    }
+
     /// <summary>
     /// A wrapper for a <see cref="ReadWriteTexture2D{T, TPixel}"/> resource that has been temporarily transitioned to readonly.
     /// </summary>
