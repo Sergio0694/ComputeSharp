@@ -14,7 +14,7 @@ using static TerraFX.Interop.DirectX.D3D12_SRV_DIMENSION;
 namespace ComputeSharp;
 
 /// <inheritdoc/>
-partial class ReadWriteTexture2D<T, TPixel>
+partial class ReadWriteTexture3D<T, TPixel>
 {
     /// <summary>
     /// The wrapping <see cref="ReadOnly"/> instance, if available.
@@ -22,11 +22,11 @@ partial class ReadWriteTexture2D<T, TPixel>
     private ReadOnly? readOnlyWrapper;
 
     /// <summary>
-    /// Retrieves a wrapping <see cref="IReadOnlyTexture2D{TPixel}"/> instance for the current resource.
+    /// Retrieves a wrapping <see cref="IReadOnlyTexture3D{TPixel}"/> instance for the current resource.
     /// </summary>
-    /// <returns>An <see cref="IReadOnlyTexture2D{TPixel}"/> instance wrapping the current resource.</returns>
+    /// <returns>An <see cref="IReadOnlyTexture3D{TPixel}"/> instance wrapping the current resource.</returns>
     /// <remarks>The returned instance can be used in a shader to enable texture sampling.</remarks>
-    public IReadOnlyTexture2D<TPixel> AsReadOnly()
+    public IReadOnlyTexture3D<TPixel> AsReadOnly()
     {
         GraphicsDevice.ThrowIfDisposed();
 
@@ -53,12 +53,8 @@ partial class ReadWriteTexture2D<T, TPixel>
             return readOnlyWrapper;
         }
 
-        // The wrapper initialization is moved to a non inlined helper to keep the codegen of this
-        // method as compact as possible. If the current wrapper is not initialized, a new one is
-        // created, then code jumps back to the check. This allows the method to have a single exit
-        // point, which further improves the final codegen.
         [MethodImpl(MethodImplOptions.NoInlining)]
-        static void InitializeWrapper(ReadWriteTexture2D<T, TPixel> texture)
+        static void InitializeWrapper(ReadWriteTexture3D<T, TPixel> texture)
         {
             texture.readOnlyWrapper = new ReadOnly(texture);
         }
@@ -77,14 +73,14 @@ partial class ReadWriteTexture2D<T, TPixel>
     }
 
     /// <summary>
-    /// A wrapper for a <see cref="ReadWriteTexture2D{T, TPixel}"/> resource that has been temporarily transitioned to readonly.
+    /// A wrapper for a <see cref="ReadWriteTexture3D{T, TPixel}"/> resource that has been temporarily transitioned to readonly.
     /// </summary>
-    private sealed unsafe class ReadOnly : NativeObject, IReadOnlyTexture2D<TPixel>, GraphicsResourceHelper.IGraphicsResource
+    private sealed unsafe class ReadOnly : NativeObject, IReadOnlyTexture3D<TPixel>, GraphicsResourceHelper.IGraphicsResource
     {
         /// <summary>
-        /// The owning <see cref="ReadWriteTexture2D{T, TPixel}"/> instance being wrapped.
+        /// The owning <see cref="ReadWriteTexture3D{T, TPixel}"/> instance being wrapped.
         /// </summary>
-        private readonly ReadWriteTexture2D<T, TPixel> owner;
+        private readonly ReadWriteTexture3D<T, TPixel> owner;
 
         /// <summary>
         /// The <see cref="ID3D12ResourceDescriptorHandles"/> instance for the current resource.
@@ -94,8 +90,8 @@ partial class ReadWriteTexture2D<T, TPixel>
         /// <summary>
         /// Creates a new <see cref="ReadOnly"/> instance with the specified parameters.
         /// </summary>
-        /// <param name="owner">The owning <see cref="ReadWriteTexture2D{T, TPixel}"/> instance to wrap.</param>
-        public ReadOnly(ReadWriteTexture2D<T, TPixel> owner)
+        /// <param name="owner">The owning <see cref="ReadWriteTexture3D{T, TPixel}"/> instance to wrap.</param>
+        public ReadOnly(ReadWriteTexture3D<T, TPixel> owner)
         {
             this.owner = owner;
 
@@ -105,22 +101,25 @@ partial class ReadWriteTexture2D<T, TPixel>
         }
 
         /// <inheritdoc/>
-        public TPixel this[int x, int y] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T, TPixel>.ReadOnly)}[{typeof(int)}, {typeof(int)}]");
+        public TPixel this[int x, int y, int z] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T, TPixel>.ReadOnly)}[{typeof(int)}, {typeof(int)}, {typeof(int)}]");
 
         /// <inheritdoc/>
-        public TPixel this[Int2 xy] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T, TPixel>.ReadOnly)}[{typeof(Int2)}]");
+        public TPixel this[Int3 xyz] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T, TPixel>.ReadOnly)}[{typeof(Int3)}]");
 
         /// <inheritdoc/>
-        public TPixel this[float u, float v] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T, TPixel>.ReadOnly)}[{typeof(float)}, {typeof(float)}]");
+        public TPixel this[float u, float v, float w] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T, TPixel>.ReadOnly)}[{typeof(float)}, {typeof(float)}, {typeof(float)}]");
 
         /// <inheritdoc/>
-        public TPixel this[Float2 uv] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T, TPixel>.ReadOnly)}[{typeof(Float2)}]");
+        public TPixel this[Float3 uvw] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T, TPixel>.ReadOnly)}[{typeof(Float3)}]");
 
         /// <inheritdoc/>
         public int Width => this.owner.Width;
 
         /// <inheritdoc/>
         public int Height => this.owner.Height;
+
+        /// <inheritdoc/>
+        public int Depth => this.owner.Depth;
 
         /// <inheritdoc/>
         public GraphicsDevice GraphicsDevice => this.owner.GraphicsDevice;

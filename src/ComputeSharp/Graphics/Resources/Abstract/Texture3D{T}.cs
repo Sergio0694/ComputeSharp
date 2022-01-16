@@ -167,6 +167,11 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     internal D3D12_GPU_DESCRIPTOR_HANDLE D3D12GpuDescriptorHandle => this.d3D12ResourceDescriptorHandles.D3D12GpuDescriptorHandle;
 
     /// <summary>
+    /// Gets whether or not the current resource is in readonly state.
+    /// </summary>
+    protected bool IsInReadOnlyState => this.d3D12ResourceState != D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+
+    /// <summary>
     /// Reads the contents of the specified range from the current <see cref="Texture3D{T}"/> instance and writes them into a target memory area.
     /// </summary>
     /// <param name="destination">The target memory area to write data to.</param>
