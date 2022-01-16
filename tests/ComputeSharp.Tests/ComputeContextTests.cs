@@ -1,11 +1,16 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using ComputeSharp.Tests.Helpers;
 using Microsoft.Toolkit.HighPerformance;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
 namespace ComputeSharp.Tests;
 
@@ -885,6 +890,32 @@ public partial class ComputeContextTests
 
     [CombinatorialTestMethod]
     [AllDevices]
+    public void Transition_ReadWriteTexture2D(Device device)
+    {
+        _ = device.Get();
+
+        string imagingPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
+        string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
+
+        using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
+
+        using ReadWriteTexture2D<Rgba32, float4> source = device.Get().LoadReadWriteTexture2D<Rgba32, float4>(Path.Combine(imagingPath, "city.jpg"));
+        using ReadWriteTexture2D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(sampled.Width, sampled.Height);
+
+        using (var context = device.Get().CreateComputeContext())
+        {
+            context.Transition(source, ResourceState.ReadOnly);
+            context.ForEach(destination, new LinearSamplingPixelShader(source.AsReadOnly()));
+            context.Transition(source, ResourceState.ReadWrite);
+        }
+
+        using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
+
+        ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
     [ExpectedException(typeof(InvalidOperationException), AllowDerivedTypes = false)]
     public void Barrier_WithoutPreviousDispatches_ThrowsException(Device device)
     {
@@ -1035,6 +1066,18 @@ public partial class ComputeContextTests
         public float4 Execute()
         {
             return color;
+        }
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct LinearSamplingPixelShader : IPixelShader<float4>
+    {
+        public readonly IReadOnlyTexture2D<float4> source;
+
+        /// <inheritdoc/>
+        public float4 Execute()
+        {
+            return source[ThreadIds.Normalized.XY];
         }
     }
 }

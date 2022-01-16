@@ -4,6 +4,7 @@ using System.Reflection;
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
+using ComputeSharp.Tests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
@@ -46,14 +47,7 @@ public partial class Texture2DTests
             }
         }
 
-        try
-        {
-            new Action<Device, Type>(Test<Rgba32, float4>).Method.GetGenericMethodDefinition().MakeGenericMethod(t, tPixel).Invoke(null, new object[] { device, textureType });
-        }
-        catch (TargetInvocationException e) when (e.InnerException is not null)
-        {
-            throw e.InnerException;
-        }
+        TestHelper.Run(Test<Rgba32, float4>, t, tPixel, device, textureType);
     }
 
     [CombinatorialTestMethod]
@@ -119,5 +113,68 @@ public partial class Texture2DTests
         {
             return texture[ThreadIds.Normalized.XY];
         }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(typeof(Bgra32), typeof(float4))]
+    [Data(typeof(R16), typeof(float))]
+    [Data(typeof(R8), typeof(float))]
+    [Data(typeof(Rg16), typeof(float2))]
+    [Data(typeof(Rg32), typeof(float2))]
+    [Data(typeof(Rgba32), typeof(float4))]
+    [Data(typeof(Rgba64), typeof(float4))]
+    public void AsReadOnly_MultipleCalls_SameInstance(Device device, Type t, Type tPixel)
+    {
+        static void Test<T, TPixel>(Device device)
+            where T : unmanaged, IPixel<T, TPixel>
+            where TPixel : unmanaged
+        {
+            using ReadWriteTexture2D<T, TPixel> texture = device.Get().AllocateReadWriteTexture2D<T, TPixel>(64, 64);
+
+            using (var context = device.Get().CreateComputeContext())
+            {
+                context.Transition(texture, ResourceState.ReadOnly);
+
+                IReadOnlyTexture2D<TPixel> wrapper1 = texture.AsReadOnly();
+
+                Assert.IsNotNull(wrapper1);
+
+                IReadOnlyTexture2D<TPixel> wrapper2 = texture.AsReadOnly();
+
+                Assert.IsNotNull(wrapper2);
+                Assert.AreSame(wrapper1, wrapper2);
+
+                context.Transition(texture, ResourceState.ReadWrite);
+            }
+        }
+
+        TestHelper.Run(Test<Rgba32, float4>, t, tPixel, device);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Data(typeof(Bgra32), typeof(float4))]
+    [Data(typeof(R16), typeof(float))]
+    [Data(typeof(R8), typeof(float))]
+    [Data(typeof(Rg16), typeof(float2))]
+    [Data(typeof(Rg32), typeof(float2))]
+    [Data(typeof(Rgba32), typeof(float4))]
+    [Data(typeof(Rgba64), typeof(float4))]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void AsReadOnly_InvalidState_ThrowInvalidOperationException(Device device, Type t, Type tPixel)
+    {
+        static void Test<T, TPixel>(Device device)
+            where T : unmanaged, IPixel<T, TPixel>
+            where TPixel : unmanaged
+        {
+            using ReadWriteTexture2D<T, TPixel> texture = device.Get().AllocateReadWriteTexture2D<T, TPixel>(64, 64);
+
+            _ = texture.AsReadOnly();
+
+            Assert.Fail();
+        }
+
+        TestHelper.Run(Test<Rgba32, float4>, t, tPixel, device);
     }
 }
