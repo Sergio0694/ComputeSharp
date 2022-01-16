@@ -32,16 +32,16 @@ public sealed class ReadOnlyTexture3D<T, TPixel> : Texture3D<T>, IReadOnlyTextur
     }
 
     /// <inheritdoc/>
-    public TPixel this[int x, int y, int z] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T, TPixel>)}[{typeof(int)}, {typeof(int)}, {typeof(int)}]");
+    public ref readonly TPixel this[int x, int y, int z] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T, TPixel>)}[{typeof(int)}, {typeof(int)}, {typeof(int)}]");
 
     /// <inheritdoc/>
-    public TPixel this[Int3 xyz] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T, TPixel>)}[{typeof(Int3)}]");
+    public ref readonly TPixel this[Int3 xyz] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T, TPixel>)}[{typeof(Int3)}]");
 
     /// <inheritdoc/>
-    public TPixel this[float u, float v, float w] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T, TPixel>)}[{typeof(float)}, {typeof(float)}, {typeof(float)}]");
+    public ref readonly TPixel this[float u, float v, float w] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T, TPixel>)}[{typeof(float)}, {typeof(float)}, {typeof(float)}]");
 
     /// <inheritdoc/>
-    public TPixel this[Float3 uvw] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T, TPixel>)}[{typeof(Float3)}]");
+    public ref readonly TPixel this[Float3 uvw] => throw new InvalidExecutionContextException($"{typeof(ReadOnlyTexture3D<T, TPixel>)}[{typeof(Float3)}]");
 
     /// <inheritdoc/>
     public override string ToString()
