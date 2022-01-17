@@ -221,13 +221,12 @@ public readonly unsafe ref partial struct TextureView3D<T>
     /// For this API to succeed, the target <see cref="TextureView3D{T}"/> has to have the same shape as the current one.
     /// </summary>
     /// <param name="destination">The destination <see cref="TextureView3D{T}"/> instance.</param>
-    /// <exception cref="ArgumentException">
-    /// Thrown when <paramref name="destination" /> is shorter than the source <see cref="TextureView3D{T}"/> instance.
-    /// </exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="destination"/> doesn't match the size of the current <see cref="TextureView3D{T}"/> instance.</exception>
     public void CopyTo(TextureView3D<T> destination)
     {
         if (destination.width != this.width ||
-            destination.width != this.height)
+            destination.height != this.height ||
+            destination.depth != this.depth)
         {
             ThrowHelper.ThrowArgumentException();
         }
@@ -277,8 +276,9 @@ public readonly unsafe ref partial struct TextureView3D<T>
     /// <returns>Whether or not the operation was successful.</returns>
     public bool TryCopyTo(TextureView3D<T> destination)
     {
-        if (destination.width == this.width ||
-            destination.height == this.height)
+        if (destination.width == this.width &&
+            destination.height == this.height &&
+            destination.depth == this.depth)
         {
             CopyTo(destination);
 
@@ -332,9 +332,7 @@ public readonly unsafe ref partial struct TextureView3D<T>
     /// </summary>
     /// <param name="y">The index of the target row to retrieve.</param>
     /// <param name="z">The depth of the row to retrieve.</param>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// Throw when either <paramref name="y"/> or <paramref name="z"/> are out of range.
-    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when either <paramref name="y"/> or <paramref name="z"/> are out of range.</exception>
     /// <returns>The resulting row <see cref="Span{T}"/>.</returns>
     public Span<T> GetRowSpan(int y, int z)
     {
@@ -342,6 +340,23 @@ public readonly unsafe ref partial struct TextureView3D<T>
         Guard.IsInRange(z, 0, this.depth, nameof(z));
 
         return new((byte*)this.pointer + (z * this.height * this.strideInBytes) + (y * this.strideInBytes), this.width);
+    }
+
+    /// <summary>
+    /// Gets a <see cref="TextureView2D{T}"/> for a depth layer.
+    /// </summary>
+    /// <param name="z">The depth of the layer to retrieve.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="z"/> is out of range.</exception>
+    /// <returns>The resulting row <see cref="TextureView2D{T}"/>.</returns>
+    public TextureView2D<T> GetDepthView(int z)
+    {
+        Guard.IsInRange(z, 0, this.depth, nameof(z));
+
+        return new(
+            (T*)((byte*)this.pointer + (z * this.height * this.strideInBytes)),
+            this.width,
+            this.height,
+            this.strideInBytes);
     }
 
     /// <summary>
