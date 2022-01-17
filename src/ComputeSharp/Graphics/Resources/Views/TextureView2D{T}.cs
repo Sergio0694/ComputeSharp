@@ -55,7 +55,7 @@ public readonly unsafe ref partial struct TextureView2D<T>
     /// <summary>
     /// The row pitch of the specified 2D region.
     /// </summary>
-    private readonly int pitchInBytes;
+    private readonly int strideInBytes;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TextureView2D{T}"/> struct with the specified parameters.
@@ -69,7 +69,7 @@ public readonly unsafe ref partial struct TextureView2D<T>
         this.pointer = pointer;
         this.width = width;
         this.height = height;
-        this.pitchInBytes = pitchInBytes;
+        this.strideInBytes = pitchInBytes;
     }
 
     /// <summary>
@@ -130,7 +130,7 @@ public readonly unsafe ref partial struct TextureView2D<T>
             Guard.IsInRange(x, 0, this.width, nameof(x));
             Guard.IsInRange(y, 0, this.height, nameof(y));
 
-            return ref *((T*)((byte*)this.pointer + (y * this.pitchInBytes)) + x);
+            return ref *((T*)((byte*)this.pointer + (y * this.strideInBytes)) + x);
         }
     }
 
@@ -191,13 +191,11 @@ public readonly unsafe ref partial struct TextureView2D<T>
     /// For this API to succeed, the target <see cref="TextureView2D{T}"/> has to have the same shape as the current one.
     /// </summary>
     /// <param name="destination">The destination <see cref="TextureView2D{T}"/> instance.</param>
-    /// <exception cref="ArgumentException">
-    /// Thrown when <paramref name="destination" /> is shorter than the source <see cref="TextureView2D{T}"/> instance.
-    /// </exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="destination"/> doesn't match the size of the current <see cref="TextureView2D{T}"/> instance.</exception>
     public void CopyTo(TextureView2D<T> destination)
     {
         if (destination.width != this.width ||
-            destination.width != this.height)
+            destination.height != this.height)
         {
             ThrowHelper.ThrowArgumentException();
         }
@@ -244,7 +242,7 @@ public readonly unsafe ref partial struct TextureView2D<T>
     /// <returns>Whether or not the operation was successful.</returns>
     public bool TryCopyTo(TextureView2D<T> destination)
     {
-        if (destination.width == this.width ||
+        if (destination.width == this.width &&
             destination.height == this.height)
         {
             CopyTo(destination);
@@ -286,7 +284,7 @@ public readonly unsafe ref partial struct TextureView2D<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T* DangerousGetAddressAndByteStride(out int strideInBytes)
     {
-        strideInBytes = this.pitchInBytes;
+        strideInBytes = this.strideInBytes;
 
         return this.pointer;
     }
@@ -295,13 +293,13 @@ public readonly unsafe ref partial struct TextureView2D<T>
     /// Gets a <see cref="Span{T}"/> for a specified row.
     /// </summary>
     /// <param name="y">The index of the target row to retrieve.</param>
-    /// <exception cref="ArgumentOutOfRangeException">Throw when <paramref name="y"/> is out of range.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="y"/> is out of range.</exception>
     /// <returns>The resulting row <see cref="Span{T}"/>.</returns>
     public Span<T> GetRowSpan(int y)
     {
         Guard.IsInRange(y, 0, this.height, nameof(y));
 
-        return new((byte*)this.pointer + (y * this.pitchInBytes), this.width);
+        return new((byte*)this.pointer + (y * this.strideInBytes), this.width);
     }
 
     /// <summary>
@@ -311,7 +309,7 @@ public readonly unsafe ref partial struct TextureView2D<T>
     /// <returns>Whether or not <paramref name="span"/> was correctly assigned.</returns>
     public bool TryGetSpan(out Span<T> span)
     {
-        if (this.pitchInBytes == this.width)
+        if (this.strideInBytes == this.width)
         {
             span = new(this.pointer, Length);
 

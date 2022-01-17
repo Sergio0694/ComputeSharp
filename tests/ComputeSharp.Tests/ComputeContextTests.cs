@@ -1,11 +1,15 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
 using ComputeSharp.Tests.Helpers;
 using Microsoft.Toolkit.HighPerformance;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SixLabors.ImageSharp;
+using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
 namespace ComputeSharp.Tests;
 
@@ -885,6 +889,164 @@ public partial class ComputeContextTests
 
     [CombinatorialTestMethod]
     [AllDevices]
+    public void Transition_ReadWriteTexture2D(Device device)
+    {
+        _ = device.Get();
+
+        string imagingPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
+        string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
+
+        using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png"));
+
+        using ReadWriteTexture2D<Rgba32, float4> source = device.Get().LoadReadWriteTexture2D<Rgba32, float4>(Path.Combine(imagingPath, "city.jpg"));
+        using ReadWriteTexture2D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(sampled.Width, sampled.Height);
+
+        using (var context = device.Get().CreateComputeContext())
+        {
+            context.Transition(source, ResourceState.ReadOnly);
+            context.ForEach(destination, new LinearSampling2DPixelShader(source.AsReadOnly()));
+            context.Transition(source, ResourceState.ReadWrite);
+        }
+
+        using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
+
+        ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void Transition_ReadWriteTexture3D(Device device)
+    {
+        _ = device.Get();
+
+        string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
+        string originalPath = Path.Combine(assetsPath, "CityWith1920x1280Resizing.png");
+        string sampledPath = Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png");
+
+        var imageInfo = Image.Identify(originalPath);
+
+        using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, sampledPath));
+
+        using ReadWriteTexture3D<Rgba32, float4> source = device.Get().AllocateReadWriteTexture3D<Rgba32, float4>(imageInfo.Width, imageInfo.Height, 3);
+
+        using (UploadTexture2D<Rgba32> upload2D = device.Get().LoadUploadTexture2D<Rgba32>(originalPath))
+        using (UploadTexture3D<Rgba32> upload3D = device.Get().AllocateUploadTexture3D<Rgba32>(upload2D.Width, upload2D.Height, 2))
+        {
+            for (int z = 0; z < upload3D.Depth; z++)
+            {
+                upload2D.View.CopyTo(upload3D.View.GetDepthView(z));
+            }
+
+            upload3D.CopyTo(source);
+        }
+
+        using ReadWriteTexture3D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture3D<Rgba32, float4>(sampled.Width, sampled.Height, 2);
+
+        using (var context = device.Get().CreateComputeContext())
+        {
+            context.Transition(source, ResourceState.ReadOnly);
+            context.For(destination.Width, destination.Height, destination.Depth, new LinearSampling3DComputeShader(source.AsReadOnly(), destination));
+            context.Transition(source, ResourceState.ReadWrite);
+        }
+
+        for (int z = 0; z < destination.Depth; z++)
+        {
+            using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>(depth: z);
+
+            ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.000012f);
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void TransitionAndWrites_ReadWriteTexture2D(Device device)
+    {
+        _ = device.Get();
+
+        string imagingPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Imaging");
+        string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
+
+        using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, "CityAfter1024x1024SamplingAndDashing.png"));
+
+        using ReadWriteTexture2D<Rgba32, float4> source = device.Get().LoadReadWriteTexture2D<Rgba32, float4>(Path.Combine(imagingPath, "city.jpg"));
+        using ReadWriteTexture2D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture2D<Rgba32, float4>(sampled.Width, sampled.Height);
+
+        using (var context = device.Get().CreateComputeContext())
+        {
+            context.For(source.Width, source.Height, new Dotted2DPixelShader(source));
+            context.Transition(source, ResourceState.ReadOnly);
+            context.ForEach(destination, new LinearSampling2DPixelShader(source.AsReadOnly()));
+            context.Transition(source, ResourceState.ReadWrite);
+            context.Fill(source, new Rgba32(0xFF, 0x6A, 0x00, 0x00));
+        }
+
+        using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
+
+        ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
+
+        Rgba32[,] clear = source.ToArray();
+
+        foreach (Rgba32 value in clear)
+        {
+            Assert.AreEqual(value, new Rgba32(0xFF, 0x6A, 0x00, 0x00));
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void TransitionAndWrites_ReadWriteTexture3D(Device device)
+    {
+        _ = device.Get();
+
+        string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
+        string originalPath = Path.Combine(assetsPath, "CityWith1920x1280Resizing.png");
+        string sampledPath = Path.Combine(assetsPath, "CityAfter1024x1024SamplingFrom1920x1080AndDashing.png");
+
+        var imageInfo = Image.Identify(originalPath);
+
+        using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, sampledPath));
+
+        using ReadWriteTexture3D<Rgba32, float4> source = device.Get().AllocateReadWriteTexture3D<Rgba32, float4>(imageInfo.Width, imageInfo.Height, 3);
+
+        using (UploadTexture2D<Rgba32> upload2D = device.Get().LoadUploadTexture2D<Rgba32>(originalPath))
+        using (UploadTexture3D<Rgba32> upload3D = device.Get().AllocateUploadTexture3D<Rgba32>(upload2D.Width, upload2D.Height, 2))
+        {
+            for (int z = 0; z < upload3D.Depth; z++)
+            {
+                upload2D.View.CopyTo(upload3D.View.GetDepthView(z));
+            }
+
+            upload3D.CopyTo(source);
+        }
+
+        using ReadWriteTexture3D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture3D<Rgba32, float4>(sampled.Width, sampled.Height, 2);
+
+        using (var context = device.Get().CreateComputeContext())
+        {
+            context.For(source.Width, source.Height, source.Depth, new Dotted3DPixelShader(source));
+            context.Transition(source, ResourceState.ReadOnly);
+            context.For(destination.Width, destination.Height, destination.Depth, new LinearSampling3DComputeShader(source.AsReadOnly(), destination));
+            context.Transition(source, ResourceState.ReadWrite);
+            context.Fill(source, new Rgba32(0xFF, 0x6A, 0x00, 0x00));
+        }
+
+        for (int z = 0; z < destination.Depth; z++)
+        {
+            using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>(depth: z);
+            
+            ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.000012f);
+        }
+
+        Rgba32[,,] clear = source.ToArray();
+
+        foreach (Rgba32 value in clear)
+        {
+            Assert.AreEqual(value, new Rgba32(0xFF, 0x6A, 0x00, 0x00));
+        }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
     [ExpectedException(typeof(InvalidOperationException), AllowDerivedTypes = false)]
     public void Barrier_WithoutPreviousDispatches_ThrowsException(Device device)
     {
@@ -1035,6 +1197,87 @@ public partial class ComputeContextTests
         public float4 Execute()
         {
             return color;
+        }
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct LinearSampling2DPixelShader : IPixelShader<float4>
+    {
+        public readonly IReadOnlyTexture2D<float4> source;
+
+        /// <inheritdoc/>
+        public float4 Execute()
+        {
+            return source[ThreadIds.Normalized.XY];
+        }
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct LinearSampling3DComputeShader : IComputeShader
+    {
+        public readonly IReadOnlyTexture3D<float4> source;
+        public readonly IReadWriteTexture3D<float4> destination;
+
+        /// <inheritdoc/>
+        public void Execute()
+        {
+            destination[ThreadIds.XYZ] = source[ThreadIds.Normalized.XYZ];
+        }
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct Dotted2DPixelShader : IComputeShader
+    {
+        public readonly IReadWriteTexture2D<float4> source;
+
+        /// <inheritdoc/>
+        public void Execute()
+        {
+            bool isHorizontal192CellEven = (ThreadIds.X / 192) % 2 == 0;
+            bool isVertical128CellEven = (ThreadIds.Y / 128) % 2 == 0;
+
+            if (isHorizontal192CellEven != isVertical128CellEven)
+            {
+                if ((ThreadIds.Normalized.X <= 0.5f &&
+                     ThreadIds.Normalized.Y <= 0.5) ||
+                    (ThreadIds.Normalized.X > 0.5f &&
+                     ThreadIds.Normalized.Y > 0.5))
+                {
+                    source[ThreadIds.XY] = float4.UnitW;
+                }
+                else
+                {
+                    source[ThreadIds.XY] = float4.Zero;
+                }
+            }
+        }
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct Dotted3DPixelShader : IComputeShader
+    {
+        public readonly IReadWriteTexture3D<float4> source;
+
+        /// <inheritdoc/>
+        public void Execute()
+        {
+            bool isHorizontal192CellEven = (ThreadIds.X / 192) % 2 == 0;
+            bool isVertical128CellEven = (ThreadIds.Y / 128) % 2 == 0;
+
+            if (isHorizontal192CellEven != isVertical128CellEven)
+            {
+                if ((ThreadIds.Normalized.X <= 0.5f &&
+                     ThreadIds.Normalized.Y <= 0.5) ||
+                    (ThreadIds.Normalized.X > 0.5f &&
+                     ThreadIds.Normalized.Y > 0.5))
+                {
+                    source[ThreadIds.XYZ] = float4.UnitW;
+                }
+                else
+                {
+                    source[ThreadIds.XYZ] = float4.Zero;
+                }
+            }
         }
     }
 }

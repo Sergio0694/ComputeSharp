@@ -253,6 +253,24 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         commandList.D3D12GraphicsCommandList->Dispatch((uint)groupsX, (uint)groupsY, 1);
     }
 
+    /// <summary>
+    /// Inserts a transition for a specific resource.
+    /// </summary>
+    /// <param name="d3D12Resource">The <see cref="ID3D12Resource"/> to change state for.</param>
+    /// <param name="d3D12ResourceStatesBefore">The starting <see cref="D3D12_RESOURCE_STATES"/> value for the transition.</param>
+    /// <param name="d3D12ResourceStatesAfter">The destnation <see cref="D3D12_RESOURCE_STATES"/> value for the transition.</param>
+    internal readonly unsafe void Transition(
+        ID3D12Resource* d3D12Resource,
+        D3D12_RESOURCE_STATES d3D12ResourceStatesBefore,
+        D3D12_RESOURCE_STATES d3D12ResourceStatesAfter)
+    {
+        ThrowInvalidOperationExceptionIfDeviceIsNull();
+
+        ref CommandList commandList = ref GetCommandList(in this, null);
+
+        commandList.D3D12GraphicsCommandList->TransitionBarrier(d3D12Resource, d3D12ResourceStatesBefore, d3D12ResourceStatesAfter);
+    }
+
     /// <inheritdoc/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Dispose()

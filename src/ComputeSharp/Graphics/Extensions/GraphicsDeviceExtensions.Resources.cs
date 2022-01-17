@@ -1173,4 +1173,60 @@ public static partial class GraphicsDeviceExtensions
 
         return texture;
     }
+
+    /// <summary>
+    /// Loads a new upload 2D texture with the contents of the specified file.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
+    /// <returns>A <see cref="UploadTexture2D{T}"/> instance with the contents of the specified file.</returns>
+    public static UploadTexture2D<T> LoadUploadTexture2D<T>(this GraphicsDevice device, string filename)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(filename, nameof(filename));
+
+        return device.LoadUploadTexture2D<T>(filename.AsSpan());
+    }
+
+    /// <summary>
+    /// Loads a new upload 2D texture with the contents of the specified file.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="filename">The filename of the image file to load and decode into the texture.</param>
+    /// <returns>A <see cref="UploadTexture2D{T}"/> instance with the contents of the specified file.</returns>
+    public static UploadTexture2D<T> LoadUploadTexture2D<T>(this GraphicsDevice device, ReadOnlySpan<char> filename)
+        where T : unmanaged
+    {
+        return WICHelper.Instance.LoadTexture<T>(device, filename);
+    }
+
+    /// <summary>
+    /// Loads a new upload 2D texture with the contents of the specified file.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="span">The buffer with the image data to load and decode into the texture.</param>
+    /// <returns>A <see cref="UploadTexture2D{T}"/> instance with the contents of the specified file.</returns>
+    public static UploadTexture2D<T> LoadUploadTexture2D<T>(this GraphicsDevice device, ReadOnlySpan<byte> span)
+        where T : unmanaged
+    {
+        return WICHelper.Instance.LoadTexture<T>(device, span);
+    }
+
+    /// <summary>
+    /// Loads a new upload 2D texture with the contents of the specified file.
+    /// </summary>
+    /// <typeparam name="T">The type of items to store in the texture.</typeparam>
+    /// <param name="device">The <see cref="GraphicsDevice"/> instance to use to allocate the texture.</param>
+    /// <param name="stream">The stream with the image data to load and decode into the texture.</param>
+    /// <returns>A <see cref="UploadTexture2D{T}"/> instance with the contents of the specified file.</returns>
+    public static UploadTexture2D<T> LoadUploadTexture2D<T>(this GraphicsDevice device, Stream stream)
+        where T : unmanaged
+    {
+        Guard.IsNotNull(stream, nameof(stream));
+
+        return WICHelper.Instance.LoadTexture<T>(device, stream);
+    }
 }

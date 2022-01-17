@@ -36,4 +36,29 @@ public static class ImagingExtensions
 
         return image;
     }
+
+    /// <summary>
+    /// Creates a new <see cref="Image{TPixel}"/> instance with the specified texture data.
+    /// </summary>
+    /// <typeparam name="TFrom">The input pixel format used in the texture.</typeparam>
+    /// <typeparam name="TTo">The target pixel format for the returned image.</typeparam>
+    /// <param name="texture">The source <see cref="Texture3D{T}"/> instance to read data from.</param>
+    /// <param name="depth">The depth layer to read the image from.</param>
+    /// <returns>An image with the data from the input texture at a specified depth layer.</returns>
+    public static unsafe Image<TTo> ToImage<TFrom, TTo>(this Texture3D<TFrom> texture, int depth)
+        where TFrom : unmanaged
+        where TTo : unmanaged, IPixel<TTo>
+    {
+        Guard.IsEqualTo(sizeof(TTo), sizeof(TFrom), nameof(TTo));
+
+        Image<TTo> image = new(texture.Width, texture.Height);
+
+        Assert.IsTrue(image.TryGetSinglePixelSpan(out Span<TTo> span));
+
+        Span<TFrom> pixels = MemoryMarshal.Cast<TTo, TFrom>(span);
+
+        texture.CopyTo(pixels, 0, 0, depth, texture.Width, texture.Height, 1);
+
+        return image;
+    }
 }

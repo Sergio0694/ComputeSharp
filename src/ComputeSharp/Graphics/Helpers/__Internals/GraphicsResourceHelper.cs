@@ -40,6 +40,15 @@ public static class GraphicsResourceHelper
         /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
         /// <returns>The the underlying <see cref="ID3D12Resource"/> object.</returns> 
         ID3D12Resource* ValidateAndGetID3D12Resource(GraphicsDevice device);
+
+        /// <summary>
+        /// Validates the given resource for usage with a specified device, and retrieves the underlying <see cref="ID3D12Resource"/> object, along with the transition states.
+        /// </summary>
+        /// <param name="device">The target <see cref="GraphicsDevice"/> instance in use.</param>
+        /// <param name="resourceState">The target state to transition the resource to.</param>
+        /// <param name="d3D12Resource">The the underlying <see cref="ID3D12Resource"/> object.</param>
+        /// <returns>The resource states for <paramref name="d3D12Resource"/>, before and after the transition.</returns>
+        (D3D12_RESOURCE_STATES Before, D3D12_RESOURCE_STATES After) ValidateAndGetID3D12ResourceAndTransitionStates(GraphicsDevice device, ResourceState resourceState, out ID3D12Resource* d3D12Resource);
     }
 
     /// <summary>
