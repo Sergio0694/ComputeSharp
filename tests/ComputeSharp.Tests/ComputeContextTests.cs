@@ -9,7 +9,6 @@ using ComputeSharp.Tests.Helpers;
 using Microsoft.Toolkit.HighPerformance;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 
 namespace ComputeSharp.Tests;
@@ -905,13 +904,57 @@ public partial class ComputeContextTests
         using (var context = device.Get().CreateComputeContext())
         {
             context.Transition(source, ResourceState.ReadOnly);
-            context.ForEach(destination, new LinearSamplingPixelShader(source.AsReadOnly()));
+            context.ForEach(destination, new LinearSampling2DPixelShader(source.AsReadOnly()));
             context.Transition(source, ResourceState.ReadWrite);
         }
 
         using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>();
 
         ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.0000017f);
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    public void Transition_ReadWriteTexture3D(Device device)
+    {
+        _ = device.Get();
+
+        string assetsPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "Assets");
+        string originalPath = Path.Combine(assetsPath, "CityWith1920x1280Resizing.png");
+        string sampledPath = Path.Combine(assetsPath, "CityAfter1024x1024Sampling.png");
+
+        var imageInfo = Image.Identify(originalPath);
+
+        using var sampled = Image.Load<ImageSharpRgba32>(Path.Combine(assetsPath, sampledPath));
+
+        using ReadWriteTexture3D<Rgba32, float4> source = device.Get().AllocateReadWriteTexture3D<Rgba32, float4>(imageInfo.Width, imageInfo.Height, 3);
+
+        using (UploadTexture2D<Rgba32> upload2D = device.Get().LoadUploadTexture2D<Rgba32>(originalPath))
+        using (UploadTexture3D<Rgba32> upload3D = device.Get().AllocateUploadTexture3D<Rgba32>(upload2D.Width, upload2D.Height, 2))
+        {
+            for (int z = 0; z < upload3D.Depth; z++)
+            {
+                upload2D.View.CopyTo(upload3D.View.GetDepthView(z));
+            }
+
+            upload3D.CopyTo(source);
+        }
+
+        using ReadWriteTexture3D<Rgba32, float4> destination = device.Get().AllocateReadWriteTexture3D<Rgba32, float4>(sampled.Width, sampled.Height, 2);
+
+        using (var context = device.Get().CreateComputeContext())
+        {
+            context.Transition(source, ResourceState.ReadOnly);
+            context.For(destination.Width, destination.Height, destination.Depth, new LinearSampling3DComputeShader(source.AsReadOnly(), destination));
+            context.Transition(source, ResourceState.ReadWrite);
+        }
+
+        for (int z = 0; z < destination.Depth; z++)
+        {
+            using var processed = destination.ToImage<Rgba32, ImageSharpRgba32>(depth: z);
+
+            ImagingTests.TolerantImageComparer.AssertEqual(sampled, processed, 0.000012f);
+        }
     }
 
     [CombinatorialTestMethod]
@@ -1070,7 +1113,7 @@ public partial class ComputeContextTests
     }
 
     [AutoConstructor]
-    internal readonly partial struct LinearSamplingPixelShader : IPixelShader<float4>
+    internal readonly partial struct LinearSampling2DPixelShader : IPixelShader<float4>
     {
         public readonly IReadOnlyTexture2D<float4> source;
 
@@ -1078,6 +1121,19 @@ public partial class ComputeContextTests
         public float4 Execute()
         {
             return source[ThreadIds.Normalized.XY];
+        }
+    }
+
+    [AutoConstructor]
+    internal readonly partial struct LinearSampling3DComputeShader : IComputeShader
+    {
+        public readonly IReadOnlyTexture3D<float4> source;
+        public readonly IReadWriteTexture3D<float4> destination;
+
+        /// <inheritdoc/>
+        public void Execute()
+        {
+            destination[ThreadIds.XYZ] = source[ThreadIds.Normalized.XYZ];
         }
     }
 }
