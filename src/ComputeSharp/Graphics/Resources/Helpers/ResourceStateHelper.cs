@@ -20,7 +20,7 @@ internal static class ResourceStateHelper
     {
         if (resourceState == ResourceState.ReadOnly)
         {
-            return D3D12_RESOURCE_STATE_COMMON;
+            return D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
         }        
         
         if (resourceState == ResourceState.ReadWrite)

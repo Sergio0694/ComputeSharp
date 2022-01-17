@@ -602,13 +602,6 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
         D3D12_RESOURCE_STATES d3D12ResourceStatesBefore = this.d3D12ResourceState;
         D3D12_RESOURCE_STATES d3D12ResourceStatesAfter = ResourceStateHelper.GetD3D12ResourceStates(resourceState);
 
-        // If the original state is COMMON, at the point where the transition is inserted into a ComputeContext the resource
-        // would have already been implicitly promoted to be NON_PIXEL_SHADER_RESOURCE. Because of this, adjust this transition.
-        if (d3D12ResourceStatesBefore == D3D12_RESOURCE_STATE_COMMON)
-        {
-            d3D12ResourceStatesBefore = D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
-        }
-
         this.d3D12ResourceState = d3D12ResourceStatesAfter;
 
         d3D12Resource = D3D12Resource;
