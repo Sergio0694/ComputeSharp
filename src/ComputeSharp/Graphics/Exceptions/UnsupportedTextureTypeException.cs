@@ -5,9 +5,9 @@ using Microsoft.Toolkit.Diagnostics;
 namespace ComputeSharp.Exceptions;
 
 /// <summary>
-/// A custom <see cref="InvalidOperationException"/> that indicates when a texture was attempted to be created with an unsupported type.
+/// A custom <see cref="NotSupportedException"/> that indicates when a texture was attempted to be created with an unsupported type.
 /// </summary>
-public sealed class UnsupportedTextureTypeException : InvalidOperationException
+public sealed class UnsupportedTextureTypeException : NotSupportedException
 {
     /// <summary>
     /// Creates a new <see cref="UnsupportedTextureTypeException"/> instance.

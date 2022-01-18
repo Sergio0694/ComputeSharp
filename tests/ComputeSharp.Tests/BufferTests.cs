@@ -414,7 +414,7 @@ public partial class BufferTests
     [Resource(typeof(ConstantBuffer<>))]
     [Resource(typeof(ReadOnlyBuffer<>))]
     [Resource(typeof(ReadWriteBuffer<>))]
-    [ExpectedException(typeof(UnsupportedDoubleOperationsException))]
+    [ExpectedException(typeof(UnsupportedDoubleOperationException))]
     public void Dispatch_ReadWriteBuffer_DoublePrecision_ThrowsExceptionIfUnsupported(Device device, Type resourceType)
     {
         if (device.Get().IsDoublePrecisionSupportAvailable())

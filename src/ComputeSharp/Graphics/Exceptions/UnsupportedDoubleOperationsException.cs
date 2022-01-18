@@ -4,15 +4,15 @@ using System.Text;
 namespace ComputeSharp.Exceptions;
 
 /// <summary>
-/// A custom <see cref="InvalidOperationException"/> that indicates when a resource was attempted to be created with an unsupported type.
+/// A custom <see cref="NotSupportedException"/> that indicates when a resource was attempted to be created with an unsupported type.
 /// </summary>
-public sealed class UnsupportedDoubleOperationsException : InvalidOperationException
+public sealed class UnsupportedDoubleOperationException : NotSupportedException
 {
     /// <summary>
-    /// Creates a new <see cref="UnsupportedDoubleOperationsException"/> instance.
+    /// Creates a new <see cref="UnsupportedDoubleOperationException"/> instance.
     /// </summary>
     /// <param name="message">The message that describes the error.</param>
-    private UnsupportedDoubleOperationsException(string message)
+    private UnsupportedDoubleOperationException(string message)
         : base(message)
     {
     }
@@ -22,7 +22,7 @@ public sealed class UnsupportedDoubleOperationsException : InvalidOperationExcep
     /// </summary>
     /// <param name="type">The element type of resource that was being created.</param>
     /// <returns>A new <see cref="UnsupportedTextureTypeException"/> instance with a formatted error message.</returns>
-    private static UnsupportedDoubleOperationsException Create(Type type)
+    private static UnsupportedDoubleOperationException Create(Type type)
     {
         StringBuilder builder = new(256);
 
@@ -35,7 +35,7 @@ public sealed class UnsupportedDoubleOperationsException : InvalidOperationExcep
     }
 
     /// <summary>
-    /// Throws a new <see cref="UnsupportedDoubleOperationsException"/> instance from the specified parameters.
+    /// Throws a new <see cref="UnsupportedDoubleOperationException"/> instance from the specified parameters.
     /// </summary>
     /// <typeparam name="T">The type of values in the resource that couldn't be created.</typeparam>
     internal static void Throw<T>()

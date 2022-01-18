@@ -79,7 +79,7 @@ public unsafe abstract class Buffer<T> : NativeObject, IGraphicsResource
         if (TypeInfo<T>.IsDoubleOrContainsDoubles &&
             device.D3D12Device->CheckFeatureSupport<D3D12_FEATURE_DATA_D3D12_OPTIONS>(D3D12_FEATURE_D3D12_OPTIONS).DoublePrecisionFloatShaderOps == 0)
         {
-            UnsupportedDoubleOperationsException.Throw<T>();
+            UnsupportedDoubleOperationException.Throw<T>();
         }
 
         nint usableSizeInBytes = checked((nint)(length * elementSizeInBytes));
