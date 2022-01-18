@@ -13,7 +13,7 @@ internal static class TypeInfo<T>
     /// <summary>
     /// Whether or not type <typeparamref name="T"/> is <see cref="double"/> or contains a <see cref="double"/> field.
     /// </summary>
-    public static readonly bool IsDoubleOrContainsDoubles;
+    public static readonly bool IsDoubleOrContainsDoubles = ChecksIsDoubleOrContainsDoubles(typeof(T));
 
     /// <summary>
     /// Checks the value for <see cref="IsDoubleOrContainsDoubles"/> for type <typeparamref name="T"/>.

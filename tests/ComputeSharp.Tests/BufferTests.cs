@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ComputeSharp.Exceptions;
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
@@ -406,5 +407,23 @@ public partial class BufferTests
         {
             buffer[ThreadIds.X] = buffer[ThreadIds.X] * factor + 3.14;
         }
+    }
+
+    [CombinatorialTestMethod]
+    [AllDevices]
+    [Resource(typeof(ConstantBuffer<>))]
+    [Resource(typeof(ReadOnlyBuffer<>))]
+    [Resource(typeof(ReadWriteBuffer<>))]
+    [ExpectedException(typeof(UnsupportedDoubleOperationsException))]
+    public void Dispatch_ReadWriteBuffer_DoublePrecision_ThrowsExceptionIfUnsupported(Device device, Type resourceType)
+    {
+        if (device.Get().IsDoublePrecisionSupportAvailable())
+        {
+            Assert.Inconclusive();
+        }
+
+        using Buffer<double> buffer = device.Get().AllocateBuffer<double>(resourceType, 32);
+
+        Assert.Fail();
     }
 }
