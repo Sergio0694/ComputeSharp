@@ -171,10 +171,14 @@ partial class SwapChainManager<TOwner>
                 RenderLoop();
             }
 
+            this.renderStopwatch?.Stop();
+
             OnRenderingStopped();
         }
         catch (Exception e)
         {
+            this.renderStopwatch?.Stop();
+
             OnRenderingFailed(e);
         }
         finally
@@ -223,8 +227,6 @@ partial class SwapChainManager<TOwner>
                 OnPresent();
             }
         }
-
-        renderStopwatch.Stop();
     }
 
     /// <summary>
@@ -275,8 +277,6 @@ partial class SwapChainManager<TOwner>
                 }
             }
         }
-
-        renderStopwatch.Stop();
     }
 
     /// <summary>
