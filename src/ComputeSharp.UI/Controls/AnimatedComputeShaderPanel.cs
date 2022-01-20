@@ -50,6 +50,7 @@ public sealed partial class AnimatedComputeShaderPanel : SwapChainPanel
         this.swapChainManager.QueueCompositionScaleChange(CompositionScaleX, CompositionScaleY);
         this.swapChainManager.QueueResolutionScaleChange(ResolutionScale);
         this.swapChainManager.QueueDynamicResolutionModeChange(IsDynamicResolutionEnabled);
+        this.swapChainManager.QueueVerticalSyncModeChange(IsVerticalSyncEnabled);
 
         if (!IsPaused &&
             ShaderRunner is IShaderRunner shaderRunner)

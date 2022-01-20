@@ -98,6 +98,17 @@ partial class SwapChainManager<TOwner>
     }
 
     /// <summary>
+    /// Queues a change in the vertical sync mode.
+    /// </summary>
+    /// <param name="isVerticalSyncEnabled">Whether or not to use vertical sync.</param>
+    public void QueueVerticalSyncModeChange(bool isVerticalSyncEnabled)
+    {
+        ThrowIfDisposed();
+
+        this.syncInterval = isVerticalSyncEnabled ? 1u : 0u;
+    }
+
+    /// <summary>
     /// Queues a resize operation.
     /// </summary>
     /// <param name="width">The width of the render resolution.</param>

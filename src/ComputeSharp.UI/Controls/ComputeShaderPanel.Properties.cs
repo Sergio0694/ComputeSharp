@@ -169,4 +169,32 @@ partial class ComputeShaderPanel
 
         @this.swapChainManager.QueueDynamicResolutionModeChange(isDynamicResolutionEnabled);
     }
+
+    /// <summary>
+    /// Gets or sets whether vertical sync is enabled.
+    /// <para>The default value for this property is <see langword="true"/>.</para>
+    /// </summary>
+    public bool IsVerticalSyncEnabled
+    {
+        get => (bool)GetValue(IsVerticalSyncEnabledProperty);
+        set => SetValue(IsVerticalSyncEnabledProperty, value);
+    }
+
+    /// <summary>
+    /// The <see cref="DependencyProperty"/> backing <see cref="IsVerticalSyncEnabled"/>.
+    /// </summary>
+    public static readonly DependencyProperty IsVerticalSyncEnabledProperty = DependencyProperty.Register(
+        nameof(IsVerticalSyncEnabled),
+        typeof(bool),
+        typeof(ComputeShaderPanel),
+        new PropertyMetadata(true, OnIsVerticalSyncEnabledPropertyChanged));
+
+    /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
+    private static void OnIsVerticalSyncEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var @this = (ComputeShaderPanel)d;
+        var isVerticalSyncEnabled = (bool)e.NewValue;
+
+        @this.swapChainManager.QueueVerticalSyncModeChange(isVerticalSyncEnabled);
+    }
 }
