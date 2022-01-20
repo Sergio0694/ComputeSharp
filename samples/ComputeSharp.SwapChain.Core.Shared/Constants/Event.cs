@@ -5,6 +5,7 @@
 /// </summary>
 public static class Event
 {
+    public const string IsVerticalSyncEnabledChanged = "[SETTINGS] IsVerticalSyncEnabled";
     public const string IsDynamicResolutionEnabledChanged = "[SETTINGS] IsDynamicResolutionEnabled";
     public const string SelectedResolutionScaleChanged = "[SETTINGS] SelectedResolutionScale";
     public const string SelectedComputeShaderChanged = "[SETTINGS] SelectedComputeShader";

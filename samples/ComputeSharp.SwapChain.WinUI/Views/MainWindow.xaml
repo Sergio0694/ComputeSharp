@@ -150,6 +150,7 @@
         <computesharp:AnimatedComputeShaderPanel
             x:Name="ShaderPanel"
             Grid.Row="1"
+            IsVerticalSyncEnabled="{x:Bind ViewModel.IsVerticalSyncEnabled, Mode=OneWay}"
             IsDynamicResolutionEnabled="{x:Bind ViewModel.IsDynamicResolutionEnabled, Mode=OneWay}"
             IsPaused="{x:Bind ViewModel.IsRenderingPaused, Mode=OneWay}"
             ResolutionScale="{x:Bind converters:ResolutionScaleConverter.ConvertPercentageToScale(ViewModel.SelectedResolutionScale), Mode=OneWay}"
