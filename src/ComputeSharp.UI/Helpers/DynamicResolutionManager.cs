@@ -31,17 +31,17 @@ internal unsafe ref struct DynamicResolutionManager
     /// <summary>
     /// The target frame time in ticks.
     /// </summary>
-    private long targetFrameTimeInTicks;
+    private readonly long targetFrameTimeInTicks;
 
     /// <summary>
     /// The upper frame time threshold in ticks.
     /// </summary>
-    private long upperFrameTimeThresholdInTicks;
+    private readonly long upperFrameTimeThresholdInTicks;
 
     /// <summary>
     /// The lower frame time threshold in ticks.
     /// </summary>
-    private long lowerFrameTimeThresholdInTicks;
+    private readonly long lowerFrameTimeThresholdInTicks;
 
     /// <summary>
     /// The window of registered frame times for previous frames.
@@ -67,20 +67,19 @@ internal unsafe ref struct DynamicResolutionManager
     /// Initializes a new <see cref="DynamicResolutionManager"/> instance.
     /// </summary>
     /// <param name="targetFramerate">The target framerate to use.</param>
-    /// <param name="manager">The resulting <see cref="DynamicResolutionManager"/> instance.</param>
-    public static void Create(int targetFramerate, out DynamicResolutionManager manager)
+    public DynamicResolutionManager(int targetFramerate)
     {
         long targetFrameTimeInTicks = TimeSpan.FromSeconds(1).Ticks / targetFramerate;
         long upperFrameTimeThresholdInTicks = TimeSpan.FromSeconds(1).Ticks / (targetFramerate - 2);
         long lowerFrameTimeThresholdInTicks = TimeSpan.FromSeconds(1).Ticks / (targetFramerate + 2);
 
-        manager.frameTimeOffset = 0;
-        manager.targetFrameTimeInTicks = targetFrameTimeInTicks;
-        manager.upperFrameTimeThresholdInTicks = upperFrameTimeThresholdInTicks;
-        manager.lowerFrameTimeThresholdInTicks = lowerFrameTimeThresholdInTicks;
-        manager.slidingFrameTimeWindowSum = targetFrameTimeInTicks * SlidingFrameTimeWindowLength;
+        this.frameTimeOffset = 0;
+        this.targetFrameTimeInTicks = targetFrameTimeInTicks;
+        this.upperFrameTimeThresholdInTicks = upperFrameTimeThresholdInTicks;
+        this.lowerFrameTimeThresholdInTicks = lowerFrameTimeThresholdInTicks;
+        this.slidingFrameTimeWindowSum = targetFrameTimeInTicks * SlidingFrameTimeWindowLength;
 
-        new Span<long>(Unsafe.AsPointer(ref manager.frameTimesInTicks[0]), SlidingFrameTimeWindowLength).Fill(targetFrameTimeInTicks);
+        new Span<long>(Unsafe.AsPointer(ref this.frameTimesInTicks[0]), SlidingFrameTimeWindowLength).Fill(targetFrameTimeInTicks);
     }
 
     /// <summary>

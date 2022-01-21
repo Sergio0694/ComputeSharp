@@ -261,19 +261,7 @@ partial class SwapChainManager<TOwner>
         Stopwatch renderStopwatch = this.renderStopwatch ??= new();
         Stopwatch frameStopwatch = new();
         CancellationToken cancellationToken = this.renderCancellationTokenSource!.Token;
-
-        DynamicResolutionManager frameTimeWatcher;
-
-        if (this.syncInterval == 0u)
-        {
-            DynamicResolutionManager.Create(60, out frameTimeWatcher);
-        }
-        else
-        {
-            // If v-sync is enabled, we target slightly below 60fps, in order to account for the
-            // actual framerate being capped due to waiting for the v-blank at each present.
-            DynamicResolutionManager.Create(55, out frameTimeWatcher);
-        }
+        DynamicResolutionManager frameTimeWatcher = new(60);
 
         if (!OnFrameRequest(out object? parameter, cancellationToken))
         {
