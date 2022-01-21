@@ -390,11 +390,14 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     }
 
     /// <inheritdoc/>
+    private unsafe partial void OnWaitForPresent()
+    {
+        _ = Win32.WaitForSingleObjectEx(frameLatencyWaitableObject, Win32.INFINITE, true);
+    }
+
+    /// <inheritdoc/>
     private unsafe partial void OnPresent()
     {
-        // Wait for the swap chain to be ready for presenting
-        _ = Win32.WaitForSingleObjectEx(frameLatencyWaitableObject, Win32.INFINITE, true);
-
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 
         // Get the underlying ID3D12Resource pointer for the texture

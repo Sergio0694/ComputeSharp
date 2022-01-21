@@ -230,6 +230,7 @@ partial class SwapChainManager<TOwner>
         // resuming after a pause correctly renders the first frame at the right time.        
         if (OnUpdate(renderStopwatch.Elapsed, parameter))
         {
+            OnWaitForPresent();
             OnPresent();
         }
 
@@ -247,6 +248,7 @@ partial class SwapChainManager<TOwner>
             
             if (OnUpdate(renderStopwatch.Elapsed, parameter))
             {
+                OnWaitForPresent();
                 OnPresent();
             }
         }
@@ -272,6 +274,7 @@ partial class SwapChainManager<TOwner>
 
         if (OnUpdate(renderStopwatch.Elapsed, parameter))
         {
+            OnWaitForPresent();
             OnPresent();
         }
 
@@ -290,6 +293,18 @@ partial class SwapChainManager<TOwner>
 
             if (OnUpdate(renderStopwatch.Elapsed, parameter))
             {
+                frameStopwatch.Stop();
+
+                // The time spent waiting for present isn't included in the frame time, as when v-sync is
+                // enabled it corresponds to the time spent waiting for the v-blank. If it was included,
+                // then the actual framerate would never exceed the target one, meaning that if dynamic
+                // resolution is enabled, the resolution scale could only keep decreasing without ever
+                // being able to be increased again, as the framerate would never exceed the target.
+                // Simply not counting the time spent waiting for that works around the issue.
+                OnWaitForPresent();
+
+                frameStopwatch.Start();
+
                 OnPresent();
 
                 // Evaluate the dynamic resolution frame time step
@@ -360,6 +375,11 @@ partial class SwapChainManager<TOwner>
     {
         return this.shaderRunner!.TryExecute(this.texture!, time, parameter);
     }
+
+    /// <summary>
+    /// Waits for the panel to be ready to present a new frame for the current application.
+    /// </summary>
+    private unsafe partial void OnWaitForPresent();
 
     /// <summary>
     /// Presents the last rendered frame for the current application.
