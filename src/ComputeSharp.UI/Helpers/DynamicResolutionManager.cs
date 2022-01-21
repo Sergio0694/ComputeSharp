@@ -1,7 +1,5 @@
 ﻿using System;
-#if !WINDOWS_UWP
-using System.Runtime.InteropServices;
-#endif
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 #if WINDOWS_UWP
@@ -82,14 +80,7 @@ internal unsafe ref struct DynamicResolutionManager
         manager.lowerFrameTimeThresholdInTicks = lowerFrameTimeThresholdInTicks;
         manager.slidingFrameTimeWindowSum = targetFrameTimeInTicks * SlidingFrameTimeWindowLength;
 
-#if WINDOWS_UWP
-        fixed (long* p = &manager.frameTimesInTicks[0])
-        {
-            new Span<long>(p, SlidingFrameTimeWindowLength).Fill(targetFrameTimeInTicks);
-        }
-#else
-        MemoryMarshal.CreateSpan(ref manager.frameTimesInTicks[0], SlidingFrameTimeWindowLength).Fill(targetFrameTimeInTicks);
-#endif
+        new Span<long>(Unsafe.AsPointer(ref manager.frameTimesInTicks[0]), SlidingFrameTimeWindowLength).Fill(targetFrameTimeInTicks);
     }
 
     /// <summary>
