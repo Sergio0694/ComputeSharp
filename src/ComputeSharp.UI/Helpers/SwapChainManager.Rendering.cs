@@ -101,11 +101,34 @@ partial class SwapChainManager<TOwner>
     /// Queues a change in the vertical sync mode.
     /// </summary>
     /// <param name="isVerticalSyncEnabled">Whether or not to use vertical sync.</param>
-    public void QueueVerticalSyncModeChange(bool isVerticalSyncEnabled)
+    public async void QueueVerticalSyncModeChange(bool isVerticalSyncEnabled)
     {
         ThrowIfDisposed();
 
-        this.syncInterval = isVerticalSyncEnabled ? 1u : 0u;
+        using (await this.setupSemaphore.LockAsync())
+        {
+            // The v-sync option can be toggled on the fly when not using dynamic resolution
+            if (this.renderCancellationTokenSource?.IsCancellationRequested == false &&
+                this.isDynamicResolutionEnabled)
+            {
+                this.renderCancellationTokenSource?.Cancel();
+
+                await this.renderSemaphore.WaitAsync();
+
+                Thread newRenderThread = new(static args => ((SwapChainManager<TOwner>)args!).SwitchAndStartRenderLoop());
+
+                this.renderCancellationTokenSource = new CancellationTokenSource();
+                this.renderThread = newRenderThread;
+                this.renderSemaphore = new SemaphoreSlim(0, 1);
+                this.syncInterval = isVerticalSyncEnabled ? 1u : 0u;
+
+                newRenderThread.Start(this);
+            }
+            else
+            {
+                this.syncInterval = isVerticalSyncEnabled ? 1u : 0u;
+            }
+        }
     }
 
     /// <summary>
@@ -239,7 +262,18 @@ partial class SwapChainManager<TOwner>
         Stopwatch frameStopwatch = new();
         CancellationToken cancellationToken = this.renderCancellationTokenSource!.Token;
 
-        DynamicResolutionManager.Create(out DynamicResolutionManager frameTimeWatcher);
+        DynamicResolutionManager frameTimeWatcher;
+
+        if (this.syncInterval == 0u)
+        {
+            DynamicResolutionManager.Create(60, out frameTimeWatcher);
+        }
+        else
+        {
+            // If v-sync is enabled, we target slightly below 60fps, in order to account for the
+            // actual framerate being capped due to waiting for the v-blank at each present.
+            DynamicResolutionManager.Create(55, out frameTimeWatcher);
+        }
 
         if (!OnFrameRequest(out object? parameter, cancellationToken))
         {

@@ -16,21 +16,6 @@ namespace ComputeSharp.WinUI.Helpers;
 internal unsafe ref struct DynamicResolutionManager
 {
     /// <summary>
-    /// The target frame time in ticks to reach 60fps (set to 64fps).
-    /// </summary>
-    public const long TargetFrameTimeInTicksFor60fps = 156250;
-
-    /// <summary>
-    /// The upper frame time threshold in ticks to reach 60fps.
-    /// </summary>
-    private const long UpperFrameTimeThresholdInTicksFor60fps = 166666;
-
-    /// <summary>
-    /// The lower frame time threshold in ticks to reach 60fps (set to 68fps).
-    /// </summary>
-    private const long LowerFrameTimeThresholdInTicksFor60fps = 147058;
-
-    /// <summary>
     /// The size of the sliding frame time window to monitor frame times.
     /// </summary>
     private const int SlidingFrameTimeWindowLength = 32;
@@ -44,6 +29,21 @@ internal unsafe ref struct DynamicResolutionManager
     /// The constant multiplicative factor for the scale factor.
     /// </summary>
     private const float ScaleFactorDeltaK = 0.8f;
+
+    /// <summary>
+    /// The target frame time in ticks.
+    /// </summary>
+    private long targetFrameTimeInTicks;
+
+    /// <summary>
+    /// The upper frame time threshold in ticks.
+    /// </summary>
+    private long upperFrameTimeThresholdInTicks;
+
+    /// <summary>
+    /// The lower frame time threshold in ticks.
+    /// </summary>
+    private long lowerFrameTimeThresholdInTicks;
 
     /// <summary>
     /// The window of registered frame times for previous frames.
@@ -68,19 +68,27 @@ internal unsafe ref struct DynamicResolutionManager
     /// <summary>
     /// Initializes a new <see cref="DynamicResolutionManager"/> instance.
     /// </summary>
+    /// <param name="targetFramerate">The target framerate to use.</param>
     /// <param name="manager">The resulting <see cref="DynamicResolutionManager"/> instance.</param>
-    public static void Create(out DynamicResolutionManager manager)
+    public static void Create(int targetFramerate, out DynamicResolutionManager manager)
     {
+        long targetFrameTimeInTicks = TimeSpan.FromSeconds(1).Ticks / targetFramerate;
+        long upperFrameTimeThresholdInTicks = TimeSpan.FromSeconds(1).Ticks / (targetFramerate - 2);
+        long lowerFrameTimeThresholdInTicks = TimeSpan.FromSeconds(1).Ticks / (targetFramerate + 2);
+
         manager.frameTimeOffset = 0;
-        manager.slidingFrameTimeWindowSum = TargetFrameTimeInTicksFor60fps * SlidingFrameTimeWindowLength;
+        manager.targetFrameTimeInTicks = targetFrameTimeInTicks;
+        manager.upperFrameTimeThresholdInTicks = upperFrameTimeThresholdInTicks;
+        manager.lowerFrameTimeThresholdInTicks = lowerFrameTimeThresholdInTicks;
+        manager.slidingFrameTimeWindowSum = targetFrameTimeInTicks * SlidingFrameTimeWindowLength;
 
 #if WINDOWS_UWP
         fixed (long* p = &manager.frameTimesInTicks[0])
         {
-            new Span<long>(p, SlidingFrameTimeWindowLength).Fill(TargetFrameTimeInTicksFor60fps);
+            new Span<long>(p, SlidingFrameTimeWindowLength).Fill(targetFrameTimeInTicks);
         }
 #else
-        MemoryMarshal.CreateSpan(ref manager.frameTimesInTicks[0], SlidingFrameTimeWindowLength).Fill(TargetFrameTimeInTicksFor60fps);
+        MemoryMarshal.CreateSpan(ref manager.frameTimesInTicks[0], SlidingFrameTimeWindowLength).Fill(targetFrameTimeInTicks);
 #endif
     }
 
@@ -116,9 +124,10 @@ internal unsafe ref struct DynamicResolutionManager
             // This formula is adapted from https://software.intel.com/content/www/us/en/develop/articles/dynamic-resolution-rendering-article.html.
             long averageFrameTimeInTicks = this.slidingFrameTimeWindowSum / SlidingFrameTimeWindowLength;
 
-            if (averageFrameTimeInTicks is < LowerFrameTimeThresholdInTicksFor60fps or > UpperFrameTimeThresholdInTicksFor60fps)
+            if (averageFrameTimeInTicks < lowerFrameTimeThresholdInTicks ||
+                averageFrameTimeInTicks > upperFrameTimeThresholdInTicks)
             {
-                float frameTimeDelta = (TargetFrameTimeInTicksFor60fps - averageFrameTimeInTicks) / (float)averageFrameTimeInTicks;
+                float frameTimeDelta = (targetFrameTimeInTicks - averageFrameTimeInTicks) / (float)averageFrameTimeInTicks;
                 float scaleFactorDelta = scaleFactor * frameTimeDelta * ScaleFactorDeltaK;
                 float updatedScaleFactor = Math.Clamp(scaleFactor + scaleFactorDelta, 0.10f, 1.0f);
 
