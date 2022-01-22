@@ -252,7 +252,7 @@ With the compute shader being like this:
 [AutoConstructor]
 public readonly partial struct GrayscaleEffect : IComputeShader
 {
-    public readonly IReadWriteTexture2D<float4> texture;
+    public readonly IReadWriteNormalizedTexture2D<float4> texture;
 
     // Other captured resources or values here...
 
