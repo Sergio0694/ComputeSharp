@@ -22,12 +22,16 @@ internal static class HlslKnownMembers
         [$"ComputeSharp.ReadOnlyTexture2D`2.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
         [$"ComputeSharp.ReadWriteTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
         [$"ComputeSharp.ReadWriteTexture2D`2.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
+        [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
+        [$"ComputeSharp.IReadWriteTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
         [$"ComputeSharp.IReadOnlyNormalizedTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
         [$"ComputeSharp.IReadWriteNormalizedTexture2D`1.this[{typeof(int).FullName}, {typeof(int).FullName}]"] = "int2",
         [$"ComputeSharp.ReadOnlyTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
         [$"ComputeSharp.ReadOnlyTexture3D`2.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
         [$"ComputeSharp.ReadWriteTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
         [$"ComputeSharp.ReadWriteTexture3D`2.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
+        [$"ComputeSharp.IReadOnlyTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
+        [$"ComputeSharp.IReadWriteTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
         [$"ComputeSharp.IReadOnlyNormalizedTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3",
         [$"ComputeSharp.IReadWriteNormalizedTexture3D`1.this[{typeof(int).FullName}, {typeof(int).FullName}, {typeof(int).FullName}]"] = "int3"
     };
@@ -39,10 +43,14 @@ internal static class HlslKnownMembers
     {
         [$"ComputeSharp.ReadOnlyTexture2D`2.this[{typeof(float).FullName}, {typeof(float).FullName}]"] = "float2",
         [$"ComputeSharp.ReadOnlyTexture2D`2.this[{typeof(Float2).FullName}]"] = null,
+        [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(float).FullName}, {typeof(float).FullName}]"] = "float2",
+        [$"ComputeSharp.IReadOnlyTexture2D`1.this[{typeof(Float2).FullName}]"] = null,
         [$"ComputeSharp.IReadOnlyNormalizedTexture2D`1.this[{typeof(float).FullName}, {typeof(float).FullName}]"] = "float2",
         [$"ComputeSharp.IReadOnlyNormalizedTexture2D`1.this[{typeof(Float2).FullName}]"] = null,
         [$"ComputeSharp.ReadOnlyTexture3D`2.this[{typeof(float).FullName}, {typeof(float).FullName}, {typeof(float).FullName}]"] = "float3",
         [$"ComputeSharp.ReadOnlyTexture3D`2.this[{typeof(Float3).FullName}]"] = null,
+        [$"ComputeSharp.IReadOnlyTexture3D`1.this[{typeof(float).FullName}, {typeof(float).FullName}, {typeof(float).FullName}]"] = "float3",
+        [$"ComputeSharp.IReadOnlyTexture3D`1.this[{typeof(Float3).FullName}]"] = null,
         [$"ComputeSharp.IReadOnlyNormalizedTexture3D`1.this[{typeof(float).FullName}, {typeof(float).FullName}, {typeof(float).FullName}]"] = "float3",
         [$"ComputeSharp.IReadOnlyNormalizedTexture3D`1.this[{typeof(Float3).FullName}]"] = null
     };
@@ -58,6 +66,11 @@ internal static class HlslKnownMembers
         ["ComputeSharp.Resources.Texture3D`1.Width"] = (3, 0),
         ["ComputeSharp.Resources.Texture3D`1.Height"] = (3, 1),
         ["ComputeSharp.Resources.Texture3D`1.Depth"] = (3, 2),
+        ["ComputeSharp.IReadOnlyTexture2D`1.Width"] = (2, 0),
+        ["ComputeSharp.IReadOnlyTexture2D`1.Height"] = (2, 1),
+        ["ComputeSharp.IReadOnlyTexture3D`1.Width"] = (3, 0),
+        ["ComputeSharp.IReadOnlyTexture3D`1.Height"] = (3, 1),
+        ["ComputeSharp.IReadOnlyTexture3D`1.Depth"] = (3, 2),
         ["ComputeSharp.IReadOnlyNormalizedTexture2D`1.Width"] = (2, 0),
         ["ComputeSharp.IReadOnlyNormalizedTexture2D`1.Height"] = (2, 1),
         ["ComputeSharp.IReadOnlyNormalizedTexture3D`1.Width"] = (3, 0),
