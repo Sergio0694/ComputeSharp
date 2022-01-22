@@ -14,15 +14,15 @@ using static TerraFX.Interop.DirectX.D3D12_SRV_DIMENSION;
 namespace ComputeSharp;
 
 /// <inheritdoc/>
-partial class ReadWriteTexture3D<T, TPixel>
+partial class ReadWriteTexture3D<T>
 {
     /// <summary>
     /// The wrapping <see cref="ReadOnly"/> instance, if available.
     /// </summary>
     private ReadOnly? readOnlyWrapper;
 
-    /// <inheritdoc cref="ReadWriteTexture3DExtensions.AsReadOnly{T, TPixel}(ReadWriteTexture3D{T, TPixel})"/>
-    public IReadOnlyNormalizedTexture3D<TPixel> AsReadOnly()
+    /// <inheritdoc cref="ReadWriteTexture3DExtensions.AsReadOnly(ReadWriteTexture3D{float})"/>
+    public IReadOnlyTexture3D<T> AsReadOnly()
     {
         GraphicsDevice.ThrowIfDisposed();
 
@@ -37,7 +37,7 @@ partial class ReadWriteTexture3D<T, TPixel>
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        static ReadOnly InitializeWrapper(ReadWriteTexture3D<T, TPixel> texture)
+        static ReadOnly InitializeWrapper(ReadWriteTexture3D<T> texture)
         {
             return texture.readOnlyWrapper = new(texture);
         }
@@ -54,14 +54,14 @@ partial class ReadWriteTexture3D<T, TPixel>
     }
 
     /// <summary>
-    /// A wrapper for a <see cref="ReadWriteTexture3D{T, TPixel}"/> resource that has been temporarily transitioned to readonly.
+    /// A wrapper for a <see cref="ReadWriteTexture3D{T}"/> resource that has been temporarily transitioned to readonly.
     /// </summary>
-    private sealed unsafe class ReadOnly : NativeObject, IReadOnlyNormalizedTexture3D<TPixel>, GraphicsResourceHelper.IGraphicsResource
+    private sealed unsafe class ReadOnly : NativeObject, IReadOnlyTexture3D<T>, GraphicsResourceHelper.IGraphicsResource
     {
         /// <summary>
-        /// The owning <see cref="ReadWriteTexture3D{T, TPixel}"/> instance being wrapped.
+        /// The owning <see cref="ReadWriteTexture3D{T}"/> instance being wrapped.
         /// </summary>
-        private readonly ReadWriteTexture3D<T, TPixel> owner;
+        private readonly ReadWriteTexture3D<T> owner;
 
         /// <summary>
         /// The <see cref="ID3D12ResourceDescriptorHandles"/> instance for the current resource.
@@ -71,8 +71,8 @@ partial class ReadWriteTexture3D<T, TPixel>
         /// <summary>
         /// Creates a new <see cref="ReadOnly"/> instance with the specified parameters.
         /// </summary>
-        /// <param name="owner">The owning <see cref="ReadWriteTexture3D{T, TPixel}"/> instance to wrap.</param>
-        public ReadOnly(ReadWriteTexture3D<T, TPixel> owner)
+        /// <param name="owner">The owning <see cref="ReadWriteTexture3D{T}"/> instance to wrap.</param>
+        public ReadOnly(ReadWriteTexture3D<T> owner)
         {
             this.owner = owner;
 
@@ -82,16 +82,16 @@ partial class ReadWriteTexture3D<T, TPixel>
         }
 
         /// <inheritdoc/>
-        public ref readonly TPixel this[int x, int y, int z] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T, TPixel>.ReadOnly)}[{typeof(int)}, {typeof(int)}, {typeof(int)}]");
+        public ref readonly T this[int x, int y, int z] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T>.ReadOnly)}[{typeof(int)}, {typeof(int)}, {typeof(int)}]");
 
         /// <inheritdoc/>
-        public ref readonly TPixel this[Int3 xyz] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T, TPixel>.ReadOnly)}[{typeof(Int3)}]");
+        public ref readonly T this[Int3 xyz] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T>.ReadOnly)}[{typeof(Int3)}]");
 
         /// <inheritdoc/>
-        public ref readonly TPixel this[float u, float v, float w] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T, TPixel>.ReadOnly)}[{typeof(float)}, {typeof(float)}, {typeof(float)}]");
+        public ref readonly T this[float u, float v, float w] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T>.ReadOnly)}[{typeof(float)}, {typeof(float)}, {typeof(float)}]");
 
         /// <inheritdoc/>
-        public ref readonly TPixel this[Float3 uvw] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T, TPixel>.ReadOnly)}[{typeof(Float3)}]");
+        public ref readonly T this[Float3 uvw] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T>.ReadOnly)}[{typeof(Float3)}]");
 
         /// <inheritdoc/>
         public int Width => this.owner.Width;

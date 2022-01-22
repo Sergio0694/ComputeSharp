@@ -57,7 +57,7 @@ public sealed class ShaderRunner<T> : IShaderRunner
     }
 
     /// <inheritdoc/>
-    public bool TryExecute(IReadWriteTexture2D<Float4> texture, TimeSpan time, object? parameter)
+    public bool TryExecute(IReadWriteNormalizedTexture2D<Float4> texture, TimeSpan time, object? parameter)
     {
         if (this.shaderFactory is Func<TimeSpan, T> shaderFactory)
         {

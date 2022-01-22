@@ -12,7 +12,7 @@ class Program
     /// <summary>
     /// A texture for <c>\Textures\RustyMetal.png</c>.
     /// </summary>
-    private static readonly IReadOnlyTexture2D<float4> RustyMetal = LoadTexture();
+    private static readonly IReadOnlyNormalizedTexture2D<float4> RustyMetal = LoadTexture();
 
     /// <summary>
     /// The mapping of available samples to choose from.

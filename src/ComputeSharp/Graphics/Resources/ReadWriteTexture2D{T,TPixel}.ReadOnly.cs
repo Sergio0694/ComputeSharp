@@ -21,25 +21,8 @@ partial class ReadWriteTexture2D<T, TPixel>
     /// </summary>
     private ReadOnly? readOnlyWrapper;
 
-    /// <summary>
-    /// Retrieves a wrapping <see cref="IReadOnlyTexture2D{TPixel}"/> instance for the current resource.
-    /// </summary>
-    /// <returns>An <see cref="IReadOnlyTexture2D{TPixel}"/> instance wrapping the current resource.</returns>
-    /// <remarks>
-    /// <para>The returned instance can be used in a shader to enable texture sampling.</para>
-    /// <para>
-    /// This is an advanced API that can only be used after the current instance has been transitioned to be in a readonly state. To do so,
-    /// use <see cref="ComputeContextExtensions.Transition{T, TPixel}(in ComputeContext, ReadWriteTexture2D{T, TPixel}, ResourceState)"/>,
-    /// and specify <see cref="ResourceState.ReadOnly"/>. After that, <see cref="AsReadOnly"/> can be used to get a readonly wrapper for
-    /// the current texture to use in a shader. This instance should not be cached or reused, but just passed directly to a shader
-    /// being dispatched through that same <see cref="ComputeContext"/>, as it will not work if the texture changes state later on.
-    /// Before the end of that list of operations, the texture also needs to be transitioned back to writeable state, using the same
-    /// API as before but specifying <see cref="ResourceState.ReadWrite"/>. Failing to do so results in undefined behavior.
-    /// </para>
-    /// </remarks>
-    /// <exception cref="ObjectDisposedException">Thrown if the current instance or its associated device are disposed.</exception>
-    /// <exception cref="InvalidOperationException">Thrown if the current instance is not in a readonly state.</exception>
-    public IReadOnlyTexture2D<TPixel> AsReadOnly()
+    /// <inheritdoc cref="ReadWriteTexture2DExtensions.AsReadOnly{T, TPixel}(ReadWriteTexture2D{T, TPixel})"/>
+    internal IReadOnlyNormalizedTexture2D<TPixel> AsReadOnly()
     {
         GraphicsDevice.ThrowIfDisposed();
 
@@ -53,9 +36,6 @@ partial class ReadWriteTexture2D<T, TPixel>
             return readOnlyWrapper;
         }
 
-        // The wrapper initialization is moved to a non inlined helper to keep the codegen of this method
-        // as compact as possible. If the current wrapper is not initialized, control goes directly to the
-        // helper that will initialize and return it, which translates to a single jump.
         [MethodImpl(MethodImplOptions.NoInlining)]
         static ReadOnly InitializeWrapper(ReadWriteTexture2D<T, TPixel> texture)
         {
@@ -76,7 +56,7 @@ partial class ReadWriteTexture2D<T, TPixel>
     /// <summary>
     /// A wrapper for a <see cref="ReadWriteTexture2D{T, TPixel}"/> resource that has been temporarily transitioned to readonly.
     /// </summary>
-    private sealed unsafe class ReadOnly : NativeObject, IReadOnlyTexture2D<TPixel>, GraphicsResourceHelper.IGraphicsResource
+    private sealed unsafe class ReadOnly : NativeObject, IReadOnlyNormalizedTexture2D<TPixel>, GraphicsResourceHelper.IGraphicsResource
     {
         /// <summary>
         /// The owning <see cref="ReadWriteTexture2D{T, TPixel}"/> instance being wrapped.

@@ -35,9 +35,9 @@ public enum DispatchAxis
     /// Indicates a shader dispatch along the X and Y axes.
     /// </summary>
     /// <remarks>
-    /// This applies to using <see cref="GraphicsDeviceExtensions.For{T}(GraphicsDevice, int, int, in T)"/>, <see cref="GraphicsDeviceExtensions.ForEach{T, TPixel}(GraphicsDevice, IReadWriteTexture2D{TPixel})"/>,
-    /// <see cref="GraphicsDeviceExtensions.ForEach{T, TPixel}(GraphicsDevice, IReadWriteTexture2D{TPixel}, in T)"/>, <see cref="ComputeContextExtensions.For{T}(in ComputeContext, int, int, in T)"/>,
-    /// <see cref="ComputeContextExtensions.ForEach{T, TPixel}(in ComputeContext, IReadWriteTexture2D{TPixel})"/> or <see cref="ComputeContextExtensions.ForEach{T, TPixel}(in ComputeContext, IReadWriteTexture2D{TPixel}, in T)"/>.
+    /// This applies to using <see cref="GraphicsDeviceExtensions.For{T}(GraphicsDevice, int, int, in T)"/>, <see cref="GraphicsDeviceExtensions.ForEach{T, TPixel}(GraphicsDevice, IReadWriteNormalizedTexture2D{TPixel})"/>,
+    /// <see cref="GraphicsDeviceExtensions.ForEach{T, TPixel}(GraphicsDevice, IReadWriteNormalizedTexture2D{TPixel}, in T)"/>, <see cref="ComputeContextExtensions.For{T}(in ComputeContext, int, int, in T)"/>,
+    /// <see cref="ComputeContextExtensions.ForEach{T, TPixel}(in ComputeContext, IReadWriteNormalizedTexture2D{TPixel})"/> or <see cref="ComputeContextExtensions.ForEach{T, TPixel}(in ComputeContext, IReadWriteNormalizedTexture2D{TPixel}, in T)"/>.
     /// </remarks>
     XY,
 

@@ -13,7 +13,7 @@ namespace ComputeSharp;
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
 [DebuggerTypeProxy(typeof(Texture3DDebugView<>))]
 [DebuggerDisplay("{ToString(),raw}")]
-public sealed class ReadWriteTexture3D<T> : Texture3D<T>
+public sealed partial class ReadWriteTexture3D<T> : Texture3D<T>
     where T : unmanaged
 {
     /// <summary>

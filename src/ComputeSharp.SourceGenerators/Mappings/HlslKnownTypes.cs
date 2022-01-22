@@ -143,6 +143,8 @@ internal static class HlslKnownTypes
             "ComputeSharp.ReadOnlyTexture3D`2" or
             "ComputeSharp.IReadOnlyTexture2D`1" or
             "ComputeSharp.IReadOnlyTexture3D`1" => true,
+            "ComputeSharp.IReadOnlyNormalizedTexture2D`1" or
+            "ComputeSharp.IReadOnlyNormalizedTexture3D`1" => true,
             _ => false,
         };
     }
@@ -161,8 +163,8 @@ internal static class HlslKnownTypes
             "ComputeSharp.ReadWriteTexture2D`2" or
             "ComputeSharp.ReadWriteTexture3D`1" or
             "ComputeSharp.ReadWriteTexture3D`2" or
-            "ComputeSharp.IReadWriteTexture2D`1" or
-            "ComputeSharp.IReadWriteTexture3D`1" => true,
+            "ComputeSharp.IReadWriteNormalizedTexture2D`1" or
+            "ComputeSharp.IReadWriteNormalizedTexture3D`1" => true,
             _ => false,
         };
     }
@@ -188,9 +190,11 @@ internal static class HlslKnownTypes
             "ComputeSharp.ReadWriteTexture3D`1" or
             "ComputeSharp.ReadWriteTexture3D`2" or
             "ComputeSharp.IReadOnlyTexture2D`1" or
-            "ComputeSharp.IReadWriteTexture2D`1" or
             "ComputeSharp.IReadOnlyTexture3D`1" or
-            "ComputeSharp.IReadWriteTexture3D`1" => true,
+            "ComputeSharp.IReadOnlyNormalizedTexture2D`1" or
+            "ComputeSharp.IReadWriteNormalizedTexture2D`1" or
+            "ComputeSharp.IReadOnlyNormalizedTexture3D`1" or
+            "ComputeSharp.IReadWriteNormalizedTexture3D`1" => true,
             _ => false,
         };
     }
@@ -294,10 +298,12 @@ internal static class HlslKnownTypes
                 "ComputeSharp.ReadOnlyTexture3D`2" => $"Texture3D<unorm {mappedElementType}>",
                 "ComputeSharp.ReadWriteTexture3D`1" => $"RWTexture3D<{mappedElementType}>",
                 "ComputeSharp.ReadWriteTexture3D`2" => $"RWTexture3D<unorm {mappedElementType}>",
-                "ComputeSharp.IReadOnlyTexture2D`1" => $"Texture2D<unorm {mappedElementType}>",
-                "ComputeSharp.IReadWriteTexture2D`1" => $"RWTexture2D<unorm {mappedElementType}>",
-                "ComputeSharp.IReadOnlyTexture3D`1" => $"Texture3D<unorm {mappedElementType}>",
-                "ComputeSharp.IReadWriteTexture3D`1" => $"RWTexture3D<unorm {mappedElementType}>",
+                "ComputeSharp.IReadOnlyTexture2D`1" => $"Texture2D<{mappedElementType}>",
+                "ComputeSharp.IReadOnlyTexture3D`1" => $"Texture3D<{mappedElementType}>",
+                "ComputeSharp.IReadOnlyNormalizedTexture2D`1" => $"Texture2D<unorm {mappedElementType}>",
+                "ComputeSharp.IReadWriteNormalizedTexture2D`1" => $"RWTexture2D<unorm {mappedElementType}>",
+                "ComputeSharp.IReadOnlyNormalizedTexture3D`1" => $"Texture3D<unorm {mappedElementType}>",
+                "ComputeSharp.IReadWriteNormalizedTexture3D`1" => $"RWTexture3D<unorm {mappedElementType}>",
                 _ => throw new ArgumentException()
             };
         }

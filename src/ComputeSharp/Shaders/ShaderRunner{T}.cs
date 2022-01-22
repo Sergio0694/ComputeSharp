@@ -145,7 +145,7 @@ internal static class ShaderRunner<T>
     /// <param name="device">The <see cref="GraphicsDevice"/> to use to run the shader.</param>
     /// <param name="texture">The target texture to invoke the pixel shader upon.</param>
     /// <param name="shader">The input <typeparamref name="T"/> instance representing the pixel shader to run.</param>
-    public static unsafe void Run<TPixel>(GraphicsDevice device, IReadWriteTexture2D<TPixel> texture, ref T shader)
+    public static unsafe void Run<TPixel>(GraphicsDevice device, IReadWriteNormalizedTexture2D<TPixel> texture, ref T shader)
         where TPixel : unmanaged
     {
         device.ThrowIfDisposed();

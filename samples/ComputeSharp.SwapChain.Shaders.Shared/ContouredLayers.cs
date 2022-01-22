@@ -19,7 +19,7 @@ internal readonly partial struct ContouredLayers : IPixelShader<float4>
     /// <summary>
     /// The background texture to sample.
     /// </summary>
-    public readonly IReadOnlyTexture2D<float4> texture;
+    public readonly IReadOnlyNormalizedTexture2D<float4> texture;
 
     // float3 to float hash.
     private static float Hash21(float2 p)
