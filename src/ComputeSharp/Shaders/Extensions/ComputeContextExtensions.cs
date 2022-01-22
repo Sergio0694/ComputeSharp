@@ -366,6 +366,58 @@ public static class ComputeContextExtensions
     /// <summary>
     /// Transitions the state of a specific resource.
     /// </summary>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to transition.</param>
+    /// <param name="resourceState">The state to transition the input resource to.</param>
+    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture2D<float> texture, ResourceState resourceState)
+    {
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+
+        context.Transition(d3D12Resource, states.Before, states.After);
+    }
+
+    /// <summary>
+    /// Transitions the state of a specific resource.
+    /// </summary>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to transition.</param>
+    /// <param name="resourceState">The state to transition the input resource to.</param>
+    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture2D<Float2> texture, ResourceState resourceState)
+    {
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+
+        context.Transition(d3D12Resource, states.Before, states.After);
+    }
+
+    /// <summary>
+    /// Transitions the state of a specific resource.
+    /// </summary>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to transition.</param>
+    /// <param name="resourceState">The state to transition the input resource to.</param>
+    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture2D<Float3> texture, ResourceState resourceState)
+    {
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+
+        context.Transition(d3D12Resource, states.Before, states.After);
+    }
+
+    /// <summary>
+    /// Transitions the state of a specific resource.
+    /// </summary>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture2D{T}"/> instance to transition.</param>
+    /// <param name="resourceState">The state to transition the input resource to.</param>
+    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture2D<Float4> texture, ResourceState resourceState)
+    {
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+
+        context.Transition(d3D12Resource, states.Before, states.After);
+    }
+
+    /// <summary>
+    /// Transitions the state of a specific resource.
+    /// </summary>
     /// <typeparam name="T">The type of items stored on the texture.</typeparam>
     /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
     /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
@@ -374,6 +426,58 @@ public static class ComputeContextExtensions
     public static unsafe void Transition<T, TPixel>(this in ComputeContext context, ReadWriteTexture2D<T, TPixel> texture, ResourceState resourceState)
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
+    {
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+
+        context.Transition(d3D12Resource, states.Before, states.After);
+    }
+
+    /// <summary>
+    /// Transitions the state of a specific resource.
+    /// </summary>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture3D{T}"/> instance to transition.</param>
+    /// <param name="resourceState">The state to transition the input resource to.</param>
+    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture3D<float> texture, ResourceState resourceState)
+    {
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+
+        context.Transition(d3D12Resource, states.Before, states.After);
+    }
+
+    /// <summary>
+    /// Transitions the state of a specific resource.
+    /// </summary>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture3D{T}"/> instance to transition.</param>
+    /// <param name="resourceState">The state to transition the input resource to.</param>
+    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture3D<Float2> texture, ResourceState resourceState)
+    {
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+
+        context.Transition(d3D12Resource, states.Before, states.After);
+    }
+
+    /// <summary>
+    /// Transitions the state of a specific resource.
+    /// </summary>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture3D{T}"/> instance to transition.</param>
+    /// <param name="resourceState">The state to transition the input resource to.</param>
+    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture3D<Float3> texture, ResourceState resourceState)
+    {
+        var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
+
+        context.Transition(d3D12Resource, states.Before, states.After);
+    }
+
+    /// <summary>
+    /// Transitions the state of a specific resource.
+    /// </summary>
+    /// <param name="context">The <see cref="ComputeContext"/> to use to transition the resource.</param>
+    /// <param name="texture">The input <see cref="ReadWriteTexture3D{T}"/> instance to transition.</param>
+    /// <param name="resourceState">The state to transition the input resource to.</param>
+    public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture3D<Float4> texture, ResourceState resourceState)
     {
         var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
 
