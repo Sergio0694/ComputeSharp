@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace ComputeSharp;
 
@@ -28,6 +29,8 @@ public static class ReadWriteTexture3DExtensions
     /// <exception cref="InvalidOperationException">Thrown if the current instance is not in a readonly state.</exception>
     public static IReadOnlyTexture3D<float> AsReadOnly(this ReadWriteTexture3D<float> texture)
     {
+        Guard.IsNotNull(texture, nameof(texture));
+
         return texture.AsReadOnly();
     }
 
@@ -52,6 +55,8 @@ public static class ReadWriteTexture3DExtensions
     /// <exception cref="InvalidOperationException">Thrown if the current instance is not in a readonly state.</exception>
     public static IReadOnlyTexture3D<Float2> AsReadOnly(this ReadWriteTexture3D<Float2> texture)
     {
+        Guard.IsNotNull(texture, nameof(texture));
+
         return texture.AsReadOnly();
     }
 
@@ -76,6 +81,8 @@ public static class ReadWriteTexture3DExtensions
     /// <exception cref="InvalidOperationException">Thrown if the current instance is not in a readonly state.</exception>
     public static IReadOnlyTexture3D<Float3> AsReadOnly(this ReadWriteTexture3D<Float3> texture)
     {
+        Guard.IsNotNull(texture, nameof(texture));
+
         return texture.AsReadOnly();
     }
 
@@ -100,6 +107,8 @@ public static class ReadWriteTexture3DExtensions
     /// <exception cref="InvalidOperationException">Thrown if the current instance is not in a readonly state.</exception>
     public static IReadOnlyTexture3D<Float4> AsReadOnly(this ReadWriteTexture3D<Float4> texture)
     {
+        Guard.IsNotNull(texture, nameof(texture));
+
         return texture.AsReadOnly();
     }
 
@@ -128,6 +137,8 @@ public static class ReadWriteTexture3DExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
+        Guard.IsNotNull(texture, nameof(texture));
+
         return texture.AsReadOnly();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ComputeSharp.Resources;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace ComputeSharp;
 
@@ -16,6 +17,9 @@ public static class StructuredBufferExtensions
     public static void CopyTo<T>(this StructuredBuffer<T> source, ReadBackBuffer<T> destination)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
+        Guard.IsNotNull(destination, nameof(destination));
+
         source.CopyTo(destination, 0, 0, source.Length);
     }
 
@@ -31,6 +35,9 @@ public static class StructuredBufferExtensions
     public static void CopyTo<T>(this StructuredBuffer<T> source, ReadBackBuffer<T> destination, int sourceOffset, int destinationOffset, int count)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
+        Guard.IsNotNull(destination, nameof(destination));
+
         source.CopyTo(destination, sourceOffset, destinationOffset, count);
     }
 
@@ -43,6 +50,9 @@ public static class StructuredBufferExtensions
     public static void CopyFrom<T>(this StructuredBuffer<T> destination, UploadBuffer<T> source)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
+
         source.CopyTo(destination, 0, 0, source.Length);
     }
 
@@ -58,6 +68,9 @@ public static class StructuredBufferExtensions
     public static void CopyFrom<T>(this StructuredBuffer<T> destination, UploadBuffer<T> source, int sourceOffset, int destinationOffset, int count)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
+
         source.CopyTo(destination, sourceOffset, destinationOffset, count);
     }
 }

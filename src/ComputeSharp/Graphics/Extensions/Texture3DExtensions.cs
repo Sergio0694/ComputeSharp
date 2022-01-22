@@ -24,6 +24,8 @@ public static class Texture3DExtensions
     public static T[,,] ToArray<T>(this Texture3D<T> source)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
+
         T[,,] data = new T[source.Depth, source.Height, source.Width];
 
         source.CopyTo(data);
@@ -46,6 +48,7 @@ public static class Texture3DExtensions
     public static unsafe T[,,] ToArray<T>(this Texture3D<T> source, int x, int y, int z, int width, int height, int depth)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
         Guard.IsGreaterThanOrEqualTo(width, 0, nameof(width));
         Guard.IsGreaterThanOrEqualTo(height, 0, nameof(height));
         Guard.IsGreaterThanOrEqualTo(depth, 0, nameof(depth));
@@ -73,6 +76,8 @@ public static class Texture3DExtensions
     public static void CopyTo<T>(this Texture3D<T> source, T[,,] destination)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
+        Guard.IsNotNull(destination, nameof(destination));
         Guard.IsEqualTo(destination.GetLength(0), source.Depth, nameof(destination));
         Guard.IsEqualTo(destination.GetLength(1), source.Height, nameof(destination));
         Guard.IsEqualTo(destination.GetLength(2), source.Width, nameof(destination));
@@ -90,6 +95,9 @@ public static class Texture3DExtensions
     public static void CopyTo<T>(this Texture3D<T> source, T[] destination, int destinationOffset)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
+        Guard.IsNotNull(destination, nameof(destination));
+
         source.CopyTo(destination.AsSpan(destinationOffset), 0, 0, 0, source.Width, source.Height, source.Depth);
     }
 
@@ -107,6 +115,9 @@ public static class Texture3DExtensions
     public static void CopyTo<T>(this Texture3D<T> source, T[] destination, int destinationOffset, Range x, Range y, Range z)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
+        Guard.IsNotNull(destination, nameof(destination));
+
         source.CopyTo(destination.AsSpan(destinationOffset), x, y, z);
     }
 #endif
@@ -127,6 +138,9 @@ public static class Texture3DExtensions
     public static void CopyTo<T>(this Texture3D<T> source, T[] destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffset, int width, int height, int depth)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
+        Guard.IsNotNull(destination, nameof(destination));
+
         source.CopyTo(destination.AsSpan(destinationOffset), sourceOffsetX, sourceOffsetY, sourceOffsetZ, width, height, depth);
     }
 
@@ -139,6 +153,8 @@ public static class Texture3DExtensions
     public static void CopyTo<T>(this Texture3D<T> source, Span<T> destination)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
+
         source.CopyTo(destination, 0, 0, 0, source.Width, source.Height, source.Depth);
     }
 
@@ -155,6 +171,8 @@ public static class Texture3DExtensions
     public static void CopyTo<T>(this Texture3D<T> source, Span<T> destination, Range x, Range y, Range z)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
+
         var (offsetX, width) = x.GetOffsetAndLength(source.Width);
         var (offsetY, height) = y.GetOffsetAndLength(source.Height);
         var (offsetZ, depth) = z.GetOffsetAndLength(source.Depth);
@@ -178,6 +196,8 @@ public static class Texture3DExtensions
     public static void CopyTo<T>(this Texture3D<T> source, Span<T> destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int width, int height, int depth)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
+
         source.CopyTo(ref MemoryMarshal.GetReference(destination), destination.Length, sourceOffsetX, sourceOffsetY, sourceOffsetZ, width, height, depth);
     }
 
@@ -190,6 +210,9 @@ public static class Texture3DExtensions
     public static void CopyTo<T>(this Texture3D<T> source, Texture3D<T> destination)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
+        Guard.IsNotNull(destination, nameof(destination));
+
         source.CopyTo(destination, 0, 0, 0, 0, 0, 0, source.Width, source.Height, source.Depth);
     }
 
@@ -208,6 +231,9 @@ public static class Texture3DExtensions
     public static void CopyTo<T>(this Texture3D<T> source, Texture3D<T> destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int width, int height, int depth)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
+        Guard.IsNotNull(destination, nameof(destination));
+
         source.CopyTo(destination, sourceOffsetX, sourceOffsetY, sourceOffsetZ, 0, 0, 0, width, height, depth);
     }
 
@@ -229,6 +255,9 @@ public static class Texture3DExtensions
     public static void CopyTo<T>(this Texture3D<T> source, Texture3D<T> destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
+        Guard.IsNotNull(destination, nameof(destination));
+
         source.CopyTo(destination, sourceOffsetX, sourceOffsetY, sourceOffsetZ, destinationOffsetX, destinationOffsetY, destinationOffsetZ, width, height, depth);
     }
 
@@ -241,6 +270,9 @@ public static class Texture3DExtensions
     public static void CopyTo<T>(this Texture3D<T> source, ReadBackTexture3D<T> destination)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
+        Guard.IsNotNull(destination, nameof(destination));
+
         source.CopyTo(destination, 0, 0, 0, 0, 0, 0, source.Width, source.Height, source.Depth);
     }
 
@@ -259,6 +291,9 @@ public static class Texture3DExtensions
     public static void CopyTo<T>(this Texture3D<T> source, ReadBackTexture3D<T> destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int width, int height, int depth)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
+        Guard.IsNotNull(destination, nameof(destination));
+
         source.CopyTo(destination, sourceOffsetX, sourceOffsetY, sourceOffsetZ, 0, 0, 0, width, height, depth);
     }
 
@@ -280,6 +315,9 @@ public static class Texture3DExtensions
     public static void CopyTo<T>(this Texture3D<T> source, ReadBackTexture3D<T> destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
+        Guard.IsNotNull(destination, nameof(destination));
+
         source.CopyTo(destination, sourceOffsetX, sourceOffsetY, sourceOffsetZ, destinationOffsetX, destinationOffsetY, destinationOffsetZ, width, height, depth);
     }
 
@@ -296,6 +334,8 @@ public static class Texture3DExtensions
     public static void CopyFrom<T>(this Texture3D<T> destination, T[,,] source)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
         Guard.IsEqualTo(source.GetLength(0), destination.Depth, nameof(source));
         Guard.IsEqualTo(source.GetLength(1), destination.Height, nameof(source));
         Guard.IsEqualTo(source.GetLength(2), destination.Width, nameof(source));
@@ -312,6 +352,9 @@ public static class Texture3DExtensions
     public static void CopyFrom<T>(this Texture3D<T> destination, T[] source)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
+
         destination.CopyFrom(source.AsSpan(), 0, 0, 0, destination.Width, destination.Height, destination.Depth);
     }
 
@@ -328,6 +371,9 @@ public static class Texture3DExtensions
     public static void CopyFrom<T>(this Texture3D<T> destination, T[] source, Range x, Range y, Range z)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
+
         destination.CopyFrom(source.AsSpan(), x, y, z);
     }
 #endif
@@ -347,6 +393,9 @@ public static class Texture3DExtensions
     public static void CopyFrom<T>(this Texture3D<T> destination, T[] source, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
+
         destination.CopyFrom(source.AsSpan(), destinationOffsetX, destinationOffsetY, destinationOffsetZ, width, height, depth);
     }
 
@@ -364,6 +413,9 @@ public static class Texture3DExtensions
     public static void CopyFrom<T>(this Texture3D<T> destination, T[] source, int sourceOffset, Range x, Range y, Range z)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
+
         destination.CopyFrom(source.AsSpan(sourceOffset), x, y, z);
     }
 #endif
@@ -384,6 +436,9 @@ public static class Texture3DExtensions
     public static void CopyFrom<T>(this Texture3D<T> destination, T[] source, int sourceOffset, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
+
         destination.CopyFrom(source.AsSpan(sourceOffset), destinationOffsetX, destinationOffsetY, destinationOffsetZ, width, height, depth);
     }
 
@@ -397,6 +452,8 @@ public static class Texture3DExtensions
     public static void CopyFrom<T>(this Texture3D<T> destination, ReadOnlySpan<T> source)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+
         destination.CopyFrom(source, 0, 0, 0, destination.Width, destination.Height, destination.Depth);
     }
 
@@ -413,6 +470,8 @@ public static class Texture3DExtensions
     public static void CopyFrom<T>(this Texture3D<T> destination, ReadOnlySpan<T> source, Range x, Range y, Range z)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+
         var (offsetX, width) = x.GetOffsetAndLength(destination.Width);
         var (offsetY, height) = y.GetOffsetAndLength(destination.Height);
         var (offsetZ, depth) = z.GetOffsetAndLength(destination.Depth);
@@ -436,6 +495,8 @@ public static class Texture3DExtensions
     public static void CopyFrom<T>(this Texture3D<T> destination, ReadOnlySpan<T> source, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+
         destination.CopyFrom(ref MemoryMarshal.GetReference(source), source.Length, destinationOffsetX, destinationOffsetY, destinationOffsetZ, width, height, depth);
     }
 
@@ -448,6 +509,9 @@ public static class Texture3DExtensions
     public static void CopyFrom<T>(this Texture3D<T> destination, Texture3D<T> source)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
+
         source.CopyTo(destination, 0, 0, 0, 0, 0, 0, source.Width, source.Height, source.Depth);
     }
 
@@ -466,6 +530,9 @@ public static class Texture3DExtensions
     public static void CopyFrom<T>(this Texture3D<T> destination, Texture3D<T> source, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int width, int height, int depth)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
+
         source.CopyTo(destination, sourceOffsetX, sourceOffsetY, sourceOffsetZ, 0, 0, 0, width, height, depth);
     }
 
@@ -487,6 +554,9 @@ public static class Texture3DExtensions
     public static void CopyFrom<T>(this Texture3D<T> destination, Texture3D<T> source, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
+
         source.CopyTo(destination, sourceOffsetX, sourceOffsetY, sourceOffsetZ, destinationOffsetX, destinationOffsetY, destinationOffsetZ, width, height, depth);
     }
 
@@ -499,6 +569,9 @@ public static class Texture3DExtensions
     public static void CopyFrom<T>(this Texture3D<T> destination, UploadTexture3D<T> source)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
+
         destination.CopyFrom(source, 0, 0, 0, 0, 0, 0, source.Width, source.Height, source.Depth);
     }
 
@@ -517,6 +590,9 @@ public static class Texture3DExtensions
     public static void CopyFrom<T>(this Texture3D<T> destination, UploadTexture3D<T> source, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int width, int height, int depth)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
+
         destination.CopyFrom(source, sourceOffsetX, sourceOffsetY, sourceOffsetZ, 0, 0, 0, width, height, depth);
     }
 
@@ -538,6 +614,9 @@ public static class Texture3DExtensions
     public static void CopyFrom<T>(this Texture3D<T> destination, UploadTexture3D<T> source, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
+
         destination.CopyFrom(source, sourceOffsetX, sourceOffsetY, sourceOffsetZ, destinationOffsetX, destinationOffsetY, destinationOffsetZ, width, height, depth);
     }
 }

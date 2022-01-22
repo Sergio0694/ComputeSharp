@@ -1,4 +1,5 @@
 ﻿using ComputeSharp.Resources;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace ComputeSharp;
 
@@ -16,6 +17,9 @@ public static class UploadBufferExtensions
     public static void CopyTo<T>(this UploadBuffer<T> source, StructuredBuffer<T> destination)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
+        Guard.IsNotNull(destination, nameof(destination));
+
         destination.CopyFrom(source, 0, 0, source.Length);
     }
 
@@ -31,6 +35,9 @@ public static class UploadBufferExtensions
     public static void CopyTo<T>(this UploadBuffer<T> source, StructuredBuffer<T> destination, int sourceOffset, int destinationOffset, int count)
         where T : unmanaged
     {
+        Guard.IsNotNull(source, nameof(source));
+        Guard.IsNotNull(destination, nameof(destination));
+
         destination.CopyFrom(source, sourceOffset, destinationOffset, count);
     }
 }
