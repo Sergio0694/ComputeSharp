@@ -34,7 +34,7 @@ public sealed class AppCenterService : IAnalyticsService
     }
 
     /// <inheritdoc/>
-    public void Log(string title, Exception exception, params (string Property, object? Value)[]? data)
+    public void Log(Exception exception, params (string Property, object? Value)[]? data)
     {
         Crashes.TrackError(exception, GetProperties(data));
     }

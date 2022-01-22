@@ -17,10 +17,9 @@ public interface IAnalyticsService
     void Log(string title, params (string Property, object? Value)[]? data);
 
     /// <summary>
-    /// Logs an exception with a specified title and optional properties.
+    /// Logs an exception with optional properties.
     /// </summary>
-    /// <param name="title">The title of the event to track.</param>
     /// <param name="exception">The exception that has been thrown.</param>
     /// <param name="data">The optional event properties.</param>
-    void Log(string title, Exception exception, params (string Property, object? Value)[]? data);
+    void Log(Exception exception, params (string Property, object? Value)[]? data);
 }

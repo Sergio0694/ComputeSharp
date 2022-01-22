@@ -30,12 +30,11 @@ public sealed class DebugAnalyticsService : IAnalyticsService
     }
 
     /// <inheritdoc/>
-    public void Log(string title, Exception exception, params (string Property, object? Value)[]? data)
+    public void Log(Exception exception, params (string Property, object? Value)[]? data)
     {
         StringBuilder builder = new();
 
-        builder.AppendLine($"[EXCEPTION]: \"{title}\"");
-        builder.AppendLine($">> Type: \"{exception.GetType()}\"");
+        builder.AppendLine($"[EXCEPTION]: \"{exception.GetType()}\"");
         builder.AppendLine(">> Stack trace");
         builder.AppendLine(exception.StackTrace);
 
