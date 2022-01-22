@@ -53,11 +53,15 @@ public sealed partial class MainView : UserControl
     private void MainShaderPanel_RenderingFailed(AnimatedComputeShaderPanel sender, Exception args)
     {
         Ioc.Default.GetRequiredService<IAnalyticsService>().Log(args, (nameof(Error), Error.RenderingFailedOnMainPanel));
+
+        RenderingErrorInfoBar.IsOpen = true;
     }
 
     // Logs rendering failed in a secondary panel
     private void SelectionShaderPanel_RenderingFailed(AnimatedComputeShaderPanel sender, Exception args)
     {
         Ioc.Default.GetRequiredService<IAnalyticsService>().Log(args, (nameof(Error), Error.RenderingFailedOnSelectionPanel));
+
+        RenderingErrorInfoBar.IsOpen = true;
     }
 }

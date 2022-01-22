@@ -6,15 +6,11 @@
     xmlns:computesharp="using:ComputeSharp.Uwp"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:converters="using:ComputeSharp.SwapChain.Core.Converters"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
     xmlns:models="using:ComputeSharp.SwapChain.Core.Models"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
-    d:DesignHeight="300"
-    d:DesignWidth="400"
-    SizeChanged="UserControl_SizeChanged"
-    mc:Ignorable="d">
+    SizeChanged="UserControl_SizeChanged">
 
     <Grid x:Name="Root">
         <Grid.Resources>
@@ -228,5 +224,31 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
             Fill="Transparent" />
+
+        <!--  Info bar  -->
+        <muxc:InfoBar
+            x:Name="RenderingErrorInfoBar"
+            Title="Rendering error"
+            Margin="80"
+            Message="There was an error that caused the rendering to fail. Try pausing and starting the rendering again, or restarting the app. If the issue persists, please report it by opening an issue on GitHub."
+            Severity="Error">
+            <muxc:InfoBar.ActionButton>
+                <HyperlinkButton Content="Report the issue" NavigateUri="https://github.com/Sergio0694/ComputeSharp/issues" />
+            </muxc:InfoBar.ActionButton>
+            <animations:Implicit.ShowAnimations>
+                <animations:OpacityAnimation
+                    From="0"
+                    To="1.0"
+                    Duration="0:0:0.5" />
+                <animations:TranslationAnimation
+                    From="0,20,0"
+                    To="0"
+                    Duration="0:0:0.5" />
+            </animations:Implicit.ShowAnimations>
+            <animations:Implicit.HideAnimations>
+                <animations:OpacityAnimation To="0" Duration="0:0:0.5" />
+                <animations:TranslationAnimation To="0,20,0" Duration="0:0:0.5" />
+            </animations:Implicit.HideAnimations>
+        </muxc:InfoBar>
     </Grid>
 </UserControl>
