@@ -12,6 +12,4 @@ public static class Event
     public const string IsRenderingPausedChanged = "[SETTINGS] IsRenderingPaused";
     public const string OpenShaderSelectionPanel = "[SHELL] Open ShaderSelectionPanel";
     public const string CloseShaderSelectionPanel = "[SHELL] Close ShaderSelectionPanel";
-    public const string RenderingFailedOnMainPanel = "[SHELL] RenderingFailed (main panel)";
-    public const string RenderingFailedOnSelectionPanel = "[SHELL] RenderingFailed (selection panel)";
 }

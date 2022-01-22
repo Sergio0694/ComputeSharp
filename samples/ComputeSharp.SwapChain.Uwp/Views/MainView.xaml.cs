@@ -52,12 +52,12 @@ public sealed partial class MainView : UserControl
     // Logs rendering failed in the main panel
     private void MainShaderPanel_RenderingFailed(AnimatedComputeShaderPanel sender, Exception args)
     {
-        Ioc.Default.GetRequiredService<IAnalyticsService>().Log(Event.RenderingFailedOnMainPanel, args);
+        Ioc.Default.GetRequiredService<IAnalyticsService>().Log(args, (nameof(Error), Error.RenderingFailedOnMainPanel));
     }
 
     // Logs rendering failed in a secondary panel
     private void SelectionShaderPanel_RenderingFailed(AnimatedComputeShaderPanel sender, Exception args)
     {
-        Ioc.Default.GetRequiredService<IAnalyticsService>().Log(Event.RenderingFailedOnSelectionPanel, args);
+        Ioc.Default.GetRequiredService<IAnalyticsService>().Log(args, (nameof(Error), Error.RenderingFailedOnSelectionPanel));
     }
 }
