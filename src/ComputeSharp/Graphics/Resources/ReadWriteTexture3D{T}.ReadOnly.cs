@@ -14,7 +14,7 @@ using static TerraFX.Interop.DirectX.D3D12_SRV_DIMENSION;
 namespace ComputeSharp;
 
 /// <inheritdoc/>
-partial class ReadWriteTexture2D<T, TPixel>
+partial class ReadWriteTexture3D<T>
 {
     /// <summary>
     /// The wrapping <see cref="ReadOnly"/> instance, if available.
@@ -22,14 +22,14 @@ partial class ReadWriteTexture2D<T, TPixel>
     private ReadOnly? readOnlyWrapper;
 
     /// <summary>
-    /// Retrieves a wrapping <see cref="IReadOnlyNormalizedTexture2D{TPixel}"/> instance for the current resource.
+    /// Retrieves a wrapping <see cref="IReadOnlyTexture3D{TPixel}"/> instance for the current resource.
     /// </summary>
-    /// <returns>An <see cref="IReadOnlyNormalizedTexture2D{TPixel}"/> instance wrapping the current resource.</returns>
+    /// <returns>An <see cref="IReadOnlyTexture3D{TPixel}"/> instance wrapping the current resource.</returns>
     /// <remarks>
     /// <para>The returned instance can be used in a shader to enable texture sampling.</para>
     /// <para>
     /// This is an advanced API that can only be used after the current instance has been transitioned to be in a readonly state. To do so,
-    /// use <see cref="ComputeContextExtensions.Transition{T, TPixel}(in ComputeContext, ReadWriteTexture2D{T, TPixel}, ResourceState)"/>,
+    /// use <see cref="ComputeContextExtensions.Transition{T, TPixel}(in ComputeContext, ReadWriteTexture3D{T, TPixel}, ResourceState)"/>,
     /// and specify <see cref="ResourceState.ReadOnly"/>. After that, <see cref="AsReadOnly"/> can be used to get a readonly wrapper for
     /// the current texture to use in a shader. This instance should not be cached or reused, but just passed directly to a shader
     /// being dispatched through that same <see cref="ComputeContext"/>, as it will not work if the texture changes state later on.
@@ -39,7 +39,7 @@ partial class ReadWriteTexture2D<T, TPixel>
     /// </remarks>
     /// <exception cref="ObjectDisposedException">Thrown if the current instance or its associated device are disposed.</exception>
     /// <exception cref="InvalidOperationException">Thrown if the current instance is not in a readonly state.</exception>
-    public IReadOnlyNormalizedTexture2D<TPixel> AsReadOnly()
+    public IReadOnlyTexture3D<T> AsReadOnly()
     {
         GraphicsDevice.ThrowIfDisposed();
 
@@ -54,7 +54,7 @@ partial class ReadWriteTexture2D<T, TPixel>
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        static ReadOnly InitializeWrapper(ReadWriteTexture2D<T, TPixel> texture)
+        static ReadOnly InitializeWrapper(ReadWriteTexture3D<T> texture)
         {
             return texture.readOnlyWrapper = new(texture);
         }
@@ -71,14 +71,14 @@ partial class ReadWriteTexture2D<T, TPixel>
     }
 
     /// <summary>
-    /// A wrapper for a <see cref="ReadWriteTexture2D{T, TPixel}"/> resource that has been temporarily transitioned to readonly.
+    /// A wrapper for a <see cref="ReadWriteTexture3D{T}"/> resource that has been temporarily transitioned to readonly.
     /// </summary>
-    private sealed unsafe class ReadOnly : NativeObject, IReadOnlyNormalizedTexture2D<TPixel>, GraphicsResourceHelper.IGraphicsResource
+    private sealed unsafe class ReadOnly : NativeObject, IReadOnlyTexture3D<T>, GraphicsResourceHelper.IGraphicsResource
     {
         /// <summary>
-        /// The owning <see cref="ReadWriteTexture2D{T, TPixel}"/> instance being wrapped.
+        /// The owning <see cref="ReadWriteTexture3D{T}"/> instance being wrapped.
         /// </summary>
-        private readonly ReadWriteTexture2D<T, TPixel> owner;
+        private readonly ReadWriteTexture3D<T> owner;
 
         /// <summary>
         /// The <see cref="ID3D12ResourceDescriptorHandles"/> instance for the current resource.
@@ -88,33 +88,36 @@ partial class ReadWriteTexture2D<T, TPixel>
         /// <summary>
         /// Creates a new <see cref="ReadOnly"/> instance with the specified parameters.
         /// </summary>
-        /// <param name="owner">The owning <see cref="ReadWriteTexture2D{T, TPixel}"/> instance to wrap.</param>
-        public ReadOnly(ReadWriteTexture2D<T, TPixel> owner)
+        /// <param name="owner">The owning <see cref="ReadWriteTexture3D{T}"/> instance to wrap.</param>
+        public ReadOnly(ReadWriteTexture3D<T> owner)
         {
             this.owner = owner;
 
             owner.GraphicsDevice.RentShaderResourceViewDescriptorHandles(out this.d3D12ResourceDescriptorHandles);
 
-            owner.GraphicsDevice.D3D12Device->CreateShaderResourceView(owner.D3D12Resource, DXGIFormatHelper.GetForType<T>(), D3D12_SRV_DIMENSION_TEXTURE2D, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandle);
+            owner.GraphicsDevice.D3D12Device->CreateShaderResourceView(owner.D3D12Resource, DXGIFormatHelper.GetForType<T>(), D3D12_SRV_DIMENSION_TEXTURE3D, this.d3D12ResourceDescriptorHandles.D3D12CpuDescriptorHandle);
         }
 
         /// <inheritdoc/>
-        public ref readonly TPixel this[int x, int y] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T, TPixel>.ReadOnly)}[{typeof(int)}, {typeof(int)}]");
+        public ref readonly T this[int x, int y, int z] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T>.ReadOnly)}[{typeof(int)}, {typeof(int)}, {typeof(int)}]");
 
         /// <inheritdoc/>
-        public ref readonly TPixel this[Int2 xy] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T, TPixel>.ReadOnly)}[{typeof(Int2)}]");
+        public ref readonly T this[Int3 xyz] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T>.ReadOnly)}[{typeof(Int3)}]");
 
         /// <inheritdoc/>
-        public ref readonly TPixel this[float u, float v] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T, TPixel>.ReadOnly)}[{typeof(float)}, {typeof(float)}]");
+        public ref readonly T this[float u, float v, float w] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T>.ReadOnly)}[{typeof(float)}, {typeof(float)}, {typeof(float)}]");
 
         /// <inheritdoc/>
-        public ref readonly TPixel this[Float2 uv] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture2D<T, TPixel>.ReadOnly)}[{typeof(Float2)}]");
+        public ref readonly T this[Float3 uvw] => throw new InvalidExecutionContextException($"{typeof(ReadWriteTexture3D<T>.ReadOnly)}[{typeof(Float3)}]");
 
         /// <inheritdoc/>
         public int Width => this.owner.Width;
 
         /// <inheritdoc/>
         public int Height => this.owner.Height;
+
+        /// <inheritdoc/>
+        public int Depth => this.owner.Depth;
 
         /// <inheritdoc/>
         public GraphicsDevice GraphicsDevice => this.owner.GraphicsDevice;

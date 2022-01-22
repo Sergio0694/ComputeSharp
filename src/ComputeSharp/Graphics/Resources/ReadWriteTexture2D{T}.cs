@@ -13,7 +13,7 @@ namespace ComputeSharp;
 /// <typeparam name="T">The type of items stored on the texture.</typeparam>
 [DebuggerTypeProxy(typeof(Texture2DDebugView<>))]
 [DebuggerDisplay("{ToString(),raw}")]
-public sealed class ReadWriteTexture2D<T> : Texture2D<T>
+public sealed partial class ReadWriteTexture2D<T> : Texture2D<T>
     where T : unmanaged
 {
     /// <summary>
