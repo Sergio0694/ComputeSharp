@@ -35,6 +35,7 @@ public sealed class MainViewModel : ObservableObject
         Guard.IsNotNull(analyticsService, nameof(analyticsService));
 
         this.analyticsService = analyticsService;
+        this.isVerticalSyncEnabled = true;
         this.isDynamicResolutionEnabled = true;
         this.selectedResolutionScale = 100;
         this.selectedComputeShader = ComputeShaderOptions[0];
@@ -48,6 +49,23 @@ public sealed class MainViewModel : ObservableObject
     /// Gets the available resolution scaling options (as percentage values).
     /// </summary>
     public IList<int> ResolutionScaleOptions { get; } = new[] { 25, 50, 75, 100 };
+
+    private bool isVerticalSyncEnabled;
+
+    /// <summary>
+    /// Gets or sets whether the vertical sync is enabled.
+    /// </summary>
+    public bool IsVerticalSyncEnabled
+    {
+        get => this.isVerticalSyncEnabled;
+        set
+        {
+            if (SetProperty(ref this.isVerticalSyncEnabled, value))
+            {
+                this.analyticsService.Log(Event.IsVerticalSyncEnabledChanged, (nameof(value), value));
+            }
+        }
+    }
 
     private bool isDynamicResolutionEnabled;
 

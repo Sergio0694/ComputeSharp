@@ -98,6 +98,40 @@ partial class SwapChainManager<TOwner>
     }
 
     /// <summary>
+    /// Queues a change in the vertical sync mode.
+    /// </summary>
+    /// <param name="isVerticalSyncEnabled">Whether or not to use vertical sync.</param>
+    public async void QueueVerticalSyncModeChange(bool isVerticalSyncEnabled)
+    {
+        ThrowIfDisposed();
+
+        using (await this.setupSemaphore.LockAsync())
+        {
+            // The v-sync option can be toggled on the fly when not using dynamic resolution
+            if (this.renderCancellationTokenSource?.IsCancellationRequested == false &&
+                this.isDynamicResolutionEnabled)
+            {
+                this.renderCancellationTokenSource?.Cancel();
+
+                await this.renderSemaphore.WaitAsync();
+
+                Thread newRenderThread = new(static args => ((SwapChainManager<TOwner>)args!).SwitchAndStartRenderLoop());
+
+                this.renderCancellationTokenSource = new CancellationTokenSource();
+                this.renderThread = newRenderThread;
+                this.renderSemaphore = new SemaphoreSlim(0, 1);
+                this.syncInterval = isVerticalSyncEnabled ? 1u : 0u;
+
+                newRenderThread.Start(this);
+            }
+            else
+            {
+                this.syncInterval = isVerticalSyncEnabled ? 1u : 0u;
+            }
+        }
+    }
+
+    /// <summary>
     /// Queues a resize operation.
     /// </summary>
     /// <param name="width">The width of the render resolution.</param>
@@ -160,10 +194,14 @@ partial class SwapChainManager<TOwner>
                 RenderLoop();
             }
 
+            this.renderStopwatch?.Stop();
+
             OnRenderingStopped();
         }
         catch (Exception e)
         {
+            this.renderStopwatch?.Stop();
+
             OnRenderingFailed(e);
         }
         finally
@@ -192,6 +230,7 @@ partial class SwapChainManager<TOwner>
         // resuming after a pause correctly renders the first frame at the right time.        
         if (OnUpdate(renderStopwatch.Elapsed, parameter))
         {
+            OnWaitForPresent();
             OnPresent();
         }
 
@@ -209,11 +248,10 @@ partial class SwapChainManager<TOwner>
             
             if (OnUpdate(renderStopwatch.Elapsed, parameter))
             {
+                OnWaitForPresent();
                 OnPresent();
             }
         }
-
-        renderStopwatch.Stop();
     }
 
     /// <summary>
@@ -225,8 +263,7 @@ partial class SwapChainManager<TOwner>
         Stopwatch renderStopwatch = this.renderStopwatch ??= new();
         Stopwatch frameStopwatch = new();
         CancellationToken cancellationToken = this.renderCancellationTokenSource!.Token;
-
-        DynamicResolutionManager.Create(out DynamicResolutionManager frameTimeWatcher);
+        DynamicResolutionManager frameTimeWatcher = new(60);
 
         if (!OnFrameRequest(out object? parameter, cancellationToken))
         {
@@ -237,6 +274,7 @@ partial class SwapChainManager<TOwner>
 
         if (OnUpdate(renderStopwatch.Elapsed, parameter))
         {
+            OnWaitForPresent();
             OnPresent();
         }
 
@@ -255,6 +293,18 @@ partial class SwapChainManager<TOwner>
 
             if (OnUpdate(renderStopwatch.Elapsed, parameter))
             {
+                frameStopwatch.Stop();
+
+                // The time spent waiting for present isn't included in the frame time, as when v-sync is
+                // enabled it corresponds to the time spent waiting for the v-blank. If it was included,
+                // then the actual framerate would never exceed the target one, meaning that if dynamic
+                // resolution is enabled, the resolution scale could only keep decreasing without ever
+                // being able to be increased again, as the framerate would never exceed the target.
+                // Simply not counting the time spent waiting for that works around the issue.
+                OnWaitForPresent();
+
+                frameStopwatch.Start();
+
                 OnPresent();
 
                 // Evaluate the dynamic resolution frame time step
@@ -264,8 +314,6 @@ partial class SwapChainManager<TOwner>
                 }
             }
         }
-
-        renderStopwatch.Stop();
     }
 
     /// <summary>
@@ -327,6 +375,11 @@ partial class SwapChainManager<TOwner>
     {
         return this.shaderRunner!.TryExecute(this.texture!, time, parameter);
     }
+
+    /// <summary>
+    /// Waits for the panel to be ready to present a new frame for the current application.
+    /// </summary>
+    private unsafe partial void OnWaitForPresent();
 
     /// <summary>
     /// Presents the last rendered frame for the current application.

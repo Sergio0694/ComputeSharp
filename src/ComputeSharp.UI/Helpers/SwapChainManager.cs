@@ -176,6 +176,11 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     private volatile bool isDynamicResolutionEnabled;
 
     /// <summary>
+    /// The flags to enable or disable vertical sync.
+    /// </summary>
+    private volatile uint syncInterval;
+
+    /// <summary>
     /// The <see cref="Stopwatch"/> instance tracking time since the first rendered frame.
     /// </summary>
     private volatile Stopwatch? renderStopwatch;
@@ -385,11 +390,14 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
     }
 
     /// <inheritdoc/>
+    private unsafe partial void OnWaitForPresent()
+    {
+        _ = Win32.WaitForSingleObjectEx(frameLatencyWaitableObject, Win32.INFINITE, true);
+    }
+
+    /// <inheritdoc/>
     private unsafe partial void OnPresent()
     {
-        // Wait for the swap chain to be ready for presenting
-        _ = Win32.WaitForSingleObjectEx(frameLatencyWaitableObject, 1000, true);
-
         using ComPtr<ID3D12Resource> d3D12Resource = default;
 
         // Get the underlying ID3D12Resource pointer for the texture
@@ -455,7 +463,7 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
         this.d3D12CommandQueue.Get()->Signal(this.d3D12Fence.Get(), updatedFenceValue).Assert();
 
         // Present the new frame
-        this.dxgiSwapChain3.Get()->Present(0, 0).Assert();
+        this.dxgiSwapChain3.Get()->Present(SyncInterval: this.syncInterval, 0).Assert();
 
         if (updatedFenceValue > this.d3D12Fence.Get()->GetCompletedValue())
         {

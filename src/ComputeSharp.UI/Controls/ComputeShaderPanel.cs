@@ -50,6 +50,7 @@ public sealed partial class ComputeShaderPanel : SwapChainPanel
         this.swapChainManager.QueueCompositionScaleChange(CompositionScaleX, CompositionScaleY);
         this.swapChainManager.QueueResolutionScaleChange(ResolutionScale);
         this.swapChainManager.QueueDynamicResolutionModeChange(IsDynamicResolutionEnabled);
+        this.swapChainManager.QueueVerticalSyncModeChange(IsVerticalSyncEnabled);
 
         if (FrameRequestQueue is IFrameRequestQueue frameRequestQueue &&
             ShaderRunner is IShaderRunner shaderRunner)

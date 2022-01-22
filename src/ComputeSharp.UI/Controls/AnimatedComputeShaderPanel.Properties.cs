@@ -136,6 +136,34 @@ partial class AnimatedComputeShaderPanel
     }
 
     /// <summary>
+    /// Gets or sets whether vertical sync is enabled.
+    /// <para>The default value for this property is <see langword="true"/>.</para>
+    /// </summary>
+    public bool IsVerticalSyncEnabled
+    {
+        get => (bool)GetValue(IsVerticalSyncEnabledProperty);
+        set => SetValue(IsVerticalSyncEnabledProperty, value);
+    }
+
+    /// <summary>
+    /// The <see cref="DependencyProperty"/> backing <see cref="IsVerticalSyncEnabled"/>.
+    /// </summary>
+    public static readonly DependencyProperty IsVerticalSyncEnabledProperty = DependencyProperty.Register(
+        nameof(IsVerticalSyncEnabled),
+        typeof(bool),
+        typeof(AnimatedComputeShaderPanel),
+        new PropertyMetadata(true, OnIsVerticalSyncEnabledPropertyChanged));
+
+    /// <inheritdoc cref="DependencyPropertyChangedCallback"/>
+    private static void OnIsVerticalSyncEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var @this = (AnimatedComputeShaderPanel)d;
+        var isVerticalSyncEnabled = (bool)e.NewValue;
+
+        @this.swapChainManager.QueueVerticalSyncModeChange(isVerticalSyncEnabled);
+    }
+
+    /// <summary>
     /// Gets or sets whether or not the rendering is paused.
     /// </summary>
     public bool IsPaused
