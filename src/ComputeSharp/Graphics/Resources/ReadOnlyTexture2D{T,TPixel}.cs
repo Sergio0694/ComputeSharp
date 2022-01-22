@@ -14,7 +14,7 @@ namespace ComputeSharp;
 /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
 [DebuggerTypeProxy(typeof(Texture2DDebugView<>))]
 [DebuggerDisplay("{ToString(),raw}")]
-public sealed class ReadOnlyTexture2D<T, TPixel> : Texture2D<T>, IReadOnlyTexture2D<TPixel>
+public sealed class ReadOnlyTexture2D<T, TPixel> : Texture2D<T>, IReadOnlyNormalizedTexture2D<TPixel>
     where T : unmanaged, IPixel<T, TPixel>
     where TPixel : unmanaged
 {

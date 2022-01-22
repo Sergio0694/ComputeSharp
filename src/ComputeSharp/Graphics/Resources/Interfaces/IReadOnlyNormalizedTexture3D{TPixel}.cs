@@ -5,7 +5,7 @@
 /// This interface can only be used to wrap <see cref="ReadOnlyTexture3D{T, TPixel}"/> instances.
 /// </summary>
 /// <typeparam name="TPixel">The type of normalized pixels used on the GPU side.</typeparam>
-public interface IReadOnlyTexture3D<TPixel> : IGraphicsResource
+public interface IReadOnlyNormalizedTexture3D<TPixel> : IGraphicsResource
     where TPixel : unmanaged
 {
     /// <summary>

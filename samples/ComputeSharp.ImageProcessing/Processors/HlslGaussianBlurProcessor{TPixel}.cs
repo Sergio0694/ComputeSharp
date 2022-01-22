@@ -121,8 +121,8 @@ public sealed partial class HlslGaussianBlurProcessor
         [AutoConstructor]
         internal readonly partial struct VerticalConvolutionProcessor : IComputeShader
         {
-            public readonly IReadWriteTexture2D<float4> source;
-            public readonly IReadWriteTexture2D<float4> target;
+            public readonly IReadWriteNormalizedTexture2D<float4> source;
+            public readonly IReadWriteNormalizedTexture2D<float4> target;
             public readonly ReadOnlyBuffer<float> kernel;
 
             /// <inheritdoc/>
@@ -153,8 +153,8 @@ public sealed partial class HlslGaussianBlurProcessor
         [AutoConstructor]
         internal readonly partial struct HorizontalConvolutionProcessor : IComputeShader
         {
-            public readonly IReadWriteTexture2D<float4> source;
-            public readonly IReadWriteTexture2D<float4> target;
+            public readonly IReadWriteNormalizedTexture2D<float4> source;
+            public readonly IReadWriteNormalizedTexture2D<float4> target;
             public readonly ReadOnlyBuffer<float> kernel;
 
             /// <inheritdoc/>

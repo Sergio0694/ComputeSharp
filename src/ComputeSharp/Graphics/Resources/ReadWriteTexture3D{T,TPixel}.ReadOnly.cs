@@ -22,9 +22,9 @@ partial class ReadWriteTexture3D<T, TPixel>
     private ReadOnly? readOnlyWrapper;
 
     /// <summary>
-    /// Retrieves a wrapping <see cref="IReadOnlyTexture3D{TPixel}"/> instance for the current resource.
+    /// Retrieves a wrapping <see cref="IReadOnlyNormalizedTexture3D{TPixel}"/> instance for the current resource.
     /// </summary>
-    /// <returns>An <see cref="IReadOnlyTexture3D{TPixel}"/> instance wrapping the current resource.</returns>
+    /// <returns>An <see cref="IReadOnlyNormalizedTexture3D{TPixel}"/> instance wrapping the current resource.</returns>
     /// <remarks>
     /// <para>The returned instance can be used in a shader to enable texture sampling.</para>
     /// <para>
@@ -39,7 +39,7 @@ partial class ReadWriteTexture3D<T, TPixel>
     /// </remarks>
     /// <exception cref="ObjectDisposedException">Thrown if the current instance or its associated device are disposed.</exception>
     /// <exception cref="InvalidOperationException">Thrown if the current instance is not in a readonly state.</exception>
-    public IReadOnlyTexture3D<TPixel> AsReadOnly()
+    public IReadOnlyNormalizedTexture3D<TPixel> AsReadOnly()
     {
         GraphicsDevice.ThrowIfDisposed();
 
@@ -73,7 +73,7 @@ partial class ReadWriteTexture3D<T, TPixel>
     /// <summary>
     /// A wrapper for a <see cref="ReadWriteTexture3D{T, TPixel}"/> resource that has been temporarily transitioned to readonly.
     /// </summary>
-    private sealed unsafe class ReadOnly : NativeObject, IReadOnlyTexture3D<TPixel>, GraphicsResourceHelper.IGraphicsResource
+    private sealed unsafe class ReadOnly : NativeObject, IReadOnlyNormalizedTexture3D<TPixel>, GraphicsResourceHelper.IGraphicsResource
     {
         /// <summary>
         /// The owning <see cref="ReadWriteTexture3D{T, TPixel}"/> instance being wrapped.

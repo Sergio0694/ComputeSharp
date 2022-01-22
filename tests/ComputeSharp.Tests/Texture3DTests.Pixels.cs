@@ -69,11 +69,11 @@ public partial class Texture3DTests
             {
                 context.Transition(texture, ResourceState.ReadOnly);
 
-                IReadOnlyTexture3D<TPixel> wrapper1 = texture.AsReadOnly();
+                IReadOnlyNormalizedTexture3D<TPixel> wrapper1 = texture.AsReadOnly();
 
                 Assert.IsNotNull(wrapper1);
 
-                IReadOnlyTexture3D<TPixel> wrapper2 = texture.AsReadOnly();
+                IReadOnlyNormalizedTexture3D<TPixel> wrapper2 = texture.AsReadOnly();
 
                 Assert.IsNotNull(wrapper2);
                 Assert.AreSame(wrapper1, wrapper2);

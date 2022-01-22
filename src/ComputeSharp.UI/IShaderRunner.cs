@@ -22,5 +22,5 @@ public interface IShaderRunner
     /// Any exceptions thrown by the runner will result in <see cref="ComputeShaderPanel.RenderingFailed"/>
     /// or <see cref="AnimatedComputeShaderPanel.RenderingFailed"/> to be raised.
     /// </remarks>
-    bool TryExecute(IReadWriteTexture2D<Float4> texture, TimeSpan timespan, object? parameter);
+    bool TryExecute(IReadWriteNormalizedTexture2D<Float4> texture, TimeSpan timespan, object? parameter);
 }

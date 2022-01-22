@@ -315,7 +315,7 @@ public sealed partial class HlslBokehBlurProcessor
         [AutoConstructor]
         internal partial struct VerticalConvolutionProcessor : IComputeShader
         {
-            public IReadWriteTexture2D<float4> source;
+            public IReadWriteNormalizedTexture2D<float4> source;
             public ReadWriteTexture2D<float4> reals;
             public ReadWriteTexture2D<float4> imaginaries;
             public ReadOnlyBuffer<Complex64> kernel;
@@ -392,7 +392,7 @@ public sealed partial class HlslBokehBlurProcessor
         [AutoConstructor]
         internal readonly partial struct GammaHighlightProcessor : IComputeShader
         {
-            public readonly IReadWriteTexture2D<float4> source;
+            public readonly IReadWriteNormalizedTexture2D<float4> source;
 
             /// <inheritdoc/>
             public void Execute()
@@ -417,7 +417,7 @@ public sealed partial class HlslBokehBlurProcessor
         internal readonly partial struct InverseGammaHighlightProcessor : IComputeShader
         {
             public readonly ReadWriteTexture2D<float4> source;
-            public readonly IReadWriteTexture2D<float4> target;
+            public readonly IReadWriteNormalizedTexture2D<float4> target;
 
             /// <inheritdoc/>
             public void Execute()

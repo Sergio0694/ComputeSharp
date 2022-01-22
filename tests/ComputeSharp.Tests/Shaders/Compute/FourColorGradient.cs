@@ -12,7 +12,7 @@ internal readonly partial struct FourColorGradient : IComputeShader
     /// <summary>
     /// The target texture.
     /// </summary>
-    public readonly IReadWriteTexture2D<float4> texture;
+    public readonly IReadWriteNormalizedTexture2D<float4> texture;
 
     /// <summary>
     /// The current time since the start of the application.

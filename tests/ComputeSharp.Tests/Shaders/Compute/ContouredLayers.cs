@@ -11,7 +11,7 @@ internal readonly partial struct ContouredLayers : IComputeShader
     /// <summary>
     /// The target texture.
     /// </summary>
-    public readonly IReadWriteTexture2D<float4> destination;
+    public readonly IReadWriteNormalizedTexture2D<float4> destination;
 
     /// <summary>
     /// The current time Hlsl.Since the start of the application.
@@ -21,7 +21,7 @@ internal readonly partial struct ContouredLayers : IComputeShader
     /// <summary>
     /// The sampling texture.
     /// </summary>
-    public readonly IReadOnlyTexture2D<float4> texture;
+    public readonly IReadOnlyNormalizedTexture2D<float4> texture;
 
     // float3 to float hash.
     private static float Hash21(float2 p)

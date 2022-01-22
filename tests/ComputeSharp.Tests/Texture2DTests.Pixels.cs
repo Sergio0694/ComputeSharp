@@ -74,8 +74,8 @@ public partial class Texture2DTests
     [AutoConstructor]
     public readonly partial struct SamplingComputeShader : IComputeShader
     {
-        public readonly IReadOnlyTexture2D<float4> source;
-        public readonly IReadWriteTexture2D<float4> destination;
+        public readonly IReadOnlyNormalizedTexture2D<float4> source;
+        public readonly IReadWriteNormalizedTexture2D<float4> destination;
 
         public void Execute()
         {
@@ -107,7 +107,7 @@ public partial class Texture2DTests
     [AutoConstructor]
     public readonly partial struct SamplingPixelShader : IPixelShader<float4>
     {
-        public readonly IReadOnlyTexture2D<float4> texture;
+        public readonly IReadOnlyNormalizedTexture2D<float4> texture;
 
         public float4 Execute()
         {
@@ -136,11 +136,11 @@ public partial class Texture2DTests
             {
                 context.Transition(texture, ResourceState.ReadOnly);
 
-                IReadOnlyTexture2D<TPixel> wrapper1 = texture.AsReadOnly();
+                IReadOnlyNormalizedTexture2D<TPixel> wrapper1 = texture.AsReadOnly();
 
                 Assert.IsNotNull(wrapper1);
 
-                IReadOnlyTexture2D<TPixel> wrapper2 = texture.AsReadOnly();
+                IReadOnlyNormalizedTexture2D<TPixel> wrapper2 = texture.AsReadOnly();
 
                 Assert.IsNotNull(wrapper2);
                 Assert.AreSame(wrapper1, wrapper2);

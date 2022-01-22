@@ -14,7 +14,7 @@ namespace ComputeSharp;
 /// <typeparam name="TPixel">The type of pixels used on the GPU side.</typeparam>
 [DebuggerTypeProxy(typeof(Texture3DDebugView<>))]
 [DebuggerDisplay("{ToString(),raw}")]
-public sealed class ReadOnlyTexture3D<T, TPixel> : Texture3D<T>, IReadOnlyTexture3D<TPixel>
+public sealed class ReadOnlyTexture3D<T, TPixel> : Texture3D<T>, IReadOnlyNormalizedTexture3D<TPixel>
     where T : unmanaged, IPixel<T, TPixel>
     where TPixel : unmanaged
 {

@@ -283,7 +283,7 @@ public partial class ComputeContextTests
 
             using (ComputeContext context = device.Get().CreateComputeContext())
             {
-                context.Clear((IReadWriteTexture2D<TPixel>)texture);
+                context.Clear((IReadWriteNormalizedTexture2D<TPixel>)texture);
             }
 
             texture.CopyTo(array);
@@ -325,7 +325,7 @@ public partial class ComputeContextTests
 
             using (ComputeContext context = device.Get().CreateComputeContext())
             {
-                context.Clear((IReadWriteTexture3D<TPixel>)texture);
+                context.Clear((IReadWriteNormalizedTexture3D<TPixel>)texture);
             }
 
             texture.CopyTo(array);
@@ -491,7 +491,7 @@ public partial class ComputeContextTests
 
             using (ComputeContext context = device.Get().CreateComputeContext())
             {
-                context.Fill((IReadWriteTexture2D<TPixel>)texture, color.ToPixel());
+                context.Fill((IReadWriteNormalizedTexture2D<TPixel>)texture, color.ToPixel());
             }
 
             T[,] result = texture.ToArray();
@@ -531,7 +531,7 @@ public partial class ComputeContextTests
 
             using (ComputeContext context = device.Get().CreateComputeContext())
             {
-                context.Fill((IReadWriteTexture3D<TPixel>)texture, color.ToPixel());
+                context.Fill((IReadWriteNormalizedTexture3D<TPixel>)texture, color.ToPixel());
             }
 
             T[,,] result = texture.ToArray();
@@ -1203,7 +1203,7 @@ public partial class ComputeContextTests
     [AutoConstructor]
     internal readonly partial struct LinearSampling2DPixelShader : IPixelShader<float4>
     {
-        public readonly IReadOnlyTexture2D<float4> source;
+        public readonly IReadOnlyNormalizedTexture2D<float4> source;
 
         /// <inheritdoc/>
         public float4 Execute()
@@ -1215,8 +1215,8 @@ public partial class ComputeContextTests
     [AutoConstructor]
     internal readonly partial struct LinearSampling3DComputeShader : IComputeShader
     {
-        public readonly IReadOnlyTexture3D<float4> source;
-        public readonly IReadWriteTexture3D<float4> destination;
+        public readonly IReadOnlyNormalizedTexture3D<float4> source;
+        public readonly IReadWriteNormalizedTexture3D<float4> destination;
 
         /// <inheritdoc/>
         public void Execute()
@@ -1228,7 +1228,7 @@ public partial class ComputeContextTests
     [AutoConstructor]
     internal readonly partial struct Dotted2DPixelShader : IComputeShader
     {
-        public readonly IReadWriteTexture2D<float4> source;
+        public readonly IReadWriteNormalizedTexture2D<float4> source;
 
         /// <inheritdoc/>
         public void Execute()
@@ -1256,7 +1256,7 @@ public partial class ComputeContextTests
     [AutoConstructor]
     internal readonly partial struct Dotted3DPixelShader : IComputeShader
     {
-        public readonly IReadWriteTexture3D<float4> source;
+        public readonly IReadWriteNormalizedTexture3D<float4> source;
 
         /// <inheritdoc/>
         public void Execute()
