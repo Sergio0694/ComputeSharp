@@ -1,4 +1,5 @@
 ﻿using ComputeSharp.Shaders;
+using Microsoft.Toolkit.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace ComputeSharp;
@@ -18,6 +19,8 @@ public static partial class GraphicsDeviceExtensions
     public static void For<T>(this GraphicsDevice device, int x, in T shader)
         where T : struct, IComputeShader
     {
+        Guard.IsNotNull(device, nameof(device));
+
         ShaderRunner<T>.Run(device, x, 1, 1, ref Unsafe.AsRef(in shader));
     }
 
@@ -32,6 +35,8 @@ public static partial class GraphicsDeviceExtensions
     public static void For<T>(this GraphicsDevice device, int x, int y, in T shader)
         where T : struct, IComputeShader
     {
+        Guard.IsNotNull(device, nameof(device));
+
         ShaderRunner<T>.Run(device, x, y, 1, ref Unsafe.AsRef(in shader));
     }
 
@@ -47,6 +52,8 @@ public static partial class GraphicsDeviceExtensions
     public static void For<T>(this GraphicsDevice device, int x, int y, int z, in T shader)
         where T : struct, IComputeShader
     {
+        Guard.IsNotNull(device, nameof(device));
+
         ShaderRunner<T>.Run(device, x, y, z, ref Unsafe.AsRef(in shader));
     }
 
@@ -65,6 +72,8 @@ public static partial class GraphicsDeviceExtensions
     public static void For<T>(this GraphicsDevice device, int x, int y, int z, int threadsX, int threadsY, int threadsZ, in T shader)
         where T : struct, IComputeShader
     {
+        Guard.IsNotNull(device, nameof(device));
+
         ShaderRunner<T>.Run(device, x, y, z, threadsX, threadsY, threadsZ, ref Unsafe.AsRef(in shader));
     }
 
@@ -79,6 +88,9 @@ public static partial class GraphicsDeviceExtensions
         where T : struct, IPixelShader<TPixel>
         where TPixel : unmanaged
     {
+        Guard.IsNotNull(device, nameof(device));
+        Guard.IsNotNull(texture, nameof(texture));
+
         ShaderRunner<T>.Run(device, texture, ref Unsafe.AsRef(default(T)));
     }
 
@@ -94,6 +106,9 @@ public static partial class GraphicsDeviceExtensions
         where T : struct, IPixelShader<TPixel>
         where TPixel : unmanaged
     {
+        Guard.IsNotNull(device, nameof(device));
+        Guard.IsNotNull(texture, nameof(texture));
+
         ShaderRunner<T>.Run(device, texture, ref Unsafe.AsRef(in shader));
     }
 
@@ -122,6 +137,8 @@ public static partial class GraphicsDeviceExtensions
     /// </remarks>
     public static ComputeContext CreateComputeContext(this GraphicsDevice device)
     {
+        Guard.IsNotNull(device, nameof(device));
+
         device.ThrowIfDisposed();
 
         return new(device);

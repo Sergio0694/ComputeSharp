@@ -1,4 +1,5 @@
 ﻿using ComputeSharp.Resources;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace ComputeSharp;
 
@@ -16,6 +17,9 @@ public static class ReadBackBufferExtensions
     public static void CopyFrom<T>(this ReadBackBuffer<T> destination, StructuredBuffer<T> source)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
+
         source.CopyTo(destination, 0, 0, source.Length);
     }
 
@@ -31,6 +35,9 @@ public static class ReadBackBufferExtensions
     public static void CopyFrom<T>(this ReadBackBuffer<T> destination, StructuredBuffer<T> source, int sourceOffset, int destinationOffset, int count)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
+
         source.CopyTo(destination, sourceOffset, destinationOffset, count);
     }
 }

@@ -62,6 +62,8 @@ public static class GraphicsResourceHelper
     public static unsafe ulong ValidateAndGetGpuDescriptorHandle<T>(Buffer<T> buffer, GraphicsDevice device)
         where T : unmanaged
     {
+        Guard.IsNotNull(buffer, nameof(buffer));
+
         buffer.ThrowIfDisposed();
         buffer.ThrowIfDeviceMismatch(device);
 
@@ -81,6 +83,8 @@ public static class GraphicsResourceHelper
     public static unsafe ulong ValidateAndGetGpuDescriptorHandle<T>(ReadOnlyTexture2D<T> texture, GraphicsDevice device)
         where T : unmanaged
     {
+        Guard.IsNotNull(texture, nameof(texture));
+
         texture.ThrowIfDisposed();
         texture.ThrowIfDeviceMismatch(device);
 
@@ -100,6 +104,8 @@ public static class GraphicsResourceHelper
     public static unsafe ulong ValidateAndGetGpuDescriptorHandle<T>(ReadWriteTexture2D<T> texture, GraphicsDevice device)
         where T : unmanaged
     {
+        Guard.IsNotNull(texture, nameof(texture));
+
         texture.ThrowIfDisposed();
         texture.ThrowIfDeviceMismatch(device);
 
@@ -119,6 +125,8 @@ public static class GraphicsResourceHelper
     public static unsafe ulong ValidateAndGetGpuDescriptorHandle<T>(IReadOnlyTexture2D<T> texture, GraphicsDevice device)
         where T : unmanaged
     {
+        Guard.IsNotNull(texture, nameof(texture));
+
         if (texture is IGraphicsResource resource)
         {
             D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = resource.ValidateAndGetGpuDescriptorHandle(device);
@@ -140,6 +148,8 @@ public static class GraphicsResourceHelper
     public static unsafe ulong ValidateAndGetGpuDescriptorHandle<TPixel>(IReadOnlyNormalizedTexture2D<TPixel> texture, GraphicsDevice device)
         where TPixel : unmanaged
     {
+        Guard.IsNotNull(texture, nameof(texture));
+
         if (texture is IGraphicsResource resource)
         {
             D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = resource.ValidateAndGetGpuDescriptorHandle(device);
@@ -161,6 +171,8 @@ public static class GraphicsResourceHelper
     public static unsafe ulong ValidateAndGetGpuDescriptorHandle<TPixel>(IReadWriteNormalizedTexture2D<TPixel> texture, GraphicsDevice device)
         where TPixel : unmanaged
     {
+        Guard.IsNotNull(texture, nameof(texture));
+
         if (texture is IGraphicsResource resource)
         {
             D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = resource.ValidateAndGetGpuDescriptorHandle(device);
@@ -182,6 +194,8 @@ public static class GraphicsResourceHelper
     public static unsafe ulong ValidateAndGetGpuDescriptorHandle<T>(ReadOnlyTexture3D<T> texture, GraphicsDevice device)
         where T : unmanaged
     {
+        Guard.IsNotNull(texture, nameof(texture));
+
         texture.ThrowIfDisposed();
         texture.ThrowIfDeviceMismatch(device);
 
@@ -201,6 +215,8 @@ public static class GraphicsResourceHelper
     public static unsafe ulong ValidateAndGetGpuDescriptorHandle<T>(ReadWriteTexture3D<T> texture, GraphicsDevice device)
         where T : unmanaged
     {
+        Guard.IsNotNull(texture, nameof(texture));
+
         texture.ThrowIfDisposed();
         texture.ThrowIfDeviceMismatch(device);
 
@@ -220,6 +236,8 @@ public static class GraphicsResourceHelper
     public static unsafe ulong ValidateAndGetGpuDescriptorHandle<T>(IReadOnlyTexture3D<T> texture, GraphicsDevice device)
         where T : unmanaged
     {
+        Guard.IsNotNull(texture, nameof(texture));
+
         if (texture is IGraphicsResource resource)
         {
             D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = resource.ValidateAndGetGpuDescriptorHandle(device);
@@ -241,6 +259,8 @@ public static class GraphicsResourceHelper
     public static unsafe ulong ValidateAndGetGpuDescriptorHandle<TPixel>(IReadOnlyNormalizedTexture3D<TPixel> texture, GraphicsDevice device)
         where TPixel : unmanaged
     {
+        Guard.IsNotNull(texture, nameof(texture));
+
         if (texture is IGraphicsResource resource)
         {
             D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = resource.ValidateAndGetGpuDescriptorHandle(device);
@@ -262,6 +282,8 @@ public static class GraphicsResourceHelper
     public static unsafe ulong ValidateAndGetGpuDescriptorHandle<TPixel>(IReadWriteNormalizedTexture3D<TPixel> texture, GraphicsDevice device)
         where TPixel : unmanaged
     {
+        Guard.IsNotNull(texture, nameof(texture));
+
         if (texture is IGraphicsResource resource)
         {
             D3D12_GPU_DESCRIPTOR_HANDLE d3D12GpuDescriptorHandle = resource.ValidateAndGetGpuDescriptorHandle(device);

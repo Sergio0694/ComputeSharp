@@ -21,6 +21,9 @@ public static class ReadBackTexture2DExtensions
     public static void CopyFrom<T>(this ReadBackTexture2D<T> destination, Texture2D<T> source)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
+
         source.CopyTo(destination, 0, 0, 0, 0, source.Width, source.Height);
     }
 
@@ -37,6 +40,9 @@ public static class ReadBackTexture2DExtensions
     public static void CopyFrom<T>(this ReadBackTexture2D<T> destination, Texture2D<T> source, int sourceOffsetX, int sourceOffsetY, int width, int height)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
+
         source.CopyTo(destination, sourceOffsetX, sourceOffsetY, 0, 0, width, height);
     }
 
@@ -55,6 +61,9 @@ public static class ReadBackTexture2DExtensions
     public static void CopyFrom<T>(this ReadBackTexture2D<T> destination, Texture2D<T> source, int sourceOffsetX, int sourceOffsetY, int destinationOffsetX, int destinationOffsetY, int width, int height)
         where T : unmanaged
     {
+        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source, nameof(source));
+
         source.CopyTo(destination, sourceOffsetX, sourceOffsetY, destinationOffsetX, destinationOffsetY, width, height);
     }
 
@@ -67,6 +76,7 @@ public static class ReadBackTexture2DExtensions
     public static void Save<T>(this ReadBackTexture2D<T> texture, string filename)
         where T : unmanaged
     {
+        Guard.IsNotNull(texture, nameof(texture));
         Guard.IsNotNull(filename, nameof(filename));
 
         WICHelper.Instance.SaveTexture(texture.View, filename.AsSpan());
@@ -81,6 +91,8 @@ public static class ReadBackTexture2DExtensions
     public static void Save<T>(this ReadBackTexture2D<T> texture, ReadOnlySpan<char> filename)
         where T : unmanaged
     {
+        Guard.IsNotNull(texture, nameof(texture));
+
         WICHelper.Instance.SaveTexture(texture.View, filename);
     }
 
@@ -94,6 +106,7 @@ public static class ReadBackTexture2DExtensions
     public static void Save<T>(this ReadBackTexture2D<T> texture, Stream stream, ImageFormat format)
         where T : unmanaged
     {
+        Guard.IsNotNull(texture, nameof(texture));
         Guard.IsNotNull(stream, nameof(stream));
 
         WICHelper.Instance.SaveTexture(texture.View, stream, format);
@@ -109,6 +122,7 @@ public static class ReadBackTexture2DExtensions
     public static void Save<T>(this ReadBackTexture2D<T> texture, IBufferWriter<byte> writer, ImageFormat format)
         where T : unmanaged
     {
+        Guard.IsNotNull(texture, nameof(texture));
         Guard.IsNotNull(writer, nameof(writer));
 
         WICHelper.Instance.SaveTexture(texture.View, writer, format);
