@@ -117,6 +117,14 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
     {
         ThrowInvalidOperationExceptionIfDeviceIsNull();
 
+        // Here we calculate the optimized [numthreads] values. Using small thread group sizes leads to the
+        // best average performance due to better occupancy of the GPU with different shaders, using any
+        // number of registers and any amount of thread local storage. We use 64 for 1D dispatches, otherwise
+        // a multiple of 32 that is greater than or equal to 64, which still results in an evenly divisible
+        // number of waves per thread group on all existing GPU devices. All GPUs will generally have a wavefront
+        // size of either 16 (eg. Intel mobile GPUs), 32 (nvidia GPUs) or 64 (AMD GPUs), so in all cases 64 will
+        // be a multiple of that, guaranteeing that all thread waves will be saturated when dispatching shaders.
+
         bool xIs1 = x == 1;
         bool yIs1 = y == 1;
         bool zIs1 = z == 1;
@@ -136,7 +144,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
                 threadsY = 1;
                 break;
             case 2: // (_, 1, 1)
-                threadsX = (int)this.device.WavefrontSize;
+                threadsX = 64;
                 threadsY = threadsZ = 1;
                 break;
             case 3: // (1, _, _)
@@ -145,11 +153,11 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
                 break;
             case 4: // (1, _, 1)
                 threadsX = threadsZ = 1;
-                threadsY = (int)this.device.WavefrontSize;
+                threadsY = 64;
                 break;
             case 5: // (1, 1, _)
                 threadsX = threadsY = 1;
-                threadsZ = (int)this.device.WavefrontSize;
+                threadsZ = 64;
                 break;
             default: // (_, _, _)
                 threadsX = threadsY = threadsZ = 4;
@@ -198,7 +206,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         Guard.IsBetweenOrEqualTo(groupsY, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
         Guard.IsBetweenOrEqualTo(groupsZ, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
 
-        PipelineData pipelineData = ShaderRunner<T>.GetPipelineData(this.device, threadsX, threadsY, threadsZ, ref shader);
+        PipelineData pipelineData = PipelineDataLoader<T>.GetPipelineData(this.device, threadsX, threadsY, threadsZ, ref shader);
 
         ref CommandList commandList = ref GetCommandList(in this, pipelineData.D3D12PipelineState);
 
@@ -235,7 +243,7 @@ public struct ComputeContext : IDisposable, IAsyncDisposable
         Guard.IsBetweenOrEqualTo(groupsX, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
         Guard.IsBetweenOrEqualTo(groupsY, 1, D3D11.D3D11_CS_DISPATCH_MAX_THREAD_GROUPS_PER_DIMENSION, nameof(groupsX));
 
-        PipelineData pipelineData = ShaderRunner<T>.GetPipelineData(this.device, threadsX, threadsY, threadsZ, ref shader);
+        PipelineData pipelineData = PipelineDataLoader<T>.GetPipelineData(this.device, threadsX, threadsY, threadsZ, ref shader);
 
         ref CommandList commandList = ref GetCommandList(in this, pipelineData.D3D12PipelineState);
 
