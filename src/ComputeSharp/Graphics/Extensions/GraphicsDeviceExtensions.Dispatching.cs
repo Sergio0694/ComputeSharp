@@ -1,6 +1,5 @@
-﻿using ComputeSharp.Shaders;
+﻿using System.Runtime.CompilerServices;
 using Microsoft.Toolkit.Diagnostics;
-using System.Runtime.CompilerServices;
 
 namespace ComputeSharp;
 
@@ -21,7 +20,9 @@ public static partial class GraphicsDeviceExtensions
     {
         Guard.IsNotNull(device, nameof(device));
 
-        ShaderRunner<T>.Run(device, x, 1, 1, ref Unsafe.AsRef(in shader));
+        using ComputeContext context = device.CreateComputeContext();
+
+        context.Run(x, 1, 1, ref Unsafe.AsRef(in shader));
     }
 
     /// <summary>
@@ -37,7 +38,9 @@ public static partial class GraphicsDeviceExtensions
     {
         Guard.IsNotNull(device, nameof(device));
 
-        ShaderRunner<T>.Run(device, x, y, 1, ref Unsafe.AsRef(in shader));
+        using ComputeContext context = device.CreateComputeContext();
+
+        context.Run(x, y, 1, ref Unsafe.AsRef(in shader));
     }
 
     /// <summary>
@@ -54,7 +57,9 @@ public static partial class GraphicsDeviceExtensions
     {
         Guard.IsNotNull(device, nameof(device));
 
-        ShaderRunner<T>.Run(device, x, y, z, ref Unsafe.AsRef(in shader));
+        using ComputeContext context = device.CreateComputeContext();
+
+        context.Run(x, y, z, ref Unsafe.AsRef(in shader));
     }
 
     /// <summary>
@@ -74,7 +79,9 @@ public static partial class GraphicsDeviceExtensions
     {
         Guard.IsNotNull(device, nameof(device));
 
-        ShaderRunner<T>.Run(device, x, y, z, threadsX, threadsY, threadsZ, ref Unsafe.AsRef(in shader));
+        using ComputeContext context = device.CreateComputeContext();
+
+        context.Run(x, y, z, threadsX, threadsY, threadsZ, ref Unsafe.AsRef(in shader));
     }
 
     /// <summary>
@@ -91,7 +98,9 @@ public static partial class GraphicsDeviceExtensions
         Guard.IsNotNull(device, nameof(device));
         Guard.IsNotNull(texture, nameof(texture));
 
-        ShaderRunner<T>.Run(device, texture, ref Unsafe.AsRef(default(T)));
+        using ComputeContext context = device.CreateComputeContext();
+
+        context.Run(texture, ref Unsafe.AsRef(default(T)));
     }
 
     /// <summary>
@@ -109,7 +118,9 @@ public static partial class GraphicsDeviceExtensions
         Guard.IsNotNull(device, nameof(device));
         Guard.IsNotNull(texture, nameof(texture));
 
-        ShaderRunner<T>.Run(device, texture, ref Unsafe.AsRef(in shader));
+        using ComputeContext context = device.CreateComputeContext();
+
+        context.Run(texture, ref Unsafe.AsRef(in shader));
     }
 
     /// <summary>

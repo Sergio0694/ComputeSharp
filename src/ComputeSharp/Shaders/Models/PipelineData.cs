@@ -2,7 +2,7 @@
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
-namespace ComputeSharp.Graphics.Commands;
+namespace ComputeSharp.Shaders.Models;
 
 /// <summary>
 /// A <see langword="class"/> representing a custom pipeline state for a compute operation.

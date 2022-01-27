@@ -236,8 +236,4 @@
       <LastGenOutput>UIntMxN.g.cs</LastGenOutput>
     </None>
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Shaders\Dispatching\__Internals\" />
-  </ItemGroup>
 </Project>

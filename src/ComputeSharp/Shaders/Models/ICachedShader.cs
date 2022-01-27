@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Interop;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
-namespace ComputeSharp.Shaders.Translation.Models;
+namespace ComputeSharp.Shaders.Models;
 
 /// <summary>
 /// An interface that contains info on a cached shader.
