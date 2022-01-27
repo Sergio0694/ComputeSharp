@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Shaders.Dispatching;
 using ComputeSharp.Shaders.Extensions;
-using ComputeSharp.Shaders.Translation.Models;
 using ComputeSharp.__Internals;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
+using ComputeSharp.Shaders.Models;
 
 #pragma warning disable CS0618
 
-namespace ComputeSharp.Shaders;
+namespace ComputeSharp.Shaders.Loading;
 
 /// <summary>
 /// A <see langword="class"/> responsible for performing all the necessary operations to compile and load shader data.

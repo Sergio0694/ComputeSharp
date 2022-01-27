@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using ComputeSharp.__Internals;
+using ComputeSharp.Shaders.Models;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
-using ComputeSharp.Shaders.Translation.Models;
 
 #pragma warning disable CS0618
 

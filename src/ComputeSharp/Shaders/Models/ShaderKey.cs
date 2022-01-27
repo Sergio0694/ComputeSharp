@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace ComputeSharp.Shaders.Translation.Models;
+namespace ComputeSharp.Shaders.Models;
 
 /// <summary>
 /// A <see langword="struct"/> representing a key for a given shader.

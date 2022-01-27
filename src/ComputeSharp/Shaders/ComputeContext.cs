@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Commands;
 using ComputeSharp.Graphics.Extensions;
-using ComputeSharp.Shaders;
 using ComputeSharp.Shaders.Dispatching;
+using ComputeSharp.Shaders.Loading;
+using ComputeSharp.Shaders.Models;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 
