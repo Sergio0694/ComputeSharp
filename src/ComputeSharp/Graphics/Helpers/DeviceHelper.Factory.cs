@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-#if DEBUG
 using ComputeSharp.Graphics.Extensions;
-#endif
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -15,12 +13,10 @@ internal static partial class DeviceHelper
     /// </summary>
     internal static readonly Dictionary<Luid, GraphicsDevice> DevicesCache = new();
 
-#if DEBUG
     /// <summary>
     /// The local map of <see cref="ID3D12InfoQueue"/> instances for the existing devices.
     /// </summary>
     private static readonly Dictionary<Luid, ComPtr<ID3D12InfoQueue>> D3D12InfoQueueMap = new();
-#endif
 
     /// <summary>
     /// Retrieves a <see cref="GraphicsDevice"/> instance for an <see cref="ID3D12Device"/> object.
@@ -41,9 +37,10 @@ internal static partial class DeviceHelper
 
                 DevicesCache.Add(luid, device);
 
-#if DEBUG
-                D3D12InfoQueueMap.Add(luid, d3D12Device->CreateInfoQueue());
-#endif
+                if (Configuration.IsDebugOutputEnabled)
+                {
+                    D3D12InfoQueueMap.Add(luid, d3D12Device->CreateInfoQueue());
+                }
             }
 
             return device;
@@ -60,11 +57,12 @@ internal static partial class DeviceHelper
         {
             DevicesCache.Remove(device.Luid);
 
-#if DEBUG
-            D3D12InfoQueueMap.Remove(device.Luid, out ComPtr<ID3D12InfoQueue> queue);
+            if (Configuration.IsDebugOutputEnabled)
+            {
+                D3D12InfoQueueMap.Remove(device.Luid, out ComPtr<ID3D12InfoQueue> queue);
 
-            queue.Dispose();
-#endif
+                queue.Dispose();
+            }
         }
     }
 }

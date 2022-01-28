@@ -1,16 +1,13 @@
-﻿#if DEBUG
-
-#if NET6_0_OR_GREATER
-using System;
-#endif
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_MESSAGE_SEVERITY;
-#if !NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER
+using Enum = System.Enum;
+#else
 using Enum = ComputeSharp.NetStandard.System.Enum;
 #endif
 
@@ -119,5 +116,3 @@ internal static partial class DeviceHelper
         return hasErrorsOrWarnings;
     }
 }
-
-#endif
