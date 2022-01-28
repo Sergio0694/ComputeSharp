@@ -228,6 +228,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Windows\shared\wtypes\STATFLAG.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\combaseapi\Windows.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\coml2api\STGM.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\um\dwmapi\DWM_TIMING_INFO.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\um\dwmapi\UNSIGNED_RATIO.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Windows\um\dwmapi\Windows.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\minwinbase\SECURITY_ATTRIBUTES.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\objidlbase\IID.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Windows\um\objidlbase\IStream.cs" />

@@ -263,7 +263,7 @@ partial class SwapChainManager<TOwner>
         Stopwatch renderStopwatch = this.renderStopwatch ??= new();
         Stopwatch frameStopwatch = new();
         CancellationToken cancellationToken = this.renderCancellationTokenSource!.Token;
-        DynamicResolutionManager frameTimeWatcher = new(60);
+        DynamicResolutionManager frameTimeWatcher = new();
 
         if (!OnFrameRequest(out object? parameter, cancellationToken))
         {

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using ComputeSharp.Core.Extensions;
+using TerraFX.Interop.Windows;
+using Win32 = TerraFX.Interop.Windows.Windows;
 
 #if WINDOWS_UWP
 namespace ComputeSharp.Uwp.Helpers;
@@ -66,9 +69,22 @@ internal unsafe ref struct DynamicResolutionManager
     /// <summary>
     /// Initializes a new <see cref="DynamicResolutionManager"/> instance.
     /// </summary>
-    /// <param name="targetFramerate">The target framerate to use.</param>
-    public DynamicResolutionManager(int targetFramerate)
+    public DynamicResolutionManager()
     {
+        DWM_TIMING_INFO dwmTimingInfo = default;
+
+        dwmTimingInfo.cbSize = (uint)sizeof(DWM_TIMING_INFO);
+
+        // Get the composition timing info (the refresh rate depends on the compositor)
+        Win32.DwmGetCompositionTimingInfo(HWND.NULL, &dwmTimingInfo).Assert();
+
+        // Calculates the best target framerate based on monitor refresh rate. Even with v-sync disabled,
+        // the target framerate should always match the refresh rate in use, instead of being capped to
+        // 60fps (as users could have a 120Hz screen and disabled v-sync). Here the refresh rate is retrieved,
+        // then the target framerate is calculated as being the rounding of this value to the next integer,
+        // then rounded up to the next multiple of 30, and then clamped between 30 and 240fps.
+        double refreshRateInHz = dwmTimingInfo.rateRefresh.uiNumerator / (double)dwmTimingInfo.rateRefresh.uiDenominator;
+        int targetFramerate = Math.Clamp((((int)Math.Ceiling(refreshRateInHz) + 29) / 30) * 30, 30, 240);
         long targetFrameTimeInTicks = TimeSpan.FromSeconds(1).Ticks / targetFramerate;
         long upperFrameTimeThresholdInTicks = TimeSpan.FromSeconds(1).Ticks / (targetFramerate - 2);
         long lowerFrameTimeThresholdInTicks = TimeSpan.FromSeconds(1).Ticks / (targetFramerate + 2);
