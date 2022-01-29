@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Commands;
@@ -9,7 +10,6 @@ using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Graphics.Resources.Helpers;
 using ComputeSharp.Graphics.Resources.Interop;
 using ComputeSharp.Interop;
-using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
@@ -74,8 +74,8 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
     {
         device.ThrowIfDisposed();
 
-        Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION, nameof(height));
+        Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
+        Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE2D_U_OR_V_DIMENSION);
 
         if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), d3D12FormatSupport))
         {
@@ -172,13 +172,13 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
 
         ThrowIfDisposed();
 
-        Guard.IsInRange(sourceOffsetX, 0, Width, nameof(sourceOffsetX));
-        Guard.IsInRange(sourceOffsetY, 0, Height, nameof(sourceOffsetY));
-        Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
+        Guard.IsInRange(sourceOffsetX, 0, Width);
+        Guard.IsInRange(sourceOffsetY, 0, Height);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
         Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
-        Guard.IsGreaterThanOrEqualTo(size, (nint)width * height, nameof(size));
+        Guard.IsGreaterThanOrEqualTo(size, (nint)width * height);
 
         GraphicsDevice.D3D12Device->GetCopyableFootprint(
             DXGIFormatHelper.GetForType<T>(),
@@ -264,14 +264,14 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
         destination.ThrowIfDeviceMismatch(GraphicsDevice);
         destination.ThrowIfDisposed();
 
-        Guard.IsInRange(sourceOffsetX, 0, Width, nameof(sourceOffsetX));
-        Guard.IsInRange(sourceOffsetY, 0, Height, nameof(sourceOffsetY));
-        Guard.IsInRange(destinationOffsetX, 0, destination.Width, nameof(destinationOffsetX));
-        Guard.IsInRange(destinationOffsetY, 0, destination.Height, nameof(destinationOffsetY));
-        Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
-        Guard.IsBetweenOrEqualTo(width, 1, destination.Width, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, destination.Height, nameof(height));
+        Guard.IsInRange(sourceOffsetX, 0, Width);
+        Guard.IsInRange(sourceOffsetY, 0, Height);
+        Guard.IsInRange(destinationOffsetX, 0, destination.Width);
+        Guard.IsInRange(destinationOffsetY, 0, destination.Height);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
+        Guard.IsBetweenOrEqualTo(height, 1, destination.Height);
         Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
         Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
@@ -332,14 +332,14 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
         destination.ThrowIfDeviceMismatch(GraphicsDevice);
         destination.ThrowIfDisposed();
 
-        Guard.IsInRange(sourceOffsetX, 0, Width, nameof(sourceOffsetX));
-        Guard.IsInRange(sourceOffsetY, 0, Height, nameof(sourceOffsetY));
-        Guard.IsInRange(destinationOffsetX, 0, destination.Width, nameof(destinationOffsetX));
-        Guard.IsInRange(destinationOffsetY, 0, destination.Height, nameof(destinationOffsetY));
-        Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
-        Guard.IsBetweenOrEqualTo(width, 1, destination.Width, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, destination.Height, nameof(height));
+        Guard.IsInRange(sourceOffsetX, 0, Width);
+        Guard.IsInRange(sourceOffsetY, 0, Height);
+        Guard.IsInRange(destinationOffsetX, 0, destination.Width);
+        Guard.IsInRange(destinationOffsetY, 0, destination.Height);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
+        Guard.IsBetweenOrEqualTo(height, 1, destination.Height);
         Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
         Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
@@ -392,13 +392,13 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
 
         ThrowIfDisposed();
 
-        Guard.IsInRange(destinationOffsetX, 0, Width, nameof(destinationOffsetX));
-        Guard.IsInRange(destinationOffsetY, 0, Height, nameof(destinationOffsetY));
-        Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
+        Guard.IsInRange(destinationOffsetX, 0, Width);
+        Guard.IsInRange(destinationOffsetY, 0, Height);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
         Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
         Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
-        Guard.IsGreaterThanOrEqualTo(size, (nint)width * height, nameof(size));
+        Guard.IsGreaterThanOrEqualTo(size, (nint)width * height);
 
         GraphicsDevice.D3D12Device->GetCopyableFootprint(
             DXGIFormatHelper.GetForType<T>(),
@@ -482,14 +482,14 @@ public unsafe abstract class Texture2D<T> : NativeObject, IGraphicsResource, Gra
         source.ThrowIfDeviceMismatch(GraphicsDevice);
         source.ThrowIfDisposed();
 
-        Guard.IsInRange(sourceOffsetX, 0, source.Width, nameof(sourceOffsetX));
-        Guard.IsInRange(sourceOffsetY, 0, source.Height, nameof(sourceOffsetY));
-        Guard.IsInRange(destinationOffsetX, 0, Width, nameof(destinationOffsetX));
-        Guard.IsInRange(destinationOffsetY, 0, Height, nameof(destinationOffsetY));
-        Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
-        Guard.IsBetweenOrEqualTo(width, 1, source.Width, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, source.Height, nameof(height));
+        Guard.IsInRange(sourceOffsetX, 0, source.Width);
+        Guard.IsInRange(sourceOffsetY, 0, source.Height);
+        Guard.IsInRange(destinationOffsetX, 0, Width);
+        Guard.IsInRange(destinationOffsetY, 0, Height);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        Guard.IsBetweenOrEqualTo(width, 1, source.Width);
+        Guard.IsBetweenOrEqualTo(height, 1, source.Height);
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, source.Width, nameof(sourceOffsetX));
         Guard.IsLessThanOrEqualTo(sourceOffsetY + height, source.Height, nameof(sourceOffsetY));
         Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));

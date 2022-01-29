@@ -1,5 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 using static TerraFX.Interop.DirectX.D3D12_RESOURCE_STATES;
 

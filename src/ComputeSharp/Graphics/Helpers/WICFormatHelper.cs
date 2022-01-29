@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using TerraFX.Interop.Windows;
 #if NET6_0_OR_GREATER
 using Path = System.IO.Path;

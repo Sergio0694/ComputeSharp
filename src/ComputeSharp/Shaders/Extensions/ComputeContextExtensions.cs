@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
+using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;
 using ComputeSharp.Graphics.Helpers;
-using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 
 #pragma warning disable CS0618
@@ -22,7 +22,7 @@ public static class ComputeContextExtensions
     public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteBuffer<T> buffer)
         where T : unmanaged
     {
-        Guard.IsNotNull(buffer, nameof(buffer));
+        Guard.IsNotNull(buffer);
 
         context.Barrier(buffer.ValidateAndGetID3D12Resource(context.GraphicsDevice));
     }
@@ -36,7 +36,7 @@ public static class ComputeContextExtensions
     public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteTexture2D<T> texture)
         where T : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
     }
@@ -50,7 +50,7 @@ public static class ComputeContextExtensions
     public static unsafe void Barrier<T>(this in ComputeContext context, ReadWriteTexture3D<T> texture)
         where T : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
     }
@@ -66,7 +66,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
     }
@@ -82,7 +82,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         context.Barrier(texture.ValidateAndGetID3D12Resource(context.GraphicsDevice));
     }
@@ -96,7 +96,7 @@ public static class ComputeContextExtensions
     public static unsafe void Barrier<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture)
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         context.Barrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice));
     }
@@ -110,7 +110,7 @@ public static class ComputeContextExtensions
     public static unsafe void Barrier<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture3D<TPixel> texture)
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         context.Barrier(((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetID3D12Resource(context.GraphicsDevice));
     }
@@ -124,7 +124,7 @@ public static class ComputeContextExtensions
     public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteBuffer<T> buffer)
         where T : unmanaged
     {
-        Guard.IsNotNull(buffer, nameof(buffer));
+        Guard.IsNotNull(buffer);
 
         var handles = buffer.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice);
 
@@ -140,7 +140,7 @@ public static class ComputeContextExtensions
     public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteTexture2D<T> texture)
         where T : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
 
@@ -156,7 +156,7 @@ public static class ComputeContextExtensions
     public static unsafe void Clear<T>(this in ComputeContext context, ReadWriteTexture3D<T> texture)
         where T : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out bool isNormalized);
 
@@ -174,7 +174,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -192,7 +192,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -208,7 +208,7 @@ public static class ComputeContextExtensions
     public static unsafe void Clear<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture)
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -224,7 +224,7 @@ public static class ComputeContextExtensions
     public static unsafe void Clear<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture3D<TPixel> texture)
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -243,7 +243,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -262,7 +262,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var handles = texture.ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -279,7 +279,7 @@ public static class ComputeContextExtensions
     public static unsafe void Fill<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture2D<TPixel> texture, TPixel value)
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -300,7 +300,7 @@ public static class ComputeContextExtensions
     public static unsafe void Fill<TPixel>(this in ComputeContext context, IReadWriteNormalizedTexture3D<TPixel> texture, TPixel value)
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var handles = ((GraphicsResourceHelper.IGraphicsResource)texture).ValidateAndGetGpuAndCpuDescriptorHandlesForClear(context.GraphicsDevice, out _);
 
@@ -382,7 +382,7 @@ public static class ComputeContextExtensions
         where T : struct, IPixelShader<TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         context.Run(texture, ref Unsafe.AsRef(default(T)));
     }
@@ -399,7 +399,7 @@ public static class ComputeContextExtensions
         where T : struct, IPixelShader<TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         context.Run(texture, ref Unsafe.AsRef(in shader));
     }
@@ -412,7 +412,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture2D<float> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
 
@@ -427,7 +427,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture2D<Float2> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
 
@@ -442,7 +442,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture2D<Float3> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
 
@@ -457,7 +457,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture2D<Float4> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
 
@@ -476,7 +476,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
 
@@ -491,7 +491,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture3D<float> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
 
@@ -506,7 +506,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture3D<Float2> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
 
@@ -521,7 +521,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture3D<Float3> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
 
@@ -536,7 +536,7 @@ public static class ComputeContextExtensions
     /// <param name="resourceState">The state to transition the input resource to.</param>
     public static unsafe void Transition(this in ComputeContext context, ReadWriteTexture3D<Float4> texture, ResourceState resourceState)
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
 
@@ -555,7 +555,7 @@ public static class ComputeContextExtensions
         where T : unmanaged, IPixel<T, TPixel>
         where TPixel : unmanaged
     {
-        Guard.IsNotNull(texture, nameof(texture));
+        Guard.IsNotNull(texture);
 
         var states = texture.ValidateAndGetID3D12ResourceAndTransitionStates(context.GraphicsDevice, resourceState, out ID3D12Resource* d3D12Resource);
 

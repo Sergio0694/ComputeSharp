@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using CommunityToolkit.Diagnostics;
 using ComputeSharp.Shaders.Extensions;
 using ComputeSharp.__Internals;
-using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 
@@ -34,7 +34,7 @@ internal readonly unsafe struct ShaderDispatchMetadataLoader : IDispatchMetadata
     /// <inheritdoc/>
     public unsafe void LoadMetadataHandle(ReadOnlySpan<byte> serializedMetadata, ReadOnlySpan<ResourceDescriptor> resourceDescriptors, out IntPtr result)
     {
-        Guard.HasSizeEqualTo(serializedMetadata, 5, nameof(serializedMetadata));
+        Guard.HasSizeEqualTo(serializedMetadata, 5);
 
         fixed (IntPtr* p = &result)
         {

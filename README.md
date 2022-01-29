@@ -434,6 +434,7 @@ Huge thanks to these sponsors for directly supporting my work on **ComputeSharp*
 
 Additionally, **ComputeSharp** uses NuGet packages from the following repositories:
 
-- [Microsoft.Toolkit.Diagnostics](https://github.com/windows-toolkit/WindowsCommunityToolkit)
+- [.NET Community Toolkit](https://aka.ms/toolkit/dotnet)
+- [Windows Community Toolkit](https://aka.ms/toolkit/windows)
 - [TerraFX.Interop.Windows](https://github.com/terrafx/terrafx.interop.windows)
 - [TerraFX.Interop.D3D12MemoryAllocator](https://github.com/terrafx/terrafx.interop.d3d12memoryallocator)

@@ -1,6 +1,6 @@
 ﻿using System;
 #if !SOURCE_GENERATOR
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 #endif
 
 namespace ComputeSharp;

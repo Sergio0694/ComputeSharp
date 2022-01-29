@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 using System.Runtime.CompilerServices;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 using static TerraFX.Interop.DirectX.DXGI_FORMAT;
 

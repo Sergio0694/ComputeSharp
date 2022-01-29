@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Commands.Interop;
 #if NET6_0_OR_GREATER
 using ComputeSharp.Core.Extensions;
@@ -7,7 +8,6 @@ using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
-using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;

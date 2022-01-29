@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Helpers;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Extensions;
@@ -7,7 +8,6 @@ using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Graphics.Resources.Interop;
 using ComputeSharp.Resources;
 using ComputeSharp.Resources.Debug;
-using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 using ResourceType = ComputeSharp.Graphics.Resources.Enums.ResourceType;
 
@@ -61,8 +61,8 @@ public sealed class ConstantBuffer<T> : Buffer<T>
 
         ThrowIfDisposed();
 
-        Guard.IsBetweenOrEqualTo(length, 0, Length, nameof(length));
-        Guard.IsInRange(offset, 0, Length, nameof(offset));
+        Guard.IsBetweenOrEqualTo(length, 0, Length);
+        Guard.IsInRange(offset, 0, Length);
         Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 
         using ID3D12ResourceMap resource = D3D12Resource->Map();
@@ -90,11 +90,11 @@ public sealed class ConstantBuffer<T> : Buffer<T>
         destination.ThrowIfDeviceMismatch(GraphicsDevice);
         destination.ThrowIfDisposed();
 
-        Guard.IsBetweenOrEqualTo(length, 0, Length, nameof(length));
-        Guard.IsBetweenOrEqualTo(length, 0, destination.Length, nameof(length));
-        Guard.IsInRange(sourceOffset, 0, Length, nameof(sourceOffset));
+        Guard.IsBetweenOrEqualTo(length, 0, Length);
+        Guard.IsBetweenOrEqualTo(length, 0, destination.Length);
+        Guard.IsInRange(sourceOffset, 0, Length);
         Guard.IsLessThanOrEqualTo(sourceOffset + length, Length, nameof(sourceOffset));
-        Guard.IsInRange(destinationOffset, 0, destination.Length, nameof(destinationOffset));
+        Guard.IsInRange(destinationOffset, 0, destination.Length);
         Guard.IsLessThanOrEqualTo(destinationOffset + length, destination.Length, nameof(destinationOffset));
 
         if (destination is ConstantBuffer<T> buffer)
@@ -121,8 +121,8 @@ public sealed class ConstantBuffer<T> : Buffer<T>
 
         ThrowIfDisposed();
 
-        Guard.IsBetweenOrEqualTo(length, 0, Length, nameof(length));
-        Guard.IsInRange(offset, 0, Length, nameof(offset));
+        Guard.IsBetweenOrEqualTo(length, 0, Length);
+        Guard.IsInRange(offset, 0, Length);
         Guard.IsLessThanOrEqualTo(offset + length, Length, nameof(offset));
 
         using ID3D12ResourceMap resource = D3D12Resource->Map();

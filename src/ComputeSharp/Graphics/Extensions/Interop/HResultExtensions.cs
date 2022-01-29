@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Helpers;
-using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.Windows;
 
 namespace ComputeSharp.Core.Extensions;

@@ -2,10 +2,10 @@
 #if NET6_0_OR_GREATER
 using System.Runtime.CompilerServices;
 #endif
+using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Extensions;
 #if !NET6_0_OR_GREATER
 using ComputeSharp.Graphics.Resources.Enums;
-using Microsoft.Toolkit.Diagnostics;
 #endif
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;

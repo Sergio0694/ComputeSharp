@@ -1,5 +1,5 @@
-﻿using ComputeSharp.Resources;
-using Microsoft.Toolkit.Diagnostics;
+﻿using CommunityToolkit.Diagnostics;
+using ComputeSharp.Resources;
 
 namespace ComputeSharp;
 
@@ -17,8 +17,8 @@ public static class ReadBackTexture3DExtensions
     public static void CopyFrom<T>(this ReadBackTexture3D<T> destination, Texture3D<T> source)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination, nameof(destination));
-        Guard.IsNotNull(source, nameof(source));
+        Guard.IsNotNull(destination);
+        Guard.IsNotNull(source);
 
         source.CopyTo(destination, 0, 0, 0, 0, 0, 0, source.Width, source.Height, source.Depth);
     }
@@ -38,8 +38,8 @@ public static class ReadBackTexture3DExtensions
     public static void CopyFrom<T>(this ReadBackTexture3D<T> destination, Texture3D<T> source, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int width, int height, int depth)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination, nameof(destination));
-        Guard.IsNotNull(source, nameof(source));
+        Guard.IsNotNull(destination);
+        Guard.IsNotNull(source);
 
         source.CopyTo(destination, sourceOffsetX, sourceOffsetY, sourceOffsetZ, 0, 0, 0, width, height, depth);
     }
@@ -62,8 +62,8 @@ public static class ReadBackTexture3DExtensions
     public static void CopyFrom<T>(this ReadBackTexture3D<T> destination, Texture3D<T> source, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
         where T : unmanaged
     {
-        Guard.IsNotNull(destination, nameof(destination));
-        Guard.IsNotNull(source, nameof(source));
+        Guard.IsNotNull(destination);
+        Guard.IsNotNull(source);
 
         source.CopyTo(destination, sourceOffsetX, sourceOffsetY, sourceOffsetZ, destinationOffsetX, destinationOffsetY, destinationOffsetZ, width, height, depth);
     }

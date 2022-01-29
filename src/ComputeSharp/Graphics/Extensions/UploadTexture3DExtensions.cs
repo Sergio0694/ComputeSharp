@@ -1,5 +1,5 @@
-﻿using ComputeSharp.Resources;
-using Microsoft.Toolkit.Diagnostics;
+﻿using CommunityToolkit.Diagnostics;
+using ComputeSharp.Resources;
 
 namespace ComputeSharp;
 
@@ -17,8 +17,8 @@ public static class UploadTexture3DExtensions
     public static void CopyTo<T>(this UploadTexture3D<T> source, Texture3D<T> destination)
         where T : unmanaged
     {
-        Guard.IsNotNull(source, nameof(source));
-        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source);
+        Guard.IsNotNull(destination);
 
         destination.CopyFrom(source, 0, 0, 0, 0, 0, 0, source.Width, source.Height, source.Depth);
     }
@@ -38,8 +38,8 @@ public static class UploadTexture3DExtensions
     public static void CopyTo<T>(this UploadTexture3D<T> source, Texture3D<T> destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int width, int height, int depth)
         where T : unmanaged
     {
-        Guard.IsNotNull(source, nameof(source));
-        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source);
+        Guard.IsNotNull(destination);
 
         destination.CopyFrom(source, sourceOffsetX, sourceOffsetY, sourceOffsetZ, 0, 0, 0, width, height, depth);
     }
@@ -62,8 +62,8 @@ public static class UploadTexture3DExtensions
     public static void CopyTo<T>(this UploadTexture3D<T> source, Texture3D<T> destination, int sourceOffsetX, int sourceOffsetY, int sourceOffsetZ, int destinationOffsetX, int destinationOffsetY, int destinationOffsetZ, int width, int height, int depth)
         where T : unmanaged
     {
-        Guard.IsNotNull(source, nameof(source));
-        Guard.IsNotNull(destination, nameof(destination));
+        Guard.IsNotNull(source);
+        Guard.IsNotNull(destination);
 
         destination.CopyFrom(source, sourceOffsetX, sourceOffsetY, sourceOffsetZ, destinationOffsetX, destinationOffsetY, destinationOffsetZ, width, height, depth);
     }

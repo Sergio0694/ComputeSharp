@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using CommunityToolkit.Diagnostics;
 using ComputeSharp.__Internals;
 using ComputeSharp.Exceptions;
 using ComputeSharp.Graphics.Commands;
@@ -9,7 +10,6 @@ using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Graphics.Resources.Helpers;
 using ComputeSharp.Graphics.Resources.Interop;
 using ComputeSharp.Interop;
-using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_COMMAND_LIST_TYPE;
@@ -75,9 +75,9 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
     {
         device.ThrowIfDisposed();
 
-        Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(height));
-        Guard.IsBetweenOrEqualTo(depth, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION, nameof(depth));
+        Guard.IsBetweenOrEqualTo(width, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
+        Guard.IsBetweenOrEqualTo(height, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
+        Guard.IsBetweenOrEqualTo(depth, 1, D3D12.D3D12_REQ_TEXTURE3D_U_V_OR_W_DIMENSION);
 
         if (!device.D3D12Device->IsDxgiFormatSupported(DXGIFormatHelper.GetForType<T>(), d3D12FormatSupport))
         {
@@ -184,16 +184,16 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
 
         ThrowIfDisposed();
 
-        Guard.IsInRange(sourceOffsetX, 0, Width, nameof(sourceOffsetX));
-        Guard.IsInRange(sourceOffsetY, 0, Height, nameof(sourceOffsetY));
-        Guard.IsInRange(sourceOffsetZ, 0, Depth, nameof(sourceOffsetZ));
-        Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
-        Guard.IsBetweenOrEqualTo(depth, 1, Depth, nameof(depth));
+        Guard.IsInRange(sourceOffsetX, 0, Width);
+        Guard.IsInRange(sourceOffsetY, 0, Height);
+        Guard.IsInRange(sourceOffsetZ, 0, Depth);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        Guard.IsBetweenOrEqualTo(depth, 1, Depth);
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, Width, nameof(sourceOffsetX));
         Guard.IsLessThanOrEqualTo(sourceOffsetY + height, Height, nameof(sourceOffsetY));
         Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, Depth, nameof(sourceOffsetZ));
-        Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth, nameof(size));
+        Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth);
 
         GraphicsDevice.D3D12Device->GetCopyableFootprint(
             DXGIFormatHelper.GetForType<T>(),
@@ -285,18 +285,18 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
         destination.ThrowIfDeviceMismatch(GraphicsDevice);
         destination.ThrowIfDisposed();
 
-        Guard.IsInRange(sourceOffsetX, 0, Width, nameof(sourceOffsetX));
-        Guard.IsInRange(sourceOffsetY, 0, Height, nameof(sourceOffsetY));
-        Guard.IsInRange(sourceOffsetZ, 0, Depth, nameof(sourceOffsetZ));
-        Guard.IsInRange(destinationOffsetX, 0, destination.Width, nameof(destinationOffsetX));
-        Guard.IsInRange(destinationOffsetY, 0, destination.Height, nameof(destinationOffsetY));
-        Guard.IsInRange(destinationOffsetZ, 0, destination.Depth, nameof(destinationOffsetZ));
-        Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
-        Guard.IsBetweenOrEqualTo(depth, 1, Depth, nameof(depth));
-        Guard.IsBetweenOrEqualTo(width, 1, destination.Width, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, destination.Height, nameof(height));
-        Guard.IsBetweenOrEqualTo(depth, 1, destination.Depth, nameof(depth));
+        Guard.IsInRange(sourceOffsetX, 0, Width);
+        Guard.IsInRange(sourceOffsetY, 0, Height);
+        Guard.IsInRange(sourceOffsetZ, 0, Depth);
+        Guard.IsInRange(destinationOffsetX, 0, destination.Width);
+        Guard.IsInRange(destinationOffsetY, 0, destination.Height);
+        Guard.IsInRange(destinationOffsetZ, 0, destination.Depth);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        Guard.IsBetweenOrEqualTo(depth, 1, Depth);
+        Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
+        Guard.IsBetweenOrEqualTo(height, 1, destination.Height);
+        Guard.IsBetweenOrEqualTo(depth, 1, destination.Depth);
         Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
         Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
         Guard.IsBetweenOrEqualTo(destinationOffsetZ + depth, 1, destination.Depth, nameof(destinationOffsetZ));
@@ -362,18 +362,18 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
         destination.ThrowIfDeviceMismatch(GraphicsDevice);
         destination.ThrowIfDisposed();
 
-        Guard.IsInRange(sourceOffsetX, 0, Width, nameof(sourceOffsetX));
-        Guard.IsInRange(sourceOffsetY, 0, Height, nameof(sourceOffsetY));
-        Guard.IsInRange(sourceOffsetZ, 0, Depth, nameof(sourceOffsetZ));
-        Guard.IsInRange(destinationOffsetX, 0, destination.Width, nameof(destinationOffsetX));
-        Guard.IsInRange(destinationOffsetY, 0, destination.Height, nameof(destinationOffsetY));
-        Guard.IsInRange(destinationOffsetZ, 0, destination.Depth, nameof(destinationOffsetZ));
-        Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
-        Guard.IsBetweenOrEqualTo(depth, 1, Depth, nameof(depth));
-        Guard.IsBetweenOrEqualTo(width, 1, destination.Width, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, destination.Height, nameof(height));
-        Guard.IsBetweenOrEqualTo(depth, 1, destination.Depth, nameof(depth));
+        Guard.IsInRange(sourceOffsetX, 0, Width);
+        Guard.IsInRange(sourceOffsetY, 0, Height);
+        Guard.IsInRange(sourceOffsetZ, 0, Depth);
+        Guard.IsInRange(destinationOffsetX, 0, destination.Width);
+        Guard.IsInRange(destinationOffsetY, 0, destination.Height);
+        Guard.IsInRange(destinationOffsetZ, 0, destination.Depth);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        Guard.IsBetweenOrEqualTo(depth, 1, Depth);
+        Guard.IsBetweenOrEqualTo(width, 1, destination.Width);
+        Guard.IsBetweenOrEqualTo(height, 1, destination.Height);
+        Guard.IsBetweenOrEqualTo(depth, 1, destination.Depth);
         Guard.IsBetweenOrEqualTo(destinationOffsetX + width, 1, destination.Width, nameof(destinationOffsetX));
         Guard.IsBetweenOrEqualTo(destinationOffsetY + height, 1, destination.Height, nameof(destinationOffsetY));
         Guard.IsBetweenOrEqualTo(destinationOffsetZ + depth, 1, destination.Depth, nameof(destinationOffsetZ));
@@ -430,16 +430,16 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
 
         ThrowIfDisposed();
 
-        Guard.IsInRange(destinationOffsetX, 0, Width, nameof(destinationOffsetX));
-        Guard.IsInRange(destinationOffsetY, 0, Height, nameof(destinationOffsetY));
-        Guard.IsInRange(destinationOffsetZ, 0, Depth, nameof(destinationOffsetZ));
-        Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
-        Guard.IsBetweenOrEqualTo(depth, 1, Depth, nameof(depth));
+        Guard.IsInRange(destinationOffsetX, 0, Width);
+        Guard.IsInRange(destinationOffsetY, 0, Height);
+        Guard.IsInRange(destinationOffsetZ, 0, Depth);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        Guard.IsBetweenOrEqualTo(depth, 1, Depth);
         Guard.IsLessThanOrEqualTo(destinationOffsetX + width, Width, nameof(destinationOffsetX));
         Guard.IsLessThanOrEqualTo(destinationOffsetY + height, Height, nameof(destinationOffsetY));
         Guard.IsLessThanOrEqualTo(destinationOffsetZ + depth, Depth, nameof(destinationOffsetZ));
-        Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth, nameof(size));
+        Guard.IsGreaterThanOrEqualTo(size, (nint)width * height * depth);
 
         GraphicsDevice.D3D12Device->GetCopyableFootprint(
             DXGIFormatHelper.GetForType<T>(),
@@ -529,18 +529,18 @@ public unsafe abstract class Texture3D<T> : NativeObject, IGraphicsResource, Gra
         source.ThrowIfDeviceMismatch(GraphicsDevice);
         source.ThrowIfDisposed();
 
-        Guard.IsInRange(sourceOffsetX, 0, source.Width, nameof(sourceOffsetX));
-        Guard.IsInRange(sourceOffsetY, 0, source.Height, nameof(sourceOffsetY));
-        Guard.IsInRange(sourceOffsetZ, 0, source.Depth, nameof(sourceOffsetZ));
-        Guard.IsInRange(destinationOffsetX, 0, Width, nameof(destinationOffsetX));
-        Guard.IsInRange(destinationOffsetY, 0, Height, nameof(destinationOffsetY));
-        Guard.IsInRange(destinationOffsetZ, 0, Depth, nameof(destinationOffsetZ));
-        Guard.IsBetweenOrEqualTo(width, 1, Width, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, Height, nameof(height));
-        Guard.IsBetweenOrEqualTo(depth, 1, Depth, nameof(depth));
-        Guard.IsBetweenOrEqualTo(width, 1, source.Width, nameof(width));
-        Guard.IsBetweenOrEqualTo(height, 1, source.Height, nameof(height));
-        Guard.IsBetweenOrEqualTo(depth, 1, source.Depth, nameof(depth));
+        Guard.IsInRange(sourceOffsetX, 0, source.Width);
+        Guard.IsInRange(sourceOffsetY, 0, source.Height);
+        Guard.IsInRange(sourceOffsetZ, 0, source.Depth);
+        Guard.IsInRange(destinationOffsetX, 0, Width);
+        Guard.IsInRange(destinationOffsetY, 0, Height);
+        Guard.IsInRange(destinationOffsetZ, 0, Depth);
+        Guard.IsBetweenOrEqualTo(width, 1, Width);
+        Guard.IsBetweenOrEqualTo(height, 1, Height);
+        Guard.IsBetweenOrEqualTo(depth, 1, Depth);
+        Guard.IsBetweenOrEqualTo(width, 1, source.Width);
+        Guard.IsBetweenOrEqualTo(height, 1, source.Height);
+        Guard.IsBetweenOrEqualTo(depth, 1, source.Depth);
         Guard.IsLessThanOrEqualTo(sourceOffsetX + width, source.Width, nameof(sourceOffsetX));
         Guard.IsLessThanOrEqualTo(sourceOffsetY + height, source.Height, nameof(sourceOffsetY));
         Guard.IsLessThanOrEqualTo(sourceOffsetZ + depth, source.Depth, nameof(sourceOffsetZ));

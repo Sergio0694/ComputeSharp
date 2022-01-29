@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using CommunityToolkit.Diagnostics;
 using ComputeSharp.Resources;
-using Microsoft.Toolkit.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
