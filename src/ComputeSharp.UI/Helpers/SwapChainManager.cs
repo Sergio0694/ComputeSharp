@@ -4,6 +4,11 @@ using System.Threading;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Interop;
+#if WINDOWS_UWP
+using ComputeSharp.Uwp.Extensions;
+#else
+using ComputeSharp.WinUI.Extensions;
+#endif
 #if !WINDOWS_UWP
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
@@ -469,6 +474,14 @@ internal sealed unsafe partial class SwapChainManager<TOwner> : NativeObject
         {
             this.d3D12Fence.Get()->SetEventOnCompletion(updatedFenceValue, default).Assert();
         }
+    }
+
+    /// <inheritdoc/>
+    private unsafe partial void OnGetDynamicResolutionManager(out DynamicResolutionManager resolutionManager)
+    {
+        int targetFramerate = GraphicsDevice.Default.DXGIAdapter->GetCompositionRefreshRate(DXGI_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM);
+
+        resolutionManager = new DynamicResolutionManager(targetFramerate);
     }
 
     /// <inheritdoc/>
