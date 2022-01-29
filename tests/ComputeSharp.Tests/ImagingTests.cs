@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using CommunityToolkit.HighPerformance.Buffers;
 using ComputeSharp.Resources;
 using ComputeSharp.Tests.Attributes;
 using ComputeSharp.Tests.Extensions;
@@ -15,7 +16,6 @@ using SixLabors.ImageSharp.PixelFormats;
 using ImageSharpRgba32 = SixLabors.ImageSharp.PixelFormats.Rgba32;
 using ImageSharpBgra32 = SixLabors.ImageSharp.PixelFormats.Bgra32;
 using ImageSharpL8 = SixLabors.ImageSharp.PixelFormats.L8;
-using Microsoft.Toolkit.HighPerformance.Buffers;
 
 namespace ComputeSharp.Tests;
 
