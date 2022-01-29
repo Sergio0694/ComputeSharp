@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ComputeSharp.SwapChain.Core.Constants;
@@ -11,7 +12,6 @@ using ComputeSharp.Uwp;
 #else
 using ComputeSharp.WinUI;
 #endif
-using Microsoft.Toolkit.Diagnostics;
 
 #nullable enable
 

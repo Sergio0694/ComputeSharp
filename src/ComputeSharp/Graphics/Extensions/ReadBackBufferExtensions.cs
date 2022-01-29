@@ -1,5 +1,5 @@
-﻿using ComputeSharp.Resources;
-using Microsoft.Toolkit.Diagnostics;
+﻿using CommunityToolkit.Diagnostics;
+using ComputeSharp.Resources;
 
 namespace ComputeSharp;
 

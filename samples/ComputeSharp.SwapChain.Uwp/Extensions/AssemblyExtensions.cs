@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 
 #nullable enable
 

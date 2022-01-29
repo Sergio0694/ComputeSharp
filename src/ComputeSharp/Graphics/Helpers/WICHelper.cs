@@ -2,9 +2,9 @@
 using System.Buffers;
 using System.IO;
 using System.Runtime.CompilerServices;
+using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Extensions;
 using ComputeSharp.Graphics.Extensions;
-using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.Windows;
 
 #pragma warning disable CA1416

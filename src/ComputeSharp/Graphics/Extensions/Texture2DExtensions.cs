@@ -2,9 +2,9 @@
 using System.Buffers;
 using System.IO;
 using System.Runtime.InteropServices;
+using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Resources;
-using Microsoft.Toolkit.Diagnostics;
 
 namespace ComputeSharp;
 

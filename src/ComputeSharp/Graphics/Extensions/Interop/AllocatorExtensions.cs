@@ -1,7 +1,7 @@
 ﻿#if NET6_0_OR_GREATER
 
+using CommunityToolkit.Diagnostics;
 using ComputeSharp.Core.Extensions;
-using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.DirectX.D3D12_CPU_PAGE_PROPERTY;

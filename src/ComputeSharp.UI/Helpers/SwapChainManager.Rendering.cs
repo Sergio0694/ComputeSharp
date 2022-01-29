@@ -2,12 +2,12 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using CommunityToolkit.Diagnostics;
 #if WINDOWS_UWP
 using ComputeSharp.Uwp.Extensions;
 #else
 using ComputeSharp.WinUI.Extensions;
 #endif
-using Microsoft.Toolkit.Diagnostics;
 
 #pragma warning disable CS0420
 

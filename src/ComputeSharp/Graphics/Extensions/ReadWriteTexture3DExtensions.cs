@@ -1,5 +1,5 @@
 ﻿using System;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 
 namespace ComputeSharp;
 

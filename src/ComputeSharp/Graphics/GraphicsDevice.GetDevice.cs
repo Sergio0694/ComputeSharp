@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Helpers;
-using Microsoft.Toolkit.Diagnostics;
 
 namespace ComputeSharp;
 

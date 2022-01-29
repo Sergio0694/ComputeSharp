@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using CommunityToolkit.Diagnostics;
 using ComputeSharp.Resources;
-using Microsoft.Toolkit.Diagnostics;
 
 namespace ComputeSharp;
 

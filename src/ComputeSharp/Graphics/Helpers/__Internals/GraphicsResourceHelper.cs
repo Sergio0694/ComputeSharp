@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using CommunityToolkit.Diagnostics;
 using ComputeSharp.Resources;
-using Microsoft.Toolkit.Diagnostics;
 using TerraFX.Interop.DirectX;
 
 namespace ComputeSharp.__Internals;

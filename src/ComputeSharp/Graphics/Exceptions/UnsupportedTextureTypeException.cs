@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 
 namespace ComputeSharp.Exceptions;
 

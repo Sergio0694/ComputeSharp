@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using TerraFX.Interop.Windows;
 using static TerraFX.Interop.Windows.E;
 using static TerraFX.Interop.Windows.IID;

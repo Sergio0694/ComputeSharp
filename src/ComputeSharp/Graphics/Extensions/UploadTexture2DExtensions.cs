@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
+using CommunityToolkit.Diagnostics;
 using ComputeSharp.Graphics.Helpers;
 using ComputeSharp.Resources;
-using Microsoft.Toolkit.Diagnostics;
 
 namespace ComputeSharp;
 
