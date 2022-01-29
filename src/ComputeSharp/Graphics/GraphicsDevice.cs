@@ -28,6 +28,11 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     private ComPtr<ID3D12Device> d3D12Device;
 
     /// <summary>
+    /// The <see cref="IDXGIAdapter"/> that <see cref="d3D12Device"/> was created from.
+    /// </summary>
+    private ComPtr<IDXGIAdapter> dxgiAdapter;
+
+    /// <summary>
     /// The <see cref="ID3D12CommandQueue"/> instance to use for compute operations.
     /// </summary>
     private ComPtr<ID3D12CommandQueue> d3D12ComputeCommandQueue;
@@ -93,6 +98,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     internal GraphicsDevice(ID3D12Device* d3D12Device, IDXGIAdapter* dxgiAdapter, DXGI_ADAPTER_DESC1* dxgiDescription1)
     {
         this.d3D12Device = new ComPtr<ID3D12Device>(d3D12Device);
+        this.dxgiAdapter = new ComPtr<IDXGIAdapter>(dxgiAdapter);
 
         this.d3D12ComputeCommandQueue = d3D12Device->CreateCommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE);
         this.d3D12CopyCommandQueue = d3D12Device->CreateCommandQueue(D3D12_COMMAND_LIST_TYPE_COPY);
@@ -168,6 +174,11 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
     /// Gets the underlying <see cref="ID3D12Device"/> wrapped by the current instance.
     /// </summary>
     internal ID3D12Device* D3D12Device => this.d3D12Device;
+
+    /// <summary>
+    /// Gets the underlying <see cref="IDXGIAdapter"/> wrapped by the current instance.
+    /// </summary>
+    internal IDXGIAdapter* DXGIAdapter => this.dxgiAdapter;
 
 #if NET6_0_OR_GREATER
     /// <summary>
@@ -352,6 +363,7 @@ public sealed unsafe partial class GraphicsDevice : NativeObject
         DeviceHelper.NotifyDisposedDevice(this);
 
         this.d3D12Device.Dispose();
+        this.dxgiAdapter.Dispose();
         this.d3D12ComputeCommandQueue.Dispose();
         this.d3D12CopyCommandQueue.Dispose();
         this.d3D12ComputeFence.Dispose();

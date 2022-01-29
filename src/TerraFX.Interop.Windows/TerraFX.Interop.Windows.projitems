@@ -25,7 +25,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\other\d3dx12\D3D12_STATIC_SAMPLER_DESC.Manual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\other\d3dx12\D3D12_TEXTURE_COPY_LOCATION.Manual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\other\d3dx12\D3D12_VERSIONED_ROOT_SIGNATURE_DESC.Manual.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_2\DXGIOutput1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_2\DXGI_ALPHA_MODE.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_2\DXGI_MODE_DESC1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_2\DXGI_SCALING.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_2\DXGI_SWAP_CHAIN_DESC1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_2\IDXGIFactory2.cs" />
@@ -38,9 +40,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_5\DXGI_FEATURE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_6\DXGI_GPU_PREFERENCE.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi1_6\IDXGIFactory6.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgicommon\DXGI_RATIONAL.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgicommon\DXGI_SAMPLE_DESC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgicommon\DXGI_SAMPLE_DESC.Manual.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgiformat\DXGI_FORMAT.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgitype\DXGI_MODE_SCALING.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgitype\DXGI_MODE_SCANLINE_ORDER.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi\DXGI.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi\DXGI_ADAPTER_DESC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DirectX\shared\dxgi\DXGI_ADAPTER_DESC1.cs" />

@@ -255,15 +255,22 @@ partial class SwapChainManager<TOwner>
     }
 
     /// <summary>
+    /// Gets the <see cref="DynamicResolutionManager"/> instance to use in <see cref="RenderLoopWithDynamicResolution"/>.
+    /// </summary>
+    /// <param name="resolutionManager">The <see cref="DynamicResolutionManager"/> instance to use.</param>
+    private unsafe partial void OnGetDynamicResolutionManager(out DynamicResolutionManager resolutionManager);
+
+    /// <summary>
     /// The core render loop with dynamic resolution.
     /// </summary>
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private void RenderLoopWithDynamicResolution()
+    private unsafe void RenderLoopWithDynamicResolution()
     {
         Stopwatch renderStopwatch = this.renderStopwatch ??= new();
         Stopwatch frameStopwatch = new();
         CancellationToken cancellationToken = this.renderCancellationTokenSource!.Token;
-        DynamicResolutionManager frameTimeWatcher = new(60);
+
+        OnGetDynamicResolutionManager(out DynamicResolutionManager resolutionManager);
 
         if (!OnFrameRequest(out object? parameter, cancellationToken))
         {
@@ -308,7 +315,7 @@ partial class SwapChainManager<TOwner>
                 OnPresent();
 
                 // Evaluate the dynamic resolution frame time step
-                if (frameTimeWatcher.Advance(frameStopwatch.ElapsedTicks, ref this.dynamicResolutionScale))
+                if (resolutionManager.Advance(frameStopwatch.ElapsedTicks, ref this.dynamicResolutionScale))
                 {
                     this.isResizePending = true;
                 }
